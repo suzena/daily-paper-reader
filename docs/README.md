@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-07-20 ~ 2026-07-29</span>
+      <span class="dpr-home-dashboard-kicker">2026-07-29</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 17 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>6</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-07-29 02:42:19 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-07-29 21:42:56 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>本期日报覆盖17篇AI论文，精读聚焦TerraMind与THOR的系统对比及海洋视频理解的视觉工具推理。</p>
-<p>最值得关注的方向是智能体系统基准评估和海洋视频工具推理，两者均获9.0高分。</p>
-<p>建议读者优先精读这两篇，再浏览速读中关于天气模型空间泛化、UUV对抗导航及无人机集群通信的8.0分论文。</p>
+<p>今日6篇论文聚焦水下自主系统，精读两篇分别获得9.0和8.0高分。最值得关注的是混合人工势场与时空Transformer的AUV实时路径规划，以及基于尺度空间匹配与上下文一致性的侧扫声纳建图方法。普通读者可优先精读这两篇高分论文，速读部分关注海底管道巡检的停靠站布局优化。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Now We Know? A Systematic Comparison of TerraMind and THOR">Now We Know? A Systematic Comparison of TerraMind and THOR</span></li><li><span class="dpr-home-dashboard-paper-title" title="MarineEVT: Advancing Event-Centric Marine Video Understanding via Visual Tool Reasoning">MarineEVT: Advancing Event-Centric Marine Video Understanding via Visual Tool Reasoning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG">Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning">Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning</span></li><li><span class="dpr-home-dashboard-paper-title" title="SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping">SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency">Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency</span></li><li><span class="dpr-home-dashboard-paper-title" title="Strategic Inference of Adversarial Navigation Objectives for Unmanned Underwater Vehicles">Strategic Inference of Adversarial Navigation Objectives for Unmanned Underwater Vehicles</span></li><li><span class="dpr-home-dashboard-paper-title" title="Predictive Lightweight MARL for Resilient Coverage in Sparse-Signaling Aerial Networks">Predictive Lightweight MARL for Resilient Coverage in Sparse-Signaling Aerial Networks</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection">Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection">Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation">Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 </div>
 

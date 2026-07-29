@@ -1,0 +1,105 @@
+{
+  "date": "20260729",
+  "date_label": "",
+  "generated_at": "2026-07-29 21:42:56 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.25056v1",
+      "route": "202607/29/2607.25056v1-hybrid-artificial-potential-fields-and-spatio-temporal-transformers-for-real-time-auv-path-planning",
+      "title": "Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "AUV路径规划智能体海洋应用",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    },
+    {
+      "paper_id": "2607.25937v1",
+      "route": "202607/29/2607.25937v1-sc-match-scale-space-matching-with-context-consistency-for-side-scan-sonar-mapping",
+      "title": "SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "深度学习匹配用于侧扫声纳制图，与海洋建模相关",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    },
+    {
+      "paper_id": "2607.19944v1",
+      "route": "202607/29/2607.19944v1-optimal-placement-of-docking-stations-and-resident-auvs-for-subsea-pipeline-inspection",
+      "title": "Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "AUV布站优化用于海底管道检测，是智能体海洋应用",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    },
+    {
+      "paper_id": "2607.18700v1",
+      "route": "202607/29/2607.18700v1-decoupled-pipeline-with-proposal-reranking-and-score-fusion-for-positive-unlabeled-marine-species-detection",
+      "title": "Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "深度学习海洋物种检测",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    },
+    {
+      "paper_id": "2607.19522v1",
+      "route": "202607/29/2607.19522v1-geospatial-diffusion-based-evolution-synthesis-geodes-for-storm-centered-weather-augmentation",
+      "title": "Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "地理空间扩散用于风暴合成，与海洋天气相关",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    },
+    {
+      "paper_id": "2607.21200v1",
+      "route": "202607/29/2607.21200v1-transformer-based-diffusion-models-for-hydrological-time-series-probabilistic-imputation-and-forecasting",
+      "title": "Transformer-based Diffusion models for Hydrological Time Series Probabilistic Imputation and Forecasting",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用于水文时间序列的Transformer扩散模型可适用于海洋建模",
+      "first_seen_at": "2026-07-29 21:42:56 UTC",
+      "updated_at": "2026-07-29 21:42:56 UTC"
+    }
+  ]
+}

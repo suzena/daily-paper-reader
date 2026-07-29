@@ -1,0 +1,252 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-29T21:37:45.764559+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2607.25056v1",
+      "source": "arxiv",
+      "title": "Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning",
+      "abstract": "Autonomous Underwater Vehicles (AUVs) operate in complex, unstructured environments where efficient and safe path planning is critical for mission success and energy conservation. This paper presents a comprehensive comparative evaluation of thirteen path planning algorithms, ranging from classical graph-search methods (A*, Dijkstra) and sampling-based approaches (RRT*) to metaheuristics (PSO, GA, ACO, BCO) and learning-based architectures. Special emphasis is placed on a proposed hybrid approach combining Artificial Potential Fields (APF) with a Spatio-Temporal (ST) Transformer. Evaluated across five navigation scenarios on high-resolution underwater terrain maps, all algorithms achieved 100\\% task completion; however, significant trade-offs emerged in path optimality, collision avoidance, and computational load. The Hybrid APF + ST-Transformer demonstrated superior balanced performance, achieving the shortest average path length (943.15 units), a low collision rate (0.031), and efficient computation time (0.96 s), outperforming standalone learning models, which required fallback mechanisms and classical methods that incurred higher latency. While classical algorithms guaranteed collision-free paths, their excessive path lengths and processing times render them less suitable for dynamic underwater operations. Conversely, metaheuristic approaches introduced trajectory complexity unsuitable for strict energy constraints. Based on these findings, the Hybrid APF + ST framework is recommended as a principal approach for real-time AUV navigation, offering a robust solution that harmonizes reactive obstacle avoidance with global path optimality in resource-constrained underwater systems.",
+      "authors": [
+        "Khadija Rais",
+        "Abdelmadjid Benmachiche",
+        "Imene Soualmia"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-27T20:34:33+00:00",
+      "link": "https://arxiv.org/pdf/2607.25056v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "AUV path planning intelligent agent marine application",
+      "llm_evidence_cn": "AUV路径规划智能体海洋应用",
+      "llm_evidence": "AUV路径规划智能体海洋应用",
+      "canonical_evidence": "AUV路径规划智能体海洋应用",
+      "llm_tldr_en": "Proposes a hybrid APF and Spatio-Temporal Transformer for real-time AUV path planning, achieving 100% task completion on underwater terrain maps.",
+      "llm_tldr_cn": "针对自主水下航行器在复杂水下环境中的路径规划挑战，提出结合人工势场和时空变换器的混合方法，在多种水下地形场景中实现100%任务完成率，显著提升了路径规划的效率与安全性。",
+      "llm_tldr": "针对自主水下航行器在复杂水下环境中的路径规划挑战，提出结合人工势场和时空变换器的混合方法，在多种水下地形场景中实现100%任务完成率，显著提升了路径规划的效率与安全性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.25937v1",
+      "source": "arxiv",
+      "title": "SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping",
+      "abstract": "Reliable estimation of spatial correspondences between overlapping side-scan sonar (SSS) measurements is essential for mapping, but acoustic appearance variations, weak seabed texture, repetitive patterns, and shadows make such correspondences sparse, unstable, and context-dependent. Scarce point-level annotations further limit sonar-specific training or fine-tuning of deep matching models. To this end, we propose SC-Match, a training-free scale-space matching framework with context-consistent correspondence refinement that adapts pretrained feature extraction and matching components to SSS observations without sonar-specific retraining. The framework improves correspondence reliability through scale-space representation and context-consistent refinement. For feature representation, a frozen extractor is applied to multiple observation scales, detector responses are calibrated according to the structure--texture tendency of the input SSS image, and score-aware cross-scale fusion is used to retain compact feature candidates. For correspondence refinement, adjacent local matching cases are used as neighboring contexts to verify stable fixed--moving relations and preserve non-conflicting complementary matches for alignment. Experiments on datasets acquired in different environments using different sonar platforms show that SC-Match provides more accurate correspondences and more consistent geometric alignment than representative pretrained methods, while maintaining stable behavior under unseen cross-platform acquisition conditions.",
+      "authors": [
+        "Can Lei",
+        "Rafael Garcia",
+        "Nuno Gracias",
+        "Hayat Rajani",
+        "Huigang Wang"
+      ],
+      "primary_category": "physics.ao-ph",
+      "categories": [
+        "physics.ao-ph"
+      ],
+      "published": "2026-07-28T16:21:37+00:00",
+      "link": "https://arxiv.org/pdf/2607.25937v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Deep learning matching for side-scan sonar mapping, relevant to ocean modeling",
+      "llm_evidence_cn": "深度学习匹配用于侧扫声纳制图，与海洋建模相关",
+      "llm_evidence": "深度学习匹配用于侧扫声纳制图，与海洋建模相关",
+      "canonical_evidence": "深度学习匹配用于侧扫声纳制图，与海洋建模相关",
+      "llm_tldr_en": "SC-Match uses scale-space matching and context consistency to improve sonar correspondence without retraining, advancing deep learning for ocean mapping.",
+      "llm_tldr_cn": "针对侧扫声纳图像匹配中声学外观变化大、纹理弱、标注少的问题，提出SC-Match框架，基于尺度空间表示和上下文一致性精炼，无需声纳特定重新训练即可利用预训练模型实现鲁棒匹配。实验表明该方法显著提升对应可靠性，为海洋测绘提供了高效的深度学习方案。",
+      "llm_tldr": "针对侧扫声纳图像匹配中声学外观变化大、纹理弱、标注少的问题，提出SC-Match框架，基于尺度空间表示和上下文一致性精炼，无需声纳特定重新训练即可利用预训练模型实现鲁棒匹配。实验表明该方法显著提升对应可靠性，为海洋测绘提供了高效的深度学习方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.19944v1",
+      "source": "arxiv",
+      "title": "Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection",
+      "abstract": "A two-stage mixed-integer linear programming framework is introduced for subsea pipeline incident response planning, jointly optimizing Subsea Docking Plate (SDP) placement and resident autonomous underwater vehicle allocation to minimize both maximum and average response times under spatial uncertainty. Phase 1 minimizes the maximum response time across all potential leak locations. Phase 2 reduces the average response time subject to the maximum bound. A case study based on the Johan Sverdrup oil and gas field in Norway, with 9 SDP options and 33 pipelines, shows that just a few well-placed SDPs are enough to achieve top performance. A cost versus time Pareto analysis reveals the trade-off between deployment expenditure and response efficiency, providing actionable guidance for designing resilient and cost-effective subsea inspection networks.",
+      "authors": [
+        "Gabrielė Kasparavičiūtė",
+        "Pasquale Grippa",
+        "Kjetil Skaugset",
+        "Asgeir J. Sørensen",
+        "Martin Ludvigsen"
+      ],
+      "primary_category": "math.OC",
+      "categories": [
+        "math.OC",
+        "cs.RO"
+      ],
+      "published": "2026-07-22T09:17:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.19944v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Optimal placement of docking stations and AUVs for subsea pipeline inspection, a marine application of intelligent agents",
+      "llm_evidence_cn": "AUV布站优化用于海底管道检测，是智能体海洋应用",
+      "llm_evidence": "AUV布站优化用于海底管道检测，是智能体海洋应用",
+      "canonical_evidence": "AUV布站优化用于海底管道检测，是智能体海洋应用",
+      "llm_tldr_en": "Proposes MILP framework to jointly optimize docking station placement and AUV allocation for subsea pipeline inspection, minimizing response time.",
+      "llm_tldr_cn": "针对海底管道泄漏应急响应，提出了两阶段混合整数线性规划框架，联合优化水下停靠板位置和驻留AUV分配，以最小化最大/平均响应时间。基于Johan Sverdrup油田案例表明少量停靠板即可达到最优性能，并给出了成本-时间帕累托曲线。该工作为海洋智能体部署提供了优化决策支持。",
+      "llm_tldr": "针对海底管道泄漏应急响应，提出了两阶段混合整数线性规划框架，联合优化水下停靠板位置和驻留AUV分配，以最小化最大/平均响应时间。基于Johan Sverdrup油田案例表明少量停靠板即可达到最优性能，并给出了成本-时间帕累托曲线。该工作为海洋智能体部署提供了优化决策支持。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.18700v1",
+      "source": "arxiv",
+      "title": "Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection",
+      "abstract": "The FathomNetCLEF 2026 competition combines underwater object detection and fine-grained marine species classification under a positive-unlabeled evaluation setting. The provided training labels are sparse, while the hidden test set is out-of-distribution relative to the training imagery, creating both annotation incompleteness and source-shift challenges. We describe DS@GT ARC's multi-stage system developed for this setting while keeping model training restricted to the data provided by the competition. The final private-leaderboard model uses a frozen Megalodon YOLOv8x detector as a class-agnostic proposal generator, combines global and tiled inference with tile-edge filtering, classifies expanded proposal crops with a LoRA-finetuned DINOv3 ViT-H classifier, and ranks predictions using weighted geometric fusion of detector and classifier confidence. This system placed 12th out of 102 teams. A closely related variant added a locally trained TTN-inspired validity head as a light reranking signal, improving public-leaderboard and proxy-evaluation performance but slightly reducing private-leaderboard performance. Across experiments, the strongest lesson was that train-derived validation and detector-only metrics were not reliable enough for model selection. Instead, we used proxy datasets only for validation and comparison, and combined those signals with leaderboard feedback and targeted ablations. These experiments showed that reserving proposal recall, avoiding over-aggressive filtering, and improving downstream ranking were more effective than fine-tuning the detector or directly training on noisy pseudo-labels. Code: https://github.com/dsgt-arc/fathomnetclef-2026.",
+      "authors": [
+        "Robert James Brock",
+        "Sebastian Maximilian Krupa",
+        "Jason Kahei Tam"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-21T04:35:47+00:00",
+      "link": "https://arxiv.org/pdf/2607.18700v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "marine species detection with deep learning",
+      "llm_evidence_cn": "深度学习海洋物种检测",
+      "llm_evidence": "深度学习海洋物种检测",
+      "canonical_evidence": "深度学习海洋物种检测",
+      "llm_tldr_en": "A multi-stage deep learning pipeline for positive-unlabeled marine species detection using frozen YOLOv8x detector with proposal reranking and score fusion, achieving strong results on the FathomNetCLEF 2026 competition.",
+      "llm_tldr_cn": "针对FathomNetCLEF 2026竞赛中正无标签设置下的海洋物种检测问题，本文提出了一种解耦流水线，使用冻结的YOLOv8x作为类无关候选框生成器，结合全局和分块推理、边缘过滤、候选框重排序和分数融合，在仅使用竞赛提供数据的情况下取得了良好效果。该方法有效应对了稀疏标签和分布偏移挑战，为海洋物种检测提供了一种实用且高效的深度学习方案。",
+      "llm_tldr": "针对FathomNetCLEF 2026竞赛中正无标签设置下的海洋物种检测问题，本文提出了一种解耦流水线，使用冻结的YOLOv8x作为类无关候选框生成器，结合全局和分块推理、边缘过滤、候选框重排序和分数融合，在仅使用竞赛提供数据的情况下取得了良好效果。该方法有效应对了稀疏标签和分布偏移挑战，为海洋物种检测提供了一种实用且高效的深度学习方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.19522v1",
+      "source": "arxiv",
+      "title": "Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation",
+      "abstract": "While machine learning-based weather models hold significant promise, they struggle to predict the detailed structure of large-scale weather systems such as cyclonic storms. Regional models are constrained by limited historical records within fixed geographic boundaries, while global models are computationally expensive and often operate at resolutions too coarse to capture fine-grained storm dynamics. To bridge this gap, we introduce the Geospatial Diffusion-based Evolution Synthesis (GeoDES) model, a custom image-to-video diffusion model. By focusing generation strictly on the evolving storm structure, GeoDES synthesizes physically consistent, high-fidelity weather events suitable for stress-testing forecast models and expanding meteorological datasets. Evaluations demonstrate that GeoDES outperforms prior methods on key metrics, achieving $52\\%$ lower Peak Vorticity Error and $8\\%$ higher Anomaly Correlation Coefficient than the next strongest methods on the North Atlantic test set.",
+      "authors": [
+        "Sonia Cromp",
+        "Satya Sai Srinath Namburi GNVV",
+        "Youran Wang",
+        "Grace Kisslinger",
+        "Frederic Sala",
+        "James Booth",
+        "Allegra LeGrande"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-07-21T19:10:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.19522v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Geospatial diffusion for storm synthesis relevant to ocean weather",
+      "llm_evidence_cn": "地理空间扩散用于风暴合成，与海洋天气相关",
+      "llm_evidence": "地理空间扩散用于风暴合成，与海洋天气相关",
+      "canonical_evidence": "地理空间扩散用于风暴合成，与海洋天气相关",
+      "llm_tldr_en": "Introduces GeoDES, a custom image-to-video diffusion model that synthesizes high-fidelity, physically consistent storm events to augment weather forecast models, addressing limitations of regional and global models.",
+      "llm_tldr_cn": "现有气象模型对气旋风暴等大型天气系统的精细结构预测不足。本文提出GeoDES模型，一种面向风暴演化的定制图像到视频扩散模型，能够生成物理一致、高保真的风暴事件，用于压力测试和扩展训练数据。该模型有望提升海洋气象预报的可靠性。",
+      "llm_tldr": "现有气象模型对气旋风暴等大型天气系统的精细结构预测不足。本文提出GeoDES模型，一种面向风暴演化的定制图像到视频扩散模型，能够生成物理一致、高保真的风暴事件，用于压力测试和扩展训练数据。该模型有望提升海洋气象预报的可靠性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.21200v1",
+      "source": "arxiv",
+      "title": "Transformer-based Diffusion models for Hydrological Time Series Probabilistic Imputation and Forecasting",
+      "abstract": "The modeling of hydrometeorological time series with limited observations is a key challenge in the monitoring of hydro-systems and water resources, as well as for flood or drought risk assessment. Due to the high variability of the underlying processes and the sparsity of available measurements, traditional statistical approaches often struggle to accurately represent their dynamics. In this context, recent advances in deep learning offer a promising direction for improving the representation and generation of complex temporal processes sampled at several observation sites. This study investigates the application of transformer-based diffusion models to the simulation and reconstruction of hydrological time series. The proposed framework is applied to the joint modeling of water quantity and quality at six sites spread across three adjacent headwater catchments located in North-East France on a limestone plateau covered by forests and field crops. The model is calibrated and validated using available observational data, which has been quality controlled and corrected for sensor drift and malfunction through collaborative efforts by LNE metrology expertise and Andra monthly quality control over more than 15 years. Its performance is compared with several established baseline approaches commonly used for time series modeling. Quantitative evaluation metrics are employed to assess the ability of the proposed method to reproduce key temporal characteristics of the observed signals in two settings: the imputation of incomplete time series and the forecasting of upcoming hydrological conditions.  Results support the effectiveness of the transformer-based approach and highlight its capacity to capture and simulate the complex patterns present in hydrological data. In particular, the results indicate that diffusion models can efficiently sample realistic time series distributions under observation settings with variable missing data for both forecasting and imputation.",
+      "authors": [
+        "Ferdinand Bhavsar",
+        "Lionel Benoit",
+        "Maxime Savatier",
+        "Edith Gabriel"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "published": "2026-07-23T11:19:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.21200v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Transformer diffusion for hydrological series applicable to ocean modeling",
+      "llm_evidence_cn": "用于水文时间序列的Transformer扩散模型可适用于海洋建模",
+      "llm_evidence": "用于水文时间序列的Transformer扩散模型可适用于海洋建模",
+      "canonical_evidence": "用于水文时间序列的Transformer扩散模型可适用于海洋建模",
+      "llm_tldr_en": "Proposes transformer-based diffusion models for probabilistic imputation and forecasting of hydrological time series with sparse observations, addressing a key challenge in water resources and flood/drought risk assessment.",
+      "llm_tldr_cn": "针对水文学中观测稀疏的时间序列建模难题，本文提出基于Transformer的扩散模型用于水文时间序列的概率插补与预测。该方法能够有效捕捉水文过程的复杂时序动态，在多个站点数据上展现了优于传统统计方法的性能。该工作为海洋等相似领域的时序建模提供了可迁移的深度学习方案。",
+      "llm_tldr": "针对水文学中观测稀疏的时间序列建模难题，本文提出基于Transformer的扩散模型用于水文时间序列的概率插补与预测。该方法能够有效捕捉水文过程的复杂时序动态，在多个站点数据上展现了优于传统统计方法的性能。该工作为海洋等相似领域的时序建模提供了可迁移的深度学习方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
