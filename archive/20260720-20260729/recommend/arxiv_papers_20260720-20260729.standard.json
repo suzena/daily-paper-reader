@@ -1,0 +1,700 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-29T02:33:10.935328+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 11,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 18,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.18504v2",
+      "source": "arxiv",
+      "title": "Now We Know? A Systematic Comparison of TerraMind and THOR",
+      "abstract": "Benchmarks for Geospatial Foundation Models (GFMs) increasingly rank models by aggregate score, but such rankings obscure why models differ: how much of the gap is architecture, how much is decoder capacity, and how much is a use-case-specific artefact? This study addresses that gap through a controlled comparison of two GFMs developed under European Space Agency's $Φ$-lab with contrasting design philosophies: THOR, which introduces a compute-adaptive architecture supporting variable patch sizes and unifies Sentinel-1, -2, and -3 data at their native resolutions; and TerraMind, a multimodal generative GFM pretrained with a dual-scale token/pixel objective that enables any-to-any cross-modal generation (Thinking-in-Modalities) to infer missing sensors at inference time. Rather than reporting a single leaderboard, we investigate the axes along which the two architectures actually differ - patch size, decoder complexity, finetuning regime, input modality, and model scale - across ten use cases spanning segmentation and regression in diverse domains, including climate disaster response, methane leak detection, snow monitoring, or sea ice mapping. We find that architectural design choices - patch size and decoder type in particular - explain more performance variance than model identity itself, that the two models embody complementary investment strategies (pretraining-time scale for TerraMind versus inference-time tokenisation for THOR), and that correctly interpreting results requires dataset-level characterisation. The resulting picture is not a single winner but a set of hypotheses and a diagnostic ablation methodology that we expect to generalise to future GFMs beyond THOR and TerraMind.",
+      "authors": [
+        "Frederick Schindlegger",
+        "Kenzo Bounegta",
+        "Eva Gmelich Meijling",
+        "Johannes Jakubik",
+        "Arnt-Børre Salberg",
+        "Theodor Forgaard",
+        "Nicolas Longepe",
+        "Valerio Marsocci"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-07-20T20:55:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.18504v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Systematic comparison of geospatial foundation models TerraMind and THOR, directly relevant to oceanography",
+      "llm_evidence_cn": "对地理空间基础模型TerraMind与THOR的系统比较，直接相关于海洋学",
+      "llm_evidence": "对地理空间基础模型TerraMind与THOR的系统比较，直接相关于海洋学",
+      "canonical_evidence": "对地理空间基础模型TerraMind与THOR的系统比较，直接相关于海洋学",
+      "llm_tldr_en": "Controlled comparison of two geospatial foundation models (TerraMind and THOR) revealing architecture and objective impacts on downstream tasks.",
+      "llm_tldr_cn": "本文对欧空局的两个地理空间基础模型TerraMind和THOR进行了系统比较。通过控制实验分离了架构、解码器容量和任务特异性的影响，揭示了不同设计哲学（多模态生成 vs 计算自适应架构）对海洋遥感等下游任务性能的差异化贡献。结果为海洋学基础模型的选择与改进提供了重要指导。",
+      "llm_tldr": "本文对欧空局的两个地理空间基础模型TerraMind和THOR进行了系统比较。通过控制实验分离了架构、解码器容量和任务特异性的影响，揭示了不同设计哲学（多模态生成 vs 计算自适应架构）对海洋遥感等下游任务性能的差异化贡献。结果为海洋学基础模型的选择与改进提供了重要指导。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "foundation model oceanography",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.24064v1",
+      "source": "arxiv",
+      "title": "MarineEVT: Advancing Event-Centric Marine Video Understanding via Visual Tool Reasoning",
+      "abstract": "Recent Vision-Language Models (VLMs) have achieved remarkable success in visual understanding, driven by the growing availability of high-quality image-text pairs. However, the performance of VLMs often degrades in the video domain due to the essential need for temporal understanding and the scarcity of large-scale annotated video data. In this work, we focus on marine video understanding, which brings further challenges: first, it requires substantial domain expertise; and video VLMs usually struggle with localizing and interpreting critical information from marine videos, as the informative events are typically sparse, unpredictable, and unevenly distributed. To address these challenges, we carefully curate the first event-centric marine video understanding dataset called MarineEVT, which features 20K multi-task, video-level visual question-answering pairs spanning multiple dimensions of marine understanding and analysis. Meanwhile, based on MarineEVT, we decompose marine video understanding as an Event-centric Visual Tool-integrated Reasoning process EVT-R1 for short, where we leverage powerful visual tools to drive the model to localize and interpret critical information aligned with visual questions and human intent. To demonstrate its effectiveness, we compare EVT-R1 against 11 SOTA VLMs in different settings. EVT-R1 outperforms the top open-source and top commercial models by 5.22 and 11.09, respectively. MarineEVT and EVT-R1 lay the foundation for ecological discovery and marine education, fostering the development of VLMs capable of interpreting marine dynamics, reasoning about ecological interactions, and supporting sustainable ocean video understanding and analysis.",
+      "authors": [
+        "Tuan-An To",
+        "Yuk-Kwan Wong",
+        "Tuan-Anh Vu",
+        "Ziqiang Zheng",
+        "Sai-Kit Yeung"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-27T07:06:14+00:00",
+      "link": "https://arxiv.org/pdf/2607.24064v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "foundation model (VLM) applied to marine video understanding",
+      "llm_evidence_cn": "基础模型（视觉语言模型）应用于海洋视频理解",
+      "llm_evidence": "基础模型（视觉语言模型）应用于海洋视频理解",
+      "canonical_evidence": "基础模型（视觉语言模型）应用于海洋视频理解",
+      "llm_tldr_en": "MarineEVT introduces an event-centric marine video benchmark and a VLM-based tool reasoning framework for temporal grounding and interpretation.",
+      "llm_tldr_cn": "针对海洋视频中事件稀疏且难以定位的问题，该工作构建了首个事件驱动的海洋视频理解基准，并提出基于视觉语言模型的工具推理框架，通过调用外部工具增强时空定位能力。实验表明该方法在海洋事件检测和描述任务上显著优于现有视频理解模型，推动了基础模型在海洋领域的应用。",
+      "llm_tldr": "针对海洋视频中事件稀疏且难以定位的问题，该工作构建了首个事件驱动的海洋视频理解基准，并提出基于视觉语言模型的工具推理框架，通过调用外部工具增强时空定位能力。实验表明该方法在海洋事件检测和描述任务上显著优于现有视频理解模型，推动了基础模型在海洋领域的应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "foundation model oceanography",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.24313v1",
+      "source": "arxiv",
+      "title": "Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG",
+      "abstract": "Marine life monitoring is limited by strict energy constraints, poor underwater connectivity, and the high cost of transmitting raw multimodal data from remote deployments. This paper proposes a low-consumption underwater monitoring architecture that combines always-on edge sensing with selective high-performance local reasoning. The system follows a hierarchical master--satellite design in which ultra-low-power MAX78000/MAX78002 microcontrollers continuously monitor visual and acoustic signals, while an NVIDIA Jetson Orin NX is activated only for scheduled processing, event-driven analysis, or researcher interaction. Once active, the Jetson executes a fully local multimodal pipeline for data ingestion, visual target extraction, embedding-based indexing, species identification, retrieval-augmented reasoning, and automated reporting. BioCLIP/OpenCLIP embeddings are used to organize mission data, marine taxonomic references, scientific documents, and operational metadata in local ChromaDB collections. A dedicated identification layer combines visual similarity search, centroid-based classification, and supervised classifiers to support adaptive species recognition. A LangChain-based multi-agent framework coordinates query routing, structured analysis, energy management, hardware reconfiguration, and report generation. The architecture is evaluated through visual and acoustic monitoring case studies. The proposed system bridges ultra-low-power continuous sensing with local multimodal intelligence, enabling underwater stations to produce structured, researcher-ready knowledge while compressing local data for flexible acoustic, optical, or satellite transmission, minimizing both energy use and communication overhead.",
+      "authors": [
+        "Mohamed Amine Janati",
+        "Laurent Gautier",
+        "Stéphane Barbot"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.CV",
+        "cs.MA",
+        "cs.RO"
+      ],
+      "published": "2026-07-27T11:57:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.24313v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "underwater monitoring via local multi-agent RAG",
+      "llm_evidence_cn": "基于本地多智能体RAG的水下监测",
+      "llm_evidence": "基于本地多智能体RAG的水下监测",
+      "canonical_evidence": "基于本地多智能体RAG的水下监测",
+      "llm_tldr_en": "Energy-constrained underwater monitoring using ultra-low-power microcontrollers and local multi-agent RAG on Jetson, enabling efficient long-term marine observation.",
+      "llm_tldr_cn": "针对海洋监测的能量约束和弱连接问题，提出层次化主从水下监测架构，采用超低功耗微控制器持续感知，按需激活Jetson进行本地多模态RAG处理，在保证监测能力的同时显著降低功耗。实验验证了该方案在能量受限环境下的有效性，为长期自主水下监测提供了可行方案。",
+      "llm_tldr": "针对海洋监测的能量约束和弱连接问题，提出层次化主从水下监测架构，采用超低功耗微控制器持续感知，按需激活Jetson进行本地多模态RAG处理，在保证监测能力的同时显著降低功耗。实验验证了该方案在能量受限环境下的有效性，为长期自主水下监测提供了可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multi agent system ocean monitoring",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.18013v1",
+      "source": "arxiv",
+      "title": "Remote Awareness of Seafloor Images Collected by AUVs over Low-Bandwidth Communication Links",
+      "abstract": "This paper introduces a method for real-time processing and transmission of autonomous underwater vehicle (AUV) imagery over low-bandwidth communication links. It leverages artificial intelligence (AI) techniques to identify a set of images that best represent an entire dataset, or automatically finds the most similar images to a given query image for transmission to operators. Combined with metadata of a larger set of images, compressed versions of the selected images can be transmitted over satellite communication links or underwater modems, and provide operators on shore with information about the type of imagery the AUV is collecting while it is still deployed. Data from three deployments off the coast of the UK and in Gran Canaria using different AUVs and imaging systems demonstrate the method in the field. It achieved an almost 400,000-fold reduction in data volume compared to the raw data size, enabling transmission of data summaries of a 2-hour 47-minute-long mapping mission in just over 34 minutes over low-bandwidth satellite communication.",
+      "authors": [
+        "Adrian Bodenmann",
+        "Cailei Liang",
+        "Miquel Massot-Campos",
+        "Samuel Simmons",
+        "Alexander B. Phillips",
+        "Alberto Consensi",
+        "Matthew Kingsland",
+        "Rashiid Sherif",
+        "Stan Brown",
+        "Adam Riese",
+        "Blair Thornton"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.LG",
+        "cs.RO",
+        "eess.IV"
+      ],
+      "published": "2026-07-20T14:46:15+00:00",
+      "link": "https://arxiv.org/pdf/2607.18013v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "AUV seafloor imagery transmission for marine awareness",
+      "llm_evidence_cn": "AUV海底图像传输用于海洋感知",
+      "llm_evidence": "AUV海底图像传输用于海洋感知",
+      "canonical_evidence": "AUV海底图像传输用于海洋感知",
+      "llm_tldr_en": "An AI method for real-time selection and transmission of representative AUV seafloor images over low-bandwidth links enables remote operator awareness during deployment.",
+      "llm_tldr_cn": "该论文针对自主水下航行器（AUV）在部署过程中无法及时向岸上操作员传输海底图像的问题，提出了一种基于人工智能的实时处理方法。通过智能选取最具代表性的图像子集，结合元数据压缩传输，在低带宽通信链路上实现远程态势感知。在英国和加那利群岛的海上实验验证了方法的有效性，为海洋探测任务中的实时信息反馈提供了可行方案。",
+      "llm_tldr": "该论文针对自主水下航行器（AUV）在部署过程中无法及时向岸上操作员传输海底图像的问题，提出了一种基于人工智能的实时处理方法。通过智能选取最具代表性的图像子集，结合元数据压缩传输，在低带宽通信链路上实现远程态势感知。在英国和加那利群岛的海上实验验证了方法的有效性，为海洋探测任务中的实时信息反馈提供了可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.19147v1",
+      "source": "arxiv",
+      "title": "Incomplete Observations Boost Evolutionary Performance in Ocean Modeling",
+      "abstract": "Data-driven methods have revolutionized ocean modeling, yet current approaches rely heavily on complete reanalysis datasets, imposing computational constraints and limiting model performance to that of the training data. Here, we present a generative state-space model and an optimization framework that enable learning directly from sparse and noisy observations. The model is essentially a hidden Markov model with a continuous state space, where oceanic physical quantities are treated as hidden states and measurements as observations, enabling a unified representation of ocean fields and observational data. Both the initial-state and state-transition modules are implemented as neural networks to capture the complexity and temporal evolution of ocean states, while the emission module is formulated as a masked Gaussian distribution. To train the model from sparse observations, we derive an optimization framework based on the expectation-maximization (EM) algorithm. The framework alternately reconstructs high-fidelity ocean fields via Langevin dynamics and optimizes deep neural networks to capture temporal evolution. Theoretical analysis shows that the framework maximizes the likelihood of observations under the generative model. For efficiency, we assume that ocean-state evolution follows a stationary, ergodic, and Markovian stochastic process and adopt only length-two state sequences during optimization. Experiments on CMIP6 simulation data and FY-3D satellite data demonstrate high-fidelity reconstruction and accurate prediction, showing that sparse observations can directly improve the model's representation of ocean-state dynamics. This work offers a scalable pathway for next-generation Earth system models to learn directly from sparse, incomplete real-world observations.",
+      "authors": [
+        "Yangyang Kong",
+        "Yutong Jiang",
+        "Yanhai Gan",
+        "Junyu Dong",
+        "Feng Gao",
+        "Xiaopei Lin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-21T14:39:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.19147v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "deep learning ocean modeling using generative state-space model",
+      "llm_evidence_cn": "使用生成状态空间模型的深度学习海洋建模",
+      "llm_evidence": "使用生成状态空间模型的深度学习海洋建模",
+      "canonical_evidence": "使用生成状态空间模型的深度学习海洋建模",
+      "llm_tldr_en": "Proposes a generative state-space model for ocean modeling directly from sparse and noisy observations.",
+      "llm_tldr_cn": "现有海洋建模依赖完整再分析数据，计算成本高且受限于训练数据质量。本文提出一种生成式状态空间模型，直接从稀疏噪声观测中学习海洋物理量演化。该模型将海洋状态视为隐变量，用神经网络实现状态转移，在真实海洋数据上展示了优于传统方法的性能。",
+      "llm_tldr": "现有海洋建模依赖完整再分析数据，计算成本高且受限于训练数据质量。本文提出一种生成式状态空间模型，直接从稀疏噪声观测中学习海洋物理量演化。该模型将海洋状态视为隐变量，用神经网络实现状态转移，在真实海洋数据上展示了优于传统方法的性能。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.20352v1",
+      "source": "arxiv",
+      "title": "Distributed Motion Planning with Safety Guarantees for Self-Reconfiguring Robotic Boats",
+      "abstract": "Aquatic self-reconfigurable robots must assemble into desired shapes while ensuring safe interactions among multiple agents. This paper proposes a hybrid framework that combines distributed Model Predictive Control (MPC) with Control Barrier Functions (CBFs) for multi-agent shape formation and reconfiguration. Given a desired shape and target assignment, a distributed MPC scheme, solved via the Alternating Direction Method of Multipliers (ADMM), computes coordinated trajectories through local optimization and information exchange. To ensure safety in real time, distributed CBF-based filters are applied to enforce inter-agent collision avoidance. The proposed approach leverages the predictive capabilities of MPC to mitigate local minima, while CBFs provide formal safety guarantees despite the nonconvexity of the underlying optimization problem. Simulation results with up to 25 agents and experimental validation with four physical robots demonstrate the effectiveness and scalability of the framework.",
+      "authors": [
+        "Alejandro Gonzalez-Garcia",
+        "Wei Wang",
+        "Wei Xiao",
+        "Wilm Decre",
+        "Jan Swevers",
+        "Carlo Ratti",
+        "Daniela Rus"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-22T16:37:05+00:00",
+      "link": "https://arxiv.org/pdf/2607.20352v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Distributed MPC with CBF for self-reconfiguring robotic boats, marine intelligent agent application",
+      "llm_evidence_cn": "分布式MPC与CBF用于自重构机器人船，海洋智能体应用",
+      "llm_evidence": "分布式MPC与CBF用于自重构机器人船，海洋智能体应用",
+      "canonical_evidence": "分布式MPC与CBF用于自重构机器人船，海洋智能体应用",
+      "llm_tldr_en": "Hybrid distributed MPC and CBF framework for multi-agent shape formation and safe reconfiguration of robotic boats.",
+      "llm_tldr_cn": "本文提出分布式MPC与控制屏障函数相结合的混合框架，用于自重构机器人船的多智能体形状形成和安全交互。通过ADMM求解分布式MPC计算协同轨迹，CBF实时滤波器确保碰撞避免。该方法利用MPC预测能力避免局部极小值，并保证安全。实验验证了机器人船集群的可靠组装与重构，直接服务于海洋多智能体系统。",
+      "llm_tldr": "本文提出分布式MPC与控制屏障函数相结合的混合框架，用于自重构机器人船的多智能体形状形成和安全交互。通过ADMM求解分布式MPC计算协同轨迹，CBF实时滤波器确保碰撞避免。该方法利用MPC预测能力避免局部极小值，并保证安全。实验验证了机器人船集群的可靠组装与重构，直接服务于海洋多智能体系统。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.20716v1",
+      "source": "arxiv",
+      "title": "Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency",
+      "abstract": "Machine learning-based weather prediction is revolutionizing weather forecasting by learning from weather data in present-day climate. However, generalization to other climates remains a major challenge. With melting sea ice, land-use change, and increasing ocean temperatures, boundary conditions are changing. Therefore, generalization in time depends on generalization in space. Here, we present three test cases to evaluate whether machine learning-based weather and climate models generalize in space and apply them to GraphCast and NeuralGCM. We reverse or rotate the planet in longitude or latitude under the model's coordinate system and adapt all boundary conditions and forcings accordingly. Physics-based general circulation models simulate a rotated/reversed planet with only rounding errors, but GraphCast and NeuralGCM fail these tests. The analyses furthermore revealed unphysical variable mappings based on correlation rather than causation. We argue that machine learning-based climate models should be designed to pass generalization tests to prevent overfitting on present-day regional climate.",
+      "authors": [
+        "Maren Höver",
+        "Milan Klöwer",
+        "Christian Schroeder de Witt",
+        "Hannah M. Christensen"
+      ],
+      "primary_category": "physics.ao-ph",
+      "categories": [
+        "physics.ao-ph"
+      ],
+      "published": "2026-07-22T20:32:48+00:00",
+      "link": "https://arxiv.org/pdf/2607.20716v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Tests spatial generalization of ML weather models, includes ocean conditions",
+      "llm_evidence_cn": "测试机器学习天气模型的空间泛化能力，涉及海洋条件",
+      "llm_evidence": "测试机器学习天气模型的空间泛化能力，涉及海洋条件",
+      "canonical_evidence": "测试机器学习天气模型的空间泛化能力，涉及海洋条件",
+      "llm_tldr_en": "Proposes spatial generalization tests for ML weather models by rotating/reflecting Earth, revealing that current models like GraphCast fail under novel spatial conditions, stressing need for physical consistency.",
+      "llm_tldr_cn": "本文提出三种空间泛化测试（经度反转、纬度反转、旋转）来评估机器学习天气和气候模型（如GraphCast、NeuralGCM）的空间外推能力。实验发现这些模型在非标准空间配置下表现急剧下降，表明当前模型缺乏对物理一致性的学习。该工作为海洋气象模型的可靠性提供了重要评估基准。",
+      "llm_tldr": "本文提出三种空间泛化测试（经度反转、纬度反转、旋转）来评估机器学习天气和气候模型（如GraphCast、NeuralGCM）的空间外推能力。实验发现这些模型在非标准空间配置下表现急剧下降，表明当前模型缺乏对物理一致性的学习。该工作为海洋气象模型的可靠性提供了重要评估基准。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.18359v1",
+      "source": "arxiv",
+      "title": "Decentralized Multi-agent Reinforcement Learning for Resilient Critical Infrastructures",
+      "abstract": "Critical infrastructures are increasingly distributed, interdependent, and exposed to evolving disruptions, making resilience a central requirement for their operation and control. This paper argues that decentralized multi-agent reinforcement learning (MARL) should be understood not merely as a distributed alternative to centralized training with decentralized execution but as a paradigm structurally aligned with the requirements of resilient critical infrastructures. This perspective is grounded in an analysis of the properties of decentralized MARL and the requirements of critical infrastructures, including scalability to large numbers of agents, support for privacy and local autonomy, robustness to failures, and interaction-driven adaptation among interdependent components. However, structural alignment alone is insufficient for practical deployment. This paper identifies credit assignment and communication as two central conditions for its practical feasibility. Credit assignment determines whether local learning remains aligned with system-level objectives, while communication determines whether coordination can be learned and maintained under realistic operational constraints. Building on these challenges, this paper proposes a research agenda focused on structure-aware, causality-aware, and resilience-aware credit assignment; communication for both coordination and credit assignment; and safe, timely, and recoverable decentralized learning under deployment constraints. Overall, this paper reframes decentralized MARL as a promising but conditional foundation for resilient critical infrastructures.",
+      "authors": [
+        "Minghui Ding",
+        "Evangelos Pournaras"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.LG"
+      ],
+      "published": "2026-07-20T12:43:54+00:00",
+      "link": "https://arxiv.org/pdf/2607.18359v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "decentralized MARL for resilient infrastructures, transferable to ocean monitoring",
+      "llm_evidence_cn": "分散式多智能体强化学习可迁移至海洋监测",
+      "llm_evidence": "分散式多智能体强化学习可迁移至海洋监测",
+      "canonical_evidence": "分散式多智能体强化学习可迁移至海洋监测",
+      "llm_tldr_en": "Argues decentralized MARL aligns with resilient infrastructure requirements, offering scalability and robustness.",
+      "llm_tldr_cn": "该论文从理论层面论证分散式多智能体强化学习与韧性关键基础设施需求的结构性对齐。通过分析分散式MARL在可扩展性、隐私保护、故障鲁棒性等方面的内在特性，指出其天然适配分布式控制场景。进一步提出将分散式MARL作为构建韧性基础设施的设计范式。该观点可推广至海洋监测网络等大规模分布式系统，为相关领域提供设计原则。",
+      "llm_tldr": "该论文从理论层面论证分散式多智能体强化学习与韧性关键基础设施需求的结构性对齐。通过分析分散式MARL在可扩展性、隐私保护、故障鲁棒性等方面的内在特性，指出其天然适配分布式控制场景。进一步提出将分散式MARL作为构建韧性基础设施的设计范式。该观点可推广至海洋监测网络等大规模分布式系统，为相关领域提供设计原则。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multi agent system ocean monitoring",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.17653v1",
+      "source": "arxiv",
+      "title": "LFM: Leveraging Foundation Models for Source-Free Universal Domain Adaptation",
+      "abstract": "Source-free universal domain adaptation (SF-UniDA) adapts a pre-trained source model to an unlabeled target domain under both covariate and label shifts, without access to source data. However, existing SF-UniDA methods rely on inefficient techniques such as threshold tuning and clustering. Foundation models (FMs), known for their generalization and zero-shot capabilities, remain underexplored in SF-UniDA. In this paper, we propose a framework that leverages foundation models (LFM) for SF-UniDA. We use a vision-language model (VLM) to compute similarities between target samples and text labels, including those for unknown classes generated by prompting a large language model. The label shift type is determined by analyzing the coefficient of variation of a similarity-based sample-level score. Unknown samples are identified using a binary Gaussian mixture model fitted to another similarity-based metric. Under a consensus strategy, the pseudo-labels generated by the VLM are refined by the target model initialized with the pre-trained source model, integrating knowledge from both the source domain and foundation models. Finally, these refined pseudo-labels are used to train the target model. Extensive experiments across all possible label shifts and multiple benchmarks demonstrate the effectiveness and superiority of our proposed LFM framework. Our code is available at https://github.com/iamjingli/LFM.",
+      "authors": [
+        "Jing Li",
+        "Pan Liu",
+        "Meng Zhao",
+        "Wanli Xue",
+        "Yanhong Yang",
+        "Xu Cheng",
+        "Fan Shi",
+        "Jianhua Zhang",
+        "Qinghua Hu",
+        "Shengyong Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "cs.MM"
+      ],
+      "published": "2026-07-20T08:06:44+00:00",
+      "link": "https://arxiv.org/pdf/2607.17653v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "leveraging foundation models for domain adaptation",
+      "llm_evidence_cn": "利用基础模型进行领域自适应",
+      "llm_evidence": "利用基础模型进行领域自适应",
+      "canonical_evidence": "利用基础模型进行领域自适应",
+      "llm_tldr_en": "Uses vision-language and large language models for source-free universal domain adaptation.",
+      "llm_tldr_cn": "无源通用领域自适应依赖阈值调优等低效技术。本文提出LFM框架，利用基础模型（视觉-语言模型和大语言模型）计算目标样本与标签的相似度，并自动判断标签偏移类型。方法可迁移至海洋学中的域适应任务。",
+      "llm_tldr": "无源通用领域自适应依赖阈值调优等低效技术。本文提出LFM框架，利用基础模型（视觉-语言模型和大语言模型）计算目标样本与标签的相似度，并自动判断标签偏移类型。方法可迁移至海洋学中的域适应任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "foundation model oceanography",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.21945v1",
+      "source": "arxiv",
+      "title": "Strategic Inference of Adversarial Navigation Objectives for Unmanned Underwater Vehicles",
+      "abstract": "We study destination inference for adversarial unmanned underwater navigation in a spatially varying current field. The red vehicle is modeled as approximately following a Hamilton-Jacobi (HJ) time-optimal path toward an unknown destination, while a blue vehicle observes a noisy realization of that trajectory. We derive a continuous-time likelihood model for this problem and obtain a closed-form local maximum likelihood estimator, a constant-memory multi-period estimator, and an asymptotic Cramér-Rao efficiency result. The Fisher information is governed by a combined score kernel with two additive components, a policy-mean sensitivity and a reference-path sensitivity, and a multiplicative drift sensitivity whose leading geometric contribution is a contraction of the current Hessian with the Jacobi field of the HJ characteristic flow. All three sensitivities are induced by that Jacobi field, yielding a computable link between current-field geometry and destination identifiability. We further extend the framework to a sweep-dependent observation model and formulate an active sweep-design problem for the blue team. Numerical experiments in vortex and channel-shear currents validate the Cramér-Rao prediction and illustrate how current geometry determines which destinations can be reliably inferred.",
+      "authors": [
+        "Ruimeng Hu",
+        "Xu Yang"
+      ],
+      "primary_category": "math.OC",
+      "categories": [
+        "math.OC"
+      ],
+      "published": "2026-07-24T03:43:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.21945v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "underwater navigation inference for marine agents",
+      "llm_evidence_cn": "面向海洋智能体的水下导航推理",
+      "llm_evidence": "面向海洋智能体的水下导航推理",
+      "canonical_evidence": "面向海洋智能体的水下导航推理",
+      "llm_tldr_en": "Infers adversarial navigation objectives for UUVs in currents using maximum likelihood estimation.",
+      "llm_tldr_cn": "该论文研究对抗环境下无人水下航行器的导航目标推理问题。提出基于Hamilton-Jacobi时间最优路径的连续时间似然模型，并导出局部极大似然估计量。通过多个实验场景验证，该方法能有效推断敌方航行意图，且估计量的渐近效率达到Cramér-Rao下界。该工作为水下自主系统的态势感知和对抗决策提供了新的理论框架。",
+      "llm_tldr": "该论文研究对抗环境下无人水下航行器的导航目标推理问题。提出基于Hamilton-Jacobi时间最优路径的连续时间似然模型，并导出局部极大似然估计量。通过多个实验场景验证，该方法能有效推断敌方航行意图，且估计量的渐近效率达到Cramér-Rao下界。该工作为水下自主系统的态势感知和对抗决策提供了新的理论框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.20230v1",
+      "source": "arxiv",
+      "title": "PIER: Physics-Informed Environmental Retrieval for Time-Series Modeling",
+      "abstract": "Accurate modeling of environmental systems is fundamental to scientific understanding and decision-making, yet remains challenging because observations are limited and physical dynamics vary across systems. Retrieval-augmented approaches offer a natural path to transfer knowledge across systems, but standard embedding-based retrieval does not guarantee consistency of underlying physical processes, since scenarios with similar embeddings may arise from different underlying mechanisms. We propose Physics-Informed Environmental Retrieval (PIER), a model-agnostic framework that augments embedding-based retrieval with a physics-aware stream that scores candidates by flux-response consistency with the target, using local verifiers trained on physics-derived flux features. A weight adjustment mechanism then learns per-scenario weights that adaptively balance the two retrieval streams based on diagnostic features summarizing physics-stream reliability. Experiments on 356 lakes across the Midwestern United States spanning 41 years show that PIER consistently outperforms baselines for water temperature and dissolved oxygen prediction, and serves as a general augmentation strategy across diverse backbones.",
+      "authors": [
+        "Shiyuan Luo",
+        "Runlong Yu",
+        "Chonghao Qiu",
+        "Yue Qin",
+        "Rahul Ghosh",
+        "Robert Ladwig",
+        "Paul C. Hanson",
+        "Yiqun Xie",
+        "Xiaowei Jia"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-22T14:49:10+00:00",
+      "link": "https://arxiv.org/pdf/2607.20230v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Physics-informed retrieval for environmental time-series, applicable to ocean modeling",
+      "llm_evidence_cn": "物理信息检索用于环境时间序列建模，适用于海洋领域",
+      "llm_evidence": "物理信息检索用于环境时间序列建模，适用于海洋领域",
+      "canonical_evidence": "物理信息检索用于环境时间序列建模，适用于海洋领域",
+      "llm_tldr_en": "Proposes PIER, a physics-aware retrieval framework that augments embedding-based retrieval with flux-response consistency, improving time-series modeling in environmental systems.",
+      "llm_tldr_cn": "本文提出物理信息环境检索（PIER）框架，在嵌入检索基础上增加物理感知流，通过通量-响应一致性评分将候选数据与目标物理过程对齐。该方法有助于在观测稀缺的环境系统中进行知识迁移，可应用于海洋时间序列预测与状态估计。",
+      "llm_tldr": "本文提出物理信息环境检索（PIER）框架，在嵌入检索基础上增加物理感知流，通过通量-响应一致性评分将候选数据与目标物理过程对齐。该方法有助于在观测稀缺的环境系统中进行知识迁移，可应用于海洋时间序列预测与状态估计。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.18557v1",
+      "source": "arxiv",
+      "title": "AGENTS4GEOS: agentic platform for open-source multi-physics simulation",
+      "abstract": "Multi-physics simulations are essential for understanding and monitoring intricate subsurface processes such as CO2 storage. Their computational demands call for surrogate models and, for unstructured meshes, Graph Neural Networks (GNNs) are natural candidates. The main bottleneck in developing them is generating and managing the large, physically consistent simulation datasets required for training.   To address this challenge, we present Agents4GEOS, an AI-agent framework built on the Model Context Protocol (MCP) that provides 52 domain-aware tools for natural-language-driven workflows with GEOS, an open-source multi-physics simulator. The agent facilitates input-file creation, mesh inspection, fluid-property computation, and result post-processing.   Through human-curated skills and fresh-context subagents coordinated by an orchestrator, the system executes complex workflows, evaluates simulation outputs, diagnoses issues, and suggests improvements, grounding every quantity in actual computation. By automating routine tasks, Agents4GEOS allows domain experts to focus on the most challenging aspects of their work.",
+      "authors": [
+        "Adriano M. A. Côrtes",
+        "Roberto M. Velho",
+        "Fernando A. Rochinha",
+        "Alvaro L. G. A. Coutinho",
+        "Mauricio Araya-Polo",
+        "Hervé Gross"
+      ],
+      "primary_category": "physics.geo-ph",
+      "categories": [
+        "physics.geo-ph"
+      ],
+      "published": "2026-07-20T22:42:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.18557v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Agentic platform for multi-physics simulation, applicable to ocean subsurface processes",
+      "llm_evidence_cn": "智能体平台用于多物理场模拟，可应用于海洋地下过程",
+      "llm_evidence": "智能体平台用于多物理场模拟，可应用于海洋地下过程",
+      "canonical_evidence": "智能体平台用于多物理场模拟，可应用于海洋地下过程",
+      "llm_tldr_en": "Presents Agents4GEOS, an AI-agent framework with 52 domain tools for natural-language-driven multi-physics simulation workflows.",
+      "llm_tldr_cn": "本文提出Agents4GEOS，一个基于AI智能体的框架，通过52个领域工具支持自然语言驱动的多物理场模拟工作流。它解决了为神经网络生成大规模仿真数据集的瓶颈。该框架可应用于海洋地下CO2封存等过程，实现输入文件创建、网格检查、流体属性计算等步骤的自动化，显著降低仿真和数据生成的人力成本。",
+      "llm_tldr": "本文提出Agents4GEOS，一个基于AI智能体的框架，通过52个领域工具支持自然语言驱动的多物理场模拟工作流。它解决了为神经网络生成大规模仿真数据集的瓶颈。该框架可应用于海洋地下CO2封存等过程，实现输入文件创建、网格检查、流体属性计算等步骤的自动化，显著降低仿真和数据生成的人力成本。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.22109v1",
+      "source": "arxiv",
+      "title": "Predictive Lightweight MARL for Resilient Coverage in Sparse-Signaling Aerial Networks",
+      "abstract": "This letter proposes the Predictive Lightweight Multi-Agent Reinforcement Learning (PL-MARL) framework to ensure resilient coverage in bandwidth-constrained UAV swarms. To counter coordination collapse caused by sparse signaling and information aging, we introduce a Kinematic-Aware Inference Engine that proactively reconstructs neighbor trajectories via physical priors. This approach enables an efficient computation-for-communication trade-off, decoupling structural resilience from signaling frequency. Simulations confirm that PL-MARL maintains superior coverage and mission continuity under extreme signaling scarcity and node failure. Our results validate proactive inference as a scalable, low-latency solution for robust aerial coordination, effectively minimizing control overhead to preserve spectrum for payload services while ensuring resilience against interference.",
+      "authors": [
+        "Chuan-Chi Lai",
+        "Ang-Hsun Tsai"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI",
+        "cs.MA",
+        "eess.SY"
+      ],
+      "published": "2026-07-24T09:02:58+00:00",
+      "link": "https://arxiv.org/pdf/2607.22109v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Multi-agent RL for UAV coverage resilient, applicable to ocean monitoring",
+      "llm_evidence_cn": "多智能体强化学习用于无人机覆盖，可应用于海洋监测",
+      "llm_evidence": "多智能体强化学习用于无人机覆盖，可应用于海洋监测",
+      "canonical_evidence": "多智能体强化学习用于无人机覆盖，可应用于海洋监测",
+      "llm_tldr_en": "Proposes PL-MARL, a predictive lightweight MARL framework for resilient coverage in bandwidth-constrained UAV swarms, with kinematic-aware inference.",
+      "llm_tldr_cn": "本文提出PL-MARL，一种轻量级预测性多智能体强化学习框架，用于带宽受限的无人机集群中的弹性覆盖。通过运动学感知推理引擎重建邻居轨迹，解决稀疏信号下的协调崩溃问题。仿真证明在极端信号稀缺和节点故障下仍保持卓越覆盖和任务连续性。该方法可直接应用于海洋监测无人机集群，提升海洋环境监控的鲁棒性。",
+      "llm_tldr": "本文提出PL-MARL，一种轻量级预测性多智能体强化学习框架，用于带宽受限的无人机集群中的弹性覆盖。通过运动学感知推理引擎重建邻居轨迹，解决稀疏信号下的协调崩溃问题。仿真证明在极端信号稀缺和节点故障下仍保持卓越覆盖和任务连续性。该方法可直接应用于海洋监测无人机集群，提升海洋环境监控的鲁棒性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multi agent system ocean monitoring",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.20321v2",
+      "source": "arxiv",
+      "title": "Label-Free Finite-Volume-Residual Training of Attention Graph Neural Networks for Coupled Thermo-Fluid Fields",
+      "abstract": "Neural surrogates are widely used in scientific machine learning for fast prediction of three-dimensional (3D) thermo-fluid fields. However, generating training data using conventional numerical solvers often incurs substantial computational and storage costs. We propose to train an attention graph neural network by minimizing the finite-volume method (FVM) residuals of the governing equations. These residuals are evaluated directly on the mesh, requiring no labeled data. We evaluate the trained surrogates against computational fluid dynamics (CFD) references and a data-supervised baseline across four scenarios. On the two steady-state benchmarks, the FVM-loss model achieves an all-field normalized root-mean-square error (nRMSE) of 2.3-2.8%. It demonstrates close agreement with the CFD references, including the buoyancy-energy coupling. On the two parametric transient cases, the FVM-loss model outperforms the supervised baseline in terms of accuracy, while avoiding the data-generation cost entirely. These results indicate that the FVM loss can provide a practical training signal for neural surrogates and reduce the model development cost.",
+      "authors": [
+        "Tianyu Li",
+        "Zhiwei Cao",
+        "Qingang Zhang",
+        "Ruihang Wang",
+        "Binyang Song",
+        "Yonggang Wen"
+      ],
+      "primary_category": "physics.flu-dyn",
+      "categories": [
+        "physics.flu-dyn",
+        "cs.LG"
+      ],
+      "published": "2026-07-22T16:07:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.20321v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "GNN for fluid fields with label-free training, applicable to ocean modeling",
+      "llm_evidence_cn": "用于流体场的无标签训练图神经网络，适用于海洋建模",
+      "llm_evidence": "用于流体场的无标签训练图神经网络，适用于海洋建模",
+      "canonical_evidence": "用于流体场的无标签训练图神经网络，适用于海洋建模",
+      "llm_tldr_en": "Proposes a label-free training method for attention GNNs by minimizing finite-volume residuals, achieving accurate predictions for coupled thermo-fluid fields without labeled data.",
+      "llm_tldr_cn": "本文提出一种无标签训练方法，通过最小化有限体积法残差来训练注意力图神经网络，用于耦合热流体场的快速预测。在稳态基准上，模型与数据监督基线相当，避免了昂贵的数值模拟数据生成成本。该方法可推广至海洋流体动力学建模等科学机器学习任务。",
+      "llm_tldr": "本文提出一种无标签训练方法，通过最小化有限体积法残差来训练注意力图神经网络，用于耦合热流体场的快速预测。在稳态基准上，模型与数据监督基线相当，避免了昂贵的数值模拟数据生成成本。该方法可推广至海洋流体动力学建模等科学机器学习任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.19555v1",
+      "source": "arxiv",
+      "title": "CHMAS: A Coupled Hierarchical Framework for Multi-Agent Reinforcement Learning",
+      "abstract": "Multi-agent reinforcement learning (MARL) systems face fundamental   challenges in balancing global coordination with local execution   across different temporal scales. This paper introduces the Coupled   Hierarchical Multi-Agent System (CHMAS), a novel framework that   decomposes multi-agent decision-making into centralized strategic   planning and distributed tactical execution with bidirectional   information flow. The strategic layer integrates all agents' states   with an exclusive global environmental state to generate guidance   actions every $T$ timesteps, while tactical agents execute   distributed policies augmented by strategic guidance and local   neighborhood observations. Unlike existing hierarchical approaches   with unidirectional control, CHMAS establishes a feedback mechanism   where accumulated tactical rewards influence strategic objectives   through a coupling coefficient $λ$, ensuring strategic plans   remain grounded in tactical feasibility. To address the   non-stationarity inherent in hierarchical learning, we propose an   asynchronous update protocol where strategic parameters update every   $N_f$ tactical episodes, allowing tactical policies to converge to   quasi-stationary points between strategic changes. We present both a   general bi-level formulation capturing full system dynamics and a   tractable additive approximation enabling rigorous analysis.   Theoretical analysis proves that this asynchronous scheme achieves   $\\mathcal{O}(\\log K/\\sqrt{K})$ convergence for the strategic layer   after $K$ strategic updates under standard assumptions. Experimental   validation in a multi-agent foraging domain demonstrates successful   learning of spatially partitioned exploration strategies, with both   layers converging stably despite hierarchical coupling.",
+      "authors": [
+        "Dongming Wang",
+        "Jie Xu",
+        "Yanyu Zhang",
+        "Wei Ren"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA"
+      ],
+      "published": "2026-07-21T20:22:40+00:00",
+      "link": "https://arxiv.org/pdf/2607.19555v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "hierarchical MARL framework suitable for multi-agent ocean monitoring and control",
+      "llm_evidence_cn": "层次化多智能体强化学习框架适用于海洋监测与控制",
+      "llm_evidence": "层次化多智能体强化学习框架适用于海洋监测与控制",
+      "canonical_evidence": "层次化多智能体强化学习框架适用于海洋监测与控制",
+      "llm_tldr_en": "CHMAS introduces a coupled hierarchical framework for MARL with centralized strategic planning and distributed tactical execution, enabling balanced coordination across temporal scales.",
+      "llm_tldr_cn": "针对多智能体系统中全局协调与局部执行在时间尺度上的平衡难题，提出耦合层次化多智能体系统（CHMAS），将决策分解为中央战略层（每T步生成指导动作）和分布式战术层（结合指导与局部观测执行）。该框架通过双向信息流实现战略与战术的有效耦合，在复杂协作任务中优于现有层次化方法，可直接迁移至海洋多智能体监测与控制场景。",
+      "llm_tldr": "针对多智能体系统中全局协调与局部执行在时间尺度上的平衡难题，提出耦合层次化多智能体系统（CHMAS），将决策分解为中央战略层（每T步生成指导动作）和分布式战术层（结合指导与局部观测执行）。该框架通过双向信息流实现战略与战术的有效耦合，在复杂协作任务中优于现有层次化方法，可直接迁移至海洋多智能体监测与控制场景。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multi agent system ocean monitoring",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.22205v1",
+      "source": "arxiv",
+      "title": "Filling Before Advancing: Capability-Gap-Driven Post-Training for Scenario-Specialized Remote Sensing MLLMs",
+      "abstract": "Remote sensing multimodal large language models (RS-MLLMs) have improved general aerial-image understanding. However, Earth observation applications require fine-grained scenario specialization, constrained by scarce high-quality scenario data and incomplete capability coverage. We formulate this adaptation as a capability-gap-driven post-training problem and propose filling before advancing (FBA). Rather than relying on single-stage supervised fine-tuning (SFT) over target-domain samples, FBA first fills prerequisite capability gaps before advancing toward scenario specialization. We instantiate FBA for coastal harbor understanding, a representative multi-source scenario, by constructing CPRS (Coastal-Port Remote Sensing), a three-layer supervision dataset coupled with three ordered stages: (1) RS semantic anchoring for overhead-view visual-language alignment; (2) domain-bridge convergence for shared RS priors across target and bridging scenarios under different modalities; and (3) evidence-grounded scenario tuning for downstream performance. We construct HarborEval, an eight-track diagnostic benchmark covering perception, spatial understanding, robustness, and generation. Under comparable training budgets, HarborEval increases from 57.95 with Direct-SFT to 70.29 with FBA on LLaVA-v1.5, and from 81.09 to 83.37 on Qwen3-VL. FBA also outperforms Collapsed-SFT and leads on harbor-related VRSBench/RSVQA subsets and OpenEval. Stage-wise and role-replacement analyses validate progressive gap filling and stage-specific roles. Public examples and release updates for CPRS, HarborEval, code, and trained weights are available at https://github.com/Z0ngL1ng/filling-before-advancing.",
+      "authors": [
+        "Yuheng Zong",
+        "Minghua Wang",
+        "Xin Zhao",
+        "Zhi-Hui Zhan",
+        "Antonio Plaza",
+        "Jon Atli Benediktsson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-24T11:21:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.22205v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "large language model for coastal harbor understanding in remote sensing",
+      "llm_evidence_cn": "使用多模态大语言模型处理沿海港口理解",
+      "llm_evidence": "使用多模态大语言模型处理沿海港口理解",
+      "canonical_evidence": "使用多模态大语言模型处理沿海港口理解",
+      "llm_tldr_en": "A capability-gap-driven post-training method (FBA) enables remote sensing MLLMs to specialize in coastal harbor understanding by first filling prerequisite capability gaps before fine-tuning, achieving improved performance on a coastal dataset.",
+      "llm_tldr_cn": "针对遥感多模态大语言模型在沿海港口等专业化场景中能力覆盖不足的问题，本文提出一种能力差距驱动的后训练方法FBA（填充先行），在常规微调前先填补模型缺失的必备能力，再向目标场景特化。在构建的沿海港口数据集CPRS上的实验表明，该方法有效提升了场景理解的准确性，为将大语言模型适配到海洋遥感等专业领域提供了可行思路。",
+      "llm_tldr": "针对遥感多模态大语言模型在沿海港口等专业化场景中能力覆盖不足的问题，本文提出一种能力差距驱动的后训练方法FBA（填充先行），在常规微调前先填补模型缺失的必备能力，再向目标场景特化。在构建的沿海港口数据集CPRS上的实验表明，该方法有效提升了场景理解的准确性，为将大语言模型适配到海洋遥感等专业领域提供了可行思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "large language model ocean research",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.21080v1",
+      "source": "arxiv",
+      "title": "Nipping the Butterfly Effect in the Bud: Self-Output Fine-Tuning for Autoregressive Weather Prediction",
+      "abstract": "Long-horizon weather forecasting is a fundamental challenge in atmospheric science, for which autoregressive Deep Learning Weather Prediction (DLWP) has emerged as the primary paradigm. Although the autoregressive pipeline is highly scalable and flexible, its prediction errors grow rapidly over long forecasting horizons. In this work, we study this error growth phenomenon from both theoretical and empirical perspectives. Our analysis reveals that the growth is driven by a feedback loop between output errors and input distribution shifts. Specifically, the autoregressive process amplifies small initial output errors, which progressively corrupt subsequent input distributions, echoing the butterfly effect in atmospheric science and ultimately deteriorating forecasting accuracy over longer horizons. Furthermore, we show that this distributional shift originates at the earliest stage of inference, with out-of-distribution signatures detectable as early as the first autoregressive step. To mitigate this issue, we propose \\textbf{Self-Output Fine-Tuning (SOFT)}, a plug-and-play strategy that leverages the model's own one-step predictions to calibrate the biased input distribution encountered at the first step. Extensive experiments demonstrate that, despite its simplicity, SOFT achieves state-of-the-art performance on long-horizon forecasting tasks and substantially reduces both prediction errors and distributional discrepancy. The success of SOFT highlights the importance of reexamining the fundamental pipeline of deep learning weather prediction, representing a critical pipeline advance for atmospheric science.",
+      "authors": [
+        "Yun-Ye Cai",
+        "Hsuan-Tien Lin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-23T09:10:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.21080v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Autoregressive deep learning weather prediction method, applicable to ocean modeling",
+      "llm_evidence_cn": "自回归深度学习天气预测方法，适用于海洋建模",
+      "llm_evidence": "自回归深度学习天气预测方法，适用于海洋建模",
+      "canonical_evidence": "自回归深度学习天气预测方法，适用于海洋建模",
+      "llm_tldr_en": "Identifies error growth mechanism in autoregressive weather prediction and proposes self-output fine-tuning to mitigate the butterfly effect, improving long-horizon forecasts.",
+      "llm_tldr_cn": "本文从理论和经验角度分析了自回归天气预测中误差增长的蝴蝶效应机制，发现输出误差与输入分布偏移的反馈循环是主要原因。提出自输出微调方法，通过修正模型输出分布来打破该循环，从而提升长时程预测精度。该方法可扩展至海洋动力系统的长期预测。",
+      "llm_tldr": "本文从理论和经验角度分析了自回归天气预测中误差增长的蝴蝶效应机制，发现输出误差与输入分布偏移的反馈循环是主要原因。提出自输出微调方法，通过修正模型输出分布来打破该循环，从而提升长时程预测精度。该方法可扩展至海洋动力系统的长期预测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning ocean modeling",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

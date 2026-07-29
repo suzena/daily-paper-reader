@@ -1,6 +1,49 @@
 {
-  "generated_at": "2026-03-06T19:11:18.471356+00:00",
-  "updated_date": "20260306",
+  "generated_at": "2026-07-29T02:33:10.937312+00:00",
+  "updated_date": "20260720-20260729",
   "carryover_days": 9,
-  "items": []
+  "tag_states": {
+    "ocean-ai": {
+      "updated_date": "20260720-20260729",
+      "carryover_days": 9,
+      "items": [
+        {
+          "id": "2607.24028v1",
+          "source": "arxiv",
+          "title": "Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks",
+          "abstract": "Reliable localization in the Internet of Underwater Things (IoUT) is hindered by limited acoustic bandwidth, long propagation delays, multipath, Doppler shifts, and energy-constrained nodes. This letter proposes an integrated sensing and communication (ISAC)-enabled topology management and multi-stage adaptive estimation (ISAC-TM-MAE) framework for time-difference-of-arrival (TDOA) localization in IoUT networks. In the proposed framework, heterogeneous underwater sensors, seabed anchors, autonomous underwater vehicles (AUVs), and surface buoys exploit acoustic ISAC packets for joint communication and localization. The IoUT network is modeled as a graph, in which informative node pairs are selected subject to acoustic bandwidth, computation, energy, and link-reliability constraints. A D-optimal criterion maximizes the Fisher information matrix (FIM) over the underwater region of interest, while the MAE stage refines the source estimate under acoustic noise and channel uncertainty. Numerical results show that the proposed ISAC-TM-MAE improves localization accuracy, resource efficiency, scalability, and robustness compared with centralized, distributed, and benchmark TDOA localization schemes.",
+          "authors": [
+            "Ruhul Amin Khalil"
+          ],
+          "primary_category": "eess.SP",
+          "categories": [
+            "eess.SP"
+          ],
+          "published": "2026-07-27T05:53:52+00:00",
+          "link": "https://arxiv.org/pdf/2607.24028v1",
+          "tags": [
+            "keyword:ocean-ai",
+            "query:ocean-ai"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "IoUT localization with AUVs and intelligent scheduling",
+          "llm_evidence_cn": "IoUT网络中基于AUV和智能调度的定位",
+          "llm_evidence": "IoUT网络中基于AUV和智能调度的定位",
+          "canonical_evidence": "IoUT网络中基于AUV和智能调度的定位",
+          "llm_tldr_en": "An ISAC-enabled topology management framework for reliable TDOA localization in IoUT networks using AUVs and heterogeneous sensors.",
+          "llm_tldr_cn": "该论文针对水下物联网（IoUT）中声学带宽有限、多径干扰等问题，提出集成感知与通信（ISAC）的拓扑管理框架。通过将AUV、海床锚节点、浮标等异构节点建模为图，智能选择信息节点对进行TDOA定位，在满足声学带宽约束的同时提升定位精度。实验结果表明该方法在资源受限场景下实现了稳健的定位性能，为海洋智能监测网络提供了关键技术。",
+          "llm_tldr": "该论文针对水下物联网（IoUT）中声学带宽有限、多径干扰等问题，提出集成感知与通信（ISAC）的拓扑管理框架。通过将AUV、海床锚节点、浮标等异构节点建模为图，智能选择信息节点对进行TDOA定位，在满足声学带宽约束的同时提升定位精度。实验结果表明该方法在资源受限场景下实现了稳健的定位性能，为海洋智能监测网络提供了关键技术。",
+          "llm_tags": [
+            "query:ocean-ai"
+          ],
+          "matched_query_tag": "query:ocean-ai",
+          "matched_query_text": "intelligent agent marine applications",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.24028v1",
+          "carry_days": 1
+        }
+      ]
+    }
+  }
 }

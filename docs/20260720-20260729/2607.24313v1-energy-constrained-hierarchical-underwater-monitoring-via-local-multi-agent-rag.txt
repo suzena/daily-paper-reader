@@ -1,0 +1,646 @@
+Title: Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+URL Source: https://arxiv.org/pdf/2607.24313v1
+
+Published Time: Tue, 28 Jul 2026 01:53:55 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+# Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG ⋆
+
+## Mohamed Amine Janati a,b , Laurent Gautier a,∗ and Stéphane Barbot a
+
+> a
+
+Ifremer, 1625 RTE de Sainte-Anne, Plouzané, 29280, France 
+
+> b
+
+IMT Atlantique, Technopôle Brest-Iroise, CS 83818, Plouzané, 29280, France 
+
+A R T I C L E I N F O 
+
+Keywords :Ocean observation Local AI Agentic AI Retrieval-Augmented Generation (RAG) Species classification Embedded AI 
+
+A B S T R A C T 
+
+Marine life monitoring is limited by strict energy constraints, poor underwater connectivity, and the high cost of transmitting raw multimodal data from remote deployments. This paper proposes a low-consumption underwater monitoring architecture that combines always-on edge sensing with selective high-performance local reasoning. The system follows a hierarchical master–satellite design in which ultra-low-power MAX78000/MAX78002 microcontrollers continuously monitor visual and acoustic signals, while an NVIDIA Jetson Orin NX is activated only for scheduled processing, event-driven analysis, or researcher interaction. Once active, the Jetson executes a fully local multimodal pipeline for data ingestion, visual target extraction, embedding-based indexing, species identification, retrieval-augmented reasoning, and automated reporting. BioCLIP/OpenCLIP embeddings are used to organize mission data, marine taxonomic references, scientific documents, and operational metadata in local ChromaDB collections. A dedicated identification layer combines visual similarity search, centroid-based classification, and supervised classifiers to support adaptive species recognition. A LangChain-based multi-agent framework coordinates query routing, structured analysis, energy management, hardware reconfiguration, and report generation. The architecture is evaluated through visual and acoustic monitoring case studies. The proposed system bridges ultra-low-power continuous sensing with local multimodal intelligence, enabling underwater stations to produce structured, researcher-ready knowledge while compressing local data for flexible acoustic, optical, or satellite transmission—minimizing both energy use and communication overhead. 
+
+## 1. Introduction 
+
+Marine ecosystems are increasingly monitored using fixed and mobile observation platforms equipped with cam-eras, hydrophones sensors, and environmental probes. These systems generate large volumes of heterogeneous data that are essential for studying biodiversity, detecting ecological changes, and identifying unusual biological or geophysi-cal events. However, underwater deployments remain con-strained by limited energy availability, restricted communi-cation bandwidth, difficult physical access, and the high cost of transferring raw multimodal data from remote sites. As a result, many monitoring workflows still rely on storing data locally and processing them only after recovery or delayed transmission, which limits real-time awareness, adaptive sensing, and rapid scientific interpretation. Recent advances in embedded artificial intelligence of-fer new opportunities for local underwater data processing. Lightweight neural networks can be deployed on low-power microcontrollers to detect acoustic or visual events directly at the sensor level. At the same time, more capable edge pro-cessors can execute multimodal models, retrieval systems, and local language models for higher-level interpretation. Nevertheless, a major architectural challenge remains: con-tinuously operating high-performance processors is often  
+
+> ⋆
+
+This document presents the results of the internship funded by the French Research Institute for Exploitation of the Sea (Ifremer). 
+
+> ∗
+
+Corresponding author  
+
+> mohamed-amine.janati@imt-atlantique.net
+
+(M.A. Janati) 
+
+> ORCID
+
+(s): 0009-0002-5753-4567 (M.A. Janati); 0000-0002-1501-6609 
+
+(L. Gautier); 0000-0002-9051-6996 (S. Barbot) 
+
+incompatible with long-duration underwater deployments, while ultra-low-power detectors alone cannot provide rich scientific reasoning, taxonomic identification, or contextual reporting. A practical monitoring station therefore requires a hierarchical design that combines continuous low-power sensing with selective activation of high-capacity local in-telligence. This paper proposes a low-consumption, multimodal, and agentic architecture for underwater monitoring, destined to operate autonomously on battery for severals months. The system follows a master–satellite topology in which two ultra-low-power microcontrollers act as always-on sentinel nodes, while an NVIDIA Jetson Orin NX acts as the high-performance master node. One MAX78002 is dedicated to visual event detection, while another MAX78000 microcon-troller is used for acoustic monitoring. The sentinel layer performs continuous first-stage detection, whereas the Jetson is activated only when scheduled processing, event-driven analysis, or researcher interaction is required. This design reduces unnecessary energy consumption while preserving the ability to perform deeper multimodal analysis at the edge. The proposed system supports three operating modes. In Autonomous Mode, the Jetson remains powered off and wakes periodically, for example once per day, to ingest and process detections accumulated by the sentinel nodes. In Hy-brid Mode, relevant events detected by the visual or acoustic sentinels trigger immediate Jetson activation through a hard-ware wake-up interface, enabling lower-latency analysis. In 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 1 of 25 arXiv:2607.24313v1 [cs.IR] 27 Jul 2026 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+Mission Mode, the Jetson remains available for direct inter-action with researchers through a local interface, allowing queries over recent detections, indexed mission data, and taxonomic references. These modes allow the same architec-ture to support long-term autonomous deployments, event-driven monitoring, and field-based scientific inspection. Once activated, the Jetson executes a fully local mul-timodal processing pipeline. Collected data are ingested, normalized, and indexed into local vector database. Images, video frames, scientific documents are indexed using an embedding model, in our case OpenCLIP or BioCLIP-2. For visual data, object localization can be performed using Grounding DINO or Yolo World to extract candidate marine targets before embedding. A dedicated species identification layer then operates in the embedding space using taxonomic centroids and supervised classifiers, such as Support Vector Machines, constructed from taxonomic reference datasets. This layer converts visual observations into taxonomic hy-potheses that can be used for retrieval-augmented reasoning. Beyond classical retrieval-augmented generation, the system includes a local multi-agent control framework. A RouterAgent selects the appropriate collection, modality, and retrieval pathway for each user query or system trig-ger. An AnalystAgent handles structured questions over video metadata using sandboxed Pandas-based computa-tion, avoiding unnecessary language-model generation when deterministic analysis is sufficient. An Energy and Sensor Management Agent adapts sensing and compute behavior according to mission context and power constraints. A Hardware Configuration Agent selects specialized model binaries for the microcontroller sentinels, while a Reporting Agent produces compact Markdown summaries of indexed assets, detections, anomalies, energy state, and model status. These reports can be stored locally and transmitted later when connectivity becomes available. The main contributions of this paper are as follows: 
+
+• A hierarchical energy-aware underwater moni-toring architecture that combines MAX78000 & MAX78002 low-power sentinel nodes with a Jetson Orin NX master node for selective high-performance processing. 
+
+• A fully local multimodal retrieval and reasoning pipeline that indexes mission data, images, videos, scientific documents, taxonomic references, and oper-ational metadata using BioCLIP-2/OpenCLIP embed-dings and local ChromaDB collections. 
+
+• A dedicated species identification layer that sup-ports centroid-based taxonomic classification and su-pervised classification in the multimodal embedding space. 
+
+• A multi-agent control framework that coordinates query routing, structured analytics, energy manage-ment, hardware reconfiguration, and autonomous sci-entific reporting directly at the edge. 
+
+• Integrated visual and acoustic monitoring work-flows implemented on ultra-low-power microcon-trollers, including visual fish detection and marine mammal acoustic classification. 
+
+• In-situ data compression workflow transforming raw underwater detections into compact embeddings for low-power transmission via acoustic, optical, or satellite networks. By combining ultra-low-power continuous sensing with selective local multimodal reasoning, the proposed archi-tecture enables underwater monitoring stations to reduce energy consumption and communication requirements while still producing structured, researcher-ready scientific infor-mation at the edge. 
+
+## 2. Related Work 
+
+2.1. Edge AI platforms from microcontrollers to embedded GPUs 
+
+Edge AI for monitoring spans a wide computational spectrum, from milliwatt microcontrollers to embedded GPU platforms. At the lowest-power end, TinyML enables local inference under severe memory and energy constraints, making it suitable for always-on sensing nodes where com-munication or continuous high-resolution processing would dominate the energy budget [27]. Hardware–software co-design frameworks such as MCUNet have shown that neural architecture search and optimized inference engines can make convolutional models feasible on microcontrollers with only hundreds of kilobytes of SRAM [14]. This direc-tion is particularly relevant for autonomous marine moni-toring, where long deployments require local preprocessing before storing or transmitting data. Recent ultra-low-power object-detection work has fur-ther reduced the gap between microcontrollers and larger edge devices. TinyissimoYOLO targets object detection on highly constrained processors and was evaluated on platforms including the MAX78000, GAP9, STM32 and Apollo-class low-power microcontrollers [19, 21]. Maxim / Analog Devices devices are especially relevant because the MAX78000 and MAX78002 integrate a convolutional neural-network accelerator while scoring very low on power consumption benchmarks[18]. The MAX78002 extends this family with larger CNN memory and sensor-oriented interfaces such as MIPI CSI-2 and I2S, which are useful for compact camera and acoustic front-ends [3]. Above the microcontroller tier, Raspberry Pi-class single-board computers provide a practical compromise between cost, programmability, and model complexity. They have been used in smart camera-trap and edge–cloud systems for real-time animal detection and species recognition, in-cluding continual-learning wildlife monitoring and ant-species detection with YOLO-based pipelines [30, 24]. For more demanding underwater perception tasks, NVIDIA Jetson platforms provide GPU acceleration for real-time deep learning. For example, Jetson-based deep-sea crawler   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 2 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+deployments have used YOLO models for automated species classification and counting in benthic imagery [23]. Another previous work carried by our team was the detection of invasive species, specifically LionFish, using Rasberry Pi module with a NPU accelerator [13].These works show that each platform tier is useful, but they also motivate architec-tures that combine them: an always-on microcontroller can perform inexpensive event filtering, while a Raspberry Pi or Jetson can be activated only when richer visual, acoustic, or multimodal inference is required. 
+
+2.2. Hierarchical cascade systems and event-triggered monitoring 
+
+A central challenge in autonomous monitoring is that the most accurate models are often too energy-intensive to run continuously. Hierarchical cascade systems address this problem by assigning low-cost decisions to low-power devices and escalating only uncertain or promising events to more capable processors. This principle appears in early wireless-sensor work on radio-triggered wake-up, where a low-power front-end activates a sleeping node only when communication or sensing is needed [10]. Similar ideas have been applied to visual monitoring: sleepyCAM, for example, uses an external low-power trigger to wake or power a Raspberry Pi camera system, reducing the cost of continuous video surveillance [17]. Such designs are directly compatible with edge AI cascades, where a microcontroller first runs a coarse detector or threshold model, then wakes a Raspberry Pi, Jetson, or communication module for expensive inference and reporting. Marine monitoring deployments are strictly limited by battery, bandwidth, and storage, making tiered cascade pro-cessing essential for long-term operation. As demonstrated by real-time baleen-whale monitoring from ocean gliders [6], a continuous, low-power first stage can screen raw acoustic or visual streams to flag candidate events, reserv-ing resource-intensive high-tier processing, accurate multi-modal detection, and data transmission strictly for detections of interest. 
+
+2.3. Multimodal retrieval, vision–language models, and embedding-based species identification 
+
+Vision–language models and contrastive embedding models provide a complementary direction for species iden-tification. CLIP showed that image and text encoders trained with contrastive learning can support zero-shot recognition and retrieval by mapping images and natural-language la-bels into a shared embedding space [26]. Biology-specific extensions make this paradigm more relevant for ecological applications. BioCLIP adapts vision foundation models to biological taxonomy and biodiversity imagery, while CLIBD extends contrastive learning toward the joint use of images, DNA barcodes, and taxonomic text for biodiversity monitoring [29, 9]. These methods are useful when the goal is not only to detect an organism, but also to compare it with a reference collection, retrieve similar examples, and use taxonomic metadata to support identification. For marine species recognition, large curated datasets and benchmarks are essential because fine-grained visual differences between species are often subtle. FishNet pro-vides a large-scale benchmark for fish recognition, detection, and trait prediction, supporting the development of mod-els that are better aligned with marine biodiversity tasks than generic object-recognition datasets [12]. A practical retrieval-based pipeline can therefore be built by embedding a labeled reference dataset of fish or marine organisms and storing the resulting vectors in a search index. Classifying a new observation is then performed via cosine similarity or 
+
+𝑘 -nearest-neighbor search. The retrieved nearest neighbors yield both a predicted label and interpretable supporting ev-idence, such as visually similar reference images, taxonomic names, habitat metadata, or confidence estimates. Multimodal retrieval-augmented generation extends this idea by combining retrieval with a generative or reasoning model. In such a system, image, text or acoustic embeddings retrieve relevant reference examples and metadata before a vision–language or multimodal language model produces a final explanation or report. Recent fisheries-oriented multi-modal RAG work follows this direction by integrating het-erogeneous fishery data sources for domain-specific retrieval and reasoning [28]. For autonomous marine monitoring, this suggests a sequential approach : Filtering detections with low-consumption models, then generating species hypothe-ses and answers with LLM models. 
+
+## 3. Datasets and Taxonomic Resources 
+
+This section groups all data sources used by the system. The first part describes the datasets used to train and validate the two low-power sentinel subsystems: visual fish detection and marine mammal acoustic classification. The second part describes the taxonomic reference collections used by the high-fidelity identification and retrieval layer after Jetson activation. 
+
+3.1. FishDet-M Image Dataset 
+
+The objective of the visual sentinel is to detect under-water events and then decide, according to the currently selected operating mode, whether the Jetson should be trig-gered or just store the data on the SD Card. As an application example, we restrict to fish detection. The visual models are trained on the FishDet-M dataset [1]. FishDet-M is a large-scale, unified benchmark dataset designed for robust fish and underwater object detection. To address the historical challenge of fragmented and niche marine vision datasets, FishDet-M consolidates 13 distinct public underwater datasets, including well-known sources such as DeepFish, FishNet, Brackish-MOT, and TrashCan 1.0, into a single standardized framework. The resulting collection contains 105,556 images and 296,885 annotated fish instances, all unified under standard COCO-style anno-tations with both bounding boxes and segmentation masks. The dataset is explicitly curated to test domain generalization across highly diverse aquatic visual domains, ranging from tropical coral reefs and marine environments to brackish                   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 3 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Table 1
+> Overview of the FishDet-M dataset splits and annotations before and after restricting to five or fewer fish instances per image.
+> Feature Training Set Validation Set Test Set
+> Original Dataset (No Restrictions)
+> Number of Images 83,093 10,654 11,809 Number of Fish Instances 228,558 32,961 35,366
+> Filtered Dataset ( ≤5 Fish Instances per Image)
+> Number of Images 76,202 9,626 10,645 Number of Fish Instances 95,199 12,290 14,060
+
+waters, aquaculture tanks, and indoor aquariums. As a re-sult, models trained on this dataset are exposed to realistic deployment challenges such as high turbidity, severe occlu-sions, motion blur, muted contrast, and green-blue spectral distortion. To enhance model generalization and prevent overfitting, a dynamic stochastic data augmentation strategy is used during training. For each sample, the pipeline dynamically generates two distinct versions by randomly applying trans-formations such as geometric modifications, color jittering, and noise insertion. We restricted the training and testing phases to images containing five or fewer bounding boxes. First, the models used are too compact to capture very fine details. Second, resizing the images to 256 ×320 pixels causes some bounding boxes to become excessively small and irrelevant. Finally, according to Tinyissimo Yolo model original paper, the authors gained approximately 20% mAP by limiting detection to a maximum of five objects per frame [20]. The final dataset repartition is resumed in table 1. 
+
+3.2. Marine Mammal Acoustic Dataset 
+
+For the initial underwater acoustic experiments, the sys-tem focuses on marine mammal detection. Many marine mammals emit sounds in the frequency range from 200 Hz to 8,000 Hz, which aligns with the memory limitations of the MAX78000 microcontroller. To natively match the hardware capture behavior of the MAX9867 audio CODEC, all input audio is isolated to the left channel, resampled to a 16 kHz sample rate, and divided into 0.98-second frame windows. The primary dataset selected for this task is the Watkins Marine Mammal Sound Database [31]. This open-access historical archive contains thousands of digitized underwater audio recordings of more than 60 species of whales, dol-phins, and seals, collected globally over seven decades. To prevent class imbalance from skewing model performance, the dataset is restricted to the 12 most heavily represented species. To make the model robust against ambient underwa-ter sounds, a Noise class is introduced as Class 0. The dataset used to represent this background noise is DeepShip [11], a benchmark underwater acoustics dataset consisting of more than 47 hours of real-world passive sonar recordings. DeepShip is commonly used to train machine learning mod-els that classify four distinct commercial ship types: cargo, passenger, tanker, and tug.                             
+
+> Table 2
+> Dataset distribution across classes. Number of elements and durations for Whale and Dolphin classes are sourced from the WHOI Dataset data exploration. Noise class is sourced from DeepShip. Class Name Audio files Duration (h) Noise (DeepShip) 63 > 47.0 Common Dolphin 884 0.64 False KillerWhale 508 0.27 FinbackWhale 580 3.90 HumpbackWhale 604 1.99 KillerWhale 2647 1.65 Long Finned PilotWhale 1104 0.86 Pantropical Spotted Dolphin 1025 0.85 Short Finned PilotWhale 607 0.39 SpermWhale 1379 12.26 Spinner Dolphin 524 0.66 Striped Dolphin 681 0.36 White sided Dolphin 560 0.45
+
+The inherent static noise produced by the MAX9867 audio CODEC on the MAX78000 platform creates a third technical challenge. To address this issue and ensure the 
+
+Noise class matches the volume of the most heavily repre-sented species without overfitting, the dataset is dynamically balanced using real hardware baseline recordings combined with a three-pronged synthetic noise generation strategy: 1. Board Noise Crops: Random 0.98-second windows are extracted from real MAX9867 background record-ings and perturbed with Gaussian jitter ( 𝜎 = 2 on a 16-bit scale) to simulate varied board idle floors. 2. White Gaussian Noise: Flat-spectrum noise gener-ated at random amplitudes reflecting the typical board idle floor (-100 dBFS to -60 dBFS). 3. Pink (1/f) Noise: Noise that rolls off at 3 dB/octave, generated between -90 dBFS and -55 dBFS, closely mimicking the ambient ocean spectral shape found in real underwater recordings. Prior to Mel spectrogram generation, all data (both real and synthetic) is scaled to a 16-bit PCM integer range and passed through an exact 1st-order IIR high-pass filter (coefficients 𝑏 = [1 .0, −1 .0] , 𝑎 = [1 .0, −0 .995] ) to perfectly mirror the C-level firmware execution on the hardware. The aggregated dataset is ultimately partitioned into a 70% training, 20% validation, and 10% testing split. By handling hardware noise and signal filtering during the train-ing phase, the system avoids the need for complex and computationally expensive noise-filtering steps during real-time preprocessing. This minimizes both latency and energy consumption. After merging all datasets, a standardized pipeline is applied to generate 96x64 log-Mel spectrograms.    
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 4 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 1: Acoustic data generation pipeline.
+
+This pipeline is strictly designed to remain memory efficient, because the same preprocessing steps must be executed locally on the MAX78000 in real time, while avoiding biases that could lead to misclassification. Figure 1 summarizes the complete acoustic dataset generation process. 
+
+3.3. Taxonomic Reference Collections and Ingestion 
+
+The high-fidelity identification layer relies on extensive taxonomic reference collections to cross-reference sensor observations. As summarized in Table 3, the project lever-ages five indexed reference datasets—FishBase/SeaLifeBase [8][25], BioTrove[32], FishNet [22], Fish-Vista[16], and WildFish++ [33] —encompassing 493,387 visual entries in total. OzFish [5] is intentionally excluded from the reference index and reserved strictly as an external evaluation set. Table 3 summarizes the different taxonomic reference datasets by specifying the number of images, species, gen-era, families, orders, and classes, as well as their geographic or ecological scope. 
+
+## 4. System Architecture 
+
+This section describes the proposed underwater moni-toring system architecture. The system is designed around a hierarchical edge-computing structure in which low-power sentinel microcontrollers continuously monitor the environ-ment, while an NVIDIA Jetson Orin NX is activated only when higher-capacity multimodal processing is required. The section first introduces the hardware hierarchy and the power-aware operating modes. It then describes the local multimodal processing pipeline executed on the Jetson Orin NX, including detection-aware ingestion, visual target ex-traction, multimodal embedding, species identification, and retrieval-augmented reasoning. Finally, it presents the multi-agent control framework responsible for routing, analysis, reporting, energy management, and hardware adaptation. 
+
+4.1. Hierarchical Structural Overview 
+
+The proposed underwater monitoring system follows a hierarchical master–satellite architecture designed to recon-cile continuous environmental monitoring with strict energy constraints. The architecture separates always-on low-power perception from high-performance multimodal reasoning. At the lower tier, a MAX78000 microcontroller and another MAX78002 microcontroller operate as low-power sentinel nodes dedicated to acoustic and visual monitoring. These subsystems continuously execute lightweight neural-network models to detect potentially relevant events, such as marine mammal vocalizations or visual activity. Their role is not to perform complete scientific interpretation, but to provide an energy-efficient first filtering stage that determines whether an event deserves deeper analysis. At the upper tier, an NVIDIA Jetson Orin NX acts as the main computational hub. It is responsible for high-fidelity inference, multimodal embedding, local vector indexing, species identification, retrieval-augmented generation, re-searcher interaction, reporting, and agentic orchestration. Under normal conditions, the Jetson remains shut down and is activated only when scheduled processing, event-driven analysis, or researcher interaction is required. This division of labor allows the system to preserve energy during long-duration underwater deployments while still providing access to computationally intensive AI pipelines when the collected data justify deeper analysis. Figure 2 resumes all the points mentionned in this sec-tion. Figure 3 shows a prototype of the developed system. 
+
+4.2. Power-Aware Operation and Hardware Orchestration 
+
+The system supports three operating modes, each corre-sponding to a different trade-off between autonomy, latency, power consumption, and researcher interaction. In all modes, the low-power sentinel tier remains responsible for continu-ous environmental monitoring, while the Jetson Orin NX is activated selectively. 
+
+4.2.1. Autonomous Batch Mode 
+
+Autonomous Batch Mode is intended for long-duration deployments where energy preservation is the main con-straint. The MAX-based acoustic and visual subsystems remain active and locally store raw detections on their re-spective SD cards. In this mode, the Jetson Orin NX remains turned off most of the time and wakes according to a scheduled cycle, for example once per day. During this scheduled activation, the Jetson ingests the accumulated detections, transfers the corresponding files from the sentinel storage arrays through UART, performs secondary validation using higher-capacity models, indexes the new data, generates compact scientific summaries, and then returns to a low-power state. 
+
+4.2.2. Event-Driven Hybrid Mode 
+
+Event-Driven Hybrid Mode prioritizes low-latency sit-uational awareness while preserving the sentinel-first archi-tecture. When a low-power subsystem detects an event of interest, it immediately wakes the Jetson Orin NX through the hardware orchestration layer. The Jetson can then retrieve the corresponding raw data, activate additional sensors if necessary, perform deeper multimodal analysis, and update the local database shortly after the event occurs.   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 5 of 25
+
+Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+Table 3 
+
+Taxonomic image collections used by the project. Image counts correspond to indexed visual entries when the collection is used as a reference. OzFish is reported separately because it is used only for evaluation. Taxonomic counts are computed after the project normalization step and, when available, completed with the local taxonomy cache. Dataset Images Species Genera Families Orders Classes Image conditions FishBase / SeaLifeBase 49,149 17,379 5,489 1,436 213 60 Reference photographs from curated databases; mixed live, aquarium, field, specimen, and pre-served/dead photographs depending on source metadata. BioTrove 190,534 19,586 5,739 1,074 188 35 Heterogeneous reference images organized by taxo-nomic class and species; conditions are mixed rather than exclusively in situ. FishNet 94,349 17,610 3,973 581 81 10 Mostly object/reference-style fish images, including multiple life stages and non-field compositions; not a pure underwater in situ dataset. Fish-Vista 56,321 729 309 120 47 3 Curated fish photographs from GLIN, iDigBio, and MorphBank; mixed specimen, museum, and field-like images rather than only live underwater scenes. WildFish++ 103,034 2,348 931 255 62 7 Real-world wild fish imagery from train and valida-tion folders, closer to natural visual conditions than the database reference collections. OzFish 1,903 198 84 29 10 2 Real fish observations with species boxes and mea-surement files; used to test cross-source generaliza-tion. 
+
+Figure 2: Hierarchical, low-power underwater monitoring architecture. Edge-level microcontrollers (MAX78000/02) continuously monitor environmental events and selectively wake a high-performance master node (Jetson Orin NX) for local multimodal processing, retrieval-augmented generation, and researcher interaction. 
+
+Figure 3: Experimental implementation of the system 
+
+This mode is suitable for deployments in which relevant biological or environmental events must be analyzed soon after detection, while continuous operation of the high-power compute module remains undesirable. To implement this behavior, the event detection sets microcontrollers’ I/O that are connected to a shared TTL 
+
+wake line, as illustrated in Fig. 4. This simple diode-OR configuration allows any microcontroller to initiate a wake-up event while preventing current from flowing between GPIO outputs. Assertion of the shared event line activates the hardware power-switching stage, which connects the 
+
+12 V supply to the Jetson. After booting, the Jetson asserts a dedicated GPIO con-nected to the same control node through an additional isola-tion diode. This signal provides a self-hold function, main-taining power after the initiating event signal has been re-leased. Once event processing, data transfer, and database updates are complete, the Jetson performs an orderly soft-ware shutdown and releases the hold signal, causing the 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 6 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG  
+
+> Figure 4: Hardware wake-up and power-hold circuit used in Event-Driven Hybrid Mode.
+
+power-switching stage to disconnect the 12 V supply. Con-sequently, short detection pulses are sufficient to initiate a complete processing cycle without requiring the detecting microcontroller to remain active throughout the Jetson oper-ating period. 
+
+4.2.3. Mission and Researcher-Interactive Mode 
+
+Mission and Researcher-Interactive Mode is designed for field operations in which researchers are physically present near the monitoring station and require direct access to the local intelligence layer. In this mode, the Jetson Orin NX re-mains active and exposes a local web interface implemented using HTML, CSS, and JavaScript. Unlike Autonomous Batch Mode and Event-Driven Hybrid Mode, this mode prioritizes interactive exploration, rapid scientific verifica-tion, and direct access to indexed data over minimum power consumption. The interface is organized into four main tabs. The first tab provides a chatbot interface connected to the local agentic retrieval system. Researchers can submit natural-language queries, which are processed by the backend through the local multimodal RAG pipeline and the unified agentic reasoning layer. Depending on the query, the system routes the request toward the appropriate ChromaDB collec-tion, retrieval modality, analytical pathway, or local instruct model. The second tab is dedicated to species identification. A researcher can upload an image of an unknown organism and select the reference collection to be used for identification. The backend then compares the image embedding against precomputed taxonomic centroids and SVM classifiers. The interface returns the most likely species, genus, family, order, and class, together with the corresponding confidence indi-cators. For SVM-based predictions, the reported value corre-sponds to the classifier probability, while for centroid-based predictions it corresponds to the cosine similarity between the query embedding and the selected taxonomic centroid. Figure 5 shows a specie identification example, the Web UI displays the five taxonomic levels (class, order, genus, family and specie). The third tab supports visual similarity  
+
+> Figure 5: Specie identification web interface
+
+search. The researcher can upload or select a query image, describe a text query, choose a target collection, and define the number of nearest neighbors 𝑘 to retrieve. The search can be performed either over marine taxonomic reference datasets or over the local multimodal mission collection. The interface then displays the top-𝑘 closest images together with their similarity scores, allowing researchers to visually inspect related examples, compare uncertain detections, and validate retrieval results. Figure 6 shows a similarity search on image, and figure 7 shows a similarity search but this time on text. The fourth tab provides a database overview. It lists the currently available ChromaDB collections and reports the number of indexed items in each collection. This view allows researchers to verify the state of the local memory, inspect whether new detections or reference assets have been indexed, and monitor the growth of the onboard database during field operations. Overall, Mission and Researcher-Interactive Mode turns the monitoring station into a local scientific inspection plat-form. It allows researchers to query the RAG system, iden-tify species from uploaded images, retrieve visually similar examples, and inspect the current database state directly at the edge without requiring cloud connectivity. 
+
+4.3. Local Multimodal Processing Pipeline 
+
+Once the Jetson Orin NX is activated, the collected data are processed through a fully local multimodal pipeline. This pipeline transforms raw detections into indexed, searchable, and interpretable scientific information. It links real-time detections with historical mission data, taxonomic refer-ences, and scientific documentation without requiring cloud connectivity. The pipeline consists of four main stages: (i) detection-aware data ingestion, (ii) target localization, (iii) species identification, multimodal embedding, and indexing, and     
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 7 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 6: Example of image-image similarity search using the Web UI
+> Figure 7: Example of text-image similarity search
+
+(iv) retrieval-augmented reasoning. This modular organiza-tion clearly separates data management from species identi-fication, making the role of each stage explicit and facilitat-ing future extensions. Before the pipeline can be executed, the species identi-fication layer must be initialized. During this configuration stage, a set of reference taxonomic datasets is indexed, after which class centroids and Support Vector Machine (SVM) classifiers are computed. These classifiers are subsequently used by the online multimodal pipeline to generate species hypotheses. The species identification layer is described in detail in Section 4.3.4. The overall workflow is as follows. An event detected by the Sentinel system triggers the acquisition process. De-pending on the operating mode, the acquired data (images or audio recordings) are either stored on the SD card for subsequent processing or captured directly after the Jetson Orin NX is awakened from its low-power state. The target localization stage extracts the relevant regions of interest from the acquired images using text-guided localization prompts. These image crops are then forwarded to the em-bedding and indexing stage, where BIOCLIP-2 embeddings are computed. The resulting embeddings are subsequently processed by the species identification layer to generate one or more hypotheses regarding the detected species. The computed embeddings, together with their associ-ated metadata—including timestamps, species hypotheses, mission identifiers, sensor information, and video sources are stored in ChromaDB collections. These indexed rep-resentations form a searchable knowledge base that con-tinuously grows throughout the mission. When a query is submitted by either a human operator or an autonomous agent, the system performs retrieval-augmented generation (RAG) over the indexed ChromaDB collections. The re-trieved embeddings and their associated metadata are pro-vided as contextual information to the large language model (LLM), enabling scientifically grounded responses based on both the current observations and previously collected mission data. The following sections describe each stage of the pro-posed pipeline in detail. The presentation of the species identification layer is intentionally deferred until after the    
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 8 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 8: Local multimodal processing and retrieval-augmented memory pipeline.
+
+embedding stage, as it relies on embedding representations introduced in the preceding section. 
+
+4.3.1. Detection-Aware Data Ingestion 
+
+The pipeline begins with detections produced by the low-power sentinel subsystems. These detections may include acoustic frames, seismic waves, visual observations or asso-ciated metadata. In Autonomous Batch Mode, detections are accumulated locally and transferred through UART to the Jetson during scheduled wake-up cycles. In Event-Driven Hybrid Mode, relevant detections can trigger immediate Jetson activation and data transfer. At this stage, the objective is not yet to identify species or generate ecological explanations. The goal is to collect, normalize, timestamp, and organize the data produced by the sentinel layer so that they can be processed by the higher-capacity multimodal pipeline. Each ingested item is associ-ated with metadata such as source subsystem, timestamp, file path, detection type, and triggering mode. 
+
+4.3.2. Target Localization and Crop Extraction 
+
+For visual inputs, the pipeline adopts a detection-first strategy prior to vector database insertion, as illustrated in Figure 8. The objective of this stage is to isolate semantically relevant marine organisms from the surrounding scene so that the subsequent embedding process focuses primarily on the target rather than on potentially dominant background el-ements, such as water, rocks, sand, vegetation, or acquisition equipment. Target localization is performed using Grounding DINO [15], an open-vocabulary object detector that combines the transformer-based DINO detection architecture with grounded vision–language pre-training. Unlike conventional closed-set detectors, which are restricted to a predefined collection of object classes, Grounding DINO receives natural-language expressions as detection queries. It jointly encodes the input image and the textual prompt, aligns their visual and linguistic representations, and returns bounding boxes associated with the image regions that are most semantically consistent with the requested concepts. This property is particularly suitable for marine imagery, for which the taxonomic categories of interest may vary between deployments and may not be adequately represented by standard object-detection datasets. The pipeline uses the Grounding DINO Tiny variant, based on a Swin-T visual backbone. Despite the “Tiny” designation, the complete model contains approximately 172 
+
+million parameters. The storage required by the parameters alone is therefore approximately 688 MB when represented in 32-bit floating-point precision and approximately 344 MB under 16-bit precision. These values represent only the theo-retical memory required to store the model weights. During inference, additional GPU memory is required for visual feature maps, language representations, cross-modal atten-tion tensors, decoder queries, intermediate activations, and framework-level CUDA allocations. Consequently, several gigabytes of GPU memory must be reserved in practice; an allocation of approximately 4 GB provides a reason-able operating margin for single-image inference, although the precise peak consumption depends on the input reso-lution, numerical precision, software implementation, and memory-caching behavior. At inference time, the detector is queried using coarse semantic categories such as fish , cnidarians , mollusks , and 
+
+crustaceans . These prompts are intentionally broader than species-level labels because the purpose of this stage is target localization rather than fine-grained taxonomic identi-fication. For every input frame, Grounding DINO produces a collection of candidate bounding boxes and their corre-sponding confidence scores. Low-confidence predictions are rejected, after which Non-Maximum Suppression (NMS) is applied to remove strongly overlapping detections that are likely to correspond to the same organism. The remaining regions of interest are cropped from the original frame and cached locally, thereby avoiding repeated detection and crop-extraction operations during subsequent indexing or retrieval experiments.   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 9 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+As summarized in Figure 8, the retained crops are sub-sequently passed to the visual embedding model and in-serted into the vector database together with their associated metadata. Performing detection before feature extraction reduces the influence of irrelevant background content and produces embeddings that more directly represent the visual characteristics of the detected organism. This is especially important when the target occupies only a small portion of the original image or when multiple background structures exhibit stronger visual patterns than the organism itself. If no candidate satisfies the detection-confidence crite-ria, the complete frame is retained as a fallback representa-tion. This conservative mechanism prevents potentially in-formative observations from being discarded due to difficult imaging conditions, small or partially occluded organisms, domain shifts, or imperfect agreement between the selected textual prompts and the visible target. Such samples can therefore remain available for downstream identification, re-trieval, and anomaly analysis even when reliable localization is not achieved. Among the models involved in the indexing pipeline, Grounding DINO is the most computationally expensive component. Its computational cost arises from the simul-taneous processing of high-resolution visual features and textual representations, together with repeated cross-modal attention and bounding-box decoding operations. In com-parison, crop extraction, NMS, local caching, and vector-database insertion introduce relatively limited overhead. Grounding DINO consequently accounts for the largest portion of the per-frame processing time and constitutes the principal computational bottleneck of the detection-aware indexing procedure. This motivates executing localization only once during ingestion and caching its outputs, rather than repeating detection whenever an indexed observation is queried. The final output of this stage is a set of localized candidate regions—or the original frame when localization fails—that can subsequently be embedded, indexed, identi-fied, and retrieved. We also evaluated YOLO World [7], which achieved very similar detection performance to Grounding DINO while operating at substantially lower computational cost. Specifically, YOLO World completes inference in a frac-tion of the time required by Grounding DINO for equiv-alent tasks, making it well-suited for real-time or near-real-time applications where throughput is critical. Despite this speed advantage, its semantic grounding capability and open-vocabulary detection accuracy remain comparable to those of Grounding DINO, ensuring that neither approach introduces meaningful differences in downstream retrieval quality. Yolo World may also be deployed through TensorRT which makes the inference far faster specially on Jetson devices. 
+
+4.3.3. Multimodal Embedding and Vector Indexing 
+
+After candidate data have been collected and the relevant visual regions have been extracted, the pipeline converts each element into a fixed-dimensional numerical representa-tion, referred to as an embedding . These embeddings encode the semantic content of an input and provide a common representation in which heterogeneous modalities can be compared and retrieved efficiently. The embedding stage utilizes Contrastive Language– Image Pre-training (CLIP) [26], a multimodal architecture featuring separate visual and text encoders. By mapping matching image–text pairs into a shared embedding space during training, CLIP aligns semantically related visual and textual representations, enabling direct cross-modal compar-ison without a task-specific classification head. In the proposed pipeline, visual inputs—including de-tected image crops and sampled video frames—are pro-cessed using either BioCLIP-2 or a general-purpose Open-CLIP visual encoder. OpenCLIP is an open-source imple-mentation of the CLIP architecture that provides pretrained models with different visual backbones, training datasets, and computational requirements. It offers a general represen-tation of visual and linguistic concepts learned from large collections of image–text pairs. However, because these training collections primarily contain broad web imagery, the resulting representation may provide limited discrimina-tion between visually similar biological taxa. BioCLIP [29] addresses this limitation by adapting the CLIP training paradigm to the biological domain. It re-tains the dual-encoder architecture and contrastive learning objective of CLIP but is trained using TreeOfLife-10M, a large-scale dataset containing images of animals, plants, and fungi together with structured taxonomic labels. The textual supervision incorporates the biological hierarchy, including taxonomic ranks such as kingdom, phylum, class, order, fam-ily, genus, and species. As a result, the learned embedding space captures both visual similarity and biologically mean-ingful relationships between organisms. This domain spe-cialization makes BioCLIP more appropriate than a general-purpose CLIP model for representing marine species, par-ticularly when the downstream task requires fine-grained differentiation between morphologically similar taxa. For each visual observation 𝐼 𝑖 , the visual encoder pro-duces an embedding vector 
+
+𝐯 𝑖 = 𝑓 img (𝐼 𝑖 ), (1) where 𝑓 img denotes the BioCLIP or OpenCLIP image en-coder. Similarly, each textual element 𝑇 𝑗 , such as a scien-tific name, species description, ecological trait, document chunk, or operational annotation, is transformed using the corresponding text encoder: 
+
+𝐭 𝑗 = 𝑓 text (𝑇 𝑗 ). (2) Before indexing, the resulting vectors are 𝐿 2-normalized: ̂
+
+𝐳 = 𝐳 
+
+‖𝐳 ‖2
+
+, (3) where 𝐳 represents either a visual or textual embedding. Semantic similarity between two normalized representations   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 10 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+is subsequently measured using cosine similarity, which reduces to their dot product: 
+
+𝑠 (̂𝐳 𝑎 ,̂ 𝐳 𝑏 ) = ̂ 𝐳 ⊤𝑎 ̂ 𝐳 𝑏 . (4) A larger similarity value indicates that the corresponding in-puts are more closely related within the learned multimodal space. This formulation supports image-to-image, text-to-text, and cross-modal text-to-image retrieval using the same indexing mechanism. The computational cost and memory footprint of this stage depend on the selected CLIP backbone. Models based on larger Vision Transformer architectures generally pro-vide richer representations but require more parameters, GPU memory, and inference time. In the proposed pipeline, embedding extraction is significantly less computationally expensive than the preceding Grounding DINO localization stage [15] and exhibits a computational footprint highly comparable to YOLO-World [7]. Nevertheless, processing a large number of crops or video frames can produce a substantial cumulative cost, as image scenes containing a high density of detections yield a proportionally higher number of localized crops requiring embedding generation. Embeddings are therefore computed once during ingestion, stored persistently, and reused during subsequent retrieval and identification operations. Mission images, localized video crops, textual species descriptions, PDF chunks and operational metadata are stored in modality-specific local ChromaDB collections. ChromaDB provides a vector-oriented storage layer that associates each embedding with a unique identifier, its original content or file reference, and structured metadata. Depending on the data modality, the stored metadata include the source-file path, frame or document index, acquisition timestamp, detected category, bounding-box coordinates, mission identifier, and preprocessing configurations. Cru-cially, the metadata also encompass hypotheses regarding taxonomic classification, which are detailed in the subse-quent subsection. Preserving this provenance ensures that each retrieved vector remains traceable to its corresponding observation, thereby preventing the embedding space from decoupling from the original mission data. When multiple crops within a single image are assumed to belong to the same species, only one representative crop is retained. The total number of such instances is recorded within the metadata of the retained crop. This mechanism prevents the saturation of ChromaDB with redundant embeddings of the same species (e.g., a large school of sardines) while simultaneously preserving the original instance count. During retrieval, a query is encoded using the appro-priate pathway and compared with the indexed vectors. ChromaDB returns the nearest candidates according to their vector distance or similarity. For example, a textual query describing a marine organism can retrieve visually compat-ible image crops, while an image crop can retrieve related species descriptions or visually similar observations. As previously noted, indexing the ingested data entails storing hypotheses across five distinct taxonomic levels as metadata. The methodology for generating these classifica-tions is entirely delegated to the species identification layer, which is detailed in the subsequent subsection. 
+
+4.3.4. Species Identification Layer 
+
+Although multimodal embeddings provide a unified rep-resentation for images and text, similarity within this space does not inherently constitute a definitive taxonomic deci-sion. Consequently, a dedicated species identification layer is introduced prior to the data indexing layer. This layer utilizes embeddings from reference sets to generate a ranked list of taxonomic hypotheses for each detected crop, accompanied by confidence scores and supporting evidence. The architecture operates directly in the pretrained Bio-CLIP -2 embedding space, avoiding retraining for every mission or geographic scope. Mission adaptation is achieved by updating reference collections rather than maintaining multiple separately trained CLIP models: a coastal survey can use fish-specific references, while a broader biodiversity survey incorporates mollusks, cnidarians, and crustaceans alongside fish. Each reference image is embedded together with a taxo-nomically structured textual representation. For an organism with known taxonomy, the text prompt follows the template 
+
+𝑇 = “a photo of ⟨class ⟩ ⟨ order ⟩ ⟨ family ⟩ ⟨ genus ⟩ ⟨ species ⟩”,
+
+(5) where every placeholder is replaced by its authoritative taxonomic value. The structured prompt provides the text encoder with both fine-grained species identity and hierar-chical context. Because source reference collections do not always pro-vide all five taxonomic ranks, missing genus, order, or class values are reconstructed through a taxonomy-resolution in-frastructure. Name normalization and taxonomic completion are supported by a synonym cache and a project-level taxon-omy cache. Let 𝐼 𝑟 denote a reference image and 𝑇 𝑟 its completed tax-onomic prompt. Their normalized BioCLIP representations are ̂
+
+𝐯 𝑟 = 𝑓 img (𝐼 𝑟 )
+
+‖𝑓 img (𝐼 𝑟 )‖2
+
+,̂ 𝐭 𝑟 = 𝑓 text (𝑇 𝑟 )
+
+‖𝑓 text (𝑇 𝑟 )‖2
+
+. (6) Visual and textual embeddings are stored as separate records in the same vector collection, preserving modality-specific information for independent evaluation during retrieval. Given a candidate crop 𝐼 𝑞 , its normalized BioCLIP vi-sual embedding is ̂
+
+𝐯 𝑞 = 𝑓 img (𝐼 𝑞 )
+
+‖‖‖𝑓 img (𝐼 𝑞 )‖‖‖2
+
+. (7) Taxonomic prediction is performed using two complemen-tary classifiers operating on the frozen BioCLIP embed-dings.   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 11 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+For a taxon 𝑐 represented by 𝑁 𝑐 reference image embed-dings, the centroid is computed as 
+
+𝝁 𝑐 =
+
+∑𝑁 𝑐 
+
+> 𝑖 =1
+
+̂ 𝐯 𝑐,𝑖 
+
+‖‖‖∑𝑁 𝑐 
+
+> 𝑖 =1
+
+̂ 𝐯 𝑐,𝑖 
+
+‖‖‖2
+
+, (8) where ̂ 𝐯 𝑐,𝑖 is the normalized embedding of the 𝑖 -th reference image for taxon 𝑐 . The query crop is compared with each cached centroid using cosine similarity: 
+
+𝑠 centroid (𝑞, 𝑐 ) = ̂ 𝐯 ⊤𝑞 𝝁 𝑐 . (9) Averaging over multiple reference observations reduces sen-sitivity to atypical viewpoints, noise, and annotation errors. Centroids are constructed at class, order, family, genus, and species levels, enabling hierarchical fallback when evidence is insufficient for a reliable species-level decision. The second strategy uses multiclass linear Support Vec-tor Machines trained on cached visual embeddings. For each taxonomic level 𝑙 , the score vector 
+
+𝐳 (𝑙 ) = 𝐖 (𝑙 )̂ 𝐯 𝑞 + 𝐛 (𝑙 ), (10) is converted to normalized confidence via softmax: 
+
+𝑝 (𝑙 ) 
+
+> 𝑗
+
+=exp 
+
+(
+
+𝑧 (𝑙 )
+
+> 𝑗
+
+)∑𝑘 exp 
+
+(
+
+𝑧 (𝑙 )
+
+> 𝑘
+
+) . (11) Centroid and SVM classifiers provide complementary evidence: centroids preserve the geometric structure of the BioCLIP embedding space and are straightforward to up-date, while linear SVMs learn explicit decision boundaries that improve discrimination between visually similar taxa. Both operate on frozen embeddings without retraining the multimodal model. The final identification decision combines both clas-sifiers. Predictions below a configurable threshold are re-jected; when species-level evidence is insufficient but higher-rank candidates agree, a broader taxonomic label (genus, family) is retained instead of forcing an unreliable species assignment. When multiple crops from the same frame receive identical predicted labels, only the top-𝑁 by score are preserved to reduce visual redundancy before down-stream indexing. Each validated crop is stored with metadata (specie, genus, family, order, class, score, source file and acquisition timestamp). The identification layer thus converts visual embeddings into traceable taxonomic hypotheses. Classification results are subsequently used by the retrieval-augmented reasoning layer to gather supporting biological, visual, temporal, and operational evidence from the local knowledge base. Finally, the species identification layer can also be ac-cessed via the Web user interface (UI). In Mission Mode, users can directly upload an image of marine fauna for classification. The interface then returns predictions from both the Support Vector Machine (SVM) and centroid-based models across five taxonomic levels. Figure 5 illustrates the species identification interface. For brevity, the figure displays predictions at the class level only; however, the full output provides predictions for all five taxonomic lev-els. This functionality provides researchers with immediate taxonomic hypotheses while maintaining a simple, user-friendly workflow. 
+
+4.3.5. Retrieval-Augmented Reasoning (RAG) 
+
+Once taxonomic candidates, event labels, or mission observations have been produced, the retrieval layer collects the evidence required by agents or human users. In both cases, retrieval is performed before language-model infer-ence so that the generated response remains grounded in locally indexed mission and biological data. The retrieval engine operates over the unified Chro-maDB collection described in Subsection 4.3.3. Because the collection contains both visual and textual records, the system supports four complementary retrieval modalities: 1. text-to-text retrieval, in which a textual query is com-pared with indexed document chunks, annotations, and taxonomic prompts; 2. text-to-image retrieval, in which a textual query re-trieves semantically compatible reference images or mission observations; 3. image-to-image retrieval, in which a query crop is compared with indexed visual reference embeddings; 4. image-to-text retrieval, in which a query crop retrieves taxonomic prompts, species annotations, or other tex-tual descriptions represented in the shared BioCLIP space. For a textual researcher query 𝑇 𝑞 , the corresponding embedding is compared independently with the textual and visual partitions: 
+
+𝑡 →𝑡 = TopK (𝑓 text (𝑇 𝑞 ), text 
+
+) , (12) 
+
+𝑡 →𝑖 = TopK (𝑓 text (𝑇 𝑞 ), image 
+
+) , (13) where text and image denote the textual and visual parti-tions of the unified collection. Similarly, when a query image or candidate crop 𝐼 𝑞 is available, the system performs image-to-image and image-to-text retrieval: 
+
+𝑖 →𝑖 = TopK (𝑓 img (𝐼 𝑞 ), image 
+
+) , (14) 
+
+𝑖 →𝑡 = TopK (𝑓 img (𝐼 𝑞 ), text 
+
+) . (15) The compatibility of these four retrieval modes results from the shared multimodal embedding space learned by the CLIP-based encoder. To prevent one modality from dominating the final con-text, the deployed retrieval configuration retains a controlled   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 12 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+mixture of six visual records and four textual records for a standard top-10 retrieval operation. The visual subset provides direct evidence from similar organisms, reference images, and mission frames, whereas the textual subset in-troduces explicit taxonomic annotations, scientific descrip-tions, sensor-log segments, and other structured information. This 6∶4 composition controls the type of evidence provided to the reasoning agents. The retrieval passes are executed separately and their results are interleaved before final selection. This prevents the substantially larger visual collection from occupying all available retrieval positions and ensures that textual evidence remains represented. When a modality filter is explicitly requested, retrieval can instead be restricted to either image or text records. Each similarity-search pass initially retrieves more can-didates than the final requested number. The candidates are ordered according to vector distance and then filtered to reduce redundancy. In particular, retrieved frames originat-ing from the same video are subjected to temporal dedu-plication: frames occurring within a three-second interval of an already retained frame are discarded. This procedure reduces the repeated retrieval of nearly identical consecutive observations while preserving temporally distinct events. Every retained result is represented as a LangChain  
+
+> Document
+
+containing its indexed content and associated meta-data. The retrieval engine augments this metadata with the vector distance and the origin of the search pass. Results obtained from visual and textual queries are subsequently merged, duplicate identifiers are removed, and the final list is truncated to the configured retrieval size. The metadata available to the reasoning layer depend on the retrieved modality and source dataset. Taxonomic reference records may provide species , genus , family , order ,and class , together with the source image path and file name. Mission video records may provide the source video, crop or frame path, acquisition timestamp, detection label, detec-tion confidence, BioCLIP-2 prediction and similarity scores. Sensor-log and tabular records may include the source file, file name, and the start and end timestamps of the retrieved interval. Before being passed to the QueryAgent or ReportAgent, the raw retrieval results are transformed into a structured context package: 
+
+ = {𝐶 text , , image , 𝑆 retrieval 
+
+} , (16) where 𝐶 text is the assembled textual context,  is the set of loaded images, image contains their source paths, and 
+
+𝑆 retrieval is a compact summary of the retrieved evidence. Textual records are separated according to their origin. Sensor-log and CSV chunks are formatted with their source file and temporal interval:  
+
+> [Source: file | time: start
+
+→ end] 
+
+whereas biological annotation records are formatted using the available taxonomic hierarchy. For example, a fish an-notation may contain the species, genus, family, order, and class followed by its descriptive text. Visual records also contribute textual metadata to the context. An identified ref-erence image contributes its taxonomic annotation, whereas an unidentified mission frame contributes its source video or image file and acquisition timestamp. The textual context is limited to a configurable maximum length, set to 4000 characters in the current implementation. When grouped video summaries are available, they are inserted before the remaining retrieved chunks so that the principal temporal and ecological evidence is preserved if truncation becomes necessary. A maximum of four retrieved images is loaded into the multimodal context package. The images are accessed only after retrieval, resized to 1344 × 756 pixels, converted to RGB, JPEG-encoded, and represented as base64 strings. This just-in-time image loading avoids placing complete image contents in the vector database while allowing the downstream reasoning model to inspect the most relevant vi-sual evidence. The original file paths are retained separately for logging and traceability. For video-oriented queries, the system additionally sup-ports grouped crop retrieval. In this mode, image records belonging to a selected source video are first grouped using reliable taxonomic or detection metadata. A species label is considered when an authoritative species value is available, when the BioCLIP score exceeds the configured threshold, or when a sufficiently confident non-generic detection label is present. Records without reliable labels are grouped ac-cording to the similarity of their normalized visual embed-dings. Let 𝐠 𝑗 denote the normalized centroid of an existing video group and 𝐯 𝑖 the embedding of an unlabelled candidate crop. The candidate is assigned to the most similar group when 
+
+max 
+
+> 𝑗
+
+(𝐯 ⊤𝑖 𝐠 𝑗 
+
+) ≥ 𝜏 𝑔 , (17) where 𝜏 𝑔 is the configured grouping threshold. Otherwise, a new visual group is created. In the current configuration, the default similarity threshold is 0.86 .For each group, the system selects one representative crop using the strongest available metadata confidence and query similarity. The corresponding grouped summary con-tains the number of detections, first and last observation times, temporal segments, representative file, representative timestamp, best and mean confidence or similarity, and the available indexed-label evidence. When trained centroid or linear SVM models are available, the summary may also include the three strongest classification candidates at the class, order, family, genus, and species levels. The grouped retrieval mode therefore prevents a long video sequence containing repeated observations of the same organism from overwhelming the reasoning context. Instead of returning every similar crop, it provides one visual representative per group together with a structured account of its occurrence frequency and temporal distribution.   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 13 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+The context packager finally produces a concise retrieval summary indicating the amount and type of evidence ob-tained, such as the number of sensor-log chunks, textual fish annotations, visual fish annotations, loaded images, and grouped video representatives. This summary allows the reasoning agents to determine whether sufficient evidence was retrieved before producing an ecological interpretation. The resulting structured package is supplied to the lo-cal instruct model, Qwen3.5-4B, through the Ollama infer-ence runner. The system employs this package to generate grounded answers for researchers and to produce detailed species reports, mission summaries, temporal activity de-scriptions, and anomaly explanations. Rather than relying exclusively on the parametric knowledge of the underlying language model, the framework cites retrieved source files, timestamps, taxonomic metadata, and visual observations directly. In high-activity Mission Mode, the instruct model can remain resident in GPU memory to reduce repeated model-loading and generation latency. In autonomous or energy-constrained operating states, it can be unloaded after query execution to reduce steady-state memory use and power consumption. Retrieval-augmented reasoning does not replace the species identification layer. The identification layer gener-ates taxonomic hypotheses from the visual observations, whereas the retrieval layer gathers the biological, visual, temporal, and operational evidence associated with those hypotheses. The language model subsequently uses this evi-dence to explain and contextualize the observations without modifying the underlying taxonomic predictions. 
+
+4.4. Multi-Agent Control Framework 
+
+The high-level behavior of the monitoring station is con-trolled by a local multi-agent framework. This framework coordinates retrieval, structured analysis, energy manage-ment, reporting, hardware configuration, and autonomous post-processing. Instead of relying only on fixed rules, the system assigns specialized responsibilities to different agents. This makes the station more adaptable to changing mission objectives, environmental conditions, and power constraints. 
+
+4.4.1. Router Agent 
+
+The Router Agent is responsible for orchestrating queries in a heterogeneous, multimodal search environment. Rather than relying on static mapping, it dynamically determines the target database collections, the search modalities (tex-tual, visual, or hybrid), and the downstream processing pathway. To achieve this, the agent is structured as an interac-tive reasoning loop following the T HINK –A CT –O BSERVE 
+
+paradigm. Before finalizing a retrieval route, the agent can actively probe candidate collections. Through a probing (or “peeking”) mechanism, it retrieves and inspects small meta-data samples from specific collections, using these empirical observations to resolve query ambiguity. To assist the agent with complex taxonomic classifi-cation queries, the system incorporates a hybrid context-enrichment step before the reasoning loop begins. If a query contains taxonomic keywords or is accompanied by an im-age, the system runs a fast, non-parametric classification step using pre-calculated reference centroids. The top taxo-nomic predictions from this step are injected directly into the agent’s reasoning context as high-confidence prior beliefs, guiding it toward the correct reference database. For queries requesting visual species evidence (e.g., listing visually different species in a specific video), the agent enforces a crop-level grouping guardrail. This path bypasses naive global similarity retrieval and instead invokes a specialized visual-clustering pipeline that groups similar object detections. Alternatively, for quantitative or temporal queries (e.g., species occurrence timelines or video database inventories), the agent can activate an analytical fast path. This path bypasses the generative language model entirely, executing database-level metadata aggregations and report-ing the results directly. Finally, to handle edge cases or allow direct developer intervention, the architecture supports a deterministic target override. When an explicit collection target is provided by the user, the routing agent’s reasoning loop is bypassed en-tirely, and queries are routed directly to the mapped reference or multimodal collections. 
+
+4.4.2. Analyst Agent 
+
+The AnalystAgent is designed to resolve queries that are better addressed via structured computation than through heuristic generation. It compiles crop-level metadata (such as species predictions, BioCLIP-2 confidence scores, video names, and frame timestamps) extracted from the vector database into a local Pandas DataFrame. An auxiliary text-only model then generates targeted Python code to perform statistical tasks, including species occurrence counting, temporal distribution timelines, co-occurrence intervals, and detection-frequency estimations. We evaluated both Qwen3.5-4B and Ornith-9B; the latter demonstrated signifi-cantly superior performance, exceeding initial expectations. To guarantee system safety and execution determinism, the generated code is executed within a restricted local namespace that isolates the system. File-system operations and hazardous python built-ins are dynamically blocked, and the code is statically validated using an abstract syntax tree (AST) parser prior to execution. If a runtime error is encountered, a bounded self-correction feedback loop is initiated to repair the code. The final outputs, including timestamps normalized to HH:MM:SS format, are printed and returned as structured Markdown tables or lists. Because this computational pathway bypasses the larger vision-language instruct model for purely quantitative queries, it reduces system latency and power consumption. 
+
+4.4.3. Energy and Sensor Management Agent 
+
+The Energy and Sensor Management Agent is respon-sible for dynamically optimizing the power state of the    
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 14 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 9: Unified agentic reasoning and reporting layer. Incoming researcher queries or automated system triggers are evaluated by a RouterAgent, which selects the appropriate retrieval, analysis, or reporting pathway. The agents interact with local memory, the local instruct model, and hardware-management modules to generate grounded outputs for researchers.
+
+station to ensure it survives the designated mission duration. Rather than relying on static power configurations, the agent continuously computes a real-time power budget by compar-ing remaining battery capacity (Wh) against the remaining mission time (hours). To evaluate current consumption, the agent monitors real-time system metrics—including CPU, GPU, and aux-iliary power rails via Tegrastats on the primary Jetson compute module—alongside a constant baseline approxi-mation of the always-on sentinel microcontrollers. Based on these variables and the recent event detection rate, the agent dynamically adjusts software- controlled parameters to align the power draw with the remaining energy reserves. These adjustments include tuning camera capture frame rates (FPS), lengthening or shortening autonomous compute cycle intervals, and modifying the keep-alive duration of cached model weights. Furthermore, the agent determines the sentinel confi-dence thresholds running on the microcontrollers to control hybrid wake-up triggers, deciding when to transition the primary compute module from a powered-off state directly into high-fidelity processing. In this manner, energy man-agement is treated as an active, context-aware control loop that balances taxonomic accuracy with long-term hardware survivability on batteries. 
+
+4.4.4. Dynamic Model Deployment Agent 
+
+The Dynamic Model Deployment Agent manages the dynamic adaptation of the low-power sentinel tier. Ultra-low-power microcontrollers offer extreme energy efficiency but are constrained by strict on-chip memory limits, pre-venting the concurrent deployment of multi-task neural net-works. The agent resolves this limitation by dynamically selecting and flashing specialized, highly-quantized neural network weights onto the microcontrollers based on deploy-ment locations, real-time battery status, seasonal predic-tions, and researcher-defined mission priorities. For instance, the agent can reconfigure the sentinel layer to prioritize cetacean acoustic monitoring in one zone, and hot-swap to visual invasive species detection in another. To prevent flashing failures, the agent queries the model col-lection, verifying candidate model sizes, hardware register constraints, compatibility matrices, and past flashing histo-ries before committing to a hardware update. This orchestra-tion enables a highly specialized sentinel layer to maintain runtime flexibility across diverse long-term missions. 
+
+4.4.5. Reporting Agent 
+
+The Reporting Agent converts the station’s indexed video logs into researcher-facing situation summaries. Rather than presenting a flat list of event detections, the agent aggre-gates raw vector database metadata to produce a structured, high-level overview of the survey’s progress and findings. To generate a report, the agent compiles a determin-istic database snapshot of the video assets. This snapshot includes global metadata coverage statistics, the number of processed video files, overall taxonomic species classifica-tion distributions, and chronologically segmented temporal detection events (grouping consecutive occurrences of indi-vidual species within a configurable temporal window). A local language model then synthesizes this raw structured data into a cohesive, scientist-oriented narrative. The resulting Markdown ( .md ) report is saved to a des-ignated local directory with a query-specific, timestamped filename. This workflow enables the low-bandwidth station to store and transmit compact, highly descriptive summaries rather than raw, high-resolution sensor streams when satel-lite or acoustic telemetry connections become available. 
+
+## 5. Low-Power Sentinel Subsystems 
+
+This section details the two specialized low-consumption subsystems deployed around the Jetson master node: the vi-sual detection subsystem on the MAX78002 and the acoustic detection subsystem on the MAX78000.    
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 15 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 10: Visual detection subsystem.
+
+5.1. Visual Detection Subsystem 
+
+The proposed visual subsystem implements a sequential, shared-bus data architecture to optimize memory utilization during hardware-accelerated execution. Data acquisition be-gins through both a MIPI CSI-2 and DVP interface, which captures RGB565 image frames and streams them sequen-tially into external QSPI SRAM using a dedicated line handler. The system was tested with two cameras, OV5640 and OVM7692. During preprocessing, the microcontroller unit (MCU) retrieves the stored frame in distinct chunks, transcodes the pixel data into 24-bit RGB888 format, packs the results into 32-bit words, and loads them directly into the convolutional neural network (CNN) hardware FIFO. To minimize overall energy consumption, the MCU transitions into a low-power sleep state during inference and delegates computation of bounding box regressions and class logits to the hardware accelerator. Upon inference completion, the MCU resumes execution to poll the output registers. It applies a softmax activation to derive class probabilities and transforms the spatial outputs into YOLO-style bounding box coordinates. Redundant localizations are systematically eliminated using a Non-Maximum Suppression (NMS) algorithm based on Intersection over Union (IoU) filtering. Finally, the raw image is retrieved row by row from SRAM and transmitted over SPI to a TFT display with overlaid bounding boxes and confidence scores. While real-time display rendering is primary for validation, operational deployments bypass the display, opting instead to write the image to an SD card or issue a GPIO interrupt to wake the Jetson host module. Figure 10 represents the sequence diagram of this subsystem. Two lightweight vision models are tested: FPN De-tector and TinyissimoYOLO. Their architectures are de-scribed in Sections 5.1.1 and 5.1.2. A major constraint on the MAX78002 is that the hardware dictates how the model should be structured. The architecture supports up to 128 layers, 2048 input and output channels per layer, and image dimensions up to 2047 pixels. Supported operations in-clude Conv1D, Conv2D, ConvTranspose2D, pooling, fully connected layers, and element-wise arithmetic operations. Weights can be quantized to 1, 2, 4, or 8 bits, and activations are processed in signed 8-bit format. The device provides approximately 2.34 MiB of dedi-cated weight memory and 1.28 MiB of data SRAM dis-tributed across 16 memory banks. Convolutional layers are restricted to specific kernel sizes and strides optimized for hardware efficiency, with support for depthwise con-volutions and streaming mode to process inputs exceed-ing on-chip memory capacity. Convolutional layers on the MAX78002 are limited to the following hardware-supported configurations: 
+
+• Conv2D: kernel size 1 × 1 or 3 × 3 only. 
+
+• Conv2D stride: fixed to 1 × 1 .
+
+• Conv2D padding: 0, 1, or 2.
+
+• Conv2D dilation: 1 to 16 .
+
+• Groups: standard convolution ( 𝑔 = 1 ) or depthwise convolution ( 𝑔 = 𝐶 in = 𝐶 out ).   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 16 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+
+• Conv1D: kernel size 1 to 9.
+
+• Conv1D stride: fixed to 1.
+
+• Conv1D padding: 0 to 2.
+
+• ConvTranspose2D: kernel size 3 × 3 only. 
+
+• ConvTranspose2D stride: fixed to 2 × 2 .
+
+• ConvTranspose2D output padding: fixed to 1.Consequently, convolutions such as 5 × 5 , 7 × 7 , stride-
+
+2 Conv2D, stride-4 Conv2D, or arbitrary grouped convolu-tions are not directly supported by the accelerator and must be decomposed into supported operations during model conversion. Fully connected layers are implemented as 1 × 1 
+
+convolutions and are constrained by input flattening lim-its. The platform also uses hardware-accelerated activation functions. 
+
+5.1.1. FPN Detector 
+
+The first tested model is a Feature Pyramid Network (FPN) object detection architecture developed by the MAX 78002 team and tailored specifically for ultra-low-power, real-time edge AI processing. Operating on an RGB in-put image of size 256 × 320 , the network uses two initial fused convolutional layers to project the input to a 64-channel space before feeding it into a highly optimized 
+
+> ResNetBackbone
+
+. This backbone uses strided max-pooling layers directly embedded within its residual blocks to down-sample the spatial dimensions across six distinct sub-blocks, producing four multiscale feature maps at resolutions match-ing 32 × 40 , 16 × 20 , 8 × 10 , and 4 × 5 .These representations are then aggregated by a top-down FPN module that uses 1 × 1 lateral convolutions to unify all pyramid feature planes to a 64-channel baseline, together with 3 × 3 transposed convolutions for spatial upsampling and element-wise additions to reduce aliasing artifacts. The resulting pyramid feature maps, 𝐏 0 to 𝐏 3,are routed in parallel to dual, weight-sharing subnetworks for classification and bounding box regression. These sub-networks simultaneously evaluate 10,200 anchor boxes per frame generated across variable aspect ratios (0 .5, 1.0, 2.0) 
+
+and scale modifiers. By using proprietary fused primitives the architecture maximizes hardware pipelining efficiency. This allows com-plex structural semantics and anchor-based post-processing operations, including Jaccard-coordinate decoding and Non-Maximum Suppression, to execute within the strict energy and memory constraints of the MAX78002 microcontroller platform. More details are provided in the repository and documentation supplied by Analog Devices [4]. 
+
+5.1.2. TinyissimoYOLO 
+
+TinyissimoYOLO is an ultra-lightweight object detec-tion architecture engineered specifically for extreme edge-computing environments and resource-constrained micro-controllers. It was developed by Julian Moosmann at the Center for Project Based Learning, ETH Zurich [20]. The network relies on a streamlined, strictly sequential convo-lutional neural network backbone consisting of standard 2D convolutional layers, typically using 3×3 kernels with ReLU activations, interspersed with 2 × 2 max-pooling layers. This topology progressively downsamples the spatial di-mensions of the input image while expanding channel depth, generally scaling from 16 up to 128 channels. To strictly minimize computational overhead and memory footprint, the architecture avoids complex mechanisms such as feature pyramids. Instead, the final pooled feature map is routed directly into a compact detection head, often implemented as a dense layer or a 1×1 convolution, which outputs a struc-tured tensor containing bounding box coordinates and class probabilities. This design prioritizes low parameter count and deterministic execution, enabling real-time inference on the MAX78002 microcontroller. Additional implementation details and model variants are provided in the associated repository [20]. 
+
+5.2. Acoustic Detection Subsystem 
+
+The developed acoustic classification system imple-ments a direct-memory-access-driven continuous process-ing pipeline to detect marine mammal vocalizations on a resource-constrained hardware architecture. Audio is sam-pled at 16 kHz through an I2S interface and buffered dynamically. Incoming data is digitally high-pass filtered to eliminate DC offset and evaluated against an amplitude threshold to suppress inference on ambient noise. For valid acoustic events, a software-based digital signal processing routine generates a log-Mel spectrogram by ap-plying a periodic Hann window, executing a 512-point real Fast Fourier Transform, and mapping the power spectrum through a 64-bin sparse triangular Mel filterbank. The result-ing feature matrix is quantized to 8-bit integers and loaded directly into the static random-access memory of a dedicated convolutional neural network accelerator. The deployed classifier employs a compact five-stage convolutional neural network optimized for execution on the MAX78000 hardware accelerator. The network accepts a single-channel 96 ×64 log-Mel spectrogram as input and progressively extracts higher-level acoustic features through successive 3 ×3 convolutional layers, each followed by batch normalization, ReLU activation, and 2 ×2 max-pooling (ex-cept for the first layer). The feature maps are reduced from 16 to 64 channels while the spatial resolution is gradually compressed, yielding a compact 64 ×3×2 representation. A final 1 ×1 convolution preserves the feature depth before flattening the output into a 384-element feature vector, which is processed by a fully connected layer to classify the input into one of 13 categories, comprising 12 cetacean vocal-ization classes and one background noise class. The archi-tecture is specifically designed to minimize computational complexity and memory usage while maintaining sufficient representational capacity for accurate embedded acoustic classification.    
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 17 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Figure 11: Acoustic detection subsystem.
+
+During CNN inference, the primary microcontroller yields execution to the hardware accelerator to reduce dy-namic power consumption. Once inference is complete, the accelerator returns a vector of class scores, which is processed using a softmax function to obtain the confidence associated with each category. If the highest-confidence prediction corresponds to a cetacean vocalization rather than the background noise class, the associated raw audio buffer is automatically archived to the integrated SD card for subsequent empirical validation. The complete processing sequence of the acoustic subsystem is illustrated in Figure 11. 
+
+## 6. Experimental Results and Evaluation 
+
+This section evaluates the operational efficiency, detec-tion accuracy, and system-wide energy consumption of the proposed hierarchical agentic underwater monitoring sys-tem. The evaluation is structured to first benchmark the ultra-low-power sentinel tier independently, and then to validate the high-fidelity master tier and the overall power savings achieved by the hardware-switched cascade architecture. 
+
+6.1. Experimental Setup and Benchmarking Environment 
+
+To validate the system under realistic edge constraints, the multi-agent framework and high-fidelity models were executed on a Seeed reComputer J4012 powered by an NVIDIA Jetson Orin NX module (16GB RAM) . The con-tinuous sentinel tier consisted of a MAX78002 EV kit and a MAX78000 FTHR board. The NVIDIA Jetson Orin NX and Maxim Integrated MAX78000/MAX78002 were pow-ered by an Aim-TTi CPX400DP DC power supply. Sys-tem current, voltage, and total power consumption for the MAX78000 FTHR board and the Seeed reComputer J4012 (Jetson Orin NX) were monitored and recorded separately using an external, inline Rohde & Schwarz HMC8015 digital power analyzer. In contrast, the MAX78002 EV Kit tracked its power consumption internally using its onboard power accumulator module. The evaluation datasets were already introduced in sec-tion 3. 
+
+6.2. Sentinel Evaluation 
+
+The Sentinel Tier was evaluated under the deployment constraints targeted by the proposed low-power architecture. The visual sentinel was assessed using mAP@50, while the acoustic sentinel was evaluated using accuracy, recall and F1 score. The visual sentinel was trained for 100 epochs using the same train/validation/test split proposed by the original dataset authors. Training employed the Adam optimizer with an initial learning rate of 0.001, a batch size of 64, and a cosine annealing learning rate schedule. Quantization-aware training (QAT) was enabled from epoch 73 onward. As                   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 18 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG
+> Table 4
+> Sentinel-tier core performance evaluation metrics.
+> Subsystem (Chip) Model Architecture Target Task Evaluation Metrics
+> Vision (MAX78002) FPN Detector Fish Detection mAP@50: 78.4% TinyissimoYOLO Fish Detection mAP@50: 70.75% Acoustic (MAX78000) Mel-Spectrogram CNN 12 Marine Mammals Accuracy: 98.99 ±0.11% Recall: 95.97 ±0.86% F1: 96.36 ±0.52%
+
+described in Section 3.1, stochastic data augmentation was applied throughout training, which was further restricted to images containing at most five annotated bounding boxes to better reflect the target deployment scenario. All visual model training was performed on the IFREMER HPC clus-ter. For the acoustic sentinel, evaluation was conducted using five-fold cross-validation. The model was trained for 50 epochs using the Adam optimizer (weight decay 10 −4 ), an initial learning rate of 0.001, and a batch size of 128, with QAT enabled from epoch 37 onward. Table 4 summarizes the resulting performance of both Sentinel Tier models. 
+
+6.3. Experimental Validation of the Master Tier 
+
+The primary objective of the experimental evaluation was to verify the feasibility of the proposed edge-based multi-agent system under realistic deployment constraints. While the fish identification component could be quantita-tively assessed using curated benchmark datasets, evaluating the complete agentic RAG pipeline proved considerably more challenging due to the absence of standardized datasets and established metrics tailored to this application. Further-more, the scope of this work did not permit the development of dedicated benchmarks for the routing, analyst, and report-ing agents. Consequently, the evaluation combines rigorous quantitative experiments for the fish identification module with qualitative validation of the remaining agents, focusing on their functional correctness, integration, and suitability for low-power edge deployment. The fish identification layer was evaluated using two complementary protocols. First, a cross-dataset evaluation was conducted across the six reference collections described in Table 3: FishBase/SeaLifeBase, WildFish++, Fish-Vista, FishNet, BioTrove restricted to marine species, and OzFish. In this setting, each dataset was used as a reference collec-tion and evaluated against the others in order to quantify cross-domain generalization. OzFish was used as the real-condition reference dataset, making it the main target for assessing deployment robustness. Since the retrieval and classification pipeline is deterministic once the embeddings are fixed, this cross-dataset evaluation was performed once. Second, an intra-dataset evaluation was conducted inde-pendently for each dataset. For this protocol, 10 independent species-stratified splits were generated, with 80% of the sam-ples embedded into the vectorized reference space and the remaining 20% used for testing. Results are reported as mean 
+
+± standard deviation. Classification was evaluated at five taxonomic levels: class, order, family, genus, and species. Two ranking-based metrics were used: Top-1 accuracy and Top-5 accuracy. The cross-dataset results are summarized in Table 5, while the intra-dataset split results are reported in Table 6. For both cross-dataset and intra-dataset evaluations, the tables present results for the SVM classifier, which achieved superior performance in most cases. This outcome was expected, as centroid-based methods risk obscuring intra-species fine details, particularly when morphology and coloration vary across age or sex. The remaining components of the system were evalu-ated qualitatively through functional validation. Given the specialized nature of the proposed architecture, no pub-licly available benchmarks currently exist to objectively as-sess the performance of an edge-deployed multi-agent RAG system operating across heterogeneous scientific databases. Consequently, the evaluation focused on verifying that the agents performed their intended roles reliably while satis-fying the power and computational constraints required for autonomous edge deployment. For the routing architecture, testing confirmed the cor-rect selection of the appropriate knowledge source and suc-cessful execution of the retrieval pipeline under realistic operating conditions. Although large-scale benchmarking involving numerous vector databases with overlapping se-mantic domains constitutes an important direction for future work, the present experiments demonstrate the practical feasibility of the routing strategy within the target hardware and energy constraints. Testing of the AnalystAgent confirmed that structured code generation and execution can be performed directly on the Jetson edge platform. In initial evaluations, the Qwen3.5-4B model exhibited significant performance limitations on complex tasks: the ReAct execution loop frequently required up to eight iterations to reach a solution, primarily due to constraints on available functions/libraries and an inability to process the full context simultaneously. In contrast, testing with the Ornith 9B model exceeded expectations, generat-ing executable Pandas code on the first iteration in most cases, and requiring at most two loops. Furthermore, because Ornith 9B is a text-only model, it eliminates the unneces-sary computational overhead of vision-language modalities present in Qwen3.5-4B—a key advantage for the text- and data-centric requirements of the AnalystAgent. One opera-tional requirement identified on the Jetson platform is the necessity of clearing the NVIDIA GPU cache prior to ini-tializing the AnalystAgent to prevent CUDA out-of-memory (cudaMalloc) errors. Overall, these results demonstrate that   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 19 of 25
+
+Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+Table 5 
+
+Cross-dataset taxonomic identification matrix. Rows indicate the dataset used as the embedded reference collection, while columns indicate the dataset used for testing. Each cell reports a compact taxonomic performance signature in the order Class, Order, Family, Genus, and Species. Values are reported as Top-1/Top-5 accuracy percentages. OzFish is used as the real-condition deployment reference.                  
+
+> Reference →Test FishBase/ WildFish++ Fish-Vista FishNet BioTrove OzFish SeaLifeBase Marine Real FishBase/SeaLifeBase –C: 98.7/100.0 O: 78.5/95.1 F: 75.4/90.4 G: 65.3/80.0 S: 51.9/67.8 C: 99.3/100.0 O: 81.5/96.7 F: 75.4/91.1 G: 45.3/66.0 S: 11.2/23.9 C: 98.0/99.9 O: 80.6/96.6 F: 73.3/88.8 G: 70.4/84.4 S: 60.0/70.6 C: 97.7/99.8 O: 75.3/95.9 F: 60.6/83.6 G: 48.2/71.6 S: 24.7/43.1 C: 97.4/100.0 O: 73.0/92.9 F: 13.4/42.9 G: 13.9/30.0 S: 3.2/6.8
+> WildFish++
+> C: 88.5/89.7 O: 66.4/83.3 F: 46.3/57.5 G: 35.1/41.5 S: 23.5/24.7 –C: 99.4/100.0 O: 70.3/94.5 F: 67.2/83.5 G: 21.7/32.6 S: 8.4/19.1 C: 98.4/99.9 O: 77.9/94.6 F: 66.6/79.4 G: 52.3/61.4 S: 39.4/44.8 C: 98.3/99.6 O: 71.6/93.0 F: 56.4/72.4 G: 37.1/49.3 S: 20.5/26.1 C: 95.5/100.0 O: 70.1/93.4 F: 15.3/44.5 G: 11.5/27.7 S: 2.6/6.7
+> Fish-Vista
+> C: 84.8/85.3 O: 53.3/71.7 F: 25.9/38.7 G: 12.0/18.5 S: 3.4/4.7 C: 96.2/96.5 O: 62.2/83.6 F: 40.2/61.1 G: 19.7/28.3 S: 5.4/7.5 –C: 92.5/93.7 O: 59.7/80.8 F: 36.3/52.9 G: 19.2/28.1 S: 9.2/14.6 C: 93.0/93.6 O: 57.4/78.1 F: 34.8/55.3 G: 11.5/20.3 S: 1.9/3.6 C: 98.6/98.6 O: 75.6/89.6 F: 16.2/52.5 G: 13.2/29.0 S: 0.7/2.1
+> FishNet
+> C: 88.8/90.0 O: 72.2/87.5 F: 57.2/68.3 G: 64.2/70.5 S: 65.0/67.2 C: 98.9/100.0 O: 77.1/96.2 F: 73.2/90.4 G: 64.3/81.0 S: 47.2/65.9 C: 99.3/99.9 O: 79.0/96.1 F: 74.9/91.1 G: 38.5/62.4 S: 14.9/30.6 –C: 98.4/99.9 O: 73.7/95.5 F: 63.0/82.0 G: 41.3/65.0 S: 17.1/33.6 C: 95.5/100.0 O: 70.4/93.3 F: 14.1/33.9 G: 9.6/19.8 S: 1.2/2.8
+> BioTrove Marine
+> C: 88.5/89.6 O: 68.1/85.8 F: 46.7/63.1 G: 35.9/52.7 S: 19.7/32.0 C: 98.9/99.8 O: 77.2/95.5 F: 72.6/88.9 G: 58.8/74.4 S: 44.3/59.9 C: 99.1/99.7 O: 74.6/94.5 F: 65.9/85.2 G: 34.3/58.1 S: 3.0/8.5 C: 98.4/99.8 O: 79.0/96.2 F: 69.0/85.5 G: 58.0/75.9 S: 41.1/56.8 –C: 96.2/100.0 O: 73.5/94.1 F: 16.7/47.5 G: 12.6/33.4 S: 4.2/8.2
+> OzFish Real ––––––
+
+Each non-diagonal cell reports five rows: C, O, F, G, and S for Class, Order, Family, Genus, and Species. Each row follows the format Top-1/Top-5 accuracy. 
+
+Table 6 
+
+Intra-dataset taxonomic identification evaluation across validated marine reference datasets. Results are reported as mean ±
+
+standard deviation over 10 species-stratified 80/20 splits. 
+
+Dataset Class Order Family Genus Species T1 T5 T1 T5 T1 T5 T1 T5 T1 T5 
+
+Fish/SeaLife Base 96.8 ± 0.1 99.6 ± 0.0 79.4 ± 0.2 96.9 ± 0.1 70.4 ± 0.2 88.6 ± 0.2 63.1 ± 0.2 83.4 ± 0.1 43.0 ± 0.4 61.3 ± 0.3 WildFish++ 99.6 ± 0.0 100.0 ± 0.0 86.3 ± 0.2 99.4 ± 0.1 90.3 ± 0.1 98.8 ± 0.0 88.7 ± 0.2 97.7 ± 0.1 79.4 ± 0.2 92.5 ± 0.1 Fish-Vista 99.7 ± 0.0 100.0 ± 0.0 95.3 ± 0.2 99.6 ± 0.1 95.4 ± 0.1 98.9 ± 0.1 83.9 ± 0.3 93.2 ± 0.1 68.9 ± 0.3 85.7 ± 0.2 FishNet 98.9 ± 0.0 100.0 ± 0.0 86.3 ± 0.1 98.5 ± 0.0 78.9 ± 0.1 90.6 ± 0.1 75.8 ± 0.2 89.4 ± 0.1 60.2 ± 0.2 73.3 ± 0.1 BioTrove Marine 98.7 ± 0.0 100.0 ± 0.0 80.8 ± 0.2 98.2 ± 0.1 69.6 ± 1.1 86.0 ± 0.7 73.8 ± 0.4 91.1 ± 0.2 68.9 ± 0.3 85.4 ± 0.1 
+
+T1 and T5 denote Top-1 and Top-5 accuracy, respectively. Each value is reported as mean ± standard deviation across 10 independent species-stratified splits. 
+
+deploying capable 8B–9B parameter models on resource-constrained edge hardware achieves both high execution accuracy and system feasibility. The ReportingAgent was not evaluated using a dedicated quantitative metric. Its behavior is largely deterministic, producing structured Markdown reports from the validated outputs of the upstream agents and the current station state. Consequently, its assessment focused on verifying the cor-rectness, consistency, and completeness of the generated reports rather than measuring predictive performance. 
+
+6.3.1. Energy Consumption Evaluation 
+
+Continuous sentinel-layer consumption. The visual and acoustic sentinels remain active continuously, establishing the baseline energy footprint of the system. This continuous sentinel layer operates independently of the downstream processing cycles, and its energy contribution is measured in isolation to define the static power draw required for uninterrupted environmental monitoring. Table 7 presents the experimental evaluation of the visual sentinel subsys-tem. We report both performances of Tinyissimo YOLO and FPN Detector. The evaluation considers eight distinct configurations: for both tested models employing either an OV5640 (a 5 MP CSI camera) or an OVM7692 (a VGA 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 20 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+Table 7 
+
+Experimental characterization of the continuously active visual sentinel subsystem (MAX78002). Note: Values reflect only the deployable portion of the system, measured via the MAX78002 EVKIT internal power monitoring circuitry, excluding the rest of the development board components.                                           
+
+> Model Camera & Mode Energy Per Inference (mJ/inf) Active Power mW Idle Power mW Latency ms FPS ms TinyissimoYOLO OVM7692 (Inference Only) 9.2 90.65 11.3 116.4 8.6 OVM7692 (Capture + Inf) 11.97 86.57 11.3 159 6.3 OV5640 (Inference Only) 17.97 119 13.2 170 5.88 OV5640 (Capture + Inf) 23.65 103 13.57 264.3 3.8 FPN Detector OVM7692 (Inference Only) 63.9 482.85 11.5 135 7.4 OVM7692 (Capture + Inf) 67.13 372.56 11.31 185.8 5.4 OV5640 (Inference Only) 63.5 480 13.2 135 7.4 OV5640 (Capture + Inf) 68.37 336.8 13.21 211.3 4.7
+
+Table 8 
+
+Experimental characterization of the continuously active audio sentinel subsystem (MAX78000FTHR). Note: Due to hardware monitoring limitations, values represent total board consumption, as isolated measurement of audio acquisition, CNN, and DSP components only is not supported.    
+
+> Audio Mode Average Power (mW) Internal Microphone 50
+> External Audio (FTHR CODEC) 180
+
+DVP camera), with measurements taken for both inference-only and capture-plus-inference operational modes. Notably, the OVM7692 yields significantly lower power consumption than the OV5640. This improvement is primarily attributed to its native hardware optimization for the MAX78002 EV Kit—with which it is bundled as the reference sensor—as well as highly tunable operational parameters, particularly regarding clock speed control. Furthermore, the OVM7692 benefits from reduced sensor startup latency, lower initial-ization overhead, and a simpler interface clocking scheme inherent to its low-resolution DVP architecture compared to the higher-resolution MIPI-CSI setup. 
+
+Measured processing blocks. In contrast to the contin-uous sentinel layer, the Jetson module’s energy consump-tion is highly dynamic and depends strictly on the deploy-ment configuration. The system utilizes three distinct operat-ing modes: periodic duty-cycling, event-triggered activation upon sentinel detection, and sustained continuous operation featuring a graphical user interface. To evaluate the energy requirements across these varying modes, the Jetson processing pipeline is decomposed into nine discrete, experimentally measurable operational blocks. These blocks, characterized in Table 9, correspond to the sequential tasks executed during system operation: 1. boot and initialization; 2. sentinel-data transfer; 3. video-frame extraction; 4. CLIP & Grounding Dino loading; 5. image/frame indexing; 6. CLIP similarity retrieval; 7. Router–RAG request processing; 8. scientific report generation; 9. controlled shutdown. 
+
+Mathematical energy formulation. To extrapolate the total daily energy consumption ( 𝐸 total ) across the three deployment configurations, the system’s energy footprint is modeled as the sum of the static sentinel baseline ( 𝐸 sentinel )and the dynamic Jetson processing load ( 𝐸 dyn ): 
+
+𝐸 total = 𝐸 sentinel + 𝐸 dyn (18) The continuous sentinel baseline is deterministic and independent of the operating mode. It is defined as: 
+
+𝐸 sentinel = 𝑃 sentinel ⋅ 𝑇 day (19) where 𝑃 sentinel is the combined average power of the active sentinels (Tables 8 and 7) and 𝑇 day is the 24-hour operational period. The dynamic energy, 𝐸 dyn , represents the variable con-sumption of the Jetson module. Let 𝐸 𝑏 𝑖 denote the energy required to execute the 𝑖 -th processing block (Table 9), and 𝑛 𝑖 
+
+denote its daily execution frequency. Because the individual energy blocks already incorporate the idle power draw and the time between operations is negligible, the dynamic load is formulated solely as the sum of these discrete processing events: 
+
+𝐸 dyn =
+
+> 9
+
+∑
+
+> 𝑖 =1
+
+𝑛 𝑖 ⋅ 𝐸 𝑏 𝑖 (20) The execution frequency 𝑛 𝑖 strictly depends on the se-lected operating mode: 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 21 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+Table 9 
+
+Experimental energy characterization of the discrete processing blocks utilized across the three deployment modes. Values are reported for the exact workload specified during each measurement.                                                
+
+> Processing block Measured workload Energy ( Wh )Duration ( s)Average power ( W)Boot and initialization One activation 0.0434 16 .374 9.55
+> Sentinel-data transfer 1 MB (32 audio files of 32KB) 0.26 136 6.88
+> Video-frame extraction 1frame 720 ∗ 360 0.0001 0.038 9.77
+> CLIP & Grounding Dino loading One loading sequence 0.076 32 8.55
+> Image/frame indexing 1frame 720 ∗ 360 4.17 × 10 −5 0.0137 10 .96
+> CLIP similarity retrieval One query over 49150 indexed items 0.046 20 8.28
+> Router–RAG request One inference request 0.431 139 11 .16
+> Scientific report generation One report from 187 indexed detections 0.646 177 13.14 Controlled shutdown One shutdown sequence 0.014 86.3
+
+• Periodic duty-cycling: The Jetson powers on at a fixed time interval Δ𝑡 . The execution frequency for core retrieval and indexing blocks is deterministic, defined as 𝑛 𝑖 = ⌊𝑇 day ∕Δ 𝑡 ⌋. The system undergoes a controlled shutdown (Block 9) after each cycle. 
+
+• Event-triggered: The processing sequence is initi-ated exclusively by sentinel detection events. The fre-quency 𝑛 𝑖 becomes a stochastic variable correspond-ing to the expected daily event rate, 𝜆 event .
+
+• Sustained continuous: The Jetson module remains powered indefinitely to support the graphical interface and real-time processing. The execution frequency 
+
+𝑛 𝑖 is driven by the volume of spontaneous scientist requests (Block 7). By defining hypothetical operational scenarios to estab-lish the frequency variables ( 𝑛 𝑖 ), this formulation, combined with the measured energy blocks, provides a direct method to estimate the total daily energy consumption of the system. This consumption profile is subject to further optimization. Structural efficiency can be improved by integrating YOLO-World, as discussed in Section 4.3.2, or by increasing the serial communication baud rate from 115200 to a higher operational rate, thereby minimizing the active transmission time between components. 
+
+## 7. Discussion 
+
+The proposed system demonstrates that the integra-tion of ultra-low-power sentinel sensing with high-fidelity local multimodal reasoning can significantly enhance au-tonomous underwater monitoring capabilities in network-isolated/limited environments. By decoupling continuous environmental surveillance from intensive data processing, the architecture achieves a robust balance between energy efficiency and scientific insight generation. This section discusses the implications of our findings, highlighting the advantages of the local Retrieval-Augmented Generation (RAG) pipeline, while acknowledging operational trade-offs such as inference latency. We also explore how this framework can be extended to diverse marine applications beyond standard biodiversity surveys. 
+
+7.1. Advantages of Local Multimodal RAG and Adaptive Identification 
+
+A key strength of the proposed architecture is its ability to perform complex taxonomic identification without relying on cloud connectivity or pre-trained closed-set classifiers for every species. The use of BioCLIP/OpenCLIP embeddings within a local ChromaDB vector database enables a flexible, retrieval-based approach to species recognition. This method allows researchers to dynamically update reference collec-tions based on specific mission objectives (e.g., focusing on invasive species in one zone and endemic fauna in another) without retraining the underlying neural networks. The adaptive nature of this identification layer is partic-ularly valuable for exploratory missions where target taxa may vary or remain unknown until deployment. By combin-ing centroid-based similarity search with linear SVMs, the system provides hierarchical taxonomic hypotheses (from class to species level) accompanied by confidence scores and supporting visual evidence. This transparency allows scien-tists to verify identifications directly at the edge, reducing reliance on post-deployment manual annotation. Further-more, the integration of textual metadata—such as scientific descriptions and habitat information—into the embedding space enables semantic queries that go beyond simple image matching, fostering a deeper understanding of ecological contexts through local RAG pipelines. Another possibility is using the localization and identification layers to count fish: by cropping and then identifying the species, it will be possible to keep a record and store the count as metadata. 
+
+7.2. Agentic Reasoning: Balancing Intelligence and Latency 
+
+The multi-agent framework (RouterAgent, AnalystA-gent, Reporting Agent) introduces a layer of autonomous decision-making that transforms raw sensor data into struc-tured scientific knowledge. While the execution of large language models (LLMs) on edge hardware like the Jetson Orin NX inherently involves higher latency compared to simple inference tasks, this overhead is justified by the value-added services provided: natural-language query handling, automated report generation, and dynamic resource manage-ment. The RouterAgent’s ability to intelligently route queries between visual retrieval, textual analysis, and structured 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 22 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+computation ensures that computational resources are al-located efficiently. For instance, deterministic statistical re-quests are handled via the AnalystAgent using sandboxed Python execution, bypassing the LLM when unnecessary. Although real-time interaction may experience delays due to model loading and generation times, this latency is ac-ceptable for non-critical scientific inspection tasks (Mis-sion Mode) where depth of analysis takes precedence over millisecond-level responsiveness. The system’s design prior-itizes comprehensive situational awareness and autonomous reporting capabilities, which are crucial for long-term de-ployments where human intervention is limited. 
+
+7.3. Energy Efficiency Through Hierarchical Activation 
+
+The hierarchical master–satellite topology effectively mitigates the high energy costs associated with continuous GPU usage. By keeping the Jetson Orin NX powered off ex-cept during scheduled cycles or event-triggered activations, the system extends operational duration significantly com-pared to always-on architectures. The MAX78000/78002 sentinels provide reliable first-stage filtering for visual and acoustic events, ensuring that high-performance processing is reserved for scientifically relevant occurrences. While the sentinel models operate under strict hardware constraints, their optimized architectures achieve sufficient accuracy for trigger-based activation without excessive false positives. The Energy Management Agent further enhances sustainability by dynamically adjusting system parameters based on remaining battery capacity and mission priorities. Although current energy estimation relies on heuristic ap-proximations, this proactive management strategy demon-strates the feasibility of self-regulating power consumption in remote underwater environments. 
+
+7.4. Limitations of the current framework 
+
+Even though the current system offers many benefits in terms of power consumption, it is still limited by the currently available hardware and software. For instance, the MAX78000 and MAX78002 are highly efficient in terms of power consumption, outperforming almost any available mi-crocontroller in energy per inference. However, they present several issues that may slow down future deployment. First, the hardware accelerator is limited exclusively to CNN mod-els—and specifically, only those that respect the constraints presented in Section 5, making it difficult to deploy models that are already available online. Another problem is the SDK; while most standard chips use classical deployment through ONNX, the Analog Devices chips require training and deployment through a specialized SDK, which slows down the deployment process. On the other hand, currently available VLM (or classical LLM) models under 4B param-eters are still not highly reliable, especially for agentic tasks. In the future, more specialized small models may appear, and the current model-agnostic implementation through Ollama will make upgrading and testing new models easier. 
+
+7.5. Scalability and Concrete Underwater Applications 
+
+Beyond standard fish detection and marine mammal acoustic monitoring, the proposed architecture is highly scalable to other critical underwater applications: 
+
+• Invasive Species Monitoring: The adaptive reference collection feature allows rapid deployment against specific invasive threats (e.g., Lionfish or Green Crab) by simply uploading targeted image/text references. The system can automatically alert researchers when high-confidence detections occur, enabling timely management interventions. 
+
+• Benthic Habitat Assessment: By integrating visual similarity search with taxonomic metadata, the system can classify and quantify benthic communities (corals, sponges, seagrasses) over time. The RAG pipeline can generate automated health reports based on changes in species composition or coverage area detected by the sentinels. 
+
+• Anthropogenic Activity Tracking: The multimodal nature of the system supports detection and classifica-tion of human-made objects (e.g., fishing gear, debris, or vessels). Acoustic signatures combined with visual confirmation can help monitor illegal fishing activities or assess pollution levels in protected marine areas. 
+
+• ROV/AUV Integration: The lightweight, modular design is suitable for integration into Remotely Op-erated Vehicles (ROVs) or Autonomous Underwater Vehicles (AUVs). In this context, the system could provide real-time situational awareness to pilots by highlighting points of interest and generating concise mission summaries upon surfacing. 
+
+• Maritime Surveillance Buoy: The system can also be deployed on a floating buoy, which guarantees a continuous power source to deliver more frequent and higher-quality reports, process more queries, and uti-lize hybrid and mission modes more often. Addition-ally, the energy management agent can be upgraded to account for variable battery charging and discharging cycles, allowing it to optimize the activity of both the sentinel nodes and the master node based on solar patterns. Future work will focus on refining the current pipeline by exploring efficient acoustic embedding techniques—such as CLAP and SAM Audio—for fully multimodal event correla-tion. Works on seismic detection models were already initi-ated; however, developing reliable edge-deployable models remains challenging due to training data scarcity and tight microcontroller memory and compute constraints, Conse-quently, this component has been excluded from the current manuscript pending further validation. Additionally, we aim to optimize the LLM inference pipeline. To eliminate image processing overhead during inference, we will leverage pre-stored CLIP embeddings directly by introducing a projector   
+
+> Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 23 of 25
+
+Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+that bridges the vision and Qwen embedding spaces, while evaluating newly developed models under 4B parameters. Finally, we plan to substitute general biological foundation models with specialized marine domain architectures like AquaticCLIP [2] to extract more granular aquatic environ-mental features. In conclusion, this work presents a viable and flexible framework for intelligent underwater monitoring, specifi-cally engineered to operate effectively under severe energy and bandwidth restrictions. By leveraging local multimodal RAG and adaptive identification, the system empowers re-searchers to obtain actionable ecological insights from re-mote deployments with minimal energy consumption and communication overhead. Its modular design opens new possibilities for diverse marine observation tasks, bridging the gap between raw data collection and automated scientific interpretation at the edge. 
+
+## 8. Acknowledgments 
+
+This work was conducted as part of an internship funded by the French Research Institute for Exploitation of the Sea (Ifremer). The authors gratefully acknowledge Ifremer for its financial support and computational resources, specifically the Datarmor HPC cluster that facilitated model training. Additionally, we express our gratitude to the creators of the WildFish dataset for granting access to their dataset, and to Mathieu Léonardon for endorsing the preprint. 
+
+## CRediT authorship contribution statement 
+
+Mohamed Amine Janati: Writing – review & editing, Writing – original draft, Validation, Supervision, Conceptu-alization, Methodology, Visualization, Software, Data cura-tion, Result analysis. Laurent Gautier: Writing – review & editing, Supervision, Conceptualization, Project administra-tion, Funding acquisition, Validation, Resources. Stéphane Barbot: Writing – review & editing, Supervision, Con-ceptualization, Project administration, Funding acquisition, Validation, Resources. 
+
+## References 
+
+[1] Abujabal, M., Saoud, L.S., Hussain, I., 2025. Fishdet-m: A unified large-scale benchmark for robust fish detection and clip-guided model selection in diverse aquatic visual domains. doi: 10.48550/arXiv.2507. 17859 , arXiv:2507.17859 .[2] Alawode, B., Ganapathi, I.I., Javed, S., Werghi, N., Bennamoun, M., Mahmood, A., 2025. Aquaticclip: A vision-language foundation model for underwater scene analysis. doi: 10.48550/arXiv.2502.01785 ,
+
+> arXiv:2502.01785
+
+.[3] Analog Devices, 2022a. MAX78002: Artificial Intelligence Micro-controller with Low-Power Convolutional Neural Network Accel-erator. Analog Devices. URL: https://www.analog.com/media/en/ technical-documentation/data-sheets/max78002.pdf . data sheet. [4] Analog Devices, 2022b. MAX78002 Artificial Intelligence Micro-controller with Low-Power Convolutional Neural Network Acceler-ator Data Sheet. Technical Report. Analog Devices, Inc. URL: 
+
+> https://www.analog.com/en/products/max78002.html
+
+.[5] Australian Institute of Marine Science, 2020. OzFish Dataset -Machine Learning Dataset for Baited Remote Underwater Video Stations. Available online: https://github.com/open-AIMS/ozfish .doi: 10.25845/5E28F062C5097 . accessed: June 2026. [6] Baumgartner, M.F., Fratantoni, D.M., Hurst, T.P., Brown, M.W., Cole, T.V.N., Van Parijs, S.M., Johnson, M., 2013. Real-time reporting of baleen whale passive acoustic detections from ocean gliders. The Journal of the Acoustical Society of America 134, 1814–1823. doi: 10. 1121/1.4816406 .[7] Cheng, T., Song, L., Ge, Y., Liu, W., Wang, X., Shan, Y., 2024. Yolo-world: Real-time open-vocabulary object detection. doi: 10.48550/ arXiv.2401.17270 , arXiv:2401.17270 .[8] Froese, R., Pauly, D., 2024. FishBase. World Wide Web electronic publication. URL: https://www.fishbase.org . accessed: June 2026. [9] Gong, Z., Wang, A.T., Huo, X., Haurum, J.B., Lowe, S.C., Taylor, G.W., Chang, A.X., 2025. CLIBD: Bridging vision and genomics for biodiversity monitoring at scale, in: Proceedings of the Thirteenth International Conference on Learning Representations. doi: 10.48550/ arXiv.2405.17537 .[10] Gu, L., Stankovic, J.A., 2005. Radio-triggered wake-up for wireless sensor networks. Real-Time Systems 29, 157–182. doi: 10.1007/ s11241-005-6883-z .[11] Irfan, M., Jiangbin, Z., Ali, S., Iqbal, M., Masood, Z., Hamid, U., 2021. Deepship: An underwater acoustic benchmark dataset and a separable convolution based autoencoder for classification. Expert Systems with Applications 183, 115270. doi: 10.1016/j.eswa.2021. 115270 .[12] Khan, F.F., Li, X., Temple, A.J., Elhoseiny, M., 2023. Fishnet: A large-scale dataset and benchmark for fish recognition, detection, and functional trait prediction, in: 2023 IEEE/CVF International Conference on Computer Vision (ICCV), pp. 20439–20449. doi: 10. 1109/ICCV51070.2023.01874 .[13] Laurent, G., Barbot, S., Le Vourc’h, D., 2025. Syrene: An underwater embedded artificial intelligence camera for invasive fauna monitoring. Marine Technology Reporter Magazine 68, 40–42. URL: https: //archimer.ifremer.fr/doc/00992/110327/ .[14] Lin, J., Chen, W.M., Lin, Y., Cohn, J., Gan, C., Han, S., 2020. Mcunet: Tiny deep learning on iot devices. doi: 10.48550/arXiv.2007.10319 ,
+
+> arXiv:2007.10319
+
+.[15] Liu, S., Zeng, Z., Ren, T., Li, F., Zhang, H., Yang, J., Jiang, Q., Li, C., Yang, J., Su, H., Zhu, J., Zhang, L., 2024. Grounding dino: Marrying dino with grounded pre-training for open-set object detection, in: Computer Vision – ECCV 2024: 18th European Conference, Mi-lan, Italy, September 29–October 4, 2024, Proceedings, Part XLVII, Springer-Verlag, Berlin, Heidelberg. p. 38–55. URL: https://doi. org/10.1007/978-3-031-72970-6_3 , doi: 10.1007/978-3-031-72970-6_3 .[16] Mehrab, K.S., Maruf, M., Daw, A., Neog, A., Manogaran, H.B., Khurana, M., Feng, Z., Altintas, B., Bakis, Y., Campolongo, E.G., Thompson, M.J., Wang, X., Lapp, H., Berger-Wolf, T., Mabee, P., Bart, H., Chao, W.L., Dahdul, W.M., Karpatne, A., 2025. Fish-vista: A multi-purpose dataset for understanding & identification of traits from images, in: 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp. 24275–24285. doi: 10.1109/ CVPR52734.2025.02261 .[17] Mekonnen, T., Harjula, E., Koskela, T., Ylianttila, M., 2017. sleepy-cam: Power management mechanism for wireless video-surveillance cameras, in: 2017 IEEE International Conference on Communications Workshops (ICC Workshops), pp. 91–96. doi: 10.1109/ICCW.2017. 7962639 .[18] Millar, J., Huang, Y., Sethi, S., Haddadi, H., Madhavapeddy, A., 2025. Benchmarking ultra-low-power 𝜇 npus. doi: 10.48550/arXiv. 2503.22567 , arXiv:2503.22567 .[19] Moosmann, J., Giordano, M., Vogt, C., Magno, M., 2023a. Tinyissi-moYOLO: A quantized, low-memory footprint, tinyml object detec-tion network for low power microcontrollers, in: 2023 IEEE 5th In-ternational Conference on Artificial Intelligence Circuits and Systems (AICAS). doi: 10.1109/AICAS57966.2023.10168657 .[20] Moosmann, J., Giordano, M., Vogt, C., Magno, M., 2023b. Tinyis-simoYOLO: A quantized, low-memory footprint, TinyML object detection network for low power microcontrollers, in: 2023 IEEE 
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 24 of 25 Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG 
+
+5th International Conference on Artificial Intelligence Circuits and Systems (AICAS), IEEE. pp. 1–5. doi: 10.1109/AICAS57966.2023. 10168657 .[21] Moosmann, J., Müller, H., Zimmerman, N., Rutishauser, G., Benini, L., Magno, M., 2024. Flexible and fully quantized lightweight TinyissimoYOLO for ultra-low-power edge systems. IEEE Access 12, 75093–75107. doi: 10.1109/ACCESS.2024.3404878 .[22] Mots’oehli, M., Nikolaev, A., IGede, W.B., Lynham, J., Mous, P.J., Sadowski, P., 2024. Fishnet: Deep neural networks for low-cost fish stock estimation, in: 2024 IEEE International Conference on Omni-layer Intelligent Systems (COINS), IEEE. pp. 1–7. doi: 10.1109/ coins61597.2024.10622134 .[23] Ortenzi, L., Aguzzi, J., Costa, C., Marini, S., D’Agostino, D., Thom-sen, L., De Leo, F.C., Correa, P.V., Chatzievangelou, D., 2024. Automated species classification and counting by deep-sea mobile crawler platforms using YOLO. Ecological Informatics 82, 102788. doi: 10.1016/j.ecoinf.2024.102788 .[24] Palazzetti, L., Giannetti, D., Verolino, A., Grasso, D.A., Pinotti, C.M., Betti Sorbelli, F., 2025. AntPi: A raspberry pi based edge-cloud system for real-time ant species detection using YOLO. Ecological Informatics 91, 103383. doi: 10.1016/j.ecoinf.2025.103383 .[25] Palomares, M.L.D., Pauly, D., 2024. SeaLifeBase. World Wide Web electronic publication. URL: https://www.sealifebase.org . accessed: June 2026. [26] Radford, A., Kim, J.W., Hallacy, C., Ramesh, A., Goh, G., Agar-wal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., Sutskever, I., 2021. Learning transferable visual models from nat-ural language supervision, in: Proceedings of the 38th International Conference on Machine Learning, PMLR. pp. 8748–8763. [27] Ray, P.P., 2022. A review on tinyml: State-of-the-art and prospects. Journal of King Saud University - Computer and Information Sci-ences 34, 1595–1623. doi: 10.1016/j.jksuci.2021.11.019 .[28] Song, Y., Lv, C., Zhu, K., 2026. FMRAG: Retrieval-augmented multimodal large language models for fisheries intelligence. Frontiers in Marine Science 13, 1801835. doi: 10.3389/fmars.2026.1801835 .[29] Stevens, S., Wu, J., Thompson, M.J., Campolongo, E.G., Song, C.H., Carlyn, D.E., Dong, L., Dahdul, W.M., Stewart, C., Berger-Wolf, T., Chao, W.L., Su, Y., 2024. BioCLIP: A vision foundation model for the tree of life, in: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). doi: 10.48550/ arXiv.2311.18803 .[30] Velasco-Montero, D., Fernández-Berni, J., Carmona-Galán, R., San-glas, A., Palomares, F., 2024. Reliable and efficient integration of AI into camera traps for smart wildlife monitoring based on continual learning. Ecological Informatics 83, 102815. doi: 10.1016/j.ecoinf. 2024.102815 .[31] Watkins, W.A., Fristrup, K., Daher, M.A., Howald, T.J., 1992. SOUND Database of Marine Animal Vocalizations: Structure and Operations. Technical Report. Woods Hole Oceanographic Institu-tion. doi: 10.1575/1912/854 .[32] Yang, C.H., Feuer, B., Jubery, Z., Deng, Z.K., Nakkab, A., Hasan, M.Z., Chiranjeevi, S., Marshall, K., Baishnab, N., Singh, A.K., Singh, A., Sarkar, S., Merchant, N., Hegde, C., Ganapathysubramanian, B., 2024. Biotrove: A large curated image dataset enabling ai for biodiversity. arXiv preprint arXiv:2406.17720 doi: 10.48550/arXiv. 2406.17720 .[33] Zhuang, P., Wang, Y., Qiao, Y., 2021. Wildfish++: A comprehensive fish benchmark for multimedia research. IEEE Transactions on Multimedia 23, 3603–3617. doi: 10.1109/TMM.2020.3028482 .
+
+Mohamed Amine JANATI et al.: Preprint submitted to Elsevier Page 25 of 25

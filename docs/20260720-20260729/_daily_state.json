@@ -1,0 +1,281 @@
+{
+  "date": "20260720-20260729",
+  "date_label": "2026-07-20 ~ 2026-07-29",
+  "generated_at": "2026-07-29 02:42:19 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.18504v2",
+      "route": "20260720-20260729/2607.18504v2-now-we-know-a-systematic-comparison-of-terramind-and-thor",
+      "title": "Now We Know? A Systematic Comparison of TerraMind and THOR",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "对地理空间基础模型TerraMind与THOR的系统比较，直接相关于海洋学",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.24064v1",
+      "route": "20260720-20260729/2607.24064v1-marineevt-advancing-event-centric-marine-video-understanding-via-visual-tool-reasoning",
+      "title": "MarineEVT: Advancing Event-Centric Marine Video Understanding via Visual Tool Reasoning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基础模型（视觉语言模型）应用于海洋视频理解",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.24313v1",
+      "route": "20260720-20260729/2607.24313v1-energy-constrained-hierarchical-underwater-monitoring-via-local-multi-agent-rag",
+      "title": "Energy Constrained Hierarchical Underwater Monitoring via Local Multi-Agent RAG",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基于本地多智能体RAG的水下监测",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.18013v1",
+      "route": "20260720-20260729/2607.18013v1-remote-awareness-of-seafloor-images-collected-by-auvs-over-low-bandwidth-communication-links",
+      "title": "Remote Awareness of Seafloor Images Collected by AUVs over Low-Bandwidth Communication Links",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "AUV海底图像传输用于海洋感知",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.19147v1",
+      "route": "20260720-20260729/2607.19147v1-incomplete-observations-boost-evolutionary-performance-in-ocean-modeling",
+      "title": "Incomplete Observations Boost Evolutionary Performance in Ocean Modeling",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "使用生成状态空间模型的深度学习海洋建模",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.20352v1",
+      "route": "20260720-20260729/2607.20352v1-distributed-motion-planning-with-safety-guarantees-for-self-reconfiguring-robotic-boats",
+      "title": "Distributed Motion Planning with Safety Guarantees for Self-Reconfiguring Robotic Boats",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "分布式MPC与CBF用于自重构机器人船，海洋智能体应用",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.20716v1",
+      "route": "20260720-20260729/2607.20716v1-spatial-generalization-tests-for-machine-learning-based-weather-models-to-assess-physical-consistency",
+      "title": "Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "测试机器学习天气模型的空间泛化能力，涉及海洋条件",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.21945v1",
+      "route": "20260720-20260729/2607.21945v1-strategic-inference-of-adversarial-navigation-objectives-for-unmanned-underwater-vehicles",
+      "title": "Strategic Inference of Adversarial Navigation Objectives for Unmanned Underwater Vehicles",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向海洋智能体的水下导航推理",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.22109v1",
+      "route": "20260720-20260729/2607.22109v1-predictive-lightweight-marl-for-resilient-coverage-in-sparse-signaling-aerial-networks",
+      "title": "Predictive Lightweight MARL for Resilient Coverage in Sparse-Signaling Aerial Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多智能体强化学习用于无人机覆盖，可应用于海洋监测",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.22205v1",
+      "route": "20260720-20260729/2607.22205v1-filling-before-advancing-capability-gap-driven-post-training-for-scenario-specialized-remote-sensing-mllms",
+      "title": "Filling Before Advancing: Capability-Gap-Driven Post-Training for Scenario-Specialized Remote Sensing MLLMs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "使用多模态大语言模型处理沿海港口理解",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.18359v1",
+      "route": "20260720-20260729/2607.18359v1-decentralized-multi-agent-reinforcement-learning-for-resilient-critical-infrastructures",
+      "title": "Decentralized Multi-agent Reinforcement Learning for Resilient Critical Infrastructures",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "分散式多智能体强化学习可迁移至海洋监测",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.20230v1",
+      "route": "20260720-20260729/2607.20230v1-pier-physics-informed-environmental-retrieval-for-time-series-modeling",
+      "title": "PIER: Physics-Informed Environmental Retrieval for Time-Series Modeling",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "物理信息检索用于环境时间序列建模，适用于海洋领域",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.20321v2",
+      "route": "20260720-20260729/2607.20321v2-label-free-finite-volume-residual-training-of-attention-graph-neural-networks-for-coupled-thermo-fluid-fields",
+      "title": "Label-Free Finite-Volume-Residual Training of Attention Graph Neural Networks for Coupled Thermo-Fluid Fields",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "用于流体场的无标签训练图神经网络，适用于海洋建模",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.21080v1",
+      "route": "20260720-20260729/2607.21080v1-nipping-the-butterfly-effect-in-the-bud-self-output-fine-tuning-for-autoregressive-weather-prediction",
+      "title": "Nipping the Butterfly Effect in the Bud: Self-Output Fine-Tuning for Autoregressive Weather Prediction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "自回归深度学习天气预测方法，适用于海洋建模",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.17653v1",
+      "route": "20260720-20260729/2607.17653v1-lfm-leveraging-foundation-models-for-source-free-universal-domain-adaptation",
+      "title": "LFM: Leveraging Foundation Models for Source-Free Universal Domain Adaptation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用基础模型进行领域自适应",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.18557v1",
+      "route": "20260720-20260729/2607.18557v1-agents4geos-agentic-platform-for-open-source-multi-physics-simulation",
+      "title": "AGENTS4GEOS: agentic platform for open-source multi-physics simulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "智能体平台用于多物理场模拟，可应用于海洋地下过程",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    },
+    {
+      "paper_id": "2607.19555v1",
+      "route": "20260720-20260729/2607.19555v1-chmas-a-coupled-hierarchical-framework-for-multi-agent-reinforcement-learning",
+      "title": "CHMAS: A Coupled Hierarchical Framework for Multi-Agent Reinforcement Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "层次化多智能体强化学习框架适用于海洋监测与控制",
+      "first_seen_at": "2026-07-29 02:42:19 UTC",
+      "updated_at": "2026-07-29 02:42:19 UTC"
+    }
+  ]
+}
