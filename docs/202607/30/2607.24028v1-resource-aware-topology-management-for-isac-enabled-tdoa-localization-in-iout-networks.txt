@@ -1,0 +1,568 @@
+Title: Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks
+
+URL Source: https://arxiv.org/pdf/2607.24028v1
+
+Published Time: Tue, 28 Jul 2026 01:57:47 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+> 1
+
+# Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks 
+
+Ruhul Amin Khalil , Member, IEEE 
+
+Abstract—Reliable localization in the Internet of Under-water Things (IoUT) is hindered by limited acoustic band-width, long propagation delays, multipath, Doppler shifts, and energy-constrained nodes. This letter proposes an integrated sensing and communication (ISAC)-enabled topology manage-ment and multi-stage adaptive estimation (ISAC-TM-MAE) framework for time-difference-of-arrival (TDOA) localization in IoUT networks. In the proposed framework, heterogeneous underwater sensors, seabed anchors, autonomous underwater vehicles (AUVs), and surface buoys exploit acoustic ISAC packets for joint communication and localization. The IoUT network is modeled as a graph, in which informative node pairs are selected subject to acoustic bandwidth, computation, energy, and link-reliability constraints. A D-optimal criterion maximizes the Fisher information matrix (FIM) over the underwater region of interest, while the MAE stage refines the source estimate under acoustic noise and channel uncertainty. Numerical results show that the proposed ISAC-TM-MAE improves localization accuracy, resource efficiency, scalability, and robustness compared with centralized, distributed, and benchmark TDOA localization schemes. Index Terms—Internet of Underwater Things, integrated sensing and communication, TDOA localization, topology man-agement, underwater acoustic networks, Fisher information matrix. I. Introduction 
+
+# THE IoUT enables marine applications such as oceano-graphic data collection, pollution monitoring, off-shore inspection, disaster prevention, assisted navigation, and tactical surveillance [1]–[3]. Unlike terrestrial IoT networks, IoUT systems mainly rely on underwater acous-tic communication because radio-frequency signals suffer severe attenuation in seawater, while optical links are limited by turbidity, alignment, and short communication ranges. However, acoustic links suffer from low propa-gation speed, limited bandwidth, long delay, frequency-dependent attenuation, multipath, Doppler spread, and strict energy limitations [4]. These features make accurate and resource-efficient localization essential for interpreting sensed data, coordinating underwater platforms, tracking targets, and maintaining reliable network operation. Several underwater localization techniques have been studied, including angle of arrival (AoA), received signal strength (RSS), time of arrival (TOA), TDOA, and frequency difference of arrival (FDOA) [5]. Among them, TDOA is attractive for IoUT networks because it esti-mates the source position from differential arrival-time measurements without requiring tight synchronization between the source and receiving nodes. Recent works have 
+
+> This work was supported by the Office of the Associate Provost for Research at the United Arab Emirates University (UAEU), UAE. R. A. Khalil is with the Engineering Requirement Unit (ERU), College of Engineering, United Arab Emirates University, Al-Ain 15551, UAE (e-mail: ruhulamin@uaeu.ac.ae).
+
+investigated TDOA-based underwater positioning using chirp signals in acoustic channels [6] and synchronized-transmission TDOA localization for IoUT under depth-dependent sound speed [7]. Nevertheless, underwater TDOA localization remains challenging due to sound-speed variations, node drift, multipath, Doppler effects, and limited acoustic resources. Most existing methods focus on estimator design or propagation modeling, while resource-aware selection of informative TDOA links un-der communication, computation, and energy constraints remains underexplored. ISAC enables the sharing of waveforms, hardware, and resources for data transmission and environmental sensing [8]. In underwater acoustic systems, ISAC is particularly useful because bandwidth and energy are scarce. Recent underwater ISAC studies have demon-strated its potential for resource prioritization, environ-mental perception, and shallow-water channel monitoring [9]. However, integrating ISAC with TDOA localization introduces a topology management challenge: activating all links may improve localization accuracy but increases bandwidth usage, energy consumption, and delay, whereas using too few links can reduce Fisher information and degrade positioning accuracy. Thus, this letter reformu-lates topology-managed TDOA localization for ISAC-enabled IoUT networks by jointly considering acoustic ISAC link formation, sound-speed uncertainty, residual bias, multipath/Doppler-induced errors, link reliability, and node-level bandwidth, computation, and energy lim-itations. Different from terrestrial IoT localization, the pro-posed ISAC-TM-MAE framework accounts for underwater acoustic propagation, heterogeneous IoUT nodes, and ISAC-enabled acoustic links [10]. The IoUT network is modeled as a directed graph whose edges represent ISAC-TDOA measurements and data-flow directions. For modeling rigor and fair comparison, all methods are eval-uated under the same IoUT deployment, acoustic timing-noise, connectivity, and node-density settings, while the proposed topology selection explicitly accounts for residual bias, link reliability, and bandwidth–energy–computation constraints. The main contributions of this letter are summarized as follows: 1) We formulate an ISAC-enabled TDOA localization model for heterogeneous IoUT networks. 2) We develop a resource-aware D-optimal topology selection strategy under acoustic bandwidth, energy, computation, and reliability constraints. 3) We design an ISAC-TM-MAE estimator with com-arXiv:2607.24028v1 [eess.SP] 27 Jul 2026 2 
+
+> Fig. 1. Proposed ISAC-enabled IoUT system model for topology-managed TDOA localization.
+
+pensated acoustic range differences and reliability-aware refinement. 4) We compare the proposed method with central-ized/distributed IoUT processing, UWA-CRLB [11], MDS-C [12], MDS-D [13], and SDP [14], including robustness tests for node drift and acoustic link breakage. II. System Model and Problem Formulation We consider an ISAC-enabled IoUT network deployed in a bounded three-dimensional underwater region Ω ⊂
+
+R3. The network contains N cooperative nodes V =
+
+{1, . . . , N }, including seabed anchors, underwater sensors, AUVs, and surface buoys. The position of node n is pn =[xn, y n, z n]T , while the unknown target/source location is u = [ x, y, z ]T ∈ Ω. During each localization interval, acoustic ISAC packets are used for both communication and sensing-assisted delay estimation, reducing dedicated localization transmissions [8], [10]. For a scheduled acous-tic ISAC packet over link e, the transmitted waveform is modeled as 
+
+se(t) = √Pe
+
+(√1 − αe de(t) + √αe pe(t)) , (1) where Pe is the transmit power, de(t) carries data symbols, 
+
+pe(t) is a known sensing pilot/chirp, and αe controls the sensing–communication resource split. A receiver timing observation is extracted by correlating the received packet with pe(t), and the TDOA measurement is formed by dif-ferencing the timing observations of two receiving nodes. Thus, the ISAC waveform affects the timing variance σ2 
+
+> e
+
+,link bandwidth βe, energy cost ξe,n , and reliability λe.Here, simultaneous communication and localization refer to waveform/resource sharing within scheduled acoustic ISAC packets, not ideal full-duplex operation. Practical narrow-band and half-duplex transducer limitations are reflected through βe, Btx  
+
+> n
+
+, Brx  
+
+> n
+
+, λe, and σ2 
+
+> e
+
+. Fig. 1 illustrates the considered topology-managed ISAC-enabled IoUT lo-calization system. Underwater acoustic propagation is affected by sound-speed variation, multipath, Doppler spread, and frequency-dependent attenuation [15]. Let c(r; χ) denote the sound speed at location r, where χ includes temper-ature, salinity, pressure, and depth. The acoustic travel time between u and node n is     
+
+> Tn(u;χ) =
+> ∫
+> Γn(u)
+> 1
+> c(r;χ)dℓ, (2)
+
+where Γn(u) is the acoustic path. For moderate-depth deployments with limited ray bending,      
+
+> Tn(u;χ)≃ ∥u−pn∥
+> ¯cn
+> ,(3)
+
+where ¯cn is the path-averaged effective sound speed. The approximation in (3) is used only for tractable localization modeling and does not assume a perfectly homogeneous channel. Residual errors due to sound-speed mismatch and unmodeled ray bending are captured by the bias term be
+
+and the SSP-related variance σ2ssp ,e in (5). If measured sound-speed profiles or ray-tracing models are available, the general travel time in (2) can be directly used in the FIM and topology-selection procedure. Let E be the set of candidate directed acoustic ISAC links. For link e = ( i → j) ∈ E , the direction determines communication, energy, and processing load, while the TDOA feature is formed by nodes i and j. The TDOA observation is modeled as 
+
+ye = Ti(u; χ) − Tj (u; χ) + be + ηe, (4) where be captures residual bias due to sound-speed-profile mismatch, unresolved multipath, and Doppler mismatch, and ηe is a zero-mean timing error with variance 
+
+σ2 
+
+> e
+
+= σ2clk ,e + σ2mp ,e + σ2dop ,e + σ2ssp ,e . (5) Here, the four terms denote clock/timing, multipath, Doppler-induced, and sound-speed-profile uncertainty components, respectively. For a selected link set S ⊆ E , the stacked TDOA model is 
+
+yS = gS (u) + bS + ηS , (6) where gS (u) contains the noiseless travel-time differences, 
+
+bS is the residual bias vector, and ηS has covariance RS .The corresponding FIM is 
+
+JS (u) = HT 
+
+> S
+
+(u)R−1 
+
+> S
+
+HS (u), (7) where HS (u) is the Jacobian of gS (u) with respect to u.For e = ( i → j), the Jacobian row is           
+
+> hTe(u) = ∇u[Ti(u;χ)−Tj(u;χ)] .(8)
+
+Using (3), this becomes                  
+
+> hTe(u)≃(u−pi)T
+> ¯ci∥u−pi∥ −(u−pj)T
+> ¯cj∥u−pj∥.(9)
+
+Hence, the CRLB of any unbiased estimator of u is 
+
+CRLB S (u) = J−1 
+
+> S
+
+(u). (10) Since u is unknown, Ω is discretized into grid points 
+
+U = {u1, . . . , uL}. To avoid activating all TDOA links, a 3
+
+compact ISAC topology is selected by maximizing 
+
+Φ( S) = 1
+
+L
+
+> L
+
+∑
+
+> ℓ=1
+
+log det ( JS (uℓ) + εI3) , (11) 
+
+where ε > 0 prevents singularity for weak geometries. Define ae = 1 if link e is selected and ae = 0 otherwise. Let τ (e) and ψ(e) denote the tail and head nodes of e,and let S(a) = {e ∈ E | ae = 1 }. For link e, βe is the bandwidth cost, γe is the processing load, ξe,n is the energy consumed by node n, and λe is the link reliability. The energy term ξe,n is a generic link-dependent cost that may include transmit, receive, idle/listening, and processing energy. Thus, nonlinear modem-specific power profiles can be incorporated into ξe,n using measured data or modem parameters; in the simulations, it is implemented as a normalized link cost. Each node has transmit bandwidth 
+
+Btx  
+
+> n
+
+, receive bandwidth Brx  
+
+> n
+
+, computational capacity Fn,and residual energy Eres  
+
+> n
+
+. The topology selection problem is 
+
+max 
+
+> {ae}e∈E
+
+Φ( S(a)) (12a) 
+
+s.t. ae ∈ { 0, 1}, ∀e ∈ E , (12b) 
+
+∑ 
+
+> e:τ(e)= n
+
+aeβe ≤ Btx  
+
+> n
+
+, ∀n ∈ V , (12c) 
+
+∑
+
+> e:ψ(e)= n
+
+aeβe ≤ Brx  
+
+> n
+
+, ∀n ∈ V , (12d) 
+
+∑
+
+> e:ψ(e)= n
+
+aeγe ≤ Fn, ∀n ∈ V , (12e) 
+
+∑
+
+> e∈E n
+
+aeξe,n ≤ Eres  
+
+> n
+
+, ∀n ∈ V , (12f) 
+
+aeλe ≥ aeλmin , ∀e ∈ E , (12g) 
+
+Kmin ≤ ∑
+
+> e∈E
+
+ae ≤ Kmax . (12h) Here, En is the set of links incident to node n, λmin is the minimum acceptable reliability, and Kmin and Kmax 
+
+bound the active topology size. The constraints limit acoustic signaling, computation, energy, and unreliable links, while the objective favors TDOA geometries with improved localization. III. Proposed ISAC-TM-MAE Method The proposed method selects a reliable ISAC-TDOA topology and refines the estimate via local fusion and residual correction, reducing transmissions under acous-tic uncertainty and energy-limited signaling [15]. Unlike direct terrestrial D-optimal FIM/WLS use, it handles residual bias, sound-speed mismatch, multipath/Doppler errors, and link reliability through compensated range differences, resource-aware selection, and reliability-aware correction. Its three-stage design avoids nonlinear WLS by providing stable initialization, enforcing hub-range consis-tency, and applying local refinement, lowering complexity for resource-constrained IoUT nodes. Let A be the feasible set of binary link-selection vectors satisfying the resource and reliability constraints, and let U = {uℓ}Lℓ=1 be the localization grid. The selected topology is obtained using the D-optimal criterion 
+
+ˆa = arg max 
+
+> a∈A
+
+1
+
+L
+
+> L
+
+∑
+
+> ℓ=1
+
+log det ( Ja(uℓ) + εI3) , (13) 
+
+where Ja(uℓ) is the FIM for topology a and ε > 0 is a regularization factor. The selected link set is 
+
+ˆS = {e ∈ E | ˆae = 1 }. (14) The graph ˆS is then divided into M local fusion groups, where ϱm denotes the hub of the m-th group and Nm
+
+denotes its neighboring nodes. For each selected pair (ϱm, n ), the ISAC-TDOA ob-servation is converted into a compensated acoustic range difference as 
+
+δm,n = ςm,n ˆcm,n 
+
+(
+
+ym,n − ˆbm,n 
+
+)
+
+, (15) where ˆcm,n is the estimated effective sound speed, ˆbm,n 
+
+is the residual bias compensation, and ςm,n ∈ {− 1, 1}
+
+accounts for link direction. Thus, 
+
+δm,n = ∥u − pn∥−∥ u − pϱm ∥+νm,n , (16) where νm,n represents the residual acoustic error. In the first stage, introduce the hub-range variable rm =
+
+∥u − pϱm ∥ and define 
+
+ϑ1 = [uT , r 1, . . . , r M
+
+]T . (17) From (16), the following pseudo-linear relation is obtained: 
+
+aTm,n ϑ1 = ℓm,n + ζm,n , (18) with 
+
+aTm,n = 2 [(pn − pϱm )T , 01×(m−1) , δ m,n , 01×(M −m)
+
+] ,
+
+(19) 
+
+ℓm,n = ∥pn∥2−∥ pϱm ∥2−δ2
+
+> m,n
+
+. (20) Stacking all selected measurements gives 
+
+A1ϑ1 = ℓ1 + ζ1. (21) An initial regularized least-squares (LS) estimate is com-puted as 
+
+ˆϑ(0) 1 = (AT 
+
+> 1
+
+A1 + μI)−1 AT 
+
+> 1
+
+ℓ1, (22) and the refined first-stage weighted LS (WLS) estimate is 
+
+ˆϑ1 = (AT 
+
+> 1
+
+W1A1 + μI)−1 AT 
+
+> 1
+
+W1ℓ1, (23) where W1 = ( D1Qδ DT 
+
+> 1
+
++ εwI)−1. Let Ks be the number of selected compensated range-difference measurements and define ˆd = [ ˆdm1,n 1 , . . . , ˆdmKs ,n Ks ]T , where ˆdmk ,n k =
+
+∥ˆu(0) − pnk ∥. Then, D1 = diag(2 ˆd) ∈ RKs×Ks .The second stage enforces consistency between the target position and the estimated hub ranges. Let ˆrm
+
+be extracted from ˆϑ1, introduce κ = uT u, and define 
+
+ϑ2 = [ uT , κ ]T . For each hub, 
+
+aT
+
+> 2,m
+
+ϑ2 = ℓ2,m + ζ2,m , aT 
+
+> 2,m
+
+= [ −2pTϱm , 1] , (24) where ℓ2,m = ˆr2 
+
+> m
+
+− ∥ pϱm ∥2. Stacking all hubs yields 40 
+
+> 50
+> 100
+> 150
+> 200
+> 250
+> x-axis of IoUT field (m) 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> y-axis of IoUT field (m)
+> 0
+> 30
+> 60
+> 90
+> 120
+> source
+> Mobile node
+> Anchor
+> Buoy
+> Predicted
+> True source
+> Mean estimate
+
+(a) 15 topology updates. 0  
+
+> 50
+> 100
+> 150
+> 200
+> 250
+> x-axis of IoUT field (m) 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> y-axis of IoUT field (m)
+> 0
+> 30
+> 60
+> 90
+> 120
+> source
+> Mobile node
+> Anchor
+> Buoy
+> Predicted
+> True source
+> Mean estimate
+
+(b) 30 topology updates. 0  
+
+> 50
+> 100
+> 150
+> 200
+> 250
+> x-axis of IoUT field (m) 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> y-axis of IoUT field (m)
+> 0
+> 30
+> 60
+> 90
+> 120
+> source
+> Mobile node
+> Anchor
+> Buoy
+> Predicted
+> True source
+> Mean estimate
+
+(c) 45 topology updates. Fig. 2. IoUT localization using the proposed ISAC-TM-MAE framework after 15, 30, and 45 topology updates. 
+
+A2ϑ2 = ℓ2 + ζ2, and 
+
+ˆϑ2 = (AT
+
+2 W2A2 + μI)−1 AT
+
+2 W2ℓ2, ˜u = [ ˆϑ2]1:3 ,
+
+(25) where W2 is formed from the covariance of the first-stage hub-range estimates. Finally, a reliability-aware nonlinear correction is ap-plied using the original ISAC-TDOA model. The residual at ˜u is 
+
+r3 = y ˆS − ˆb ˆS − g ˆS (˜ u; ˆ χ) , (26) where g ˆS (·) is the predicted TDOA vector. Using the Jacobian H3 = ∂g ˆS (u; ˆ χ)/∂ u|u=˜ u, the correction is 
+
+∆ˆ u = (HT
+
+3 W3H3 + μI3
+
+)−1 HT
+
+3 W3r3, (27) where W3 = Λ(R ˆS + Rb + Rχ)−1Λ weights the selected links according to measurement noise, bias uncertainty, environmental uncertainty, and link reliability. The final estimate is 
+
+ˆu = Π Ω (˜ u + ∆ˆ u) , (28) where ΠΩ(·) projects the solution onto the feasible under-water deployment region. The complete procedure is summarized in Algorithm 1. Algorithm 1 Proposed ISAC-TM-MAE for IoUT Localiza-tion. 
+
+Require: {pn}Nn=1 , E, {ye}, ˆχ, constraints, U
+
+Ensure: ˆS, ˆu
+
+1: Select ˆa by evaluating Ja(uℓ) over feasible a and uℓ ∈ U using (13). 
+
+2: Form ˆS = {e ∈ E | ˆae = 1 } and divide it into hub-based local fusion groups. 
+
+3: Convert selected ISAC–TDOA observations to compensated range differences δm,n using (15). 
+
+4: Estimate ˆϑ1 from the first-stage WLS system A1ϑ1 = ℓ1.
+
+5: Obtain ˜u from the hub-range consistency WLS system A2ϑ2 = ℓ2.
+
+6: Refine ˜u using the nonlinear residual correction ∆ˆ u.
+
+7: Output ˆu = Π Ω(˜ u + ∆ˆ u) and ˆS.
+
+IV. Results and Analysis The simulations are conducted in a 3D IoUT region 
+
+Ω = [0 , 250] × [0 , 250] × [0 , 120] m 3 with seabed anchors, surface buoys, and mobile AUV/ROV receivers localizing an underwater acoustic source. The effective sound speed is ¯c = 1500 m /s, while the timing jitter, connectivity radius, and number of cooperative receivers are varied as στ ∈ [0 .10 , 1.30] ms , Ra ∈ [120 , 720] m , and N ∈
+
+[12 , 60] , respectively. The selected topology is obtained using the proposed D-optimal FIM-based criterion under 
+
+{Btx 
+
+n , B rx 
+
+n , F n, E res 
+
+n , λ e}, and the accuracy is measured by RMSE = 
+
+√ 1
+
+Nmc 
+
+∑Nmc 
+
+ϖ=1 ∥ˆu(ϖ) − u(ϖ)∥2. The proposed scheme is compared with centralized/distributed IoUT processing [11], UWA-CRLB, MDS-C [12], MDS-D [13], and SDP [14]. For dynamic IoUT evaluation, passive node drift is modeled as ˜pn = pn + ∆ pn, where ∆pn ∼N (0, σ 2
+
+dI3), and link breakage is modeled by ωe ∈ { 0, 1}
+
+with probability pb, so topology selection is performed over Ea = {e ∈ E | ωe = 1 }. The timing disturbance follows zero-mean Gaussian noise with variance σ2
+
+e in (5), while be captures deterministic residual bias; experimental validation with measured underwater acoustic ISAC data is left for future work. Fig. 2 shows the 3D localization behavior of the proposed ISAC-TM-MAE after 15, 30, and 45 topol-ogy updates. The predicted source locations are initially dispersed due to underwater timing errors, multipath, Doppler distortion, and sound-speed uncertainty, but become increasingly concentrated around the true acoustic source as the topology and MAE refinement progress. This confirms that the proposed framework improves localization stability while avoiding activation of all IoUT links. Figs. 3a–3c show the RMSE performance under tim-ing noise, connectivity range, and node-density varia-tions, compared with centralized/distributed IoUT pro-cessing [11], UWA-CRLB [11], MDS-C [12], MDS-D [13], and SDP [14]. As στ increases from 0.10 ms to 1.30 
+
+ms, the proposed ISAC-TM-MAE increases from about 
+
+0.48 m to 1.53 m, while centralized, distributed, and random topology schemes reach about 1.78 m, 2.04 m, and 2.28 m, respectively. Increasing Ra from 120 m to 
+
+720 m reduces the proposed RMSE from 5.58 m to 3.53 
+
+m, which is about 35% lower than ISAC-MDS-D [13] at 
+
+Ra = 720 m. Similarly, increasing N from 12 to 60 reduces the proposed RMSE from 4.96 m to 3.62 m, remaining 50.1 0.3 0.5 0.7 0.9 1.1 1.3   
+
+> Acoustic timing jitter, στ(ms)
+> 0.4
+> 0.8
+> 1.2
+> 1.6
+> 2.0
+> 2.4
+> RMSE (m)
+> UWA-CRLB
+> Proposed ISAC-TM-MAE
+> Centralized ISAC-WLS
+> Distributed ISAC-WLS
+> Random ISAC topology
+
+(a) Noise standard deviation. 120 220 320 420 520 620 720    
+
+> Acoustic connectivity radius, Ra(m)
+> 3.0
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> 7.0
+> 7.5
+> RMSE (m)
+> UWA-CRLB
+> Proposed ISAC-TM-MAE
+> ISAC-MDS-D
+> ISAC-MDS-C
+> Acoustic SDP
+
+(b) Connectivity range. 12 18 24 30 36 42 48 54 60   
+
+> Number of cooperative IoUT receivers, N
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> RMSE (m)
+> UWA-CRLB
+> Proposed ISAC-TM-MAE
+> ISAC-MDS-D
+> ISAC-MDS-C
+> Acoustic SDP
+
+(c) Number of IoUT nodes. 0 2 4 6 8 10   
+
+> Node-drift STD, σd(m)
+> 3.0
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> 7.0
+> 7.5
+> RMSE (m)
+> UWA-CRLB
+> Proposed ISAC-TM-MAE
+> ISAC-MDS-D
+> ISAC-MDS-C
+> Acoustic SDP
+
+(d) Node drift. 0.0 0.1 0.2 0.3 0.4 0.5   
+
+> Link-breakage probability, pb
+> 3
+> 4
+> 5
+> 6
+> 7
+> 8
+> RMSE (m)
+> UWA-CRLB
+> Proposed ISAC-TM-MAE
+> ISAC-MDS-D
+> ISAC-MDS-C
+> Acoustic SDP
+
+(e) Link breakage. 4 6 8 10 12 14 16   
+
+> Active ISAC-TDOA link budget, Kmax
+> 3.0
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> RMSE (m)
+> Full-link ISAC-WLS
+> Proposed ISAC-TM-MAE
+> Reliability-agnostic D-opt
+> Greedy SNR topology
+> Random feasible topology
+
+(f) Topology ablation. Fig. 3. RMSE performance of the proposed ISAC-TM-MAE framework under different IoUT localization, robustness, and topology-selection scenarios. 
+
+close to the UWA-CRLB of 3.42 m [11]. These results suggest that the proposed topology model can effectively exploit informative acoustic links with reduce unnecessary measurements. Figs. 3d and 3e evaluate robustness under dynamic IoUT conditions. When σd increases from 0 m to 10 m, the proposed method increases from about 3.53 m to 4.72 
+
+m, while ISAC-MDS-D [13] and acoustic SDP [14] reach about 7.15 m and 7.00 m, respectively. When pb = 0 .5, the proposed method achieves about 5.35 m RMSE, compared with 8.38 m, 7.90 m, and 8.22 m for ISAC-MDS-D [13], ISAC-MDS-C [12], and acoustic SDP [14], respectively. Fig. 3f further shows that at Kmax = 8 , the proposed ISAC-TM-MAE achieves about 3.92 m RMSE, compared with 4.38 m, 4.62 m, and 5.02 m for reliability-agnostic D-optimal, greedy SNR, and random topology selection, respectively. These ablation baselines isolate the effect of resource-aware link selection and show that the proposed method provides a better accuracy–resource tradeoff by selecting reliable acoustic links without activating all available IoUT links. V. Conclusion This letter presents the proposed ISAC-TM-MAE framework for TDOA localization in IoUT networks. By integrating D-optimal topology management with multi-stage adaptive estimation, the proposed framework selects informative and reliable acoustic links while accounting for bandwidth, energy, computation, and link-reliability constraints. Numerical results show that the proposed method improves localization accuracy compared with centralized, distributed, MDS-C, MDS-D, and SDP-based methods, while closely approaching the underwater acous-tic CRLB. The additional robustness results further demonstrate its effectiveness under node drift, acoustic link breakage, and limited active-link budgets. Therefore, the proposed method provides a resource-efficient and robust localization solution for underwater ISAC-enabled IoUT networks. References 
+
+[1] R. A. Khalil, N. Saeed, M. I. Babar, and T. Jan, “Toward the Internet of Underwater Things: Recent Developments and Future Challenges,” IEEE Consum. Electron. Mag., vol. 10, no. 6, pp. 32–37, 2020. [2] M. Jouhari, K. Ibrahimi, H. Tembine, and J. Ben-Othman, “Underwater wireless sensor networks: A survey on enabling technologies, localization protocols, and internet of underwater things,” IEEE Access, vol. 7, pp. 96 879–96 899, 2019. [3] R. A. Khalil, A. Jehangir, H. Lamaazi, S. Rubab, and N. Saeed, “Semantic communication for the internet of underwater things: Architectures, applications, challenges, and future directions,” 2026. [Online]. Available: https://arxiv .org/abs/2601 .13289 [4] A. Jehangir, S. M. Ashraf, R. A. Khalil, and N. Saeed, “ISAC-Enabled Underwater IoT Network Localization: Overcoming Asynchrony, Mobility, and Stratification Issues,” IEEE Open J. Commun. Soc., vol. 5, pp. 3277–3288, 2024. [5] J. Yan, X. Guan, X. Yang, C. Chen, and X. Luo, “A survey on integration design of localization, communication, and control for underwater acoustic sensor networks,” IEEE Internet Things J., vol. 12, no. 6, pp. 6300–6324, 2025. [6] M. Rezzouki, G. Ferré, G. Terrasson, and A. Llaria, “Net fishing localization: Performance of TDOA-based positioning technique in underwater acoustic channels using chirp signals,” in Proc. IEEE Int. Symp. Circuits Syst. (ISCAS), Singapore, Singapore, 2024, pp. 1–5. [7] J. Chen, T. Shi, Y. Luo, P. Yang, and D. O. Wu, “Synchronized-transmission TDOA-based IoUT localization under depth-dependent sound speed,” IEEE Internet Things J., vol. 12, no. 20, pp. 42 940–42 952, Oct. 2025. 6
+
+[8] F. Liu, Y. Cui, C. Masouros, J. Xu, T. X. Han, Y. C. Eldar, and S. Buzzi, “Integrated sensing and communications: Toward dual-functional wireless networks for 6G and beyond,” IEEE J. Sel. Areas Commun., vol. 40, no. 6, pp. 1728–1767, 2022. [9] A. Hazarika and M. Rahmati, “Underwater acoustic integrated sensing and communication: A spatio-temporal freshness for intelligent resource prioritization,” J. Mar. Sci. Eng., vol. 13, no. 9, p. 1747, 2025. [10] Q. Zheng, F. Tong, Y. Qiu, H. Zheng, J. Yao, and Y. Zhou, “Toward integrated underwater acoustic sensing and communi-cation: An experimental study in a shallow water channel,” J. Mar. Sci. Appl., 2025. [11] Z. Gong, C. Li, and R. Su, “Fundamental limits of doppler shift-based, ToA-based, and TDoA-based underwater localization,” IEEE/CAA J. Autom. Sinica, vol. 10, no. 7, pp. 1637–1639, Jul. 2023. [12] R. A. Khalil, N. Saeed, M. I. Babar, T. Jan, and S. Din, “Bayesian multidimensional scaling for location awareness in hybrid-internet of underwater things,” IEEE/CAA J. Autom. Sinica, vol. 9, no. 3, pp. 496–509, 2021. [13] J. A. Costa, N. Patwari, and A. O. H. III, “Distributed multidi-mensional scaling with adaptive weighting for node localization in sensor networks,” ACM Trans. Sensor Netw., vol. 2, no. 1, pp. 39–64, Feb. 2006. [14] Q. Wang, Z. Duan, and F. Li, “Semidefinite programming for wireless cooperative localization using biased RSS measure-ments,” IEEE Commun. Lett., vol. 26, no. 6, pp. 1278–1282, Jun. 2022. [15] M. Stojanovic and J. Preisig, “Underwater acoustic communi-cation channels: Propagation models and statistical characteri-zation,” IEEE Commun. Mag., vol. 47, no. 1, pp. 84–89, 2009.

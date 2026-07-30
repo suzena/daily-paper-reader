@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-07-29</span>
+      <span class="dpr-home-dashboard-kicker">2026-07-30</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-07-29 21:42:56 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-07-30 21:54:12 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日6篇论文聚焦水下自主系统，精读两篇分别获得9.0和8.0高分。最值得关注的是混合人工势场与时空Transformer的AUV实时路径规划，以及基于尺度空间匹配与上下文一致性的侧扫声纳建图方法。普通读者可优先精读这两篇高分论文，速读部分关注海底管道巡检的停靠站布局优化。</p>
+<p>今日聚焦多机器人海洋自主与海上风电预测两大高分研究，探索从仿真到实物的协同进化与精准预报。</p>
+<p>最值得精读的是多目标一致性协同进化方法，在真实海洋机器人部署中表现突出；同时风速预测模型基于卫星星座数据，显著提升离岸风电精度。</p>
+<p>普通读者可重点关注多智能体强化学习中的消息学习与水下重建技术，这些方向正加速无人系统在复杂环境中的实用化。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning">Hybrid Artificial Potential Fields and Spatio-Temporal Transformers for Real-Time AUV Path Planning</span></li><li><span class="dpr-home-dashboard-paper-title" title="SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping">SC-Match: Scale-Space Matching with Context Consistency for Side-Scan Sonar Mapping</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-Objective Compliance-Integrated Coevolution For Simulated And Real-World Deployment Of Multi-Robot Marine Autonomy">Multi-Objective Compliance-Integrated Coevolution For Simulated And Real-World Deployment Of Multi-Robot Marine Autonomy</span></li><li><span class="dpr-home-dashboard-paper-title" title="Skillful forecasting of offshore winds from satellite scatterometer constellations">Skillful forecasting of offshore winds from satellite scatterometer constellations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks">Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection">Optimal Placement of Docking Stations and Resident AUVs for Subsea Pipeline Inspection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection">Decoupled Pipeline with Proposal Reranking and Score Fusion for Positive-Unlabeled Marine Species Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation">Geospatial Diffusion-based Evolution Synthesis (GeoDES) for Storm-Centered Weather Augmentation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning">Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning</span></li><li><span class="dpr-home-dashboard-paper-title" title="WAT3R: Feedforward Underwater 3D Reconstruction">WAT3R: Feedforward Underwater 3D Reconstruction</span></li><li><span class="dpr-home-dashboard-paper-title" title="Mission-Level Runtime Assurance for LLM-Assisted ISR Swarms over a Verification-Aware Fabric">Mission-Level Runtime Assurance for LLM-Assisted ISR Swarms over a Verification-Aware Fabric</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
 </section>
 </div>
 

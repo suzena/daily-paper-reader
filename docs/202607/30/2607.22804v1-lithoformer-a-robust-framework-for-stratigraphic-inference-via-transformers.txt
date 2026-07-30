@@ -1,0 +1,266 @@
+Title: LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers
+
+URL Source: https://arxiv.org/pdf/2607.22804v1
+
+Published Time: Tue, 28 Jul 2026 00:09:32 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers 
+
+# Shwetha Salimath 
+
+Laboratoire Interdisciplinaire des Sciences du Numérique, Université Paris-Saclay, SLB Montpellier, France shwetha.salimath@universite-paris-saclay.fr 
+
+# Francesca Bugiotti 
+
+Laboratoire Interdisciplinaire des Sciences du Numérique, CentraleSupélec, CNRS, Université Paris-Saclay Gif-sur-Yvette, France francesca.bugiotti@centralesupelec.fr 
+
+# Sylvain Wlodarczyk 
+
+SLB Montpellier, France swlodarczyk@slb.com 
+
+# Sohaib Ouzineb 
+
+SLB Montpellier, France souzineb@slb.com 
+
+## Abstract 
+
+Accurate geological characterization of subsurface reservoirs from well log data is essential to support projects such as carbon cap-ture and storage (CCS), geothermal development, and extraction of natural resources. Existing automated techniques for geologi-cal characterization primarily use sliding-window classification, which limits their ability to understand broader geological con-texts, often leading to misaligned formation layers. To overcome these limitations, we introduce LithoFormer, a robust framework for stratigraphic inference using a Seq2Seq transformer model that ingests entire multivariate well logs in a single pass. The framework utilizes a channel-independent PatchTST backbone enhanced with rotary positional embeddings (RoPE) to capture long-range geolog-ical dependencies across entire multivariate well logs. A decoupled multi-task head is employed to jointly predict geological zona-tion and precise boundary probabilities, while a geology-informed loss function enforces physical constraints such as the Law of Su-perposition. Validated and deployed on three real-world datasets, LithoFormer demonstrates a 90% reduction in median boundary error and eliminates stratigraphic order violations compared to tra-ditional sliding-window baselines. It also achieves a 80% reduction in manual expert labor and eliminates stratigraphic inconsistencies, providing a scalable and reliable solution for large-scale subsurface modeling. 
+
+## CCS Concepts 
+
+• Computing methodologies → Supervised learning ; Neural networks ; • Applied computing → Earth and atmospheric sci-ences . 
+
+> Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.
+> Conference’17, Washington, DC, USA
+> ©2026 Copyright held by the owner/author(s). Publication rights licensed to ACM. ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM https://doi.org/10.1145/nnnnnnn.nnnnnnn
+
+## Keywords 
+
+Time Series Segmentation, Transformer, Physics-Informed Machine Learning, Subsurface Characterization, Multi-Task Learning. 
+
+ACM Reference Format: 
+
+Shwetha Salimath, Francesca Bugiotti, Sylvain Wlodarczyk, and Sohaib Ouzineb. 2026. LithoFormer: A Robust Framework for Stratigraphic In-ference via Transformers. In . ACM, New York, NY, USA, 8 pages. https: //doi.org/10.1145/nnnnnnn.nnnnnnn 
+
+## 1 Introduction 
+
+The mapping of stratigraphy is essential for energy projects that re-quire subsurface characterization, as it determines resource storage capacity and geological safety. Accurate 3D models of subsurface architecture are crucial for identifying porous reservoirs for carbon sequestration, geothermal formations, and traditional petroleum re-serves. This modeling involves reconstructing geological processes over millions of years and primarily relies on well correlation, which aligns stratigraphic boundaries or "markers" across drilled wells [ 2, 30 ]. Well logs analysis helps pinpoint these markers [ 6 , 9], pro-viding a continuous, high-resolution record of subsurface layers often missed by seismic data. Traditionally, well correlation using well logs is a manual process in which geologists visually match patterns in well log data, such as Gamma Ray, Resistivity, and Density measurements [ 18 ]. This method lacks scalability. It is confirmed by both geologists and our research that a specific marker within a region usually exhibits a consistent signal pattern [ 1, 24 ]. Early computational approaches for matching well log patterns, such as dynamic time warping (DTW) [ 19 ], provided some level of automation, but were often fragile, sensitive to noise, and struggled to generalize across geologically diverse areas. This led to the development of deep learning models that treated the task as a sliding-window classification problem. However, the sliding-window paradigm is inherently limited by a local receptive field. These models lack global context; a sliding window has a "short-sighted" view, unable to see the full geological sequence. They cannot distinguish between a valid marker pattern and a visually similar artifact appearing at an incorrect position, nor can they enforce the basic physical law that geological layers are deposited sequentially. arXiv:2607.22804v1 [cs.LG] 24 Jul 2026 Conference’17, July 2017, Washington, DC, USA Salimath et al. 
+
+Figure 1: Workflow Comparison. The sliding-window ap-proach (left) requires 𝐿 local classifications per well, while LithoFormer (right), processes the entire well log in a single pass to generate a complete stratigraphic map. M1, M2, M3, and M4 are markers denoting the stratigraphic sequence. 
+
+To address these challenges, we propose an approach shift from a local classification task to a global end-to-end Seq2Seq task. We introduce LithoFormer, whose core contribution is the ability to predict a sequential order of events from long, multivariate time series data. As illustrated in Figure 1, this approach uses the power of transformers to learn both local patterns and global trends that match a valid stratigraphic succession. By processing the well log in a single pass, LithoFormer ensures that every predicted marker is placed within its proper global context, maintaining the chrono-logical integrity of the geological interpretation. The contributions of the paper are as follows. 
+
+• LithoFormer Framework for identifying a precise, ordered sequence of events within complex, multivariate time series data. 
+
+• A robust data-centric pipeline that uses resampling, fil-tering, and constrained data augmentation to help the model distinguish true markers from out-of-context patterns. 
+
+• Multi-Task Transformer Architecture using a channel-independent PatchTST transformer [ 20 ], enhanced with RoPE [28 ] and a decoupled multi-task head. The dual head jointly learns coarse zonations (geological formation intervals) and precise edges (interval boundaries). 
+
+• A Geology-Informed Loss to enforce stratigraphic order (the Law of Superposition), while a thickness-weighted 
+
+loss enables the model to detect extremely thin or rare layers accurately. 
+
+• Real World Validation : We deploy and test on three datasets from Colorado, Wyoming, and the Norwegian North Sea. LithoFormer achieves state-of-the-art precision while ensuring geological consistency. This provides a scalable and physically con-sistent solution for subsurface reservoir characterization. The paper is structured as follows. In Section 2, we review related work. Section 3 details our methodology, including the novel Litho-Former model architecture, the data augmentation pipeline, and the multi-stage training curriculum. Section 4 reports our compre-hensive experimental results and ablation analyses, and concludes in Section 5. 
+
+## 2 Related Work 
+
+Our work intersects three key research areas: automated geological correlation, deep learning for time series, and physics-informed machine learning. We review the evolution of well correlation and discuss advancements in time series transformers that support our approach. 
+
+Automated Well Log Correlation is essential in stratigraphic analysis. Initial methods focused on automation through signal processing, using cross-correlation, statistical methods, and feature-based matching [ 7]. Techniques like DTW were used for aligning log sequences via optimal nonlinear warping [ 17 ]. However, DTW struggles with multi-well and multivariate correlation due to its computational demands and sensitivity to noise. Recent approaches have integrated machine learning (ML) techniques for better cor-relation. Recurrent Neural Networks (RNNs) and convolutional neural networks (CNNs), including hybrid models like LSTM-CNN and LSTM-2dCNN, have been successfully employed to process well logs as multivariate time series and identify marker signatures [ 3, 15 , 25 ]. Nonetheless, challenges persist in managing long-range dependencies and capturing a well’s global context, problems that transformer architectures aim to address. 
+
+Transformers for Time Series Analysis. The transformer ar-chitecture [ 31 ] has been adapted for time series tasks, particularly with models like Informer and Autoformer [ 34 , 35 ], which focus on long-range forecasting. However, these models treat time series as sequences of individual time steps, leading to high computa-tional costs. An advancement in this field is PatchTST [ 20 ], our architectural backbone, which segments a time series into patches used as tokens. This approach reduces sequence length, captures local semantics, and improves learning from longer contexts. Its has achieved state-of-the-art performance in classification [ 32 ]and forecasting benchmarks [ 11 , 14 ]. Transformers need positional information to model sequential dependencies effectively [ 8 , 16 ]. Early methods employed absolute sinusoidal embeddings, which struggle with longer sequences. RoPE improves this by represent-ing relative positions within the attention mechanism, enhancing translation invariance and generalization [ 28 ]. RoPE has shown exceptional performance in large language models like LLaMA and Gpt-oss [22, 29]. 
+
+Physics-Informed and Constrained Deep Learning. An im-portant direction in scientific machine learning is to incorporate domain knowledge and physical principles directly into the learning process [ 5, 10 ]. While initially introduced to solve physics prob-lems, it was also successfully applied in finance and autonomous systems for fairness and safety [ 12 , 27 ]. Following this idea, our method introduces a loss term that enforces the geological law of superposition, guiding optimization toward stratigraphic sequences that are geologically consistent. LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers Conference’17, July 2017, Washington, DC, USA 
+
+## 3 LithoFormer framework 
+
+This section details the LithoFormer framework. We first explain the problem formulation followed by detail description of the data-centric pipeline, the multi-task architecture, and the geology-informed training curriculum. The complete end-to-end workflow, encom-passing both training and inference, is illustrated in Figure 2. 
+
+Figure 2: The end-to-end LithoFormer framework. 
+
+## 3.1 Problem Formulation 
+
+Stratigraphic inference is formulated as a mapping from a multivari-ate well log 𝑋 ∈ R𝐿 ×𝐶 to an ordered sequence of geological zones 
+
+𝑦 ∈ { 0, . . . , 𝐾 }𝐿 with corresponding marker depths 𝑑 ∈ R𝐾 . Here, 𝐿 
+
+represents the number of depth samples and 𝐶 the number of well logging channels. These channels correspond to well log data of physical properties such as gamma-ray , resistivity, and density. 𝐾 
+
+is the number of markers. Zone indices {0, . . . , 𝐾 } correspond to markers sorted by expected stratigraphic order. The index "0" rep-resents the zone before the first marker. Given well 𝑋 , LithoFormer is trained to simultaneously predict two outputs: (1) Zonation Probabilities ˆ𝑃 𝑧𝑜𝑛𝑒 : A set of probability curves 
+
+ˆ𝑃 𝑧𝑜𝑛𝑒 ∈ [ 0, 1]𝐿 × ( 𝐾 +1) indicating the probability of geological zones occurrence at each depth. (2) Edge Probabilities ˆ𝑃 𝑒𝑑𝑔𝑒 : A set of probability curves, ˆ𝑃 𝑒𝑑𝑔𝑒 ∈[0, 1]𝐿 ×𝐾 , indicating the probability of marker occurrence at each depth. A globally consistent zone sequence ˆ𝑦 𝑧𝑜𝑛𝑒 ∈ { 0, . . . , 𝐾 }𝐿 is de-rived from ˆ𝑃 𝑧𝑜𝑛𝑒 to establish the stratigraphic order. In parallel, precise marker depths ˆ𝑑 𝑒𝑑𝑔𝑒 ∈ R𝐾 are computed by identifying peak probabilities within ˆ𝑃 𝑒𝑑𝑔𝑒 . With this notation, the fundamen-tal geological constraints described in the paper can be stated as: 
+
+• Monotonic layer order : For any two depth indices 𝑖 < 𝑗 ,the predicted zone indices must be increasing: ˆ𝑦 𝑖 ≤ ˆ𝑦 𝑗 .
+
+• Exactly one boundary per marker : For each marker 𝑘 ∈{1, . . . , 𝐾 }, ˆ𝑃 𝑒𝑑𝑔𝑒 should contain at the 𝑘 -th channel a single dominant peak at ˆ𝑑 𝑒𝑑𝑔𝑒,𝑘 . This reflects the geological assump-tion that marker 𝑘 occurs exactly once and in the correct order. 
+
+## 3.2 Data-Centric Pipeline 
+
+Real-world well log data often contain sensor noise, data gaps, and inconsistent sequence lengths due to varying drilling depths. To manage this variability, a preprocessing pipeline is used. First, the logs are resampled to a fixed sequence length. Then, a two-stage filtering process is applied: a Hampel filter [ 23 ] replaces outliers with the local median, and a Savitzky-Golay filter [ 26 ] smooths the signal while preserving the trend. To combat overfitting and ensure accurate depth predictions, we propose a constrained data augmen-tation strategy that inserts expert-verified marker signatures into incorrect log locations, generating realistic out-of-context negative samples. Our ablation studies 4.4 demonstrate that this method significantly improves model robustness and precision. From a mathematical point of view, let 𝑋 ∈ R𝐿 ×𝐶 be the in-put well log and 𝑦 ∈ { 0, . . . , 𝐾 }𝐿 its target zonation sequence. Let 
+
+M𝑦 be the set of true markers present in 𝑦 . We generate a new sample (𝑋 𝑎𝑢𝑔 , 𝑦 ) as follows: First, a true marker 𝑚 ∗ ∈ M 𝑦 with its corresponding depth index 𝑑 ∗ is selected. Extract the multivari-ate signature pattern 𝑋 𝑠𝑖𝑔 ∈ R2𝑊 ×𝐶 from a window of length 2𝑊 
+
+samples around 𝑑 ∗. To prevent overlaps with existing markers, we define Z𝑒𝑥𝑐𝑙𝑢𝑑𝑒 as the union of windows of size 2𝐸 samples around all marker depth indices in M𝑦 . Sample a new depth index 𝑑 𝑛𝑒𝑤 
+
+from the set of valid indices {1, . . . , 𝐿 } \ Z 𝑒𝑥𝑐𝑙𝑢𝑑𝑒 . Finally, construct 
+
+𝑋 𝑎𝑢𝑔 by copying 𝑋 and pasting the pattern 𝑋 𝑠𝑖𝑔 at the new location 
+
+𝑑 𝑛𝑒𝑤 . The new pair (𝑋 𝑎𝑢𝑔 , 𝑦 ) is then added to the training set. 
+
+## 3.3 LithoFormer Transformer Backbone 
+
+LithoFormer employs a multi-task Seq2Seq transformer backbone to process multivariate well log inputs 𝑋 ∈ R𝐿 ×𝐶 through two se-quential blocks: a channel-independent feature extraction PatchTST encoder and a multi-task prediction head. The backbone treats each log channel as a univariate series, which is essential for two rea-sons. First, it accommodates diverse statistical distributions and log patterns of different physical measurements. Second, it ensures robustness against missing data. While Gamma Ray (GR) is often available, other logs such as resistivity (RES) or density (DEN) are frequently absent. Channel independence allows effective feature extraction from available signals without interference from missing inputs. The input data is segmented into 𝑁 𝑝 overlapping patches of length 𝐿 𝑝 along the depth dimension with patch stride 𝑠 , processed per input channel due to the channel-independent architecture. These patches are projected onto a latent dimension 𝐷 model , and the resulting latent embedding vectors are processed by a PatchTST encoder. To effectively capture the relative depth dependencies crucial to stratigraphy, where sequence order and layer thickness are important, RoPE is applied. RoPE embeds relative positional information directly into the attention mechanism, enhancing trans-lation invariance and generalization to longer sequences [28]. Conference’17, July 2017, Washington, DC, USA Salimath et al. 
+
+Figure 3: The LithoFormer transformer backbone. Multivariate inputs are processed via a channel-independent PatchTST with RoPE. Decoupled multi-task heads then generate zone and edge probabilities from the fused dense features. 
+
+To upsample compressed patch features of the encoder output back to a dense well log resolution 𝐿 , linear interpolation is ap-plied. Following the upsampling procedure, we obtain a tensor in 
+
+R𝐶 ×𝐿 ×𝐷 model . Subsequently, the feature vectors corresponding to all 
+
+𝐶 logs are concatenated to construct a dense unified representation 
+
+𝑍 upsampled ∈ R𝐿 × ( 𝐶 ·𝐷 model ) . This operation facilitates the learning of cross-log dependencies prior to the prediction head. As an innovative aspect of our model, we utilize two decoupled prediction heads running in parallel to forecast zonation and edge probabilities. The zonation head focuses on the segmentation task by projecting the latent features into 𝐾 + 1 channels via a linear layer, which corresponds to the geological zone probabilities ˆ𝑃 𝑧𝑜𝑛𝑒 
+
+at each depth index. This approach effectively captures the global structural state of the stratigraphy. In parallel, the edge head pro-cesses the latent features to predict marker depth probabilities ˆ𝑃 𝑒𝑑𝑔𝑒 
+
+through a linear layer. Unlike the zonation head, which predicts mutually exclusive zones, the edge head is designed to identify sparse boundary events by generating independent logits for each of the 𝐾 specific markers. The output ˆ𝑃 𝑧𝑜𝑛𝑒 is as follows: 
+
+ˆ𝑃 𝑧𝑜𝑛𝑒 = Linear 𝑧𝑜𝑛𝑒 (𝑍 𝑢𝑝𝑠𝑎𝑚𝑝𝑙𝑒𝑑 ) ∈ R𝐿 × ( 𝐾 +1) (1) The output ˆ𝑃 𝑒𝑑𝑔𝑒 is as follows: 
+
+ˆ𝑃 𝑒𝑑𝑔𝑒 = Linear 𝑒𝑑𝑔𝑒 (𝑍 𝑢𝑝𝑠𝑎𝑚𝑝𝑙𝑒𝑑 ) ∈ R𝐿 ×𝐾 (2) A key feature of LithoFormer is the joint optimization of both heads without gradient isolation. This allows the model to recon-struct an ordered sequence of events while preserving spatial detail through shared gradient backpropagation. 
+
+## 3.4 Geology-Informed Loss Function 
+
+Standard cross-entropy loss is insufficient for our task because it treats each depth index independently and ignores stratigraphic sequence order. To obtain geologically plausible predictions, we de-sign a composite loss that embeds domain knowledge by combining the cross-entropy term ( L𝐶𝐸 ) with regularizers. These regularizers preserve stratigraphic order ( L𝑀𝑜𝑛𝑜 ) and sharpen edge detection boundaries ( L𝐸𝑑𝑔𝑒 ) as observed in ablation studies 4.4. The total loss, Ltotal , is a weighted sum of these components, with 𝜆 𝑚 , 𝜆 𝑒 ∈ R.
+
+L𝑡𝑜𝑡𝑎𝑙 = L𝐶𝐸 + 𝜆 𝑚 L𝑀𝑜𝑛𝑜 + 𝜆 𝑒 L𝐸𝑑𝑔𝑒 (3) 
+
+Weighted Cross-Entropy ( L𝐶𝐸 ): Geological layers vary in thickness, leading to class imbalance in the zonation sequence, and as a result, thin yet significant formations may be overlooked. There-fore, we use the inverse thickness weighting, where the weight 𝑤 𝑘 
+
+for each zone class 𝑘 is 𝐿 ÷ 𝑁 𝑘 , where 𝑁 𝑘 is the number of samples inside the corresponding zone. 
+
+Monotonic Loss ( L𝑀𝑜𝑛𝑜 ): An important physical constraint is the enforcement of the Law of Superposition, which requires that stratigraphic sequences be arranged by geological age from younger to older strata with increasing depth. The expected zonation class sequence ˆ𝑘 𝑧𝑜𝑛𝑒 is calculated as ˆ𝑘 𝑧𝑜𝑛𝑒,𝑖 = Í𝐾 𝑘 =0 𝑘 · ˆ𝑃 𝑧𝑜𝑛𝑒,𝑖,𝑘 at each depth index 𝑖 . A penalty is applied only when the ˆ𝑘 𝑧𝑜𝑛𝑒 sequence violates increasing monotonicity: 
+
+L𝑀𝑜𝑛𝑜 ( ˆ𝑘 𝑧𝑜𝑛𝑒 ) = 1
+
+𝐿 − 1
+
+> 𝐿
+
+∑︁ 
+
+> 𝑖 =2
+
+ReLU ( ˆ𝑘 𝑧𝑜𝑛𝑒,𝑖 −1 − ˆ𝑘 𝑧𝑜𝑛𝑒,𝑖 ) (4) 
+
+Edge Focal Loss ( L𝐸𝑑𝑔𝑒 ): As the number of zonation boundaries is much fewer than the total number of depth samples, it creates a significant class imbalance. Let 𝑦 𝑒𝑑𝑔𝑒 ∈ R𝐿 ×𝐾 be encoded by the marker channel as a Gaussian distribution centered around the true marker depth index. To obtain L𝐸𝑑𝑔𝑒 , we first define the focal loss 
+
+LFL,i,k for a depth index 𝑖 and a marker class 𝑘 . The focal loss is derived from the the Binary Cross-Entropy loss LBCE,i,k applied to the edge head output probabilities ˆ𝑃 𝑒𝑑𝑔𝑒 against the target 𝑦 𝑒𝑑𝑔𝑒 at the depth index 𝑖 and marker channel 𝑘 such that: 
+
+LFL,i,k = 𝛼 𝑖,𝑘 (1 − exp (−L BCE,i,k )) 𝛾 · L BCE,i,k (5) The focusing parameter 𝛾 decreases LFL,i,k for correctly classified examples. Let 𝛼 ∈ [ 0.5, 1], the balancing factor 𝛼 𝑖,𝑘 is defined as 
+
+𝛼 when 𝑦 𝑒𝑑𝑔𝑒,𝑖,𝑘 > 0.5 and 1 − 𝛼 otherwise. Higher weights are assigned to indices near true marker depths, and lower weights to background indices. L𝐸𝑑𝑔𝑒 is the mean focal loss over all depth indices and marker classes. This loss term is crucial for achieving high precision in sparse detection tasks. LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers Conference’17, July 2017, Washington, DC, USA 
+
+## 3.5 Stratigraphic Inference 
+
+The LithoFormer framework generates two complementary sets of predictions: ˆ𝑃 𝑧𝑜𝑛𝑒 and ˆ𝑃 𝑒𝑑𝑔𝑒 . We get ˆ𝑑 𝑧𝑜𝑛𝑒 by employing a sequence decoder that iteratively selects for each ˆ𝑃 𝑧𝑜𝑛𝑒 channel the minimal depth at which the corresponding probability is the highest across channels. Concurrently, high-resolution marker depths ( ˆ𝑑 𝑒𝑑𝑔𝑒 ) are obtained by identifying the peak probabilities within each marker channel of the output ˆ𝑃 𝑒𝑑𝑔𝑒 . ˆ𝑦 𝑧𝑜𝑛𝑒 and ˆ𝑦 is the zone sequence rep-resentation of ˆ𝑑 𝑧𝑜𝑛𝑒 and ˆ𝑑 𝑒𝑑𝑔𝑒 . Ultimately, the framework utilizes the ˆ𝑑 𝑒𝑑𝑔𝑒 as the final result, leveraging their superior local preci-sion while the zonation output ˆ𝑦 𝑧𝑜𝑛𝑒 serves to validate the global stratigraphic sequence. 
+
+## 4 Experiments and Results 
+
+We validated the LithoFormer framework and our backbone model by comparing its performance in precision, recall, and stratigraphic order against state-of-the-art methods using an end-to-end Seq2Seq approach and sliding-window models. Ablation studies explored our data-centric pipeline, patch stride, and loss function terms. The following sections outline our experimental setup, results, and performance analysis. 
+
+## 4.1 Datasets 
+
+To perform a robust evaluation, we use three distinct datasets from publicly available well-log data, representing various levels of geo-logical complexity and signal degradation. We filter training wells, with at least 60% sequence markers present. A quality control step removes wells with entirely missing log readings and label qual-ity control to remove marker outliers. We perform no imputation, smoothing, or input signal cleaning; thus, the model is evaluated on raw, noisy industrial data. The train, validation, and test split is 70:20:10. The test set wells were manually verified by a domain expert to address inaccuracies in public datasets. 
+
+Table 1: Dataset Specifications Dataset Wells Interval (ft) Channels Missing 
+
+Colorado 800 5,800–7,200 1 (GR) 0% Wyoming 700 100–1,800 1 (GR) ∼3% North Sea 1000 2,000–14,000 3 (GR, RES, DEN) >54% *
+
+> *Missingness in North Sea is primarily driven by Density (DEN) logs.
+
+The three datasets of increasing difficulty levels are used for model evaluation (Table 1). Dataset Colorado [ 4] provides a base-line where marker signatures for Niobrara, Codel, and Forth Hayes are clearly distinguishable. Dataset Wyoming [ 33 ] adds complex-ity with similar signature patterns in Badger Coal, Felix Coal, and Big George Coal markers, some lacking recognizable signatures. Dataset Norwegian North Sea [ 21 ] represents a complex, multivari-ate, long-sequence scenario critical for proving scalability. The zona-tion sequence applied is Hordaland, Rogaland, Shetland, Viking, Vestland, and Dunling. 
+
+## 4.2 Experimentation setup 
+
+To evaluate LithoFormer, we benchmarked it against four baselines from different architectural paradigms. First, a traditional DTW-based baseline represents the industry standard. Second, GeoTS, our previous state-of-the-art model using the LSTM-2dCNN neural net-work [ 25 ]. Third, a Conformer model was assessed for the combined CNN and transformer features. Fourth, a PatchTST baseline was included to evaluate performance gains from the LithoFormer back-bone’s multi-task head. Lastly, to validate our channel-independent backbone choice, we implemented a channel-mixing variant com-bining log channels at the embedding layer. To ensure a fair com-parison, all neural baselines—including Conformer, PatchTST, and Channel-Mixing were integrated with LithoFormer framework’s data-centric pipeline. All baseline models underwent rigorous hy-perparameter tuning for a fair evaluation. The models were implemented in PyTorch and trained on a NVIDIA L4 GPU using the fastai framework [ 13 ]. The transformer backbone features six PatchTST encoder layers with four attention heads, a patch stride 𝑠 of eight, and a patch length 𝐿 𝑝 of 50. Data augmentation window parameters 𝑊 and 𝐸 are set to 100 ft and 200 ft, and adjusted to the resampling rate of the input well log sequence. The loss function is calibrated with 𝜆 𝑚 = 1.5 (𝐿 𝑚 ) and 𝜆 𝑒 = 20 .0
+
+(𝐿 𝑒 ). The code for reproducing the models and experiments will be made publicly available upon publication. We evaluated all models using three critical metrics. Our pri-mary metric for localization precision is the Median Absolute Error (MedAE), reported in feet for its robustness against outlier predic-tions in real-world datasets. To assess sensitivity, we used Recall@ 𝜏 ,defined as the proportion of markers predicted within 𝜏 feet of the ground truth. Lastly, for geological consistency, we report the ac-curacy of the predicted sequence order, reflecting the percentage of wells where all predicted markers conform to the correct strati-graphic sequence. 
+
+## 4.3 Main Results 
+
+The results in varying geological complexities are summarized in Table 2. A clear performance hierarchy emerges as data difficulty in-creases. In the Colorado dataset, transformer-based models excelled, achieving MedAE below 3 ft with perfect recall, indicating efficacy with simpler stratigraphic sequences. In the Wyoming dataset, the sliding-window approach showed limitations; the GeoTS baseline’s recall fell to 50.37%, while patch transformer models retained accu-racy, highlighting the advantages of a global context approach. The analysis of the North Sea dataset reveals critical insights. We report recall at 𝜏 = 50 ft, considering a downsampling rate of 4 feet. The DTW baseline and GeoTS show limitations due to local matching issues, while the Conformer model performs sub-optimally. In contrast, the channel-mixing transformer achieves a MedAE of 59.92 ft, but our channel-independent LithoFormer excels at 19.74 ft. This indicates that early fusion harms well log data anal-ysis, as channels represent distinct properties with different noise profiles. LithoFormer demonstrates a significant advancement in the learning of temporal structures, achieving a new benchmark in error reduction. It decreases errors by 95% compared to GeoTS and by 75% against the PatchTST baseline. LithoFormer also achieves Conference’17, July 2017, Washington, DC, USA Salimath et al. 
+
+Table 2: Main comparative results across all datasets. Recall and order accuracy values are percentages (%). MedAE is in feet. Dataset Colorado Dataset Wyoming Dataset North Sea Model MedAE(ft) Recall@20ft Order % MedAE(ft) Recall@20ft Order % MedAE(ft) Recall@50ft Order % DTW Baseline 6.60 89.25 100 194.0 15.14 57.8 1123 10.25 20 GeoTS (KDD ’25) 2.0 97.42 80 76.2 50.37 100 667.98 35.24 88 Conformer ∗ 15.0 53.75 100 322.4 21.67 85 410.92 38.92 68 Patchtst baseline ∗ 3.0 97.67 100 8.0 89.62 98 84.67 51.56 92 Channel-Mixing ∗ 2.0 100.00 100 2.0 91.62 100 59.92 58.54 94 
+
+LithoFormer (Ours) 2.0 100.00 100 2.0 91.62 100 19.74 72.81 95 
+
+> ∗These baselines utilize the same data-centric pipeline as LithoFormer.
+
+Figure 4: Qualitative visualization of LithoFormer’s output on a North Sea well. Tracks (1-3): Ground Truth (Geologist picks), predicted Zone and Edge sequence. Tracks (4-6): The multivariate input logs. Tracks (7+): The internal model outputs. The 
+
+Zone Probabilities identify the geological zone, while the Edge Probabilities precisely pinpoint the boundary location. 
+
+the highest order accuracy. Figure 4 illustrates the inference with distinct geological zonation and precise boundary detection. 
+
+Failure Analysis for North Sea While LithoFormer shows high recall in Colorado and Wyoming, the North Sea (NS) dataset has a 
+
+27% recall gap due to geological complexity. Key drivers for these stratigraphic residuals include Geological Ambiguity , which arises from difficult-to-distinguish markers like the Hordaland Group. Additionally, Class Imbalance plays a significant role, as there are under-represented formations such as the Vestland and Dunlin groups that have 75% fewer samples. The presence of False Positives 
+
+is another contributing factor, stemming from bimodal probability peaks resulting from near-identical signatures. Furthermore, Sensor Noise can lead to data gaps being misinterpreted as stratigraphic edges, and Covariate Shift results in precision loss in deeper test wells. To address these challenges, the model flags low-confidence edges for manual expert review during production workflows. 
+
+## 4.4 Ablation study 
+
+To analyze the key components of our framework and validate our design choices, we performed a series of component-wise ablation studies. They are conducted on the multivariate North Sea dataset, where the impact of each component is most pronounced. The results shown are on the 100 test wells. 
+
+Table 3: Ablation on Backbone Stride (North Sea) Stride MedAE Recall Run memory (GB) 
+
+Default (1) 26.81 69.67 17.8 4 22.74 69.20 1.8 
+
+8 19.74 72.81 0.84 
+
+16 28.60 65.20 0.58 
+
+Backbone Stride and Resource Efficiency. The trade-off between feature resolution and resource consumption was analyzed by ad-justing the stride of the PatchTST backbone (Table 3). A stride of 1 captures fine temporal details but results in a high MedAE and memory usage. In contrast, Stride 8 achieved the best MedAE and Recall while also reducing GPU usage to 0.84 GB due to fewer to-kens. This performance gain stems from coarser sampling, which reduces overfitting to high signal variability. Moreover, upsampling LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers Conference’17, July 2017, Washington, DC, USA 
+
+latent features via linear interpolation offers a more stable repre-sentation for prediction heads compared to the denser stride 1. The 95% decrease in GPU memory usage to 0.84 GB enables deployment on edge hardware with less than 1GB of VRAM. 
+
+Table 4: Ablation on Loss Function Components (North Sea) Loss Configuration MedAE Recall Order 
+
+1. Baseline ( L𝐶𝐸 ) 72.38 45.74 52.9 2. L𝐶𝐸 + Physics ( L𝑀𝑜𝑛𝑜 ) 58.80 49.39 80.57 3. L𝐶𝐸 + Edge ( L𝑒𝑑𝑔𝑒 ) 25.85 65.88 73.0 
+
+4. LithoFormer ( L𝑡𝑜𝑡𝑎𝑙 ) 19.74 72.81 94.56 
+
+Loss Components. The contribution of each loss component was evaluated by isolating its effect (Table 4). The first and second rows, lacking an edge loss term, derive metrics using ˆ𝑑 𝑧𝑜𝑛𝑒 , while the third and fourth use ˆ𝑑 𝑒𝑑𝑔𝑒 . The baseline cross-entropy loss ( L𝐶𝐸 )shows poor precision and order due to a lack of geological context. Adding ( L𝑀𝑜𝑛𝑜 ) boosts the raw order to 80.57%, reinforcing the Law of Superposition. Row 3 ( L𝐸𝑑𝑔𝑒 ) is vital for precision, significantly enhancing MedAE and Recall. In conclusion, LithoFormer ( L𝑡𝑜𝑡𝑎𝑙 )achieves optimal performance by integrating structural zonation logic with edge detection. 
+
+Data-Centric pipeline. Assessments of the data pipeline (Table 5) showed that constrained data augmentation significantly improves model performance, achieving a 67% reduction in MedAE and a 26% increase in recall. Showing that learning the global stratigraphic context via cut-and-paste negative examples is important. However, explicit preprocessing with Hampel/Savitzky-Golay filters nega-tively impacted the final framework. While it slightly improved the baseline, it increased the MedAE of the augmented framework. The best approach is to use raw, resampled logs, allowing the multi-task architecture to perform internal denoising. 
+
+Table 5: Ablation on Data-Centric Components (North Sea) Configuration MedAE Recall Order 
+
+Baseline (Raw Data) 60.74 46.29 89 Preproc 55.03 47.89 89 Constr Aug. (Final) 19.74 72.81 94.56 
+
+Preproc. + Aug. 25.34 67.99 94.56 
+
+## 5 Conclusions and Future Work 
+
+This work introduces LithoFormer, a robust framework designed for high-precision stratigraphic inference from multivariate well-log data. By reframing the problem from traditional sliding-window classification to a global seq2seq paradigm, the framework suc-cessfully captures the long-range dependencies essential for re-constructing geologically consistent sequences. Key innovations include a decoupled multi-task architecture and a geology-informed training. Validated across three diverse datasets the LithoFormer demonstrates exceptional stability, maintaining high precision even in the presence of 54% data missingness. Ultimately, LithoFormer transforms a traditionally slow analytical process into a scalable automatic solution, applicable beyond geology to fields like medical monitoring and industrial phase detection. Future work aims to develop a global foundation model for well log data using a self-supervised approach similar to the MOMENT model [ 11 ]. This model will support task-specific heads for data imputation, marker prediction, and petrophysical property estima-tion, enabling faster adaptation to new regions with fewer expert engagements. 
+
+## Acknowledgments 
+
+We thank the CESMC [ 4], WOGCC [ 33 ], and NOD [ 21 ] for providing well log datasets for informational and research purposes. 
+
+## References 
+
+[1] Reda Abdel Azim and Abdulrahman Aljehani. 2022. Neural network model for permeability prediction from reservoir well logs. Processes 10, 12 (2022), 2587. [2] Monzurul Alam and et.al Mohamad-Hussein. 2023. Carbon Capture and Storage (CCS) subsurface modeling for risk identification. (2023). [3] Seth Brazell, Alex Bayeh, and Ashby et. al. 2019. A Machine-Learning-Based Approach to Assistive Well-Log Correlation. Petrophysics - The SPWLA Jour-nal 60, 04 (08 2019), 469–479. arXiv:https://onepetro.org/petrophysics/article-pdf/60/04/469/2202651/spwla-2019-v60n4a1.pdf doi:10.30632/PJV60N4-2019a1 [4] CECMC. [n. d.]. Data Portal. https://ecmc.state.co.us/data.html#/cogis. [5] Salvatore Cuomo and et. al Vincenzo Schiano di Cola. 2022. Scientific Machine Learning through Physics-Informed Neural Networks: Where we are and What’s next. arXiv:2201.05624 [cs.LG] https://arxiv.org/abs/2201.05624 [6] Toby Darling. 2005. Well logging and formation evaluation . Elsevier. [7] Hassan Dashtian and et. al Jafari. 2011. Analysis of cross correlations between well logs of hydrocarbon reservoirs. Transport in porous media 90, 2 (2011), 445–464. [8] Philipp Dufter, Martin Schmitt, and Hinrich Schütze. 2022. Position information in transformers: An overview. Computational Linguistics 48, 3 (2022), 733–763. [9] Darwin V Ellis and Julian M Singer. 2007. Well logging for earth scientists . Vol. 692. Springer. [10] Amer Farea, Olli Yli-Harja, and Frank Emmert-Streib. 2024. Understanding Physics-Informed Neural Networks: Techniques, Applications, Trends, and Chal-lenges. AI 5, 3 (2024), 1534–1557. doi:10.3390/ai5030074 [11] Mononito Goswami, Konrad Szafer, Arjun Choudhry, Yifu Cai, Shuo Li, and Artur Dubrawski. 2024. Moment: A family of open time-series foundation models. arXiv preprint arXiv:2402.03885 (2024). [12] Ignacio Hounie, Javier Porras-Valenzuela, and Alejandro Ribeiro. 2024. Loss Shap-ing Constraints for Long-Term Time Series Forecasting. arXiv:2402.09373 [cs.LG] https://arxiv.org/abs/2402.09373 [13] Jeremy Howard and Sylvain Gugger. 2020. Fastai: A Layered API for Deep Learning. Information 11, 2 (Feb. 2020), 108. doi:10.3390/info11020108 [14] Xinyu Huang, Jun Tang, and Yongming Shen. 2024. Long time series of ocean wave prediction based on PatchTST model. Ocean Engineering 301 (2024), 117572. [15] Yadigar Imamverdiyev and Lyudmila Sukhostat. 2019. Lithological facies classifi-cation using deep convolutional neural network. Journal of Petroleum Science and Engineering 174 (2019), 216–228. [16] Jaeho Kim, Kwangryeol Park, and et. al Yun. [n. d.]. PPT: Patch Order Do Matters In Time Series Pretext Task. In The Thirteenth International Conference on Learning Representations .[17] DJ Lineman, JD Mendelson, and M Nafi Toksoz. 1987. Well to well log correlation using knowledge-based systems and dynamic depth warping. In SPWLA Annual Logging Symposium . SPWLA, SPWLA–1987. [18] C John Mann and Thomas PL Dowell Jr. 1978. Quantitative lithostratigraphic correlation of subsurface sequences. Computers & Geosciences 4, 3 (1978), 295– 306. [19] Meinard Müller. 2007. Dynamic Time Warping . Springer Berlin Heidelberg, Berlin, Heidelberg, 69–84. doi:10.1007/978-3-540-74048-3_4 [20] Yuqi Nie and et. al H. Nguyen. 2023. A Time Series is Worth 64 Words: Long-term Forecasting with Transformers. In International Conference on Learning Representations .[21] NPD. [n. d.]. The Norwegian Offshore Directory (SODir). https://www.sodir.no/ en/. [22] OpenAI, :, and Sandhini Agarwal et. al. 2025. gpt-oss-120b & gpt-oss-20b Model Card. arXiv:2508.10925 [cs.CL] https://arxiv.org/abs/2508.10925 Conference’17, July 2017, Washington, DC, USA Salimath et al. 
+
+[23] Ronald K Pearson and et.al Neuvo. 2016. Generalized hampel filters. EURASIP Journal on Advances in Signal Processing 2016, 1 (2016), 87. [24] MH Rider. 1990. Gamma-ray log shape used as a facies indicator: critical analysis of an oversimplified methodology. Geological Society, London, Special Publications 
+
+48, 1 (1990), 27–37. [25] Shwetha Salimath, Francesca Bugiotti, and Sylvain Wlodarczyk. 2025. GeoTS: A TSC Framework for Estimating Geological Formation to Model Carbon Storage Reservoirs. In Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining V. 2 . 4773–4783. [26] Ronald W Schafer. 2011. What is a savitzky-golay filter?[lecture notes]. IEEE Signal processing magazine 28, 4 (2011), 111–117. [27] Aishwarya Sivaraman and et. al Golnoosh Farnadi. 2020. Counterexample-Guided Learning of Monotonic Neural Networks. arXiv:2006.08852 [cs.LG] https://arxiv.org/abs/2006.08852 [28] Jianlin Su, Murtadha Ahmed, and et. al Lu. 2024. Roformer: Enhanced transformer with rotary position embedding. Neurocomputing 568 (2024), 127063. [29] Hugo Touvron, Thibaut Lavril, and et. al Izacard. 2023. Llama: Open and efficient foundation language models. arXiv preprint arXiv:2302.13971 (2023). [30] Takeshi Tsuji and et. al Matsuoka. 2014. Reservoir characterization for site selection in the Gundih CCS project, Indonesia. Energy Procedia 63 (2014), 6335– 6343. [31] Ashish Vaswani, Noam Shazeer, and et. al Parmar. 2017. Attention is all you need. 
+
+Advances in neural information processing systems 30 (2017). [32] Yihe Wang, Nan Huang, Taida Li, Yujun Yan, and Xiang Zhang. 2024. Medformer: A multi-granularity patching transformer for medical time-series classification. 
+
+Advances in Neural Information Processing Systems 37 (2024), 36314–36341. [33] WOGCC. [n. d.]. Data Pipeline. https://pipeline.wyo.gov. [34] Haixu Wu, Jiehui Xu, and et. al Wang. 2021. Autoformer: Decomposition trans-formers with auto-correlation for long-term series forecasting. Advances in neural information processing systems 34 (2021), 22419–22430. [35] Haoyi Zhou, Shanghang Zhang, and et. al Peng. 2021. Informer: Beyond efficient transformer for long sequence time-series forecasting. In Proceedings of the AAAI conference on artificial intelligence , Vol. 35. 11106–11115.

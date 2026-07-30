@@ -1,0 +1,169 @@
+{
+  "date": "20260730",
+  "date_label": "",
+  "generated_at": "2026-07-30 21:54:12 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.26279v1",
+      "route": "202607/30/2607.26279v1-multi-objective-compliance-integrated-coevolution-for-simulated-and-real-world-deployment-of-multi-robot-marine-autonomy",
+      "title": "Multi-Objective Compliance-Integrated Coevolution For Simulated And Real-World Deployment Of Multi-Robot Marine Autonomy",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "多机器人海洋自主，智能体海洋应用",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.27152v1",
+      "route": "202607/30/2607.27152v1-skillful-forecasting-of-offshore-winds-from-satellite-scatterometer-constellations",
+      "title": "Skillful forecasting of offshore winds from satellite scatterometer constellations",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基于深度学习的近海风场预报模型，直接应用于海洋建模",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.24028v1",
+      "route": "202607/30/2607.24028v1-resource-aware-topology-management-for-isac-enabled-tdoa-localization-in-iout-networks",
+      "title": "Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "IoUT中AUV定位的拓扑管理框架，直接海洋应用",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.26850v1",
+      "route": "202607/30/2607.26850v1-rotational-equivariance-and-locality-in-data-driven-subgrid-scale-closures",
+      "title": "Rotational equivariance and locality in data-driven subgrid-scale closures",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "数据驱动的子网格尺度闭合方法，直接关联海洋建模",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.19809v1",
+      "route": "202607/30/2607.19809v1-dreamer-cpc-message-learning-with-world-models-for-decentralized-multi-agent-reinforcement-learning",
+      "title": "Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "去中心化多智能体强化学习与世界模型通信，可应用于海洋监控。",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.21023v1",
+      "route": "202607/30/2607.21023v1-wat3r-feedforward-underwater-3d-reconstruction",
+      "title": "WAT3R: Feedforward Underwater 3D Reconstruction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "前馈式水下三维重建深度学习框架",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.23532v1",
+      "route": "202607/30/2607.23532v1-mission-level-runtime-assurance-for-llm-assisted-isr-swarms-over-a-verification-aware-fabric",
+      "title": "Mission-Level Runtime Assurance for LLM-Assisted ISR Swarms over a Verification-Aware Fabric",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "LLM辅助ISR蜂群可应用于海洋监视",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.25929v1",
+      "route": "202607/30/2607.25929v1-can-deep-generative-models-reproduce-non-stationary-gaussian-random-fields",
+      "title": "Can Deep Generative Models Reproduce Non-Stationary Gaussian Random Fields?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "评估深度生成模型在非平稳空间场上的表现,适用于海洋建模",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.22804v1",
+      "route": "202607/30/2607.22804v1-lithoformer-a-robust-framework-for-stratigraphic-inference-via-transformers",
+      "title": "LithoFormer: A Robust Framework for Stratigraphic Inference via Transformers",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于Transformer的深度学习用于地下储层地层推断，与海底地质相关",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    },
+    {
+      "paper_id": "2607.23678v1",
+      "route": "202607/30/2607.23678v1-focus-is-all-you-need-adaptive-goal-aware-attention-orchestration-for-multi-agent-graph-systems",
+      "title": "Focus Is All You Need: Adaptive Goal-aware Attention Orchestration for Multi-Agent Graph Systems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自适应注意力编排的多智能体系统方法，可用于海洋监测",
+      "first_seen_at": "2026-07-30 21:54:12 UTC",
+      "updated_at": "2026-07-30 21:54:12 UTC"
+    }
+  ]
+}
