@@ -1,0 +1,281 @@
+{
+  "date": "20260731",
+  "date_label": "",
+  "generated_at": "2026-07-31 21:01:13 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.21088v1",
+      "route": "202607/31/2607.21088v1-casc-causal-adversarial-subspace-clustering-for-multivariate-spatiotemporal-data",
+      "title": "CASC: Causal Adversarial Subspace Clustering for Multivariate Spatiotemporal Data",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "针对多变量时空数据的因果对抗子空间聚类，应用于海冰监测，可直接用于海洋遥感数据挖掘",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.24160v1",
+      "route": "202607/31/2607.24160v1-calibrated-tree-neural-fusion-for-fine-grained-vegetation-community-classification",
+      "title": "Calibrated Tree-Neural Fusion for Fine-Grained Vegetation Community Classification",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向细粒度生态分类的树-神经融合框架，与珊瑚礁底栖覆盖分类直接类比",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.24856v1",
+      "route": "202607/31/2607.24856v1-disastertd-disaster-toponym-disambiguation-using-multimodal-llms-and-cross-view-geolocalization",
+      "title": "DisasterTD: Disaster Toponym Disambiguation Using Multimodal LLMs and Cross-View Geolocalization",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多模态大模型融合文本与遥感影像进行地理定位，可迁移至环境评估",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.25563v1",
+      "route": "202607/31/2607.25563v1-few-shot-open-vocabulary-remote-sensing-segmentation-via-textual-inversion",
+      "title": "Few-Shot Open-Vocabulary Remote Sensing Segmentation via Textual Inversion",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过文本反演提升遥感开放词汇分割，可支撑珊瑚礁栖息地文字查询映射",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.25993v1",
+      "route": "202607/31/2607.25993v1-beyond-zooming-learning-multi-tool-visual-reasoning-for-ultra-high-resolution-remote-sensing",
+      "title": "Beyond Zooming: Learning Multi-Tool Visual Reasoning for Ultra-High-Resolution Remote Sensing",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向超高分辨率遥感的多模态大语言模型与多工具视觉推理，直接支持大模型辅助制图",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.28571v1",
+      "route": "202607/31/2607.28571v1-finding-change-in-satellite-archives-from-text-how-to-combine-before-and-after-images-efficiently",
+      "title": "Finding Change in Satellite Archives from Text: How to Combine Before-and-After Images Efficiently",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "直接结合卫星影像与自然语言的跨模态融合方法，可复用于海洋环境评估",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.22272v1",
+      "route": "202607/31/2607.22272v1-efficient-spatial-spectral-feature-extraction-in-hyperspectral-images-via-holistic-multivariance-decomposition",
+      "title": "Efficient Spatial-Spectral Feature Extraction in Hyperspectral Images via Holistic Multivariance Decomposition",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "高光谱影像分类特征提取，可用于底栖覆盖制图",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.23024v1",
+      "route": "202607/31/2607.23024v1-when-less-is-more-a-controlled-benchmark-of-lightweight-cnns-for-satellite-land-cover-segmentation-on-deepglobe",
+      "title": "When Less Is More: A Controlled Benchmark of Lightweight CNNs for Satellite Land-Cover Segmentation on DeepGlobe",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "轻量CNN卫星土地覆盖分割基准研究，可为珊瑚礁遥感分割选型提供参考",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.23908v1",
+      "route": "202607/31/2607.23908v1-embeddings-based-anomaly-detection-for-cleaning-global-crop-type-reference-datasets",
+      "title": "Embeddings based Anomaly Detection for Cleaning Global Crop Type Reference Datasets",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于地理空间基础模型嵌入的参考数据异常检测，可迁移用于珊瑚礁遥感参考数据清洗",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.24532v3",
+      "route": "202607/31/2607.24532v3-from-machine-learning-to-large-scale-eo-products-best-practices-for-making-maps",
+      "title": "From Machine Learning to Large-Scale EO Products: Best Practices for Making Maps",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向地球观测数据的大规模机器学习制图最佳实践，适用于珊瑚礁生境制图",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.27139v1",
+      "route": "202607/31/2607.27139v1-seasonstereo-robust-dense-stereo-matching-for-multi-date-satellite-imagery-via-generative-ai",
+      "title": "SeasonStereo: Robust Dense Stereo Matching for Multi-Date Satellite Imagery via Generative AI",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向多日期卫星影像的深度学习立体匹配方法",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.21050v2",
+      "route": "202607/31/2607.21050v2-hyperimagenet-a-large-scale-high-spatial-resolution-hyperspectral-imagery-classification-benchmark",
+      "title": "HyperImageNet: A Large-Scale High-Spatial Resolution Hyperspectral Imagery Classification Benchmark",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "高光谱地物分类基准，方法可迁移至珊瑚礁遥感栖息地制图",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.21467v1",
+      "route": "202607/31/2607.21467v1-cluie-clustering-aware-recurrent-propagation-with-local-structural-compensation-for-underwater-image-enhancement",
+      "title": "CLUIE: Clustering-Aware Recurrent Propagation with Local Structural Compensation for Underwater Image Enhancement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下图像增强方法，解决退化问题，可用于珊瑚礁影像",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.21881v1",
+      "route": "202607/31/2607.21881v1-farmland-extent-and-visible-boundary-mapping-from-1-m-naip-imagery-using-residual-u-net-and-text-prompted-sam-3-refinement",
+      "title": "Farmland Extent and Visible Boundary Mapping from 1 m NAIP Imagery Using Residual U-Net and Text-Prompted SAM 3 Refinement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "结合U-Net和文本提示SAM的遥感分割工作流，可迁移至生态系统制图",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.23638v1",
+      "route": "202607/31/2607.23638v1-wgdnet-wishart-guided-geometric-aware-deep-network-for-polsar-image-classification",
+      "title": "WGDnet: Wishart-guided Geometric-aware Deep Network for PolSAR Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "PolSAR图像分类深度网络",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.23673v1",
+      "route": "202607/31/2607.23673v1-contrastive-parameter-disentanglement-for-multi-modal-remote-sensing-image-generation",
+      "title": "Contrastive Parameter Disentanglement for Multi-modal Remote Sensing Image Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从文本提示生成多模态遥感图像，与海洋科学的图像-文本融合相关",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    },
+    {
+      "paper_id": "2607.24482v1",
+      "route": "202607/31/2607.24482v1-distributed-coordination-for-resilient-multi-uav-remote-sensing-a-photovoltaic-inspection-case-study",
+      "title": "Distributed Coordination for Resilient Multi-UAV Remote Sensing: A Photovoltaic Inspection Case Study",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向弹性遥感的多UAV分布式协调基础设施，可迁移至自主海洋监测",
+      "first_seen_at": "2026-07-31 21:01:13 UTC",
+      "updated_at": "2026-07-31 21:01:13 UTC"
+    }
+  ]
+}

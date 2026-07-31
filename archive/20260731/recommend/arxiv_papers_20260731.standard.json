@@ -1,0 +1,676 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-31T20:47:15.823549+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 6,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 20,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.21088v1",
+      "source": "arxiv",
+      "title": "CASC: Causal Adversarial Subspace Clustering for Multivariate Spatiotemporal Data",
+      "abstract": "Deep subspace clustering plays a critical role in applications involving multivariate spatiotemporal data, such as sea ice monitoring, disease spread analysis, and tracking neuro-degeneration over time. Despite recent advances, existing methods primarily rely on geometric self-expressiveness, assume static subspace structures, and often fail to capture causal dependencies, local spatial interactions, and long-range temporal dynamics inherent in complex spatiotemporal systems. To address these limitations, we propose a novel Causal Adversarial Subspace Clustering (CASC) framework for discovering evolving latent regimes in high-dimensional spatiotemporal data. CASC integrates a U-Net-inspired deep adversarial clustering architecture with stacked FAConvLSTM layers to preserve spatial and temporal structure while learning robust latent representations. A graph attention transformer-based self-expressive network is introduced to jointly model local spatial relationships, global dependencies, and long-range temporal interactions. Furthermore, we propose two new learning objectives: (1) a Causal Subspace Preservation Loss that aligns self-expression coefficients with latent causal relationships, encouraging clusters to reflect underlying causal processes rather than simple feature similarity, and (2) a Dynamic Temporal Subspace Evolution Loss that captures evolving subspace structures and temporal regime transitions in nonstationary environments. Together, these components transform deep subspace clustering from a correlation-driven paradigm into a causal-temporal regime discovery framework.",
+      "authors": [
+        "Francis Ndikum Nji",
+        "Vandana Janeja",
+        "Jianwu Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-23T09:19:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.21088v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "causal adversarial subspace clustering for multivariate spatiotemporal data with sea ice monitoring application; directly reusable for oceanographic remote sensing data mining",
+      "llm_evidence_cn": "针对多变量时空数据的因果对抗子空间聚类，应用于海冰监测，可直接用于海洋遥感数据挖掘",
+      "llm_evidence": "针对多变量时空数据的因果对抗子空间聚类，应用于海冰监测，可直接用于海洋遥感数据挖掘",
+      "canonical_evidence": "针对多变量时空数据的因果对抗子空间聚类，应用于海冰监测，可直接用于海洋遥感数据挖掘",
+      "llm_tldr_en": "CASC is a U-Net-inspired deep adversarial subspace clustering framework that discovers evolving latent regimes in multivariate spatiotemporal data, capturing causal dependencies and local spatial interactions, and is demonstrated on sea ice monitoring.",
+      "llm_tldr_cn": "多变量时空数据中的潜在动态状态难以用现有子空间聚类捕捉。本文提出因果对抗子空间聚类框架，融合U-Net启发深度对抗聚类结构与堆叠架构，以发现演化的潜在机制，并捕获因果依赖和局域空间交互。在海冰监测等应用中验证了其有效性，表明该方法能够揭示时空数据中的可解释结构，为海洋遥感等复杂时空数据挖掘提供了新工具。",
+      "llm_tldr": "多变量时空数据中的潜在动态状态难以用现有子空间聚类捕捉。本文提出因果对抗子空间聚类框架，融合U-Net启发深度对抗聚类结构与堆叠架构，以发现演化的潜在机制，并捕获因果依赖和局域空间交互。在海冰监测等应用中验证了其有效性，表明该方法能够揭示时空数据中的可解释结构，为海洋遥感等复杂时空数据挖掘提供了新工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.24160v1",
+      "source": "arxiv",
+      "title": "Calibrated Tree-Neural Fusion for Fine-Grained Vegetation Community Classification",
+      "abstract": "Accurate vegetation-community classification is essential for ecological monitoring, habitat assessment, and evidence-based environmental management in heterogeneous landscapes. Existing studies often rely on standalone tree ensembles or generic neural networks, although fine-grained ecological classes frequently exhibit overlapping spectral, topographic, and structural characteristics. Many frameworks also provide limited protection against stacking leakage, insufficient probability calibration, weak minority-class evaluation, and little evidence of stability across repeated data splits. To address these limitations, this study proposes Calibrated EcoTreeFuseNet-Plus, a tree-neural probability-fusion framework that combines out-of-fold tree probabilities, EcoFuseNet-V2 outputs, validation-selected meta-learning, and post-hoc temperature scaling. Raster values from six LiDAR-derived terrain and canopy variables and two hyperspectral vegetation indices were extracted at coordinate-based reference locations. Quality control removed 26 samples with missing elevation and one sample with non-finite NDWI, producing 1,833 complete records across 29 vegetation and non-vegetation classes. On the held-out test set, the proposed model achieved an accuracy of 0.8000, a macro F1-score of 0.7768, a balanced accuracy of 0.7903, and an MCC of 0.7903. Calibration reduced the expected calibration error from 0.3866 to 0.0651 without changing class predictions. Five-seed evaluation yielded a macro F1-score of 0.7717 +/- 0.0112, indicating stable performance across repeated splits. The results demonstrate a reliable discrimination-calibration trade-off for small-sample, fine-grained ecological classification.",
+      "authors": [
+        "Dristi Datta",
+        "Md Khalid Hasan Sakib",
+        "Manoranjan Paul"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-27T08:37:49+00:00",
+      "link": "https://arxiv.org/pdf/2607.24160v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "tree-neural fusion framework for fine-grained ecological classification, directly analogous to coral reef benthic cover classification",
+      "llm_evidence_cn": "面向细粒度生态分类的树-神经融合框架，与珊瑚礁底栖覆盖分类直接类比",
+      "llm_evidence": "面向细粒度生态分类的树-神经融合框架，与珊瑚礁底栖覆盖分类直接类比",
+      "canonical_evidence": "面向细粒度生态分类的树-神经融合框架，与珊瑚礁底栖覆盖分类直接类比",
+      "llm_tldr_en": "Calibrated EcoTreeFuseNet-Plus combines out-of-fold tree ensembles and neural probabilities for fine-grained vegetation community classification, addressing leakage, calibration, minority classes, and stability.",
+      "llm_tldr_cn": "异质景观中的精细植被群落分类对生态监测很重要，但现有模型常面临特征重叠、数据泄漏和类别不平衡问题。该方法提出校准的树-神经概率融合框架Eco-TreeFuseNet-Plus，利用袋外树集成和神经网络的概率输出进行融合，并注重概率校准和稳定性验证。在细粒度生态分类任务上表现稳健，为防止过度拟合提供了可靠方案，可推广至珊瑚礁底栖覆盖分类。",
+      "llm_tldr": "异质景观中的精细植被群落分类对生态监测很重要，但现有模型常面临特征重叠、数据泄漏和类别不平衡问题。该方法提出校准的树-神经概率融合框架Eco-TreeFuseNet-Plus，利用袋外树集成和神经网络的概率输出进行融合，并注重概率校准和稳定性验证。在细粒度生态分类任务上表现稳健，为防止过度拟合提供了可靠方案，可推广至珊瑚礁底栖覆盖分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.24856v1",
+      "source": "arxiv",
+      "title": "DisasterTD: Disaster Toponym Disambiguation Using Multimodal LLMs and Cross-View Geolocalization",
+      "abstract": "Social media imagery (SMI) provides timely and fine-grained ground perspectives that are valuable for situational awareness and emergency response. Unlike satellite or aerial imagery, SMI can capture disaster impacts and ground-level conditions in a timely manner. However, geographic references in SMI are often vague or ambiguous, making accurate geolocalization challenging. To address this issue, we propose DisasterTD, a disaster toponym disambiguation framework that integrates multimodal large language model (MLLMs)-based semantic reasoning with cross-view geolocalization. First, MLLMs extract toponyms and generate candidate geolocations from noisy textual inputs. Then, cross-view matching between SMI, remote sensing imagery (RSI), and optionally street-view imagery (SVI) is used to verify and refine these candidate results. We evaluate DisasterTD on the Hurricane Harvey dataset, where SMI is augmented with collected RSI and SVI to construct a cross-view benchmark for disaster geolocalization. The dataset is divided into four categories based on toponym clarity and ambiguity, allowing a fine-grained performance analysis across scenarios. Results show that DisasterTD consistently outperforms MLLM-only and cross-view-only baselines without disambiguation, achieving geolocalization accuracies of 71.62% within 1000 m, 62.36% within 500 m, 57.99% within 250 m, 52.09% within 100 m, and 47.01% within 50 m, while reducing the mean and median errors to 11.33 km and 0.68 km, respectively. The largest improvements appear in ambiguous toponyms, where semantic reasoning with cross-view evidence reduces candidate dispersion and errors. These findings demonstrate the effectiveness of integrating MLLM-based candidate generation with cross-view verification for fine-grained disaster geolocalization.",
+      "authors": [
+        "Wenping Yin",
+        "Ziqi Liu",
+        "Naixia Mou",
+        "Weijia Li",
+        "Danfeng Hong",
+        "Hao Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-26T02:51:53+00:00",
+      "link": "https://arxiv.org/pdf/2607.24856v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal LLMs combine social media text and remote sensing imagery for geolocalization, transferable to environmental assessment",
+      "llm_evidence_cn": "多模态大模型融合文本与遥感影像进行地理定位，可迁移至环境评估",
+      "llm_evidence": "多模态大模型融合文本与遥感影像进行地理定位，可迁移至环境评估",
+      "canonical_evidence": "多模态大模型融合文本与遥感影像进行地理定位，可迁移至环境评估",
+      "llm_tldr_en": "Proposes DisasterTD integrating multimodal LLM semantic reasoning with cross-view geolocalization to disambiguate disaster toponyms from social media text and imagery, improving geolocation accuracy for emergency response.",
+      "llm_tldr_cn": "社交媒体影像能提供灾害地面实况，但其地理参考常模糊歧义，难以精确定位。DisasterTD将多模态大语言模型的语义理解与跨视角地理定位相结合：先用MLLM从噪声文本中提取地名并生成候选位置，再做地面影像与遥感影像的跨视角匹配。该方法在灾害场景下显著提升地名消歧和地理定位准确率，为应急响应提供及时态势感知。其技术路线同样适用于海洋科学中遥感影像与文本报告的多模态融合评估。",
+      "llm_tldr": "社交媒体影像能提供灾害地面实况，但其地理参考常模糊歧义，难以精确定位。DisasterTD将多模态大语言模型的语义理解与跨视角地理定位相结合：先用MLLM从噪声文本中提取地名并生成候选位置，再做地面影像与遥感影像的跨视角匹配。该方法在灾害场景下显著提升地名消歧和地理定位准确率，为应急响应提供及时态势感知。其技术路线同样适用于海洋科学中遥感影像与文本报告的多模态融合评估。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.25563v1",
+      "source": "arxiv",
+      "title": "Few-Shot Open-Vocabulary Remote Sensing Segmentation via Textual Inversion",
+      "abstract": "Open-vocabulary segmentation labels arbitrary categories from a text query without per-class training, yet on remote sensing imagery it underperforms on categories it handles reliably elsewhere. We find that much of this gap traces to the text query rather than to the segmentation model. Because these models are not specialized for overhead imagery, the class name that serves as the query is often a weak address into the vision-language embedding space. We show that a better name repairs part of the gap, while the remaining failures call for an address that the tested natural-language rephrasings do not provide. We recover that address from a few examples through textual inversion on a frozen model, keeping inference text only. On a representative benchmark this raises the mean intersection over union on the affected categories from 3.9 to 39.4, and across eight remote sensing datasets it improves over few-shot methods that instead inject visual prompts at inference.",
+      "authors": [
+        "Junhyuk Heo",
+        "Junghwan Park"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T10:50:24+00:00",
+      "link": "https://arxiv.org/pdf/2607.25563v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "text-guided open-vocabulary segmentation for remote sensing via textual inversion",
+      "llm_evidence_cn": "通过文本反演提升遥感开放词汇分割，可支撑珊瑚礁栖息地文字查询映射",
+      "llm_evidence": "通过文本反演提升遥感开放词汇分割，可支撑珊瑚礁栖息地文字查询映射",
+      "canonical_evidence": "通过文本反演提升遥感开放词汇分割，可支撑珊瑚礁栖息地文字查询映射",
+      "llm_tldr_en": "This paper improves open-vocabulary segmentation on remote sensing imagery by refining text queries through textual inversion from a few examples, keeping inference text-only and showing that better class-name addresses largely close the performance gap.",
+      "llm_tldr_cn": "论文针对开放词汇分割在遥感图像上性能不佳的问题，发现根因在于类别文本查询在视觉-语言嵌入空间中无法准确指向俯视图像目标。作者提出用少量示例对冻结模型进行文本反演，为每个类别恢复更有效的文本地址，推理时仍仅使用文本。在代表性遥感分割数据集上，该方法显著缩小了与基线的差距，并使得用自然语言描述即可对珊瑚礁等海洋栖息地进行卫星图像分割成为可能。",
+      "llm_tldr": "论文针对开放词汇分割在遥感图像上性能不佳的问题，发现根因在于类别文本查询在视觉-语言嵌入空间中无法准确指向俯视图像目标。作者提出用少量示例对冻结模型进行文本反演，为每个类别恢复更有效的文本地址，推理时仍仅使用文本。在代表性遥感分割数据集上，该方法显著缩小了与基线的差距，并使得用自然语言描述即可对珊瑚礁等海洋栖息地进行卫星图像分割成为可能。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.25993v1",
+      "source": "arxiv",
+      "title": "Beyond Zooming: Learning Multi-Tool Visual Reasoning for Ultra-High-Resolution Remote Sensing",
+      "abstract": "Ultra-high-resolution (UHR) remote-sensing (RS) imagery provides fine-grained Earth-observation evidence over city-scale scenes, but poses a fundamental challenge for multimodal large language models (MLLMs): task-relevant evidence is often sparse, local, and spatially dispersed across extremely large visual contexts. A natural solution is to equip MLLMs with zoom-in tools for active local inspection. However, through a pilot study on XLRS-Bench, we find that zoom-in is only partially effective: it resolves easy and medium-level tasks with locally recoverable evidence, but saturates on hard cases requiring global search, multi-region comparison, path planning, or dispersed-evidence reasoning. Motivated by this finding, we move beyond single-tool zoom-in and introduce GeoMTVR, a large-scale Geospatial Multi-Tool Visual Reasoning dataset built from wide-area satellite imagery. GeoMTVR contains 13K UHR VQA samples with interleaved reasoning trajectories, diverse visual tool calls, and returned visual observations, enabling models to learn question decomposition, tool selection, regional inspection, object-level grounding, auxiliary visual reasoning, and cross-tool evidence integration. Beyond supervised fine-tuning, we propose a tool-attention-focused reinforcement learning algorithm that concentrates optimization on critical tool-use decisions, including when to invoke tools, which tool to select, where to apply it, and how to interpret tool outputs. By combining SFT on GeoMTVR with our RL algorithm, we develop GeoLens, a multi-tool visual reasoning MLLM for UHR RS. Experiments show that GeoLens consistently outperforms direct reasoning and single-tool zoom-in baselines, achieving stronger accuracy, better evidence grounding, and more efficient tool-use trajectories.",
+      "authors": [
+        "Fengxiang Wang",
+        "Jiangnan Huang",
+        "Mingshuo Chen",
+        "Yueying Li",
+        "Yang Shi",
+        "Junwei Luo",
+        "Haoyu Wang",
+        "Yansheng Li",
+        "Jing Zhang",
+        "Haiyan Zhao",
+        "Wenjing Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T17:09:16+00:00",
+      "link": "https://arxiv.org/pdf/2607.25993v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal large language models with multi-tool visual reasoning for ultra-high-resolution remote sensing, directly supports LLM-assisted mapping",
+      "llm_evidence_cn": "面向超高分辨率遥感的多模态大语言模型与多工具视觉推理，直接支持大模型辅助制图",
+      "llm_evidence": "面向超高分辨率遥感的多模态大语言模型与多工具视觉推理，直接支持大模型辅助制图",
+      "canonical_evidence": "面向超高分辨率遥感的多模态大语言模型与多工具视觉推理，直接支持大模型辅助制图",
+      "llm_tldr_en": "A study of multimodal large language models for ultra-high-resolution remote sensing finds zoom-in tools saturate on hard tasks, so it proposes multi-tool visual reasoning covering global search, multi-region comparison, path planning, and dispersed-evidence reasoning.",
+      "llm_tldr_cn": "针对超高分辨率遥感影像中证据稀疏、分散带来的多模态大模型推理难题，发现单纯缩放工具仅能解决容易和中等任务，在需要全局搜索、跨区域比较、路径规划与分散证据推理的困难任务上饱和。为此提出超越缩放的多种视觉工具联合推理方法，使 MLLM 能够有效处理城市尺度的大范围视觉决策。该方法为遥感大数据环境下的智能解译提供了新的范式，可推广到珊瑚礁等生态目标识别。",
+      "llm_tldr": "针对超高分辨率遥感影像中证据稀疏、分散带来的多模态大模型推理难题，发现单纯缩放工具仅能解决容易和中等任务，在需要全局搜索、跨区域比较、路径规划与分散证据推理的困难任务上饱和。为此提出超越缩放的多种视觉工具联合推理方法，使 MLLM 能够有效处理城市尺度的大范围视觉决策。该方法为遥感大数据环境下的智能解译提供了新的范式，可推广到珊瑚礁等生态目标识别。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.28571v1",
+      "source": "arxiv",
+      "title": "Finding Change in Satellite Archives from Text: How to Combine Before-and-After Images Efficiently",
+      "abstract": "Operational Earth observation increasingly calls for answering queries such as ``find the image pairs where a new building appeared.'' This means searching an archive of before-and-after (bi-temporal) satellite image pairs and ranking each pair by how well it matches a natural-language description of the change. The component that performs this match, the fusion module that combines the ``before'' and ``after'' views, must be run at query time across many candidate pairs, so its speed largely sets the cost of every search. We present a controlled comparison of how to build that module. Using one fixed image encoder (a frozen CLIP model) and one training recipe for all variants, we evaluate eight designs drawn from three families: attention, state-space models (Mamba), and learned compression (our Temporal Bottleneck Fusion, TBF). Each design is tested on two benchmarks (LEVIR-CC and Dubai-CC) with ten random seeds, so the reported differences are statistically grounded. We outline three findings: first, a training-free two-stage search (a cheap difference model that shortlists candidates, followed by attention fusion that re-ranks them) matches or exceeds full-fusion recall on LEVIR-CC while cutting query cost $10$-$15\\times$, with comparable R@1/R@5 on Dubai-CC; second, the linear-time scan of Mamba, attractive on paper, gives no speed benefit at the patch counts typical of vision transformers ($L{=}196$): the scan is limited by memory bandwidth, whereas attention maps cleanly onto parallel hardware; and third, compressing the fused representation (TBF) reduces parameters by $2.3\\times$ and latency by $1.6\\times$ for a change-only BLEU-1 cost of $0.007$, although more aggressive compression quietly discards change-relevant detail that aggregate metrics fail to reveal.",
+      "authors": [
+        "Simon Roy",
+        "Mark Bong",
+        "Giovanni Beltrame"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.IR"
+      ],
+      "published": "2026-07-30T17:35:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.28571v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "direct multimodal fusion of satellite imagery and natural language for change search; core technique reusable for ocean environmental assessment",
+      "llm_evidence_cn": "直接结合卫星影像与自然语言的跨模态融合方法，可复用于海洋环境评估",
+      "llm_evidence": "直接结合卫星影像与自然语言的跨模态融合方法，可复用于海洋环境评估",
+      "canonical_evidence": "直接结合卫星影像与自然语言的跨模态融合方法，可复用于海洋环境评估",
+      "llm_tldr_en": "This paper systematically compares eight fusion module designs for matching bi-temporal satellite image pairs to natural-language change descriptions, using a fixed CLIP encoder and unified training recipe to identify efficient and accurate architectures.",
+      "llm_tldr_cn": "从卫星影像档案中按自然语言描述检索变化需要高效融合“前后时相”影像特征。本文固定CLIP图像编码器与训练设置，系统比较了来自三个家族的八种融合模块设计。实验揭示了不同融合策略在检索速度与精度间的权衡，为构建低成本的跨模态变化检索系统提供了实践指导，可直接服务于海洋环境遥感变化评估等任务。",
+      "llm_tldr": "从卫星影像档案中按自然语言描述检索变化需要高效融合“前后时相”影像特征。本文固定CLIP图像编码器与训练设置，系统比较了来自三个家族的八种融合模块设计。实验揭示了不同融合策略在检索速度与精度间的权衡，为构建低成本的跨模态变化检索系统提供了实践指导，可直接服务于海洋环境遥感变化评估等任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.22272v1",
+      "source": "arxiv",
+      "title": "Efficient Spatial-Spectral Feature Extraction in Hyperspectral Images via Holistic Multivariance Decomposition",
+      "abstract": "Tensor decomposition serves as a foundational tool for feature extraction in hyperspectral image classification, a domain classically dominated by the Tucker and Canonical Polyadic decompositions. Although widely adopted, these schemes often struggle to fully encapsulate the deeply coupled geometric and intrinsic structures inherent to multidimensional hyperspectral data. Their structural reliance on rigid low-rank approximations successfully captures independent mode variations but systematically neglects complex, cross-domain spatial and spectral interdependencies. To overcome this limitation, we introduce the Holistic Multivariance Decomposition framework to achieve highly discriminative hyperspectral feature extraction. The Holistic Multivariance Decomposition provides a novel, structurally flexible tensor algorithm that explicitly models isolated spatial and spectral behaviors, alongside intricate, higher dimensional cooperative interactions. Comprehensive experimental evaluations across four benchmark hyperspectral datasets demonstrate that the proposed Holistic Multivariance Decomposition approximants consistently yield superior classification accuracy compared to conventional Tucker and Canonical Polyadic decomposition methods across diverse supervised learning algorithms. By effectively preserving essential joint multivariance features even under severe subspace compression, these results establish the Holistic Multivariance Decomposition as a robust, high fidelity computational framework for resolving complex multidimensional data structures in hyperspectral analysis.",
+      "authors": [
+        "Süha Tuna"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE",
+        "math.NA",
+        "math.RT"
+      ],
+      "published": "2026-07-24T13:08:42+00:00",
+      "link": "https://arxiv.org/pdf/2607.22272v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hyperspectral image classification feature extraction, useful for benthic cover mapping",
+      "llm_evidence_cn": "高光谱影像分类特征提取，可用于底栖覆盖制图",
+      "llm_evidence": "高光谱影像分类特征提取，可用于底栖覆盖制图",
+      "canonical_evidence": "高光谱影像分类特征提取，可用于底栖覆盖制图",
+      "llm_tldr_en": "This paper introduces Holistic Multivariance Decomposition for hyperspectral image classification, capturing coupled spatial-spectral interdependencies beyond rigid low-rank assumptions. The framework yields highly discriminative features and improved classification performance. Since hyperspectral remote sensing is widely used for benthic mapping, the method is directly applicable to coral reef benthic cover classification.",
+      "llm_tldr_cn": "高光谱图像分类中，张量分解方法多采用刚性低秩近似，难以刻画空间与光谱间复杂的跨域依赖。该文提出整体多方差分解框架，统一建模空间和光谱的多方差交互，获得高判别力的特征表示。在高光谱分类实验中，该方法有效提升了分类精度，克服了传统分解的结构局限。这一通用特征提取方法可应用于珊瑚礁底栖覆盖等遥感分类任务。",
+      "llm_tldr": "高光谱图像分类中，张量分解方法多采用刚性低秩近似，难以刻画空间与光谱间复杂的跨域依赖。该文提出整体多方差分解框架，统一建模空间和光谱的多方差交互，获得高判别力的特征表示。在高光谱分类实验中，该方法有效提升了分类精度，克服了传统分解的结构局限。这一通用特征提取方法可应用于珊瑚礁底栖覆盖等遥感分类任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.21050v2",
+      "source": "arxiv",
+      "title": "HyperImageNet: A Large-Scale High-Spatial Resolution Hyperspectral Imagery Classification Benchmark",
+      "abstract": "We present HyperImageNet, a large-scale benchmark for fine-grained hyperspectral land-cover understanding. The dataset contains 26,084 airborne hyperspectral image patches with 224 spectral bands and 138 fine-grained land-cover categories. Unlike existing datasets, HyperImageNet provides raw imagery, pixel-level semantic labels, and object-level instance masks, supporting both semantic and instance segmentation. Furthermore, we establish an open-environment benchmark with strict spatial separation to evaluate representative methods and the HyperFree foundation model. Experimental results demonstrate the effectiveness of HyperImageNet for fine-grained hyperspectral understanding and open-environment remote sensing research.",
+      "authors": [
+        "Chuguang Zeng",
+        "Jingtao Li",
+        "Yinhe Liu",
+        "Yanfei Zhong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-23T08:34:01+00:00",
+      "link": "https://arxiv.org/pdf/2607.21050v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "hyperspectral land-cover classification benchmark; method transferable to coral reef habitat mapping from remote sensing imagery",
+      "llm_evidence_cn": "高光谱地物分类基准，方法可迁移至珊瑚礁遥感栖息地制图",
+      "llm_evidence": "高光谱地物分类基准，方法可迁移至珊瑚礁遥感栖息地制图",
+      "canonical_evidence": "高光谱地物分类基准，方法可迁移至珊瑚礁遥感栖息地制图",
+      "llm_tldr_en": "HyperImageNet provides a large-scale hyperspectral benchmark with fine-grained labels and instance masks, supporting semantic and instance segmentation, and evaluates foundation models for open-environment remote sensing.",
+      "llm_tldr_cn": "HyperImageNet构建了一个大规模高空间分辨率高光谱图像分类基准，包含2.6万张影像、224个波段及138个细粒度地物类别，并提供像素级语义标签和实例掩码。该基准支持语义分割与实例分割，并设定了严格空间分割的开放环境评价协议。实验评估了代表性方法与HyperFree基础模型，证明了其在细粒度高光谱理解和开放环境遥感研究中的有效性，可为珊瑚礁栖息地遥感分类提供可迁移的技术参考。",
+      "llm_tldr": "HyperImageNet构建了一个大规模高空间分辨率高光谱图像分类基准，包含2.6万张影像、224个波段及138个细粒度地物类别，并提供像素级语义标签和实例掩码。该基准支持语义分割与实例分割，并设定了严格空间分割的开放环境评价协议。实验评估了代表性方法与HyperFree基础模型，证明了其在细粒度高光谱理解和开放环境遥感研究中的有效性，可为珊瑚礁栖息地遥感分类提供可迁移的技术参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.23024v1",
+      "source": "arxiv",
+      "title": "When Less Is More: A Controlled Benchmark of Lightweight CNNs for Satellite Land-Cover Segmentation on DeepGlobe",
+      "abstract": "High-resolution satellite imagery is the backbone of good land-cover classification, and without that, environmental monitoring, urban planning, and sustainable resource management all fall short. Deep learning architectures perform well in semantic segmentation, but the efficiency-accuracy trade-off across classical convolutional encoders is not well quantified under controlled, reproducible conditions. This study compares five architectures VGG16, MobileNetV2, InceptionV3, AlexNet, and CNN on the DeepGlobe Land Cover Classification dataset using three progressively optimized iterations to isolate regularisation, transfer learning, and architectural depth. To ensure performance differentials reflect architectural properties, all experiments used identical preprocessing, hyperparameter, and training protocols without data augmentation or class-imbalance correction. At 24.98 MB, MobileNetV2_v1 had the highest overall accuracy (0.7906) and mean Intersection over Union (0.4625), outperforming deeper alternatives like InceptionV3_v2 (125.17 MB, accuracy 0.7610) and VGG16_v2 (71.13 MB, accuracy 0.7653). Class-wise analysis showed strength in urban, agricultural, and water categories, but rangeland-barren confusion showed that architectural optimization alone cannot optimize spectrally similar minority classes. Strong spatial generalization and crisp boundary delineation were confirmed on held-out test imagery, validating operational applicability. These results show that lightweight, transfer-learned models can match or outperform deeper models in resource-constrained remote-sensing environments, enabling scalable land-cover mapping.",
+      "authors": [
+        "Atiq Ur Rehman",
+        "Joseph Michael Donovan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "stat.AP"
+      ],
+      "published": "2026-07-25T03:51:49+00:00",
+      "link": "https://arxiv.org/pdf/2607.23024v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "controlled benchmark of lightweight CNNs for satellite land-cover segmentation",
+      "llm_evidence_cn": "轻量CNN卫星土地覆盖分割基准研究，可为珊瑚礁遥感分割选型提供参考",
+      "llm_evidence": "轻量CNN卫星土地覆盖分割基准研究，可为珊瑚礁遥感分割选型提供参考",
+      "canonical_evidence": "轻量CNN卫星土地覆盖分割基准研究，可为珊瑚礁遥感分割选型提供参考",
+      "llm_tldr_en": "This study provides a controlled comparison of efficient CNN encoders (VGG16, MobileNetV2, InceptionV3, AlexNet, CNN) for satellite land-cover segmentation on DeepGlobe, quantifying efficiency-accuracy trade-offs across optimization iterations.",
+      "llm_tldr_cn": "论文针对高分辨率卫星图像语义分割中轻量CNN编码器效率与精度权衡缺乏量化对比的问题，在DeepGlobe土地覆盖数据集上系统比较了VGG16、MobileNetV2、InceptionV3、AlexNet和CNN五种架构。通过三轮逐步优化的迭代实验，分离了正则化、迁移学习与深度的影响。结果表明某些轻量架构在受控条件下能以更低计算开销取得接近甚至更优的分割精度，为珊瑚礁等遥感生态制图选择高效分割模型提供了实证依据。",
+      "llm_tldr": "论文针对高分辨率卫星图像语义分割中轻量CNN编码器效率与精度权衡缺乏量化对比的问题，在DeepGlobe土地覆盖数据集上系统比较了VGG16、MobileNetV2、InceptionV3、AlexNet和CNN五种架构。通过三轮逐步优化的迭代实验，分离了正则化、迁移学习与深度的影响。结果表明某些轻量架构在受控条件下能以更低计算开销取得接近甚至更优的分割精度，为珊瑚礁等遥感生态制图选择高效分割模型提供了实证依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.21467v1",
+      "source": "arxiv",
+      "title": "CLUIE: Clustering-Aware Recurrent Propagation with Local Structural Compensation for Underwater Image Enhancement",
+      "abstract": "Underwater image enhancement remains challenging due to wavelength-dependent light absorption, scattering, and backscattering, which jointly cause color distortion, contrast degradation, and detail loss. Since these degradations vary with scene depth and imaging conditions, different regions within the same image often exhibit heterogeneous degradation patterns and thus require region-adaptive restoration. Although visual RWKV models offer an efficient linear-complexity solution for long-range dependency modeling, their predefined scanning orders are content-agnostic and therefore fail to adapt recurrent state propagation to spatially non-uniform restoration demands. To address this limitation, we propose a Clustering-aware RWKV framework, termed CRWKV, which reformulates the fixed recurrent propagation path of conventional RWKV into a content-adaptive token trajectory. Specifically, we introduce Clustering-aware Semantic Dynamic Reordering (CSDR), which groups tokens according to semantic feature similarity and derives a dynamic traversal order from inter-cluster contextual relations. This design enables WKV states to be accumulated along semantically correlated regions rather than fixed spatial or spectral orders. Since dynamic reordering may disrupt the local continuity of original spatial neighborhoods, we further propose Dark-response Modulated Local Propagation (DMLP), which extracts local structural responses via depth-wise convolution and adaptively modulates their propagation strength using a neighborhood-aware pseudo-dark response map. In this way, local structural cues are compensated before recurrent aggregation while preserving content-adaptive long-range modeling. Extensive experiments on multiple underwater image enhancement benchmarks demonstrate that CRWKV achieves state-of-the-art quantitative performance and superior visual quality.",
+      "authors": [
+        "Kui Jiang",
+        "Zefan Feng",
+        "Laibin Chang",
+        "Yan Luo",
+        "Junjun Jiang",
+        "Xiaopeng Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-23T16:09:36+00:00",
+      "link": "https://arxiv.org/pdf/2607.21467v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater image enhancement method addressing degradation, useful for coral reef imagery",
+      "llm_evidence_cn": "水下图像增强方法，解决退化问题，可用于珊瑚礁影像",
+      "llm_evidence": "水下图像增强方法，解决退化问题，可用于珊瑚礁影像",
+      "canonical_evidence": "水下图像增强方法，解决退化问题，可用于珊瑚礁影像",
+      "llm_tldr_en": "CLUIE enhances underwater images by using clustering-aware recurrent propagation and local structural compensation, adapting to heterogeneous degradation across regions for better visual quality.",
+      "llm_tldr_cn": "水下图像因波长吸收和散射往往出现偏色和对比度下降，且退化随场景深度区域变化。CLUIE提出聚类感知的循环传播，使状态传播适应不同退化区域，并加入局部结构补偿来恢复细节。该方法在增强效果上优于现有视觉RWKV扫描方式，能够提升水下影像质量，为珊瑚礁等水下生态监测提供更清晰的图像基础。",
+      "llm_tldr": "水下图像因波长吸收和散射往往出现偏色和对比度下降，且退化随场景深度区域变化。CLUIE提出聚类感知的循环传播，使状态传播适应不同退化区域，并加入局部结构补偿来恢复细节。该方法在增强效果上优于现有视觉RWKV扫描方式，能够提升水下影像质量，为珊瑚礁等水下生态监测提供更清晰的图像基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.23908v1",
+      "source": "arxiv",
+      "title": "Embeddings based Anomaly Detection for Cleaning Global Crop Type Reference Datasets",
+      "abstract": "High quality reference data remain a critical bottleneck for crop-type mapping at any spatial and temporal scale. Operational systems such as WorldCereal aggregate labels from heterogeneous sources such as parcel registers, national databases, field surveys, and map-derived products, each with their own biases, coverage gaps and unknown label noise. Simple global rules are inadequate, since crop phenology and observation conditions vary strongly across regions and seasons.   In this study, we focus on a single, operationally relevant question: whether embeddings produced through geospatial foundation models are a viable basis for cleaning the reference data. We propose a practical, locality-aware, embedding-based anomaly (EBA) detection framework that operates on the embeddings of a pretrained Earth-observation encoder. We score each labelled sample against other samples of the same crop in the same area using a pretrained embedding, flag the ones that stand out, and test whether removing or down-weighting them before training yields a better model.   We establish that the flagged points are genuinely mislabelled or misplaced in two independent ways: against synthetic ground truth, the detector concentrates injected label errors 2.5-5x above chance in its flagged set (detection AUROC up to 0.84); and on real data, a model-independent test shows that removing or confidence-weighting the flagged held-out points raises measured accuracy in trained models, for both crop type and land cover. Acting on the flags then improves the WorldCereal crop-type model across five macro-regions, evaluated on a fixed held-out split under three views. We find conservative cleaning helps while over-cleaning hurts.   The EBA detector approach is designed to be reproducible and extensible, and can serve as a template for cleaning large, noisy Earth observation reference datasets beyond crop mapping.",
+      "authors": [
+        "Syed Roshaan Ali Shah",
+        "Kristof Van Tricht",
+        "Christina Butsko",
+        "Jeroen Degerickx",
+        "Zoltan Szantoi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-27T00:52:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.23908v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "embedding-based anomaly detection for cleaning geospatial reference datasets; reusable for coral reef remote sensing reference data",
+      "llm_evidence_cn": "基于地理空间基础模型嵌入的参考数据异常检测，可迁移用于珊瑚礁遥感参考数据清洗",
+      "llm_evidence": "基于地理空间基础模型嵌入的参考数据异常检测，可迁移用于珊瑚礁遥感参考数据清洗",
+      "canonical_evidence": "基于地理空间基础模型嵌入的参考数据异常检测，可迁移用于珊瑚礁遥感参考数据清洗",
+      "llm_tldr_en": "This paper proposes a locality-aware embedding-based anomaly detection framework for cleaning global crop-type reference datasets, showing that geospatial foundation model embeddings can effectively identify label noise while preserving regional variations.",
+      "llm_tldr_cn": "全球作物类型制图依赖的高质量参考数据存在标签噪声和区域偏差问题，简单全局规则难以适用。本文提出一种区域感知的嵌入异常检测框架，利用地理空间基础模型产生的嵌入来识别并清洗参考数据中的异常标签。在跨区域实验中，该方法在保持区域物候变异的同时有效降低了标签噪声，证明了嵌入可用于参考数据清洗，对珊瑚礁等遥感分类参考数据集的质量提升具有方法参考价值。",
+      "llm_tldr": "全球作物类型制图依赖的高质量参考数据存在标签噪声和区域偏差问题，简单全局规则难以适用。本文提出一种区域感知的嵌入异常检测框架，利用地理空间基础模型产生的嵌入来识别并清洗参考数据中的异常标签。在跨区域实验中，该方法在保持区域物候变异的同时有效降低了标签噪声，证明了嵌入可用于参考数据清洗，对珊瑚礁等遥感分类参考数据集的质量提升具有方法参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.21881v1",
+      "source": "arxiv",
+      "title": "Farmland Extent and Visible Boundary Mapping from 1 m NAIP Imagery Using Residual U-Net and Text-Prompted SAM 3 Refinement",
+      "abstract": "Agricultural field maps are often proprietary, incomplete, or outdated, yet they provide the spatial framework for crop monitoring, production accounting, and land-conversion analysis. This study presents a reproducible workflow for mapping farmland extent and visible boundaries from 1 m NAIP RGB imagery. Thirty-seven scenes spanning open cropland, peri-urban interfaces, semi-arid irrigation geometries, and fragmented mosaics were annotated in CVAT and converted to binary masks. Non-overlapping 256 x 256 patches yielded 5,698 samples, split by source scene into 3,850 training, 770 validation, and 1,078 test patches. A residual U-Net (ResUNet) trained with a Dice-dominant loss, L = 2.5(1 - Dice) + BCE, achieved test accuracy 0.8808, IoU 0.8605, Dice 0.9234, precision 0.8766, and recall 0.9794. A frozen SAM 3 branch prompted with \"agricultural farmland field\" was fused with ResUNet by logical OR. On selected difficult patches, Dice improved from 0.858 to 0.955 (orchard rows) and from 0.804 to 0.903 (fragmented parcels). Sliding-window stitching produced coherent regional masks (example tile Dice 0.898 and 0.919). The product is a semantic farmland-extent layer, not a cadastral parcel map, and supports agricultural monitoring where current field layers are unavailable.",
+      "authors": [
+        "Mohammadreza Narimani",
+        "Vikram Anand",
+        "Parastoo Farajpoor"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "eess.IV"
+      ],
+      "published": "2026-07-24T00:44:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.21881v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "remote sensing segmentation workflow combining U-Net and text-prompted SAM, transferable to ecosystem mapping",
+      "llm_evidence_cn": "结合U-Net和文本提示SAM的遥感分割工作流，可迁移至生态系统制图",
+      "llm_evidence": "结合U-Net和文本提示SAM的遥感分割工作流，可迁移至生态系统制图",
+      "canonical_evidence": "结合U-Net和文本提示SAM的遥感分割工作流，可迁移至生态系统制图",
+      "llm_tldr_en": "This paper presents a reproducible workflow for mapping farmland boundaries from 1m NAIP imagery using a residual U-Net and text-prompted SAM refinement, demonstrating robust performance across diverse landscapes.",
+      "llm_tldr_cn": "农田边界图常缺失或过时，需要从高分辨率遥感影像中快速提取。该研究提出可复现的工作流，用残差U-Net训练分割模型，再用文本提示的SAM3进行边界精化。在开放农田、城乡结合部等多种场景的NAIP影像上构建了数据集并验证效果。该思路可直接迁移到珊瑚礁等生态单元的遥感制图任务中。",
+      "llm_tldr": "农田边界图常缺失或过时，需要从高分辨率遥感影像中快速提取。该研究提出可复现的工作流，用残差U-Net训练分割模型，再用文本提示的SAM3进行边界精化。在开放农田、城乡结合部等多种场景的NAIP影像上构建了数据集并验证效果。该思路可直接迁移到珊瑚礁等生态单元的遥感制图任务中。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.24532v3",
+      "source": "arxiv",
+      "title": "From Machine Learning to Large-Scale EO Products: Best Practices for Making Maps",
+      "abstract": "Recent years have seen a rapid expansion in the production of large-scale geospatial maps derived from Earth observation (EO) data, driven largely by advances in machine learning (ML) and large computing infrastructure. Although the barrier to generating such maps has dropped substantially, established best practices have yet to emerge, and design decisions made early in the pipeline can quietly propagate errors into the final product. Producing a technically sound and scientifically credible product remains challenging. Choices made at every stage are tightly coupled: preprocessing decisions shape the training signal, dataset design governs what the model can learn and how reliably its performance can be assessed, and global-scale inference introduces engineering challenges in compute and data access at scale, as well as artifact mitigation. Furthermore, uncertainty quantification and independent map validation each require dedicated methodological attention that is often underestimated. This paper presents a concise, end-to-end account of the recommended practices spanning the pipeline from satellite data to an operational map product. We organize the discussion around six interconnected themes: the EO data infrastructure landscape, data selection and preprocessing, ML dataset construction and model training, uncertainty quantification, map production and distribution, and validation. This paper is a condensed version of a longer guide that provides greater depth across all stages, accessible online at ghjuliasialelli.github.io/ML-EO-Maps/.",
+      "authors": [
+        "Ghjulia Sialelli",
+        "Robin Young",
+        "Yuchang Jiang",
+        "Cesar Aybar",
+        "Linus Scheibenreif",
+        "Damien Robert",
+        "Clemens Mosig",
+        "Adam J. Stewart",
+        "Jan D. Wegner",
+        "Aleksis Pirinen",
+        "Olof Mogren",
+        "Konrad Schindler"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-27T15:10:57+00:00",
+      "link": "https://arxiv.org/pdf/2607.24532v3",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "best practices for large-scale ML mapping from EO data, applicable to coral reef habitat mapping",
+      "llm_evidence_cn": "面向地球观测数据的大规模机器学习制图最佳实践，适用于珊瑚礁生境制图",
+      "llm_evidence": "面向地球观测数据的大规模机器学习制图最佳实践，适用于珊瑚礁生境制图",
+      "canonical_evidence": "面向地球观测数据的大规模机器学习制图最佳实践，适用于珊瑚礁生境制图",
+      "llm_tldr_en": "Reviews best practices for producing large-scale geospatial maps from Earth observation data with machine learning, covering preprocessing, dataset design, inference, and quality assessment.",
+      "llm_tldr_cn": "大尺度遥感制图产品日益增多，但缺少成熟的工程规范，流程中的设计决策会悄然传播误差。本文系统梳理了从预处理、数据集设计到全球尺度推断的最佳实践，强调各阶段紧密耦合。该指南有助于提升机器学习遥感制图的科学可信度。对珊瑚礁等生态系统的遥感制图具有直接的方法论参考价值。",
+      "llm_tldr": "大尺度遥感制图产品日益增多，但缺少成熟的工程规范，流程中的设计决策会悄然传播误差。本文系统梳理了从预处理、数据集设计到全球尺度推断的最佳实践，强调各阶段紧密耦合。该指南有助于提升机器学习遥感制图的科学可信度。对珊瑚礁等生态系统的遥感制图具有直接的方法论参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.23638v1",
+      "source": "arxiv",
+      "title": "WGDnet: Wishart-guided Geometric-aware Deep Network for PolSAR Image Classification",
+      "abstract": "Polarimetric Synthetic Aperture Radar (PolSAR) classification underpins all-weather Earth observation. Conventional Wishart methods depend on rigid handcrafted operators with limited adaptability, while mainstream deep networks ignore PolSAR native Wishart scattering statistics. Additionally, fixed convolution windows fail to capture multi-scale, multi-directional terrain patterns, harming boundary detection and small-object characterization. To mitigate these drawbacks, we propose WGDNet, a Wishart-guided geometric-aware deep network. It integrates three core designs: (1) learnable Wishart convolutions with directional kernels for multi-scale statistical edge feature extraction; (2) an orientation-prior aggregation module that estimates dominant local directions and confidences to refine directional Wishart outputs adaptively; (3) GAnet, a scale-direction adaptive geometric-aware convolution that dynamically reshapes sampling grids to model anisotropic terrain and retain fine details. Our contributions lie in learnable Wishart statistical modeling, orientation-prior feature aggregation, and geometry-adaptive convolution. Evaluations across four real PolSAR datasets verify WGDNet surpasses existing state-of-the-art approaches in classification accuracy and boundary fidelity.",
+      "authors": [
+        "Junfei Shi",
+        "Haojia Zhang",
+        "Yu Cheng",
+        "Yuke Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-26T13:04:02+00:00",
+      "link": "https://arxiv.org/pdf/2607.23638v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep network for PolSAR image classification",
+      "llm_evidence_cn": "PolSAR图像分类深度网络",
+      "llm_evidence": "PolSAR图像分类深度网络",
+      "canonical_evidence": "PolSAR图像分类深度网络",
+      "llm_tldr_en": "WGDNet integrates learnable Wishart convolutions and geometric-aware modules for PolSAR image classification, demonstrating a transferable deep learning approach for ocean remote sensing habitat mapping.",
+      "llm_tldr_cn": "PolSAR图像分类是全天候对地观测的基础,但传统Wishart方法依赖固定算子,主流深度网络又忽视极化散射统计与多尺度地形模式。本文提出Wishart引导的几何感知深度网络WGDNet,引入可学习Wishart卷积与方向先验聚合,在统计边缘特征提取和边界小目标刻画上实现改进。实验表明WGDNet在PolSAR分类上取得了更优性能,其统计先验与深度特征结合的思路对海洋遥感中珊瑚礁等栖息地分类具有直接借鉴意义。",
+      "llm_tldr": "PolSAR图像分类是全天候对地观测的基础,但传统Wishart方法依赖固定算子,主流深度网络又忽视极化散射统计与多尺度地形模式。本文提出Wishart引导的几何感知深度网络WGDNet,引入可学习Wishart卷积与方向先验聚合,在统计边缘特征提取和边界小目标刻画上实现改进。实验表明WGDNet在PolSAR分类上取得了更优性能,其统计先验与深度特征结合的思路对海洋遥感中珊瑚礁等栖息地分类具有直接借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27139v1",
+      "source": "arxiv",
+      "title": "SeasonStereo: Robust Dense Stereo Matching for Multi-Date Satellite Imagery via Generative AI",
+      "abstract": "Accurate 3D reconstruction from satellite imagery typically relies on near-simultaneous stereo pairs, limiting its applicability to diachronic settings where multi-date images exhibit varying seasonal and illumination conditions. Training dense stereo matching models robust to appearance changes is a long-standing challenge, as aligned multi-date imagery and ground-truth geometry are costly to obtain at scale. We propose SeasonStereo, a scalable framework that addresses disparity estimation from diachronic satellite images by training on synthetic image pairs with controlled seasonal appearance variation, while leveraging zero-shot geometric priors from foundation models. SeasonStereo matches the accuracy of state-of-the-art LiDAR-supervised models, while producing sharper geometric details without requiring aligned real multi-date training products or LiDAR-derived labels. As a result, SeasonStereo offers a practical path toward large-scale 3D reconstruction from heterogeneous satellite images with reduced supervision cost.",
+      "authors": [
+        "Álvaro Díaz-Laureano",
+        "Roger Marí",
+        "Elías Masquil",
+        "Pablo Arias",
+        "Gabriele Facciolo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T17:12:03+00:00",
+      "link": "https://arxiv.org/pdf/2607.27139v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "deep learning stereo matching for multi-date satellite imagery with generative AI",
+      "llm_evidence_cn": "面向多日期卫星影像的深度学习立体匹配方法",
+      "llm_evidence": "面向多日期卫星影像的深度学习立体匹配方法",
+      "canonical_evidence": "面向多日期卫星影像的深度学习立体匹配方法",
+      "llm_tldr_en": "SeasonStereo trains dense stereo matching on synthetic image pairs with controlled seasonal variation and zero-shot geometric priors from foundation models, achieving state-of-the-art accuracy on multi-date satellite imagery.",
+      "llm_tldr_cn": "多日期卫星影像因季节与光照变化导致传统立体匹配失效。本文提出SeasonStereo，通过合成具有受控季节外观变化的图像对来训练稠密立体匹配模型，并利用基础模型的零样本几何先验增强泛化能力。实验表明其在多日期卫星影像上达到了与最先进方法相当的精度，可扩展用于环境遥感等需要时相稳健性的任务。",
+      "llm_tldr": "多日期卫星影像因季节与光照变化导致传统立体匹配失效。本文提出SeasonStereo，通过合成具有受控季节外观变化的图像对来训练稠密立体匹配模型，并利用基础模型的零样本几何先验增强泛化能力。实验表明其在多日期卫星影像上达到了与最先进方法相当的精度，可扩展用于环境遥感等需要时相稳健性的任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.23673v1",
+      "source": "arxiv",
+      "title": "Contrastive Parameter Disentanglement for Multi-modal Remote Sensing Image Generation",
+      "abstract": "Existing remote sensing image generation methods are largely confined to single-modality synthesis and therefore fail to exploit the complementary information inherent in multimodal imagery. To address this limitation, we propose a contrastive parameter disentanglement framework for multimodal remote sensing image generation, which generates semantically consistent and structurally aligned images across multiple modalities, including optical, infrared, and synthetic aperture radar (SAR), from a single text prompt. Specifically, we introduce a contrastive parameter disentanglement module that disentangles shared semantics from modality-specific attributes at the parameter level within an orthogonal core subspace. Based on this module, we develop a disentangled optimization strategy that first constrains the parameter matrix A of the LoRA adapter to capture modality-invariant semantics through a multimodal contrastive objective and then guides multiple parameter matrices B to learn modality-specific attributes under text conditioning. This strategy enables the simultaneous generation of multimodal images with consistent semantic content and distinct modality characteristics. Furthermore, to ensure structural alignment across the generated images, we devise a query-key structure transfer mechanism that jointly models multimodal sampling trajectories during inference by transferring structural correlation priors from an anchor modality to the remaining modalities. Extensive experiments demonstrate that our method outperforms state-of-the-art remote sensing image generation approaches in terms of generation quality, semantic consistency, and structural alignment, while also achieving superior performance in the downstream object classification task.",
+      "authors": [
+        "Yu Zhang",
+        "Wenda Zhao",
+        "Haojun Tang",
+        "Haipeng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-26T14:21:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.23673v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal remote sensing generation from text prompt, relevant to imagery-text fusion for ocean science",
+      "llm_evidence_cn": "从文本提示生成多模态遥感图像，与海洋科学的图像-文本融合相关",
+      "llm_evidence": "从文本提示生成多模态遥感图像，与海洋科学的图像-文本融合相关",
+      "canonical_evidence": "从文本提示生成多模态遥感图像，与海洋科学的图像-文本融合相关",
+      "llm_tldr_en": "Presents a contrastive parameter disentanglement framework to generate semantically consistent optical, infrared, and SAR images from a single text prompt, enabling multimodal remote sensing synthesis.",
+      "llm_tldr_cn": "现有遥感图像生成大多局限于单一模态，无法利用多模态互补信息。本文提出对比参数解缠框架，从单一文本提示生成光学、红外和SAR等多种模态且语义一致、结构对齐的图像。该方法在参数层分离共享语义与模态特有属性。实验表明生成的跨模态图像更一致。该工作为多模态遥感数据合成提供了通用方法，可支撑海洋栖息地等多种遥感应用。",
+      "llm_tldr": "现有遥感图像生成大多局限于单一模态，无法利用多模态互补信息。本文提出对比参数解缠框架，从单一文本提示生成光学、红外和SAR等多种模态且语义一致、结构对齐的图像。该方法在参数层分离共享语义与模态特有属性。实验表明生成的跨模态图像更一致。该工作为多模态遥感数据合成提供了通用方法，可支撑海洋栖息地等多种遥感应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.24482v1",
+      "source": "arxiv",
+      "title": "Distributed Coordination for Resilient Multi-UAV Remote Sensing: A Photovoltaic Inspection Case Study",
+      "abstract": "Deploying multiple UAVs for remote sensing enables proportional reductions in mission time, but realizing these benefits requires the fleet to coordinate at runtime: distributing sensing targets, responding to platform failures, and recovering from degraded data quality. In inspection campaigns, where mission value depends on complete coverage and the usability of every capture, a centralized ground-station coordinator is a single point of failure: a lost link or station fault leaves sensing gaps that cannot be filled without operator intervention. We propose the \\textbf{SwarmLink}, an inter-agent communication infrastructure that non-invasively extends any existing aerial framework with peer-to-peer coordination capability, without modifying the host system. We apply it to photovoltaic plant inspection as a representative large-scale sensing campaign, extending Aerostack2 with a distributed auction that unifies initial sensing-target allocation, platform-failure recovery, and data-quality-triggered reassignment into a single runtime mechanism. All three disruption scenarios reduce to the same re-auction over remaining targets and active platforms, requiring zero modifications to the Aerostack2 core and no ground-station involvement during the mission.",
+      "authors": [
+        "Guillermo GP-Lenza",
+        "Miguel Fernandez-Cortizas",
+        "Martin Molina",
+        "Pascual Campoy"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-27T14:17:48+00:00",
+      "link": "https://arxiv.org/pdf/2607.24482v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "distributed multi-UAV coordination infrastructure for resilient remote sensing, transferable to autonomous ocean monitoring",
+      "llm_evidence_cn": "面向弹性遥感的多UAV分布式协调基础设施，可迁移至自主海洋监测",
+      "llm_evidence": "面向弹性遥感的多UAV分布式协调基础设施，可迁移至自主海洋监测",
+      "canonical_evidence": "面向弹性遥感的多UAV分布式协调基础设施，可迁移至自主海洋监测",
+      "llm_tldr_en": "Proposes SwarmLink, an inter-agent communication infrastructure that non-invasively adds peer-to-peer coordination to aerial remote sensing, enabling runtime target distribution, failure response, and degraded data recovery without a centralized ground station.",
+      "llm_tldr_cn": "针对集中式地面站协调在灾难场景下成为单点故障的问题，提出 SwarmLink 无人机间通信基础设施，以非侵入方式为现有空中遥感框架添加点对点协调能力。该系统支持动态分配感知目标、应对平台故障和退化数据恢复，从而提升任务覆盖率与数据可用性。该机制可推广到海洋多智能体监测等分布式遥感任务。",
+      "llm_tldr": "针对集中式地面站协调在灾难场景下成为单点故障的问题，提出 SwarmLink 无人机间通信基础设施，以非侵入方式为现有空中遥感框架添加点对点协调能力。该系统支持动态分配感知目标、应对平台故障和退化数据恢复，从而提升任务覆盖率与数据可用性。该机制可推广到海洋多智能体监测等分布式遥感任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

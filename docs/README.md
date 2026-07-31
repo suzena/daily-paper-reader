@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-07-30</span>
+      <span class="dpr-home-dashboard-kicker">2026-07-31</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 17 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-07-30 21:54:12 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-07-31 21:01:13 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦多机器人海洋自主与海上风电预测两大高分研究，探索从仿真到实物的协同进化与精准预报。</p>
-<p>最值得精读的是多目标一致性协同进化方法，在真实海洋机器人部署中表现突出；同时风速预测模型基于卫星星座数据，显著提升离岸风电精度。</p>
-<p>普通读者可重点关注多智能体强化学习中的消息学习与水下重建技术，这些方向正加速无人系统在复杂环境中的实用化。</p>
+<p>今日精读6篇、速读11篇，聚焦时空聚类与植被分类</p>
+<p>最值得看：因果对抗子空间聚类（8.0）与树木-神经融合分类（8.0）</p>
+<p>建议优先关注轻量CNN在土地覆盖分割中的效率与精度权衡</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-Objective Compliance-Integrated Coevolution For Simulated And Real-World Deployment Of Multi-Robot Marine Autonomy">Multi-Objective Compliance-Integrated Coevolution For Simulated And Real-World Deployment Of Multi-Robot Marine Autonomy</span></li><li><span class="dpr-home-dashboard-paper-title" title="Skillful forecasting of offshore winds from satellite scatterometer constellations">Skillful forecasting of offshore winds from satellite scatterometer constellations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks">Resource-Aware Topology Management for ISAC-Enabled TDOA Localization in IoUT Networks</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CASC: Causal Adversarial Subspace Clustering for Multivariate Spatiotemporal Data">CASC: Causal Adversarial Subspace Clustering for Multivariate Spatiotemporal Data</span></li><li><span class="dpr-home-dashboard-paper-title" title="Calibrated Tree-Neural Fusion for Fine-Grained Vegetation Community Classification">Calibrated Tree-Neural Fusion for Fine-Grained Vegetation Community Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="DisasterTD: Disaster Toponym Disambiguation Using Multimodal LLMs and Cross-View Geolocalization">DisasterTD: Disaster Toponym Disambiguation Using Multimodal LLMs and Cross-View Geolocalization</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">11 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning">Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning</span></li><li><span class="dpr-home-dashboard-paper-title" title="WAT3R: Feedforward Underwater 3D Reconstruction">WAT3R: Feedforward Underwater 3D Reconstruction</span></li><li><span class="dpr-home-dashboard-paper-title" title="Mission-Level Runtime Assurance for LLM-Assisted ISR Swarms over a Verification-Aware Fabric">Mission-Level Runtime Assurance for LLM-Assisted ISR Swarms over a Verification-Aware Fabric</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Efficient Spatial-Spectral Feature Extraction in Hyperspectral Images via Holistic Multivariance Decomposition">Efficient Spatial-Spectral Feature Extraction in Hyperspectral Images via Holistic Multivariance Decomposition</span></li><li><span class="dpr-home-dashboard-paper-title" title="When Less Is More: A Controlled Benchmark of Lightweight CNNs for Satellite Land-Cover Segmentation on DeepGlobe">When Less Is More: A Controlled Benchmark of Lightweight CNNs for Satellite Land-Cover Segmentation on DeepGlobe</span></li><li><span class="dpr-home-dashboard-paper-title" title="Embeddings based Anomaly Detection for Cleaning Global Crop Type Reference Datasets">Embeddings based Anomaly Detection for Cleaning Global Crop Type Reference Datasets</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
 </section>
 </div>
 
