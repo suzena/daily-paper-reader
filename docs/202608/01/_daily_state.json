@@ -1,0 +1,201 @@
+{
+  "date": "20260801",
+  "date_label": "",
+  "generated_at": "2026-08-01 21:27:23 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.28277v1",
+      "route": "202608/01/2607.28277v1-mscm-net-a-hyperspectral-image-classiffcation-method-based-on-multi-scale-convolution-and-mamba",
+      "title": "MSCM-net: A hyperspectral image classiffcation method based on multi-scale convolution and Mamba",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "结合多尺度CNN与Mamba的高光谱图像分类方法，用于遥感地物分类",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.22043v1",
+      "route": "202608/01/2607.22043v1-scaling-native-multimodal-pre-training-from-scratch",
+      "title": "Scaling Native Multimodal Pre-Training From Scratch",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "原生多模态预训练的扩展规律，是海洋影像-文本融合的支撑技术",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.23464v1",
+      "route": "202608/01/2607.23464v1-direction-adaptive-mamba-spatial-frequency-dual-domain-collaborative-learning-for-polsar-image-classification",
+      "title": "Direction-adaptive Mamba: Spatial-Frequency Dual-Domain Collaborative Learning for PolSAR Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向卫星/雷达影像的深度学习分类模型，可迁移至珊瑚礁分类",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.26679v1",
+      "route": "202608/01/2607.26679v1-uav-swarming-for-air-ground-isac-via-cross-region-cooperation",
+      "title": "UAV Swarming for Air-Ground ISAC via Cross-Region Cooperation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "多智能体协作框架，可迁移到自主海洋监测智能体",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.27418v1",
+      "route": "202608/01/2607.27418v1-context-informed-ship-trajectory-prediction-via-conditional-attention",
+      "title": "Context-Informed Ship Trajectory Prediction via Conditional Attention",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海上安全与自主导航的船舶轨迹预测",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.22408v1",
+      "route": "202608/01/2607.22408v1-lunarfm-a-shared-multimodal-representation-of-the-moons-surface",
+      "title": "LunarFM: A Shared Multimodal Representation of the Moon's Surface",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态遥感基础模型，可迁移到海洋遥感数据挖掘",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.23396v1",
+      "route": "202608/01/2607.23396v1-distributed-and-recursive-bayesian-inference-for-big-data-and-complex-spatio-temporal-models",
+      "title": "Distributed and recursive Bayesian inference for Big Data and complex spatio-temporal models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向大数据与复杂时空模型的分布式贝叶斯推断框架，可应用于海洋遥感数据分析",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.23770v1",
+      "route": "202608/01/2607.23770v1-a-comparison-of-data-augmentation-methods-for-training-deep-neural-networks-on-synthetic-aperture-sonar",
+      "title": "A Comparison of Data Augmentation Methods for Training Deep Neural Networks on Synthetic Aperture Sonar",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "比较合成孔径声纳数据增广方法，直接应对海洋遥感数据稀缺",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.25124v1",
+      "route": "202608/01/2607.25124v1-urbantrace-llm-assisted-discovery-and-semantics-aware-integration-of-spatial-data",
+      "title": "UrbanTrace: LLM-Assisted Discovery and Semantics-Aware Integration of Spatial Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "LLM辅助的空间数据集成与AI智能体，可迁移至遥感与文本融合的环境评估",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.26973v1",
+      "route": "202608/01/2607.26973v1-robust-rpc-bundle-adjustment-for-multi-date-satellite-imagery-with-season-invariant-correspondences",
+      "title": "Robust RPC Bundle Adjustment for Multi-Date Satellite Imagery with Season-Invariant Correspondences",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "鲁棒卫星影像几何校正，是多日期珊瑚礁制图的关键技术",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.27278v1",
+      "route": "202608/01/2607.27278v1-ovearth-bench-evaluating-category-breadth-and-query-diversity-for-open-vocabulary-earth-observation",
+      "title": "OVEarth-Bench: Evaluating Category Breadth and Query Diversity for Open-Vocabulary Earth Observation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "开放词汇地球观测基准，将自然语言与地理空间定位关联",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    },
+    {
+      "paper_id": "2607.27898v1",
+      "route": "202608/01/2607.27898v1-core-uir-prior-guided-common-and-residual-experts-for-efficient-all-in-one-remote-sensing-image-restoration",
+      "title": "CoRE-UIR: Prior-guided common and residual experts for efficient all-in-one remote sensing image restoration",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "先验引导的公共与残差专家块，统一恢复退化的遥感卫星图像",
+      "first_seen_at": "2026-08-01 21:27:23 UTC",
+      "updated_at": "2026-08-01 21:27:23 UTC"
+    }
+  ]
+}

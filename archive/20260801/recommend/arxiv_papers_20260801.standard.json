@@ -1,0 +1,493 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-01T21:20:44.059088+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 14,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.28277v1",
+      "source": "arxiv",
+      "title": "MSCM-net: A hyperspectral image classiffcation method based on multi-scale convolution and Mamba",
+      "abstract": "Hyperspectral imaging is widely used in remote sensing and engineering. Therefore, research on its classification methods is crucial. While CNN and Transformer-based methods have advanced, they still face locality constraints and high computational complexity. To address these issues, we propose an innovative hyperspectral image classification model, MSCM-net. Specifically, first of all, a model architecture combining multi-scale CNN and Mamba is proposed. It consists of a multi-scale feature extraction module (MCSE) and multiple stacked Mamba blocks, which integrates the local feature extraction capability of multi-scale CNN and the long sequence modeling advantage of Mamba. Secondly, the proposed MCSE module consists of multi-scale convolution and SENet. Convolution kernels of different scales extract local information with different receptive fields, enhancing the fusion of spatial and spectral information. Meanwhile, the SENet enables the model to automatically learn the importance of each channel in the multi-scale features. Furthermore, we also propose a dual-branch feature aggregation module, which further effectively extracts and integrates the spectral information contained in the central pixel and the spatial information in the surrounding pixels. Our model has undergone numerous experiments on three widely used benchmark datasets. The experimental results show that MSCM-net can achieve advanced classification performance while reducing computational complexity.",
+      "authors": [
+        "Jianjun Chen",
+        "Linlin Wang",
+        "Lifang Chang",
+        "Limin Huo",
+        "Shujiang Song",
+        "Yanjia Zhao",
+        "Mingwei Shao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T14:27:59+00:00",
+      "link": "https://arxiv.org/pdf/2607.28277v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Hyperspectral image classification combining multi-scale CNN and Mamba for remote sensing",
+      "llm_evidence_cn": "结合多尺度CNN与Mamba的高光谱图像分类方法，用于遥感地物分类",
+      "llm_evidence": "结合多尺度CNN与Mamba的高光谱图像分类方法，用于遥感地物分类",
+      "canonical_evidence": "结合多尺度CNN与Mamba的高光谱图像分类方法，用于遥感地物分类",
+      "llm_tldr_en": "MSCM-net combines multi-scale CNN with stacked Mamba blocks for hyperspectral image classification, capturing local and long-range dependencies with low complexity, directly applicable to coral reef benthic cover mapping.",
+      "llm_tldr_cn": "高光谱图像分类对珊瑚礁底栖覆盖度制图至关重要，但CNN存在局部性限制，Transformer计算复杂。本文提出MSCM-net，将多尺度卷积特征提取模块（MCSE）与堆叠Mamba块结合，兼顾局部特征提取与长序列建模，在降低复杂度的同时提升高光谱图像的分类能力。该模型可用于卫星高光谱遥感中的珊瑚礁底栖覆盖分类。",
+      "llm_tldr": "高光谱图像分类对珊瑚礁底栖覆盖度制图至关重要，但CNN存在局部性限制，Transformer计算复杂。本文提出MSCM-net，将多尺度卷积特征提取模块（MCSE）与堆叠Mamba块结合，兼顾局部特征提取与长序列建模，在降低复杂度的同时提升高光谱图像的分类能力。该模型可用于卫星高光谱遥感中的珊瑚礁底栖覆盖分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.22043v1",
+      "source": "arxiv",
+      "title": "Scaling Native Multimodal Pre-Training From Scratch",
+      "abstract": "Although large language models (LLMs) exhibit remarkable reasoning capabilities, their reliance on text-only pre-training restricts the perception of the multimodal physical world. Native multimodal pre-training avoids this limitation by training models from scratch on multimodal inputs, thereby achieving deep cross-modal integration and mitigating optimization asymmetries inherent to traditional late-fusion architectures. Despite these advantages, the scaling properties of this paradigm remain systematically uncharacterized. To address this gap, we investigate the optimal model size and token count for training a transformer-based vision-language model under a fixed computational budget. We demonstrate that minimal objective loss adheres to a predictable compute law, whereas compute-optimal model sizes and token counts scale as power laws. Notably, language and multimodal objectives manifest distinct scaling behaviors. The language allocation law is largely invariant to the composition of the data, indicating stable language learning regardless of the multimodal data ratio. Conversely, the multimodal allocation law is highly sensitive to this composition. Specifically, text-heavy mixtures become compute-efficient only at larger model scales, shifting the optimal resource allocation toward greater model capacity. Additionally, by modeling the influence of data composition on compute laws and allocation exponents, we derive an efficiency frontier specifying precise configurations of model size, token count, and data mixture. Downstream evaluations further reveal that native multimodal pre-training induces positive cross-modal transfer, thereby enhancing pure-text spatial reasoning and enabling robust multimodal in-context learning. In summary, this empirical research establishes the essential groundwork for predictably scaling multimodal foundation models.",
+      "authors": [
+        "Haoyuan Wu",
+        "Aoqi Wu",
+        "Hai Wang",
+        "Jiajia Wu",
+        "Jinxiang Ou",
+        "Bei Yu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "published": "2026-07-24T07:13:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.22043v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "scaling laws for native multimodal vision-language pre-training, an enabling technique for ocean image-text fusion",
+      "llm_evidence_cn": "原生多模态预训练的扩展规律，是海洋影像-文本融合的支撑技术",
+      "llm_evidence": "原生多模态预训练的扩展规律，是海洋影像-文本融合的支撑技术",
+      "canonical_evidence": "原生多模态预训练的扩展规律，是海洋影像-文本融合的支撑技术",
+      "llm_tldr_en": "Investigates optimal model size and token count for native multimodal vision-language pre-training from scratch, deriving a compute-aware scaling law that enables efficient training of fused multimodal models for downstream applications.",
+      "llm_tldr_cn": "传统大语言模型仅以文本预训练，无法充分感知多模态物理世界。本文研究从头训练原生多模态模型时的最优模型规模与数据量，并证明最小目标损失遵循可预测的计算法则。这一发现为在海洋遥感与文本报告融合等多模态应用中设计高效预训练方案提供了理论依据。",
+      "llm_tldr": "传统大语言模型仅以文本预训练，无法充分感知多模态物理世界。本文研究从头训练原生多模态模型时的最优模型规模与数据量，并证明最小目标损失遵循可预测的计算法则。这一发现为在海洋遥感与文本报告融合等多模态应用中设计高效预训练方案提供了理论依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.22408v1",
+      "source": "arxiv",
+      "title": "LunarFM: A Shared Multimodal Representation of the Moon's Surface",
+      "abstract": "The renewed global focus on lunar exploration, driven by the prospect of in-situ resource utilization and a sustained human presence on the Moon, has created growing demand for accurate, large-scale characterization of the lunar surface. Although vast quantities of orbital remote-sensing data have been collected, scientific analysis and resource mapping remain fragmented by heterogeneous multiinstrument observations, sparse labels, and bespoke task-specific modelling workflows. Here we introduce LunarFM, a multimodal foundation model that learns a general representation of the lunar surface from diverse orbital measurements. LunarFM assimilates observations from six instruments across three lunar missions, mapping 18 input channels to a shared embedding space. We demonstrate that this embedding space supports a diverse range of downstream applications, including similarity search, few-shot resource mapping, mineral abundance regression, and geological unit classification, enabling efficient scientific investigation and resource-oriented analysis. We provide a machine-learning-ready dataset of co-registered multimodal observations spanning latitudes from 70°S to 70°N, a pretrained multimodal masked autoencoder, and a companion embedding dataset providing a joint 768-dimensional representation of lunar surface properties. All code and data are available at https://lunarfm.trillium.tech/",
+      "authors": [
+        "Marc Girona-Mata",
+        "Jakob Gawlikowski",
+        "Sumit Goski",
+        "Gautier Bardi de Fourtou",
+        "Valentin T. Bickel",
+        "Ben Moseley",
+        "Abigail Calzada-Diaz",
+        "Sylvester Kaczmarek",
+        "Raúl Ramos-Pollán"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-24T15:25:20+00:00",
+      "link": "https://arxiv.org/pdf/2607.22408v1",
+      "tags": [
+        "keyword:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal foundation model for remote sensing data fusion, transferable to oceanographic data mining",
+      "llm_evidence_cn": "多模态遥感基础模型，可迁移到海洋遥感数据挖掘",
+      "llm_evidence": "多模态遥感基础模型，可迁移到海洋遥感数据挖掘",
+      "canonical_evidence": "多模态遥感基础模型，可迁移到海洋遥感数据挖掘",
+      "llm_tldr_en": "Introduces LunarFM, a multimodal foundation model that learns shared representations of the Moon from multiple orbital remote-sensing instruments, enabling scalable scientific analysis and resource mapping from heterogeneous observations.",
+      "llm_tldr_cn": "月球探测数据规模庞大但多源异构、标注稀缺，导致科学分析和资源制图碎片化。LunarFM作为多模态基础模型，融合三个任务六个仪器的18个输入通道，学习月球表面的共享表征。该模型能够支持跨传感器联合分析与资源映射，为缺乏密集标注的遥感场景提供可迁移的通用表示范式，对类似海量遥感数据的海洋科学研究具有启示意义。",
+      "llm_tldr": "月球探测数据规模庞大但多源异构、标注稀缺，导致科学分析和资源制图碎片化。LunarFM作为多模态基础模型，融合三个任务六个仪器的18个输入通道，学习月球表面的共享表征。该模型能够支持跨传感器联合分析与资源映射，为缺乏密集标注的遥感场景提供可迁移的通用表示范式，对类似海量遥感数据的海洋科学研究具有启示意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.23464v1",
+      "source": "arxiv",
+      "title": "Direction-adaptive Mamba: Spatial-Frequency Dual-Domain Collaborative Learning for PolSAR Image Classification",
+      "abstract": "Deep learning dominates polarimetric synthetic aperture radar (PolSAR) image classification, with Mamba architectures serving as favorable backbones due to linear complexity and strong global modeling capacity. However, existing PolSAR Mamba methods have two critical flaws: pure spatial processing discards fine-grained edges and textures, and fixed scanning patterns fail to model direction-variant anisotropic scattering and weak boundaries essential for PolSAR physical analysis. This work proposes DA-Mamba, a direction-adaptive Mamba framework with dual-domain collaborative learning for PolSAR classification. Equipped with an edge-aligned direction-adaptive scanning scheme, DA-Mamba captures long-range spatial dependencies and accurate boundary details. It adopts the Non-Subsampled Contourlet Transform (NSCT) to separate PolSAR data into low-frequency global components and multi-directional high-frequency subbands, extracting anisotropic structural features from high-frequency information while preserving global context via low-frequency branches. A dual-domain collaborative learning module further integrates spatial scattering and frequency-domain representations to strengthen feature discriminability. Evaluated on three real-world PolSAR datasets, DA-Mamba surpasses state-of-the-art methods, verifying the efficacy of the proposed adaptive scanning and dual-domain fusion designs. Code will be publicly available.",
+      "authors": [
+        "Junfei Shi",
+        "Yu Cheng",
+        "Haojia Zhang",
+        "Wenqiang Hua",
+        "Junhuai Li",
+        "Maoguo Gong"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV"
+      ],
+      "published": "2026-07-26T05:17:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.23464v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "deep learning classification model for satellite/radar imagery, transferable to coral reef classification",
+      "llm_evidence_cn": "面向卫星/雷达影像的深度学习分类模型，可迁移至珊瑚礁分类",
+      "llm_evidence": "面向卫星/雷达影像的深度学习分类模型，可迁移至珊瑚礁分类",
+      "canonical_evidence": "面向卫星/雷达影像的深度学习分类模型，可迁移至珊瑚礁分类",
+      "llm_tldr_en": "Proposes DA-Mamba, a direction-adaptive Mamba framework with spatial-frequency dual-domain collaborative learning for PolSAR image classification, capturing long-range dependencies while preserving edges and anisotropy.",
+      "llm_tldr_cn": "针对极化SAR图像分类中固定扫描模式难以建模方向变化和各向异性散射的问题，提出方向自适应Mamba框架，通过边缘对齐的方向自适应扫描与空间-频率双域协同学习，提升长程建模与边缘保持能力。在PolSAR分类任务上验证了其优于现有Mamba方法，为遥感图像分类提供了可迁移的骨干网络。",
+      "llm_tldr": "针对极化SAR图像分类中固定扫描模式难以建模方向变化和各向异性散射的问题，提出方向自适应Mamba框架，通过边缘对齐的方向自适应扫描与空间-频率双域协同学习，提升长程建模与边缘保持能力。在PolSAR分类任务上验证了其优于现有Mamba方法，为遥感图像分类提供了可迁移的骨干网络。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Which deep learning models perform best for coral reef classification in satellite images?",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.23396v1",
+      "source": "arxiv",
+      "title": "Distributed and recursive Bayesian inference for Big Data and complex spatio-temporal models",
+      "abstract": "The rapid growth of massive and complex datasets in fields such as econometrics, environmental sciences, risk management, and public policy has reshaped statistical modeling while introducing significant computational and methodological challenges. These challenges arise not only from data scale and model complexity, but also from the sequential or streaming nature of modern applications and from data-privacy constraints that prevent sharing raw data and thus limit joint analysis. To address these challenges, we introduce a novel and comprehensive Bayesian framework for distributed and recursive inference, grounded in the Integrated Nested Laplace Approximations (INLA) methodology and implemented using the R-INLA software. Our contributions include the partitioning both data and structured model components, reducing computational complexity while preserving accuracy relative to centralized full-data inference. We demonstrate the effectiveness of the proposed framework through case studies that highlight its applicability in large-scale, streaming, and privacy-sensitive settings. By integrating distributed, federated, and recursive paradigms, this work offers scalable, adaptive, and generalizable tools for modern Bayesian inference.",
+      "authors": [
+        "Mario Figueira",
+        "David Conesa",
+        "Antonio López-Quílez",
+        "Håvard Rue"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-07-25T23:44:44+00:00",
+      "link": "https://arxiv.org/pdf/2607.23396v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "distributed Bayesian inference framework for big spatio-temporal data applicable to oceanographic remote sensing analysis",
+      "llm_evidence_cn": "面向大数据与复杂时空模型的分布式贝叶斯推断框架，可应用于海洋遥感数据分析",
+      "llm_evidence": "面向大数据与复杂时空模型的分布式贝叶斯推断框架，可应用于海洋遥感数据分析",
+      "canonical_evidence": "面向大数据与复杂时空模型的分布式贝叶斯推断框架，可应用于海洋遥感数据分析",
+      "llm_tldr_en": "Presents a comprehensive Bayesian framework for distributed and recursive inference on big spatio-temporal data using INLA, addressing scale, streaming, and data privacy without sharing raw data.",
+      "llm_tldr_cn": "面向大规模复杂时空数据，提出基于集成嵌套拉普拉斯近似（INLA）的分布式与递归贝叶斯推断框架，支持流式数据与隐私约束下的联合分析。该方法在R-INLA中实现，可高效处理海量时空观测，为海洋遥感等领域的建模提供了可扩展的统计工具。",
+      "llm_tldr": "面向大规模复杂时空数据，提出基于集成嵌套拉普拉斯近似（INLA）的分布式与递归贝叶斯推断框架，支持流式数据与隐私约束下的联合分析。该方法在R-INLA中实现，可高效处理海量时空观测，为海洋遥感等领域的建模提供了可扩展的统计工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.26679v1",
+      "source": "arxiv",
+      "title": "UAV Swarming for Air-Ground ISAC via Cross-Region Cooperation",
+      "abstract": "To serve the volumetric air-ground space, uncrewed aerial vehicles (UAVs) are urgently needed. Yet, relying on them for integrated sensing and communication (ISAC) introduces two key challenges: 1) dynamic and imbalanced ground communication demand, and 2) limited observation diversity for sensing. To address these issues, a cross-region cooperative framework is designed to coordinate UAV swarms. Specifically, a service-driven regional partitioning scheme is proposed to support traffic-aware UAV communication, and an adaptive handshaking mechanism is introduced to improve cooperative sensing accuracy by mitigating residual inter-region phase errors with controlled synchronization overhead. Based on these designs, a region-level multi-agent proximal policy optimization (MAPPO) framework with centralized training and decentralized execution (CTDE) is developed for cross-region cooperative decision-making. Simulation results demonstrate that the proposed method achieves a communication quality-of-service (QoS) of approximately 90% and reduces the Cramér-Rao bound (CRB) by about 45% compared to conventional baselines.",
+      "authors": [
+        "Linghui Miao",
+        "Shijian Gao"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-07-29T09:30:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.26679v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-agent cooperative framework with MAPPO for UAV swarms, transferable to autonomous ocean monitoring agents",
+      "llm_evidence_cn": "多智能体协作框架，可迁移到自主海洋监测智能体",
+      "llm_evidence": "多智能体协作框架，可迁移到自主海洋监测智能体",
+      "canonical_evidence": "多智能体协作框架，可迁移到自主海洋监测智能体",
+      "llm_tldr_en": "Proposes a cross-region cooperative framework for UAV swarms performing integrated sensing and communication, using region-level multi-agent proximal policy optimization to balance communication demand and sensing diversity.",
+      "llm_tldr_cn": "无人机用于空地一体化感知与通信时面临通信需求波动和观测多样性不足的挑战。本文设计跨区域协同框架，通过服务驱动的区域划分和自适应握手机制协调无人机集群，并采用区域级多智能体近端策略优化求解。该方法能够兼顾动态通信需求与协同感知精度，为多智能体自主环境监测系统的架构设计提供了参考。",
+      "llm_tldr": "无人机用于空地一体化感知与通信时面临通信需求波动和观测多样性不足的挑战。本文设计跨区域协同框架，通过服务驱动的区域划分和自适应握手机制协调无人机集群，并采用区域级多智能体近端策略优化求解。该方法能够兼顾动态通信需求与协同感知精度，为多智能体自主环境监测系统的架构设计提供了参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.23770v1",
+      "source": "arxiv",
+      "title": "A Comparison of Data Augmentation Methods for Training Deep Neural Networks on Synthetic Aperture Sonar",
+      "abstract": "In this work we study Automatic Target Recognition (ATR) for Synthetic Aperture Sonar (SAS) data with a focus on deep neural networks (DNNs). The main challenge in training DNNs for SAS ATR arises from the limited quantity of labeled target examples, which arises due to the significant costs and time required to collect real-world SAS data. One successful general strategy for mitigating the problem of limited training data is augmentation, which generates additional synthetic training data by introducing realistic variations to available real-world data. Prior research has investigated a variety of augmentation strategies for SAS ATR, including conventional image augmentations (e.g., contrast changes, cropping) as well as physics-based augmentations, which are motivated the specific physics of SAS data. Building on prior work, we systematically compare many of these existing augmentation strategies for training DNNs for SAS ATR. We also investigate the impact of augmentation when combined with modern DNN architectures such as transformers. The results indicate that augmentation can improve target recognition accuracy, although benefits vary, and not all augmentations are beneficial.",
+      "authors": [
+        "C. J. Moore",
+        "Gregory D. Vetaw",
+        "Jordan Malof"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-26T17:42:18+00:00",
+      "link": "https://arxiv.org/pdf/2607.23770v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compares data augmentation methods for training DNNs on synthetic aperture sonar, directly addressing data scarcity in marine remote sensing",
+      "llm_evidence_cn": "比较合成孔径声纳数据增广方法，直接应对海洋遥感数据稀缺",
+      "llm_evidence": "比较合成孔径声纳数据增广方法，直接应对海洋遥感数据稀缺",
+      "canonical_evidence": "比较合成孔径声纳数据增广方法，直接应对海洋遥感数据稀缺",
+      "llm_tldr_en": "Studies automatic target recognition for synthetic aperture sonar with deep nets, comparing augmentation strategies to overcome limited labeled underwater target examples, highlighting general techniques for marine remote sensing data mining.",
+      "llm_tldr_cn": "合成孔径声纳数据采集成本高、标注样本少，制约深度网络训练。本文针对声纳自动目标识别系统比较多种数据增广方法，包括常规图像增广和真实数据变体等。结果显示合适的增广策略能有效提升模型泛化能力，为海洋声学遥感中稀缺标签场景下训练深度模型提供了实用指导。",
+      "llm_tldr": "合成孔径声纳数据采集成本高、标注样本少，制约深度网络训练。本文针对声纳自动目标识别系统比较多种数据增广方法，包括常规图像增广和真实数据变体等。结果显示合适的增广策略能有效提升模型泛化能力，为海洋声学遥感中稀缺标签场景下训练深度模型提供了实用指导。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27418v1",
+      "source": "arxiv",
+      "title": "Context-Informed Ship Trajectory Prediction via Conditional Attention",
+      "abstract": "Long-term ship trajectory prediction is a fundamental capability for maritime safety and autonomous navigation. While recent Transformer-based architectures have improved forecasting horizons, they predominantly rely on historical kinematic states, treating vessel motion as an isolated system. In reality, maritime navigation is profoundly modulated by extrinsic factors like weather and constrained by static vessel characteristics. Existing multimodal approaches fundamentally model the joint distribution over states and contexts, treating environmental variables as peer features rather than encoding the directional physical dependence of vessel dynamics on environmental conditions.   In this work, we propose the Conditional Informer, a novel encoder-decoder architecture that formulates trajectory prediction as a conditional generation task. We employ a dedicated Conditional Attention mechanism where the vessel state explicitly queries environmental contexts through cross-attention, encoding the physical prior that weather modulates - but is not generated by - vessel dynamics. Furthermore, to address the intermittency of real-world data, we introduce a Modality Masking training strategy to prevent catastrophic degradation during sensor fallback. Extensive experiments on AIS and ERA5 data demonstrate that our approach outperforms kinematic and concatenation-based baselines by 15.4% in prediction accuracy when context is available. Crucially, Modality Masking prevents shortcut learning, reducing fallback error by nearly an order of magnitude compared to unconstrained models.",
+      "authors": [
+        "Yuan Guan",
+        "Chandler Squires",
+        "Timothy Hu",
+        "Pradeep Ravikumar"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-29T19:38:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.27418v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "ship trajectory prediction for maritime safety and autonomous navigation",
+      "llm_evidence_cn": "面向海上安全与自主导航的船舶轨迹预测",
+      "llm_evidence": "面向海上安全与自主导航的船舶轨迹预测",
+      "canonical_evidence": "面向海上安全与自主导航的船舶轨迹预测",
+      "llm_tldr_en": "Proposes Conditional Informer for long-term ship trajectory prediction that encodes physical dependence of vessel dynamics on weather and vessel characteristics, improving forecasting for autonomous maritime navigation.",
+      "llm_tldr_cn": "船舶轨迹预测对于海事安全和自主导航至关重要，但现有Transformer模型把船舶运动视为孤立系统，未建模天气和船舶静态特征的物理影响。本文提出Conditional Informer，以条件注意力显式编码环境因素对船舶动力学的方向性依赖。在长时程预测任务中，该方法优于仅利用历史运动状态的基线，为海上智能体导航提供了更可靠的环境感知轨迹预测能力。",
+      "llm_tldr": "船舶轨迹预测对于海事安全和自主导航至关重要，但现有Transformer模型把船舶运动视为孤立系统，未建模天气和船舶静态特征的物理影响。本文提出Conditional Informer，以条件注意力显式编码环境因素对船舶动力学的方向性依赖。在长时程预测任务中，该方法优于仅利用历史运动状态的基线，为海上智能体导航提供了更可靠的环境感知轨迹预测能力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.25124v1",
+      "source": "arxiv",
+      "title": "UrbanTrace: LLM-Assisted Discovery and Semantics-Aware Integration of Spatial Data",
+      "abstract": "Urban decision-making requires integrating heterogeneous spatial data. While current GIS tools handle geometric computation efficiently, they lack the semantic reasoning to guide complex workflows. Analysts manually manage data discovery, spatial boundaries, and measurement semantics, risking aggregation errors. We present UrbanTrace, a visual analytics system that transforms manual spatial data-wrangling into a transparent, node-based collaborative workflow with context-aware AI agents. Using an offline profiler to extract semantic and geometric metadata, UrbanTrace grounds LLMs in real-world data distributions. This enables specialized agents to retrieve datasets based on high-level goals and automatically enforce valid spatial aggregations. To make harmonization explicit, three interactive views: an Integration Provenance Graph, Multivariate Priority Map, and Spatial Delta Map, allow users to explore how conclusions shift across spatial configurations. We evaluate UrbanTrace on 28 urban scenarios spanning 112 datasets. Quantitative ablations show our profiling significantly outperforms baseline LLMs in data discovery, achieving 100% semantic and 87% geometric validity in spatial mapping. Through real-world case studies and expert interviews, we demonstrate that UrbanTrace turns spatial aggregation sensitivity from a methodological burden into an exploratory visual asset.",
+      "authors": [
+        "Sonia Castelo",
+        "Eden Wu",
+        "Joao Rulff",
+        "Harish Doraiswamy",
+        "Juliana Freire",
+        "Claudio Silva"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-07-27T22:35:18+00:00",
+      "link": "https://arxiv.org/pdf/2607.25124v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM-assisted spatial data integration with AI agents, applicable to remote sensing and text fusion for environmental assessment",
+      "llm_evidence_cn": "LLM辅助的空间数据集成与AI智能体，可迁移至遥感与文本融合的环境评估",
+      "llm_evidence": "LLM辅助的空间数据集成与AI智能体，可迁移至遥感与文本融合的环境评估",
+      "canonical_evidence": "LLM辅助的空间数据集成与AI智能体，可迁移至遥感与文本融合的环境评估",
+      "llm_tldr_en": "UrbanTrace uses LLM-grounded AI agents to automate spatial data discovery and semantics-aware integration, offering a transferable framework for combining remote sensing and text data in environmental assessment.",
+      "llm_tldr_cn": "城市决策需要集成异构空间数据，而现有GIS工具缺乏语义推理能力。论文提出UrbanTrace，一个基于节点式工作流的可视分析系统，利用离线分析器提取语义与几何元数据，使LLM接地于真实数据分布，并由专用智能体按高层目标检索数据并自动执行有效的空间聚合。该系统提升了空间数据整理的透明性与自动化，为遥感与环境文本等多模态融合提供了可借鉴的智能体范式。",
+      "llm_tldr": "城市决策需要集成异构空间数据，而现有GIS工具缺乏语义推理能力。论文提出UrbanTrace，一个基于节点式工作流的可视分析系统，利用离线分析器提取语义与几何元数据，使LLM接地于真实数据分布，并由专用智能体按高层目标检索数据并自动执行有效的空间聚合。该系统提升了空间数据整理的透明性与自动化，为遥感与环境文本等多模态融合提供了可借鉴的智能体范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.26973v1",
+      "source": "arxiv",
+      "title": "Robust RPC Bundle Adjustment for Multi-Date Satellite Imagery with Season-Invariant Correspondences",
+      "abstract": "Accurate refinement of Rational Polynomial Camera (RPC) models is essential for high-quality satellite image geolocation. In ground control point (GCP)-free multi-view pipelines, this refinement is commonly performed through bundle adjustment from automatically extracted image correspondences. However, conventional RPC bundle adjustment pipelines rely on handcrafted feature matching, which becomes unreliable in multi-date collections affected by seasonal, illumination, and land-cover changes. We propose an appearance-aware RPC refinement pipeline that combines learned local feature matching for season-invariant correspondences with global image descriptors for selecting visually compatible image pairs. This reduces redundant and error-prone matching while preserving the connectivity of the matching graph. Experiments on seasonally diverse WorldView-3 images show that our pipeline improves GCP-free relative RPC refinement over open-source baselines, achieving lower geometric consistency errors while substantially reducing matching time on collections with 39-42 views. By making RPC refinement more robust to diachronic appearance variation, our approach enables more effective use of multi-date satellite imagery.",
+      "authors": [
+        "Roger Marí",
+        "Elías Masquil",
+        "Xavier Bou",
+        "Thibaud Ehret",
+        "Gabriele Facciolo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T14:34:22+00:00",
+      "link": "https://arxiv.org/pdf/2607.26973v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "robust satellite image geolocation refinement, key for multi-date coral reef mapping",
+      "llm_evidence_cn": "鲁棒卫星影像几何校正，是多日期珊瑚礁制图的关键技术",
+      "llm_evidence": "鲁棒卫星影像几何校正，是多日期珊瑚礁制图的关键技术",
+      "canonical_evidence": "鲁棒卫星影像几何校正，是多日期珊瑚礁制图的关键技术",
+      "llm_tldr_en": "Proposes an appearance-aware RPC bundle adjustment using learned season-invariant local feature matching and global image descriptors for reliable multi-date satellite image geolocation, improving GCP-free pipelines in seasonal land-cover changes.",
+      "llm_tldr_cn": "无地面控制点的多视卫星影像处理中，传统手工特征匹配在多日期、季节变化场景下容易失效。本文提出外观感知的RPC光束法平差流程，结合学习得到的季节不变局部特征匹配与全局图像描述子来选择视觉兼容的图像对，并细化RPC模型。该方法减少了多日期数据中的冗余和误匹配，提升了卫星影像几何定位精度。这为多时相珊瑚礁遥感制图提供了高精度配准支撑。",
+      "llm_tldr": "无地面控制点的多视卫星影像处理中，传统手工特征匹配在多日期、季节变化场景下容易失效。本文提出外观感知的RPC光束法平差流程，结合学习得到的季节不变局部特征匹配与全局图像描述子来选择视觉兼容的图像对，并细化RPC模型。该方法减少了多日期数据中的冗余和误匹配，提升了卫星影像几何定位精度。这为多时相珊瑚礁遥感制图提供了高精度配准支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27278v1",
+      "source": "arxiv",
+      "title": "OVEarth-Bench: Evaluating Category Breadth and Query Diversity for Open-Vocabulary Earth Observation",
+      "abstract": "Open-vocabulary Earth observation (EO) aims to localize geospatial concepts specified in natural language rather than a fixed label set. Existing benchmarks, however, usually cover narrow category vocabularies or limited query forms. To fill this gap, we introduce OVEarth-Bench, which extends existing evaluation in two directions: category breadth, through broad hierarchical category coverage with positive and negative expressions, and query diversity, through vocabulary, referring, and reasoning queries. The benchmark supports mask and box localization under a unified zero-shot protocol. We evaluate a broad set of general and EO-specific methods. The evaluation reveals that: (1) the performance of current methods remains limited, while broader category coverage yields more stable model rankings; (2) MLLM-based methods achieve the strongest overall performance; and (3) EO-specific methods generally underperform general models and rarely match the strongest methods. These findings provide guidance for future open-vocabulary EO method design and highlight the importance of developing more realistic, diverse, high-quality, and large-scale benchmarks for reliable evaluation. Our data and evaluation package are released at https://earth-insights.github.io/OVEarth-bench.",
+      "authors": [
+        "Kaiyu Li",
+        "Zepeng Xin",
+        "Zixuan Jiang",
+        "Jing Fu",
+        "Lanxuan Xue",
+        "Lingyu Zhang",
+        "Xiangyong Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-29T13:19:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.27278v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "open-vocabulary Earth observation benchmark linking natural language to geospatial localization",
+      "llm_evidence_cn": "开放词汇地球观测基准，将自然语言与地理空间定位关联",
+      "llm_evidence": "开放词汇地球观测基准，将自然语言与地理空间定位关联",
+      "canonical_evidence": "开放词汇地球观测基准，将自然语言与地理空间定位关联",
+      "llm_tldr_en": "Introduces OVEarth-Bench, an open-vocabulary Earth observation benchmark expanding category breadth and query diversity; current general and EO-specific methods still struggle under zero-shot localization.",
+      "llm_tldr_cn": "开放词汇地球观测旨在用自然语言而非固定标签定位地理空间概念，但现有基准类别词表窄、查询形式有限。本文提出OVEarth-Bench，从类别广度（层级正负表达）和查询多样性（词汇、指代与推理查询）扩展评测，并支持掩码与框定位的统一零样本协议。评测表明当前方法在该基准上表现仍明显不足，为遥感视觉语言模型的海洋与珊瑚目标映射研究提供了更严格的评测工具。",
+      "llm_tldr": "开放词汇地球观测旨在用自然语言而非固定标签定位地理空间概念，但现有基准类别词表窄、查询形式有限。本文提出OVEarth-Bench，从类别广度（层级正负表达）和查询多样性（词汇、指代与推理查询）扩展评测，并支持掩码与框定位的统一零样本协议。评测表明当前方法在该基准上表现仍明显不足，为遥感视觉语言模型的海洋与珊瑚目标映射研究提供了更严格的评测工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27898v1",
+      "source": "arxiv",
+      "title": "CoRE-UIR: Prior-guided common and residual experts for efficient all-in-one remote sensing image restoration",
+      "abstract": "Remote sensing images acquired by unmanned aerial vehicles (UAVs) and satellites are often degraded by adverse weather, illumination variation, and imaging artifacts, which may co-occur and jointly induce global distribution shifts and local structural corruption. Although All-in-One image restoration offers an appealing unified alternative to task-specific pipelines, existing methods still suffer from weak or implicit degradation cues and parameter redundancy caused by full-rank multi-expert designs with overlapping restoration behaviors. We propose CoRE-UIR (Common and Residual Experts for Universal Image Restoration), a prior-guided global-local framework centered on the Common-and-Residual Expert Block (CoRE). CoRE explicitly decomposes restoration capacity into a common dense expert for degradation-invariant restoration and low-rank residual experts for degradation-specific compensation, enabling adaptive specialization without redundant expert replication. Built on this design, Degradation Prior Embedding (DPE) adapts frozen CLIP features into an explicit restoration-oriented prior, while Global Feature Modulation (GFM) aligns global feature statistics before local residual compensation. We also construct MDVD-108K (Multi-Degradation VisDrone), a large-scale UAV restoration dataset covering both single and compound degradations, together with a real-world test set. Extensive experiments on multiple datasets show that CoRE-UIR improves the overall average PSNR by 1.05 dB while running 11.83$\\times$ faster and reducing peak memory by 85.3% relative to the strongest baseline, BaryIR, thereby maintaining a favorable quality-efficiency trade-off. Evaluations on downstream tasks and unseen degradation also validate the generalizability of CoRE-UIR. The code and dataset will be released at https://github.com/zzaiyan/CoRE-UIR.",
+      "authors": [
+        "Zaiyan Zhang",
+        "Qiangqiang Yuan",
+        "Jie Li",
+        "Ziyang Lihe",
+        "Yu Wan",
+        "Yuzeng Chen",
+        "Xin Su",
+        "Liangpei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T09:14:08+00:00",
+      "link": "https://arxiv.org/pdf/2607.27898v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "All-in-one remote sensing image restoration prior-guided expert block for degraded satellite imagery",
+      "llm_evidence_cn": "先验引导的公共与残差专家块，统一恢复退化的遥感卫星图像",
+      "llm_evidence": "先验引导的公共与残差专家块，统一恢复退化的遥感卫星图像",
+      "canonical_evidence": "先验引导的公共与残差专家块，统一恢复退化的遥感卫星图像",
+      "llm_tldr_en": "CoRE-UIR is a prior-guided all-in-one remote sensing image restoration framework with Common-and-Residual Expert Block, efficiently restoring multiple co-occurring degradations with reduced parameter redundancy for satellite imagery.",
+      "llm_tldr_cn": "卫星和无人机遥感图像常受多种退化因素共同影响。现有全能恢复方法存在退化线索弱、参数冗余问题。本文提出CoRE-UIR，以先验引导的公共与残差专家块为核心，在统一框架下高效恢复多种退化图像，减少参数重叠并提升恢复质量。该方法可改善珊瑚礁遥感图像质量，从而服务后续栖息地分析。",
+      "llm_tldr": "卫星和无人机遥感图像常受多种退化因素共同影响。现有全能恢复方法存在退化线索弱、参数冗余问题。本文提出CoRE-UIR，以先验引导的公共与残差专家块为核心，在统一框架下高效恢复多种退化图像，减少参数重叠并提升恢复质量。该方法可改善珊瑚礁遥感图像质量，从而服务后续栖息地分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
