@@ -1,0 +1,410 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-02T21:00:44.044769+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2607.28186v1",
+      "source": "arxiv",
+      "title": "Think with Extra-Image: A Farmland Segmentation Agent Driven by Spatio-Temporal Information Gain",
+      "abstract": "Existing farmland remote sensing image (FRSI) segmentation follows a \"Think with Intra-Image\" paradigm, assuming that the current image contains sufficient visual evidence for reliable segmentation. Yet farmland appearance varies with phenology and spatial context and is often confused with other land-cover, making instantaneous, local observations inadequate. Thus, segmentation ambiguity stems not only from limited model representation, but more fundamentally from the required spatio-temporal information lying beyond the current image. Based on this insight, we redefine FRSI segmentation from an information bottleneck perspective as a dynamic decision process driven by task-relevant extra spatio-temporal information gain. We further propose FarmSeeker, a dynamic FRSI segmentation agent that identifies ambiguous regions, reasons about their causes, and queries extra spatio-temporal information on demand for accurate segmentation. To evaluate FarmSeeker, we construct GSFS-Bench, the first global-scale, high-resolution FRSI segmentation benchmark that supports reasoning-querying. Experiments show that FarmSeeker achieves more stable segmentation performance than existing methods. The project is publicly available at: https://withoutocean.github.io/FarmSeeker/",
+      "authors": [
+        "Haiyang Wu",
+        "Weiliang Mu",
+        "Zhuofei Du",
+        "Dandan Zhong",
+        "Kaijie Shi",
+        "Haifeng Li",
+        "Chao Tao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T13:22:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.28186v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agent-driven remote sensing segmentation with spatio-temporal information gain, directly relevant to autonomous ocean monitoring",
+      "llm_evidence_cn": "智能体驱动的遥感分割，通过时空信息增益决策，与自主海洋监测高度相关",
+      "llm_evidence": "智能体驱动的遥感分割，通过时空信息增益决策，与自主海洋监测高度相关",
+      "canonical_evidence": "智能体驱动的遥感分割，通过时空信息增益决策，与自主海洋监测高度相关",
+      "llm_tldr_en": "Presents a farmland segmentation agent that dynamically queries extra spatio-temporal images based on information gain, addressing the insufficiency of single-image evidence.",
+      "llm_tldr_cn": "农田遥感分割常因物候和空间背景超出当前图像而出现歧义。本文将分割重新定义为信息瓶颈下的动态决策过程，提出一个由任务相关时空信息增益驱动的分割智能体。该智能体主动获取超越当前图像的额外影像以消除分割不确定。实验表明其优于仅基于单幅图像的范式。其决策框架可迁移至珊瑚礁等海洋生境的自主遥感解译与智能体监测。",
+      "llm_tldr": "农田遥感分割常因物候和空间背景超出当前图像而出现歧义。本文将分割重新定义为信息瓶颈下的动态决策过程，提出一个由任务相关时空信息增益驱动的分割智能体。该智能体主动获取超越当前图像的额外影像以消除分割不确定。实验表明其优于仅基于单幅图像的范式。其决策框架可迁移至珊瑚礁等海洋生境的自主遥感解译与智能体监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.23136v1",
+      "source": "arxiv",
+      "title": "Optimized Embedded Implementation of Hyperspectral-Multispectral Image Fusion on Raspberry Pi",
+      "abstract": "Remote sensing optical images have become central to a wide range of applications. In particular, hyperspectral images, with their high spectral resolution, enable the extraction of rich information about the objects and materials present in the observed scene. Nevertheless, processing such data comes at the expense of a high computational load due to its large data volume, making real-time processing very difficult to achieve. Recently, we proposed an approach to investigate the feasibility of processing such data on a Raspberry Pi by implementing a hyperspectral super-resolution technique, namely HSB-SV. However, the implementation resulted in high computational time. To overcome this limitation, we apply computational optimization techniques based on migrating the most intensive operations to PyTorch and edge inference frameworks such as ONNX Runtime and ExecuTorch with the XNNPACK backend. The proposed optimized implementation is deployed on a Raspberry Pi 5 platform. Experimental results demonstrate a significant reduction in computational time, achieving a 1.48x overall speedup on the Raspberry Pi 5, the total execution time decreases significantly, from 527.1 ms to 356.7 ms corresponding to a 32.3% dminution, while fully preserving the fusion quality, making the approach more suitable for embedded and edge computing scenarios, particularly for UAV-based hyperspectral remote sensing applications.",
+      "authors": [
+        "Salah Eddine Brezini",
+        "Okba Bekhelifi",
+        "Oussama Mezouar",
+        "Chams Eddine Choucha",
+        "Sarra Boukhacheba",
+        "Fethi Abdelatif Dali"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.PF"
+      ],
+      "published": "2026-07-25T10:36:14+00:00",
+      "link": "https://arxiv.org/pdf/2607.23136v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hyperspectral remote sensing image processing; key for coral reef mapping",
+      "llm_evidence_cn": "高光谱遥感图像处理，是珊瑚礁制图的关键技术",
+      "llm_evidence": "高光谱遥感图像处理，是珊瑚礁制图的关键技术",
+      "canonical_evidence": "高光谱遥感图像处理，是珊瑚礁制图的关键技术",
+      "llm_tldr_en": "This paper optimizes hyperspectral-multispectral image fusion on a Raspberry Pi, reducing computational time with optimization techniques for embedded implementation; facilitates field deployment of reef mapping systems.",
+      "llm_tldr_cn": "针对高光谱图像数据量大、实时处理困难的问题，论文在树莓派上实现了高光谱-多光谱图像融合（HSB-SV）的计算优化。通过应用多种计算优化技术，显著降低了运算时间，使嵌入式设备上的处理更具可行性。高光谱图像具有丰富光谱信息，常用于珊瑚礁底质分类与制图。该工作为野外珊瑚礁遥感调查提供了低成本的边缘处理方案。",
+      "llm_tldr": "针对高光谱图像数据量大、实时处理困难的问题，论文在树莓派上实现了高光谱-多光谱图像融合（HSB-SV）的计算优化。通过应用多种计算优化技术，显著降低了运算时间，使嵌入式设备上的处理更具可行性。高光谱图像具有丰富光谱信息，常用于珊瑚礁底质分类与制图。该工作为野外珊瑚礁遥感调查提供了低成本的边缘处理方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.23680v1",
+      "source": "arxiv",
+      "title": "Perturbation-Aware Diffusion-Guided Hybrid Segmentation for Robust and Annotation-Efficient Plant Stress Phenotyping",
+      "abstract": "Semantic segmentation in agricultural imagery is often evaluated under in-domain protocols, yet practical deployment requires robustness to appearance perturbations, limited annotations, and cross domain shift. This paper presents a diffusion-guided hybrid segmentation framework in which U-Net, DeepLabV3+, and SegFormer backbones generate coarse masks that are refined by Denoising Diffusion Probabilistic Models (DDPM), latent diffusion, or semantic-guided diffusion. The framework is evaluated through a 3x3 architectural screening study on PlantSegV3, followed by boundary-constrained optimization, perturbation-guided retraining, low-data evaluation, constrained hyperparameter screening, and controlled cross-domain adaptation. On PlantSegV3, the best selected hybrid model achieves 71.83% refined mean Intersection-over-Union (mIoU) and 26.10% refined Boundary-F1, and the selected models remain stable under substantially reduced supervision, demonstrating strong annotation efficiency. Perturbation analysis identifies grayscale conversion, fog, coarse dropout, and shadow as the most disruptive appearance shifts, and the resulting augmentation policy substantially improves robustness during retraining. The adapted models further show effective transfer to external agricultural datasets under limited target supervision, indicating that diffusion refinement and boundary-aware optimization provide transferable structural priors. Overall, the results show that carefully matched backbone-refiner pairings, combined with perturbation-aware retraining, can improve structural delineation and robustness under realistic resource and distribution constraints.",
+      "authors": [
+        "Gurbhit Chaurakoti",
+        "Soumyashree Kar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-26T14:28:05+00:00",
+      "link": "https://arxiv.org/pdf/2607.23680v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Diffusion-guided hybrid semantic segmentation with annotation efficiency transferable to benthic cover classification",
+      "llm_evidence_cn": "扩散引导的混合语义分割方法，标注高效，可迁移到珊瑚礁底质覆盖分类",
+      "llm_evidence": "扩散引导的混合语义分割方法，标注高效，可迁移到珊瑚礁底质覆盖分类",
+      "canonical_evidence": "扩散引导的混合语义分割方法，标注高效，可迁移到珊瑚礁底质覆盖分类",
+      "llm_tldr_en": "Proposes a diffusion-guided hybrid semantic segmentation framework robust to perturbation and limited annotations; transferable to coral reef benthic cover classification.",
+      "llm_tldr_cn": "农业影像语义分割常按同域协议评估，但实际部署需应对外观扰动、标注受限和跨域迁移。本文提出扩散引导的混合分割框架，先由 U-Net、DeepLabV3+、SegFormer 生成粗掩膜，再用扩散概率模型精化，并结合边界约束优化与扰动引导重训。在 3x3 架构筛选和低数据评估中，该方法展现出鲁棒性和标注效率。框架虽面向植物胁迫表型，其稳健分割与少标注策略可直接支持珊瑚礁底质覆盖等海洋遥感分类。",
+      "llm_tldr": "农业影像语义分割常按同域协议评估，但实际部署需应对外观扰动、标注受限和跨域迁移。本文提出扩散引导的混合分割框架，先由 U-Net、DeepLabV3+、SegFormer 生成粗掩膜，再用扩散概率模型精化，并结合边界约束优化与扰动引导重训。在 3x3 架构筛选和低数据评估中，该方法展现出鲁棒性和标注效率。框架虽面向植物胁迫表型，其稳健分割与少标注策略可直接支持珊瑚礁底质覆盖等海洋遥感分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.25815v1",
+      "source": "arxiv",
+      "title": "Freq-RemoteVAR: Next-Frequency Autoregressive Modeling for Remote Sensing Change Detection",
+      "abstract": "Remote sensing change detection aims to identify land-cover changes from bi-temporal images. Most existing methods follow a one-shot dense prediction paradigm, directly regressing a change mask from fused features. However, such approaches overlook the intrinsic frequency characteristics of change patterns. We propose Freq-RemoteVAR, a frequency autoregressive framework that reformulates change detection as a structured generation problem in the frequency domain. Instead of predicting the change mask in a single step, we introduce a next-frequency prediction paradigm, where change information is progressively generated from coarse to fine. We design a frequency-aware mask tokenization strategy that decomposes change supervision into multi-frequency token targets via Fourier transformation and quantization. We develop a Frequency VAR Transformer, which performs causal autoregressive modeling over frequency tokens. The model starts from learned mask queries and progressively predicts frequency-level tokens conditioned on previously generated tokens and bi-temporal image features, effectively capturing long-range dependencies across frequency scales. We introduce Scale-Aligned RoPE Cross Attention (SRCA) module, which aligns frequency-domain mask queries with spatial-domain bi-temporal features under a unified coordinate system, enhancing spatial-frequency consistency during generation. We propose a Change-quality Control module that adaptively modulates the generation process through dynamic normalization, attention biasing, and spatial offset adjustment, thereby suppressing pseudo-change responses and improving robustness. Extensive experiments on CDD, GZ-CD, and LEVIR-CD demonstrate that Freq-RemoteVAR consistently outperforms existing methods, particularly in challenging scenarios with complex appearance variations and noisy disturbances.",
+      "authors": [
+        "Luqi Gong",
+        "Rui Xu",
+        "Yue Chen",
+        "Chao Li",
+        "Jingqi Hong",
+        "Xuefeng Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T14:59:56+00:00",
+      "link": "https://arxiv.org/pdf/2607.25815v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "frequency-domain autoregressive framework for remote sensing change detection; applicable to ocean habitat change analysis",
+      "llm_evidence_cn": "频域自回归遥感变化检测框架，可用于海洋栖息地变化监测",
+      "llm_evidence": "频域自回归遥感变化检测框架，可用于海洋栖息地变化监测",
+      "canonical_evidence": "频域自回归遥感变化检测框架，可用于海洋栖息地变化监测",
+      "llm_tldr_en": "Remote sensing change detection usually regresses change masks in one shot, ignoring frequency characteristics. Freq-RemoteVAR casts change detection as structured generation in the frequency domain with next-frequency prediction from coarse to fine and a frequency-aware mask tokenizer, offering an effective autoregressive paradigm useful for dynamic ocean habitat monitoring from satellite images.",
+      "llm_tldr_cn": "现有遥感变化检测多采用一次性稠密预测，忽略了变化模式的频域特征。本文提出Freq-RemoteVAR，将变化检测重构为频域中的结构化生成问题，采用下一频次预测范式由粗到细地生成变化信息，并设计频域感知的掩码词元化策略。该方法在变化检测任务上验证了频域自回归建模的有效性，为海洋栖息地等动态目标的卫星影像变化监测提供了新思路。",
+      "llm_tldr": "现有遥感变化检测多采用一次性稠密预测，忽略了变化模式的频域特征。本文提出Freq-RemoteVAR，将变化检测重构为频域中的结构化生成问题，采用下一频次预测范式由粗到细地生成变化信息，并设计频域感知的掩码词元化策略。该方法在变化检测任务上验证了频域自回归建模的有效性，为海洋栖息地等动态目标的卫星影像变化监测提供了新思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.24424v1",
+      "source": "arxiv",
+      "title": "MAViE: A Multi-scale Adaptive Vision Encoder for Fine-grained Visual Perception and Efficient Multimodal Reasoning",
+      "abstract": "Vision-language models commonly project all tokens produced by a pretrained vision encoder into a large language model. However, final-layer features can discard text, local attributes, and spatial relationships, while high-resolution inputs substantially increase context length and inference latency. We introduce \\method, a Multi-scale Adaptive Vision Encoder. \\method uses position-dependent gates to fuse shallow, intermediate, and deep features from a vision Transformer, preserving global semantics while enhancing edges, text, and local structure. It then performs question-conditioned token routing according to question relevance, local information content, global semantics, and spatial coverage, with a token budget that adapts to image complexity. To mitigate compression loss, we further introduce full-to-compressed representation distillation and a spatial diversity regularizer. In an illustrative simulation under a unified 7B language-model framework, \\method reduces the average number of SigLIP-SO400M visual tokens from 729 to 146 (approximately 80.0\\%) and improves the mean score on VQAv2, GQA, TextVQA, ScienceQA-IMG, and MMBench by 2.2 percentage points, while reducing single-image time to first token from 228\\,ms to 129\\,ms. We provide the full model design and evaluation protocol. All reported numbers currently serve only as placeholders for paper organization and experimental design; formal claims require real training runs, independent replications, and official benchmark evaluation.",
+      "authors": [
+        "Shaofei Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-27T13:36:08+00:00",
+      "link": "https://arxiv.org/pdf/2607.24424v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-scale adaptive vision encoder for fine-grained visual perception and multimodal reasoning; useful for imagery-text fusion",
+      "llm_evidence_cn": "多尺度自适应视觉编码器用于细粒度视觉感知和高效多模态推理，有助于影像与文本融合应用",
+      "llm_evidence": "多尺度自适应视觉编码器用于细粒度视觉感知和高效多模态推理，有助于影像与文本融合应用",
+      "canonical_evidence": "多尺度自适应视觉编码器用于细粒度视觉感知和高效多模态推理，有助于影像与文本融合应用",
+      "llm_tldr_en": "Introduces MAViE, a multi-scale adaptive vision encoder that fuses shallow-to-deep features via position-dependent gates and performs question-conditioned token routing, improving fine-grained perception and multimodal reasoning efficiency.",
+      "llm_tldr_cn": "该论文针对视觉-语言模型中最终层特征丢失局部属性、高分辨率输入导致推理成本高的问题，提出了MAViE多尺度自适应视觉编码器。编码器通过位置相关门控融合浅层、中间层和深层特征，保留全局语义的同时增强边缘、文本和局部结构；再依据问题相关性进行条件化词元路由。实验表明该方法在细粒度视觉感知和多模态推理上取得提升，为遥感影像与文本联合分析等应用提供了高效的视觉编码方案。",
+      "llm_tldr": "该论文针对视觉-语言模型中最终层特征丢失局部属性、高分辨率输入导致推理成本高的问题，提出了MAViE多尺度自适应视觉编码器。编码器通过位置相关门控融合浅层、中间层和深层特征，保留全局语义的同时增强边缘、文本和局部结构；再依据问题相关性进行条件化词元路由。实验表明该方法在细粒度视觉感知和多模态推理上取得提升，为遥感影像与文本联合分析等应用提供了高效的视觉编码方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.25830v1",
+      "source": "arxiv",
+      "title": "Beyond Static Costs: Learning-Dynamics Aware Loss Functions for Long-Tailed Classification",
+      "abstract": "Deep learning models in computer vision face significant challenges when trained on long-tailed datasets, where a few majority classes dominate while many minority classes are severely underrepresented. Such imbalances frequently arise in real-world scenarios such as rare species recognition, manufacturing fault detection, and medical image understanding, leading to biased models that underperform on tail classes. Existing reweighting methods typically rely on static class frequencies to penalize the model, ignoring the dynamic nature of how effectively a network actually learns a class over time. We address this by introducing a novel Learning-Dynamics Aware Loss (LDAL) function that shifts the focus from static sample counts to dynamic learning progress. LDAL framework adjusts class weights continuously by leveraging: (i) the strength of learned feature representations (semantic scale), (ii) the intrinsic learning difficulty of each class, measured via the Shannon entropy of its predictions, and (iii) an inter-epoch regularizer term that tracks prediction shifts between consecutive epochs to stabilize training and avoid local minima. LDAL is purely a objective function which incurs negligible computational overhead while adapting to the feature learning of the model. Experimental results on multiple benchmark datasets demonstrate that our approach significantly surpasses state-of-the-art reweighting loss functions, providing an optimal trade-off between accuracy and generalizability. The source code is available at https://github.com/sdm2026/ldal",
+      "authors": [
+        "Varad Shinde",
+        "Nikhil Kumar Shrey",
+        "Magesh Rajasekaran",
+        "Md Saiful Islam Sajol",
+        "Harshil Bhargava",
+        "Subhajit Sidanta",
+        "Supratik Mukhopadhyay",
+        "Yimin Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-28T15:10:33+00:00",
+      "link": "https://arxiv.org/pdf/2607.25830v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "learning-dynamics aware loss addresses class imbalance in long-tailed classification, directly applicable to coral reef benthic cover classification",
+      "llm_evidence_cn": "面向长尾分类的动态损失函数可迁移用于珊瑚礁底栖覆盖分类中的类别不平衡问题",
+      "llm_evidence": "面向长尾分类的动态损失函数可迁移用于珊瑚礁底栖覆盖分类中的类别不平衡问题",
+      "canonical_evidence": "面向长尾分类的动态损失函数可迁移用于珊瑚礁底栖覆盖分类中的类别不平衡问题",
+      "llm_tldr_en": "Introduces Learning-Dynamics Aware Loss (LDAL) that adapts reweighting based on how effectively a network learns each class over time, improving minority-class performance in long-tailed classification across real-world scenarios.",
+      "llm_tldr_cn": "长尾分类中少数类严重欠拟合，而现有重加权方法多依赖静态类别频率，忽视了网络对各类学习效果的动态变化。本文提出学习动态感知损失LDAL，根据网络实际学习各类的进展自适应调整损失权重，从而缓解类别不平衡导致的偏差。在多种真实世界长尾数据集上有效提升尾部类性能，对珊瑚礁底栖覆盖等稀有生态类别分类具有直接借鉴价值。",
+      "llm_tldr": "长尾分类中少数类严重欠拟合，而现有重加权方法多依赖静态类别频率，忽视了网络对各类学习效果的动态变化。本文提出学习动态感知损失LDAL，根据网络实际学习各类的进展自适应调整损失权重，从而缓解类别不平衡导致的偏差。在多种真实世界长尾数据集上有效提升尾部类性能，对珊瑚礁底栖覆盖等稀有生态类别分类具有直接借鉴价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.26107v1",
+      "source": "arxiv",
+      "title": "TraceCLIP: Recovering Local Semantics from Patch-to-CLS Contributions",
+      "abstract": "Dense vision-language understanding, including object localization, region recognition, and open-vocabulary semantic segmentation, requires associating language concepts with spatially grounded visual regions. CLIP provides a strong foundation for these tasks by learning a shared image-text embedding space from large-scale contrastive pre-training. However, its image-level objective aligns text with a CLS-derived global representation, leaving local vision-language correspondence only indirectly constrained. Existing methods either introduce additional supervision, external models, or task-specific adaptation, while training-free approaches mainly recover dense responses from existing patch features without examining where local semantics become most accessible within CLIP. We introduce TraceCLIP, a training-free framework that recovers latent patch-level semantic evidence by isolating the patch-specific terms written into the CLS attention output. TraceCLIP further converts contribution-derived semantic responses into a semantic-geodesic topology gate that calibrates final-layer patch affinity for dense feature reconstruction. Diagnostic experiments show that these contribution features exhibit strong local semantic discrimination and text-conditioned spatial alignment. On eight zero-shot semantic segmentation benchmarks, TraceCLIP achieves gains of 1.3 to 4.5 points in average mIoU over the strongest prior training-free methods across both backbones and background settings, without additional training, external vision foundation models, or region-level supervision. More broadly, these findings suggest that spatially localized semantics may remain accessible within the internal construction of globally aligned representations.",
+      "authors": [
+        "Xinran Liu",
+        "Shouqian Shi",
+        "Yutong Chen",
+        "Ge Wang",
+        "Xin-Wei Yao",
+        "Sheng Zhong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-28T11:25:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.26107v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "training-free dense vision-language semantic segmentation useful for satellite habitat mapping",
+      "llm_evidence_cn": "无训练的稠密视觉-语言语义分割方法，可用于卫星生境制图",
+      "llm_evidence": "无训练的稠密视觉-语言语义分割方法，可用于卫星生境制图",
+      "canonical_evidence": "无训练的稠密视觉-语言语义分割方法，可用于卫星生境制图",
+      "llm_tldr_en": "TraceCLIP recovers local vision-language semantics from patch-to-CLS contributions, enabling training-free open-vocabulary semantic segmentation for dense visual understanding.",
+      "llm_tldr_cn": "CLIP的图像级对比学习只对齐全局表征，缺少对局部视觉-语言语义的显式约束。TraceCLIP通过追踪每个patch对CLS token的贡献，恢复空间化的局部语义响应，无需额外训练即可支持开放词汇语义分割、目标定位与区域识别。该方法在密集视觉语言任务上有效。这种即插即用的CLIP局部语义恢复可直接支撑遥感影像中珊瑚礁等生境的像素级分类。",
+      "llm_tldr": "CLIP的图像级对比学习只对齐全局表征，缺少对局部视觉-语言语义的显式约束。TraceCLIP通过追踪每个patch对CLS token的贡献，恢复空间化的局部语义响应，无需额外训练即可支持开放词汇语义分割、目标定位与区域识别。该方法在密集视觉语言任务上有效。这种即插即用的CLIP局部语义恢复可直接支撑遥感影像中珊瑚礁等生境的像素级分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27969v1",
+      "source": "arxiv",
+      "title": "FootprintNet: State-Transition-Guided Dynamic Footprint Learning for Multi-temporal Remote Sensing Change Detection",
+      "abstract": "Despite substantial progress in remote sensing multi-temporal change detection (MTCD), most existing MTCD methods still represent the dynamic process at each spatial location over the entire observation period using a single change category associated with the final observation. This implicit single-change assumption limits their ability to characterize regions of recurrent change closely related to human activities. To address this limitation, we introduce Urban Building Dynamics Detection (UBDD), which identifies building-change dynamic footprints, i.e., the temporal intervals in which changes occur, from multi-temporal imagery and produces pixel-wise classification masks. For regions undergoing two or more changes, UBDD introduces an independent multi-change class for unified representation, thereby enabling unified modeling of single- and multi-change processes. Furthermore, we propose FootprintNet, which abstracts building-change processes as interactions between latent states and actions, and imposes state-action transition constraints to guide the learning of causally coherent change trajectories. It further exploits temporal change-boundary cues to enhance feature contrast across boundary sides, thereby improving the discrimination among different dynamic footprints and enabling accurate detection of dynamic footprints. Moreover, we introduce the Building Change Dynamics Score (BCDS) to address the inability of conventional metrics to reflect the temporal proximity between predicted footprints and labels. It evaluates predictions according to their preservation of change semantics and temporal offsets from the corresponding labels. Extensive experiments on TSCD, MUDS, and WUSU demonstrate that FootprintNet outperforms current state-of-the-art methods. The code is available at https://github.com/zmoka-zht/FootprintNet.",
+      "authors": [
+        "Haotian Zhang",
+        "Hao Chen",
+        "Han Guo",
+        "Zhengxia Zou",
+        "Zhenwei Shi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T10:16:53+00:00",
+      "link": "https://arxiv.org/pdf/2607.27969v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-temporal remote sensing change detection with pixel-wise classification, transferable to ocean habitat satellite image analysis",
+      "llm_evidence_cn": "多时相遥感变化检测的深度学习方法，可迁移至海洋栖息地卫星图像分析",
+      "llm_evidence": "多时相遥感变化检测的深度学习方法，可迁移至海洋栖息地卫星图像分析",
+      "canonical_evidence": "多时相遥感变化检测的深度学习方法，可迁移至海洋栖息地卫星图像分析",
+      "llm_tldr_en": "Proposes FootprintNet for multi-temporal remote sensing change detection to capture recurrent building-change dynamic footprints via state-transition-guided learning, producing pixel-wise classification masks.",
+      "llm_tldr_cn": "现有多时相遥感变化检测方法通常只用单一类别表示整个观测期的变化，难以刻画与人类活动相关的重复变化区域。为此提出FootprintNet，通过状态转移引导的动态足迹学习，从多时相影像中识别建筑变化发生的时间区间并生成逐像素分类掩码。该方法能刻画发生两次或更多次变化的区域，为城市动态监测提供更细粒度的时间语义，并可推广至生态环境等领域的时序遥感变化分析。",
+      "llm_tldr": "现有多时相遥感变化检测方法通常只用单一类别表示整个观测期的变化，难以刻画与人类活动相关的重复变化区域。为此提出FootprintNet，通过状态转移引导的动态足迹学习，从多时相影像中识别建筑变化发生的时间区间并生成逐像素分类掩码。该方法能刻画发生两次或更多次变化的区域，为城市动态监测提供更细粒度的时间语义，并可推广至生态环境等领域的时序遥感变化分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.28247v1",
+      "source": "arxiv",
+      "title": "Space2Ground 2.0: A Multi-Source Dataset and Framework for Agricultural Monitoring through Fusion of Street-Level and Satellite Imagery",
+      "abstract": "Accurate and scalable parcel-level agricultural monitoring remains challenging because satellite Earth Observation alone provides only an overhead perspective of agricultural parcels, while optical observations are further affected by cloud-induced temporal gaps. This paper presents Space2Ground 2.0, a multi-source framework integrating Sentinel-1 SAR and Sentinel-2 multispectral time series with geo-tagged street-level imagery acquired using vehicle-mounted cameras and shared through the Mapillary platform. A largely automated processing pipeline performs semantic filtering, image quality assessment, viewpoint-based parcel association, and dataset refinement, transforming large volumes of crowdsourced imagery into parcel-linked, analysis-ready data. Applied over Cyprus during the 2022 growing season, the pipeline produced a curated dataset of 46,050 annotated street-level images, selected from an initial collection exceeding 900,000 images and linked with satellite information for 8,581 agricultural parcels. The practical value of the dataset was assessed through parcel-level crop classification experiments using both single- and multi-source observations. The results demonstrate that street-level imagery provides complementary fine-scale visual information that enhances classification when integrated with satellite time series. Overall, Space2Ground 2.0 provides an openly available benchmark dataset and a reproducible methodology for multimodal agricultural monitoring, with potential applications in visual verification, reduced reliance on costly field inspections, and data-driven agricultural policy implementation.",
+      "authors": [
+        "Iason Tsardanidis",
+        "Alkiviadis Koukos",
+        "George Choumos",
+        "Vasileios Sitokontantinou",
+        "Charalampos Kontoes"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T14:10:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.28247v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-source fusion of satellite and ground imagery framework transferable to coral reef ecosystem mapping",
+      "llm_evidence_cn": "卫星与地面影像多源融合框架，可迁移到珊瑚礁生态系统制图",
+      "llm_evidence": "卫星与地面影像多源融合框架，可迁移到珊瑚礁生态系统制图",
+      "canonical_evidence": "卫星与地面影像多源融合框架，可迁移到珊瑚礁生态系统制图",
+      "llm_tldr_en": "Space2Ground 2.0 fuses Sentinel satellite time series with geo-tagged street-level imagery for agricultural monitoring; multi-source fusion approach transferable to coral reef mapping.",
+      "llm_tldr_cn": "卫星对地观测只能提供俯视视角且受云层影响，难以支撑精细化农业监测。本文提出 Space2Ground 2.0 框架，融合 Sentinel-1 SAR、Sentinel-2 多光谱时序与地理标记街景影像，并通过语义过滤、质量评估、视角-地块关联等自动化流程构建数据集。该框架将海量地面图像与卫星数据结合，为地块级农业监测提供可扩展方案。其多源融合与自动化处理思路对珊瑚礁生态系统的遥感精细制图具有直接借鉴价值。",
+      "llm_tldr": "卫星对地观测只能提供俯视视角且受云层影响，难以支撑精细化农业监测。本文提出 Space2Ground 2.0 框架，融合 Sentinel-1 SAR、Sentinel-2 多光谱时序与地理标记街景影像，并通过语义过滤、质量评估、视角-地块关联等自动化流程构建数据集。该框架将海量地面图像与卫星数据结合，为地块级农业监测提供可扩展方案。其多源融合与自动化处理思路对珊瑚礁生态系统的遥感精细制图具有直接借鉴价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.28470v1",
+      "source": "arxiv",
+      "title": "Towards Autonomous Aircraft Surveillance from Nanosatellites through On-Board Inference and Generative Data Augmentation",
+      "abstract": "Airborne surveillance from low Earth orbit is hindered by two interconnected bottlenecks: nanosatellites have a limited downlink budget, yet the conventional approach still transmits terabytes of raw imagery to the ground for processing, and open satellite datasets for aircraft are scarce and severely class-imbalanced. These limitations either delay timely decision-making or prevent standard detectors from learning robust representations of rare aircraft classes. In this paper, a workflow that combines on-board inference with generative data augmentation is proposed to address both limitations jointly. Inference is executed on a 6U CubeSat equipped with a low-power edge tensor accelerator, while a diffusion model fine-tuned through low-rank adaptation generates synthetic minority-class imagery. This synthetic output is automatically annotated, pseudo-labelled, by an intermediate detector and merged with classically augmented samples. The results show that the balanced dataset increases global mean average precision from 77.9% to 82.2%, with the minority class rising from F1=0.683 to F1=0.811, and that the quantised detector fits the on-chip memory and projects 25-30 frames per second on orbit. This approach contrasts with the conventional bent-pipe architecture, in which the satellite acts as a passive data collector. Therefore, the computational tests support the proposed workflow as a decision-support tool for real-time, autonomous airborne surveillance from nanosatellites.",
+      "authors": [
+        "Antonio Delgado-Rosa",
+        "David Muñoz-Valero",
+        "Enrique Adrian Villarrubia-Martin",
+        "Juan Moreno-Garcia"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-07-30T16:26:38+00:00",
+      "link": "https://arxiv.org/pdf/2607.28470v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "on-board inference plus generative augmentation for rare classes in satellite imagery, transferable to ocean habitat classification",
+      "llm_evidence_cn": "星上推理与生成式数据增强解决卫星影像稀有类别识别，可用于海洋栖息地分类",
+      "llm_evidence": "星上推理与生成式数据增强解决卫星影像稀有类别识别，可用于海洋栖息地分类",
+      "canonical_evidence": "星上推理与生成式数据增强解决卫星影像稀有类别识别，可用于海洋栖息地分类",
+      "llm_tldr_en": "Presents a workflow combining on-board inference on a 6U CubeSat edge accelerator with diffusion-based generative data augmentation to detect rare aircraft classes from orbit, addressing downlink and class imbalance bottlenecks.",
+      "llm_tldr_cn": "纳米卫星有限的下行带宽和公开航空数据集稀少且类不平衡，制约星上目标检测。该文提出将6U立方星上低功耗边缘张量加速推理与扩散生成式数据增强结合：卫星直接执行检测，同时用生成数据增强稀有飞机类别。该方法缓解了下行链路压力并提升少见类鲁棒性，这种端边协同思路对海洋遥感目标识别同样具有参考价值。",
+      "llm_tldr": "纳米卫星有限的下行带宽和公开航空数据集稀少且类不平衡，制约星上目标检测。该文提出将6U立方星上低功耗边缘张量加速推理与扩散生成式数据增强结合：卫星直接执行检测，同时用生成数据增强稀有飞机类别。该方法缓解了下行链路压力并提升少见类鲁棒性，这种端边协同思路对海洋遥感目标识别同样具有参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

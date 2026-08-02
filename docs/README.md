@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-01</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-02</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-01 21:27:23 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-02 21:08:04 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读1篇、速读3篇，重点覆盖高光谱图像分类及多模态预训练等领域。最值得关注的是MSCM-net（8.0分），融合多尺度卷积与Mamba架构，为高光谱分类提供新思路。建议优先精读该文，并速览PolSAR分类的频域双域协作方法。</p>
+<p>今日精读1篇、速读9篇，聚焦遥感智能解译与高效模型设计。</p>
+<p>最值得关注的是《Think with Extra-Image》（8.0分）提出的时空信息增益驱动农田分割，以及《Freq-RemoteVAR》的遥感变化检测新范式。</p>
+<p>建议从精读论文的“额外图像+信息增益”思路入手，再顺藤摸瓜探索其与变化检测任务的结合点。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -74,7 +76,7 @@
     <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="MSCM-net: A hyperspectral image classiffcation method based on multi-scale convolution and Mamba">MSCM-net: A hyperspectral image classiffcation method based on multi-scale convolution and Mamba</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Think with Extra-Image: A Farmland Segmentation Agent Driven by Spatio-Temporal Information Gain">Think with Extra-Image: A Farmland Segmentation Agent Driven by Spatio-Temporal Information Gain</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Scaling Native Multimodal Pre-Training From Scratch">Scaling Native Multimodal Pre-Training From Scratch</span></li><li><span class="dpr-home-dashboard-paper-title" title="Direction-adaptive Mamba: Spatial-Frequency Dual-Domain Collaborative Learning for PolSAR Image Classification">Direction-adaptive Mamba: Spatial-Frequency Dual-Domain Collaborative Learning for PolSAR Image Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="UAV Swarming for Air-Ground ISAC via Cross-Region Cooperation">UAV Swarming for Air-Ground ISAC via Cross-Region Cooperation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Optimized Embedded Implementation of Hyperspectral-Multispectral Image Fusion on Raspberry Pi">Optimized Embedded Implementation of Hyperspectral-Multispectral Image Fusion on Raspberry Pi</span></li><li><span class="dpr-home-dashboard-paper-title" title="Freq-RemoteVAR: Next-Frequency Autoregressive Modeling for Remote Sensing Change Detection">Freq-RemoteVAR: Next-Frequency Autoregressive Modeling for Remote Sensing Change Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Beyond Static Costs: Learning-Dynamics Aware Loss Functions for Long-Tailed Classification">Beyond Static Costs: Learning-Dynamics Aware Loss Functions for Long-Tailed Classification</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
 </section>
 </div>
 
