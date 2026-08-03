@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-02</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-03</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-02 21:08:04 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-03 21:13:25 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读1篇、速读9篇，聚焦遥感智能解译与高效模型设计。</p>
-<p>最值得关注的是《Think with Extra-Image》（8.0分）提出的时空信息增益驱动农田分割，以及《Freq-RemoteVAR》的遥感变化检测新范式。</p>
-<p>建议从精读论文的“额外图像+信息增益”思路入手，再顺藤摸瓜探索其与变化检测任务的结合点。</p>
+<p>今日聚焦水下机器人动力学与遥感小样本分类，12篇中精读3篇、速读9篇。</p>
+<p>最值得看：AquaJEPA以动作条件多模态预测表征建模水下动态（9.0分），遥感小样本场景分类采用局部一致转导信息最大化（8.0分）。</p>
+<p>若求快速入门，可先从速读中的遥感实体级小样本分割与生成式空气质量重建入手。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Think with Extra-Image: A Farmland Segmentation Agent Driven by Spatio-Temporal Information Gain">Think with Extra-Image: A Farmland Segmentation Agent Driven by Spatio-Temporal Information Gain</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics">AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics</span></li><li><span class="dpr-home-dashboard-paper-title" title="Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification">Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression">MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -89,7 +89,7 @@
     <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Optimized Embedded Implementation of Hyperspectral-Multispectral Image Fusion on Raspberry Pi">Optimized Embedded Implementation of Hyperspectral-Multispectral Image Fusion on Raspberry Pi</span></li><li><span class="dpr-home-dashboard-paper-title" title="Freq-RemoteVAR: Next-Frequency Autoregressive Modeling for Remote Sensing Change Detection">Freq-RemoteVAR: Next-Frequency Autoregressive Modeling for Remote Sensing Change Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Beyond Static Costs: Learning-Dynamics Aware Loss Functions for Long-Tailed Classification">Beyond Static Costs: Learning-Dynamics Aware Loss Functions for Long-Tailed Classification</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement">Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement</span></li><li><span class="dpr-home-dashboard-paper-title" title="Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation">Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations">From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
 </section>

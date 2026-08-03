@@ -1,0 +1,201 @@
+{
+  "date": "20260803",
+  "date_label": "",
+  "generated_at": "2026-08-03 21:13:25 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.29393v1",
+      "route": "202608/03/2607.29393v1-aquajepa-action-conditioned-multimodal-predictive-representations-for-underwater-robot-dynamics",
+      "title": "AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "水下机器人多模态预测世界模型，基于动作条件实现自主控制",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.29192v1",
+      "route": "202608/03/2607.29192v1-locally-consistent-transductive-information-maximization-for-few-shot-remote-sensing-scene-classification",
+      "title": "Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "少样本传导场景分类方法可扩展至卫星影像珊瑚礁底质覆盖分类.",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.29203v1",
+      "route": "202608/03/2607.29203v1-mrope-a-multi-robot-safe-cooperative-strategy-via-combined-predictive-safety-filters-and-ellipse-based-constraint-compression",
+      "title": "MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多机器人安全协同监测架构，可应用于自主海洋监测任务",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.29278v1",
+      "route": "202608/03/2607.29278v1-training-free-entity-level-few-shot-segmentation-of-remote-sensing-images-with-advection-refinement",
+      "title": "Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "结合密集文本语义响应的遥感图像多模态小样本分割",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.25527v1",
+      "route": "202608/03/2607.25527v1-argus-unified-towards-a-compact-and-economical-unified-model-for-image-understanding-and-generation",
+      "title": "Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "统一多模态模型，可迁移至海洋图像-文本融合",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.25687v1",
+      "route": "202608/03/2607.25687v1-from-deterministic-to-generative-deep-learning-for-urban-air-quality-reconstruction-from-sparse-observations",
+      "title": "From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于稀疏观测的深度学习重建方法，可迁移至海洋遥感数据挖掘。",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.27959v1",
+      "route": "202608/03/2607.27959v1-fire-enhancing-mllms-with-fine-grained-context-learning-for-complex-image-retrieval",
+      "title": "FiRE: Enhancing MLLMs with Fine-Grained Context Learning for Complex Image Retrieval",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "细粒度上下文学习增强多模态大模型检索，可检索海洋遥感图像与文本",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.28005v1",
+      "route": "202608/03/2607.28005v1-deep-learning-based-hierarchical-insect-classification-using-camera-trap-imagery",
+      "title": "Deep learning-based hierarchical insect classification using camera trap imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向生物多样性监测的深度学习分层图像分类，可迁移至珊瑚礁底质覆盖分类",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.28743v1",
+      "route": "202608/03/2607.28743v1-multiplicative-errors-in-variables-models-for-hyperspectral-unmixing",
+      "title": "Multiplicative Errors-in-Variables Models for Hyperspectral Unmixing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "高光谱图像的乘性误差变量模型改进了底栖生境制图中的端元与丰度估计",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.28970v1",
+      "route": "202608/03/2607.28970v1-legoq-density-matrix-representation-learning-with-spectral-spatial-state-transitions-for-hyperspectral-classification",
+      "title": "LegoQ: Density-Matrix Representation Learning with Spectral-Spatial State Transitions for Hyperspectral Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "高光谱分类方法，可迁移至海洋栖息地卫星图像分析",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.29367v1",
+      "route": "202608/03/2607.29367v1-satedit-mask-conditioned-image-editing-via-vlm-guided-segment-annotation",
+      "title": "SatEdit: Mask-Conditioned Image Editing via VLM-Guided Segment Annotation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "VLM引导语义标签赋值的掩码条件卫星图像编辑",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    },
+    {
+      "paper_id": "2607.29440v1",
+      "route": "202608/03/2607.29440v1-beyond-retrieval-analytic-memory-for-multimodal-agents",
+      "title": "Beyond Retrieval: Analytic Memory for Multimodal Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态智能体记忆框架，支持分析推理，可用于智能体应用",
+      "first_seen_at": "2026-08-03 21:13:25 UTC",
+      "updated_at": "2026-08-03 21:13:25 UTC"
+    }
+  ]
+}

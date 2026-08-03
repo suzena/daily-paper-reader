@@ -1,0 +1,484 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-03T21:07:50.266630+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2607.29393v1",
+      "source": "arxiv",
+      "title": "AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics",
+      "abstract": "Underwater robots combine complementary sensors whose reliability changes abruptly with water visibility, viewpoint, and vehicle motion. We introduce AquaJEPA, an action-conditioned joint-embedding predictive model that fuses an RGB camera, forward-looking sonar, and proprioception with explicit sensor validity. It predicts a future latent target conditioned on eight-thruster commands and supplies velocity and sonar-profile predictions to a shared receding-horizon planner. We study the method in Stonefish against reactive, state-only, ordinary multimodal, supervised dynamics, and recurrent world-model baselines. We further isolate the EMA target, action margin, masks, and modality dropout. A preregistered 120-environment replication comprises five independent replicates of a grid crossing three unseen obstacle maps, four water-visibility coefficients, and nominal versus shifted dynamics, while intermittently removing DVL observations. In 120 fresh paired environments with scheduled DVL loss, AquaJEPA reaches 74 goals, versus 68 for both state-only and the recurrent world model, and attains the lowest mean final error (0.906 m). Paired final-error reductions relative to ordinary multimodal prediction, supervised dynamics, and the recurrent world model are 0.273 m (95% CI: 0.190-0.356), 0.364 m (0.260-0.468), and 0.106 m (0.025-0.187), respectively. AquaJEPA therefore achieves the best aggregate closed-loop performance and significantly outperforms three action-conditioned predictive baselines in paired final error; its advantage over state-only remains statistically unresolved.",
+      "authors": [
+        "Alan-Barsag Gazzaev",
+        "Alexey Gavrilov",
+        "Sergey Muravyov"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-31T13:11:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.29393v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "underwater robot predictive world model with multimodal fusion; action-conditioned for autonomy",
+      "llm_evidence_cn": "水下机器人多模态预测世界模型，基于动作条件实现自主控制",
+      "llm_evidence": "水下机器人多模态预测世界模型，基于动作条件实现自主控制",
+      "canonical_evidence": "水下机器人多模态预测世界模型，基于动作条件实现自主控制",
+      "llm_tldr_en": "Presents AquaJEPA, an action-conditioned predictive model fusing camera, sonar, and proprioception for underwater robots. It predicts future latents from thruster commands and uses them in receding-horizon planning. In Stonefish, it outperforms reactive, state-only, and supervised baselines across 120 preregistered environments.",
+      "llm_tldr_cn": "水下机器人的传感器可靠性随能见度和运动状态急剧变化，现有世界模型难以有效融合多模态信息。本文提出AquaJEPA，以动作条件联合嵌入预测框架融合RGB相机、前视声呐和本体感觉，并显式建模传感器有效性与动作预测。预测的未来潜变量与速度/声呐剖面被供给共享的滚动时域规划器。在Stonefish仿真中，相比反应式、仅状态等基线，该方法在120个预注册环境下表现更佳，证明了多模态动作条件世界模型对水下自主控制的有效性。",
+      "llm_tldr": "水下机器人的传感器可靠性随能见度和运动状态急剧变化，现有世界模型难以有效融合多模态信息。本文提出AquaJEPA，以动作条件联合嵌入预测框架融合RGB相机、前视声呐和本体感觉，并显式建模传感器有效性与动作预测。预测的未来潜变量与速度/声呐剖面被供给共享的滚动时域规划器。在Stonefish仿真中，相比反应式、仅状态等基线，该方法在120个预注册环境下表现更佳，证明了多模态动作条件世界模型对水下自主控制的有效性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.29192v1",
+      "source": "arxiv",
+      "title": "Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification",
+      "abstract": "Remote sensing scene classification is increasingly relying on foundation models pre-trained on large-scale Earth-observation data. Moreover, transductive inference, which exploits the collective statistical structure of the entire unlabeled query set, appears to naturally match remote sensing pipelines where large images are routinely split into patches and inferred as a batch. In this work, we introduce LC-TIM (Locally Consistent Transductive Information Maximization), which extends the state-of-the-art Transductive Information Maximization for Few-Shot CLIP (TIM++) objective with a local consistency regularizer that enforces prediction agreement between each query sample and its $κ$ nearest feature-space neighbors. The regularizer enters as a single multiplicative factor in the closed-form $q$-update, adding negligible computational overhead. We further propose a multi-source extension that fuses the affinity graph from multiple remote sensing foundation model, further boosting classification accuracy. To assess these methods, we establish the first comprehensive, open-source benchmark for transductive few-shot RS scene classification, evaluating LP++, TransCLIP, TIM++, and LC-TIM across ten diverse datasets, two remote sensing vision-language models, and across various few-shot settings. Our experiments show that transductive methods consistently outperform zero-shot baselines, and that LC-TIM achieves state-of-the-art accuracy, with the largest gains in the low-shot regime where neighborhood cues are most informative. Code is publicly available at: https://github.com/elkhouryk/LC-TIM",
+      "authors": [
+        "Karim El Khoury",
+        "Benoît Gérin",
+        "Benoît Macq",
+        "Christophe De Vleeschouwer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-31T09:13:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.29192v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Few-shot transductive scene classification method extensible to coral reef benthic cover classification from satellite imagery.",
+      "llm_evidence_cn": "少样本传导场景分类方法可扩展至卫星影像珊瑚礁底质覆盖分类.",
+      "llm_evidence": "少样本传导场景分类方法可扩展至卫星影像珊瑚礁底质覆盖分类.",
+      "canonical_evidence": "少样本传导场景分类方法可扩展至卫星影像珊瑚礁底质覆盖分类.",
+      "llm_tldr_en": "LC-TIM extends transductive information maximization for few-shot remote sensing scene classification with a local consistency regularizer on nearest neighbors. It improves query-set prediction coherence and classification accuracy, suitable for coral reef benthic cover mapping with scarce labels.",
+      "llm_tldr_cn": "少样本遥感场景分类对珊瑚礁底质覆盖制图很重要，但现有传导推理忽略了样本局部一致性。该文提出LC-TIM，在远近邻特征空间中增加局部一致性正则约束，扩展了TIM++目标。在少样本场景分类任务上，LC-TIM提升了查询集的预测一致性和分类精度。该方法能为样本稀缺的珊瑚礁底质覆盖分类提供有效的深度模型。",
+      "llm_tldr": "少样本遥感场景分类对珊瑚礁底质覆盖制图很重要，但现有传导推理忽略了样本局部一致性。该文提出LC-TIM，在远近邻特征空间中增加局部一致性正则约束，扩展了TIM++目标。在少样本场景分类任务上，LC-TIM提升了查询集的预测一致性和分类精度。该方法能为样本稀缺的珊瑚礁底质覆盖分类提供有效的深度模型。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.29203v1",
+      "source": "arxiv",
+      "title": "MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression",
+      "abstract": "Deploying drone swarms to track a dynamic target in cluttered environments presents severe computational and safety challenges. We propose MROPE, a hierarchical strategy that decouples the cooperative monitoring mission from strict local safety requirements. To overcome the computational bottlenecks typical of dense spaces, our approach dynamically aggregates complex obstacle geometries into a single safe bounding ellipse for each drone. Methodologically, this architecture is realized by combining distributed aggregative optimization for high-level swarm coordination, a decentralized consensus scheme for the safe area computation, and local Predictive Safety Filters (PSF) for real-time collision avoidance. Virtual and real-world experiments validate the framework, demonstrating superior real-time efficiency and scalability compared to centralized approaches.",
+      "authors": [
+        "Alice Rosetti",
+        "Lorenzo Pichierri",
+        "Domenico Cappello",
+        "Fabrizio Schiano",
+        "Giuseppe Notarstefano"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-07-31T09:22:04+00:00",
+      "link": "https://arxiv.org/pdf/2607.29203v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "hierarchical multi-robot cooperative monitoring with safety filters, directly supports autonomous mission planning and safe monitoring for marine environments",
+      "llm_evidence_cn": "多机器人安全协同监测架构，可应用于自主海洋监测任务",
+      "llm_evidence": "多机器人安全协同监测架构，可应用于自主海洋监测任务",
+      "canonical_evidence": "多机器人安全协同监测架构，可应用于自主海洋监测任务",
+      "llm_tldr_en": "MROPE is a hierarchical multi-robot cooperative strategy that decouples cooperative monitoring from local safety, aggregating obstacle geometry into safe ellipses and using predictive safety filters for real-time collision avoidance. It enables scalable, safe swarm monitoring of dynamic targets, applicable to autonomous ocean monitoring.",
+      "llm_tldr_cn": "无人机集群在密集环境中协同跟踪动态目标面临计算和安全挑战。MROPE提出分层策略，将协同监控任务与局部安全约束解耦，通过分布式聚合优化进行集群协调，并将复杂障碍物几何聚合为安全椭圆，结合局部预测安全滤波器实现实时避碰。方法在保证安全性的同时降低计算复杂度，为海洋监测中多智能体自主协同监控提供了可行的架构参考。",
+      "llm_tldr": "无人机集群在密集环境中协同跟踪动态目标面临计算和安全挑战。MROPE提出分层策略，将协同监控任务与局部安全约束解耦，通过分布式聚合优化进行集群协调，并将复杂障碍物几何聚合为安全椭圆，结合局部预测安全滤波器实现实时避碰。方法在保证安全性的同时降低计算复杂度，为海洋监测中多智能体自主协同监控提供了可行的架构参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.29278v1",
+      "source": "arxiv",
+      "title": "Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement",
+      "abstract": "Existing cross-domain few-shot segmentation approaches suffer from high training costs due to source-domain episodic training and pixel-wise dense prediction, while often producing fragmented and noisy predictions. To overcome these issues, we propose a training-free entity-level few-shot segmentation framework for remote sensing images with advection refinement. Specifically, we first leverage SAM3's generic geometric priors to generate category-agnostic entity primitives. By reformulating few-shot inference from pixel-level prediction to entity-level reasoning, foreground and background prototypes are constructed and combined with dense textual semantic responses from SAM3 to build a multi-modal semantic potential field. Furthermore, an advection equation-based semantic refinement mechanism is introduced to propagate category-aware information across both feature and similarity spaces, enhancing semantic continuity and suppressing local texture noise. Extensive experiments on multiple remote sensing datasets demonstrate that the proposed framework effectively mitigates domain shift and local noise, substantially improving SAM3's adaptation capability for remote sensing few-shot segmentation without additional training. Our code will be publicly available at https://github.com/yu-ni1989/ELFSS-AR.",
+      "authors": [
+        "Xueting Bai",
+        "Huan Ni"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-31T10:49:16+00:00",
+      "link": "https://arxiv.org/pdf/2607.29278v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-modal semantic potential field combining dense textual responses for few-shot segmentation of remote sensing imagery",
+      "llm_evidence_cn": "结合密集文本语义响应的遥感图像多模态小样本分割",
+      "llm_evidence": "结合密集文本语义响应的遥感图像多模态小样本分割",
+      "canonical_evidence": "结合密集文本语义响应的遥感图像多模态小样本分割",
+      "llm_tldr_en": "Proposes a training-free entity-level few-shot segmentation framework for remote sensing images, using SAM3 geometric priors and dense textual semantics to form a multi-modal potential field with advection refinement, avoiding costly episodic training.",
+      "llm_tldr_cn": "针对跨域小样本遥感分割训练成本高、预测碎片化的问题，本文提出免训练的实体级小样本分割框架。方法借用SAM3的通用几何先验生成类别无关的实体基元，并将像素级预测转化为实体级推理，同时结合密集文本语义响应构建多模态语义势场，再通过对流细化提升预测完整性。该方法无需源域情景训练即可实现遥感图像分割，展示了视觉-语言模型在遥感语义理解中的潜力，可迁移至珊瑚礁等生境制图任务。",
+      "llm_tldr": "针对跨域小样本遥感分割训练成本高、预测碎片化的问题，本文提出免训练的实体级小样本分割框架。方法借用SAM3的通用几何先验生成类别无关的实体基元，并将像素级预测转化为实体级推理，同时结合密集文本语义响应构建多模态语义势场，再通过对流细化提升预测完整性。该方法无需源域情景训练即可实现遥感图像分割，展示了视觉-语言模型在遥感语义理解中的潜力，可迁移至珊瑚礁等生境制图任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.25527v1",
+      "source": "arxiv",
+      "title": "Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation",
+      "abstract": "Unifying visual understanding and generation in one model holds immense promise, but remains challenging and expensive due to heavy compute and data demands and conflicts between the visual features needed for these two capabilities. To address these challenges, we present Argus-Unified, a compact, effective and unified multimodal model built with low demand on computation and data. Instead of aligning modalities from scratch, Argus-Unified effectively leverages pretrained vision-language models (VLMs) that provide strong multimodal priors. Specifically, we introduce hybrid visual tokens that preserve continuous tokens for understanding while learning discrete tokens for generation from a frozen unified vision encoder. Our training pipeline includes two stages: the first stage learns a quantizer and image decoder on top of the frozen vision encoder, the second stage trains the LLM initialized from a pretrained VLM for the unified multimodal modeling. Using by far the least amount of data (15.6M) and the lowest cost (~$2,000), we demonstrate that unified multimodal models can be trained economically while achieving strong performance in both understanding and generation. Notably, our model attains state-of-the-art multimodal understanding on GQA, POPE, and VQAv2, and competitive generation quality compared to models with dedicated vision encoders (e.g., Janus, Janus-Pro), all at ~10x lower cost and with ~5x less data. We envision Argus-Unified as a useful baseline that lowers the development barrier for unified models.",
+      "authors": [
+        "Weiming Zhuang",
+        "Jiabo Huang",
+        "Jingtao Li",
+        "Zhizhong Li",
+        "Chen Chen",
+        "Sina Sajadmanesh",
+        "Lingjuan Lyu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-28T10:12:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.25527v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified multimodal model combining visual understanding and generation, transferable to ocean image-text fusion",
+      "llm_evidence_cn": "统一多模态模型，可迁移至海洋图像-文本融合",
+      "llm_evidence": "统一多模态模型，可迁移至海洋图像-文本融合",
+      "canonical_evidence": "统一多模态模型，可迁移至海洋图像-文本融合",
+      "llm_tldr_en": "Argus-Unified is a compact unified multimodal model that combines visual understanding and generation with hybrid tokens, leveraging pretrained vision-language models to reduce data and compute needs. It offers a low-resource foundation for image-text fusion tasks.",
+      "llm_tldr_cn": "针对统一视觉理解与生成模型训练成本高、数据需求大且视觉特征冲突的问题，Argus-Unified利用预训练视觉语言模型提供强多模态先验，设计混合视觉标记以同时保留用于理解的连续特征和用于生成的离散特征，从而以低计算与数据成本构建紧凑有效的统一多模态模型。实验表明其在图像理解与生成任务上表现优异，为海洋科学中图像与文本的融合分析提供了可迁移的通用技术基础。",
+      "llm_tldr": "针对统一视觉理解与生成模型训练成本高、数据需求大且视觉特征冲突的问题，Argus-Unified利用预训练视觉语言模型提供强多模态先验，设计混合视觉标记以同时保留用于理解的连续特征和用于生成的离散特征，从而以低计算与数据成本构建紧凑有效的统一多模态模型。实验表明其在图像理解与生成任务上表现优异，为海洋科学中图像与文本的融合分析提供了可迁移的通用技术基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.25687v1",
+      "source": "arxiv",
+      "title": "From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations",
+      "abstract": "Full-field reconstruction of air pollution is essential for evaluating pollution exposure and supporting public health decision-making. However, the complex interactions among pollutants, hard-to-predict weather patterns, and limited monitoring station coverage make this a complex task. We apply deep learning techniques to provide fast and accurate reconstructions from sparse observations of four key pollutants: NO2, O3, PM2.5 and PM10. Models are trained on full-field simulation data and evaluated on real-world observations collected from 9 to 28 monitoring stations in the city of Paris. We introduce a diffusion-based generative framework for multi-pollutant reconstruction and benchmark its performance against deterministic deep learning models. Despite noisy observations and strong spatial variability, the models achieve high structural similarity on simulated validation data and produce realistic spatial patterns on real-world observations, as indicated by power-spectrum analysis. We introduce data augmentation methods that enable transfer to real-world observations without retraining, allowing the models to generalise beyond the training period. These findings highlight the potential of ML models for reliable real-world deployment in air pollution reconstruction tasks.",
+      "authors": [
+        "Abhishek A. Sabnis",
+        "Mihai Mitrea",
+        "Lya Lugon",
+        "Karine Sartelet",
+        "Marc Bocquet",
+        "Xiaoyuan Cheng",
+        "Shupeng Zhu",
+        "Sibo Cheng"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-28T13:03:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.25687v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep learning reconstruction from sparse observations, method transferable to oceanographic remote sensing data mining.",
+      "llm_evidence_cn": "基于稀疏观测的深度学习重建方法，可迁移至海洋遥感数据挖掘。",
+      "llm_evidence": "基于稀疏观测的深度学习重建方法，可迁移至海洋遥感数据挖掘。",
+      "canonical_evidence": "基于稀疏观测的深度学习重建方法，可迁移至海洋遥感数据挖掘。",
+      "llm_tldr_en": "The paper introduces a diffusion-based generative framework to reconstruct full-field pollution concentrations from sparse observations. Evaluated on Paris air quality data, it achieves fast and accurate reconstructions across multiple pollutants, demonstrating a strong method for spatial field reconstruction useful in ocean monitoring.",
+      "llm_tldr_cn": "全字段环境污染物重建对健康评估至关重要，但稀疏观测和复杂天气交互使任务困难。本文提出基于扩散的生成式深度学习框架，对NO2、O3等四种污染物进行重建，并在巴黎监测站数据上验证。结果表明该方法在稀疏观测下优于确定性基准，可迁移至海洋环境场重建。",
+      "llm_tldr": "全字段环境污染物重建对健康评估至关重要，但稀疏观测和复杂天气交互使任务困难。本文提出基于扩散的生成式深度学习框架，对NO2、O3等四种污染物进行重建，并在巴黎监测站数据上验证。结果表明该方法在稀疏观测下优于确定性基准，可迁移至海洋环境场重建。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.27959v1",
+      "source": "arxiv",
+      "title": "FiRE: Enhancing MLLMs with Fine-Grained Context Learning for Complex Image Retrieval",
+      "abstract": "Due to their strong generalizable multimodal processing and reasoning capabilities, Multimodal Large Language Models (MLLMs) have demonstrated significant potential as universal image retrievers, effectively addressing diverse real-world image retrieval tasks. Nevertheless, pioneering studies, while promising, overlook the potential of fine-grained context modeling and disentangled fine-tuning objectives in enhancing MLLMs' retrieval performance, particularly for complex tasks such as long-text-to-image retrieval, visual dialog retrieval, and composed image retrieval (CIR). Therefore, in this work, we propose an automated fine-grained multimodal quintuple dataset construction pipeline and a novel two-stage fine-grained multimodal fine-tuning strategy. The dataset generation pipeline produces a comprehensive CIR dataset with fine-grained image captions and modification text, facilitating fine-grained context modeling. Beyond the previously entangled fine-tuning paradigm, our approach separates the fine-tuning process into two distinct stages: (1) fine-grained context reasoning-oriented fine-tuning and (2) fine-grained retrieval-oriented fine-tuning. These stages aim to sequentially enhance the model's context understanding and query-target alignment capabilities, thereby improving retrieval performance. Extensive experiments across five datasets encompassing diverse and complex image retrieval tasks demonstrate the remarkable superiority of our method over existing approaches in zero-shot retrieval settings, even with a more lightweight MLLM backbone compared to those methods.",
+      "authors": [
+        "Bohan Hou",
+        "Haoqiang Lin",
+        "Xuemeng Song",
+        "Haokun Wen",
+        "Meng Liu",
+        "Yupeng Hu",
+        "Xiangyu Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.IR"
+      ],
+      "published": "2026-07-30T10:06:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.27959v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "fine-grained context learning for MLLM-based image retrieval, applicable to retrieving ocean remote sensing imagery from text",
+      "llm_evidence_cn": "细粒度上下文学习增强多模态大模型检索，可检索海洋遥感图像与文本",
+      "llm_evidence": "细粒度上下文学习增强多模态大模型检索，可检索海洋遥感图像与文本",
+      "canonical_evidence": "细粒度上下文学习增强多模态大模型检索，可检索海洋遥感图像与文本",
+      "llm_tldr_en": "FiRE enhances multimodal large language models with fine-grained context learning and disentangled objectives, improving complex image retrieval tasks such as long-text-to-image, visual dialog, and composed image retrieval. It strengthens MLLMs as universal retrievers for applications like ocean image-text retrieval.",
+      "llm_tldr_cn": "多模态大语言模型在图像检索中展现潜力，但对复杂任务如长文本-图像检索、视觉对话检索和组合检索的细粒度上下文建模不足。FiRE提出自动化多模态五元组数据构建流程和两阶段细粒度微调，通过解耦的微调目标增强模型对细粒度上下文的理解。在复杂图像检索任务上取得显著提升，为海洋科学中结合遥感影像与文本描述的高精度检索提供了可迁移的方法。",
+      "llm_tldr": "多模态大语言模型在图像检索中展现潜力，但对复杂任务如长文本-图像检索、视觉对话检索和组合检索的细粒度上下文建模不足。FiRE提出自动化多模态五元组数据构建流程和两阶段细粒度微调，通过解耦的微调目标增强模型对细粒度上下文的理解。在复杂图像检索任务上取得显著提升，为海洋科学中结合遥感影像与文本描述的高精度检索提供了可迁移的方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.28005v1",
+      "source": "arxiv",
+      "title": "Deep learning-based hierarchical insect classification using camera trap imagery",
+      "abstract": "Declining insect populations make reliable biodiversity monitoring increasingly urgent, yet monitoring of insect biodiversity is hampered by a lack of standardised data and by costly and time-consuming manual identification by expert entomologists. Deep learning-based image classifiers, processing data from automated non-lethal camera traps, have the potential to transform and scale insect biodiversity monitoring. However, challenges remain in acquiring expert-annotated datasets, developing model architectures that generalise well across diverse taxonomic levels and training models on highly imbalanced data. Hierarchical data also benefits from designing models that default to higher-confidence, coarser-level predictions, when uncertain about finer taxonomic levels. In this paper we address these challenges with a deep learning-based hierarchical classification model. First, we present a manually curated, long-tailed dataset of around one million images of insects, extracted from 1,801 camera-trap video recordings and annotated with a five-level, 34-class hierarchy. Further, we adapt a hierarchical classification model architecture to a five-level variable-depth hierarchy, with class-balanced weighting. Our model improves on non-hierarchical classifiers by leveraging biological taxonomy to extract granularity-specific visual features and makes hierarchy-consistent predictions to the deepest taxonomic level that meets a confidence threshold (T = 0.6). Our model achieved a per-level accuracy of 80-99% on test data, across five levels of hierarchy. Furthermore ...",
+      "authors": [
+        "Zaki Mahfoud",
+        "Juan A. Chiavassa",
+        "Simon Walther",
+        "Florian Haselbeck",
+        "Ehsan Yaghoubi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T10:51:38+00:00",
+      "link": "https://arxiv.org/pdf/2607.28005v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning hierarchical image classification for biodiversity monitoring; transferable to coral reef benthic cover classification from imagery",
+      "llm_evidence_cn": "面向生物多样性监测的深度学习分层图像分类，可迁移至珊瑚礁底质覆盖分类",
+      "llm_evidence": "面向生物多样性监测的深度学习分层图像分类，可迁移至珊瑚礁底质覆盖分类",
+      "canonical_evidence": "面向生物多样性监测的深度学习分层图像分类，可迁移至珊瑚礁底质覆盖分类",
+      "llm_tldr_en": "Addresses insect biodiversity monitoring with camera traps; presents deep learning hierarchical classifiers that handle taxonomic levels and imbalanced data, scalable to other biological image classification tasks.",
+      "llm_tldr_cn": "昆虫多样性监测依赖专家人工鉴定，耗时且难以规模化。论文提出基于深度学习的分层图像分类方法，利用相机陷阱影像在多个分类层级上进行识别，并针对标注数据少和类别不平衡问题设计模型默认在不确定时输出粗粒度预测。该方法有望将自动化监测扩展到昆虫等生物类群，其分层分类思想也可迁移到珊瑚底质等生态图像分类任务。",
+      "llm_tldr": "昆虫多样性监测依赖专家人工鉴定，耗时且难以规模化。论文提出基于深度学习的分层图像分类方法，利用相机陷阱影像在多个分类层级上进行识别，并针对标注数据少和类别不平衡问题设计模型默认在不确定时输出粗粒度预测。该方法有望将自动化监测扩展到昆虫等生物类群，其分层分类思想也可迁移到珊瑚底质等生态图像分类任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.28743v1",
+      "source": "arxiv",
+      "title": "Multiplicative Errors-in-Variables Models for Hyperspectral Unmixing",
+      "abstract": "Estimating endmember spectra and their corresponding abundances from hyperspectral images is a fundamental inverse problem in remote sensing. The standard linear mixing model relies on additive homoscedastic errors, which misspecifies the mean-variance relationship inherent to optical measurements for which the noise intensity might be proportional to the signal magnitude. This leads to confidence intervals with poor coverage. To address these limitations, we propose a hierarchical Bayesian multiplicative Errors-in-Variables (EIV) model. Motivated by the physics of light propagation, our formulation captures signal-dependent noise through a multivariate log-normal specification that naturally accommodates dependence across spectral bands. The EIV framework treats endmember signatures as random and allows for class-specific variance scaling, yielding a flexible and physically grounded data-generating process. We establish that the MLE of the abundance vector under the multiplicative model has a constant asymptotic multivariate coefficient of variation, implying that well-calibrated confidence intervals should scale proportionally with signal magnitude. The additive model, by contrast, produces intervals of constant width regardless of signal magnitude, leading to overcoverage at low abundance and undercoverage at high abundance when the true noise is multiplicative. Practical implementation and inference for the full hierarchical model is obtained from posterior distributions over the model parameters. Experiments on several real and simulated datasets demonstrate that confidence intervals derived from the proposed model achieve improved coverage across abundance levels compared to those from a standard additive model, with widths that scale proportionally with signal magnitude, while achieving comparable or superior signal reconstruction error.",
+      "authors": [
+        "Vivek Singh",
+        "Peter Hoff"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-07-30T18:03:46+00:00",
+      "link": "https://arxiv.org/pdf/2607.28743v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multiplicative errors-in-variables model for hyperspectral imagery improves mapping of benthic habitats",
+      "llm_evidence_cn": "高光谱图像的乘性误差变量模型改进了底栖生境制图中的端元与丰度估计",
+      "llm_evidence": "高光谱图像的乘性误差变量模型改进了底栖生境制图中的端元与丰度估计",
+      "canonical_evidence": "高光谱图像的乘性误差变量模型改进了底栖生境制图中的端元与丰度估计",
+      "llm_tldr_en": "A hierarchical Bayesian multiplicative Errors-in-Variables model captures signal-dependent noise in hyperspectral data, improving endmember and abundance estimates for remote sensing mapping.",
+      "llm_tldr_cn": "高光谱图像解混通常假设加性同方差噪声，但光学测量的噪声往往随信号强度变化，导致置信区间覆盖较差。作者提出分层贝叶斯乘性误差变量模型，利用多元对数正态分布刻画噪声与信号强度及波段间的依赖关系。该模型从物理传播动机出发，可更准确地估计端元和丰度，并给出覆盖良好的不确定性度量。这项工作为高光谱遥感制图，包括珊瑚礁底栖生境映射，提供了更稳健的解混基础。",
+      "llm_tldr": "高光谱图像解混通常假设加性同方差噪声，但光学测量的噪声往往随信号强度变化，导致置信区间覆盖较差。作者提出分层贝叶斯乘性误差变量模型，利用多元对数正态分布刻画噪声与信号强度及波段间的依赖关系。该模型从物理传播动机出发，可更准确地估计端元和丰度，并给出覆盖良好的不确定性度量。这项工作为高光谱遥感制图，包括珊瑚礁底栖生境映射，提供了更稳健的解混基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.28970v1",
+      "source": "arxiv",
+      "title": "LegoQ: Density-Matrix Representation Learning with Spectral-Spatial State Transitions for Hyperspectral Classification",
+      "abstract": "Hyperspectral image classification is complicated by mixed pixels, spectral ambiguity, class imbalance, and limited annotations. Most current classifiers encode a pixel or patch as a deterministic vector and apply a linear or multilayer softmax head. Although effective for discrimination, this representation does not directly expose how mixed or uncertain a sample is. This paper presents \\method, a classical density-matrix representation learning framework for hyperspectral images. The spectral bands are divided into groups and each group is mapped to a positive semi-definite, Hermitian, trace-normalized matrix state. A composable stack of spectral, spatial, and inter-group transitions then updates the states while repeatedly projecting them back to the valid state set. Instead of flattening the final features, \\method\\ aggregates the group states and compares them with learnable class-prototype density matrices through Uhlmann fidelity. The normalized eigenspectrum, von Neumann entropy, purity, and prototype fidelity provide sample-level diagnostics that are unavailable from a conventional vector head. On Indian Pines, ten runs yield an overall accuracy of $96.20\\pm0.70\\%$, an average accuracy of $95.57\\pm1.29\\%$, and a kappa coefficient of $95.66\\pm0.80\\%$. On WHU-Hi-LongKou, the best of ten runs reaches $97.52\\%$ overall accuracy. Classification maps and feature projections show that the transition stack produces compact and better separated class structures. The results support constrained matrix-state learning as a practical alternative to vector-only hyperspectral classification without requiring quantum hardware.",
+      "authors": [
+        "Weijia Cao",
+        "Xiaofei Yang",
+        "Fu Wang",
+        "Yicong Zhou",
+        "Xiang Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-31T02:47:16+00:00",
+      "link": "https://arxiv.org/pdf/2607.28970v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "hyperspectral classification method transferable to satellite image analysis of ocean habitats",
+      "llm_evidence_cn": "高光谱分类方法，可迁移至海洋栖息地卫星图像分析",
+      "llm_evidence": "高光谱分类方法，可迁移至海洋栖息地卫星图像分析",
+      "canonical_evidence": "高光谱分类方法，可迁移至海洋栖息地卫星图像分析",
+      "llm_tldr_en": "LegoQ proposes density-matrix representation learning for hyperspectral classification, mapping bands to PSD matrix states with spectral-spatial transitions. It outperforms traditional classifiers and exposes sample mix/uncertainty, offering a transferable tool for remote sensing fine mapping.",
+      "llm_tldr_cn": "高光谱图像分类常因混合像元和标注有限而困难，传统确定性向量表示难以反映样本的混合与不确定性。LegoQ提出经典的密度矩阵表示学习，将光谱波段分组映射为正半定矩阵状态，并通过谱-空间-组间转移更新。实验显示该方法在分类精度和不确定性揭示上优于现有分类器。这为遥感精细制图（包括海洋栖息地分类）提供了可迁移的深度学习工具。",
+      "llm_tldr": "高光谱图像分类常因混合像元和标注有限而困难，传统确定性向量表示难以反映样本的混合与不确定性。LegoQ提出经典的密度矩阵表示学习，将光谱波段分组映射为正半定矩阵状态，并通过谱-空间-组间转移更新。实验显示该方法在分类精度和不确定性揭示上优于现有分类器。这为遥感精细制图（包括海洋栖息地分类）提供了可迁移的深度学习工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.29367v1",
+      "source": "arxiv",
+      "title": "SatEdit: Mask-Conditioned Image Editing via VLM-Guided Segment Annotation",
+      "abstract": "Satellite image editing requires spatially precise object-level control, but supervised editing datasets for overhead imagery are costly to build because object masks, semantic labels, and paired edits are rarely available at scale. We introduce SatEdit, a mask-conditioned satellite image editing framework that constructs training supervision from unlabeled imagery. SatEdit proposes object masks with a seg- mentation foundation model, assigns semantic la- bels to sampled segments with a Vision-Language Model, and applies lightweight human verification before generating paired addition and removal exam- ples through mask-guided inpainting. We fine-tune a high-resolution image editing backbone with LoRA on a SODA-A-derived dataset containing 1,014 im- ages and 852 verified object annotations across 91 classes. In controlled comparisons with open- source and proprietary image editing models, SatE- dit achieves the highest aggregate masked-region se- mantic alignment, with a CLIP score of 0.6322 and CLIP delta of 0.0726, while preserving the surround- ing scene qualitatively. These results suggest that VLM-assisted segment annotation is a practical route to data-efficient, spatially controllable satellite image editing.",
+      "authors": [
+        "Muhammad Talha",
+        "Muhammad Ahmed Amer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-31T12:52:32+00:00",
+      "link": "https://arxiv.org/pdf/2607.29367v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "mask-conditioned satellite image editing with VLM-guided semantic label assignment",
+      "llm_evidence_cn": "VLM引导语义标签赋值的掩码条件卫星图像编辑",
+      "llm_evidence": "VLM引导语义标签赋值的掩码条件卫星图像编辑",
+      "canonical_evidence": "VLM引导语义标签赋值的掩码条件卫星图像编辑",
+      "llm_tldr_en": "Introduces SatEdit, a mask-conditioned satellite image editing framework that uses segmentation foundation models and VLM-guided semantic annotation to build supervision from unlabeled imagery and fine-tunes an editing model with LoRA.",
+      "llm_tldr_cn": "针对卫星图像编辑所需物体掩码、语义标签和成对编辑样本难以大规模获取的问题，本文提出SatEdit框架。它利用分割基础模型生成物体掩码，借助视觉语言模型为分割区域自动赋予语义标签，再通过掩码引导修复生成增删物体的编辑样本，并采用LoRA微调高分辨率图像编辑模型。该方法极大降低了构建遥感编辑数据集的成本，也可为海洋遥感目标标注与多模态样本生成提供支撑。",
+      "llm_tldr": "针对卫星图像编辑所需物体掩码、语义标签和成对编辑样本难以大规模获取的问题，本文提出SatEdit框架。它利用分割基础模型生成物体掩码，借助视觉语言模型为分割区域自动赋予语义标签，再通过掩码引导修复生成增删物体的编辑样本，并采用LoRA微调高分辨率图像编辑模型。该方法极大降低了构建遥感编辑数据集的成本，也可为海洋遥感目标标注与多模态样本生成提供支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.29440v1",
+      "source": "arxiv",
+      "title": "Beyond Retrieval: Analytic Memory for Multimodal Agents",
+      "abstract": "Long-term multimodal memory must support not only retrieving relevant information but also computing over observations accumulated across interactions. Existing systems largely emphasize \\emph{retrieval memory}, organizing interaction histories through summaries and indexes to return query-relevant information at multiple granularities, from high-level abstractions to underlying records. In this paper, we formulate \\emph{analytic memory} as a complementary abstraction that organizes recurring multimodal observations into queryable structures supporting filtering, aggregation, ranking, and temporal comparison. We present AdaMM, a framework that jointly supports retrieval and analytic memory. Rather than relying on application-defined schemas, AdaMM extracts provenance-linked attribute-value observations from dialogue, images, and contextual metadata, discovers recurring field structures, and materializes them for analytical access. At inference time, a memory-aware planner decomposes queries into retrieval and analytic operations and routes each operation to the appropriate tools. Experiments on two long-term multimodal memory benchmarks, MemEye and MemGallery, show that AdaMM improves performance by up to 11.3\\% and 7.3\\%, respectively.",
+      "authors": [
+        "Zhoujin Tian",
+        "Yao Tian",
+        "Hao Zhang",
+        "Cheng Chen",
+        "Yakun Li",
+        "Lei Zhang",
+        "Xiaofang Zhou"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-07-31T14:07:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.29440v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal agent memory framework enabling analytic reasoning for intelligent agents",
+      "llm_evidence_cn": "多模态智能体记忆框架，支持分析推理，可用于智能体应用",
+      "llm_evidence": "多模态智能体记忆框架，支持分析推理，可用于智能体应用",
+      "canonical_evidence": "多模态智能体记忆框架，支持分析推理，可用于智能体应用",
+      "llm_tldr_en": "AdaMM introduces analytic memory for multimodal agents, organizing observations into queryable structures for filtering, aggregation, ranking, and temporal comparison, significantly improving agent reasoning over long-term interactions beyond mere retrieval.",
+      "llm_tldr_cn": "现有长程多模态记忆主要强调检索，无法对累积观测进行统计分析，限制了智能体的推理能力。本文提出解析记忆（analytic memory）作为检索记忆的补充，并实现AdaMM框架，自动提取带来源的结构化记忆，支持过滤、聚合、排序和时间比较。实验表明AdaMM显著提升了多模态智能体的任务表现和回答质量。该框架为海洋领域的智能体长期记忆与决策支持提供了通用基础。",
+      "llm_tldr": "现有长程多模态记忆主要强调检索，无法对累积观测进行统计分析，限制了智能体的推理能力。本文提出解析记忆（analytic memory）作为检索记忆的补充，并实现AdaMM框架，自动提取带来源的结构化记忆，支持过滤、聚合、排序和时间比较。实验表明AdaMM显著提升了多模态智能体的任务表现和回答质量。该框架为海洋领域的智能体长期记忆与决策支持提供了通用基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
