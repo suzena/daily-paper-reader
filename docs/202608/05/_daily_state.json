@@ -1,0 +1,281 @@
+{
+  "date": "20260805",
+  "date_label": "",
+  "generated_at": "2026-08-05 21:40:11 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.00877v1",
+      "route": "202608/05/2608.00877v1-geoarbiter-verifiability-guided-grounding-for-remote-sensing-multimodal-llms",
+      "title": "GeoArbiter: Verifiability-Guided Grounding for Remote-Sensing Multimodal LLMs",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "用可验证性引导地理记录与遥感多模态大模型结合，提升土地利用分类，展示遥感与文本的多模态融合",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.01751v1",
+      "route": "202608/05/2608.01751v1-spectra-band-routed-embedding-and-stage-wise-lora-for-cross-sensor-fine-tuning-of-geospatial-foundation-models",
+      "title": "SPECTRA: Band-Routed Embedding and Stage-Wise LoRA for Cross-Sensor Fine-Tuning of Geospatial Foundation Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向卫星影像的地理空间基础模型跨传感器微调",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.01856v1",
+      "route": "202608/05/2608.01856v1-echochange-a-diffusion-language-model-with-dual-pass-remasking-for-factual-remote-sensing-disaster-change-captioning",
+      "title": "EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "用于遥感变化描述的多模态扩散语言模型，与结合遥感影像和文本进行环境评估的需求高度契合",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.01896v1",
+      "route": "202608/05/2608.01896v1-geocore-9b-towards-geo-aware-generative-foundation-models-in-earth-observation",
+      "title": "GeoCore-9B: Towards Geo-Aware Generative Foundation Models in Earth Observation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "文本与地理元数据条件约束的遥感生成基础模型，可服务于环境评估",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.02039v1",
+      "route": "202608/05/2608.02039v1-rsvideo-are-your-vision-language-models-ready-for-remote-sensing-videos",
+      "title": "RSVideo: Are Your Vision-Language Models Ready for Remote Sensing Videos?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "为遥感视频中的视觉语言模型提供评测基准，支持遥感影像与文本的多模态评估",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03023v1",
+      "route": "202608/05/2608.03023v1-standalone-dinov3-for-training-free-open-vocabulary-semantic-segmentation-in-remote-sensing",
+      "title": "Standalone DINOv3 for Training-Free Open-Vocabulary Semantic Segmentation in Remote Sensing",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "利用图像-文本模型实现免训练开放词汇遥感分割，可按文本描述进行生境制图",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03147v1",
+      "route": "202608/05/2608.03147v1-cross-cascaded-distillation-and-dual-constraint-grounding-for-remote-sensing-referring-segmentation",
+      "title": "CROSS: Cascaded Distillation and Dual-Constraint Grounding for Remote Sensing Referring Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向遥感分割的视觉-语言多模态融合，可直接用于海洋科学的图文分析",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03155v1",
+      "route": "202608/05/2608.03155v1-pomdps-for-autonomous-science-exploration",
+      "title": "POMDPs for Autonomous Science Exploration",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向自主科学探索的POMDP智能体规划架构，可应用于自主海洋监测",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03911v1",
+      "route": "202608/05/2608.03911v1-unievo-rs-omni-prompt-unified-remote-sensing-segmentation-with-representative-exemplar-driven-prototype-evolution",
+      "title": "UniEvo-RS: Omni-Prompt Unified Remote Sensing Segmentation with Representative Exemplar-Driven Prototype Evolution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于提示的遥感分割与原型演化，辅助生境制图",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.01910v1",
+      "route": "202608/05/2608.01910v1-pnec-mamba-prototype-guided-positive-negative-evidence-calibration-for-hyperspectral-image-classification",
+      "title": "PNEC-Mamba: Prototype-Guided Positive-Negative Evidence Calibration for Hyperspectral Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "高光谱图像分类中的正负证据校准方法，可直接迁移至珊瑚礁底栖覆盖分类",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.02483v1",
+      "route": "202608/05/2608.02483v1-fermat-active-laplace-learning-for-semi-supervised-hyperspectral-image-classification",
+      "title": "Fermat Active Laplace Learning for Semi-Supervised Hyperspectral Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "主动与半监督高光谱分类方法，可减少珊瑚礁底栖覆盖制图中的标注代价",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.02811v1",
+      "route": "202608/05/2608.02811v1-staying-on-spec-real-time-monitoring-under-uncertainty-with-a-maritime-case-study",
+      "title": "Staying on Spec: Real-Time Monitoring under Uncertainty with a Maritime Case Study",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海上机器人系统的实时监控框架，支持不确定性下的自主海洋监测",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03410v1",
+      "route": "202608/05/2608.03410v1-earth-embeddings",
+      "title": "Earth Embeddings",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "地球观测嵌入作为卫星影像分析的可复用特征向量，支持生态制图",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2607.28285v1",
+      "route": "202608/05/2607.28285v1-beyond-visual-ambiguity-guiding-robust-monocular-depth-estimation-in-challenging-scenarios-via-detailed-long-captions",
+      "title": "Beyond Visual Ambiguity: Guiding Robust Monocular Depth Estimation in Challenging Scenarios via Detailed Long Captions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用详细长描述文本引导视觉感知，与图像-文本多模态融合相关",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.01090v1",
+      "route": "202608/05/2608.01090v1-breaking-diversity-collapse-in-spiking-pseudo-ensembles-for-efficient-ood-detection-in-remote-sensing",
+      "title": "Breaking Diversity Collapse in Spiking Pseudo-Ensembles for Efficient OOD Detection in Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感的高效分布外检测方法，可应用于海洋栖息地卫星影像分析",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.02468v1",
+      "route": "202608/05/2608.02468v1-isrs-detr-detection-guided-click-propagation-for-remote-sensing-interactive-segmentation",
+      "title": "ISRS-DETR: Detection-Guided Click Propagation for Remote Sensing Interactive Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遥感交互式分割方法，降低珊瑚礁制图的标注成本",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    },
+    {
+      "paper_id": "2608.03826v1",
+      "route": "202608/05/2608.03826v1-geo-embed-towards-unified-multimodal-embeddings-for-urban-understanding",
+      "title": "Geo-Embed: Towards Unified Multimodal Embeddings for Urban Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向地理空间遥感影像与文本描述的统一多模态嵌入方法",
+      "first_seen_at": "2026-08-05 21:40:11 UTC",
+      "updated_at": "2026-08-05 21:40:11 UTC"
+    }
+  ]
+}

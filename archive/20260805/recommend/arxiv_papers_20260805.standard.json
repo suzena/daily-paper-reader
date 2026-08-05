@@ -1,0 +1,674 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-05T21:27:37.001620+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 11,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2608.00877v1",
+      "source": "arxiv",
+      "title": "GeoArbiter: Verifiability-Guided Grounding for Remote-Sensing Multimodal LLMs",
+      "abstract": "Remote-sensing multimodal large language models (MLLMs) often assert facts that imagery cannot establish, such as a facility's identity or function. Coordinate-keyed geographic retrieval can supply this missing knowledge, improving fMoW land-use accuracy by 12.06--17.19 points across three open MLLMs. However, retrieved records can also contradict visible evidence, and we find that models frequently follow the records even when the image is decisive. We argue that source trust should therefore depend on \\emph{cross-modal verifiability}: geographic records are most useful for attributes the image cannot verify and most dangerous when they dispute visually verifiable attributes. We introduce GeoArbiter, a training-free pipeline that operationalizes this principle by injecting only image-unverifiable geographic facts. Unlike arbitration prompts, which leak across attribute types and bias yes/no responses, content-level filtering preserves 84.69--87.15\\% of the full-retrieval accuracy gain, reduces claim-level hallucination by 9.58--26.34\\% under a source-blinded judge, and improves robustness to conflicting records across all three models. These results identify verifiability-guided content selection as a simple, effective mechanism for grounding remote-sensing MLLMs in fallible geographic knowledge.",
+      "authors": [
+        "Xuechen Li"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-01T21:38:15+00:00",
+      "link": "https://arxiv.org/pdf/2608.00877v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Verifiability-guided grounding of geographic records with remote sensing MLLMs improves land-use classification, demonstrating multimodal remote sensing and text fusion",
+      "llm_evidence_cn": "用可验证性引导地理记录与遥感多模态大模型结合，提升土地利用分类，展示遥感与文本的多模态融合",
+      "llm_evidence": "用可验证性引导地理记录与遥感多模态大模型结合，提升土地利用分类，展示遥感与文本的多模态融合",
+      "canonical_evidence": "用可验证性引导地理记录与遥感多模态大模型结合，提升土地利用分类，展示遥感与文本的多模态融合",
+      "llm_tldr_en": "Proposes GeoArbiter, a training-free pipeline that grounds remote-sensing MLLMs with coordinate-keyed geographic records guided by cross-modal verifiability, improving land-use accuracy by 12-17 points.",
+      "llm_tldr_cn": "遥感多模态大模型常断言图像无法证实的事实，而坐标索引的地理记录能补充这一缺失知识。本文提出GeoArbiter，一个免训练流水线，通过跨模态可验证性决定何时信任地理记录，让模型在视觉可验证属性上优先图像证据，在不可验证属性上利用外部记录。在fMoW土地利用任务上，该方法在三种开源多模态大模型上准确率提升12.06至17.19个百分点，为遥感数据与文本报告融合的环境评估提供了可靠范式。",
+      "llm_tldr": "遥感多模态大模型常断言图像无法证实的事实，而坐标索引的地理记录能补充这一缺失知识。本文提出GeoArbiter，一个免训练流水线，通过跨模态可验证性决定何时信任地理记录，让模型在视觉可验证属性上优先图像证据，在不可验证属性上利用外部记录。在fMoW土地利用任务上，该方法在三种开源多模态大模型上准确率提升12.06至17.19个百分点，为遥感数据与文本报告融合的环境评估提供了可靠范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.01751v1",
+      "source": "arxiv",
+      "title": "SPECTRA: Band-Routed Embedding and Stage-Wise LoRA for Cross-Sensor Fine-Tuning of Geospatial Foundation Models",
+      "abstract": "Geospatial foundation models (GeoFMs), pretrained on large-scale geospatial data such as Earth observation (EO), climate, and weather data, have shown promising performance when fine-tuned on diverse downstream tasks. However, there are two challenges of adapting EO-pretrained GeoFMs to practical downstream datasets. The first challenge is how to handle spectral mismatch: pretrained patch embeddings expect a fixed set of input bands, whereas downstream sensors may provide different channels. The second challenge is how to reduce fine-tuning cost and make it efficient. While existing work has made efforts on these challenges individually, jointly improving fine-tuning performance under spectral mismatch while reducing adaptation cost remains underexplored. We propose SPECTRA, a parameter-efficient fine-tuning framework that addresses both spectral mismatch and adaptation cost. To handle spectral mismatch, SPECTRA introduces Band-Routed Embedding (BRE), which maps all available downstream bands into the band space expected by the pretrained GeoFM. By using BRE, all available bands in the downstream dataset are utilized to improve the selected-band input without changing the pretrained patch embedding interface. To reduce adaptation cost, SPECTRA further introduces a Stage-wise Transferability-aware LoRA (ST-LoRA) fine-tuning. ST-LoRA estimates stage-wise transferability before fine-tuning and assigns stage-specific LoRA ranks, concentrating trainable parameters on the stages with high transferability for the target task. Across three EO-pretrained GeoFMs and four downstream segmentation datasets, experiments show that BRE improves performance by utilizing all spectral bands, while ST-LoRA reduces trainable parameters compared with full fine-tuning and standard LoRA. Code is available at https://github.com/big-data-lab-umbc/SPECTRA.",
+      "authors": [
+        "Xingyan Li",
+        "Jordan A. Caraballo-Vega",
+        "Jie Gong",
+        "Mark L. Carroll",
+        "Jianwu Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-03T06:18:12+00:00",
+      "link": "https://arxiv.org/pdf/2608.01751v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Cross-sensor fine-tuning of geospatial foundation models for satellite imagery",
+      "llm_evidence_cn": "面向卫星影像的地理空间基础模型跨传感器微调",
+      "llm_evidence": "面向卫星影像的地理空间基础模型跨传感器微调",
+      "canonical_evidence": "面向卫星影像的地理空间基础模型跨传感器微调",
+      "llm_tldr_en": "SPECTRA addresses spectral mismatch and high fine-tuning cost in geospatial foundation models. It uses band-routed embeddings and stage-wise LoRA for efficient cross-sensor fine-tuning, improving adaptability of Earth observation models to diverse satellite sensors.",
+      "llm_tldr_cn": "遥感预训练的地理空间基础模型在用于实际下游数据集时，常因输入波段与预训练波段不一致以及微调成本过高而难以部署。论文提出SPECTRA，通过波段路由嵌入解决光谱失配，并采用分阶段LoRA降低微调成本，在跨传感器场景下兼顾性能与效率。该方法使得同一基础模型可以高效适配不同卫星传感器，为海洋栖息地等遥感制图任务提供了可复用的深度模型适配工具。",
+      "llm_tldr": "遥感预训练的地理空间基础模型在用于实际下游数据集时，常因输入波段与预训练波段不一致以及微调成本过高而难以部署。论文提出SPECTRA，通过波段路由嵌入解决光谱失配，并采用分阶段LoRA降低微调成本，在跨传感器场景下兼顾性能与效率。该方法使得同一基础模型可以高效适配不同卫星传感器，为海洋栖息地等遥感制图任务提供了可复用的深度模型适配工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.01856v1",
+      "source": "arxiv",
+      "title": "EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning",
+      "abstract": "Bi-temporal remote-sensing disaster change captioning often needs to identify sparse and spatially localized changes across large pre- and post-event scenes and then translate them into coherent, factual descriptions. However, existing change captioning methods always follow an autoregressive decoding paradigm to generate the change description and thus an early misinterpretation of the changed object, event, or spatial relation becomes an irreversible premise for subsequent text, amplifying visual ambiguity into cascading factual errors. To address this limitation, we propose EchoChange, a multimodal discrete diffusion language model that formulates change captioning as iterative masked-token denoising rather than left-to-right generation. By repeatedly revising the entire caption while conditioning on the image pair, EchoChange can reconsider uncertain content and correct imperfect intermediate predictions. We further introduce draft-aware dual-pass training, a progressive masking curriculum, and confidence-guided remasking to align training with iterative inference. Extensive experiments on the RSCC benchmark show that EchoChange substantially outperforms both general-purpose and remote-sensing-specific baselines across lexical and semantic metrics. The EchoChange Project is at https://github.com/sundongwei/EchoChange_Project",
+      "authors": [
+        "Dongwei Sun",
+        "Bowen Yao",
+        "Yujie Zhang",
+        "Pei Liu",
+        "Jing Yao",
+        "Xiangyong Cao"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-03T08:04:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.01856v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal diffusion language model for RS change captioning, aligns with combining remote sensing imagery and text for environmental assessment",
+      "llm_evidence_cn": "用于遥感变化描述的多模态扩散语言模型，与结合遥感影像和文本进行环境评估的需求高度契合",
+      "llm_evidence": "用于遥感变化描述的多模态扩散语言模型，与结合遥感影像和文本进行环境评估的需求高度契合",
+      "canonical_evidence": "用于遥感变化描述的多模态扩散语言模型，与结合遥感影像和文本进行环境评估的需求高度契合",
+      "llm_tldr_en": "Introduces EchoChange, a multimodal discrete diffusion language model that generates factual remote sensing disaster change captions by iterative masked-token denoising, avoiding cascading errors of autoregressive decoding.",
+      "llm_tldr_cn": "双时相遥感灾害变化描述需要从大范围场景中捕捉稀疏变化并生成准确的事实性文本，现有自回归解码方式早期误判会导致级联错误。为此提出EchoChange，一种多模态离散扩散语言模型，将变化描述建模为迭代掩码标记去噪过程，通过双重传递重掩码纠正早期错误。实验表明该方法生成的描述在事实性和连贯性上优于自回归基线。该工作为遥感影像与文本报告结合的环境评估提供了新思路，可推广至海洋环境灾害评估等任务。",
+      "llm_tldr": "双时相遥感灾害变化描述需要从大范围场景中捕捉稀疏变化并生成准确的事实性文本，现有自回归解码方式早期误判会导致级联错误。为此提出EchoChange，一种多模态离散扩散语言模型，将变化描述建模为迭代掩码标记去噪过程，通过双重传递重掩码纠正早期错误。实验表明该方法生成的描述在事实性和连贯性上优于自回归基线。该工作为遥感影像与文本报告结合的环境评估提供了新思路，可推广至海洋环境灾害评估等任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.01896v1",
+      "source": "arxiv",
+      "title": "GeoCore-9B: Towards Geo-Aware Generative Foundation Models in Earth Observation",
+      "abstract": "Existing generative models for earth observation (EO) predominantly rely on fine-tuning natural image priors, which limits their scalability and introduces perspective biases that conflict with geospatial constraints. To address this, we introduce GeoCore-9B, a 9-billion-parameter generative foundation model, which is the first of its scale to be trained from scratch exclusively on EO data. Unlike previous EO foundation models, GeoCore-9B is built upon a Flow Matching-based Diffusion Transformer (DiT) and natively conditions generation on text descriptions and continuous geospatial metadata, including ground sample distances, latitudes, and longitudes. To overcome the convergence and spatial disorientation challenges of training at this scale, we propose a Geospatial Semantic Alignment loss. This objective distills structural Earth surface priors (e.g., terrain and urban areas) from a frozen specialist teacher network, constraining the diffusion latent trajectory during training without adding inference overhead. Pre-trained on the global-scale Git-10M dataset, GeoCore-9B demonstrates strong downstream versatility. Beyond standard proxy generative tasks, we show that GeoCore-9B can be effectively adapted for practical EO applications, including highly challenging tasks such as cloud removal and SAR-to-optical cross-modal translation. Extensive evaluations confirm that GeoCore-9B establishes new state-of-the-art performance in both visual fidelity and geographic structural accuracy.",
+      "authors": [
+        "Jeonghyeok Do",
+        "Munchurl Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T08:35:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.01896v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "text-conditioned geospatial foundation model combining text and remote sensing data",
+      "llm_evidence_cn": "文本与地理元数据条件约束的遥感生成基础模型，可服务于环境评估",
+      "llm_evidence": "文本与地理元数据条件约束的遥感生成基础模型，可服务于环境评估",
+      "canonical_evidence": "文本与地理元数据条件约束的遥感生成基础模型，可服务于环境评估",
+      "llm_tldr_en": "GeoCore-9B is a 9B-parameter generative foundation model trained from scratch on earth observation data using flow matching, natively conditioning generation on text descriptions and geospatial metadata such as ground sample distance, latitude, and longitude.",
+      "llm_tldr_cn": "现有地球观测生成模型多依赖自然图像先验，扩展性差且地理约束弱。本文提出GeoCore-9B，这是首个仅用EO数据从零训练的90亿参数生成式基础模型，基于流匹配扩散Transformer，支持文本描述和连续地理元数据（如地面采样距离、经纬度）条件生成。该模型展现出地理感知的生成能力，为遥感影像与文本结合的环境应用提供了可扩展底座。",
+      "llm_tldr": "现有地球观测生成模型多依赖自然图像先验，扩展性差且地理约束弱。本文提出GeoCore-9B，这是首个仅用EO数据从零训练的90亿参数生成式基础模型，基于流匹配扩散Transformer，支持文本描述和连续地理元数据（如地面采样距离、经纬度）条件生成。该模型展现出地理感知的生成能力，为遥感影像与文本结合的环境应用提供了可扩展底座。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.02039v1",
+      "source": "arxiv",
+      "title": "RSVideo: Are Your Vision-Language Models Ready for Remote Sensing Videos?",
+      "abstract": "Remote-sensing videos enable real-time observation of changes in target attributes, short-term activities, and scene evolution. They record motion, actions, interactions, and scene changes that cannot be captured by isolated images. Existing models primarily target single images or discrete temporal observations spanning a long time range. However, a unified evaluation setting for assessing vision-language models on continuous remote-sensing video understanding remains lacking. We introduce RSVideo-10K, a remote-sensing video dataset comprising 10,773 instances, 1.47 million frames, and 17.02 hours of footage, containing both unmanned aerial vehicles and satellite platforms. Its fixed evaluation benchmark, RSVideo-Bench, contains 2,731 test instances and evaluates two complementary aspects of remote-sensing video understanding: L1 Perception and L2 Reasoning, spanning seven capability groups and 17 tasks. Evaluations show that current vision-language models still struggle to recover small local evidence, track short-lived states, and use scene-constrained spatial relations. Based on this analysis, we further propose RSVideo, a reinforcement learning framework for small-target spatiotemporal focusing that selects question-relevant regions across frames and suppresses redundant background tokens. RSVideo achieves a maximum absolute improvement of 9.01% with InternVL3.5-14B and attains the highest accuracy of 40.63% with Qwen3.6-27B across 26 open-source vision-language backbones.Codes will be available at https://github.com/HongjieZhou0329/RSVideo.",
+      "authors": [
+        "Hongjie Zhou",
+        "Shiqin Wang",
+        "Haoyang Chen",
+        "Haonan Guo",
+        "Di Wang",
+        "Juhua Liu",
+        "Fu Lin",
+        "Yong Luo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T10:34:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.02039v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Benchmark for evaluating vision-language models on remote sensing videos, enabling multimodal remote sensing data and text assessment",
+      "llm_evidence_cn": "为遥感视频中的视觉语言模型提供评测基准，支持遥感影像与文本的多模态评估",
+      "llm_evidence": "为遥感视频中的视觉语言模型提供评测基准，支持遥感影像与文本的多模态评估",
+      "canonical_evidence": "为遥感视频中的视觉语言模型提供评测基准，支持遥感影像与文本的多模态评估",
+      "llm_tldr_en": "RSVideo-10K dataset and RSVideo-Bench evaluate vision-language models on continuous remote sensing videos; current VLMs show significant gaps, establishing a standard for multimodal remote sensing.",
+      "llm_tldr_cn": "尽管视觉语言模型在图像理解上表现优异，但针对连续遥感视频的评测体系仍然缺失。为此构建了RSVideo-10K数据集，含1.47百万帧、覆盖无人机与卫星平台，并设计固定评测基准RSVideo-Bench。对多个主流VLM的测试显示，现有模型在遥感视频理解上存在明显短板。该工作为遥感视频-语言多模态研究提供了标准化评测与训练资源，有助于推动多模态大模型在环境监测等领域的落地。",
+      "llm_tldr": "尽管视觉语言模型在图像理解上表现优异，但针对连续遥感视频的评测体系仍然缺失。为此构建了RSVideo-10K数据集，含1.47百万帧、覆盖无人机与卫星平台，并设计固定评测基准RSVideo-Bench。对多个主流VLM的测试显示，现有模型在遥感视频理解上存在明显短板。该工作为遥感视频-语言多模态研究提供了标准化评测与训练资源，有助于推动多模态大模型在环境监测等领域的落地。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.03023v1",
+      "source": "arxiv",
+      "title": "Standalone DINOv3 for Training-Free Open-Vocabulary Semantic Segmentation in Remote Sensing",
+      "abstract": "Remote sensing semantic segmentation is hindered by costly pixel-level annotations, motivating training-free open-vocabulary methods. Recently, the recent release of DINOv3 brings DINO.txt, which equips the standalone DINO backbone with image-text contrastive learning and thus opens up the possibility of open-vocabulary segmentation. We propose DinoSplat-OV, a training-free framework that adapts DINOv3 to remote sensing without fine-tuning or additional pretraining. Targeting the dense distribution, multi-scale nature, and large size of remote sensing imagery, we design two core modules. Its Text-aware Laplacian Propagation module de-noises patch-level predictions by combining textual semantic affinities with local visual similarity, improving regional consistency while preserving boundaries. Its Gaussian Splatting Upsampling module reconstructs pixel-level features through RGB-guided anisotropic aggregation and test-time optimization. A global-anchor sliding-window strategy further supports large-scale imagery. Experiments on UDD5, DOTA, and LoveDA demonstrate competitive or superior performance over existing training-free methods, effectively filling the gap of DINO-series models in training-free open-vocabulary segmentation and providing a viable new path for further advances in this direction.",
+      "authors": [
+        "Changhao Zhao",
+        "Haoxiang Li",
+        "Yuke Li",
+        "Hai Liu",
+        "LingLin Zeng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-04T02:12:39+00:00",
+      "link": "https://arxiv.org/pdf/2608.03023v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "training-free open-vocabulary remote sensing segmentation using image-text model, enabling text-based habitat mapping",
+      "llm_evidence_cn": "利用图像-文本模型实现免训练开放词汇遥感分割，可按文本描述进行生境制图",
+      "llm_evidence": "利用图像-文本模型实现免训练开放词汇遥感分割，可按文本描述进行生境制图",
+      "canonical_evidence": "利用图像-文本模型实现免训练开放词汇遥感分割，可按文本描述进行生境制图",
+      "llm_tldr_en": "DinoSplat-OV adapts DINOv3 with image-text contrastive learning to remote sensing without fine-tuning, using text-aware Laplacian propagation for training-free open-vocabulary semantic segmentation.",
+      "llm_tldr_cn": "遥感语义分割受限于像素级标注昂贵，该文提出DinoSplat-OV，利用新发布的DINOv3（DINO.txt）的图像-文本对比能力，无需微调或额外预训练即可进行开放词汇分割。针对遥感影像密集分布、多尺度和大尺寸特点，设计文本感知Laplacian传播模块，结合文本语义亲和度与局部视觉相似度精化块级预测。该方法为遥感影像按自然语言描述进行像素级分类提供了一种免训练且高效的技术路径。",
+      "llm_tldr": "遥感语义分割受限于像素级标注昂贵，该文提出DinoSplat-OV，利用新发布的DINOv3（DINO.txt）的图像-文本对比能力，无需微调或额外预训练即可进行开放词汇分割。针对遥感影像密集分布、多尺度和大尺寸特点，设计文本感知Laplacian传播模块，结合文本语义亲和度与局部视觉相似度精化块级预测。该方法为遥感影像按自然语言描述进行像素级分类提供了一种免训练且高效的技术路径。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.03147v1",
+      "source": "arxiv",
+      "title": "CROSS: Cascaded Distillation and Dual-Constraint Grounding for Remote Sensing Referring Segmentation",
+      "abstract": "Referring Remote Sensing Image Segmentation (RRSIS) has achieved significant progress through the integration of VLMs and the Segment Anything Model (SAM). However, this progress largely relies on strong pre-trained capabilities, while leaving two fundamental limitations insufficiently addressed: (1) Architectural Weak-Coupling, where the unidirectional flow forces reliance on coarse VLM prompts and wastes SAM's pixel-level structural guidance, causing localization drift; and (2) Object-Centric Semantic Bias, where models overemphasize dominant object semantics while remaining insensitive to spatial reasoning crucial for RRSIS. Motivated by these observations, we propose CROSS, a tightly integrated paradigm for RRSIS. First, we introduce Linguistic-Guided Cascaded Distillation (LGCD) to bridge the architectural gap, which distills SAM's geometric affinities as soft regularizers into VLM intermediate layers, injecting dense structural priors to refine localization. Second, Perspective-Spatial Contrastive Learning (PSCL) imposes cross-anchored constraints by mining mask-filtered deceptive distractors and spatial-linguistic counterfactuals as hard negatives, explicitly shattering semantic shortcuts to enforce genuine logical consistency. Extensive experiments on RRSIS benchmarks demonstrate that CROSS achieves state-of-the-art performance and maintains precise localization even under severe spatial description perturbations, standing as a robust new paradigm for RRSIS.",
+      "authors": [
+        "Tingzhang Luo",
+        "Ruizhong Liu",
+        "Yichao Liu",
+        "Cheng Fan",
+        "Yu Liu",
+        "Jianyuan Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-04T05:24:05+00:00",
+      "link": "https://arxiv.org/pdf/2608.03147v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Vision-language multimodal fusion for remote sensing segmentation, directly applicable to ocean science imagery-text analysis",
+      "llm_evidence_cn": "面向遥感分割的视觉-语言多模态融合，可直接用于海洋科学的图文分析",
+      "llm_evidence": "面向遥感分割的视觉-语言多模态融合，可直接用于海洋科学的图文分析",
+      "canonical_evidence": "面向遥感分割的视觉-语言多模态融合，可直接用于海洋科学的图文分析",
+      "llm_tldr_en": "CROSS tightly couples VLM and SAM for referring remote sensing segmentation via cascaded distillation and dual-constraint grounding, reducing localization drift and semantic bias.",
+      "llm_tldr_cn": "遥感指代分割需要根据自然语言描述在影像中定位目标，但现有VLM与SAM的耦合较弱，且模型偏向主导目标而忽略空间关系。本文提出CROSS，以级联蒸馏与双约束定位使VLM提示和SAM像素结构相互增强。在基准上有效缓解了定位漂移和语义偏差，为遥感影像与文本的多模态融合分析提供了更强范式，可服务于海洋科学中的图文联合解译。",
+      "llm_tldr": "遥感指代分割需要根据自然语言描述在影像中定位目标，但现有VLM与SAM的耦合较弱，且模型偏向主导目标而忽略空间关系。本文提出CROSS，以级联蒸馏与双约束定位使VLM提示和SAM像素结构相互增强。在基准上有效缓解了定位漂移和语义偏差，为遥感影像与文本的多模态融合分析提供了更强范式，可服务于海洋科学中的图文联合解译。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.01910v1",
+      "source": "arxiv",
+      "title": "PNEC-Mamba: Prototype-Guided Positive-Negative Evidence Calibration for Hyperspectral Image Classification",
+      "abstract": "In real-world hyperspectral scenes, pixel representations are often ambiguous due to factors such as spectral similarity, mixed pixels, and local context interference, which may simultaneously encode discriminative evidence and interfering information. Existing methods mainly focus on learning more powerful representations or modeling broader contexts, but rarely investigate whether the learned representations provide reliable evidence or introduce interference into classification decisions. To address this issue, we view hyperspectral image classification from the perspective of pixel-level evidence reliability modeling and propose PNEC-Mamba, a prototype-guided positive-negative evidence calibration framework. The framework progressively establishes semantic references, separates class-related evidence from interference, estimates pixel-level reliability, and performs selective calibration. First, a full-image state-space encoder extracts pixel representations, while dynamic class prototypes provide semantic references that evolve jointly with the feature space. Subsequently, positive and negative evidence is derived from pixel-prototype competition, explicitly separating discriminative cues that support classification from confusing signals associated with competing classes. Based on these evidence relationships, a multi-source uncertainty estimation strategy is introduced to assess pixel-level reliability, enabling stronger evidence calibration for uncertain regions. Finally, a full-resolution consistency refinement step is applied to recover local spatial details and improve boundary coherence in the final predictions. Extensive experiments on three benchmark datasets demonstrate that PNEC-Mamba achieves superior classification performance compared with state-of-the-art methods.",
+      "authors": [
+        "Mingzhen Xu",
+        "Can Xu",
+        "Di Wang",
+        "Haonan Guo",
+        "Bo Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T08:45:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.01910v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hyperspectral classification with positive-negative evidence calibration, directly transferable to coral reef benthic cover mapping",
+      "llm_evidence_cn": "高光谱图像分类中的正负证据校准方法，可直接迁移至珊瑚礁底栖覆盖分类",
+      "llm_evidence": "高光谱图像分类中的正负证据校准方法，可直接迁移至珊瑚礁底栖覆盖分类",
+      "canonical_evidence": "高光谱图像分类中的正负证据校准方法，可直接迁移至珊瑚礁底栖覆盖分类",
+      "llm_tldr_en": "Views hyperspectral classification as pixel-level evidence reliability modeling and proposes PNEC-Mamba, a prototype-guided framework that calibrates positive and negative evidence to suppress interference, improving classification under ambiguity.",
+      "llm_tldr_cn": "真实高光谱场景中像素因光谱相似、混合像元和局部上下文干扰而表征模糊，现有方法很少关注特征中证据的可靠性。该文提出PNEC-Mamba，从像素级证据可靠性建模出发，用原型引导的正负证据校准框架，区分判别性证据与干扰信息并加以校正。实验表明该方法在高光谱图像分类中有效提升了对模糊像素的判别能力。该技术可直接用于珊瑚礁底栖覆盖高光谱制图，提高分类精度。",
+      "llm_tldr": "真实高光谱场景中像素因光谱相似、混合像元和局部上下文干扰而表征模糊，现有方法很少关注特征中证据的可靠性。该文提出PNEC-Mamba，从像素级证据可靠性建模出发，用原型引导的正负证据校准框架，区分判别性证据与干扰信息并加以校正。实验表明该方法在高光谱图像分类中有效提升了对模糊像素的判别能力。该技术可直接用于珊瑚礁底栖覆盖高光谱制图，提高分类精度。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.28285v1",
+      "source": "arxiv",
+      "title": "Beyond Visual Ambiguity: Guiding Robust Monocular Depth Estimation in Challenging Scenarios via Detailed Long Captions",
+      "abstract": "Monocular depth estimation (MDE) faces challenges with non-Lambertian surfaces and adverse weather conditions due to the visual ambiguities inherent in single-image limited information. Existing works address them in isolation via image inpainting or augmentation, yielding limited robustness gains. Language, as a powerful complementary modality to vision, is demonstrated to enhance the visual perception capabilities of vision-language models (VLMs) via detailed long captions. However, prior language-integrated MDE methods fail to fully harness this potential due to short text input with limited information, coarse global text feature learning, and limited language guidance during depth decoding. To address these limitations, we propose CapDepth, a novel framework for robust MDE that leverages guidance from detailed long captions to alleviate visual ambiguities in both challenging scenarios. First, we design a detailed long caption input template that explicitly conveys rich spatial relationships among multiple atom sentences. Second, a dynamic caption encoder is introduced to extract fine-grained depth-relevant text features via progressive masked attention. Finally, we propose a text-adaptive decoder that guides enhanced depth decoding with text features via stable adaptive layer normalization. Extensive experiments validate the efficacy of CapDepth, which outperforms state-of-the-art methods, achieving depth error reductions of 25.0% on non-Lambertian surfaces and 22.0% under adverse weather conditions.",
+      "authors": [
+        "Junrui Zhang",
+        "Jiaqi Li",
+        "Yiran Wang",
+        "Liao Shen",
+        "Zhiguo Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-30T14:32:02+00:00",
+      "link": "https://arxiv.org/pdf/2607.28285v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Detailed long captions as language modality to guide visual perception, related to image-text multimodal fusion",
+      "llm_evidence_cn": "用详细长描述文本引导视觉感知，与图像-文本多模态融合相关",
+      "llm_evidence": "用详细长描述文本引导视觉感知，与图像-文本多模态融合相关",
+      "canonical_evidence": "用详细长描述文本引导视觉感知，与图像-文本多模态融合相关",
+      "llm_tldr_en": "To improve monocular depth estimation in visually ambiguous scenes, this paper integrates detailed long captions as a language modality into a vision-language model. It overcomes limited short-text guidance and coarse global text features, enabling more robust depth decoding in challenging scenarios.",
+      "llm_tldr_cn": "单目深度估计在非朗伯表面与恶劣天气等挑战场景中容易受到视觉歧义影响，已有工作依赖图像修复或增强，提升有限。论文提出利用详细长描述文本作为补充模态，将语言信息以更细粒度的方式注入视觉语言模型，指导深度解码过程，克服短文本信息不足和全局特征学习粗糙的问题。在困难场景数据集上的实验显示该方法能提升深度估计的鲁棒性。这项工作表明，丰富文本描述是增强视觉感知能力的有效途径，对遥感图像与文本联合分析具有借鉴意义。",
+      "llm_tldr": "单目深度估计在非朗伯表面与恶劣天气等挑战场景中容易受到视觉歧义影响，已有工作依赖图像修复或增强，提升有限。论文提出利用详细长描述文本作为补充模态，将语言信息以更细粒度的方式注入视觉语言模型，指导深度解码过程，克服短文本信息不足和全局特征学习粗糙的问题。在困难场景数据集上的实验显示该方法能提升深度估计的鲁棒性。这项工作表明，丰富文本描述是增强视觉感知能力的有效途径，对遥感图像与文本联合分析具有借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.03155v1",
+      "source": "arxiv",
+      "title": "POMDPs for Autonomous Science Exploration",
+      "abstract": "Autonomous exploration missions require decision-making under sensor uncertainty and computational constraints, yet integrating scientific representations into POMDP planning has remained intractable due to high-dimensional observation spaces. Information-theoretic planners overcome this by assuming deterministic observations, sacrificing the principled uncertainty quantification that POMDPs provide. We introduce the Science Hypothesis Map POMDP (SHM-POMDP), which makes science-driven belief-space planning more tractable by branching on inferred physical properties rather than raw sensor data. This preserves full sensor information through learned observation models while enabling the planner to reason jointly about navigation and scientific properties under uncertainty. On an extended RockSample domain with 50-dimensional observations, SHM-POMDP achieves 18.6\\% higher rewards and 32.9\\% reduced computation time per step than continuous-observation baselines. On realistic geologic exploration using Cuprite hyperspectral data, SHM-POMDP achieves 2.5$\\times$ higher information gain than the best information-theoretic baseline by maintaining beliefs and replanning adaptively---reaching 80\\% of oracle performance using only uniform priors. These results demonstrate that integrating hierarchical probabilistic models into belief-space planning enables tractable, principled autonomous science that outperforms both traditional POMDP methods and science-aware information-theoretic approaches.",
+      "authors": [
+        "Daniel Guirguis",
+        "Nathan Wallace",
+        "Hanna Kurniawati",
+        "Salah Sukkarieh"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-04T05:38:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.03155v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "POMDP planning architecture for autonomous science exploration under sensor uncertainty",
+      "llm_evidence_cn": "面向自主科学探索的POMDP智能体规划架构，可应用于自主海洋监测",
+      "llm_evidence": "面向自主科学探索的POMDP智能体规划架构，可应用于自主海洋监测",
+      "canonical_evidence": "面向自主科学探索的POMDP智能体规划架构，可应用于自主海洋监测",
+      "llm_tldr_en": "Introduces SHM-POMDP, a science-driven belief-space planning framework branching on inferred physical properties for tractable autonomous exploration.",
+      "llm_tldr_cn": "自主科学探索任务需要在传感器不确定性和计算约束下进行决策，但将科学表征直接融入POMDP规划常因观测空间维数过高而难以求解。本文提出科学假设地图POMDP（SHM-POMDP），通过推断物理属性而不是原始传感器数据来分支，从而在保持全传感器信息的同时实现可处理的科学驱动置信空间规划。在扩展实验中展现了在不确定环境中同时考虑导航与科学属性的能力，为自主海洋监测等智能体架构提供了重要参考。",
+      "llm_tldr": "自主科学探索任务需要在传感器不确定性和计算约束下进行决策，但将科学表征直接融入POMDP规划常因观测空间维数过高而难以求解。本文提出科学假设地图POMDP（SHM-POMDP），通过推断物理属性而不是原始传感器数据来分支，从而在保持全传感器信息的同时实现可处理的科学驱动置信空间规划。在扩展实验中展现了在不确定环境中同时考虑导航与科学属性的能力，为自主海洋监测等智能体架构提供了重要参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.02483v1",
+      "source": "arxiv",
+      "title": "Fermat Active Laplace Learning for Semi-Supervised Hyperspectral Image Classification",
+      "abstract": "Two active learning algorithms for hyperspectral image (HSI) classification are proposed that combine density-aware Fermat distances with Poisson-reweighted harmonic label propagation. Our methods actively query points using an uncertainty-based acquisition function, extending Poisson ReWeighted Laplace Learning (PWLL). Our first algorithm, Fermat Active Laplace Learning (FALL), builds an affinity matrix using Fermat distances between all data points. Then, PWLL is run with a diagonal perturbation using the minimum-norm acquisition function. In contrast, Approximate FALL (A-FALL) computes Fermat distances between each data point and landmark pixels selected via farthest-point sampling and constructs the affinity matrix using landmark multidimensional scaling. After several query rounds, A-FALL selects the Fermat exponent $p$ using a leave-one-out cross-validation variant. FALL and A-FALL leverage Fermat distances and subsequent harmonic label propagation to provide a density-aware estimation of the data manifold, improving labeling accuracy. Experiments on Salinas A and Pavia show the effectiveness of FALL and the scalability of A-FALL to large HSI scenes.",
+      "authors": [
+        "Vutichart Buranasiri",
+        "James M. Murphy"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "stat.ML"
+      ],
+      "published": "2026-08-03T16:51:06+00:00",
+      "link": "https://arxiv.org/pdf/2608.02483v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "active and semi-supervised hyperspectral classification method, reducing labeling effort for coral reef benthic cover mapping",
+      "llm_evidence_cn": "主动与半监督高光谱分类方法，可减少珊瑚礁底栖覆盖制图中的标注代价",
+      "llm_evidence": "主动与半监督高光谱分类方法，可减少珊瑚礁底栖覆盖制图中的标注代价",
+      "canonical_evidence": "主动与半监督高光谱分类方法，可减少珊瑚礁底栖覆盖制图中的标注代价",
+      "llm_tldr_en": "Proposes two active learning algorithms combining Fermat distances with Poisson-reweighted harmonic label propagation for semi-supervised hyperspectral classification, actively querying uncertain points to reduce labeling cost.",
+      "llm_tldr_cn": "高光谱图像分类中标注成本高，主动学习和半监督学习可降低标注需求。该文提出将密度感知的费马距离与泊松重加权调和标签传播结合，设计两种主动学习算法，通过基于不确定性的采集函数主动查询最有价值样本。在扩展泊松重加权拉普拉斯学习的基础上，FALL与A-FALL分别用全量亲和矩阵和地标近似方式构建矩阵。实验表明所提方法能在较少标注下保持高分类精度，为珊瑚礁底栖覆盖遥感分类提供了低标注成本的方案。",
+      "llm_tldr": "高光谱图像分类中标注成本高，主动学习和半监督学习可降低标注需求。该文提出将密度感知的费马距离与泊松重加权调和标签传播结合，设计两种主动学习算法，通过基于不确定性的采集函数主动查询最有价值样本。在扩展泊松重加权拉普拉斯学习的基础上，FALL与A-FALL分别用全量亲和矩阵和地标近似方式构建矩阵。实验表明所提方法能在较少标注下保持高分类精度，为珊瑚礁底栖覆盖遥感分类提供了低标注成本的方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.01090v1",
+      "source": "arxiv",
+      "title": "Breaking Diversity Collapse in Spiking Pseudo-Ensembles for Efficient OOD Detection in Remote Sensing",
+      "abstract": "Spiking Neural Networks (SNNs) are attractive for resource-constrained remote-sensing systems, but reliable out-of-distribution (OOD) detection remains challenging. Deep ensembles provide strong predictive uncertainty, yet require multiple complete models and backbone evaluations. We propose an efficient spiking pseudo-ensemble that attaches multiple lightweight classification heads to a frozen SNN backbone. Naively training these heads with cross-entropy can lead to diversity collapse, where independently parameterized heads may produce correlated predictions. To address this, we introduce an agree--disagree objective that preserves correct predictions on clean in-distribution samples while encouraging diversity on structured, uncertainty-inducing transformations of the same inputs. This provides a diversity-promoting training signal without requiring external OOD data. Experiments with Spikformer and ResNet19-SNN on EuroSAT demonstrate consistent improvements over conventionally trained pseudo-ensembles. Using three backbones with five heads each matches or improves upon a five-model deep ensemble on UCM and AID, while requiring approximately 38% fewer parameters and 40% fewer backbone evaluations. These results show that explicit diversity promotion can recover useful ensemble-style uncertainty at substantially lower deployment cost.",
+      "authors": [
+        "Srinivas Anumasa",
+        "Rushi Shah",
+        "Qiran Zou",
+        "Dianbo Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-02T08:44:25+00:00",
+      "link": "https://arxiv.org/pdf/2608.01090v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "efficient OOD detection method for remote sensing, applicable to ocean habitat satellite image analysis",
+      "llm_evidence_cn": "面向遥感的高效分布外检测方法，可应用于海洋栖息地卫星影像分析",
+      "llm_evidence": "面向遥感的高效分布外检测方法，可应用于海洋栖息地卫星影像分析",
+      "canonical_evidence": "面向遥感的高效分布外检测方法，可应用于海洋栖息地卫星影像分析",
+      "llm_tldr_en": "Proposes an efficient spiking pseudo-ensemble with multiple lightweight heads and an agree-disagree objective to preserve in-distribution accuracy while encouraging diversity for OOD detection in remote sensing, avoiding resource-heavy ensembles.",
+      "llm_tldr_cn": "遥感系统常需在资源受限条件下进行可靠的分布外(OOD)检测，但深度集成开销大。为此提出一种高效的尖峰伪集成方法，在冻结的SNN主干上附加多个轻量分类头，并用同意-不同意目标避免多样性崩溃，既保持分布内样本预测正确，又增强对分布外样本的多样性。该方法在保持检测可靠性的同时显著降低计算成本，适用于资源受限的遥感分类任务，可为海洋栖息地卫星影像分析提供可靠的OOD检测工具。",
+      "llm_tldr": "遥感系统常需在资源受限条件下进行可靠的分布外(OOD)检测，但深度集成开销大。为此提出一种高效的尖峰伪集成方法，在冻结的SNN主干上附加多个轻量分类头，并用同意-不同意目标避免多样性崩溃，既保持分布内样本预测正确，又增强对分布外样本的多样性。该方法在保持检测可靠性的同时显著降低计算成本，适用于资源受限的遥感分类任务，可为海洋栖息地卫星影像分析提供可靠的OOD检测工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.03911v1",
+      "source": "arxiv",
+      "title": "UniEvo-RS: Omni-Prompt Unified Remote Sensing Segmentation with Representative Exemplar-Driven Prototype Evolution",
+      "abstract": "Prompt-driven vision-language models (VLMs) hold immense promise for accelerating dense remote sensing (RS) annotation, but static models suffer from severe performance degradation when deployed on novel scenes, unseen categories, or visually confusing backgrounds. Moreover, existing unified paradigms primarily rely on intra-image specific prompts, lacking flexible task routing to adapt to multi-intent operational workflows. In practical batch mapping, annotators typically refine a small set of representative samples before processing large datasets. Motivated by this practice, we propose UniEvo-RS, an omni-prompt unified RS segmentation framework equipped with representative exemplar-driven prototype evolution. First, we construct a multi-instruction prompt dataset that unifies text-driven and visual-driven prompts within a single architecture, establishing a dynamic task-routing mechanism for highly diverse RS annotation scenarios. Second, we introduce a representative feedback-driven, training-free prototype evolution mechanism. By contrasting manual annotations with initial predictions on exemplars, UniEvo-RS distills prediction errors into positive and negative prototypes. These prototypes enhance LLM query recall and suppress spatial background noise under a fixed-budget clustering memory. Extensive experiments show that UniEvo-RS unifies diverse prompting tasks, achieving state-of-the-art performance across most settings. Crucially, with minimal interaction on a few exemplars, it enables training-free, progressive accuracy enhancement on unseen categories during batch annotation.",
+      "authors": [
+        "Kunquan Zhang",
+        "Peilang Li",
+        "Xikun Hu",
+        "Yunkai Yang",
+        "Yushan Zou",
+        "Zhiwei Zhang",
+        "Runmin Dong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-04T16:39:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.03911v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Prompt-driven vision-language remote sensing segmentation with prototype evolution for mapping",
+      "llm_evidence_cn": "基于提示的遥感分割与原型演化，辅助生境制图",
+      "llm_evidence": "基于提示的遥感分割与原型演化，辅助生境制图",
+      "canonical_evidence": "基于提示的遥感分割与原型演化，辅助生境制图",
+      "llm_tldr_en": "UniEvo-RS enables prompt-driven remote sensing segmentation to adapt to novel scenes and unseen classes via representative exemplar-driven prototype evolution and flexible task routing, supporting efficient batch mapping workflows.",
+      "llm_tldr_cn": "静态的提示驱动遥感分割模型在遇到新场景、未见类别或视觉混淆背景时性能会明显下降，难以满足实际批量制图的多样需求。论文提出UniEvo-RS，一个全提示统一的遥感分割框架，通过代表性样例驱动原型演化适应新类别，并引入灵活任务路由以应对多意图标注工作流。该方法借鉴了标注员先精标少量代表样本再批量处理的实践，能够加速遥感密集标注。相关工作为珊瑚礁等生境的遥感测绘提供了高效的分割工具。",
+      "llm_tldr": "静态的提示驱动遥感分割模型在遇到新场景、未见类别或视觉混淆背景时性能会明显下降，难以满足实际批量制图的多样需求。论文提出UniEvo-RS，一个全提示统一的遥感分割框架，通过代表性样例驱动原型演化适应新类别，并引入灵活任务路由以应对多意图标注工作流。该方法借鉴了标注员先精标少量代表样本再批量处理的实践，能够加速遥感密集标注。相关工作为珊瑚礁等生境的遥感测绘提供了高效的分割工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.02811v1",
+      "source": "arxiv",
+      "title": "Staying on Spec: Real-Time Monitoring under Uncertainty with a Maritime Case Study",
+      "abstract": "Robotic systems must operate under uncertainty while satisfying complex task and safety specifications. Monitoring such specifications under uncertainty remains challenging, as existing formulations typically require extensive data or explicit uncertainty distributions. In this paper, we propose a real-time monitoring framework that reduces data requirements by leveraging data-driven reachable sets for specification evaluation. We instantiate the framework for maritime navigation, where complex specifications arise from traffic rules. We develop a data-efficient pipeline for constructing reachable sets and derive a monitoring formulation suitable for real-time deployment. Simulation and hardware experiments demonstrate robust monitoring under realistic disturbances, achieving improved risk detection compared to state-of-the-art metrics.",
+      "authors": [
+        "Elizabeth Dietrich",
+        "Hanna Krasowski",
+        "Emir Cem Gezer",
+        "Roger Skjetne",
+        "Asgeir Johan Sørensen",
+        "Murat Arcak"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-08-03T19:06:29+00:00",
+      "link": "https://arxiv.org/pdf/2608.02811v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Real-time monitoring framework for maritime robotic systems under uncertainty, supporting autonomous ocean monitoring",
+      "llm_evidence_cn": "面向海上机器人系统的实时监控框架，支持不确定性下的自主海洋监测",
+      "llm_evidence": "面向海上机器人系统的实时监控框架，支持不确定性下的自主海洋监测",
+      "canonical_evidence": "面向海上机器人系统的实时监控框架，支持不确定性下的自主海洋监测",
+      "llm_tldr_en": "Presents a real-time monitoring framework that uses data-driven reachable sets to verify safety specifications under uncertainty, demonstrated in maritime navigation with traffic rules.",
+      "llm_tldr_cn": "机器人在不确定环境下需满足复杂安全规范，现有监控方法常需大量数据或明确不确定性分布。本文提出一种实时监控框架，利用数据驱动的可达集进行规范评估，减少数据需求，并在海事导航场景中针对交通规则实例化。仿真与硬件实验表明，该框架能在不确定条件下鲁棒监控规范满足情况，适合实时部署，为自主海洋系统安全监控提供了数据高效的方法。",
+      "llm_tldr": "机器人在不确定环境下需满足复杂安全规范，现有监控方法常需大量数据或明确不确定性分布。本文提出一种实时监控框架，利用数据驱动的可达集进行规范评估，减少数据需求，并在海事导航场景中针对交通规则实例化。仿真与硬件实验表明，该框架能在不确定条件下鲁棒监控规范满足情况，适合实时部署，为自主海洋系统安全监控提供了数据高效的方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.02468v1",
+      "source": "arxiv",
+      "title": "ISRS-DETR: Detection-Guided Click Propagation for Remote Sensing Interactive Segmentation",
+      "abstract": "Interactive segmentation reduces the prohibitive cost of pixel-level annotation by allowing users to delineate objects with a few clicks. However, applying this paradigm directly to remote sensing imagery is non-trivial: ultra-high resolutions, small object sizes, and sparse spatial distributions all degrade segmentation quality. Recent work has addressed the resolution barrier and achieved competitive results in interactive segmentation for remote sensing (ISRS). However, they treat all instances of a class within an image as a single objective target. Consequently, interactions spent on one object contribute nothing to its same-class neighbours, and satisfactory masks may demand up to 40 clicks per image, hindering the practicality of these frameworks. We observe that remote sensing scenes exhibit markedly strong inter-object correlation, meaning a single clicked object is highly informative about the rest of its category. Building on this, we propose ISRS-DETR, a detection-guided interactive segmentation framework that injects object-level evidence into both training and inference. Our ISRS-DETR employs an RF-DETR decoder with the interactive segmentation backbone to localise co-occurring same-class objects, and introduces a Dynamic Top-K Click Selection strategy that retains only reliable proposals and converts each into a simulated click, so one user interaction propagates across an entire class. Experiments on three standard remote sensing benchmarks show that ISRS-DETR achieves state-of-the-art accuracy while substantially reducing Number of Clicks per Image (NoC-I). All codes and data splits will be released for reproducibility upon acceptance.",
+      "authors": [
+        "Thanh Duc Pham",
+        "Anh Nguyen",
+        "Duong Duc Hieu",
+        "Minh-Tan Pham"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T16:37:12+00:00",
+      "link": "https://arxiv.org/pdf/2608.02468v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Interactive segmentation for remote sensing, reduces annotation costs for coral reef mapping",
+      "llm_evidence_cn": "遥感交互式分割方法，降低珊瑚礁制图的标注成本",
+      "llm_evidence": "遥感交互式分割方法，降低珊瑚礁制图的标注成本",
+      "canonical_evidence": "遥感交互式分割方法，降低珊瑚礁制图的标注成本",
+      "llm_tldr_en": "ISRS-DETR enhances remote sensing interactive segmentation via detection-guided click propagation across same-class instances, reducing clicks and improving efficiency for high-resolution imagery.",
+      "llm_tldr_cn": "遥感影像的交互式分割常因超高分辨率、目标小且分布稀疏而需要大量点击，且同一类实例相互独立、交互不共享。本文提出ISRS-DETR，通过检测引导的点击传播让同类别邻近实例受益于已有交互，减少点击次数。在基准上以更少交互获得相当或更优的分割质量，为珊瑚礁等生态目标的高效标注与制图提供了可行的交互工具。",
+      "llm_tldr": "遥感影像的交互式分割常因超高分辨率、目标小且分布稀疏而需要大量点击，且同一类实例相互独立、交互不共享。本文提出ISRS-DETR，通过检测引导的点击传播让同类别邻近实例受益于已有交互，减少点击次数。在基准上以更少交互获得相当或更优的分割质量，为珊瑚礁等生态目标的高效标注与制图提供了可行的交互工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.03410v1",
+      "source": "arxiv",
+      "title": "Earth Embeddings",
+      "abstract": "Earth observation is moving from foundation models that users must run themselves toward embedding products that package model feature outputs as reusable data without needing to download and process the imagery used to generate them. Earth embeddings are vectors that summarize locations, image patches, or pixels, letting users analyze compact features instead of repeatedly training or running large models on raw satellite imagery. This chapter explains the main types of Earth embeddings, from implicit location encoders to explicit patch and pixel products, and compares their coverage, resolution, dimensionality, storage cost, licenses, and reproducibility. We review their use in land cover and crop mapping, ecological and hazard modeling, socioeconomic prediction, and semantic search, with evidence on when embeddings improve on conventional features and when pooling, fusion, or spatial transfer limit performance. Two case studies show practical workflows for similarity search and land cover mapping. We close with guidance for choosing, evaluating, storing, compressing, and publishing embeddings, and with open problems in oceanic and atmospheric coverage, uncertainty, and benchmarking.",
+      "authors": [
+        "Adam J. Stewart",
+        "Heng Fang",
+        "Isaac A. Corley",
+        "Xiao Xiang Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-04T10:04:14+00:00",
+      "link": "https://arxiv.org/pdf/2608.03410v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Earth observation embeddings as reusable feature vectors for satellite image analysis and ecological mapping",
+      "llm_evidence_cn": "地球观测嵌入作为卫星影像分析的可复用特征向量，支持生态制图",
+      "llm_evidence": "地球观测嵌入作为卫星影像分析的可复用特征向量，支持生态制图",
+      "canonical_evidence": "地球观测嵌入作为卫星影像分析的可复用特征向量，支持生态制图",
+      "llm_tldr_en": "This chapter surveys Earth embeddings—reusable vectors that summarize locations, patches, or pixels from Earth observation models—covering types, coverage, resolution, storage, and applications such as land cover, ecological modeling, and semantic search for efficient satellite image analysis.",
+      "llm_tldr_cn": "地球观测应用正从用户自行运行基础模型转向直接使用可复用的嵌入产品，以降低大规模卫星影像处理成本。该章节系统介绍地球嵌入的主要类型，包括位置隐式编码、图像块级和像素级嵌入，并从覆盖范围、分辨率、维度、存储成本、许可和可复现性等方面进行对比。文中回顾了这些嵌入在土地覆盖与作物制图、生态与灾害建模、社会经济预测和语义搜索中的用途，并给出证据。地球嵌入为包括海洋生境在内的遥感制图分析提供了紧凑、可复用的特征基础设施。",
+      "llm_tldr": "地球观测应用正从用户自行运行基础模型转向直接使用可复用的嵌入产品，以降低大规模卫星影像处理成本。该章节系统介绍地球嵌入的主要类型，包括位置隐式编码、图像块级和像素级嵌入，并从覆盖范围、分辨率、维度、存储成本、许可和可复现性等方面进行对比。文中回顾了这些嵌入在土地覆盖与作物制图、生态与灾害建模、社会经济预测和语义搜索中的用途，并给出证据。地球嵌入为包括海洋生境在内的遥感制图分析提供了紧凑、可复用的特征基础设施。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.03826v1",
+      "source": "arxiv",
+      "title": "Geo-Embed: Towards Unified Multimodal Embeddings for Urban Understanding",
+      "abstract": "Geospatial and urban applications increasingly require models to compare heterogeneous evidence across street-view imagery, remote-sensing observations, text descriptions, region proposals, and temporal change cues. However, existing multimodal embedding models and benchmarks are still largely designed and evaluated around general-purpose image-text matching, leaving unclear whether unified embedding space can support heterogeneous geospatial tasks involving spatial relationships, fine-grained semantics, and temporal changes. To address this gap, we make three key contributions. First, we introduce GeoMEB, a large-scale multimodal embedding benchmark that standardizes 45 urban evaluation tasks across retrieval, visual question answering, change detection, classification, and visual grounding, together with training collections comprising 1.32M examples and 286K evaluation queries. Second, we present Geo-Embed, a unified embedding model that adapts a shared vision-language backbone to instruction-conditioned query-target matching over heterogeneous geospatial inputs, including single images, multiple images, text, regions, and masks. On GeoMEB, Geo-Embed achieves the strongest overall performance among representative multimodal embedders, with a 15.3% relative improvement over the strongest baseline. These results motivate future geospatial embedders that organize training and evaluation around explicit query-target relations, including semantic, cross-view, region-level, and temporal correspondence.",
+      "authors": [
+        "Jiapeng Li",
+        "Yong Li",
+        "Junjie Zhou",
+        "Fan Zhang",
+        "Yu Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-04T15:36:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.03826v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unified multimodal embeddings for geospatial data including remote sensing imagery and text descriptions",
+      "llm_evidence_cn": "面向地理空间遥感影像与文本描述的统一多模态嵌入方法",
+      "llm_evidence": "面向地理空间遥感影像与文本描述的统一多模态嵌入方法",
+      "canonical_evidence": "面向地理空间遥感影像与文本描述的统一多模态嵌入方法",
+      "llm_tldr_en": "Introduces Geo-Embed and GeoMEB benchmark for unified multimodal embeddings across street-view, remote sensing, text, and temporal changes in urban understanding.",
+      "llm_tldr_cn": "城市与地理空间应用需要比较街景影像、遥感观测、文本描述等多种异构证据，但现有多模态嵌入模型仍围绕通用图文匹配设计。Geo-Embed提出面向城市理解的统一多模态嵌入框架，并配套45个城市评测任务的GeoMEB基准，涵盖检索、视觉问答、变化检测等。实验表明统一嵌入空间能够支持异构地理空间任务，为城市与海洋等领域的多模态地理理解提供可参考的建模与评测基础。",
+      "llm_tldr": "城市与地理空间应用需要比较街景影像、遥感观测、文本描述等多种异构证据，但现有多模态嵌入模型仍围绕通用图文匹配设计。Geo-Embed提出面向城市理解的统一多模态嵌入框架，并配套45个城市评测任务的GeoMEB基准，涵盖检索、视觉问答、变化检测等。实验表明统一嵌入空间能够支持异构地理空间任务，为城市与海洋等领域的多模态地理理解提供可参考的建模与评测基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

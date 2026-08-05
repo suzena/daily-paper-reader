@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-03</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-05</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 17 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-03 21:13:25 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-05 21:40:11 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦水下机器人动力学与遥感小样本分类，12篇中精读3篇、速读9篇。</p>
-<p>最值得看：AquaJEPA以动作条件多模态预测表征建模水下动态（9.0分），遥感小样本场景分类采用局部一致转导信息最大化（8.0分）。</p>
-<p>若求快速入门，可先从速读中的遥感实体级小样本分割与生成式空气质量重建入手。</p>
+<p>今日共读17篇遥感论文，精读6篇，其中GeoArbiter以9.0分领跑，SPECTRA获8.0分紧随其后。最值得关注的是多模态大模型的可验证性定位与跨传感器高效微调，二者分别缓解遥感幻觉和适应不同卫星数据。建议普通读者优先精读GeoArbiter，理解其验证机制如何提升定位可信度。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics">AquaJEPA: Action-Conditioned Multimodal Predictive Representations for Underwater Robot Dynamics</span></li><li><span class="dpr-home-dashboard-paper-title" title="Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification">Locally Consistent Transductive Information Maximization for Few-Shot Remote Sensing Scene Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression">MROPE: A Multi-Robot Safe Cooperative Strategy via combined Predictive Safety Filters and Ellipse-based Constraint Compression</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="GeoArbiter: Verifiability-Guided Grounding for Remote-Sensing Multimodal LLMs">GeoArbiter: Verifiability-Guided Grounding for Remote-Sensing Multimodal LLMs</span></li><li><span class="dpr-home-dashboard-paper-title" title="SPECTRA: Band-Routed Embedding and Stage-Wise LoRA for Cross-Sensor Fine-Tuning of Geospatial Foundation Models">SPECTRA: Band-Routed Embedding and Stage-Wise LoRA for Cross-Sensor Fine-Tuning of Geospatial Foundation Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning">EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">9 篇</strong>
+    <strong class="dpr-home-dashboard-count">11 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement">Training-Free Entity-Level Few-Shot Segmentation of Remote Sensing Images with Advection Refinement</span></li><li><span class="dpr-home-dashboard-paper-title" title="Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation">Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations">From Deterministic to Generative Deep Learning for Urban Air Quality Reconstruction from Sparse Observations</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CROSS: Cascaded Distillation and Dual-Constraint Grounding for Remote Sensing Referring Segmentation">CROSS: Cascaded Distillation and Dual-Constraint Grounding for Remote Sensing Referring Segmentation</span></li><li><span class="dpr-home-dashboard-paper-title" title="POMDPs for Autonomous Science Exploration">POMDPs for Autonomous Science Exploration</span></li><li><span class="dpr-home-dashboard-paper-title" title="UniEvo-RS: Omni-Prompt Unified Remote Sensing Segmentation with Representative Exemplar-Driven Prototype Evolution">UniEvo-RS: Omni-Prompt Unified Remote Sensing Segmentation with Representative Exemplar-Driven Prototype Evolution</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
 </section>
 </div>
 

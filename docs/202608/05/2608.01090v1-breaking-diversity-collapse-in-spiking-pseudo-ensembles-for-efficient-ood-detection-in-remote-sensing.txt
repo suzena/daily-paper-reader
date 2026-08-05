@@ -1,0 +1,808 @@
+Title: Breaking Diversity Collapse in Spiking Pseudo-Ensembles for Efficient OOD Detection in Remote Sensing
+
+URL Source: https://arxiv.org/pdf/2608.01090v1
+
+Published Time: Tue, 04 Aug 2026 01:12:18 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+# Breaking Diversity Collapse in Spiking Pseudo-Ensembles for Efficient OOD Detection in Remote Sensing 
+
+## Srinivas Anumasa, Rushi Shah 1, Qiran Zou 1, Dianbo Liu 1
+
+> 1
+
+National University of Singapore 
+
+Abstract 
+
+Spiking Neural Networks (SNNs) are attractive for resource-constrained remote-sensing systems, but reliable out-of-distribution (OOD) detection remains challenging. Deep en-sembles provide strong predictive uncertainty, yet require mul-tiple complete models and backbone evaluations. We propose an efficient spiking pseudo-ensemble that attaches multiple lightweight classification heads to a frozen SNN backbone. Naively training these heads with cross-entropy can lead to 
+
+diversity collapse , where independently parameterized heads may produce correlated predictions. To address this, we intro-duce an agree–disagree objective that preserves correct pre-dictions on clean in-distribution samples while encouraging diversity on structured, uncertainty-inducing transformations of the same inputs. This provides a diversity-promoting train-ing signal without requiring external OOD data. Experiments with Spikformer and ResNet19-SNN on EuroSAT demon-strate consistent improvements over conventionally trained pseudo-ensembles. Using three backbones with five heads each matches or improves upon a five-model deep ensemble on UCM and AID, while requiring approximately 38% fewer parameters and 40% fewer backbone evaluations. These re-sults show that explicit diversity promotion can recover useful ensemble-style uncertainty at substantially lower deployment cost. 
+
+## Introduction 
+
+Spiking Neural Networks (SNNs) process information through temporally distributed spike events and can ex-ploit sparse, event-driven computation. When deployed on compatible neuromorphic hardware, this computational model can support energy-efficient inference, making SNNs promising for resource-constrained remote-sensing plat-forms such as satellites, unmanned aerial vehicles, and edge sensors (Maass 1997; Davies et al. 2018). Recent ad-vances in surrogate gradient training, residual SNNs, and spiking self-attention have also enabled directly trained SNNs to achieve competitive image-classification perfor-mance (Neftci, Mostafa, and Zenke 2019; Fang et al. 2021; Zhou et al. 2022). Reliable deployment, however, requires more than high classification accuracy. Remote-sensing images can differ substantially from the training data because of changes in geographic region, season, illumination, atmospheric con-ditions, spatial resolution, sensing platform, or land-cover 
+
+Figure 1: Multihead SNN OOD detection. A shared spik-ing ResNet19 backbone produces temporal features F ∈
+
+RB×T ×512 which are broadcast to Kh spike-consistent heads. Head predictions are aggregated to form the ensemble predictive distribution, from which MSP, predictive entropy, and mutual information (MI) are computed. content. A classifier may nevertheless produce a highly con-fident prediction for such unfamiliar inputs. Detecting out-of-distribution (OOD) samples is therefore essential for de-ciding when a prediction should be accepted, rejected, or deferred (Gawlikowski et al. 2022; Li et al. 2024). While uncertainty estimation and OOD detection have been studied extensively for conventional neural networks, they remain comparatively underexplored for deep SNNs. Existing SNN research has mainly focused on classifica-tion accuracy, spike efficiency, latency, and training methods, with only limited work addressing OOD detection through spike-based representations (Martinez-Seras et al. 2023). Many uncertainty methods developed for artificial neural networks can, in principle, be adapted to SNNs. In particu-lar, Monte Carlo dropout and deep ensembles obtain predic-tive uncertainty from multiple model realizations (Gal and Ghahramani 2016; Lakshminarayanan, Pritzel, and Blundell 2017). Deep ensembles are especially effective because in-dependently trained networks can represent different predic-tive functions. Their parameter storage and inference cost, however, grow linearly with the number of members, requir-arXiv:2608.01090v1 [cs.LG] 2 Aug 2026 ing a complete SNN evaluation for every prediction. This repeated computation can undermine the efficiency that mo-tivates SNN deployment. Efficient ensemble approximations reduce this cost by sharing parameters or computations across predictors (Wen, Tran, and Ba 2020; Havasi et al. 2020; Durasov et al. 2021; Laurent et al. 2023). A particularly simple alternative is to attach several lightweight classification heads to a shared pretrained backbone as shown in Figure 1. Such a pseudo-ensemble requires only one backbone evaluation to obtain multiple predictions. However, independently initializing ad-ditional heads does not guarantee functionally diverse pre-dictors. When the heads receive the same features, labels, and optimization objective, they can converge to highly cor-related predictions, as observed for naive shared-backbone multihead architectures (Havasi et al. 2020). We refer to this failure mode as diversity collapse .We address this limitation with an agree–disagree spik-ing pseudo-ensemble. A pretrained SNN backbone is frozen and equipped with multiple lightweight spiking classification heads. The heads are trained to preserve correct predictions on clean in-distribution samples while expressing differ-ent predictive behaviours on structured, uncertainty-inducing transformations of the same images. To select these inputs, we conduct a diagnostic study using independently trained SNNs and compare several image corruptions. Medium and strong box blur induce high predictive entropy and inter-model disagreement while retaining coarse scene structure. We therefore use blur-corrupted inputs to promote diver-sity without requiring real OOD samples, an external outlier dataset, or a pretrained teacher ensemble. We evaluate the proposed agree–disagree pseudo-ensemble using Transformer-based Spikformer and convo-lutional ResNet19-SNN backbones, with EuroSAT as the in-distribution dataset and UCM, AID, and two Sentinel-2 Global LULC subsets as distribution shifts. The proposed training objective consistently improves over cross-entropy-trained pseudo-ensembles. In particular, a configuration with three backbones and five heads per backbone matches or ex-ceeds a five-model deep ensemble on UCM and AID while using approximately 38% fewer parameters and three-fifths fewer backbone evaluations. Our main contributions are: 
+
+• We introduce an efficient spiking pseudo-ensemble that generates multiple predictive hypotheses using a frozen SNN backbone and lightweight spiking classification heads. 
+
+• We identify diversity collapse in shared-backbone pseudo-ensembles and propose an agree–disagree objec-tive that promotes functional diversity using structured blur-corrupted inputs derived solely from the ID training data. 
+
+• We evaluate the method across two distinct SNN ar-chitectures and multiple remote-sensing distribution shifts, demonstrating an improved OOD-performance– deployment-cost trade-off relative to conventional pseudo-ensembles and deep ensembles. 
+
+## Background 
+
+This section briefly introduces the spiking-neuron dynamics, input encoding scheme, and training strategy used by the SNN backbones in this work. 
+
+Spiking Neuron Dynamics 
+
+Spiking Neural Networks (SNNs) process information through discrete spike events distributed over a sequence of simulation steps. Unlike conventional artificial neurons that communicate using continuous-valued activations, a spiking neuron maintains an internal membrane potential and emits a spike when this potential crosses a prescribed threshold (Maass 1997; Gerstner et al. 2014). Because remote-sensing images are static, we use constant encoding: the same normalized RGB image is presented to the network at every simulation step, 
+
+x(t) = x, t = 1 , . . . , T. (1) The temporal dynamics of the SNN subsequently transform this repeated input into a sequence of membrane potentials and spike activations. We consider the discrete-time leaky integrate-and-fire (LIF) neuron. For neuron i in layer l, its pre-reset membrane potential at time step t is updated as 
+
+eu(l) 
+
+> i
+
+[t] = βu (l) 
+
+> i
+
+[t − 1] + X
+
+> j
+
+w(l) 
+
+> ij
+
+x(l−1)  
+
+> j
+
+[t], (2) where u(l) 
+
+> i
+
+[t−1] is the membrane potential from the previous time step, β ∈ [0 , 1] controls membrane leakage, w(l) 
+
+> ij
+
+is the synaptic weight connecting neuron j in layer l − 1 to neuron 
+
+i, and x(l−1)  
+
+> j
+
+[t] ∈ { 0, 1} denotes the presynaptic spike. The neuron emits a binary spike when its membrane po-tential exceeds the firing threshold uth :
+
+x(l) 
+
+> i
+
+[t] = H
+
+eu(l) 
+
+> i
+
+[t] − uth 
+
+
+
+=
+
+(
+
+1, eu(l) 
+
+> i
+
+[t] > u th ,
+
+0, otherwise , (3) where H(·) is the Heaviside step function. Following spike generation, the membrane potential is reset according to 
+
+u(l) 
+
+> i
+
+[t] = eu(l) 
+
+> i
+
+[t]
+
+
+
+1 − x(l) 
+
+> i
+
+[t]
+
+
+
+. (4) Thus, the membrane potential accumulates temporally dis-tributed input information, decays according to β, and is reset when the neuron fires. The number of simulation steps T con-trols the temporal duration of inference and determines an important accuracy–latency–computation trade-off. 
+
+Training Deep SNNs 
+
+Training SNNs is challenging because the Heaviside func-tion in Eq. (3) is non-differentiable. Deep SNNs are com-monly trained either directly using surrogate gradients or obtained through ANN-to-SNN conversion. In direct train-ing(Anumasa et al. 2024; Deng et al. 2022), the network is optimized end-to-end over multiple simulation steps using backpropagation through time, while the undefined deriva-tive of the spike function is replaced by the derivative of a smooth surrogate function (Shrestha and Orchard 2018; Neftci, Mostafa, and Zenke 2019). This approach has en-abled deep convolutional and Transformer-based SNN archi-tectures (Fang et al. 2021; Deng et al. 2022; Zhou et al. 2022). ANN-to-SNN conversion instead trains a conventional ANN and subsequently calibrates activation thresholds, normal-ization statistics, and reset mechanisms so that SNN firing rates approximate the original ANN activations (Diehl et al. 2015; Rueckauer et al. 2017; Deng and Gu 2021; Bojkovic et al. 2024). Although conversion can retain high accuracy, it may require more simulation steps to represent continuous activations accurately. In this work, both ResNet19-SNN and Spikformer are trained directly using surrogate-gradient optimization. 
+
+## Proposed Method 
+
+This section presents the proposed agree–disagree spiking pseudo-ensemble. We first describe the shared-backbone multihead architecture and its diversity-collapse problem, and then introduce the selection of structured disagreement inputs, the agree–disagree training objective, and the result-ing inference-efficiency benefits. 
+
+Problem Formulation 
+
+Let DID = {(xi, y i)}Ni=1 denote an in-distribution remote-sensing training set, where xi ∈ X is an RGB image and 
+
+yi ∈ { 1, . . . , C } is its scene label. At test time, an input may originate either from the ID distribution or from an un-known distribution caused by changes in geography, sensing conditions, acquisition domain, or semantic content. Our goal is to obtain multiple predictive hypotheses from a pretrained SNN while preserving its clean classification performance and avoiding the cost of a conventional deep ensemble. We assume access only to DID during training and do not require real OOD samples or an auxiliary out-lier dataset. To promote diversity among the predictors, we construct structured disagreement inputs directly from the available ID images. 
+
+Spiking Pseudo-Ensemble Architecture 
+
+Let fθ denote a deterministically trained SNN backbone with parameters θ. Since the remote-sensing images are static, we use constant encoding, in which the same normalized RGB image is presented at every simulation step: 
+
+x(t) = x, t = 1 , . . . , T. 
+
+The backbone processes the repeated input over T simu-lation steps and produces the time-resolved representation 
+
+Fθ (x) = 
+
+h
+
+f (1) (x), . . . , f (T )(x)
+
+i
+
+∈ RT ×D, (5) where D is the feature dimension. For Spikformer, f (t)(x)
+
+is obtained by spatially pooling the output tokens at simula-tion step t. For ResNet19-SNN, it corresponds to the time-resolved penultimate representation. We freeze the backbone parameters and normalization statistics, remove the original classifier, and attach Kh inde-pendently initialized spiking classification heads {gϕh }Kh
+
+> h=1
+
+.The same temporal representation is broadcast to every head. At simulation step t, head h computes 
+
+h(t) 
+
+> h
+
+(x) = LIF 
+
+
+
+BN h
+
+
+
+Wh, 1f (t)(x) + bh, 1
+
+ 
+
+, (6) 
+
+z(t) 
+
+> h
+
+(x) = Wh, 2h(t) 
+
+> h
+
+(x) + bh, 2, (7) where z(t) 
+
+> h
+
+(x) ∈ RC denotes the time-dependent logits. The temporal logits are averaged before applying the soft-max: 
+
+zh(x) = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+z(t) 
+
+> h
+
+(x), ph(x) = softmax( zh(x)) .
+
+(8) The predictive distribution of one pseudo-ensemble is ob-tained by averaging the probabilities of its Kh heads: 
+
+p(x) = 1
+
+KhKhX
+
+> h=1
+
+ph(x). (9) Unlike a conventional ensemble containing Kh complete networks, the proposed architecture evaluates the frozen backbone only once and reuses its temporal representation across Kh lightweight heads. 
+
+Diversity Collapse under a Frozen Backbone 
+
+A straightforward pseudo-ensemble trains the independently initialized heads using cross-entropy alone. We refer to this baseline as the Cross-Entropy Pseudo-Ensemble (CEPE). However, introducing additional parameters or indepen-dently initialized heads does not by itself guarantee func-tionally diverse predictors. All heads receive the same frozen representation, the same class labels, and the same optimiza-tion objective. Cross-entropy training can therefore guide them toward similar decision functions, even when their pa-rameter values are different. This limitation has also been observed in shared-input en-semble architectures, where architectural multiplicity alone is insufficient to produce independent predictive functions (Havasi et al. 2020). In our setting, parameter sharing is even stronger because the complete feature extractor is frozen and only the lightweight classification heads are optimized. Con-sequently, the heads may produce highly correlated predic-tions, providing limited additional epistemic information as their number increases. We refer to this failure mode as di-versity collapse .The purpose of the proposed agree–disagree objective is therefore not merely to increase the number of predictors, but to provide an explicit training signal that encourages the heads to learn different predictive behaviours away from the clean ID regime. 
+
+Selection of Structured Disagreement Inputs 
+
+Previous ensemble-diversification methods encourage pre-dictors to agree on in-distribution data while disagreeing on auxiliary OOD samples (Pagliardini et al. 2023; Ţifrea, Stavarache, and Yang 2022). More generally, Outlier Expo-sure improves OOD detection by training with an external dataset of anomalous examples (Hendrycks, Mazeika, and Table 1: Predictive entropy induced by different corruptions on EuroSAT. Values are averaged over the evaluation samples; higher values indicate greater predictive uncertainty. Medium and large box blur produce the strongest uncertainty response while preserving the coarse spatial structure of the original scene.                      
+
+> Clean Noise Blur-S Blur-M Blur-L Bright. Dark Contrast Rot. 90 ◦Cutout Predictive entropy ↑0.076 0.650 0.557 0.707 0.752 0.611 0.473 0.602 0.104 0.165
+
+Dietterich 2019). However, suitable auxiliary outliers may not always be available, particularly in remote sensing, where future distribution shifts may arise from unknown sensors, geographic regions, seasons, atmospheric conditions, or pre-viously unseen land-cover categories. We therefore seek to construct disagreement inputs di-rectly from the available ID images. Our goal is not to ap-proximate the unknown test-time OOD distribution, but to identify structured inputs on which independently trained predictors naturally express different hypotheses. Such inputs should satisfy two competing requirements. First, they should move the predictors away from the high-confidence clean-data regime and induce meaningful predictive disagreement. Second, they should preserve sufficient spatial and semantic structure so that they do not reduce to arbitrary noise. To identify a suitable transformation, we conduct a di-agnostic study using a conventional deep ensemble of five independently trained Spikformer models. This study is per-formed before training the proposed pseudo-ensemble and examines how different corruption families affect ensemble uncertainty and inter-model disagreement. Table 1 reports the predictive entropy of the ensemble-averaged distribution. Clean EuroSAT images yield a low mean entropy of 0.076 .Weak transformations such as 90 ◦ rotation and cutout also leave the ensemble comparatively confident, with entropy values of 0.104 and 0.165 , respectively. In contrast, medium and large box blur increase predictive entropy to 0.707 and 
+
+0.752 , giving the strongest uncertainty response among the evaluated structured corruptions. The same trend is observed in ensemble disagreement. Mutual information increases from 0.023 on clean images to 0.263 and 0.288 under medium and large blur, respec-tively, indicating that independently trained models produce increasingly different predictions as blur severity grows. The complete comparison using MSP, predictive entropy, head variance, and mutual information is provided in the supple-mentary material. Although additive noise also induces substantial uncer-tainty, it introduces unstructured pixel-level perturbations and can severely distort the natural image statistics. Box blur instead suppresses fine-grained texture and sharp boundaries while preserving dominant colour regions and coarse spatial organization. These observations suggest that blur naturally exposes re-gions in which independently trained models express differ-ent predictive hypotheses. We therefore construct the dis-agreement set directly from the ID training images using box blur. For a clean sample x, we generate 
+
+˜x = Bk(x), (10) where Bk denotes box blurr with kernel size k ∈{5, 7, 9, 11 }. During training, the kernel size is sampled uni-formly for each selected image. The blurred samples are not assumed to follow the true test-time OOD distribution; rather, they serve as structured inputs on which the lightweight heads are encouraged to express different predictive behaviours. 
+
+Agree–Disagree Training 
+
+For each training minibatch, every image is independently se-lected for box blur with probability ρ = 0 .3. Let Ic denote the remaining clean ID samples and Ib the blur-corrupted sam-ples. The two subsets serve complementary purposes: clean samples preserve the original classification task, whereas blur-corrupted samples provide structured inputs on which predictive diversity is encouraged. 
+
+Agreement on clean ID samples. All Kh heads are trained to predict the correct labels for the clean subset using the average cross-entropy loss, 
+
+LCE = 1
+
+Kh|I c|
+
+> Kh
+
+X
+
+> k=1
+
+X
+
+> i∈I c
+
+CE( pk(xi), y i) .
+
+Although this term does not explicitly minimize the distance between the head predictions, it requires every head to solve the same clean ID classification task. It therefore preserves agreement where supervised evidence is available and main-tains the classification performance of the pretrained SNN. 
+
+Disagreement on blur-corrupted inputs. For each blur-corrupted input ˜xi, we first compute the mean prediction across the Kh heads, 
+
+¯p(˜ xi) = 1
+
+KhKhX
+
+> k=1
+
+pk(˜ xi).
+
+We then measure predictive disagreement using the general-ized Jensen–Shannon divergence, 
+
+DJS = 1
+
+Kh|I b|
+
+X
+
+> i∈I b
+> Kh
+
+X
+
+> k=1
+
+DKL (pk(˜ xi) ∥ ¯p(˜ xi)) . (11) This quantity is zero when all heads produce identical predic-tive distributions and increases as their predictions diverge. Maximizing it therefore provides an explicit functional-diversity signal that is absent from ordinary cross-entropy training. The complete agree–disagree objective is 
+
+LAD = LCE − λdis DJS , λdis = 0 .3. (12) During optimization, clean samples contribute only to 
+
+LCE , whereas blur-corrupted samples contribute only to DJS . The blurred inputs are therefore not assigned class la-bels and are not treated as samples from the true test-time OOD distributions. Instead, they are used solely to encour-age the heads to express different predictive behaviours away from the clean training regime. Only the lightweight classification heads are updated dur-ing this stage; the pretrained SNN backbone and its nor-malization statistics remain frozen. We refer to the resulting model as the Agree–Disagree Pseudo-Ensemble (ADPE). 
+
+Inference and Computational Efficiency 
+
+At inference, each input is evaluated once by every selected backbone, and its temporal features are passed to the cor-responding Kh fixed heads. With Kb independently trained backbones, the final predictive distribution is 
+
+pKb,K h (x) = 1
+
+KbKhKbX
+
+> b=1
+> Kh
+
+X
+
+> h=1
+
+pb,h (x). (13) Thus, ADPE produces KbKh predictive hypotheses using only Kb backbone evaluations. Its parameter and compu-tation costs are PADPE = Kb(Pb + KhPh) and CADPE =
+
+Kb(Cb +KhCh), respectively. For both backbones, Pb ≈ 12 .5
+
+million and Ph ≈ 0.1 million; hence, five heads add only about 4% parameter overhead. Since Ch ≪ C b, the dominant cost scales with Kb rather than KbKh work. 
+
+## Experimental Setup and Analysis 
+
+Datasets. We use EuroSAT (Helber et al. 2019) as the in-distribution dataset and evaluate OOD detection on UCM (Yang and Newsam 2010), AID (Xia et al. 2017), and two subsets of Sentinel-2 Global LULC (Benhammou et al. 2022). Global-Near contains classes with semantic overlap with EuroSAT, whereas Global-Far contains classes with-out a direct EuroSAT counterpart. All images are resized to 
+
+64 × 64 and normalized using ImageNet statistics. 
+
+Models and training. We evaluate Transformer-based Spikformer and convolutional ResNet19-SNN backbones, both directly trained with T = 2 simulation steps. Five in-dependently initialized backbones are trained for each archi-tecture. After deterministic training, each backbone is frozen and equipped with Kh = 5 lightweight spiking heads. CEPE trains these heads using cross-entropy alone, whereas ADPE additionally applies the agree–disagree objective in Eq. (12). Complete architectural and optimization details are provided in the supplementary material. 
+
+Baselines and evaluation. We compare ADPE against a deterministic SNN, deep ensembles, Monte Carlo dropout, last-layer Laplace, Mahalanobis distance, and the cross-entropy pseudo-ensemble CEPE.A configuration (Kb, K h)
+
+denotes the number of selected backbones and the number of heads per backbone, respectively. For each Kb, we evaluate all   5
+
+> Kb
+
+ possible subsets of the five trained backbones and report the mean and standard deviation across these subsets. For Kb = 5 , k h = 1 , only one subset exists, so the reported standard deviation is zero. We report EuroSAT classification accuracy and OOD detection using MSP and mutual informa-tion. Performance is measured using AUROC, AUPR-Out, and FPR@95, where FPR@95 is the fraction of OOD sam-ples accepted as ID at a threshold retaining 95% of the ID samples. Full baseline implementations, uncertainty-score definitions, and reproducibility details are provided in the supplementary material. 
+
+Overall OOD Detection Performance 
+
+Table 2 reports ID classification accuracy and MSP-based OOD detection on UCM and AID. Across both backbones, ADPE improves as additional independently trained back-bone instances are combined, while retaining essentially the same EuroSAT classification accuracy as CEPE and conven-tional deep ensembles. For Spikformer, ADPE with three backbones achieves the strongest results across all reported UCM and AID detec-tion metrics. On UCM, ADPE (3 , 5) obtains an AUROC of 
+
+97 .12% and an FPR@95 of 14 .75% , compared with 94 .84% 
+
+and 23 .71% , respectively, for the five-model deep ensem-ble. On AID, it similarly improves AUROC from 95 .41% 
+
+to 97 .29% and reduces FPR@95 from 22 .93% to 13 .07% .These improvements are obtained while using only three backbone evaluations instead of five. The same overall trend is observed for ResNet19-SNN, although the performance differences are smaller. ADPE 
+
+(3 , 5) achieves AUROC values of 92 .10% and 93 .12% on UCM and AID, respectively, slightly exceeding the five-model deep ensemble values of 91 .84% and 92 .79% . It also reduces FPR@95 from 33 .62% to 32 .03% on UCM and from 
+
+31 .82% to 31 .07% on AID. Thus, the benefit of the proposed objective is observed for both Transformer-based and convo-lutional SNNs, but is more pronounced for Spikformer. Importantly, these gains do not come at the expense of ID classification performance. ADPE (3 , 5) obtains Eu-roSAT accuracies of 98 .30% and 98 .50% for Spikformer and ResNet19-SNN, respectively. These values are within 0.14 
+
+percentage points of the corresponding five-model deep en-sembles, indicating that promoting disagreement on blurred inputs does not substantially compromise the clean classifi-cation task. 
+
+Effect of Agree–Disagree Training 
+
+The comparison between CEPE and ADPE isolates the effect of the disagreement objective because both methods use the same frozen backbones, head architectures, optimization set-tings, and number of heads. The only difference is the Jensen– Shannon disagreement term applied to blur-corrupted inputs. For Spikformer, ADPE (3 , 5) improves over CEPE (3 , 5) 
+
+by 2.02 percentage points in UCM AUROC and reduces FPR@95 by 7.57 points. On AID, the corresponding im-provements are 1.32 AUROC points and 6.91 FPR@95 points. For ResNet19-SNN, ADPE improves UCM AUROC from 91 .30% to 92 .10% and reduces FPR@95 from 34 .33% 
+
+to 32 .03% . On AID, it improves AUROC from 92 .59% to 
+
+93 .12% and reduces FPR@95 from 31 .91% to 31 .07% .The single-backbone setting provides further evidence that the gains are not explained only by combining independently trained models. For Spikformer, ADPE (1 , 5) improves UCM AUROC from 89 .53% for the deterministic model to 94 .82% ,while reducing FPR@95 from 43 .71% to 23 .41% . Similar Table 2: Classification accuracy and MSP-based OOD detection with EuroSAT as ID. For Mahalanobis, the reported OOD results use its native feature-distance score rather than MSP. ADPE denotes our proposed agree–disagree pseudo-ensemble and is identified by a bold method name. The pair (Kb, K h) denotes the number of backbones and heads per backbone. AUPR treats OOD as the positive class. All values are percentages. Higher accuracy, AUROC, and AUPR are better; lower FPR@95 is better. The best and second-best results within each backbone and metric column are shown in bold and underlined, respectively. Method Acc. ↑ UCM AID AUROC ↑ AUPR ↑ FPR@95 ↓ AUROC ↑ AUPR ↑ FPR@95 ↓
+
+Spikformer 
+
+Maha. (1 , –) 97 .22 ±0.18 95 .09 ±0.51 94 .20 ±0.80 22 .97 ±2.45 95 .16 ±0.68 98 .59 ±0.21 22 .09 ±1.34 
+
+MC-DO (1 , –) 97 .61 ±0.11 92 .13 ±0.48 90 .86 ±0.59 34 .41 ±2.59 93 .70 ±0.99 98 .08 ±0.29 30 .56 ±3.78 
+
+LLL (1 , –) 97 .47 ±0.17 91 .53 ±1.37 89 .48 ±1.44 39 .37 ±4.29 92 .53 ±1.28 97 .53 ±0.48 37 .33 ±6.44 
+
+DE (1 , 1) 97 .58 ±0.10 89 .53 ±1.66 87 .28 ±1.58 43 .71 ±3.40 90 .57 ±1.97 96 .87 ±0.67 42 .63 ±6.44 
+
+DE (3 , 1) 98 .23 ± 0.08 94 .05 ± 0.53 92 .72 ± 0.57 27 .57 ± 2.28 94 .70 ± 0.35 98 .27 ± 0.12 27 .07 ± 2.25 
+
+DE (5 , 1) 98 .44 ±0.00 94 .84 ±0.00 93 .69 ±0.00 23 .71 ±0.00 95 .41 ±0.00 98 .50 ±0.00 22 .93 ±0.00 
+
+CEPE (3 , 5) 98 .40 ±0.11 95 .10 ±0.27 94 .47 ±0.32 22 .32 ±1.11 95 .97 ±0.29 98 .79 ±0.10 19 .98 ±1.57 
+
+ADPE (1 , 5) 97 .56 ±0.21 94 .82 ±0.60 94 .13 ±0.75 23 .41 ±2.20 95 .33 ±1.05 98 .60 ±0.36 22 .52 ±5.46 
+
+ADPE (2 , 5) 98 .16 ±0.16 96 .47 ±0.46 95 .84 ±0.51 16 .87 ±1.77 96 .73 ±0.46 99 .03 ±0.17 15 .24 ±2.72 
+
+ADPE (3 , 5) 98 .30 ±0.12 97 .12 ±0.30 96 .61 ±0.29 14 .75 ±0.82 97 .29 ±0.24 99 .22 ±0.09 13 .07 ±1.06 
+
+ResNet19-SNN 
+
+Maha. (1 , –) 97 .86 ±0.27 83 .43 ±3.01 78 .33 ±3.62 65 .47 ±5.32 77 .67 ±4.42 90 .99 ±2.34 79 .06 ±8.25 
+
+MC-DO (1 , –) 98 .04 ±0.23 88 .90 ±1.17 87 .14 ±1.39 42 .51 ±5.30 90 .34 ±0.84 96 .93 ±0.31 40 .09 ±4.55 
+
+LLL (1 , –) 98 .10 ±0.23 89 .45 ±0.43 87 .29 ±0.76 43 .13 ±2.95 90 .40 ±0.50 96 .91 ±0.18 41 .08 ±3.74 
+
+DE (1 , 1) 98 .08 ±0.10 88 .96 ±0.95 86 .45 ±1.23 44 .32 ±3.20 90 .00 ±0.53 96 .69 ±0.20 42 .50 ±2.87 
+
+DE (3 , 1) 98 .49 ± 0.07 91 .27 ± 0.28 89 .65 ± 0.40 36 .33 ± 1.35 92 .25 ± 0.13 97 .53 ± 0.06 34 .77 ± 1.52 
+
+DE (5 , 1) 98 .56 ±0.00 91 .84 ±0.00 90 .38 ±0.00 33 .62 ±0.00 92 .79 ±0.00 97 .72 ±0.00 31 .82 ±0.00 
+
+CEPE (3 , 5) 98 .50 ±0.13 91 .30 ±0.19 90 .00 ±0.31 34 .33 ±1.47 92 .59 ±0.14 97 .70 ±0.06 31 .91 ±1.57 
+
+ADPE (1 , 5) 98 .08 ±0.10 89 .90 ±0.70 88 .58 ±1.06 39 .19 ±3.13 91 .02 ±0.45 97 .17 ±0.17 38 .73 ±1.87 
+
+ADPE (2 , 5) 98 .40 ±0.16 91 .51 ±0.30 90 .44 ±0.51 34 .33 ±1.98 92 .55 ±0.26 97 .69 ±0.11 33 .42 ±1.69 
+
+ADPE (3 , 5) 98 .50 ±0.14 92 .10 ±0.17 91 .17 ±0.34 32 .03 ±1.05 93 .12 ±0.17 97 .89 ±0.07 31 .07 ±1.28 
+
+improvements are obtained on AID. The gain is smaller but still visible for ResNet19-SNN. These results show that five heads attached to one frozen backbone can provide useful ad-ditional predictive variation when they are explicitly trained to avoid collapsing to the same behavior. 
+
+Scaling the Number of Backbones 
+
+Increasing Kb consistently improves MSP-based detection for ADPE. For Spikformer, UCM AUROC increases from 
+
+94 .82% at Kb = 1 to 96 .47% at Kb = 2 and 97 .12% at Kb =3. Over the same configurations, FPR@95 decreases from 
+
+23 .41% to 16 .87% and then to 14 .75% . A similar monotonic trend is observed on AID and for ResNet19-SNN. This result illustrates the complementary roles of within-backbone and across-backbone diversity. The multiple heads provide several predictive hypotheses for each frozen rep-resentation, whereas independently trained backbones intro-duce additional variation in the representation itself. Com-bining both sources produces stronger OOD detection than increasing either source alone. Since five heads add only approximately 4% parameter overhead per backbone, ADPE (3 , 5) requires approximately 
+
+3.12 full-model parameter equivalents, compared with five for DE (5 , 1) . It therefore uses approximately 38% less pa-rameter storage and 40% fewer backbone evaluations, while matching or improving its OOD detection performance on UCM and AID. These quantities represent model-size and computation proxies rather than direct hardware-energy mea-surements. 
+
+Predictive Disagreement Analysis 
+
+Table 3 evaluates mutual information, which directly mea-sures disagreement among the predictive members. The com-parison between CEPE and ADPE is particularly informa-tive because a cross-entropy-trained pseudo-ensemble may achieve reasonable MSP performance while its heads still produce highly correlated predictions. For Spikformer, ADPE (3 , 5) improves MI-based AUROC over CEPE (3 , 5) by 2.72 , 2.05 , 2.06 , and 2.46 percentage points on UCM, AID, Global-Near, and Global-Far, respec-tively. For ResNet19-SNN, the corresponding improvements are 1.34 , 0.37 , 0.87 , and 0.49 points. The improvement across all evaluated datasets is consistent with the intended effect of the disagreement objective: the heads retain similar clean ac-Table 3: OOD detection using mutual information (MI) with EuroSAT as ID. ADPE denotes our proposed agree–disagree pseudo-ensemble and is identified by a bold method name. The pair (Kb, K h) denotes the number of independently trained backbones and the number of heads per backbone. Results are mean ±standard deviation and are reported as percentages. Higher AUROC is better; lower FPR@95 is better. The best and second-best results within each backbone and metric column are shown in bold and underlined, respectively. Method UCM AID Global-Near Global-Far AUROC ↑ FPR@95 ↓ AUROC ↑ FPR@95 ↓ AUROC ↑ FPR@95 ↓ AUROC ↑ FPR@95 ↓
+
+Spikformer 
+
+MC-DO (1 , –) 85 .94 ±0.90 46 .30 ±4.47 85 .73 ±1.30 46 .03 ±4.92 78 .25 ±3.24 51 .87 ±5.70 72 .37 ±1.60 56 .19 ±4.40 
+
+LLL (1 , –) 92 .98 ±1.40 32 .03 ±3.83 93 .94 ±1.22 30 .38 ±4.56 87 .38 ±2.06 49 .96 ±8.63 89 .85 ±2.65 50 .02 ±6.70 
+
+DE (5 , 1) 95 .18 ±0.00 22 .43 ±0.00 95 .64 ±0.00 22 .53 ±0.00 90 .53 ±0.00 35 .24 ±0.00 93 .66 ±0.00 40 .32 ±0.00 
+
+CEPE (3 , 5) 93 .25 ±0.31 33 .80 ±4.04 94 .40 ±0.29 28 .37 ±3.05 90 .48 ±1.20 40 .27 ±2.45 92 .01 ±0.49 44 .57 ±2.06 
+
+ADPE (1 , 5) 94 .67 ±0.56 21 .90 ±1.94 94 .89 ±0.83 21 .57 ±4.53 88 .33 ±1.12 47 .36 ±7.49 90 .43 ±1.60 39 .10 ±2.86 
+
+ADPE (2 , 5) 95 .51 ±0.55 25 .06 ±3.55 95 .99 ±0.37 20 .66 ±2.91 91 .43 ±0.79 40 .33 ±5.30 93 .46 ±1.12 33 .01 ±4.57 
+
+ADPE (3 , 5) 95 .97 ±0.45 25 .83 ±3.40 96 .45 ±0.23 20 .54 ±2.40 92 .54 ±0.44 36 .88 ±2.88 94 .47 ±0.70 30 .70 ±4.08 
+
+ResNet19-SNN 
+
+MC-DO (1 , –) 88 .24 ±1.15 44 .50 ±4.21 89 .59 ±0.78 42 .23 ±3.61 88 .62 ±0.98 43 .48 ±10 .08 92 .67 ±1.14 39 .84 ±4.83 
+
+LLL (1 , –) 89 .42 ±0.51 43 .09 ±2.34 90 .42 ±0.57 40 .90 ±2.68 88 .23 ±1.26 42 .55 ±6.28 92 .50 ±1.30 38 .71 ±4.73 
+
+DE (5 , 1) 91 .84 ±0.00 34 .10 ±0.00 92 .85 ±0.00 33 .03 ±0.00 90 .44 ±0.00 31 .15 ±0.00 96 .12 ±0.00 19 .80 ±0.00 
+
+CEPE (3 , 5) 91 .34 ±0.25 35 .66 ±1.51 92 .55 ±0.17 33 .12 ±1.31 89 .71 ±0.52 35 .96 ±4.39 95 .64 ±0.52 23 .12 ±5.09 
+
+ADPE (1 , 5) 90 .84 ±0.79 38 .11 ±3.84 90 .44 ±0.89 41 .34 ±4.23 88 .82 ±1.30 49 .88 ±6.29 93 .37 ±0.78 35 .98 ±5.37 
+
+ADPE (2 , 5) 92 .11 ±0.27 34 .02 ±2.32 92 .21 ±0.32 35 .92 ±1.73 89 .93 ±0.82 43 .42 ±4.18 95 .41 ±0.59 26 .10 ±4.99 
+
+ADPE (3 , 5) 92 .68 ±0.11 31 .92 ±1.02 92 .92 ±0.20 33 .34 ±1.00 90 .58 ±0.59 39 .48 ±3.50 96 .13 ±0.32 21 .72 ±2.20 
+
+curacy but produce more informative predictive differences away from the clean training distribution. ADPE (3 , 5) also achieves the highest MI AUROC for nearly every dataset and backbone configuration. For Spik-former, it exceeds the five-model deep ensemble on UCM, AID, Global-Near, and Global-Far. For ResNet19-SNN, it is either slightly better than or comparable to the five-model ensemble across the four datasets. The FPR@95 results, however, are less uniformly mono-tonic. For example, Spikformer ADPE (1 , 5) obtains a lower UCM MI-based FPR@95 than ADPE configurations with more backbones, even though the latter have higher AU-ROC. Similarly, the five-model ResNet19-SNN ensemble retains the lowest FPR@95 on some Global-LULC shifts. This indicates that improved global ranking, as measured by AUROC, does not always produce the best operating point at a threshold fixed to accept 95% of ID samples. The location and spread of the uncertainty-score distributions therefore remain important, particularly for semantically close distri-bution shifts. 
+
+Effect of OOD Shift Type 
+
+Detection is generally more difficult on Global-Near than on Global-Far. For example, Spikformer ADPE (3 , 5) obtains an MI AUROC of 92 .54% on Global-Near and 94 .47% on Global-Far. A similar difference is observed for ResNet19-SNN. This behavior is consistent with the construction of the subsets: Global-Near contains classes that overlap semanti-cally with EuroSAT and are therefore more likely to occupy regions close to the ID representation, whereas Global-Far contains classes without a direct EuroSAT counterpart. Although ADPE improves MI AUROC on both shifts, its FPR@95 advantage is less consistent on Global-Near. The proposed method should therefore be viewed as an ef-ficient mechanism for increasing useful ensemble disagree-ment rather than as a uniformly superior detector under every shift and operating threshold. 
+
+## Conclusion 
+
+We introduced an efficient spiking pseudo-ensemble for remote-sensing OOD detection. The proposed agree– disagree objective addresses diversity collapse by preserving classification performance on clean ID samples while en-couraging lightweight heads to express different predictions on structured disagreement inputs. Across Spikformer and ResNet19-SNN, the method improves over conventionally trained pseudo-ensembles and provides a favorable trade-off relative to deep ensembles, requiring fewer backbone evalua-tions and substantially less parameter replication. The results also indicate that semantically close distribution shifts and performance at fixed operating thresholds remain challeng-ing, motivating further study of adaptive disagreement inputs and uncertainty calibration in SNNs. References 
+
+Anumasa, S.; Mukhoty, B.; Bojkovic, V.; De Masi, G.; Xiong, H.; and Gu, B. 2024. Enhancing training of spiking neural network with stochastic latency. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 38, 10900– 10908. Benhammou, Y.; Alcaraz-Segura, D.; Guirado, E.; Khaldi, R.; Achchab, B.; Herrera, F.; and Tabik, S. 2022. Sen-tinel2GlobalLULC: A Sentinel-2 RGB Image Tile Dataset for Global Land Use/Cover Mapping with Deep Learning. 
+
+Scientific Data , 9(1): 681. Bojkovic, V.; Anumasa, S.; De Masi, G.; Gu, B.; and Xiong, H. 2024. Data driven threshold and potential initialization for spiking neural networks. In International Conference on Artificial Intelligence and Statistics , 4771–4779. PMLR. Davies, M.; Srinivasa, N.; Lin, T.-H.; Chinya, G.; Cao, Y.; Choday, S.; Dimou, G.; Joshi, P.; Imam, N.; Jain, S.; Liao, Y.; et al. 2018. Loihi: A Neuromorphic Manycore Processor with On-Chip Learning. IEEE Micro , 38(1): 82–99. Daxberger, E.; Kristiadi, A.; Immer, A.; Eschenhagen, R.; Bauer, M.; and Hennig, P. 2021. Laplace redux-effortless bayesian deep learning. Advances in neural information pro-cessing systems , 34: 20089–20103. Deng, S.; and Gu, S. 2021. Optimal Conversion of Con-ventional Artificial Neural Networks to Spiking Neural Net-works. In International Conference on Learning Represen-tations (ICLR) .Deng, S.; Li, Y.; Zhang, S.; and Gu, S. 2022. Temporal efficient training of spiking neural network via gradient re-weighting. arXiv preprint arXiv:2202.11946 .Diehl, P. U.; Neil, D.; Binas, J.; Cook, M.; Liu, S.-C.; and Pfeiffer, M. 2015. Fast-classifying, high-accuracy spiking deep networks through weight and threshold balancing. In 
+
+International Joint Conference on Neural Networks (IJCNN) .Durasov, N.; Bagautdinov, T.; Baque, P.; and Fua, P. 2021. Masksembles for Uncertainty Estimation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 13539–13548. Fang, W.; Chen, Y.; Ding, J.; Yu, Z.; Masquelier, T.; Chen, D.; Huang, L.; Zhou, H.; Li, G.; and Tian, Y. 2023. Spikingjelly: An open-source machine learning infrastructure platform for spike-based intelligence. Science Advances , 9(40): eadi1480. Fang, W.; Yu, Z.; Chen, Y.; Huang, T.; Masquelier, T.; and Tian, Y. 2021. Deep Residual Learning in Spiking Neural Networks. In Advances in Neural Information Processing Systems , volume 34. Gal, Y.; and Ghahramani, Z. 2016. Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning. In International Conference on Machine Learning (ICML) .Gawlikowski, J.; Saha, S.; Kruspe, A.; and Zhu, X. X. 2022. An advanced Dirichlet prior network for out-of-distribution detection in remote sensing. IEEE Transactions on Geo-science and Remote Sensing , 60: 1–19. Gerstner, W.; Kistler, W. M.; Naud, R.; and Paninski, L. 2014. 
+
+Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition . Cambridge University Press. Havasi, M.; Jenatton, R.; Fort, S.; Liu, J. Z.; Snoek, J.; Lak-shminarayanan, B.; Dai, A. M.; and Tran, D. 2020. Train-ing independent subnetworks for robust prediction. arXiv preprint arXiv:2010.06610 .Helber, P.; Bischke, B.; Dengel, A.; and Borth, D. 2019. Eurosat: A novel dataset and deep learning benchmark for land use and land cover classification. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 12(7): 2217–2226. Hendrycks, D.; Mazeika, M.; and Dietterich, T. G. 2019. Deep Anomaly Detection with Outlier Exposure. In Inter-national Conference on Learning Representations .Lakshminarayanan, B.; Pritzel, A.; and Blundell, C. 2017. Simple and Scalable Predictive Uncertainty Estimation us-ing Deep Ensembles. In Advances in Neural Information Processing Systems (NeurIPS) .Laurent, O.; Lafage, A.; Tartaglione, E.; Daniel, G.; Mar-tinez, J.-M.; Bursuc, A.; and Franchi, G. 2023. Packed-Ensembles for Efficient Uncertainty Estimation. In Interna-tional Conference on Learning Representations .Lee, K.; Lee, K.; Lee, H.; and Shin, J. 2018. A Simple Uni-fied Framework for Detecting Out-of-Distribution Samples and Adversarial Attacks. In Advances in Neural Information Processing Systems , volume 31. Li, S.; Li, N.; Jing, M.; Ji, C.; and Cheng, L. 2024. Evalua-tion of ten deep-learning-based out-of-distribution detection methods for remote sensing image scene classification. Re-mote Sensing , 16(9): 1501. Maass, W. 1997. Networks of spiking neurons: The third gen-eration of neural network models. Neural Networks , 10(9): 1659–1671. Martinez-Seras, A.; Del Ser, J.; Lobo, J. L.; Garcia-Bringas, P.; and Kasabov, N. 2023. A novel Out-of-Distribution detec-tion approach for Spiking Neural Networks: Design, fusion, performance evaluation and explainability. Information Fu-sion , 100: 101943. Neftci, E. O.; Mostafa, H.; and Zenke, F. 2019. Surrogate Gradient Learning in Spiking Neural Networks: Bringing the Power of Gradient-Based Optimization to Spiking Neural Networks. IEEE Signal Processing Magazine , 36(6): 51–63. Pagliardini, M.; Jaggi, M.; Fleuret, F.; and Karimireddy, S. P. 2023. Agree to Disagree: Diversity through Disagreement for Better Transferability. In International Conference on Learning Representations .Rueckauer, B.; Lungu, I.-A.; Hu, Y.; Pfeiffer, M.; and Liu, S.-C. 2017. Conversion of Continuous-Valued Deep Networks to Efficient Event-Driven Networks for Image Classification. 
+
+Frontiers in Neuroscience , 11: 682. Shrestha, S. B.; and Orchard, G. 2018. SLAYER: Spike Layer Error Reassignment in Time. In Advances in Neural Information Processing Systems (NeurIPS) .Ţifrea, A.; Stavarache, E.; and Yang, F. 2022. Semi-Supervised Novelty Detection Using Ensembles with Regu-larized Disagreement. In Cussens, J.; and Zhang, K., eds., 
+
+Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial Intelligence , volume 180 of Proceedings of Ma-chine Learning Research , 1939–1948. PMLR. Wen, Y.; Tran, D.; and Ba, J. 2020. BatchEnsemble: An Alternative Approach to Efficient Ensemble and Lifelong Learning. In International Conference on Learning Repre-sentations .Xia, G.-S.; Hu, J.; Hu, F.; Shi, B.; Bai, X.; Zhong, Y.; Zhang, L.; and Lu, X. 2017. AID: A Benchmark Data Set for Per-formance Evaluation of Aerial Scene Classification. IEEE Transactions on Geoscience and Remote Sensing , 55(7): 3965–3981. Yang, Y.; and Newsam, S. 2010. Bag-of-visual-words and spatial extensions for land-use classification. In Proceed-ings of the 18th SIGSPATIAL international conference on advances in geographic information systems , 270–279. Zhou, Z.; Zhu, Y.; He, C.; Wang, Y.; Yan, S.; Tian, Y.; and Yuan, L. 2022. Spikformer: When spiking neural network meets transformer. arXiv preprint arXiv:2209.15425 .Supplementary Material Overview 
+
+This document provides additional dataset details, imple-mentation and training settings, random-seed configuration, computational resources, formal definitions of the evaluation metrics, and the trainable-parameter calculation supporting the results reported in the main paper. 
+
+Datasets and Preprocessing 
+
+All experiments use EuroSAT (Helber et al. 2019) as the in-distribution (ID) dataset. EuroSAT contains 27,000 Sentinel-2 images from 10 land-use and land-cover classes. We use only the RGB channels, resize every image to 64 × 64 pixels, and normalize the channels using the ImageNet mean and standard deviation. The dataset is partitioned using a fixed train/validation/test split stored in a single split file. The same split is used for every architecture, baseline, and random seed. For OOD evaluation, we use UCMerced Land Use (UCM) (Yang and Newsam 2010), AID (Xia et al. 2017), and Sentinel-2 Global Land Use/Land Cover (Benhammou et al. 2022). UCM and AID are evaluated using their com-plete datasets. For Sentinel-2 Global LULC, we construct two subsets according to semantic overlap with the EuroSAT classes. Global-Near contains 21 classes with semantic over-lap with EuroSAT, whereas Global-Far contains eight classes without an apparent EuroSAT counterpart. To reduce class-size imbalance, every selected Global LULC class is capped at 416 images, corresponding to the size of the smallest se-lected class. During backbone training, we apply random horizontal flipping and a random resized crop with scale range [0 .8, 1.0] .Validation, ID test, and OOD images are resized and normal-ized without stochastic augmentation. 
+
+SNN Backbones and Classification Heads 
+
+We evaluate two directly trained SNN architectures: a Transformer-based Spikformer and a convolutional ResNet19-SNN. Both use T = 2 simulation steps. 
+
+Spikformer. (Zhou et al. 2022) The Spikformer uses six Transformer blocks, embedding dimension 384, six attention heads, patch size 4, and an MLP expansion ratio of 4. Spiking activations are implemented using MultiStepLIFNode 
+
+from SpikingJelly with membrane time constant τ = 2 .0 and 
+
+detach_reset=True . We use the sigmoid surrogate gra-dient with slope parameter α = 4 .0. Each pseudo-ensemble head has the form 
+
+Linear(384 , 256) → BN → LIF → Linear(256 , C ).
+
+ResNet19-SNN. (Deng et al. 2022) The ResNet19-SNN uses residual-layer configuration [3 , 3, 2] and channel dimen-sions 64 → 128 → 256 → 512 . The network uses LIFSpike neurons with membrane decay τ = 0 .5, a piecewise-linear surrogate gradient with γ = 1 .0, and a hard membrane reset to zero at the beginning of each forward pass. Each pseudo-ensemble head is 
+
+tdLayer(512 , 256) → LIFSpike → tdLayer(256 , C ).
+
+Table 4: Optimization hyperparameters used for deterministic-backbone and pseudo-ensemble-head training.                
+
+> Hyperparameter Value
+> Optimizer SGD Momentum 0.9
+> Initial learning rate 0.1
+> Weight decay 10 −4
+> Learning-rate schedule Cosine annealing Minimum learning rate 0
+> Batch size 64
+> Input resolution 64 ×64
+> Backbone epochs 300
+> Head-only epochs 100
+> Simulation steps T= 2
+
+Backbone and Pseudo-Ensemble Training 
+
+Each deterministic backbone is trained for 300 epochs using cross-entropy loss. After deterministic training, the check-point with the highest validation accuracy is retained. Its backbone parameters and normalization statistics are then frozen, the original classifier is removed, and Kh = 5 inde-pendently initialized classification heads are attached. The heads are trained simultaneously for 100 epochs. For CEPE, each head receives minibatches from its own indepen-dently shuffled data loader and is updated using a separate optimizer. This provides a stronger cross-entropy baseline by exposing the heads to different minibatch sequences. Al-though the heads may receive different samples at a particular optimization step, they share the same frozen backbone and therefore operate in the same representation space. ADPE uses a shared minibatch because the general-ized Jensen–Shannon objective requires predictions from all heads for the same input. Each ADPE head is nevertheless up-dated using a separate optimizer. All head-specific optimizers use identical hyperparameters and learning-rate schedules. For ADPE, each training image is independently selected for box blur with probability ρ = 0 .3. Blur is implemented using average pooling with kernel size 
+
+k ∈ { 5, 7, 9, 11 },
+
+sampled uniformly for each selected image. Clean images contribute only to the cross-entropy objective, whereas blur-corrupted images are excluded from cross-entropy and con-tribute only to the generalized Jensen–Shannon disagreement objective, with λdis = 0 .3. Therefore, no class label is im-posed on a blur-corrupted image. For both CEPE and ADPE, each classification head is up-dated using a separate optimizer. All head-specific optimizers use the same optimization hyperparameters and learning-rate schedule. 
+
+Baseline Implementations 
+
+We compare against deterministic confidence and feature-distance methods, stochastic-head approximations, and con-ventional deep ensembles. Deterministic MSP and entropy. MSP and predictive en-tropy are computed directly from the softmax distribution of a deterministically trained SNN. 
+
+Deep ensemble. (Lakshminarayanan, Pritzel, and Blundell 2017) Deep-ensemble predictions are obtained by averaging the class probabilities of independently initialized and trained deterministic SNNs. Each ensemble member contains a com-plete backbone and classification head. 
+
+Monte Carlo dropout. (Gal and Ghahramani 2016) For MC dropout, we attach and retrain a classification head con-taining dropout with probability p = 0 .2 after its LIF activa-tion. The head is trained for 100 epochs, and uncertainty is estimated using TMC = 20 stochastic inference passes. 
+
+Last-layer Laplace (Daxberger et al. 2021) We fit a Kronecker-factored Laplace approximation to the final clas-sification layer. For Spikformer, the posterior is fitted to 
+
+backbone.head , corresponding to Linear(384 , C ). For ResNet19-SNN, it is fitted to model.fc2 , corresponding to Linear(256 , C ). The prior precision is optimized us-ing marginal likelihood, and predictions are averaged over 
+
+S = 20 posterior samples. 
+
+Mahalanobis distance (Lee et al. 2018). Mahalanobis detection uses temporal-mean-pooled firing-rate features from the penultimate representation. These features are 384-dimensional for Spikformer and 512-dimensional for ResNet19-SNN. We estimate one mean per ID class and a covariance matrix tied across classes. The OOD score is the distance to the nearest class mean. 
+
+Evaluation Protocol 
+
+We train five independently initialized deterministic back-bones using the fixed random seeds 
+
+{0, 1, 2, 3, 4}.
+
+For a configuration containing Kb independently trained backbones, we evaluate every subset among the five avail-able models. Results for Kb = 1 , Kb = 2 , and Kb = 3 
+
+are therefore averaged over 5, 10, and 10 backbone sub-sets, respectively. For Kb = 5 , only one subset exists and its reported subset standard deviation is zero. Each selected pseudo-ensemble backbone contributes all of its Kh = 5 
+
+heads, whereas a deep-ensemble member has one head. Post-hoc single-backbone baselines are summarized across the five deterministic-backbone seeds. The hyper-parameter ablation in Section Hyperparameter Ablation 
+
+uses three deterministic backbones, corresponding to seeds 
+
+{0, 1, 2}.We report EuroSAT test accuracy and OOD detection us-ing MSP, predictive entropy, and mutual information. For AUROC and AUPR, OOD samples are treated as the posi-tive class. All reported metric values are percentages unless stated otherwise. Higher accuracy, AUROC, and AUPR are better, whereas lower FPR@95 is better. 
+
+Uncertainty Scores and OOD Metrics 
+
+Predictive distribution. Let J denote the total number of predictive members and C the number of classes. Member j
+
+produces p(j)(x) ∈ RC , and the aggregated distribution is 
+
+¯pc(x) = 1
+
+J
+
+> J
+
+X
+
+> j=1
+
+p(j) 
+
+> c
+
+(x), c = 1 , . . . , C. (14) For a pseudo-ensemble with Kb backbones and Kh heads per backbone, J = KbKh. For a conventional deep ensemble, 
+
+J = Kb. For MC dropout and last-layer Laplace, J denotes the number of stochastic predictive samples. 
+
+MSP-based uncertainty. We orient the MSP score so that larger values indicate stronger OOD evidence: 
+
+sMSP (x) = 1 − max  
+
+> c
+
+¯pc(x). (15) 
+
+Predictive entropy. 
+
+sEnt (x) = H(¯ p(x)) = −
+
+> C
+
+X
+
+> c=1
+
+¯pc(x) log ¯ pc(x). (16) 
+
+Mutual information. 
+
+sMI (x) = H(¯ p(x)) − 1
+
+J
+
+> J
+
+X
+
+> j=1
+
+H
+
+
+
+p(j)(x)
+
+
+
+. (17) Mutual information is high when individual predictors are confident but mutually inconsistent. 
+
+Mahalanobis distance. Let z(x) denote the temporal-mean-pooled penultimate feature, μc the feature mean of class c, and Σ the covariance matrix shared across classes. The score is 
+
+sMaha (x) = min  
+
+> c
+
+(z(x) − μc)⊤ Σ−1 (z(x) − μc) . (18) 
+
+AUROC, AUPR-Out, and FPR@95. All scores are ori-ented so that larger values indicate stronger OOD evi-dence. AUROC measures separation across all thresholds, and AUPR-Out is the area under the precision–recall curve with OOD as the positive class. For FPR@95, we select the score threshold 
+
+τ95 = Q0.95 ({s(x) : x ∈ D ID }) , (19) which accepts 95% of the ID samples. Because larger scores indicate OOD evidence, an example is accepted as ID when 
+
+s(x) ≤ τ95 . We compute 
+
+FPR@95 = 1
+
+|D OOD |
+
+X
+
+> x∈D OOD
+
+I[s(x) ≤ τ95 ] . (20) 
+
+Implementation and Reproducibility 
+
+All experiments are implemented in PyTorch 2.6.0 using SpikingJelly 0.0.0.0.14 (Fang et al. 2023) and are exe-cuted on NVIDIA A100 GPUs. Each seed controls the Python, NumPy, PyTorch CPU, and PyTorch CUDA ran-dom states. CuDNN deterministic execution is enabled with 
+
+deterministic=True and benchmark=False . The same dataset split is reused for all methods. Table 5: Complete diagnostic comparison of image transformations on EuroSAT using a conventional deep ensemble of five independently trained Spikformer models. Values denote the mean ± standard deviation across evaluation samples. Lower MSP indicates lower predictive confidence, whereas higher predictive entropy, predictive variance, and mutual information indicate greater uncertainty or inter-model disagreement. Bold and underlined values denote the strongest and second-strongest uncertainty responses, respectively.                                                        
+
+> Metric Clean Noise Blur-S Blur-M Blur-L Bright. Dark Contrast Rot. 90 ◦Cutout MSP ↓0.974 ±0.080 0.760 ±0.209 0.779 ±0.190 0.712 ±0.188 0.687 ±0.177 0.769 ±0.201 0.839 ±0.190 0.785 ±0.210 0.965 ±0.093 0.941 ±0.121
+> Predictive entropy ↑0.076 ±0.183 0.650 ±0.480 0.557 ±0.401 0.707 ±0.365 0.752 ±0.334 0.611 ±0.455 0.473 ±0.441 0.602 ±0.499 0.104 ±0.219 0.165 ±0.271
+> Predictive variance ↑0.0012 ±0.0048 0.0131 ±0.0132 0.0113 ±0.0114 0.0154 ±0.0118 0.0172 ±0.0117 0.0128 ±0.0126 0.0085 ±0.0119 0.0106 ±0.0119 0.0017 ±0.0057 0.0029 ±0.0072
+> Mutual information ↑0.0234 ±0.0738 0.2522 ±0.2223 0.1968 ±0.1762 0.2627 ±0.1779 0.2877 ±0.1732 0.2382 ±0.2102 0.1745 ±0.1990 0.2128 ±0.2089 0.0329 ±0.0893 0.0531 ±0.1105
+
+Parameter and Computation Accounting 
+
+For a configuration with Kb backbones and Kh heads per backbone, the parameter count and inference-computation proxy are 
+
+PADPE = Kb(Pb +KhPh), CADPE = Kb(Cb +KhCh),
+
+(21) where Pb and Cb denote the parameters and computation of one backbone, and Ph and Ch denote those of one head. For both architectures, Pb ≈ 12 .5 million and Ph ≈ 0.1 million, so five heads add approximately 4% parameter overhead to one backbone. Because the head computation is small rela-tive to the backbone computation, the dominant deployment cost scales with Kb rather than KbKh. We therefore report parameter storage and the number of backbone evaluations as deployment-cost proxies. 
+
+## Diagnostic Study of Structured Disagreement Inputs 
+
+Before training ADPE, we evaluate a conventional deep en-semble of five independently trained Spikformer models on transformed EuroSAT images. This diagnostic study is used only to identify structured inputs that naturally induce inter-model uncertainty and disagreement. The transformed im-ages are not treated as samples from the unknown test-time OOD distributions. 
+
+Evaluated Transformations 
+
+We consider additive noise (gaussian noise with std =0.3), small(window size=5), medium(9), and large box blur(11), brightness increase(0.5), darkening(-0.5), contrast (factor=2) modification, a 90 ◦ rotation, and cutout(16x16). The three blur levels correspond to increasing box-filter kernel sizes which use average-pooling kernels. Medium and large blur produce the strongest predictive-entropy and mutual-information responses while retaining coarse scene struc-ture, motivating their use as structured disagreement inputs. Table 5 provides the complete comparison underlying the transformation-selection study in the main paper. Clean im-ages produce high confidence and little inter-model disagree-ment. Rotation and cutout cause only small changes in all four diagnostics, indicating that the ensemble remains com-paratively confident under these transformations. Additive noise, brightness, darkening, and contrast modification in-duce greater uncertainty, but medium and large box blur produce the most consistent response across all measures. In particular, large blur yields the lowest MSP and the high-est predictive entropy, predictive variance, and mutual infor-mation. We therefore use box-blurred images as structured disagreement inputs for ADPE. 
+
+Predictive variance. The class-wise variance across pre-dictive members is averaged over classes: 
+
+sVar (x) = 1
+
+C
+
+> C
+
+X
+
+> c=1
+
+ 1
+
+J
+
+> J
+
+X
+
+> j=1
+
+
+
+p(j) 
+
+> c
+
+(x) − ¯pc(x)
+
+2
+
+ . (22) 
+
+## Additional OOD Detection Results 
+
+Tables 6 and 7 provide complementary evidence that the pro-posed disagreement objective improves both predictive un-certainty and inter-member diversity. In Table 6, ADPE (3 , 5) 
+
+consistently outperforms CEPE (3 , 5) for predictive-entropy-based OOD detection on UCM and AID across both back-bones. The improvement is especially pronounced for Spik-former, where FPR@95 decreases from 20 .16% to 12 .59% 
+
+on UCM and from 17 .49% to 11 .21% on AID. For ResNet19-SNN, the gains are smaller but remain consistent across AUROC, AUPR, and FPR@95. Table 7 further shows that these improvements are accompanied by more informative predictive disagreement. Spikformer ADPE (3 , 5) achieves the highest MI-based AUPR-Out on AID, Global-Near, and Global-Far, while remaining close to the five-model deep en-semble on UCM. For ResNet19-SNN, ADPE (3 , 5) obtains the strongest UCM result and remains competitive with the deep ensemble on the remaining distribution shifts. Together, the two tables indicate that ADPE improves uncertainty qual-ity not only by modifying the ensemble-averaged confidence, but also by increasing useful diversity among the predictive members. 
+
+## Hyperparameter Ablation 
+
+Effect of the Number of Heads and Disagreement Weight 
+
+We vary the number of heads Kh ∈ { 2, 3, 4, 5, 6, 7} and the disagreement weight λdis ∈ { 0.1, 0.2, 0.3, 0.4, 0.5} for ResNet19-SNN. Every entry is the mean and sample standard deviation over deterministic-backbone seeds {0, 1, 2}. The setting used in the main experiments, Kh = 5 and λdis =0.3, is shown in bold, and the best mean is underlined. The ablation exhibits a broad region of competitive perfor-mance rather than a sharply localized optimum. The selected Table 6: OOD detection using predictive entropy with EuroSAT as ID. ADPE denotes our proposed method and is identified by a bold method name. AUPR treats OOD as the positive class. All values are percentages. Higher AUROC and AUPR are better; lower FPR@95 is better. The best and second-best results within each backbone and metric column are shown in bold and underlined, respectively. 
+
+Method UCM AID AUROC ↑ AUPR ↑ FPR@95 ↓ AUROC ↑ AUPR ↑ FPR@95 ↓
+
+Spikformer 
+
+MC-DO (1 , –) 92 .31 ±0.49 91 .30 ±0.64 33 .75 ±2.94 93 .87 ±0.99 98 .17 ±0.29 29 .74 ±3.95 
+
+LLL (1 , –) 92 .22 ±1.46 91 .22 ±1.60 34 .47 ±4.00 93 .23 ±1.36 97 .94 ±0.47 32 .71 ±6.00 
+
+DE (1 , 1) 89 .99 ±1.76 88 .75 ±1.78 41 .41 ±3.58 91 .04 ±2.12 97 .21 ±0.72 40 .29 ±6.91 
+
+DE (5 , 1) 95 .51 ±0.00 95 .14 ±0.00 21 .29 ±0.00 96 .19 ±0.00 98 .89 ±0.00 19 .28 ±0.00 
+
+CEPE (3 , 5) 95 .60 ±0.22 95 .42 ±0.24 20 .16 ±0.90 96 .55 ±0.31 99 .03 ±0.10 17 .49 ±1.72 
+
+ADPE (1 , 5) 94 .92 ±0.60 94 .30 ±0.77 22 .72 ±2.49 95 .40 ±1.06 98 .62 ±0.35 21 .85 ±5.40 
+
+ADPE (2 , 5) 96 .86 ±0.41 96 .53 ±0.41 15 .61 ±1.43 97 .15 ±0.45 99 .19 ±0.15 14 .04 ±2.39 
+
+ADPE (3 , 5) 97 .51 ±0.26 97 .25 ±0.23 12 .59 ±0.71 97 .68 ±0.23 99 .36 ±0.08 11 .21 ±1.17 
+
+ResNet19-SNN 
+
+MC-DO (1 , –) 89 .06 ±1.20 87 .83 ±1.42 41 .35 ±5.40 90 .53 ±0.88 97 .09 ±0.32 38 .72 ±4.63 
+
+LLL (1 , –) 89 .88 ±0.46 88 .57 ±0.78 41 .06 ±2.83 90 .82 ±0.54 97 .19 ±0.19 39 .03 ±3.31 
+
+DE (1 , 1) 89 .22 ±0.97 87 .49 ±1.25 43 .27 ±3.43 90 .24 ±0.57 96 .92 ±0.21 41 .37 ±2.96 
+
+DE (5 , 1) 92 .28 ±0.00 91 .64 ±0.00 31 .71 ±0.00 93 .22 ±0.00 98 .00 ±0.00 30 .10 ±0.00 
+
+CEPE (3 , 5) 91 .69 ±0.18 91 .13 ±0.26 32 .88 ±1.10 93 .00 ±0.15 97 .95 ±0.06 30 .38 ±1.15 
+
+ADPE (1 , 5) 90 .14 ±0.74 89 .31 ±1.06 37 .45 ±3.51 91 .30 ±0.53 97 .36 ±0.19 36 .82 ±2.33 
+
+ADPE (2 , 5) 91 .86 ±0.33 91 .32 ±0.51 32 .60 ±1.88 92 .92 ±0.29 97 .90 ±0.11 31 .48 ±1.45 
+
+ADPE (3 , 5) 92 .48 ±0.17 92 .04 ±0.31 30 .40 ±1.33 93 .51 ±0.19 98 .09 ±0.07 29 .24 ±1.46 
+
+configuration, Kh = 5 and λdis = 0 .3, is within approx-imately 1.2 percentage points of the best mean FPR@95 for both MSP and predictive entropy. These differences are smaller than the observed cross-seed variability, indicating that the selected configuration is a robust intermediate set-ting without requiring the largest number of heads or the strongest disagreement weight. Table 7: Mutual-information-based AUPR-Out for ensemble-based methods with EuroSAT as ID. The pair (Kb, K h) denotes the number of independently trained backbones and the number of heads per backbone. Results are reported as mean ±standard deviation over the evaluated backbone combinations. All values are percentages, and higher values are better. The best and second-best results within each backbone and dataset are shown in bold and underlined, respectively. 
+
+Method UCM AID Global-Near Global-Far 
+
+Spikformer 
+
+DE (5 , 1) 94 .30 ±0.00 98 .62 ±0.00 96 .51 ±0.00 94 .17 ±0.00 
+
+CEPE (3 , 5) 89 .41 ±0.94 97 .75 ±0.24 96 .16 ±0.40 92 .12 ±0.40 
+
+ADPE (1 , 5) 93 .52 ±0.66 98 .48 ±0.32 95 .70 ±0.67 92 .00 ±1.07 
+
+ADPE (2 , 5) 93 .37 ±1.03 98 .72 ±0.19 96 .77 ±0.42 93 .74 ±1.14 
+
+ADPE (3 , 5) 94 .05 ±0.78 98 .90 ±0.11 97 .24 ±0.22 94 .72 ±0.81 
+
+ResNet19-SNN 
+
+DE (5 , 1) 90 .17 ±0.00 97 .68 ±0.00 96 .58 ±0.00 95 .91 ±0.00 
+
+CEPE (3 , 5) 88 .98 ±0.40 97 .46 ±0.10 96 .24 ±0.25 95 .13 ±0.67 
+
+ADPE (1 , 5) 88 .70 ±1.17 96 .73 ±0.34 94 .85 ±0.61 93 .14 ±0.89 
+
+ADPE (2 , 5) 90 .20 ±0.40 97 .32 ±0.14 95 .67 ±0.47 94 .96 ±0.93 
+
+ADPE (3 , 5) 91 .03 ±0.18 97 .59 ±0.09 96 .01 ±0.34 95 .78 ±0.62 
+
+Table 8: Ablation of the number of heads Kh and disagreement weight λdis on UCM using MSP-based FPR@95. Results are mean ± standard deviation over three independently trained backbones. Lower values are better. 
+
+λdis \Kh 2 3 4 5 6 70.1 39 .33 ± 4.33 39 .60 ± 3.01 38 .51 ± 4.61 37 .86 ± 3.65 37 .22 ± 4.84 37 .98 ± 4.83 
+
+0.2 40 .41 ± 3.96 38 .67 ± 4.77 38 .27 ± 3.27 37 .63 ± 4.36 37 .40 ± 4.42 37 .79 ± 3.76 
+
+0.3 40 .52 ± 5.36 38 .84 ± 3.74 37 .97 ± 4.48 38 .00 ± 4.49 38 .25 ± 4.91 39 .19 ± 4.84 
+
+0.4 40 .10 ± 5.03 38 .78 ± 3.59 37 .09 ± 4.68 37 .57 ± 4.67 37 .71 ± 4.87 37 .06 ± 6.01 
+
+0.5 39 .22 ± 4.85 38 .79 ± 4.28 38 .83 ± 4.73 36 .92 ± 5.01 37 .54 ± 4.08 37 .62 ± 5.17 
+
+Bold indicates the configuration used in the main experiments; underlining indicates the best mean result. 
+
+Table 9: Ablation of the number of heads Kh and disagreement weight λdis on UCM using predictive-entropy-based FPR@95. Results are mean ± standard deviation over three independently trained backbones. Lower values are better. 
+
+λdis \Kh 2 3 4 5 6 70.1 37 .94 ± 4.66 37 .29 ± 2.97 36 .73 ± 3.78 35 .97 ± 3.24 35 .70 ± 4.23 35 .35 ± 3.48 
+
+0.2 38 .84 ± 3.78 36 .79 ± 4.77 35 .68 ± 2.54 36 .00 ± 4.18 35 .22 ± 3.11 35 .52 ± 3.27 
+
+0.3 39 .03 ± 4.68 36 .98 ± 3.41 35 .30 ± 3.75 35 .81 ± 4.07 35 .90 ± 3.52 36 .22 ± 3.62 
+
+0.4 38 .47 ± 5.62 36 .78 ± 4.06 35 .44 ± 4.39 35 .37 ± 4.72 35 .53 ± 4.47 34 .65 ± 5.02 
+
+0.5 37 .70 ± 4.76 36 .33 ± 3.87 36 .09 ± 3.96 35 .10 ± 4.75 35 .62 ± 3.98 35 .03 ± 4.28 
+
+Bold indicates the configuration used in the main experiments; underlining indicates the best mean result.

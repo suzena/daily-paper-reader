@@ -1,0 +1,534 @@
+Title: Staying on Spec: Real-Time Monitoring under Uncertainty with a Maritime Case Study
+
+URL Source: https://arxiv.org/pdf/2608.02811v1
+
+Published Time: Wed, 05 Aug 2026 00:12:05 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# Staying on Spec: Real-Time Monitoring under Uncertainty with a Maritime Case Study 
+
+Elizabeth Dietrich †,1, Hanna Krasowski †,1, Emir Cem Gezer 2,Roger Skjetne 2, Asgeir Johan Sørensen 2, and Murat Arcak 1
+
+Abstract —Robotic systems must operate under uncertainty while satisfying complex task and safety specifications. Monitor-ing such specifications under uncertainty remains challenging, as existing formulations typically require extensive data or explicit uncertainty distributions. In this paper, we propose a real-time monitoring framework that reduces data requirements by leveraging data-driven reachable sets for specification evaluation. We instantiate the framework for maritime navigation, where complex specifications arise from traffic rules. We develop a data-efficient pipeline for constructing reachable sets and derive a monitoring formulation suitable for real-time deployment. Simu-lation and hardware experiments demonstrate robust monitoring under realistic disturbances, achieving improved risk detection compared to state-of-the-art metrics. 
+
+I. I NTRODUCTION 
+
+Temporal logic provides a flexible framework to encode and monitor complex behavioral requirements in many robotics ap-plications [1]–[3]. In maritime navigation, temporal logic has been used to falsify autonomous surface vessel controllers [4], [5], monitor underwater vehicles [6], and certify surface vessel specification compliance [7]. However, these approaches either neglect uncertainty [5], [6] or depend on simplified models to overapproximate system behavior [7], limiting their applica-bility in real-world settings where disturbances are pervasive. Current approaches typically address uncertainty in trajec-tory predictions through model-based reachability methods with bounded uncertainty estimation, where uncertainty is characterized through online data collection [8], [9] or his-torical data [10], [11]. Resulting reachable sets are generally assumed to be valid over-approximations, which is difficult to verify when only limited data is available due to real-world resource constraints. In contrast, when generating data is in-expensive, e.g., in simulation, various data-driven reachability methods exist to directly compute tight reachable sets with probabilistic guarantees [12]–[14]. However, this typically results in a sim-to-real gap when deployed on hardware. In this paper, we present a real-time monitoring framework and demonstrate its use in maritime navigation (see Fig. 1). We build on the probabilistic signal temporal logic language, pacSTL [15], and formulate realistic and computationally efficient monitoring specifications for maritime navigation, allowing us to account for uncertainty in real time. Addi-tionally, we propose a real-world, data-driven reachability 
+
+> †
+
+Equal conribution 
+
+> 1
+
+Elizabeth Dietrich, Hanna Krasowski, Murat Arcak are with the University of California, Berkeley {eadietri, krasowski, arcak }@berkeley.edu 
+
+> 2
+
+Emir Cem Gezer, Roger Skjetne, Asgeir Sørensen are with the Nor-wegian University of Science and Technology {emir.cem.gezer, roger.skjetne, asgeir.sorensen }@ntnu.no   
+
+> Offline
+> Simulation Data
+> Cheap
+> Reachable Sets
+> Real World Data
+> Costly
+> Reachable Sets
+
+̸
+
+=       
+
+> Limited Real-World Experiments
+> {δ(i)
+> r}Li=1 |ab|
+> Characterize Distribution
+> Ξ( t;t0,·,·)
+> Add to Simulation Model
+> Online
+> Data-Driven
+> Reachable Sets
+
+## +
+
+> pacSTL
+> Specifications
+
+G( encounter )
+
+τ
+
+> Control Input
+
+δt 
+
+> Vessel States Reachable Sets Prediction
+
+Fig. 1. Offline: We use experimental data to characterize the disturbance dis-tribution and incorporate it into the simulation model, bridging the sim-to-real gap (purple) and enabling inexpensive generation of real-world representative trajectories for reachability analysis. Online: The resulting reachable sets are combined with pacSTL specifications for real-time monitoring. 
+
+procedure that estimates distributional support from limited experimental data. We compare our framework against state-of-the-art baselines in hardware experiments with varying wave disturbances. Our main contributions include:  
+
+> •
+
+We introduce an efficient pacSTL formulation for mar-itime monitoring and decision making;  
+
+> •
+
+We propose an approach to data-driven reachability that integrates distribution modeling with high-fidelity simu-lations and leverages system invariances for deployment;  
+
+> •
+
+We compare against signal temporal logic (STL) and a commonly used risk metric, demonstrating that pacSTL offers greater expressiveness and more robust monitoring, especially under disturbances, such as waves. II. R EAL -TIME UNCERTAINTY -AWARE MONITORING 
+
+Assessing temporal logic specification compliance under unbounded uncertainty is typically data-intensive [16]–[19]. This is especially challenging for multi-agent relative states, arXiv:2608.02811v1 [cs.RO] 3 Aug 2026 as in maritime navigation. To address this challenge, pac-STL [15] was introduced as a probabilistic STL language that evaluates specifications over reachable sets with Probably Approximately Correct (PAC) guarantees [20]. Given a PAC-bounded reachable tube, pacSTL computes lower ht and upper ht robustness bounds for each atomic proposition at every time step. Specifically, for a robustness function h(δt), where δt denotes the system trajectory at time 
+
+t, pacSTL computes these bounds by solving optimization problems over the reachable set, Rt:
+
+ht = minimize 
+
+> δt
+
+h(δt) subject to δt ∈ R t, (1) 
+
+ht = maximize 
+
+> δt
+
+h(δt) subject to δt ∈ R t. (2) The resulting interval [ht, h t] bounds the robustness of any state contained in Rt and inherits its PAC guarantee. These atomic robustness intervals are used to recursively evaluate the STL specification using interval semantics [21], obtaining a specification-level robustness interval and PAC bound on robustness interval satisfaction. We refer the reader to [15] for the details on syntax, semantics, and bound derivations. In this work, we build on pacSTL to enable specification monitoring under uncertainty for maritime navigation. Deploy-ing pacSTL in the real world requires two key capabilities: (i) PAC-bounded reachable sets representative of real-world behavior, and (ii) a specification formulation that enables real-time evaluation. We address these challenges by developing a sim-to-real calibration procedure that aligns simulated trajecto-ries with the real-world distribution using limited experimental data (Sec. III), and by introducing efficiently evaluatable atomic propositions for maritime navigation (Sec. IV). To-gether, these contributions facilitate real-time monitoring of complex temporal logic specifications under uncertainty using offline-computed reachable sets, without requiring a symbolic model of the system. III. D ATA -D RIVEN REACHABILITY ANALYSIS WITH 
+
+REAL -W ORLD DISTURBANCES 
+
+Data-driven reachability analysis enables reasoning about systems characterized by probability distributions over initial conditions, disturbances, or model parameters [12]–[14], [22]. Compared to model-based reachability [23], [24], the data-driven paradigm is particularly useful when accurate models are unavailable, and system behavior can only be observed through simulation or experimentation. Although data-driven methods can be applied directly to real-world data, collecting sufficient i.i.d. samples to obtain meaningful statistical guar-antees is often time- and resource-intensive. Conversely, while simulations provide abundant data, they typically suffer from a sim-to-real gap. To address these challenges, we propose a data-driven reachability framework (see Fig. 1) that com-bines data-driven disturbance modeling with sufficiently high-fidelity simulations. Experimental data is used to characterize a disturbance distribution, which is incorporated into a nominal simulation model to generate trajectories for reachable set computation. We formalize this approach below. A forward reachable set is defined as Rt = {Ξ( t; t0, x 0, d ) : 
+
+x0 ∈ X 0, d ∈ D} where X0 ⊆ Rnx is the set of initial states, 
+
+D is the set of disturbance signals d : [ t0, t ] → Rnd , and 
+
+Ξ( t; t0, ·, ·) : Rnx × D → Rnx is the state transition function. 
+
+Rt contains all states that the system can transition to at time 
+
+t from X0 at t0, subject to disturbances in D. Further, we denote a forward reachable tube as a collection of reachable sets R = {R 0, . . . , RT }. To estimate Rt, we first specify the initial state set X0 and disturbance set D, which may include disturbance terms, uncertain parameters, or other application-specific sources of variability. The set X0 is selected given the operating conditions of interest, while D is characterized from real-world experimental data {δ(i) 
+
+> r
+
+}Li=1 .Although the distribution of D, μD , could ideally be esti-mated directly from representative, experimental data, obtain-ing sufficient i.i.d. data is often infeasible in practice. Given limited data and no prior distribution, the observed extrema of each disturbance component in {δ(i) 
+
+> r
+
+}Li=1 can be used to parameterize a bounded support, SD , over which the distur-bance distribution is modeled as uniform, i.e., μD = U(SD ). In the absence of additional distributional information, a uniform distribution is typically assumed [25]. For estimating probabilistic reachable sets, let δ(i) =Ξ( t; t0, x 0i, d i), i = 1, . . . , N denote trajectories such that 
+
+x01 , . . . , x 0Ni.i.d. 
+
+∼ μX0 , d1, . . . , d Ni.i.d. 
+
+∼ μD , where X0 is endowed with distribution μX0 , and μD is as characterized above. For a desired confidence parameter, β, we aim to find the minimum-volume Rt containing {δ}Ni=1 , such that 
+
+P M (Pδ∈R t ≥ 1−ϵRt ) ≥ 1−β holds for M i.i.d. samples, and the accuracy ϵRt is dependent on the verification approach. Note that due to the independence of samples δ(i), P M denotes the product probability over M samples, where i = 1 , . . . , M .IV. M ARITIME NAVIGATION 
+
+Maritime navigation is structured by traffic rules that de-scribe proper maneuvers in case of a collision risk. More specifically, we focus on the traffic rules for power-driven vessels on the open sea described in the Convention on the International Regulations for Preventing Collisions at Sea (COLREG) [26]. Specifically, for power-driven vessels, there are three specified encounters (crossing, head-on, overtaking) and two collision-avoidance behaviors (give-way and stand-on). These encounters are always specified for two vessels, in our case, an autonomous ego vessel and another traffic participant, for which we can compute data-driven reachable sets. We denote a vessel trajectory as δt ∈ R6, consisting of surface position p = [px, p y ]⊤, orientation ψ, velocity 
+
+v = [ vx, v y ]T , and absolute velocity vel = ∥[vx, v y ]∥2, where superscripts E and O denote ego and other vessel, respectively. A head-on or crossing encounter is present when another vessel approaches the ego vessel from a specified sector and poses a risk of collision in the near future. A head-on encounter corresponds to an approach within the front sector (i.e., ±10 ◦ from the orientation of the ego vessel), whereas a crossing encounter corresponds to an approach from the right. For the computational verifiability of these natural language rules, formalizations using temporal logic have been developed [4], [5], [7], [27], [28]. A. Atomic Propositions 
+
+We build on the formalizations in [5], [7], [27] to spec-ify robustness measures for atomic propositions that can be efficiently evaluated with pacSTL. The maritime use case illustrates a realistic setting for evaluating different robustness measures as optimization objectives and demonstrates that efficient algorithms can be developed for nonlinear robustness measures. Since the COLREG is specified between two ves-sels, the robustness measures of the atomic propositions are functions of signals from both the ego and other vessels. We adapt the robustness measures of the atomic propositions for maritime traffic rules from [5, Sec. 5.2]. Specifically, we build on the following atomic propositions:  
+
+> •
+
+hposition_halfplane : linear function to detect relative positions  
+
+> •
+
+hcollision_risk : quadratic function to detect potential collisions  
+
+> •
+
+horientation_halfplane : nonlinear function to detect rel-ative orientations 
+
+a) Linear Atomic Propositions: For linear atomic propo-sitions, the robustness function is hlin (δt) = a⊤ δt − b, where 
+
+a is a vector with the same dimensions as δt, and b is an offset. To calculate the maximum and minimum robustness, we solve (1) and (2) with h = hlin . In maritime navigation, relative positions are specified by linear atomic propositions, which determine if the other vessel is in a position sector that may require evasive maneuvers. Specifically, we use the atomic proposition position halfplane presented in [5]: 
+
+hposition_halfplane (γp, σ, δ Et , δ Ot , v max ) = (3) 
+
+σvmax 
+
+− sin( ψEt + γp)cos( ψEt + γp)
+
+⊤
+
+(pOt − pEt ),
+
+where γp defines one side of the position sector as a halfplane passing through the ego vessel position and is set according to the COLREG. The maximum velocity vmax scales the robustness magnitudes to a time domain, and σ ∈ { 1, −1}
+
+determines which side of the halfplane satisfies the atomic proposition. Evaluating hposition_halfplane at the predicted ego state δEt results in 
+
+apos = σvmax 
+
+− sin( ψEt + γp)cos( ψEt + γp)
+
+
+
+, (4) 
+
+bpos = a⊤ 
+
+> pos
+
+pEt (5) as parameters for hlin . Note that dependency on the ego vessel state results in a state-dependent robustness function. 
+
+b) Quadratic Atomic Propositions: For quadratic atomic propositions, the general robustness function is hquad =
+
+δ⊤ 
+
+> t
+
+Qδ t + a⊤δt + b. In maritime navigation, we use a quadratic function to quantify collision risk over a given time horizon, conservatively relaxing the collision predicate from [5]: 
+
+hcollision_risk (δEt , δ Ot , κ □ 
+
+> t
+
+; amax , t h) = (6) 
+
+1
+
+amax 
+
+ ∥κ□ 
+
+> t
+
+∥2
+
+th
+
+− ∥ vEt − vOt ∥2
+
+
+
+,
+
+where amax is the maximum acceleration of the ego vessel and κ□ 
+
+> t
+
+= □
+
+> pOt
+
+(pEt − pOt ) is the minimal or maximal relative 
+
+h
+
+h h′
+
+h
+
+hh
+
+h
+
+α′
+
+α            
+
+> Fig. 2. Illustrative computation of three orientation halfplane robust-ness intervals. The colored sectors represent orientation intervals projected from reachable sets, and the blue line denotes the robustness satisfaction boundary. The yellow example illustrates an orientation interval that overlaps the satisfaction boundary. The purple example shows the case in which the lower and upper robustness bounds are reversed. In the green example,
+> his determined by the point 90 ◦from the satisfaction boundary because
+> α= 90 ◦> α ′, where αis the relative orientation corresponding to ψOt.
+
+position between the ego vessel and the other vessel, with □
+
+denoting min or max , respectively. As a result, the robustness function is quadratic in δO . We define the following optimiza-tion problems to compute the robustness bounds: 
+
+ht =minimize  
+
+> vOt∈R
+
+hcollision_risk (δEt , δ Ot , κ max  
+
+> t
+
+), (7) 
+
+ht =maximize  
+
+> vOt∈R
+
+hcollision_risk (δEt , δ Ot , κ min  
+
+> t
+
+). (8) 
+
+c) Special Atomic Propositions: Solving (1) and (2) is challenging for general nonlinear atomic propositions. How-ever, efficient computation of lower and upper robustness bounds remains possible when there is only one signal relevant for the atomic proposition, or the nonlinear function can be tightly bound by linear functions. This setting is common in maritime navigation, where nonlinear atomic propositions with only one signal are often used to characterize the relative orien-tation between two vessels. Specifically, for convex reachable sets, the relative orientation of the other vessel is bounded by a one-dimensional interval, enabling a case-wise computation of the lower and upper robustness measures: 
+
+[h t, ht] = (9) 
+
+[orientation halfplane ]( γψ , σ, [ψOt , ψ Ot ], ψ Et , r max ),
+
+where [ψOt , ψ Ot ] is the orientation interval at time step t, γψ
+
+is the relative orientation threshold, σ ∈ { 1, −1} determines if the threshold is a lower or upper bound, and rmax is the ego vessel’s maximal angular velocity. The orientation interval 
+
+[ψOt , ψ Ot ] is calculated relative to the orientation threshold, defined by γψ and ψEt (see [5, Fig. 3(b)]). If any orientation 
+
+ψOt ∈ [ψOt , ψ Ot ] is more than π/ 2 from the satisfaction thresholds, we instead use the remaining angular distance to 
+
+π. Fig. 2 provides an illustration of this computation. 
+
+B. pacSTL Specifications 
+
+Based on these robustness functions for atomic propositions, pacSTL specifications are constructed according to I-STL syn-tax [21]. For maritime navigation, we present two encounter specifications that determine whether an evasion maneuver is required. Given the robustness functions from Sec. IV-A, we denote the corresponding predicates using typewriter font. First, we define predicates that determine whether the other vessel will occupy the relative position or orientation sector corresponding to each encounter . Let γp and γp denote the lower and upper orientations of the specified position sector relative to the ego orientation, with σ = −1 and σ = 1 .The relative position and orientation specifications are defined using position halfplane and orientation halfplane :
+
+pos encounter =: (10) 
+
+position halfplane (γp,e , σ, δ Et , δ Ot , v max )∧
+
+position halfplane (γp,e , σ, δ Et , δ Ot , v max ),
+
+and 
+
+ori encounter =: (11) 
+
+orientation halfplane (γψ,e , σ, [ψOt , ψ Ot ], ψ Et , r max )∧
+
+orientation halfplane (γψ,e , σ, [ψOt , ψ Ot ], ψ Et , r max ).
+
+The superscript e denotes the encounter type and is instantiated as H and C for head-on and crossing, respectively. The cor-responding parameters are set according to the COLREG (see Table I for values). Now, we formalize each encounter specifi-cation as a conjunction of pos encounter , ori encounter ,and collision risk . Specifically, for a head-on encounter: 
+
+head on =: (12) 
+
+pos head on ∧ ori head on ∧ collision risk ,
+
+and for a crossing encounter: 
+
+crossing =: (13) 
+
+pos crossing ∧ ori crossing ∧ collision risk .
+
+The above predicates only capture instantaneous encounter conditions using Boolean operators. To detect if an evasive maneuver is necessary, we require these encounters to persist over a specified time interval [tstart , t end ]:
+
+ΦH =: G [tstart ,t end ](head on ), (14) 
+
+ΦC =: G [tstart ,t end ](crossing ), (15) where G is the temporal operator for always. V. E XPERIMENTAL SETUP 
+
+We evaluate the pacSTL formulation in simulation and on a physical vessel testbed, comparing against existing baselines. 1
+
+This section describes the reachable set computation, naviga-tion scenarios, experimental setup, and baseline implementa-tions. Key parameters are summarized in Table I.                                    
+
+> 1For reproducibility, we provide our implementation including parameters at: https://anonymous.4open.science/r/pacSTLMaritime-4484/ TABLE I EVALUATION PARAMETERS
+> Vessel Parameters Value Traffic Rule Parameters Value
+> S/L Width 0.3 m /0.4 m tstart 1.0 s
+> S/L Length 1.0 m /2.6 m tend 2.5 s
+> S/L Draft 0.08 m /0.02 m ∆t0.5 s
+> vmax 0.4 m s −1γp,H , γ p,H [10 ◦,−10 ◦]
+> amax 0.15 m s −2γp,C , γ p,C [−10 ◦,−112 .5◦]
+> rmax 0.8 rad s −1γψ,H , γ ψ,H [170 ◦,−170 ◦]
+> vdes 0.1 m s −1γψ,C , γ ψ,C [170 ◦,10 ◦]
+
+A. Vessel Simulation Model 
+
+We use a six-degree-of-freedom (6-DOF) vessel model that considers position and orientation in the inertial frame and velocities in the body frame [29]. We define η =px, p y , z, ϕ, θ, ψ ⊤ to be the vessel’s position (px, p y ), heave (z), roll (ϕ), pitch (θ), and yaw (ψ) angles. Furthermore, 
+
+ν = vx, v y , v z , v ϕ, v θ , v ψ
+
+⊤ denotes the vessel’s linear and angular velocities. The dynamics for this system are: 
+
+˙η = R(ψ)ν, 
+
+˙ν = M−1(τ − C(ν)ν − D(ν)ν + b), (16) where R(ψ) transforms velocities from the body-fixed frame to the world-fixed frame, as defined in [29]. Further, M ∈
+
+R6×6 is the inertia matrix, including the vessel’s mass and added mass terms, C(ν) ∈ R6×6 represents Coriolis and centripetal forces, D(ν) ∈ R6×6 is the hydrodynamic damping matrix accounting for drag forces, τ ∈ R6 represents control forces and moments (e.g., thrusters), and b ∈ R6 represents slowly varying environmental loads or unmodeled dynamics. 
+
+B. Reachable Set Computation 
+
+To enable offline reachable set construction from simulation while maintaining consistency with real-world vessel behavior, we first characterize μX0 and μD . In the maritime setting, disturbances are largely captured by 
+
+b = M ˙ν − τ + C(ν)ν + D(ν)ν. (17) Collecting sufficient real-world trajectories to directly con-struct statistically meaningful reachable sets is time- and resource-intensive. Therefore, we instead estimate the dis-turbance support SD using data from approximately 100 
+
+physical vessel trials conducted under representative operating conditions (e.g., still-water or wave conditions). In each trial, the vessel is initialized at a deployment starting position and commanded to traverse the laboratory pool using randomly sampled control inputs τ . Specifically, samples are drawn uniformly over feasible control actions based on vessel op-erating limits. After each traversal, the vessel is reset to its initial positions and the process is repeated. Motion-capture measurements of vessel velocity ν and applied control inputs τ
+
+are used to compute the disturbance term b from (17). Finally, the b-component of SD is defined by the component-wise extrema of b observed across all trials. Separate supports are estimated for still-water and wave conditions. For reachable set computation, uncertainty in the control in-put τ is introduced as an additional disturbance. Accordingly, the set of disturbance signals is 
+
+D =
+
+({b(t) = b, ∀t ∈ { t0, t 2, t 4, ..., t T }} ∪ {τ (t) = τ, ∀t ∈ { t0, t 1, t 2, ..., t T }} 
+
+)
+
+,
+
+where b and τ are piecewise constant, and μD is uniform over the identified support. The different sampling frequencies of b and τ reflect b’s dependency on the velocity derivative 
+
+˙ν, making a factor-of-two scaling the smallest meaningful discretization interval. In addition to μD , μX0 is characterized to capture the vessel’s operating conditions. The dynamics in (16) are invariant to global translations and equivariant under rotations, as they depend on relative orientation, velocity, inputs, and disturbances, rather than absolute position. We exploit this symmetry to reduce the number of reachable sets computed offline. The initial-state set for surge velocity is par-titioned into four intervals, {U i}4
+
+> i=1
+
+, spanning the experimental operating speeds. Reachable sets are computed separately for each interval, with μX0 taken as a uniform distribution over the corresponding velocity range. Using μX0 and μD , we simulate trajectories of (16) and estimate reachable tubes R over δt ∈ R6, consisting of the specification-relevant states p, ψ , v. While there are multiple approaches to obtain PAC-bounded reachable sets [12]–[14], [30], we employ sampling-based optimization to obtain ellip-soids [12, Eq. (8)] and verify them using the holdout method [31]. Ellipsoids provide compact set representations while remaining computationally tractable through efficient opti-mization formulations. For each of the four forward-velocity intervals, one reachable tube is constructed with prediction horizon T = 2.5s . We use N = 1500 i.i.d. samples for reachable set construction and M = 1500 i.i.d. samples with 
+
+β = 10 −9 to compute probabilistic guarantees. To account for vessel geometry, the x, y center coordinates of the reduced state are transformed into four corner points representing the vessel. We assume no distribution shift between disturbance characterization and deployment. The resulting reachable tubes 
+
+R have accuracies ϵ ∈ [0 .026 , 0.045] in still-water and 
+
+ϵ ∈ [0 .029 , 0.044] in waves, while the reachable sets Rt have 
+
+ϵ ∈ [0 .019 , 0.039] and ϵ ∈ [0 .018 , 0.042] , respectively. 
+
+C. Maritime navigation setting 
+
+We demonstrate pacSTL monitoring for safe maneuvering on two scenarios, i.e., head-on and crossing, using a small vessel (S) and a large vessel (L). Each scenario consists of initial states for the ego δE 
+
+> 0
+
+and other vessel δO 
+
+> 0
+
+, as well as a goal state for the ego vessel δE
+
+> goal
+
+. The parameters for specifications (14) and (15) are based on the COLREG. Note that the time parameters are adjusted to achieve realistic maneuvering in a confined lab space. During an experiment (see Fig. 3), the ego vessel monitors for possible encounters based on pacSTL specifications (14) and (15), while using a line-of-sight (LOS) controller [32] to steer towards the specified goal with a desired velocity vdes =0.1 ms −1. The ego vessel observes the current state of both vessels, predicts its own future states assuming constant speed and orientation, and selects reachable tube predictions given                                 
+
+> PAC-Bounded
+> Reachable Tube RPredicted Trajectory
+> Ego Vessel
+> Other Vessel t= 2 .5st= 0 .5s
+> hencounter = [0 .11 ,2.4]
+> hencounter = [ −1.0,2.6]
+> PM(Phϕ(δ)∈[−1.0,2.4] ≥1−ϵR)≥1−β
+> where ϕ⇐⇒ G[0 .5s,2.5s](encounter ),
+> ϵRdenotes accuracy, and βdenotes confidence.
+> Fig. 3. Example evaluation pacSTL specification ϕ, which is based on the example atomic proposition encounter . The resulting robustness interval of
+> ϕ, here [−1.0,2.4] , is endowed with a probabilistic guarantee on the robust-ness value of an unseen trajectory being contained within the interval. The robustness intervals are used to monitor critical encounters and, consequently, trigger an evasive maneuver reliably for still-water and wave conditions.
+
+the other vessel’s current state. The runtime for evaluating pacSTL specifications on hardware is on average 1.4Hz. Once the upper bound on robustness h becomes positive, the ego vessel evades by altering the desired path. Specifically, two additional waypoints are generated. The first waypoint is at the angle ψturn = 0 .8 rad to the right of the ego vessel at a distance dturn = vdes tturn , where tturn = 30 s approximately specifies the time spent in the turning phase. The second waypoint is at the distance dparallel = vdes tparallel from the first waypoint, where tparallel = 15 s is the approximate time spent in the parallel phase. The line between the first and second waypoints is parallel to the orientation of the ego vessel when the evasive maneuver is triggered. 
+
+D. Baseline monitoring approaches 
+
+We compare against two alternative monitoring formula-tions. The first is an instantaneous monitor based on the current states of the vessels. It assesses the time to closest point of approach (TCPA) [33] and evaluates the pos encounter 
+
+predicate to differentiate crossing and head-on encounters. Note that monitoring based on TCPA (or similar risk metrics) and relative position is the most common choice in maritime navigation literature [34]. The second approach uses standard STL for monitoring, where the predicted trajectory of the other vessel is given by the centers of the data-driven reachable sets. 
+
+E. Real-world and simulation setup 
+
+For real-world experimentation, we use a model tugboat (S) as the ego vessel and a drillship (L) as the other vessel. The reduced state δt of both vessels is obtained through the motion capture system Qualisys, with approximately 4 m by 7 m 
+
+coverage, limiting the maneuvering and encounter possibilities for the two vessels. To introduce environmental disturbance, waves are generated using the JONSWAP (Joint North Sea Wave Project) spectrum [35], which models the distribution of wave energy across directions and frequencies. We use a peak enhancement factor of 3.5, a peak period of 1.03 s , and vary the wave height between 0.025 m and 0.035 m . For the 0 10 20 30 
+
+−20 
+
+−10 
+
+0
+
+t (s) 
+
+> Robustness
+
+pacSTL STL TCPA      
+
+> 0510
+> −2
+> 0
+> 2
+> 4
+> Fig. 4. Worst-case robustness over time for head-on encounters, comparing pacSTL (blue/yellow), STL (teal), and TCPA (purple). Solid and dashed lines denote still-water and wave conditions, respectively. The inset highlights the first 10 s for the worst-case, still-water head-on encounter. pacSTL provides earlier detection than STL, while TCPA triggers inconsistently.
+
+simulation experiments, we replace the vessels with a Python-based simulation that uses the dynamics specified in (16), where wave and current effects are neglected. VI. E XPERIMENTAL RESULTS 
+
+We evaluate the efficiency, effectiveness, and scalability of pacSTL for maritime navigation on a physical testbed in two experimental configurations and compare its performance against STL and TCPA (Sec. V-D) on COLREG monitor-ing tasks. Additionally, we conduct simulation-based ablation studies to assess pacSTL’s robustness to vessel types and evaluation parameters, and check for distribution alignment between the reachable set calculation and real-world system. 
+
+A. Baseline Comparison 
+
+Three monitoring techniques (pacSTL, STL, and TCPA) are compared across two initial configurations, each with ten trials in wave and still-water conditions. 2 Although the two configurations are designed to generate head-on and crossing encounters, respectively, uncertainty in the vessels’ initial orientations leads to varying observed encounter types. The observed shares are presented in the last column of Table II. Crossing encounters occur more frequently due to the rela-tively narrow COLREG sector defining head-on encounters. Table II reports the time to evasion te, defined as the time at which h in specification (14) or (15) first becomes positive, as well as collision and detection rates, where the latter measures the fraction of encounters the monitoring method identifies. Compared with STL, pacSTL consistently initiates evasive maneuvers earlier (i.e., smaller te) resulting in lower collision rates. This improvement is especially pronounced in the presence of environmental disturbance (i.e., waves). TCPA achieved lower collision rates and higher detection rates than STL, but its behavior is more sensitive to the ego vessel’s initial orientation. Therefore, TCPA displayed inconsistent 
+
+> 2Video of experiments: https://youtu.be/lQIh8rX26ug
+
+0 10 20 30 
+
+−20 
+
+−10 
+
+0
+
+t (s) 
+
+> Head-On Robustness
+
+Waves No Waves 
+
+0 10 20 30 40 
+
+−20 
+
+0
+
+t (s)   
+
+> Crossing Robustness
+> Fig. 5. Smoothed mean of pacSTL robustness intervals over time (dark, inner band), with ±1standard deviation (light, outer band) in still-water conditions [blue] and waves [yellow]. Top: 8 head-on encounters. Bottom: 12 crossing encounters.
+
+behavior with both premature encounter triggers and delayed reactions, resulting in collision and missed detection. This is illustrated in Fig. 4, which compares the worst-case robustness values of each method. pacSTL provides an earlier and more consistent indication of encounter, whereas STL detects the encounter several seconds later, and TCPA exhibits substantial variability. Although waves introduce additional uncertainty, the qualitative results are consistent across still-water and wave conditions. 
+
+B. Real-World Evaluation of Maritime pacSTL 
+
+The evolution of the pacSTL robustness intervals during head-on and crossing encounters is shown in Fig. 5. Specif-ically, an encounter is detected when the upper robustness bound, h, becomes positive, typically around 4 or 5 s . Once the maneuver is initiated, the robustness interval decreases as the vessel complies with the designated COLREG. The subsequent increase in robustness after the initial decline is due to the vessel turning to maneuver parallel to its original path. Because the reachable tubes account for disturbances, including waves, the larger robustness intervals reflect the increased uncertainty, leading to more robust navigation and decreased risk of collision. TABLE II DETECTION TIMES AND PERFORMANCE RESULTS ACROSS MONITORING STRATEGIES                                                                
+
+> Average teCollision Rate ↓Detection Rate ↑#Observed Encounters
+> Head-on no waves waves no waves waves no waves waves no waves waves
+> TCPA 4.00 s 2.95 s 0.00 0.10 1.00 0.90 12 10
+> STL 7.80 s 8.64 s 0.00 0.38 0.50 0.75 68
+> pacSTL 4.70 s 5.54 s 0.00 0.00 1.00 1.00 88
+> Crossing
+> TCPA 4.95 s 4.89 s 0.00 0.00 1.00 1.00 810
+> STL 6.18 s 5.50 s 0.07 0.08 1.00 1.00 14 12
+> pacSTL 4.04 s 5.61 s 0.00 0.00 1.00 1.00 12 12
+
+C. Analysis of Real-World Data-Driven Reachable Sets 
+
+To assess whether the offline-computed reachable sets, which incorporate experimentally-derived disturbance b, re-main valid during real-world operation, we perform an a posteriori analysis of the disturbances encountered during experimentation. During the experiments, the distribution of control inputs τ is sampled identically to the offline reachable set computation. The realized control inputs are logged and used to compute the disturbance term btest . Specifically, we analyze the 60 trials conducted under wave conditions and compare the measured disturbances btest against the support 
+
+SD used for offline reachability analysis. As shown in Fig. 6, only two of the 60 trials fall outside the assumed support. Importantly, the reachable sets are constructed using the sce-nario approach, which emphasizes worst-case system behavior. Consequently, occasional violations of the support does not necessarily imply reachable set violations. 
+
+D. Ablation Studies 
+
+Specification Complexity: To demonstrate the expressive-ness of pacSTL, we analyze the effect of increasing the specification complexity: 
+
+Φ =: ¬encounter ∧ G[tstart ,t end ](encounter ). (18) The leading negated term ensures that the specification is satisfied only shortly before the onset of a persistent encounter, providing a more refined trigger for initiating an evasive ma-neuver. This transition-based specification is more challenging, as detecting the onset is more sensitive to low observation frequencies. Therefore, the increased complexity resulted in only sporadic detection when using STL. Nevertheless, pac-STL maintained an average time to evasion of te = 6 .7 s ,compared to te = 6 .8 s for the original specification, with a 
+
+100% detection rate. 
+
+Time Horizon: The time horizon parameter th governs the behavior of atomic proposition hcollision risk . Higher values of th increase the conservativeness of pacSTL, leading to earlier times of detection te. We tested th = 10 (default value) and th = 20 , leading to average respective times of evasion 
+
+te = 6 .8 s and te = 4 .0 s . There is no computational overhead to changing the parameter th with pacSTL and can even be changed throughout a mission. 
+
+Vessel Type: In simulation, we evaluated three different combinations of vessel types (S-L, which is the default on hardware, S-S, and L-S). Incorporating additional vessel types only requires offline computation of their reachable tubes, which can then be reused across scenarios, e.g., S-S and L-S use the same reachable tubes since the other vessel is S in both cases. As expected, when the large vessel is designated as the ego vessel, the average time to evasion increases from 
+
+te = 6.8 s to te = 8.5 s , due to smaller reachable sets associated with the other vessel, S. VII. D ISCUSSION 
+
+Our experiments demonstrate that uncertainty-aware mon-itoring improves decision making. Compared with STL and TCPA, pacSTL consistently detects encounters earlier and reduces collision rates. The ablation studies further show that these improvements persist with increased specification com-plexity and varying parameterization. The proposed framework obtains this flexibility by shifting the computational burden largely offline through data-driven reachable sets. During deployment, monitoring only requires evaluating the pacSTL optimization problems presented in Sec. IV, which takes approximately 0.15 - 0.6 seconds using a naive implementa-tion based on standard Python packages (achieving real-time operation for maritime navigation where 1-2Hz is expected). To reduce runtime for more dynamic robotic applications, the optimization problems for the atomic propositions could be parallelized and reused. Additionally, deriving closed-form solutions for linear atomic propositions would reduce computational overhead, motivating the use of specifications primarily composed of linear atomic propositions. In our experiments, uncertainty in the state estimation of the ego vessel can be neglected due to the high accuracy of the 
+
+−1 −0.5 0 0.5 1
+
+−0.2
+
+0
+
+0.2
+
+bu (surge)         
+
+> bv (sway)
+> Fig. 6. Measured disturbance btest in surge and sway from 60 wave trials (purple points), plotted against the b-component of the support SDused for offline, reachable-set computation (teal box).
+
+motion capture system. Additionally, in full-scale applications, state estimates are typically relative to the ego vessel, which implicitly incorporates ego uncertainty into the reachable sets of the other vessel. Nevertheless, developing pacSTL formula-tions that account for reachable sets of multiple agents would broaden the applicability of pacSTL. Extending the framework to multiple agents requires optimization problems for atomic robustness functions that efficiently determine valid lower and upper bounds and deriving PAC guarantees for specifications involving multiple PAC-bounded reachable sets. VIII. C ONCLUSION 
+
+We propose an uncertainty-aware, real-time monitoring framework based on pacSTL. By combining experimentally derived distribution models with high-fidelity simulations, the framework enables data-driven reachability analysis for real-world robotic systems. Experimental results in maritime navigation demonstrate that the framework provides more robust monitoring than simpler metrics in the presence of environmental disturbances, consistently detecting encounters and avoiding collisions in real-world experiments. This work highlights the potential of pacSTL for deployment across a wide range of robotic systems. REFERENCES [1] X. Li, C.-I. Vasile, and C. Belta, “Reinforcement learning with temporal logic rewards,” in IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2017, pp. 3834–3839. [2] M. Srinivasan and S. Coogan, “Control of Mobile Robots Using Barrier Functions Under Temporal Logic Specifications,” IEEE Transactions on Robotics , vol. 37, no. 2, pp. 363–374, 2021. [3] D. B. Choe, S. V. Sangeetha, S. Emanuel, C.-Y. Chiu, S. Coogan, and S. Kousik, “Seeing, Saying, Solving: An LLM-to-TL Framework for Cooperative Robots,” arXiv: 2505.13376 , 2025. [4] T. R. Torben, J. A. Glomsrud, T. A. Pedersen, I. B. Utne, and A. J. Sørensen, “Automatic simulation-based testing of autonomous ships using Gaussian processes and temporal logic,” Proceedings of the Insti-tution of Mechanical Engineers, Part O: Journal of Risk and Reliability ,vol. 237, no. 2, pp. 293–313, 2023. [5] M. M¨ uller, F. Finkeldei, H. Krasowski, M. Arcak, and M. Althoff, “Falsification-Driven Reinforcement Learning for Maritime Motion Planning,” arXiv:2510.06970 , 2025. [6] M. Fossdal, A. H. Brodtkorb, M. Arcak, and A. J. Sørensen, “Past-time Signal Temporal Logic Hybrid Switching Control for Underwater Vehicles,” in IEEE/OES Autonomous Underwater Vehicles Symposium (AUV) , 2024, pp. 1–6. [7] H. Krasowski and M. Althoff, “Provable Traffic Rule Compliance in Safe Reinforcement Learning on the Open Sea,” IEEE Transactions on Intelligent Vehicles , vol. 9, no. 12, pp. 7617–7634, 2024. [8] K. Mahesh, T. M. Paine, M. L. Greene, N. Rober, S. Lee, S. T. Monteiro, A. Annaswamy, M. R. Benjamin, and J. P. How, “Safe autonomy for uncrewed surface vehicles using adaptive control and reachability analysis,” IEEE Transactions on Control Systems Technology , pp. 1–16, 2025. [9] A. N. Akhormeh, A. Hegazy, and A. Alanwar, “Online data-driven reachability analysis using zonotopic recursive least squares,” 
+
+arXiv:2509.17058 , 2025. [10] A. Alanwar, F. J. Jiang, M. Sharifi, D. V. Dimarogonas, and K. H. Johansson, “Enhancing data-driven reachability analysis using temporal logic side information,” in 2022 International Conference on Robotics and Automation (ICRA) , 2022, pp. 6793–6799. [11] L. L¨ utzow and M. Althoff, “Reachset-conformant system identification,” 
+
+IEEE Transactions on Automatic Control , vol. 71, no. 5, pp. 3014–3029, 2026. [12] A. Devonport and M. Arcak, “Estimating reachable sets with scenario optimization,” in Learning for Dynamics & Control Conference (L4DC) ,2020, pp. 75–84. [13] D. Paccagnan, D. Marks, M. C. Campi, and S. Garatti, “Pick-to-learn for systems and control: theoretical review with a showcase in reachability analysis,” in IEEE Conference on Decision and Control (CDC) , 2025, pp. 1980–1985. [14] E. Dietrich, A. Devonport, and M. Arcak, “Nonconvex Scenario Opti-mization for Data-Driven Reachability,” in Learning for Dynamics & Control Conference (L4DC) , 2024, pp. 514–527. [15] H. Krasowski, E. Dietrich, E. C. Gezer, R. Skjetne, A. J. Sørensen, and M. Arcak, “pacSTL: PAC-Bounded Signal Temporal Logic from Data-Driven Reachability Analysis,” IEEE Control Systems Letters , 2026. [16] D. Sadigh and A. Kapoor, “Safe Control Under Uncertainty with Prob-abilistic Signal Temporal Logic,” in Proceedings of Robotics: Science and Systems XII , June 2016. [17] C. Yoo and C. Belta, “Control with Probabilistic Signal Temporal Logic,” arXiv:1510.08474 , 2015. [18] M. Tiger and F. Heintz, “Incremental reasoning in probabilistic Signal Temporal Logic,” International Journal of Approximate Reasoning , vol. 119, pp. 325–352, 2020. [19] Y. Lin, H. Li, and M. Althoff, “Model Predictive Robustness of Signal Temporal Logic Predicates,” IEEE Robotics and Automation Letters ,vol. 8, no. 12, pp. 8050–8057, 2023. [20] L. G. Valiant, “A theory of the learnable,” Commun. ACM , vol. 27, no. 11, p. 1134–1142, Nov. 1984. [21] L. Baird, A. Harapanahalli, and S. Coogan, “Interval Signal Temporal Logic From Natural Inclusion Functions,” IEEE Control Systems Letters ,vol. 7, pp. 3555–3560, 2023. [22] A. Devonport, F. Yang, L. El Ghaoui, and M. Arcak, “Data-Driven Reachability Analysis with Christoffel Functions,” in IEEE Conference on Decision and Control (CDC) , 2021, pp. 5067–5072. [23] M. Althoff, G. Frehse, and A. Girard, “Set Propagation Techniques for Reachability Analysis,” Annual Review of Control, Robotics, and Autonomous Systems , vol. 4, no. Volume 4, 2021, pp. 369–395, 2021. [24] M. Chen and C. J. Tomlin, “Hamilton–Jacobi reachability: Some recent theoretical advances and applications in unmanned airspace manage-ment,” Annual Review of Control, Robotics, and Autonomous Systems ,vol. 1, no. 1, pp. 333–358, 2018. [25] E. T. Jaynes, “Information theory and statistical mechanics,” Phys. Rev. ,vol. 106, pp. 620–630, May 1957. [26] International Maritime Organization, “Convention on the International Regulations for Preventing Collisions at Sea, 1972 (COLREGs),” 1972. [27] H. Krasowski and M. Althoff, “Temporal Logic Formalization of Marine Traffic Rules,” in Proc. of the IEEE Intelligent Vehicles Symposium (IV) ,2021, pp. 186–192. [28] T. A. Pedersen, C. Vasanthan, M. Hemrich, K. B. Karolius, and S. Kemna, “Formalizing testing of collision avoidance systems using signal temporal logic,” in Proceedings of the European Safety and Reliability conference (ESREL) , 2025. [29] T. I. Fossen, Handbook of marine craft hydrodynamics and motion control . John Wiley & Sons, 2011. [30] A. Devonport, F. Yang, L. E. Ghaoui, and M. Arcak, “Data-driven reachability and support estimation with Christoffel functions,” IEEE Transactions on Automatic Control , vol. 68, no. 9, pp. 5216–5229, 2023. [31] E. Dietrich, R. Devonport, S. Tu, and M. Arcak, “Data-Driven Reach-ability with Scenario Optimization and the Holdout Method,” in IEEE Conference on Decision and Control (CDC) , 2025, pp. 3925–3931. [32] A. M. Lekkas and T. I. Fossen, “Line-of-sight guidance for path following of marine vehicles,” Advanced in marine robotics , vol. 5, pp. 63–92, 2013. [33] C. A. Mu˜ noz, A. Dutle, A. Narkawicz, and J. Upchurch, “Unmanned aircraft systems in the national airspace system: a formal methods perspective,” vol. 3, no. 3, pp. 67—-76, 2016. [34] A. Vagale, R. Oucheikh, R. T. Bye, O. L. Osen, and T. I. Fossen, “Path planning and collision avoidance for autonomous surface vehicles i: a review,” Journal of Marine Science and Technology , vol. 26, no. 4, pp. 1292–1306, 2021. [35] K. Hasselmann, T. P. Barnett, E. Bouws, H. Carlson, D. E. Cartwright, K. Enke, J. A. Ewing, H. Gienapp, D. E. Hasselmann, P. Kruseman, A. Meerburg, P. M¨ uller, D. J. Olbers, K. Richter, W. Sell, and H. Walden, “Measurements of wind-wave growth and swell decay during the joint north sea wave project (JONSWAP),” Erg¨ anzungsheft zur Deutschen Hydrographischen Zeitschrift, 1973.

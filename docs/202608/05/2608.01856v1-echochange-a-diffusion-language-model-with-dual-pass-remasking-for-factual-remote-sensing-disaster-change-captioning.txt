@@ -1,0 +1,1124 @@
+Title: EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning
+
+URL Source: https://arxiv.org/pdf/2608.01856v1
+
+Published Time: Tue, 04 Aug 2026 02:00:34 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+## EchoChange: A Diffusion Language Model with Dual Pass Remasking for Factual Remote Sensing Disaster Change Captioning 
+
+Dongwei Sun 1∗, Bowen Yao 2∗, Yujie Zhang 2, Pei Liu 1, Jing Yao 3, Xiangyong Cao 1
+
+> 1
+
+School of Computer Science and Technology and the Ministry of Education Key Lab for Intelligent Networks and Network Security, Xi’an Jiaotong University, 710049, China 
+
+> 2
+
+School of Computer Science and Technology, Faculty of Electronic and Information Engineering, Xi’an Jiaotong University, Xi’an 710049, China 
+
+> 3
+
+State Key Laboratory of Remote Sensing and Digital Earth, Aerospace Information Research Institute, Chinese Academy of Sciences, Beijing, 100094, China {sundongwei, BowenYao2007, zhang_yujie2005}@outlook.com, lpei53682@gmail.com, jasonyao92@gmail.com, caoxiangyong@xjtu.edu.cn 
+
+Abstract 
+
+Bi-temporal remote-sensing disaster change captioning of-ten needs to identify sparse and spatially localized changes across large pre- and post-event scenes and then translate them into coherent, factual descriptions. However, existing change captioning methods always follow an autoregressive decoding paradigm to generate the change description and thus an early misinterpretation of the changed object, event, or spatial relation becomes an irreversible premise for subse-quent text, amplifying visual ambiguity into cascading factual errors. To address this limitation, we propose EchoChange, a multimodal discrete diffusion language model that formu-lates change captioning as iterative masked-token denois-ing rather than left-to-right generation. By repeatedly revis-ing the entire caption while conditioning on the image pair, EchoChange can reconsider uncertain content and correct im-perfect intermediate predictions. We further introduce draft-aware dual-pass training, a progressive masking curriculum, and confidence-guided remasking to align training with iter-ative inference. Extensive experiments on the RSCC bench-mark show that EchoChange substantially outperforms both general-purpose and remote-sensing-specific baselines across lexical and semantic metrics. The EchoChange Project is at https://github.com/sundongwei/EchoChange_Project 
+
+1 Introduction 
+
+Rapid post-disaster assessment requires semantic interpre-tation beyond merely locating altered pixels. Analysts must identify what changed, where it occurred, and how the post-event scene differs from its pre-event state. Bi-temporal remote-sensing (RS) change captioning supports this goal by translating image pairs into descriptions of objects, events, quantities, and spatial relations. Early work estab-lished the task, while subsequent Transformer-based meth-ods and larger benchmarks broadened its scope (Hoxha et al. 2022; Liu et al. 2022; Sun et al. 2026). Disaster assessment, however, imposes a stricter requirement: captions must be factually accurate, not merely fluent. 
+
+> ∗
+
+These authors contributed equally. It urban shows areas appeared slowly …                
+
+> Irreversible Error Accumulation
+> It [Mask] shows areas expanded rapidly …
+> [Mask] [Mask] [Mask] [Mask] [Mask] [Mask] [Mask]
+> It agricultural shows areas expanded rapidly …
+> Initialize ➞Denoise ⇆Refine
+
+Autoregressive LLM 
+
+EchoChange Model (Ours) 
+
+> Pre -Disaster  Post -Disaster  Instruction
+
+Input 
+
+Figure 1: Generation under identical multimodal conditions. Autoregressive decoding commits to each generated token, allowing early factual errors to influence later predictions. EchoChange instead remasks uncertain tokens and iteratively refines an editable answer. Factual captioning remains difficult because event ev-idence is sparse, while illumination, seasonal variation, sensor differences, and misregistration can mimic genuine change. General-purpose multimodal large language mod-els (MLLMs) and RS assistants improve temporal visual-language reasoning, but most still decode captions autore-gressively (Wang et al. 2024; Irvin et al. 2025). An early factual error therefore becomes part of the prefix that con-ditions every later prediction, making the output difficult to revise. Teacher-forced training compounds this problem by exposing the decoder to gold prefixes during training but its own predictions during inference (Bengio et al. 2015). Figure 1 illustrates how this mismatch can propagate a local comparison error into a globally inconsistent description. Iterative masked prediction and diffusion language mod-els offer a revisable alternative, allowing uncertain tokens to be regenerated from global context (Ghazvininejad et al. 2019; Austin et al. 2021; Li et al. 2022; Gong et al. 2023; Sa-hoo et al. 2024). Existing RS diffusion methods do not fully arXiv:2608.01856v1 [cs.AI] 3 Aug 2026 realize this possibility. Diffusion-RSCC denoises continu-ous word embeddings, whereas Mask Approximation Net diffuses a visual change mask but retains autoregressive cap-tion decoding (Yu et al. 2025; Sun et al. 2025). This leaves a central question: can multimodal caption generation be formulated as discrete token-space denoising that explicitly revises uncertain factual hypotheses? 
+
+We answer this question with EchoChange , a multimodal discrete diffusion language model for bi-temporal disaster change captioning. EchoChange represents the caption as an editable answer region and constructs it through masked-token denoising conditioned on the ordered pre- and post-event images. At each iteration, the model jointly predicts all editable positions, retains high-confidence content, and remasks uncertain positions for reconsideration against the visual pair and the evolving caption. Intermediate predictions of disaster entities, events, quantities, and relations can thus be revised after global caption context becomes available. Masked denoising alone, however, does not teach a model to correct its own output. Conventional single-pass training corrupts a reference caption while leaving every visible token copied from the ground truth. Iterative inference instead con-ditions on the model’s preceding draft, whose visible tokens may already contain factual or structural errors. EchoChange bridges this train–inference gap through dual-pass remask-ing. Pass 1 predicts the entire answer region from a cor-rupted reference and forms a model-generated draft. After low-confidence positions are remasked, Pass 2 reconstructs the reference from this draft without restoring the retained positions from the ground truth. The second pass must there-fore recover missing content, revise incorrect visible tokens, and preserve content already supported by the images. Cur-riculum timestep sampling expands the training distribution from local token recovery to near-fully masked caption gen-eration, while confidence calibration makes the uncertainty scores used for remasking more reliable. During inference, a two-stage schedule first establishes the global change struc-ture through denoising and then applies the learned draft-repair behavior to the nearly complete caption during polish-ing. These components align training with iterative inference and allow EchoChange to generate and revise intermediate hypotheses within a unified process. We evaluate EchoChange on the RSCC disaster bench-mark (Chen et al. 2025) against eleven general-purpose and remote-sensing-specific baselines. EchoChange ranks first across the reported lexical-overlap and semantic-similarity metrics. Controlled correction experiments further show that it can revise single and multiple factual errors across diverse change categories, while the clean-control evaluation mea-sures its ability to preserve valid descriptions. Fragment-recovery experiments and inference-stage ablations sepa-rately examine masked-content reconstruction and the com-plementary roles of denoising and polishing. Our main contributions are threefold: 
+
+• We formulate bi-temporal RS disaster change captioning as multimodal discrete masked-token diffusion, giving the generated caption a globally editable representation rather than fixing tokens in left-to-right order. 
+
+• We introduce dual-pass remasking to bridge the clean-context gap between diffusion training and iterative infer-ence, supported by curriculum timestep sampling, con-fidence calibration, and confidence-guided two-stage re-finement. 
+
+• We compare EchoChange with eleven general-purpose and remote-sensing-specific baselines and evaluate gener-ation, factual correction, clean-caption preservation, and masked-fragment recovery, demonstrating strong caption quality and measurable draft-revision capability. 
+
+2 Related Work 
+
+RS Change Captioning and Multimodal Disaster Under-standing. Change captioning was first studied as describ-ing differences between paired natural images, with later work emphasizing robustness to viewpoint distractors and lo-calized visual changes (Jhamtani and Berg-Kirkpatrick 2018; Park, Darrell, and Rohrbach 2019). In remote sensing, foun-dational studies established dedicated datasets and cross-temporal architectures (Hoxha et al. 2022; Sun et al. 2024); subsequent methods improved attentive change localization, task decoupling, spatial–temporal modeling, and semantic guidance (Chang and Ghamisi 2023; Liu et al. 2023, 2024a; Zhu et al. 2024). Domain-aligned vision–language pretrain-ing and MLLMs further broadened RS interpretation (Liu et al. 2024b; Kuckreja et al. 2024; Muhtar et al. 2025; Zhang et al. 2024; Wang et al. 2024; Irvin et al. 2025), while disaster benchmarks emphasized building damage, post-flood under-standing, and detailed temporal descriptions (Gupta et al. 2019; Rahnemoonfar et al. 2021; Chen et al. 2025). Never-theless, studies of image captioning and MLLMs show that fluent outputs may remain visually ungrounded (Rohrbach et al. 2018; Dai et al. 2023; Li et al. 2023). Decoding-time methods mitigate such hallucinations through visual con-trast or retrospection (Leng et al. 2024; Huang et al. 2024), but retain autoregressive text generation. Diffusion-RSCC instead denoises continuous caption embeddings, whereas Mask Approx Net diffuses a visual change mask while keep-ing an autoregressive caption decoder (Yu et al. 2025; Sun et al. 2025). EchoChange differs by making discrete cap-tion tokens the diffusion state, so the textual hypothesis itself remains editable. 
+
+Non-Autoregressive and Diffusion Text Generation. 
+
+Non-autoregressive generation removes strict left-to-right dependence (Gu et al. 2018), and iterative-refinement mod-els showed that complete sequences can be repeatedly re-vised (Lee, Mansimov, and Cho 2018; Ghazvininejad et al. 2019). Diffusion then provided probabilistic formulations over categorical and general discrete state spaces (Hooge-boom et al. 2021; Austin et al. 2021). Text-oriented models have explored continuous embeddings (Li et al. 2022; Gong et al. 2023), vocabulary simplices (Han, Kumar, and Tsvetkov 2023; Karimi Mahabadi et al. 2024), absorbing or soft-mask corruption (He et al. 2023; Chen et al. 2023; Zhou et al. 2024; Sahoo et al. 2024), and score-entropy objectives (Lou, Meng, and Ermon 2024). Asada and Miwa further train discrete diffusion models on self-generated intermediate states to re-duce the training–inference discrepancy (Asada and Miwa 2025). EchoChange extends this revisable-generation line to bi-temporal multimodal conditioning: intermediate tokens are assessed against paired RS observations, low-confidence regions are selectively remasked, and its evaluation directly measures correction of controlled factual errors. 
+
+3 Methodology 
+
+3.1 Problem Formulation and Overview 
+
+Given a pre-disaster image I1, a post-disaster image I2, and an instruction q, EchoChange generates a factual change de-scription y. The description must identify disaster-related entities and actions while preserving quantities, severity, and spatial relations. Unlike autoregressive models, which com-mit to each token once it is emitted, EchoChange maintains an editable answer region and treats generation as condi-tional discrete denoising. Before denoising, we use CLIP to calculate an answer-length estimate from the image pair: 
+
+ˆL = CLIPLen( I1, I 2),
+
+ˆy ∼ pθ (y1: ˆL | I1, I 2, q ). (1) where ˆL is stored as pred_len and determines the number of answer slots at inference. CLIPLen denotes a direct CLIP-based calculation, it introduces neither trainable parameters nor an auxiliary length loss. Training uses the ground-truth answer length, whereas inference obtains no length informa-tion from the reference caption. EchoChange contains three connected parts as shown in Figure 2. The multimodal backbone first encodes the ordered pre- and post-disaster images as fixed visual conditions. The model then corrupts only the assistant answer and learns to reconstruct it under a curriculum that increases the mask-ing difficulty. A second pass replaces the clean ground-truth context with the model’s own draft, so even visible answer tokens can be erroneous and must be checked against the images and global sentence context. At inference, the CLIP-derived length initializes a fully masked answer region, after which confidence-guided denoising and a short polishing stage repeatedly apply this learned draft-repair behavior. The standard generation, correction, clean-control, and fragment-recovery experiments use the same editable answer interface, which allows generation, revision, preservation, and recon-struction to be tested separately. 
+
+3.2 Bi-Temporal Visual Conditioning 
+
+EchoChange uses the native multimodal encoder to process the two remote-sensing images. The input template identifies 
+
+I1 as the pre-disaster observation and I2 as the post-disaster observation, preserving their temporal order when the pro-cessor converts them into visual tokens. We denote the re-sulting representations by V1 and V2 and write the complete conditional sequence as 
+
+C = [ V1, V2, q], x = [ C, y]. (2) The prompt and both sets of visual tokens remain visible during every training and inference pass; only positions in 
+
+y can be masked or rewritten. EchoChange relies on the backbone’s native cross-image reasoning and applies its task-specific changes to the language-generation process. 
+
+3.3 Answer-Region Discrete Diffusion Learning 
+
+Answer-only corruption. The multimodal prompt, image tokens, and instruction remain visible throughout training. EchoChange applies noise only to the assistant answer, pre-venting the model from treating missing visual evidence as part of the generation task. Let ai mark answer positions and let ρt denote the masking ratio at diffusion step t. For each answer token, we sample b(t) 
+
+> i
+
+∼ Bernoulli( ρt). The masked set Mt, visible-answer set Vt, and corrupted input share one definition: 
+
+Mt = i | ai = 1 , b (t) 
+
+> i
+
+= 1 ,Vt = i | ai = 1 , b (t) 
+
+> i
+
+= 0 ,
+
+ex(t) 
+
+> i
+
+=
+
+[Mask] , i ∈ Mt,xi, i / ∈ Mt.
+
+(3) We use pure mask corruption rather than random token re-placement. The training input therefore matches the inference trajectory, which starts from a masked answer region. 
+
+Curriculum timestep sampling. The curriculum expands the accessible noise range as training proceeds. Let τ ∈ [0 , 1] 
+
+denote normalized progress within the curriculum ramp and 
+
+u ∼ U (0 , 1) . We sample the timestep and mask ratio by 
+
+tmax (τ ) = min 
+
+n
+
+T, t (0) max + τ  T − t(0) max 
+
+o
+
+,t = tmin + round  uγτ tmax (τ ) − tmin 
+
+ ,ρt = tT .
+
+(4) The exponent γτ decreases from 1.0 to 0.5, biasing later sam-pling toward larger timesteps. After the ramp, the scheduler sets t = T with probability pfull = 0 .1, exposing the model to the near-fully-masked state used at inference. The schedule connects local token recovery with caption-level generation without introducing a different objective for each noise level. 
+
+Dual-pass Remasking. A single denoising pass is trained in a clean-context regime: every unmasked answer token is copied from the ground truth. Iterative inference is different because its visible context comes from the preceding model prediction and may contain an incorrect entity, event, count, relation, or sentence structure. A model trained only in the former regime can become a strong masked-token infiller without learning to revise its own mistakes. EchoChange narrows this train–inference gap with two forward passes. Pass 1 predicts the entire answer region and forms a self-generated draft ¯y. The model then remasks the kt least-confident positions from the initial masked set Mt and sends the resulting draft to Pass 2: 
+
+P(1) = fθ
+
+
+
+C, ey(t)
+
+,ci = max  
+
+> w
+
+P (1)  
+
+> i
+
+(w),
+
+¯yi = arg max  
+
+> w
+
+P (1)  
+
+> i
+
+(w), i ∈ Mt ∪ Vt,kt = ⌈ρt′ |Mt|⌉ ,Rt = BottomK( Mt, {ci}i∈Mt , k t) ,
+
+P(2) = fθ (C, Remask(¯ y, R t)) .
+
+(5) (1) Random Scattered Masking   
+
+> GT Caption Tokens
+> Noised Caption Tokens
+> (2) Denoising Pass -1(3) Confidence -based Remasking (4) Denoising Pass -2
+
+(1) Initialization & Denoising 
+
+(2) Argmax  Refinement        
+
+> (b) Training Stage (c) Inference  Stage
+> Pre -Disaster Token  Post -Disaster Token  Instruction Token
+> 16/16 Masked 15/16 Masked 8/16 Masked 1/16 Masked 0/16 Masked Re -enter Bottom -K
+> Remask 15/16 Tokens={1,3,8,..,33} Remask 8/16 Tokens={2,7,9,26,..52} Remask 1/16 Tokens={16,21,..66} Remask 0/16 Tokens={ }
+> Remask=Empty, No Remask
+
+… …                                                
+
+> Denoising Denoising
+> The image pre -event shows road through post -event shows forest ,flooding along dirt the road .while
+> The dirt image pre -event shows road through post -event shows vegetation ,flooding covering the road .while
+> The dirt image pre -event shows road through post -event shows ,flooding along vegetation the road .while
+> The aimage pre -event shows road through post -event shows forest ,flooding along the road .while
+> Unmasked  Refining
+
+(a) Input  The                           
+
+> by
+> covered
+> was
+> water
+> road
+> 0.96
+> 0.79
+> 0.84
+> 0.88
+> 0.31
+> 0.92
+> The by …[Mask] road
+> Lowest Confidence
+> The by was water road covered
+> The by was [Mask] [Mask] [Mask]
+> Visible Token Loss
+> Masked Token Loss
+> Calibration Loss
+> The by was street covered flooding
+> GT Caption
+> Draft Output Temporary Retention
+> The by was [Mask ]road covered
+> The by was street covered flooding
+> Calibration Loss Visible Token Loss
+> Masked Token Loss
+> Visible token repair
+> road street
+> Masked token recovery
+> [Mask ]flooding
+> The by was flooding street covered
+> Final Output
+> GT Caption
+
+Figure 2: Overview of EchoChange. (a) The pre- and post-disaster images and task instruction remain fixed conditions. (b) During training, only ground-truth caption tokens are corrupted with [Mask] to form a curriculum-controlled mask set. Pass 1 produces a self-generated draft; its least-confident masked positions are then remasked, and both passes are supervised using the original masked and visible target sets. (c) Standard inference starts from a fully masked answer slot, retains confident predictions through scheduled denoising, and then applies mask-free polishing. The dashed branch denotes imperfect-caption initialization used only for correction analysis. Here t′ < t denotes the next target noise level. The remask-ing budget kt therefore gives Pass 2 more editable positions at high noise and fewer near the end of the schedule. Impor-tantly, Pass 2 receives model predictions at every answer po-sition rather than restoring Vt from the ground truth. Hence, a retained token can satisfy ¯yi̸ = yi even when i / ∈ Rt. Both passes nevertheless use the original sets Mt and Vt for su-pervision; Rt changes the second input but does not redefine its targets. Copying an incorrect draft token therefore incurs loss, forcing the model to validate visible content against the bi-temporal evidence and bidirectional sentence context. This is the key difference between masked-token completion and draft-level correction. 
+
+Compact training objective. The objective combines to-ken reconstruction with confidence calibration. For pass 
+
+s ∈ { 1, 2} and answer subset A ∈ { Mt, V t}, we define 
+
+by(s)
+
+i = arg max 
+
+w P (s)
+
+i (w),c(s)
+
+i = max 
+
+w P (s)
+
+i (w),ℓcal 
+
+i,s =
+
+( c(s)
+
+i
+
+2, by(s)
+
+i̸ = yi,
+
+ 1 − c(s)
+
+i
+
+2, by(s)
+
+i = yi,
+
+LA
+
+CE ,s = − 1
+
+|A|
+
+X
+
+i∈A
+
+log P (s)
+
+i (yi),
+
+LA
+
+cal ,s = 1
+
+|A|
+
+X
+
+i∈A
+
+ℓcal 
+
+i,s .
+
+(6) Masked-token cross-entropy drives factual recovery. The lower-weight visible-token term has a dual role: it teaches Pass 2 to replace erroneous retained draft tokens, while dis-couraging unnecessary changes when the visible context is already correct. Calibration penalizes confident errors as well as under-confident correct predictions. Both passes are com-bined as 
+
+L =
+
+2X
+
+s=1 
+
+ws
+
+h
+
+λm LMt
+
+CE ,s + λv LVt
+
+CE ,s 
+
++ λc
+
+
+
+LMt
+
+cal ,s + λv LVt
+
+cal ,s 
+
+i 
+
+.
+
+(7) The main configuration sets w1 = w2 = 1 and 
+
+(λm, λ v , λ c) = (1 .0, 0.2, 0.1) , assigning lower weight to visible-token supervision. Calibration is necessary because the inference procedure uses confidence to decide which fac-tual tokens can remain and which must be revised. 
+
+3.4 Length-Aware Confidence-Guided Inference 
+
+EchoChange first calculates ˆL from the pre- and post-disaster images using CLIP. This deterministic step requires no learned length head and produces the pred_len used by the generator. EchoChange then creates ˆL [Mask] tokens as the answer region while keeping the visual evidence and instruction fixed. The model receives no reference-derived length at inference and must fill the CLIP-sized answer re-gion from the image pair. The denoising stage updates all editable positions in par-allel. Let E contain the editable answer positions and let rk
+
+denote the remasking ratio at iteration k. Starting from a fully masked answer, one iteration is 
+
+by(K) = Repeat 
+
+
+
+[Mask] , bL
+
+
+
+,
+
+P(k) = fθ
+
+
+
+C, by(k)
+
+,c(k) 
+
+> i
+
+= max  
+
+> w
+
+P (k) 
+
+> i
+
+(w),rk = tk−1
+
+T ,Rk = BottomK 
+
+
+
+E, {c(k) 
+
+> i
+
+}i∈E , ⌈rk |E|⌉ 
+
+
+
+,
+
+by(k−1)  
+
+> i
+
+=
+
+([Mask] , i ∈ Rk,
+
+arg max  
+
+> w
+
+P (k) 
+
+> i
+
+(w), i ∈ E \ Rk.
+
+(8) The ratio rk decreases with the timestep. Early iterations can revise broad sentence structure, while later iterations focus on uncertain entities, change actions, counts, or relations. A token can therefore be replaced after the model has observed the rest of the draft, rather than remaining fixed because it appeared early in the sequence. Once the remasking schedule reaches zero, a short pol-ishing stage performs full-answer refinement without intro-ducing new masks. This stage is not a separately trained post-processor. Its capability follows from Pass 2 training, where the model learns to predict the ground truth from its own complete or partially remasked draft and cannot assume that a visible token is correct. Denoising first establishes the global factual structure; polishing then reuses this learned draft editor to remove residual factual or lexical inconsisten-cies and incomplete phrases. Algorithm 1: EchoChange training and inference. 
+
+Require: Image (I1, I 2); instruction q; Ref. y for training 
+
+Ensure: Predicted change description ˆy 
+
+> 1:
+
+(V1, V2) ← EncodePair( I1, I 2) 
+
+> 2:
+
+C ← [V1, V2, q] 
+
+> 3:
+
+Training  
+
+> 4:
+
+t ← CurriculumSample()  
+
+> 5:
+
+(ey(t), M t, V t) ← MaskAnswer( y, t ) 
+
+> 6:
+
+P(1) ← fθ (C, ey(t)) 
+
+> 7:
+
+¯y ← arg max P(1)  
+
+> 8:
+
+Rt ← LowConfidence( P(1) , M t, t ) 
+
+> 9:
+
+P(2) ← fθ
+
+ C, Remask(¯ y, R t) 
+
+> 10:
+
+Update θ using L(P(1) , P(2) , y, M t, V t) 
+
+> 11:
+
+Inference  
+
+> 12:
+
+ˆL ← CLIPLen( I1, I 2); ˆy(K) ← [Mask ]ˆL 
+
+> 13:
+
+for k = K, . . . , 1 do  
+
+> 14:
+
+P(k) ← fθ (C, ˆy(k)) 
+
+> 15:
+
+¯y ← arg max P(k) 
+
+> 16:
+
+ˆy(k−1) ← Remask  ¯y, LowConfidence( P(k), k ) 
+
+> 17:
+
+end for  
+
+> 18:
+
+for r = 1 , . . . , R polish do  
+
+> 19:
+
+ˆy(0) ← Polish( C, ˆy(0) ) 
+
+> 20:
+
+end for  
+
+> 21:
+
+return Decode(ˆ y(0) )
+
+4 Experiments 
+
+4.1 Experimental Setup 
+
+Dataset and evaluation tasks. We evaluate EchoChange on the RSCC benchmark, which contains 62,351 bi-temporal remote-sensing image pairs paired with disaster-change de-scriptions. The average reference length is 72 tokens, making the benchmark substantially more demanding than short-form change captioning: a prediction must simultaneously preserve changed entities, damage events, quantities, direc-tions, and spatial relations over a relatively long sequence. We use the official split for standard caption generation and evaluate 3,119 test records. Beyond ordinary generation, we construct three controlled diagnostic tasks. The clean-control set contains 892 correct descriptions and tests whether a model preserves already valid content. The correction benchmark contains 2,291 single-error samples and 553 multi-error samples; corrup-tions cover change type, direction, event, object, quantity, and relation. The recovery benchmark contains 892 samples in which factual spans are masked and must be reconstructed from the image pair and the remaining caption. These pro-tocols separately test generation quality, active error correc-tion, resistance to unnecessary rewriting, and fragment-level reconstruction. All experiments were conducted on a system running Ubuntu 22.04, equipped with six NVIDIA A100 GPUs (40 GB each), using PyTorch 2.10.0 and CUDA 12.8. 
+
+Baselines and metrics. We compare with general-purpose multimodal models and remote-sensing-specific models. Standard generation is evaluated using ROUGE-L, ME-TEOR, and Sentence-T5 semantic similarity (ST5-SCS). For correction, Clean Keep measures exact preservation of cor-rect captions; Strict Hit requires every annotated error in a sample to be corrected; CCSR additionally requires non-target content to remain unchanged; Non-target Preservation (NTP) measures contextual stability; and error-level preci-sion and F1 assess the accuracy of individual edits. Recovery is evaluated by masked-token accuracy (MTA), masked-span exact match (MSEM), full-caption token accuracy (FCTA), unresolved-mask rate (UMR), length mean absolute error (L-MAE), and repetition rates. 
+
+4.2 Main Captioning Results 
+
+EchoChange consistently outperforms both general-purpose MLLMs and remote-sensing-specialized baselines. Its abso-lute advantage ranges from 11.19 to 18.88 points across the three metrics, rather than being confined to either surface-level word overlap or semantic similarity. The particularly large ST5-SCS improvement indicates that the generated de-scriptions better preserve the overall disaster-change mean-ing, while the simultaneous ROUGE-L and METEOR gains show that this semantic advantage is accompanied by more accurate entities, actions, and relations. These results sup-port the central premise of EchoChange: an editable, globally denoised answer is well suited to long-form, fact-intensive description of ordered bi-temporal evidence. Model Size Lexical SCS 
+
+R-L ↑ MET ↑ ST5 ↑
+
+Open-source general models 
+
+BLIP-3 3B 4.53 10.85 44.05 Kimi-VL 3B 12.47 16.95 51.35 Phi-4-Multimodal 4B 4.09 1.45 34.55 Qwen2-VL 7B 11.02 9.95 45.55 LLaVA-NeXT 8B 12.51 13.29 46.99 LLaVA-OneVision 8B 8.40 10.97 46.15 InternVL3 8B 12.76 15.77 51.84 Pixtral 12B 12.34 15.94 49.36 
+
+Remote-sensing-specific models 
+
+CCExpert 7B 7.61 4.32 40.81 TEOChat 7B 7.86 5.77 52.64 RSCCM 7B 14.99 16.05 58.52 
+
+Base model and our method 
+
+Qwen3.5 (Base) 9B 12.89 19.04 64.09 
+
+EchoChange (Ours) 9B 26.18 
+
+(+11.19) 
+
+30.86 
+
+(+11.82) 
+
+77.40 
+
+(+13.31) 
+
+Table 1: Comparison with general-purpose and remote-sensing-specific models. Qwen3.5-9B, the base model of EchoChange, is reported separately for direct comparison. R-L, MET, and ST5 denote ROUGE-L, METEOR, and ST5-SCS, respectively. The best results are shown in bold, while the strongest baseline results are underlined. Parenthetical values indicate the absolute improvements over the strongest baseline for each metric. 
+
+4.3 Factual Correction and Preservation 
+
+The correction task exposes a distinction that is obscured by ordinary caption scores: a model must recognize an error, replace it with the visually supported fact, and avoid damag-ing valid context as shown in Table 2. EchoChange attains strict-hit rates of 65.34% and 41.23% on single- and multi-error descriptions, respectively, and more than doubles the strongest baseline error-level F1 in both settings. The drop from single-error to multi-error settings is expected because strict success requires all corrupted facts in a caption to be repaired simultaneously; nevertheless, EchoChange retains a much wider margin under this harder condition. This be-havior is consistent with the purpose of dual-pass training: the model learns from a self-generated draft whose visible tokens are not guaranteed to be correct, rather than learn-ing only to fill masked positions surrounded by ground-truth context. The clean control reveals the complementary side of draft revision. Qwen2-VL preserves more untouched captions (88.00%), but seldom performs a correct edit when an er-ror is present. EchoChange retains 79.26% of clean descrip-tions while remaining substantially more responsive to actual errors, showing that revision was not obtained by indiscrim-inately rewriting every input. This correction–preservation balance matches the asymmetric supervision used in train-ing: erroneous model drafts receive ground-truth correction, whereas lower-weight visible-token supervision discourages changes to already valid context. The lower NTP and near-tied single-error CCSR also expose the remaining boundary: edit locality is not yet perfect, and confidence-aware selection can still introduce secondary changes. EchoChange’s advantage is strongest for visually grounded factual variables. In Table 3, relation errors are corrected at over 95%, and event, object, and quantity corrections re-main robust when several corruptions coexist. This pattern indicates that the model is not merely applying common linguistic substitutions; it can repeatedly consult bi-temporal evidence to resolve what changed, where it changed, and how many objects were involved. Change type remains the main exception: InternVL3 achieves 34.40% on the single-error split, compared with 21.87% for EchoChange. This weak-ness suggests that fine-grained lexical distinctions among se-mantically adjacent change verbs remain difficult even when the affected entity is correctly localized. 
+
+4.4 Analysis of Two-Stage Inference 
+
+Table 4 shows that denoising provides the principal quality gain, whereas polishing is most effective after a globally co-herent draft has been formed. Denoising alone reaches an ST5-SCS of 75.49, and adding four polishing steps raises METEOR by 2.56 points while producing the best result across all three metrics. By contrast, even twenty polishing steps without denoising remain inferior, indicating that re-peated local revision cannot compensate for the absence of an initial stage that establishes the event category, changed entities, and their temporal relations. The comparison also suggests that polishing is not intended to reconstruct the cap-tion from an unstructured answer state. Instead, it operates on an already meaningful draft, correcting residual lexical er-rors, incomplete phrases, and inconsistencies among factual elements. This supports a clear division of labor: denoising constructs the global change structure through confidence-guided masked-token prediction, while polishing performs late-stage draft refinement. The latter is not an unrelated post-processing module; it reuses the full-answer revision behav-ior learned through dual-pass remasking, where Pass 2 is con-ditioned on a model-generated draft rather than a reference-derived context. Precision Recall F1 Jaccard               
+
+> 0
+> 10
+> 20
+> 30
+> 40
+> Token score (%)
+> (a) Token-level lexical quality
+> 35.3% 36.8% 35.2%
+> 23.1%
+> 27.9% 29.3% 27.9%
+> 19.7%
+> 32.5% 33.8% 32.4%
+> 21.9%
+> Denoise Polish Denoise + Polish
+> Baseline
+> Qwen Denoise Polish Denoise +
+> Polish
+> 0
+> 1k
+> 2k
+> 3k
+> 4k
+> 5k
+> 6k
+> Latency (ms)
+> 1.00x
+> 1.86x
+> 5.98x 3.72x
+> (b) Inference efficiency
+> 5300
+> 2856
+> 887
+> 1423
+> 5101
+> 2916
+> 906
+> 1455
+> 3310
+> 350
+> 1128
+> 703
+> Average P95 Equivalent sample
+
+Figure 3: Token-level lexical quality and inference efficiency of the denoising and polishing regimes. (a) Precision, recall, F1, and Jaccard scores. (b) Average, P95, and equivalent-sample latency; labels above each group report the average speed-up relative to the baseline Qwen model. Figure 3 examines the two stages from lexical and compu-Model Clean Single Error Multiple Errors Keep ↑ Strict ↑ CCSR ↑ NTP ↑ Err.-P ↑ Err.-F1 ↑ Strict ↑ CCSR ↑ NTP ↑ Err.-P ↑ Err.-F1 ↑                                                       
+
+> Qwen2-VL-7B 88.00 5.11 2.97 67.53 5.06 5.12 0.36 0.00 63.11 9.98 7.11 InternVL3-8B 52.24 27.50 16.67 38.59 12.84 17.57 7.23 4.16 31.28 21.11 23.74 RSCCM 36.55 17.33 6.55 29.29 3.51 5.86 4.70 1.99 20.98 7.10 10.49 Qwen3.5-9B 83.41 18.68 14.01 65.95 20.03 19.38 4.16 2.53 60.40 32.07 22.75
+> EchoChange (Ours) 79.26 65.34 16.15 23.26 30.47 41.59 41.23 9.04 18.08 42.67 51.26
+
+Table 2: Clean-caption preservation and factual correction. Strict denotes sample-level all-target correction; CCSR requires semantic correction and non-target preservation; NTP measures preservation outside the injected positions; Err.-P/F1 are error-instance-level metrics. All values are percentages.                                           
+
+> Model Chg. ↑Dir. ↑Evt. ↑Obj. ↑Qty. ↑Rel. ↑
+> Qwen2-VL-7B 2.92 3.77 16.76 2.09 0.00 9.80 InternVL3-8B 34.40 30.19 30.64 20.71 5.36 58.82 RSCCM 16.62 11.32 21.68 9.23 5.36 67.16 Qwen3.5-9B 28.57 62.26 25.43 11.25 7.14 29.41
+> EchoChange (Ours) 21.87 49.06 81.21 68.35 69.64 95.59
+
+Table 3: Strict correction hit rates by error type. Chg., Dir., Evt., Obj., Qty., and Rel. denote change, direction, event, object, quantity, and relation errors, respectively. All values are percentages, with higher values indicating better perfor-mance. The best and second-best results in each column are highlighted in bold and underlined, respectively.                             
+
+> Configuration DPROUGE-L ↑METEOR ↑ST5-SCS ↑
+> Short two-stage 4424.45 25.39 73.98 Polish only 020 22.75 21.61 71.92 Denoise only 16 025.20 28.30 75.49
+> Full two-stage 16 426.18 30.86 77.40
+
+Table 4: Effect of denoising and polishing steps on caption quality. D and P denote the respective numbers of denoising and polishing steps. tational perspectives. Denoising alone obtains the strongest token-level F1 (35.20%) and Jaccard score (23.10%); the combined procedure retains 32.40% and 21.90%, respec-tively, while reducing average latency from 5.30 s for the baseline Qwen model to 1.42 s, corresponding to a 3.72 ×
+
+speed-up. Polishing alone is faster but has lower lexical agreement, so speed cannot be considered independently of output quality. The combined setting offers the more useful operating point: it preserves most of the denoising-stage lex-ical evidence while realizing a substantial latency reduction. 
+
+4.5 Masked Factual-Span Recovery 
+
+EchoChange recovers masked factual content much more re-liably than models trained only for left-to-right continuation. Its masked-token accuracy reaches 72.32%, a 35.21-point gain over the strongest baseline in Table 5, and the corre-sponding span-level advantage shows that the improvement is not produced by recovering only easy isolated words. The high full-caption token accuracy and near-zero length error                                   
+
+> Model MTA ↑MSEM ↑FCTA ↑UMR ↓L-MAE ↓
+> Qwen2-VL-7B 18.87 17.04 74.02 11.55 8.14 InternVL3-8B 22.32 20.74 72.79 0.11 13.58 RSCCM 37.11 35.76 82.41 3.25 1.03 Qwen3.5-9B 12.04 11.55 82.78 3.36 1.90
+> EchoChange (Ours) 72.32 68.83 95.10 0.00 0.07
+
+Table 5: Masked-fragment recovery results. MTA, MSEM, FCTA, UMR, and L-MAE denote masked-token accu-racy, masked-span exact match, full-caption token accuracy, unresolved-mask rate, and length MAE, respectively. further indicate that newly reconstructed spans remain com-patible with the visible context instead of changing the sur-rounding sentence structure. EchoChange also resolves every mask in the evaluation set. Its bigram and trigram repetition rates remain at 0.05% and 0.00%, respectively, showing that iterative refinement does not obtain its recovery gain by col-lapsing into repeated lexical patterns. Read together with correction and clean control, recovery separates the three be-haviors learned by the answer-region objective: reconstruct missing evidence, revise incorrect visible evidence, and pre-serve correct evidence. 
+
+4.6 Qualitative Analysis of Progressive Generation and Model Comparison 
+
+Figure 4 visualizes EchoChange’s progressive generation: starting from a heavily masked sequence, the model estab-lishes the dominant event and scene transition, then intro-duces affected objects, spatial relations, and damage details through successive iterations, with unsupported hypotheses remasked and revised as the global description develops. Figure 5 compares EchoChange with Qwen2-VL-7B and InternVL3-8B. Autoregressive baselines often extend inac-curate early interpretations with unsupported objects or avoid verifiable details through vague expressions; EchoChange instead produces more visually supported descriptions with less unsupported elaboration. Ambiguous visual evidence and fine-grained quantity estimation remain challenging. To-gether, these visualizations show how EchoChange’s revis-able generation improves factual grounding over conven-tional autoregressive decoding. 5 Conclusion 
+
+We presented EchoChange, a discrete diffusion framework for generating factual disaster change descriptions from bi-temporal remote-sensing images. Its dual-pass remasking ob-jective equips the model with an explicit draft-revision ca-pability: EchoChange learns not only to reconstruct masked factual content, but also to reassess visible tokens in its own imperfect drafts and preserve content that is already valid. During inference, confidence-guided denoising repeatedly redirects uncertain positions for reconsideration, while the subsequent polishing stage refines residual factual and lex-ical inconsistencies after the global description has formed. Experiments on RSCC show that EchoChange surpasses both general-purpose and remote-sensing-specific baselines in lexical and semantic caption quality. Factual-correction, clean-control, fragment-recovery, and denoise–polish eval-uations further demonstrate its ability to repair single and multiple factual errors, reconstruct missing evidence, and avoid indiscriminate rewriting. Pre-Disaster Post-Disaster 
+
+Pre-Disaster Post-Disaster 
+
+Pre-Disaster Post-Disaster 
+
+Pre-Disaster Post-Disaster 
+
+Flooding transforms arid far into into 
+
+MASK×3, MASK×8, MASK×28. 
+
+Flooding transforms arid farmland into 
+
+widespread inundation, submerging 
+
+agricultural fields under murky waters, 
+
+obsc MASK×7, MASK×19. 
+
+Flooding transforms arid farmland into 
+
+widespread inundation, submerging 
+
+agricultural fields under murky waters, 
+
+obscuring dirt MASK×1, isolating 
+
+structures, isolating MASK×1, MASK×1 
+
+altering MASK×2, and MASK×8 
+
+panse. 
+
+Flooding transforms arid farmland into 
+
+widespread inundation, submerging 
+
+agricultural fields under murky waters, 
+
+obscuring dirt roads, isolating 
+
+structures, engulfing scattered vegetation, 
+
+altering terrain contours, and converting 
+
+dry earth into a vast aquatic expanse. 
+
+Flooding transforms arid farmland into 
+
+a vast aquatic expanse, submerging 
+
+grid-like agricultural plots beneath 
+
+murky waters, engulfing rural structures 
+
+and pathways, obscuring once-distinct 
+
+field boundaries, displacing vegetation, 
+
+and altering terrain contours 
+
+dramatically. 
+
+Wildfire devastates forested area, 
+
+transforming transforming greenery into 
+
+MASK×1 ched MASK×3 -event 
+
+MASK×47. 
+
+Wildfire devastates forested area, 
+
+transforming lush greenery into 
+
+scorched earth MASK×1 pre-event 
+
+imagery shows dense vegetation and 
+
+MASK×32 3 (Destroyed) due to 
+
+complete ecological MASK×1. 
+
+Wildfire devastates forested area, 
+
+transforming lush greenery into 
+
+scorched earth; pre-event imagery 
+
+shows dense vegetation and intact dirt 
+
+paths, while post-event MASK×2 
+
+extensive MASK×2, MASK×3, and 
+
+MASK×3; MASK×7 with Disaster 
+
+Level 3 (Destroyed) due to …
+
+Wildfire devastates forested area, 
+
+transforming lush greenery into scorched 
+
+earth; pre-event imagery shows dense 
+
+vegetation and intact dirt paths, while 
+
+post-event imagery reveals extensive burn 
+
+scars, blackened terrain, and eradicated 
+
+foliage; no structures present, damage 
+
+aligns with Disaster Level 3 (Destroyed) 
+
+due to complete ecological disruption. 
+
+Wildfire devastates forested landscape, 
+
+transforming lush greenery into charred 
+
+remnants; pre-event imagery shows dense 
+
+vegetation and intact dirt paths, while 
+
+post-event imagery reveals extensive 
+
+scorching, blackened earth, and fragmented 
+
+foliage; no structures are present, but the 
+
+ecological damage classifies as Disaster 
+
+Level 3 (Destroyed) due to complete 
+
+ecological disruption and loss of natural 
+
+cover. 
+
+Volcanic eruption transformed the 
+
+landscape,, lush green MASK×7 -event 
+
+MASK×18,, MASK×28 to MASK×1 
+
+environmental MASK×1. 
+
+Volcanic eruption transforms the 
+
+landscape, replacing lush greenery into 
+
+scorched earth; pre-event imagery 
+
+MASK×2 vegetation and and 
+
+MASK×2, while post-event scenes 
+
+MASK×1 extensive MASK×3,, 
+
+MASK×3, and MASK×23 to 
+
+MASK×3. 
+
+Volcanic eruption transforms the 
+
+landscape, replacing lush greenery with 
+
+scorched earth; pre-event imagery 
+
+shows intact vegetation and clear dirt 
+
+MASK×1, while post-event scenes 
+
+MASK×1 extensive MASK×4, 
+
+MASK×1 -covered MASK×1, and 
+
+obliterated MASK×2; MASK×2 3 …
+
+Volcanic eruption transforms the landscape, 
+
+replacing lush greenery with scorched earth; 
+
+pre-event imagery shows intact vegetation 
+
+and clear dirt paths, while post-event scenes 
+
+display extensive dark brown lava flows, 
+
+ash-covered terrain, and obliterated natural 
+
+features; disaster level 3 (Destroyed) applies 
+
+due to complete ecological disruption, with 
+
+no structures present to assess structural 
+
+damage. 
+
+Volcanic eruption caused a catastrophic 
+
+landscape transformation. Pre-event imagery 
+
+revealed lush greenery and scattered 
+
+vegetation, while post-event scenes showed 
+
+extensive scorched earth, widespread lava 
+
+flows engulfing the prior terrain, and the 
+
+complete obliteration of natural features. 
+
+This aligns with Disaster Level 3
+
+(Destroyed) due to total coverage and 
+
+irreversible ecological disruption. 
+
+The pre-event image shows an intact, 
+
+with with with MASK×2,,, 
+
+MASK×80,,,,,, the storm's catastrophic 
+
+destruction. 
+
+The pre-event image shows an intact 
+
+residential with with MASK×2,,, 
+
+MASK×19,, MASK×1,,,,,,,,,,,, 
+
+MASK×1,, MASK×1, MASK×10, 
+
+MASK×2,,,,, MASK×18, and 
+
+MASK×1,,,,,,, the the storm's 
+
+catastrophic impact. 
+
+The pre-event image shows an intact 
+
+residential area with MASK×2,,, while 
+
+the post-event image reveals 
+
+widespread destruction: MASK×1 
+
+buildings MASK×1 destroyed 
+
+MASK×3, MASK×1,,,,,,,,,,,, 
+
+MASK×2,,,,, MASK×1,, MASK×2, 
+
+MASK×1 MASK×1, MASK×2,, …
+
+The pre-event image shows an intact residential 
+
+area with 60 intact buildings, while the post-event 
+
+image reveals widespread destruction: 20 buildings 
+
+are destroyed (scched, collapsed, or submerged in 
+
+water or mud), have minor damage (including 
+
+partial burns, roofs, missing elements, or localized 
+
+cracks, and 11 suffer major damage including 
+
+collapsed walls, missing roofs, or extensive 
+
+flooding. No buildings remain undamaged, with 
+
+orderly neighborhoods transformed into chaotic 
+
+landscapes of streets, flattened vegetation, and 
+
+debris, highlighting the storm's catastrophic impact. 
+
+A devastating storm transformed a once-intact residential 
+
+area into a scene of widespread destruction, with 64 
+
+buildings assessed for damage. Pre-event imagery showed 
+
+orderly neighborhoods, while post-event views revealed 29 
+
+structures obliterated (Level 3), reduced to scorched earth, 
+
+collapsed frames, or buried under mud or water. Twelve 
+
+buildings suffered major damage (Level 2), exhibiting 
+
+collapsed walls, roofs, or inundation by floodwaters, 
+
+contrasting sharply with their pre-storm integrity. Twenty 
+
+properties endured minor harm (Level 1), displaying partial 
+
+burns, missing shingles, or localized flooding, though their 
+
+core structures remained standing. Only two buildings 
+
+escaped unscathed (Level 0), retaining pre-disaster 
+
+appearances amid the chaos. One structure remains 
+
+unclassified, obscured by debris or imaging limitations. 
+
+A Flooding 
+
+Stage 1 · Coarse Semantics Stage 2 · Semantic Expansion Stage 3 · Detail Completion Final · Refined Generation GT 
+
+B Wildfire 
+
+Stage 1 · Coarse Semantics Stage 2 · Semantic Expansion Stage 3 · Detail Completion Final · Refined Generation GT 
+
+C Volcano 
+
+Stage 1 · Coarse Semantics Stage 2 · Semantic Expansion Stage 3 · Detail Completion Final · Refined Generation GT 
+
+D Tornado 
+
+Stage 1 · Coarse Semantics Stage 2 · Semantic Expansion Stage 3 · Detail Completion Final · Refined Generation GT Figure 4: Visualization of the progressive generation process of EchoChange. For each bi-temporal image pair, the caption evolves from coarse event semantics to semantic expansion, detail completion, and final refinement. Masked positions are predicted jointly, while uncertain tokens remain editable across iterations, allowing unsupported intermediate hypotheses to be reconsidered using the global visual and textual context. Pre-Disaster Post-Disaster Pre-Disaster Post-Disaster 
+
+Pre-Disaster Post-Disaster Pre-Disaster Post-Disaster 
+
+Supported Incorrect Vague 
+
+A dense ash plume emerges from a volcanic vent, obscuring forested slopes as it spreads 
+
+northeastward. The ash blankets rural settlements, disrupting visibility and contrasting sharply 
+
+with the pre-eruption greenery. This indicates intensified volcanic activity, highlights the 
+
+environmental impact, and alters the landscape composition. 
+
+A significant landslide has occurred in the forested area, as evidenced by the large, white, cloud-like formation in the 
+
+post-disaster image, which contrasts sharply with the undisturbed greenery in the pre-disaster image. The landslide 
+
+appears to have displaced a substantial amount of earth and vegetation, altering the landscape's topography. 
+
+The forested area in the post-disaster image shows significant damage, with a large section of trees visibly destroyed and 
+
+a thick cloud of smoke rising from the affected zone, indicating a recent wildfire. The cleared area contrasts sharply 
+
+with the intact greenery surrounding it, highlighting the extent of the devastation. 
+
+Volcano erupts, spewing dense ash plume, obscuring the previously visible forested landscape, obscuring roads and 
+
+vegetation, altering terrain visibility, indicating explosive activity across the region, disrupting local ecosystems, altering 
+
+atmospheric conditions, highlighting immediate environmental impact. 
+
+The pre-event image shows a patchwork of dry, cultivated fields with varied textures and colors, indicating 
+
+normal agricultural activity. Post-event, the entire area is uniformly submerged under dark green floodwaters, 
+
+obscuring all prior land features. This transformation corresponds to Disaster Level 3 (Destroyed), as the region 
+
+is entirely covered by water, rendering the landscape unrecognizable and functionally erased. No structures or 
+
+vegetation remain visible, confirming catastrophic inundation. 
+
+Agricultural fields in T1 show distinct rectangular patterns, indicating organized farming practices, while T2 reveals a
+
+uniform, dark green area, suggesting a significant loss of agricultural land, possibly due to a disaster such as flooding 
+
+or a large-scale agricultural abandonment. 
+
+The image shows a significant transformation from the pre-disaster to the post-disaster state, with large sections of the area appearing 
+
+heavily damaged. The once uniform and structured layout in T1 has been disrupted, revealing extensive destruction and debris scattered 
+
+across the landscape in T2. The green and brown patches in T1 indicate intact and possibly vegetated areas, while T2 displays a more 
+
+uniform dark green, suggesting widespread devastation and loss of structure, likely due to a catastrophic event such as a fire or 
+
+natural disaster. The changes highlight the severe impact on the area, with large portions now appearing barren and uninhabitable. 
+
+The pre-event image shows a patchwork of agricultural fields with varied textures and colors while the post-event image 
+
+shows a uniformly dark, featureless area, indicating complete flooding. The landscape transition from structured farmland 
+
+to a homogeneous floodplain, aligning with Disaster Level 3 (Destroyed) due to complete coverage by water, erasing 
+
+prior land features. 
+
+Hurricane devastation transforms dense forest into fragmented landscape, winding road now 
+
+obstructed by debris and fallen trees, once-lush canopy replaced by sparse patches of greenery, 
+
+emergency structures emerge near impacted zones, highlighting catastrophic environmental 
+
+disruption. 
+
+A significant change is observed in the post-disaster remote-sensing image, where a noticeable clearing has appeared in 
+
+the forested area, indicating deforestation or land clearing. The road on the right side of the image appears to be 
+
+intact, suggesting that the impact of the disaster is limited to the forested area. 
+
+The forested area depicted in the pre-disaster image (T1) shows a dense canopy of green vegetation. In the post-disaster 
+
+image (T2), a significant portion of the forest appears to have been affected, with noticeable damage and debris visible near 
+
+the bottom right. A dirt path running diagonally from the top left to the bottom right remains consistent in both images, 
+
+but the altered landscape suggests the impact of a disaster, likely resulting in deforestation or vegetation damage. The 
+
+changes indicate a substantial alteration to the area, with clear signs of destruction and loss of green cover. 
+
+Hurricane-induced devastation transformed the landscape, with the dense green canopy replaced by widespread 
+
+deforestation, exposing bare soil and fragmented vegetation across the terrain, while a once-clear road now blocked by 
+
+fallen trees and scattered debris, marking the storm's path, highlighting catastrophic wind damage and ecological 
+
+disruption. 
+
+The pre-event and post-event satellite images reveal no discernible changes, confirming all 281 
+
+buildings remain at Disaster Level 0 (No Damage). Structures exhibit consistent roof integrity, 
+
+with no visible water encroachment, collapses, or burn scars. Street layouts, vegetation, and 
+
+urban density appear unchanged, indicating the tsunami did not impact this specific area. 
+
+A significant structural change is observed in the post-disaster remote-sensing image, where a large white building, likely 
+
+a warehouse or factory, has been replaced by a darker, more compact structure, indicating potential damage or 
+
+reconstruction. The surrounding area shows minimal visible changes, with the layout of the streets and buildings 
+
+remaining largely intact. 
+
+The image shows a densely populated urban area with numerous buildings, many of which have red and grey rooftops. In the post-disaster 
+
+image, T2, there is visible damage and disruption compared to the pre-disaster image, T1. A large rectangular building in the center appears 
+
+intact, but surrounding structures show signs of destruction or collapse. The layout of the area remains consistent, with roads and pathways 
+
+clearly visible, though some sections appear altered or damaged. The green spaces and trees are still present, but the overall appearance 
+
+suggests significant impact, likely from an event such as an earthquake or severe weather, leading to structural damage and potential 
+
+displacement. 
+
+The pre-event and post-event satellite images show no noticeable changes, confirming all 204 buildings remain undamaged 
+
+(Disaster Level 0). Structures maintain their original integrity, with no signs of water damage, collapse, or burn marks. 
+
+Vegetation and terrain appear consistent, indicating no disruption. Urban infrastructure, road networks, and land use 
+
+patterns remain unchanged, indicating the tsunami did not affect this area. 
+
+A Volcano 
+
+GT 
+
+Qwen2.5-VL-7B 
+
+InternVL3-8B 
+
+EchoChange 
+
+B Flooding 
+
+GT 
+
+Qwen2.5-VL-7B 
+
+InternVL3-8B 
+
+EchoChange 
+
+C Hurricane 
+
+GT 
+
+Qwen2.5-VL-7B 
+
+InternVL3-8B 
+
+EchoChange 
+
+D No Change 
+
+GT 
+
+Qwen2.5-VL-7B 
+
+InternVL3-8B 
+
+EchoChange Figure 5: Qualitative comparison between EchoChange and autoregressive baselines under identical image pairs and instructions. Blue, orange, and yellow denote visually supported, incorrect, and vague spans, respectively. Compared with Qwen2-VL-7B and InternVL3-8B, EchoChange produces descriptions with more supported factual content and less unsupported elaboration, while the retained errors illustrate the remaining difficulty of ambiguous scenes and fine-grained quantity estimation. References 
+
+Asada, M.; and Miwa, M. 2025. Addressing the Training-Inference Discrepancy in Discrete Diffusion for Text Generation. In 
+
+Proceedings of the 31st International Conference on Computational Linguistics , 7156–7164. Abu Dhabi, UAE: Association for Computational Linguistics. Austin, J.; Johnson, D. D.; Ho, J.; Tarlow, D.; and van den Berg, R. 2021. Structured Denoising Diffusion Models in Discrete State-Spaces. In Advances in Neural Information Processing Systems , volume 34, 17981–17993. Curran Associates, Inc. Bengio, S.; Vinyals, O.; Jaitly, N.; and Shazeer, N. 2015. Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks. In Advances in Neural Information Processing Systems , volume 28, 1171–1179. Curran Associates, Inc. Chang, S.; and Ghamisi, P. 2023. Changes to Captions: An Attentive Network for Remote Sensing Change Captioning. IEEE Transactions on Image Processing , 32: 6047–6060. Chen, J.; Zhang, A.; Li, M.; Smola, A.; and Yang, D. 2023. A Cheaper and Better Diffusion Language Model with Soft-Masked Noise. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing , 4765–4775. Singapore: Association for Computational Linguistics. Chen, Z.; Wang, C.; Zhang, N.; and Zhang, F. 2025. RSCC: A Large-Scale Remote Sensing Change Caption Dataset for Disaster Events. In Advances in Neural Information Processing Systems , volume 38. Curran Associates, Inc. Datasets and Benchmarks Track. Dai, W.; Liu, Z.; Ji, Z.; Su, D.; and Fung, P. 2023. Plausible May Not Be Faithful: Probing Object Hallucination in Vision-Language Pre-training. In Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics , 2136–2148. Dubrovnik, Croatia: Association for Computational Linguistics. Ghazvininejad, M.; Levy, O.; Liu, Y.; and Zettlemoyer, L. 2019. Mask-Predict: Parallel Decoding of Conditional Masked Language Models. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) , 6112–6121. Hong Kong, China: Association for Computational Linguistics. Gong, S.; Li, M.; Feng, J.; Wu, Z.; and Kong, L. 2023. DiffuSeq: Sequence to Sequence Text Generation with Diffusion Models. In International Conference on Learning Representations .Gu, J.; Bradbury, J.; Xiong, C.; Li, V. O. K.; and Socher, R. 2018. Non-Autoregressive Neural Machine Translation. In 
+
+International Conference on Learning Representations .Gupta, R.; Goodman, B.; Patel, N.; Hosfelt, R.; Sajeev, S.; Heim, E.; Doshi, J.; Lucas, K.; Choset, H.; and Gaston, M. 2019. Creating xBD: A Dataset for Assessing Building Damage from Satellite Imagery. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops , 10–17. Han, X.; Kumar, S.; and Tsvetkov, Y. 2023. SSD-LM: Semi-Autoregressive Simplex-Based Diffusion Language Model for Text Generation and Modular Control. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 11575–11596. Toronto, Canada: Association for Computational Linguistics. He, Z.; Sun, T.; Tang, Q.; Wang, K.; Huang, X.; and Qiu, X. 2023. DiffusionBERT: Improving Generative Masked Language Models with Diffusion Models. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 4521–4534. Toronto, Canada: Association for Computational Linguistics. Hoogeboom, E.; Nielsen, D.; Jaini, P.; Forré, P.; and Welling, M. 2021. Argmax Flows and Multinomial Diffusion: Learning Categorical Distributions. In Advances in Neural Information Processing Systems , volume 34, 12454–12465. Curran Associates, Inc. Hoxha, G.; Chouaf, S.; Melgani, F.; and Smara, Y. 2022. Change Captioning: A New Paradigm for Multitemporal Remote Sensing Image Analysis. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–14. Huang, Q.; Dong, X.; Zhang, P.; Wang, B.; He, C.; Wang, J.; Lin, D.; Zhang, W.; and Yu, N. 2024. OPERA: Alleviating Hallucination in Multi-Modal Large Language Models via Over-Trust Penalty and Retrospection-Allocation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 13418–13427. Irvin, J. A.; Liu, E. R.; Chen, J. C.; Dormoy, I.; Kim, J.; Khanna, S.; Zheng, Z.; and Ermon, S. 2025. TEOChat: A Large Vision-Language Assistant for Temporal Earth Observation Data. In International Conference on Learning Representations .Jhamtani, H.; and Berg-Kirkpatrick, T. 2018. Learning to Describe Differences Between Pairs of Similar Images. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing , 4024–4034. Brussels, Belgium: Association for Computational Linguistics. Karimi Mahabadi, R.; Ivison, H.; Tae, J.; Henderson, J.; Beltagy, I.; Peters, M.; and Cohan, A. 2024. TESS: Text-to-Text Self-Conditioned Simplex Diffusion. In Proceedings of the 18th Conference of the European Chapter of the Association for Computational Linguistics (Volume 1: Long Papers) , 2347–2361. St. Julian’s, Malta: Association for Computational Linguistics. Kuckreja, K.; Danish, M. S.; Naseer, M.; Das, A.; Khan, S.; and Khan, F. S. 2024. GeoChat: Grounded Large Vision-Language Model for Remote Sensing. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,27831–27840. Lee, J.; Mansimov, E.; and Cho, K. 2018. Deterministic Non-Autoregressive Neural Sequence Modeling by Iterative Refinement. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing , 1173–1182. Brussels, Belgium: Association for Computational Linguistics. Leng, S.; Zhang, H.; Chen, G.; Li, X.; Lu, S.; Miao, C.; and Bing, L. 2024. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 13872–13882. Li, X. L.; Thickstun, J.; Gulrajani, I.; Liang, P.; and Hashimoto, T. B. 2022. Diffusion-LM Improves Controllable Text Generation. In Advances in Neural Information Processing Systems , volume 35, 4328–4343. Curran Associates, Inc. Li, Y.; Du, Y.; Zhou, K.; Wang, J.; Zhao, X.; and Wen, J.-R. 2023. Evaluating Object Hallucination in Large Vision-Language Models. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing , 292–305. Singapore: Association for Computational Linguistics. Liu, C.; Chen, K.; Chen, B.; Zhang, H.; Zou, Z.; and Shi, Z. 2024a. RSCaMa: Remote Sensing Image Change Captioning With State Space Model. IEEE Geoscience and Remote Sensing Letters , 21: 1–5. Liu, C.; Zhao, R.; Chen, H.; Zou, Z.; and Shi, Z. 2022. Remote Sensing Image Change Captioning With Dual-Branch Transformers: A New Method and a Large Scale Dataset. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–20. Liu, C.; Zhao, R.; Chen, J.; Qi, Z.; Zou, Z.; and Shi, Z. 2023. A Decoupling Paradigm With Prompt Learning for Remote Sensing Image Change Captioning. IEEE Transactions on Geoscience and Remote Sensing , 61: 1–18. Liu, F.; Chen, D.; Guan, Z.; Zhou, X.; Zhu, J.; Ye, Q.; Fu, L.; and Zhou, J. 2024b. RemoteCLIP: A Vision Language Foundation Model for Remote Sensing. IEEE Transactions on Geoscience and Remote Sensing , 62: 1–16. Lou, A.; Meng, C.; and Ermon, S. 2024. Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution. In 
+
+Proceedings of the 41st International Conference on Machine Learning , volume 235 of Proceedings of Machine Learning Research , 32819–32848. PMLR. Muhtar, D.; Li, Z.; Gu, F.; Zhang, X.; and Xiao, P. 2025. LHRS-Bot: Empowering Remote Sensing with VGI-Enhanced Large Multimodal Language Model. In Computer Vision – ECCV 2024 , volume 15132 of Lecture Notes in Computer Science ,440–457. Cham: Springer Nature Switzerland. Park, D. H.; Darrell, T.; and Rohrbach, A. 2019. Robust Change Captioning. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 4624–4633. Rahnemoonfar, M.; Chowdhury, T.; Sarkar, A.; Varshney, D.; Yari, M.; and Murphy, R. R. 2021. FloodNet: A High Resolution Aerial Imagery Dataset for Post Flood Scene Understanding. IEEE Access , 9: 89644–89654. Rohrbach, A.; Hendricks, L. A.; Burns, K.; Darrell, T.; and Saenko, K. 2018. Object Hallucination in Image Captioning. In 
+
+Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing , 4035–4045. Brussels, Belgium: Association for Computational Linguistics. Sahoo, S. S.; Arriola, M.; Schiff, Y.; Gokaslan, A.; Marroquin, E.; Chiu, J. T.; Rush, A.; and Kuleshov, V. 2024. Simple and Effective Masked Diffusion Language Models. In Advances in Neural Information Processing Systems , volume 37, 130136– 130184. Curran Associates, Inc. Sun, D.; Bao, Y.; Liu, J.; and Cao, X. 2024. A Lightweight Sparse Focus Transformer for Remote Sensing Image Change Captioning. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 17: 18727–18738. Sun, D.; Wang, Y.; Yao, J.; Yu, W.; Cao, X.; and Ghamisi, P. 2026. SCNet: Lightweight Spatial-Channel Attention Network for Remote Sensing Change Captioning. IEEE Transactions on Geoscience and Remote Sensing , 64: 5610513. Sun, D.; Yao, J.; Wu, X.; Zhou, C.; Ghamisi, P.; and Cao, X. 2025. Mask Approximation Net: A Novel Diffusion Model Approach for Remote Sensing Change Captioning. IEEE Transactions on Geoscience and Remote Sensing , 63: 1–11. Wang, Z.; Wang, M.; Xu, S.; Li, Y.; and Zhang, B. 2024. CCExpert: Advancing MLLM Capability in Remote Sensing Change Captioning with Difference-Aware Integration and a Foundational Dataset. arXiv:2411.11360. Yu, X.; Li, Y.; Ma, J.; Li, C.; and Wu, H. 2025. Diffusion-RSCC: Diffusion Probabilistic Model for Change Captioning in Remote Sensing Images. IEEE Transactions on Geoscience and Remote Sensing , 63: 1–13. Zhang, W.; Cai, M.; Zhang, T.; Zhuang, Y.; and Mao, X. 2024. EarthGPT: A Universal Multimodal Large Language Model for Multisensor Image Comprehension in Remote Sensing Domain. IEEE Transactions on Geoscience and Remote Sensing , 62: 1–20. Zhou, K.; Li, Y.; Zhao, X.; and Wen, J.-R. 2024. Diffusion-NAT: Self-Prompting Discrete Diffusion for Non-Autoregressive Text Generation. In Proceedings of the 18th Conference of the European Chapter of the Association for Computational Linguistics (Volume 1: Long Papers) , 1438–1451. St. Julian’s, Malta: Association for Computational Linguistics. Zhu, Y.; Li, L.; Chen, K.; Liu, C.; Zhou, F.; and Shi, Z. 2024. Semantic-CC: Boosting Remote Sensing Image Change Captioning via Foundational Knowledge and Semantic Guidance. IEEE Transactions on Geoscience and Remote Sensing , 62: 1–16.
