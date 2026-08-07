@@ -1,0 +1,617 @@
+Title: Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling
+
+URL Source: https://arxiv.org/pdf/2608.04230v1
+
+Published Time: Thu, 06 Aug 2026 00:12:31 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling 
+
+## Parth Doshi 
+
+Dalhousie University Halifax, NS, Canada parth.doshi@dal.ca 
+
+## Priyanka Aravindan 
+
+Dalhousie University Halifax, NS, Canada priyanka.aravindan@dal.ca 
+
+## Vaishnav Vaidheeswaran 
+
+Dalhousie University Halifax, NS, Canada vaishnav@dal.ca 
+
+## Md Mahbub Alam 
+
+Dalhousie University Halifax, NS, Canada mahbub.alam@dal.ca 
+
+## Gabriel Spadon ∗
+
+Dalhousie University Halifax, NS, Canada spadon@dal.ca 
+
+## Abstract 
+
+Deep learning models for scientific spatio-temporal downscaling often minimize reconstruction error while failing to preserve physi-cally meaningful multi-scale structure. For sea surface temperature prediction, this can yield outputs that are numerically plausible yet overly smooth, missing mesoscale variability critical to regional ocean dynamics. Existing methods often focus on pixel-wise objec-tives or single-context conditioning, which limits their ability to preserve spectral fidelity and generalize across regions. To address this, we propose EddyFlow , a representation learning framework for kilometer-scale sea surface temperature downscaling that bal-ances predictive accuracy, scale-dependent structure, and regional generalization. EddyFlow is trained on the Gulf of St. Lawrence and evaluated in zero-shot and few-shot settings on the Bay of Fundy and the Gulf of Mexico. EddyFlow demonstrates that physics-informed representation learning reduces zero-shot RMSE by 21%, achieves up to 85.6% skill relative to persistence on unseen domains, and maintains near-ideal spectral fidelity with a PSD ratio of ≈ 1.00 .
+
+## CCS Concepts 
+
+• Computing methodologies → Machine learning ; Neural networks ; Learning latent representations ; • Applied computing 
+
+→ Earth and atmospheric sciences .
+
+## Keywords 
+
+SST Downscaling, Diffusion Models, Transfer Learning, Domain Shift, Spectral Fidelity 
+
+ACM Reference Format: 
+
+Parth Doshi, Priyanka Aravindan, Vaishnav Vaidheeswaran, Md Mahbub Alam, and Gabriel Spadon. 2026. Transferable Dual-Stream Representations for Mesoscale- Preserving Sea Surface Temperature Downscaling. In Pro-ceedings of Proceedings of the 33rd ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD ’27). ACM, New York, NY, USA, 12 pages. https://doi.org/XXXXXXX.XXXXXXX  
+
+> ∗Corresponding Author
+> This work is licensed under a Creative Commons Attribution 4.0 International License.
+> KDD ’27, San Jose, CA, USA
+> ©2026 Copyright held by the owner/author(s). ACM ISBN 978-1-4503-XXXX-X/2027/08 https://doi.org/XXXXXXX.XXXXXXX
+
+## 1 Introduction 
+
+Sea Surface Temperature (SST) is a primary driver of coastal ecosys-tem health, fisheries productivity, and marine weather hazards [ 1 ]. However, satellite and reanalysis datasets that provide global SST estimates are far too coarse to capture the frontal structures, eddies, and thermal gradients that govern regional ocean dynamics [ 2–5 ]. In the Gulf of St. Lawrence (GSL), sharp SST fronts associated with the Laurentian Channel and shelf-break bathymetry shape fish habitats and marine management decisions, yet remain un-resolved in standard reanalyses such as ERA5 1 [6, 7]. Recovering kilometer-scale SST from coarse inputs is a prerequisite for fish-eries management and coastal hazard forecasting, which depend on precise thermal gradients, not approximate magnitudes [2, 6]. Deep learning models for structured prediction increasingly in-fer high-resolution scientific fields from sparse or coarse obser-vations [ 3 – 5, 8]. Even at strong predictive accuracy, pixel-wise losses alone do not guarantee that learned representations capture target-domain structure. Representations here mean the latent en-coding governing how spatial organization, temporal evolution, and cross-scale dependencies are preserved. When these encodings miss physical structures, models can achieve low reconstruction er-ror while producing outputs that are spectrally smooth, temporally uninformative, or unable to generalize across physical regimes, a failure often visible only beyond the training distribution [4, 8]. SST downscaling exemplifies this limitation as the target appli-cation reflects coupled physical processes, so faithful reconstruc-tion requires more than interpolating the coarse input [ 8 ]. Models trained to minimize pixel-wise reconstruction error can match tar-get values while collapsing fine-scale variance [ 4, 5 ]. This collapse goes unpenalized by pixel-wise losses, yielding compressed predic-tions structurally inconsistent with the dynamics and fragile under geographic shift [8]. The difficulty is sharpest where spatial statistics are not station-ary and temporal persistence is strong. The GSL exemplifies both. Its semi-enclosed geometry, freshwater input from major rivers, and strong coupling to shelf circulation produce an SST field whose spatial covariance structure varies across the domain. Consequently, the mapping from coarse to fine resolution is non-stationary, forcing region-dependent relationships rather than a global interpolation rule. Convolutional or attention-based architectures [ 9 , 10 ] often  
+
+> 1https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels arXiv:2608.04230v1 [cs.LG] 4 Aug 2026 KDD ’27, August, 2027, San Jose, CA, USA Doshi et al.
+
+assume spatial homogeneity and struggle to generalize. Temporal autocorrelation makes persistence a competitive baseline. These observations suggest viewing SST downscaling not merely as image super-resolution, but as representation learning under domain shift. The learned encoding must remain accurate, tempo-rally informative, and spectrally faithful when the physical regime changes across geographies. We assess these properties with three metrics. Root-mean-square Error (RMSE) measures pixel-wise re-construction error, the Skill Score (SS) measures improvement over the ERA5 persistence baseline, and the Power Spectral Density (PSD) ratio measures preservation of fine-scale variability. No single metric captures all three; their joint behavior determines whether learned representations are accurate, informative, and physically consistent. We present EddyFlow , a physics-informed representation-learning framework for kilometer-scale SST downscaling, evaluated under geographic domain shift. We adopt the GSL as the training domain because its physical complexity, non-stationary spatial statistics, and strong persistence test whether a model learns generalizable structure rather than dataset-specific patterns (Section 3). EddyFlow 
+
+separates atmospheric forcing, ocean memory, and diffusion-based refinement to recover the mesoscale variance that pixel-wise objec-tives smooth away (Section 4), mesoscale means intermediate size or scale, typically ranging from roughly 2 to 1,000 kilometers. Ed-dyFlow is evaluated in zero-shot and few-shot transfer on the Bay of Fundy (BOF) and the Gulf of Mexico (GOM) in Section 5. Physics-informed representation learning drives generalization across ocean regimes; our contributions: 
+
+• a 21% reduction in zero-shot RMSE on unseen basins relative to a strong downscaling baseline; 
+
+• up to 85.6% skill relative to the ERA5 persistence base-line on domains never observed during training; and 
+
+• near-ideal spectral fidelity , with a PSD ratio of ≈ 1.00 that preserves fine-scale variability rather than blurring it. The remainder of the paper is organized as follows. Section 2 re-views related work; Section 3 formalizes the downscaling task and evaluation criteria; Section 4 presents EddyFlow ; Section 5 reports in-domain and transfer results; and Section 6 concludes. 
+
+## 2 Related Work 
+
+Learning high-resolution spatial structure. Much recent work treats geophysical downscaling as a spatial reconstruction prob-lem, in which diffusion and generative models recover the sharp gradients and high-frequency variability that pixel-wise regression smooths away [ 11 , 12 ]. CorrDiff [ 9] pairs a deterministic backbone with a residual diffusion corrector, restricting stochastic generation to unresolved fine scales, improving realism while preserving spec-tral behavior. DIFFDS [ 10 ] adapts diffusion-based image restora-tion to SST, learning a compact high-resolution prior that guides reconstruction from coarse inputs. Earlier work established that deep networks can recover ocean-front structure from satellite im-agery. Lloyd et al. [ 13 ] fuse optical and thermal features for fivefold SST super-resolution, and Ducournau and Fablet [ 14 ] showed that CNN-based super-resolution substantially outperforms classical downscaling methods. Recent Mediterranean studies with deter-ministic and generative formulations [ 15 , 16 ] reinforce that learning a conditional high-resolution mapping from low-resolution SST alone, outperforms interpolation, particularly in recovering small-scale gradients and spectral properties. These methods excel at spatial fidelity and high-wavenumber variance recovery, but most refine one or a few concurrent observations with limited temporal conditioning, so improved visual and spectral quality does not guar-antee evolution consistent with recent atmospheric forcing.As they are largely translation-equivariant architectures, they struggle to capture the fixed, spatially non-stationary influence of coastlines, bathymetry, and continental shelves. 
+
+Learning temporal ocean evolution. A second line of work treats ocean prediction as sequence modeling, learning state evolution through autoregressive or multi-step temporal models that better represent persistence, advection, and slowly varying circulation structure [ 17 , 18 ]. WenHai [ 19 ] shows that explicit temporal mod-eling is essential for maintaining coherent evolution in autoregres-sive settings, where small stepwise errors otherwise accumulate. GraphCast [ 20 ] and GenCast [ 21 ] demonstrate that graph- and diffusion-based temporal emulators achieve strong forecast skill while preserving dynamical coherence across lead times, and FuXi-Ocean [ 22 ] extends this to sub-daily, eddy-resolving global fore-casting with improved skill over WenHai. Forecasting, however, solves a different problem from SST downscaling. It predicts future ocean states rather than recovering fine-scale structure missing from coarse observations, capturing large-scale evolution while missing sharp fronts and kilometer-scale variability. Many forecast-ing models also encode atmospheric forcing and ocean memory in a single latent representation, limiting separate modeling of short-term dynamics from persistent ocean structure observations. 
+
+Learning regional generalization. A third line of work empha-sizes that ocean prediction models must remain reliable when trans-ferred across water bodies with distinct coastlines, boundary con-ditions, and circulation regimes, since one coarse input can map to different fine-scale responses depending on local geometry and context. Recent regional emulators combine low-resolution autore-gressive forecasting with learned high-resolution refinement and online bias correction, remaining stable over long horizons while improving spectral behavior and fine-scale realism [ 8], showing that physical consistency, roll-out stability, and multiscale correction can coexist in one framework. Such models, however, are typically trained on a single basin, and their performance degrades substan-tially when out of the training distribution, making them effective basin-specific models but unreliable on unseen regions. 
+
+## 3 Problem Formulation 
+
+Global SST products such as ERA5 capture the large-scale ther-mal structure of the ocean but are too coarse to resolve fine-scale features such as fronts, eddies, and coastal gradients. Statistical downscaling therefore aims to recover a high-resolution SST field consistent with the observed coarse state [ 23 ]. This is an ill-posed problem because multiple plausible high-resolution fields can cor-respond to the same coarse input. As a result, models trained only with pixel-wise regression losses often predict overly smooth fields that minimize average error but fail to recover realistic fine-scale variability. Diffusion models address this by refining an initial esti-mate towards consistent fine-scale structure [24, 25]. Mesoscale-Preserving SST Downscaling Across Ocean Basins KDD ’27, August, 2027, San Jose, CA, USA 
+
+Let 𝑥 𝑡 denote the coarse-resolution input at time 𝑡 , 𝑜 𝑡 denote the optional ocean-state history, and 𝑦 𝑡 denote the target high-resolution SST field. The objective is a mapping 𝑓 𝜃 from coarse input and history to the high-resolution field ˆ𝑦 𝑡 = 𝑓 𝜃 (𝑥 𝑡 , 𝑜 𝑡 ). Since SST evolves gradually, we estimate the temporal residual 𝑟 𝑡 = 𝑦 𝑡 −
+
+𝑦 𝑡 −1 rather than the full field, and recover the target by adding it back to the previous day through ˆ𝑦 𝑡 = 𝑦 𝑡 −1 + ˆ𝑟 𝑡 . Predicting the residual focuses the model on day-to-day spatial change rather than repeatedly reconstructing the slowly varying background at every timestep. It also yields a natural persistence reference that carries the previous day’s state forward and thus assumes the SST remains unchanged absent new forcing. These observations motivate the three complementary evalua-tion criteria used throughout this study: RMSE for pixel-wise accu-racy, persistence-relative skill score for temporal informativeness, and PSD ratio for spectral fidelity. Beyond metrics, we evaluate in zero-shot and few-shot transfer settings. A model that performs well only within its training basin may simply have learned basin-specific coastline or circulation patterns rather than the coarse-to-fine relationship. Testing on unseen basins therefore better mea-sures whether the representation generalizes across geographies. 
+
+## 4 Methodology 4.1 RMSE and the Skill Score 
+
+SST demonstrates strong day-to-day persistence [ 26 ]. The simplest predictor, ˆ𝑦 pers  
+
+> 𝑡
+
+= 𝑦 𝑡 −1, achieves low RMSE in most coastal and shelf regions because SST rarely changes significantly within a 24-hour period. This situation presents a methodological challenge where a model may report an RMSE that appears excellent in absolute terms while providing no additional predictive information, simply by replicating persistence. Consequently, RMSE is necessary but insufficient, as it cannot distinguish between a model that learned ocean dynamics and one that reproduces the previous day’s field. We therefore define a skill score relative to a persistence ref-erence, following the classical verification framework in which a forecast is judged not against zero, but against a reference forecast requiring no learning component [ 27 ]. Let RMSE ( ˆ𝑦 𝑡 , 𝑦 𝑡 ) denote the root-mean-square error of the model prediction and RMSE ( ˆ𝑦 pers  
+
+> 𝑡
+
+, 𝑦 𝑡 )
+
+that of the persistence reference. We define the skill score as: 
+
+SS = 1 − RMSE ( ˆ𝑦 𝑡 , 𝑦 𝑡 )
+
+RMSE ( ˆ𝑦 pers  
+
+> 𝑡
+
+, 𝑦 𝑡 ) . (1) The ratio is directly interpretable. When SS = 0, the model is exactly as informative as carrying the reference field forward. When 
+
+SS > 0, the model has extracted genuine predictive signal beyond persistence, and when SS < 0, the model is worse than the naive baseline despite an RMSE that looks reasonable in isolation. This last case is the one that a pixel-wise loss alone cannot detect, which is why persistence-relative skill, not RMSE alone, is the correct lens for short-horizon SST prediction. In our zero-shot BOF and GOM setting, a positive skill score is the minimum bar for indicating model usefulness. The skill score, however, is computed on raw pixel values and is blind to where error lives across spatial scale. A model can satisfy SS > 0 while discarding the fine-scale structure that makes it useful, a failure visible only in the frequency domain. 
+
+## 4.2 Pixel-Wise Loss and the PSD Ratio 
+
+Minimizing squared error drives a network toward the conditional mean of the target at each pixel; when fine-scale structure is only partially determined by the coarse input, that mean is smoother than any single realization, so a pixel-wise reconstruction loss (the loss term Lrec in Section 4.7) alone yields pixel-accurate yet systematically under-variant predictions at high wavenumbers, a deviation we quantify in the frequency domain, scale by scale. Let 𝑦 (u) be the target field and ˆ𝑦 (u) the prediction over spatial position u = (𝑢 1, 𝑢 2), each with its spatial mean removed, 
+
+𝑦 ′ (u) = 𝑦 (u) − 𝜇 𝑦 . (2) The 2D Fourier transform of the centered field and its inverse are 
+
+𝑌 (k) =
+
+∬
+
+𝑦 ′ (u) 𝑒 −𝑖 k·u 𝑑 u, 𝑦 ′ (u) = 1 
+
+> (2𝜋 )2
+
+∬
+
+𝑌 (k) 𝑒 𝑖 k·u 𝑑 k, (3) with wavenumber k = (𝑘 𝑥 , 𝑘 𝑦 ), and Parseval’s theorem guarantees 
+
+∬
+
+|𝑦 ′ (u)| 2 𝑑 u = 1
+
+(2𝜋 )2
+
+∬
+
+|𝑌 (k)| 2 𝑑 k, (4) so spatial variance is exactly preserved and attributable spectrally. The power spectra of the target field and the model prediction are 
+
+𝑃 𝑦 (k) = |𝑌 (k)| 2, 𝑃 ˆ𝑦 (k) = | ˆ𝑌 (k)| 2, (5) where ˆ𝑌 (k) denotes the transform of the centered prediction. Ocean fields are scale-organized rather than direction-organized; conse-quently we radially average over the annulus Ω𝑘 at 𝑘 =√︃ 𝑘 2 
+
+> 𝑥
+
++ 𝑘 2 
+
+> 𝑦
+
+,
+
+¯𝑃 𝑦 (𝑘 ) = 1
+
+|Ω𝑘 |∑︁ k∈Ω𝑘 
+
+𝑃 𝑦 (k), (6) and identically for ¯𝑃 ˆ𝑦 (𝑘 ), giving the isotropic 1D PSD used in down-scaling and turbulence diagnostics [ 9 ]. We define the PSD ratio as: 
+
+PSDR (𝑘 ) =
+
+¯𝑃 ˆ𝑦 (𝑘 )
+
+¯𝑃 𝑦 (𝑘 ) + 𝜀 , (7) with 𝜀 a small constant for numerical stability, evaluated between the coarse-input scale and the kilometer-scale Nyquist limit, re-ported over 5–50 km (Section 5). A value of PSDR (𝑘 ) ≈ 1 indicates that variance is preserved at scale 𝑘 , while PSDR (𝑘 ) < 1 indicates over-smoothing, the spectral signature of mean-seeking collapse, and PSDR (𝑘 ) > 1 indicates over-amplified noise. A model can post low RMSE and SS > 0 while PSDR (𝑘 ) → 0 at high 𝑘 , exactly the failure mode invisible to pixel-wise metrics, since eddies and fronts occupy bands of 𝑘 ; a faithful model must not collapse. 
+
+## 4.3 Two Streams for Two Timescales 
+
+Atmospheric forcing and oceanic memory operate on separable timescales. Synoptic weather systems driving short-term SST change have lifetimes of two to seven days, while SST anomalies set by that forcing persist for weeks to months as the mixed layer relaxes toward equilibrium [ 26 ]. One encoder at one window and sampling rate cannot resolve both, so EddyFlow has two input tensors, 
+
+𝑋 𝑎 ∈ R28 ×23 ×20 ×48 , 𝑋 𝑜 ∈ R60 ×1×501 ×1201 , (8) with dimensions ordered as frames, channels, height, and width. 
+
+𝑋 𝑎 is a 7-day, 6-hourly window of 23 coarse atmospheric reanalysis forcing fields, spanning roughly two synoptic cycles, beyond which KDD ’27, August, 2027, San Jose, CA, USA Doshi et al. 
+
+autocorrelation decays too quickly to add information. 𝑋 𝑜 is a 60-day, daily window of fine-resolution ocean surface temperature observations, chosen so that mesoscale eddies translating at 5–20 km/day [ 28 ] remain inside the receptive field even after several hundred kilometers, and long enough to span seasonal transitions such as summer heating giving way to autumn cooling. Because the two streams differ in resolution by roughly two orders of magnitude, they cannot share a patch embedding [ 29 ]. The atmospheric stream uses a fixed patch size of 4, projecting each 20 ×48 frame to 𝑁 = 5 × 12 = 60 tokens via a strided convolution. The ocean stream uses a dynamic patch embedding with patch size 64, keeping the token count tractable at 501 ×1201 resolution and yielding 𝑁 𝑜 = 8 × 19 = 152 tokens per frame. The patch grid is computed at runtime from the input shape, so the same ocean encoder applies to differently sized domains without modification. 
+
+## 4.4 Spatio-Temporal Stream Encoders 
+
+Each stream factorizes attention into a spatial stage, mixing across the 𝑁 tokens per frame, and a temporal stage, mixing across frames per location [30]. For the atmospheric stream, 
+
+ℎ𝑎,𝜏 = SpatialAttn (𝑋 𝑎,𝜏 ), 𝜏 = 1, . . . , 28 , (9) 
+
+𝑎 = TemporalAttn (ℎ𝑎, 1, . . . , ℎ 𝑎, 28 ), (10) using 8 spatial layers then 4 temporal layers, with a learned frame embedding in place of a causal mask, since every frame in the window precedes the prediction time. The spatial summary 𝑠 is kept separate from the temporal summary 𝑎 : 𝑠 answers where current forcing sits, 𝑎 how it evolved over the week, two physically distinct questions. The ocean stream’s spatial attention uses 2D Rotary Positional Embedding (RoPE) [31, 32] rather than absolute position: 
+
+ℎ𝑜,𝜏 = SpatialAttn RoPE (𝑋 𝑜,𝜏 ), 𝜏 = 1, . . . , 60 , (11) 
+
+˜𝑜 = TemporalAttn (ℎ𝑜, 1, . . . , ℎ 𝑜, 60 ), (12) after which the ocean summary is pooled to match the atmospheric token count, 𝑜 = AdaptiveAvgPool ( ˜𝑜 ) ∈ R𝑁 ×𝐷 , since fusion re-quires a common grid despite the ocean stream’s finer resolution. 
+
+## 4.5 Three-Way Fusion 
+
+The atmospheric spatial summary, temporal summary, and pooled ocean summary are concatenated and fused with a two-layer MLP rather than a single linear projection, since the mapping from three different summaries (instantaneous forcing location, forcing history, ocean memory) to a joint latent is unlikely to be linear: 
+
+𝑧 = MLP  [ 𝑠 ; 𝑎 ; 𝑜 ] ∈ R𝑁 ×𝐷 . (13) The concatenation keeps the spatial pattern 𝑠 distinct from the temporal trend 𝑎 , since a forcing event’s location and persistence differently constrain where and how much SST will change. 
+
+## 4.6 Decoder and Bathymetric Guidance 
+
+The latent 𝑧 is reshaped to [𝐷, 𝑛 𝐻 , 𝑛 𝑊 ] and passed through a deter-ministic decoder producing a coarse baseline prediction of the SST tendency, 𝑥 base = 𝑅 𝜃 (𝑧 ), via four bilinear upsampling stages. The output size is derived at runtime from the bathymetry tensor, so the same decoder targets different grid sizes without modification. Bathymetry is injected as a skip connection before the final convo-lution, cat [ℎ, bathy ] with ℎ the penultimate feature map, so shelf breaks and banks shape the output where they are resolved, not only at the coarse encoder input where they modulate the forcing. 
+
+## 4.7 Residual Formulation and Loss 
+
+As formalized in Section 3, EddyFlow predicts the SST tendency 
+
+𝑟 𝑡 = 𝑦 𝑡 − 𝑦 𝑡 −1 rather than the absolute field and recovers ˆ𝑦 𝑡 =
+
+𝑦 𝑡 −1 + ˆ𝑟 𝑡 . The motivation is dynamic range. Absolute SST in the training domain spans tens of degrees Celsius, while the residual diffusion component models have a standard deviation nearly two orders of magnitude smaller. Learning the smaller signal concen-trates capacity on the fine structure of daily change rather than the seasonal cycle, carried forward through 𝑦 𝑡 −1. The joint training objective, minimized in Phase 1 of the training schedule, is 
+
+L = Lrec + 10 Ldiff + 0.1 Lspec , (14) where Lrec is the 𝐿 1 loss between the deterministic baseline 𝑥 base 
+
+and the tendency 𝑟 𝑡 , Ldiff is the diffusion loss in Section 4.8, and 
+
+Lspec = E𝑤 (𝑘 ) | ˆ𝑌 (𝑘 )| − | 𝑌 (𝑘 )|  , 𝑤 (𝑘 ) = √1 + 20 𝑘 2. (15) The weight 𝑤 (𝑘 ) grows approximately linearly in wavenum-ber, penalizing missing high-wavenumber power more than low-wavenumber error, which counteracts the tendency of Lrec to fa-vor spatially smooth predictions. The weights 10 and 0.1 keep the initially small diffusion loss from being ignored and the large-for-textured-fields spectral loss from dominating reconstruction. 
+
+## 4.8 Diffusion Refinement with DDIM 
+
+The deterministic baseline 𝑥 base , even with Lspec , still fails to rep-resent mesoscale variance that is only partially determined by the coarse input, so a diffusion model refines the correction residual 
+
+𝛿 𝑡 = 𝑟 𝑡 − 𝑥 base , (16) the part of the tendency the deterministic decoder fails to capture. We write 𝛿 for 𝛿 𝑡 below, omitting the time index. We use a standard linear-schedule diffusion formulation with DDIM sampling, since the residual is modeled directly as a noise-prediction problem under a DDPM-style forward process. The forward process uses a linear noise schedule 𝛽 𝑡 ∈ [ 10 −4, 0.02 ] over 𝑇 diff steps, with 𝛼 𝑡 = 1−𝛽 𝑡 and 
+
+¯𝛼 𝑡 = Î𝑠 ≤𝑡 𝛼 𝑠 . For a clean residual 𝛿 and Gaussian noise 𝜖 ∼ N ( 0, 𝐼 ),the noised sample is 
+
+𝑟 𝑡 = √ ¯𝛼 𝑡 𝛿 + √1 − ¯𝛼 𝑡 𝜖. (17) The denoiser 𝜖 𝜃 (𝑟 𝑡 , 𝑥 base , 𝑧, bathy , 𝑡 ) is trained to recover the in-jected noise directly: 
+
+Ldiff = E𝑡,𝜖 
+
+∥𝜖 𝜃 (𝑟 𝑡 , 𝑥 base , 𝑧, bathy , 𝑡 ) − 𝜖 ∥2  . (18) At inference, DDIM sampling proceeds deterministically with 𝜂 = 0
+
+via the 𝑥 0-prediction form, 
+
+ˆ𝛿 0 = 𝑟 𝑡 − √1 − ¯𝛼 𝑡 𝜖 𝜃 
+
+√ ¯𝛼 𝑡 
+
+, 𝑟 𝑡 −1 = √ ¯𝛼 𝑡 −1 ˆ𝛿 0 + √1 − ¯𝛼 𝑡 −1 𝜖 𝜃 , (19) run over a strided subsequence of the training timesteps for fast sampling. As in the rest of the model, the full training objective combines baseline, diffusion, and spectral terms, 
+
+L = Lbase + 10 Ldiff + 0.1 Lspec . (20) Mesoscale-Preserving SST Downscaling Across Ocean Basins KDD ’27, August, 2027, San Jose, CA, USA 7-day,    
+
+> 6-hourly input
+> Patch
+> Embedding Tokens MHSA
+> Add & Norm
+> FFN
+> Add & Norm
+> Spatial Attention
+> Tokens Temporal
+> Attention
+
+# s Spatial 
+
+> Representation
+
+# a Temporal   
+
+> Representation
+> 60-day
+> daily input
+> Dynamic Patch
+> Embedding MHSA
+> Add & Norm
+> FFN
+> Add & Norm
+> Spatial Attention
+> + RoPE
+> Tokens Temporal
+> Attention
+
+# o Pooled Ocean 
+
+> Representation
+
+# sSpatial 
+
+> Representation
+
+# oPooled Ocean 
+
+> Representation
+
+# aTemporal 
+
+> Representation
+> Concatenate
+> GELU
+> Two-layer MLP
+> Fused
+> Latent
+
+# z
+
+# z    
+
+> ×4
+> Bilinear
+> Upsampling ConvBlock Interpolation
+> Bathymetry
+> ConvBlock 1×1 Conv x_base
+> skip connections
+> Residual
+> Down Block
+> Residual
+> Down Block
+> Spatial Attention
+> Residual Mid-Block
+> Bottleneck
+> Residual
+> Up Block
+> Residual
+> Up Block
+> Reshape
+
+Figure 1: The EddyFlow architecture. An atmospheric (ERA5) encoder processes a 7-day, 6-hourly forcing window and an ocean (MUR) encoder a 60-day daily SST history, each factorizing attention into spatial and temporal stages, with RoPE in the ocean stream. Spatial ( 𝑠 ), temporal ( 𝑎 ), and pooled ocean ( 𝑜 ) summaries are fused by a two-layer MLP into a latent 𝑧 , which the decoder upsamples under bathymetric guidance into the coarse tendency 𝑥 base ; a diffusion U-Net refines the fine-scale residual. 
+
+## 4.9 RoPE and Domain Conditioning 
+
+Absolute positional encoding binds a token’s representation to its row and column in the training grid. Trained with absolute 2D sinusoidal position, the ocean stream learned associations be-tween fixed grid coordinates and features, associations that become meaningless once the same coordinates index a different basin. We therefore replace absolute position with 2D RoPE in the ocean stream’s spatial attention, which rotates query and key vectors by an angle determined by token position so that the attention score 𝑞 ⊤
+
+𝑖 𝑘 𝑗 ∝ cos  𝜃 (Δ𝑢 𝑖 𝑗 , Δ𝑣 𝑖 𝑗 ) depends only on the relative 
+
+row–column displacement (Δ𝑢 𝑖 𝑗 , Δ𝑣 𝑖 𝑗 ) between tokens 𝑖 and 𝑗 ,never their absolute position. An eddy of a given radius therefore produces the same attention pattern wherever, and in whichever domain, it appears, a property absolute encoding cannot provide. In parallel, the diffusion head is conditioned on the per-domain mean and standard deviation of the residual field. At training time, these statistics default to (0, 1); at zero-shot inference, the true do-main statistics are substituted, letting the head rescale its output to an unseen basin without gradient-based adaptation. Together they target the two most basin-specific quantities, spatial relational struc-ture and the field’s statistical scale, leaving the atmospheric stream’s absolute positions as the component not yet transfer-invariant. 
+
+## 5 Experiments and Analysis 5.1 Experimental Setup 
+
+Models are implemented in PyTorch [ 33 ] and trained on Digital Re-search Alliance of Canada infrastructure. Each run uses 4 CPU cores and one 3g.40 GB Multi-Instance GPU (MIG) slice of an NVIDIA H100; one MIG slice per run, without distributed data parallelism. This provides enough memory for all components while keeping runs reproducible and easy to schedule on a shared cluster. 
+
+5.1.1 Dataset and Preprocessing. ERA5 is the fifth-generation Eu-ropean Centre for Medium-Range Weather Forecasts (ECMWF) 2
+
+atmospheric reanalysis, combining short-range forecasts with ob-servations through data assimilation into a physically consistent, globally complete hourly atmospheric state [ 7]. We use ERA5 at 6-hourly resolution (00, 06, 12, 18 UTC), cropped to 47 ◦N–52 ◦N, 68 ◦W–56 ◦W, and regridded to a coarse 20 ×48 grid at 0.25 ◦ spacing. MUR (Multi-scale Ultra-high Resolution) 3 SST is a satellite-derived Level-4 product that fuses infrared and microwave observations with in-situ measurements into a gap-filled daily SST analysis at approximately 1 km resolution [ 34 ]. We use MUR at its native 0.01 ◦
+
+spacing over the same crop, giving a 501 ×1201 fine grid. The train-ing target is the SST tendency 𝑟 𝑡 = 𝑦 𝑡 −𝑦 𝑡 −1 of Section 3, computed from the MUR field; the absolute field is retained only to reconstruct 
+
+ˆ𝑦 𝑡 at evaluation. The training domain is the GSL; the zero-shot and few-shot evaluation domains are BOF and GOM. Data are split tem-porally, where training uses 2013–2020 (8 years), validation uses 2021, and test uses 2022–2023 (732 valid samples). Normalization statistics are computed over each stream’s training-period data. ERA5’s SST channel is not an independently analyzed ocean product; it is a lower boundary condition prescribed from an exter-nal, coarser SST/sea-ice product used only to force the atmospheric model rather than to resolve ocean structure [ 35 ]. ERA5 SST is thus unsuited to fine-scale reconstruction and, in our crop, shows substantially weaker gradients than the MUR analysis. 
+
+> 2
+
+https://www.ecmwf.int 
+
+> 3
+
+https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1 KDD ’27, August, 2027, San Jose, CA, USA Doshi et al. 
+
+Table 1: The six-stage architectural ladder used for all experiments. Stage 1, joint spatio-temporal attention with a residual head, serves as the strong downscaling baseline; each later stage modifies one part of the design (rightmost column), so metric changes between adjacent stages localize, though do not perfectly isolate, each component’s contribution.                       
+
+> Stage Encoder / Representation Diffusion Head Key Addition
+> Stage 1 Joint spatio-temporal self-attn., block-causal mask Baseline residual — (ladder baseline) Stage 2 Alternating spatial/temporal blocks, single stream Baseline residual Factorized attention Stage 3 Dual-stream, cross-attn. bridges Baseline residual Learned stream fusion Stage 4 (EddyFlow) Separate atm./ocean streams, 2D RoPE (ocean) DDIM [36] RoPE + DDIM refinement Stage 5 Same as Stage 4 (shared encoder) EDM [25] + domain norm. Domain norm. for zero-shot Stage 6 Stage 4 encoder, ocean pathway via 8 ×VAE EDM (latent) Latent compression for scale
+
+5.1.2 Evaluation Metrics. We report the three metrics of Sections 4.1 and 4.2, instantiated as follows. First, RMSE is pixel-and-day-pooled over the full test period, restricted to valid ocean pixels only: 
+
+RMSE =√︄ Í( ˆ𝑦 − 𝑦 )2 · 𝑚 
+
+Í 𝑚 , (21) where 𝑚 is the valid mask, excluding pixels with sea-ice fraction above 0.15 or non-finite SST values. RMSE is computed in normal-ized units and converted to Celsius for reporting, except on the GOM, where figures and tables state normalized units and ◦C values follow by multiplying by 𝜎 = 6.3153 . Second, we report the skill score of Eq. (1) , where the persistence reference is ERA5’s coarse SST channel, denormalized and bilinearly upsampled to the fine grid; this is the sole persistence denominator used throughout the paper. Third, we report the PSD ratio of Section 4.2, the mean az-imuthally averaged 2D PSD of prediction over target in the 5–50 km band, plus the logarithmic bias log 10 (PSDR ). Correlation is not a primary aggregate metric. All evaluations provide the model with ERA5 inputs up to time 𝑡 and MUR history up to time 𝑡 − 1.
+
+5.1.3 Models and Training Protocol. Table 1 defines the six-stage ladder used throughout the evaluation. Stage 1, a single joint spatio-temporal attention model with a residual head, serves as the strong downscaling baseline; each subsequent stage builds into EddyFlow .Training proceeds in three phases; Phase 1 jointly trains the encoder, decoder, and diffusion module for 100 epochs on the GSL under the objective of Eq. (14) ; Phase 2 fine-tunes the diffusion module (encoder and decoder frozen) for 40 epochs on the BOF and the GOM; and Phase 3 performs few-shot transfer for 20 epochs at 1-, 7-, and 30-day target windows. All zero-shot results use the Phase 1 checkpoint; Phases 2 and 3 constitute the few-shot experiments. All phases use AdamW [ 37 ] ( 𝛽 1, 𝛽 2 = 0.9, 0.95 , weight decay 10 −4), with learning rates 3 × 10 −4 and 10 −5 for joint training and fine-tuning under cosine annealing to 0.01 ×, bfloat16 mixed precision, gradient clipping at 1.0 post-accumulation, no early stopping, and non-finite-loss batches skipped rather than aborting. 
+
+5.1.4 Baselines. We report two baselines. The first is ERA5 coarse persistence, constructed as in the skill-score definition above; it serves as the skill-score denominator and represents no learned downscaling model beyond the reanalysis SST channel itself. The second is MUR-yesterday, which is reported only as an oracle upper-bound reference and is not used to compute the main skill score, since the MUR history is an input to the model (Section 4.1). We include no separate classical interpolation or super-resolution base-line; bilinear up-sampling appears only inside the ERA5 persistence construction, not as an independent competitor. 
+
+## 5.2 GSL Results 
+
+Table 2 collects in-domain GSL performance across all six stages for RMSE, skill, and PSD ratio. Across all three metrics, performance is largely set by the early stages and, except for Stage 5’s latent-domain variant, changes marginally thereafter, confirming that the ladder’s later stages are not evaluated on further in-domain gains; the transfer results below should be read against this baseline. 
+
+Table 2: In-domain GSL RMSE ( ◦C), persistence-relative skill, and 5–50 km PSD ratio for all six stages, together with the zero-shot PSD ratio on the transfer basins (BOF, GOM). PSD values closer to 1 indicate closer agreement with target spec-tral power. In-domain performance changes little across stages, so the ladder’s differences emerge under transfer. 
+
+Source domain (GSL) Transfer PSD 
+
+Model RMSE ( ◦C) Skill PSD BOF GOM Stage 1 0.5381 0.7340 1.0155 1.0258 0.9831 Stage 2 0.5494 0.7284 0.9897 1.0043 1.0092 Stage 3 0.5440 0.7311 0.9883 1.0022 0.9847 Stage 4 0.5522 0.7270 1.0019 0.9891 0.9738 Stage 5 0.6767 0.6637 1.0097 0.9996 1.0068 Stage 6 0.5751 0.7157 1.0000 1.0200 0.9603 
+
+## 5.3 RMSE Results 
+
+Figure 2 reports zero-shot RMSE across the six-stage ladder on GSL, BOF, and GOM. Source-domain error saturates almost immediately as, past the Stage 1 →2 transition, GSL RMSE stays within a narrow band, with Stage 5 as the sole outlier, so little of the ladder shows up in-domain. Transfer tells a different story as Stage 4 cuts BOF RMSE by roughly 22% and GOM RMSE by roughly 21% relative to the Stage 1 baseline, the largest transfer-domain gap in the ladder and the lowest zero-shot error on either transfer domain. With no GSL counterpart, the gap reflects better generalization from the representation, not better fitting of the training distribution. Mesoscale-Preserving SST Downscaling Across Ocean Basins KDD ’27, August, 2027, San Jose, CA, USA 
+
+Figure 2: RMSE across the six-stage ladder on the (a) BOF and (b) GOM, versus the few-shot budget 𝑛 , the number of target-domain days used for adaptation; lower is better. 
+
+Stages 5 and 6, despite more expressive generative refinement, do not improve on Stage 4’s zero-shot RMSE; added diffusion-head flex-ibility does not translate into transfer accuracy. Few-shot adaptation adds little further evidence either way as Stage 4 moves by under 1% at 1 day and is measurably worse by 30 days on both domains as the diffusion starts over-fitting, so the zero-shot checkpoint already sits near the transfer ceiling before any target supervision. 
+
+## 5.4 Skill Score Results 
+
+Skill relative to ERA5 persistence (Figure 3) reveals a pattern RMSE alone does not capture. Compared with Stage 1, Stage 2 leaves source-domain skill essentially unchanged, yet transfer skill fails to improve, dipping on GOM while staying flat on BOF, indicating that optimizing further for the GSL training distribution does not necessarily improve generalization. Stage 4 breaks this trend de-cisively as source-domain skill remains nearly unchanged, while transfer skill increases on both BOF and GOM. This matches the RMSE transition, now as an improvement over ERA5 persistence rather than absolute error. Stage 5 reduces transfer skill relative to Stage 4, and Stage 6 remains competitive without consistently surpassing it; despite substantially different diffusion formulations, neither improves on Stage 4’s transfer skill. This suggests that the primary source of the performance gain lies in the learned encoder representation rather than in the downstream diffusion refinement. Few-shot experiments reinforce this on both domains as the ranking barely changes after fine-tuning, so limited supervision mainly confirms the zero-shot representation rather than producing a better one. 
+
+## 5.5 PSD Ratio Results 
+
+PSD ratio in the 5–50 km band (Table 2) answers a different question, asking not how large the error is but whether fine-scale structure survives. The ladder settles even earlier than in RMSE or skill. Stage 1 is the only model with a visible departure from spectral parity on GSL, and every later stage stays close to 1.0 across all three domains. That rules out the simplest alternative explanation as Stage 4 is not buying lower RMSE by smoothing away the variance PSD measures. What makes this metric distinctive is how little it moves across Stages 4–6 even though their diffusion heads differ substantially and their RMSE and skill numbers disagree. A shared encoder producing near-identical spectral fidelity under three refinement strategies is the clearest evidence that preserved mesoscale content is a property of the representation, not the generative head. Few-shot fine-tuning moves this metric least as PSD stays near parity at every shot level, so adaptation recalibrates without altering retained spatial content. Figure 4 illustrates the qualitative counterpart of this transition. Together, the three metrics localize the gains in the encoder as Stage 4’s dual-stream, RoPE-based representation enables zero-shot transfer across accuracy, skill, and spectral fidelity; Stages 5 and 6 mainly modulate adaptation and stability; and few-shot supervision leaves the ranking intact. Detailed ablations appear in the appendix. 
+
+## 6 Conclusion 
+
+This paper introduced EddyFlow , a physics-informed framework for kilometer-scale SST downscaling. It encodes atmospheric forcing and ocean memory in separate streams at their native timescales, ap-plies relative (RoPE) spatial encoding in the ocean pathway, injects bathymetry where it is resolved, and refines a deterministic ten-dency with a diffusion head under a wavenumber-weighted spectral loss, with performance judged jointly by RMSE, persistence-relative skill, and the PSD ratio. Trained on the GSL, it transfers zero-shot to the BOF and the GOM, cutting RMSE by up to 21% over a strong baseline, reaching up to 85.6% skill over ERA5 persistence, and 
+
+Figure 3: Skill relative to ERA5 persistence across the ladder stages on (a) BOF and (b) GOM versus the few-shot budget; higher is better; zero corresponds to carrying the reference forward, and positive values indicate improvement over it. KDD ’27, August, 2027, San Jose, CA, USA Doshi et al. 
+
+Figure 4: Zero-shot downscaling under geographic domain shift for two basins held out of training. Each row shows a single date in an unseen basin: the Bay of Fundy (top) and the Gulf of Mexico (bottom), chosen to span contrasting thermal regimes. From left to right, the panels present the coarse input, the MUR ground-truth analysis, and the Stage 4 zero-shot prediction. The prediction is produced with no supervision from the target basin, showing that the learned representation reconstructs mesoscale sea-surface-temperature structure across basins rather than memorizing the training domain. 
+
+holding the 5–50 km PSD ratio near 1.00. These gains localize in the dual-stream encoder, where RoPE-based representation sets trans-fer performance, while richer diffusion heads alter adaptation and stability without improving zero-shot accuracy, so transfer-aligned inductive bias matters more than added generative complexity. Three limitations qualify these results. (i) the atmospheric stream still relies on absolute positions, so one pathway remains bound to training-domain geometry and plausibly contributes to the residual skill degradation observed under transfer; (ii) evaluation covers a single source basin and two transfer basins in the western North At-lantic, leaving eastern-boundary upwelling systems, tropical basins, and marginal ice zones untested, with ice-affected pixels masked rather than modeled; (iii) because the model predicts a one-day tendency from observed high-resolution history, multi-day hori-zons would require auto-regressive roll-out whose stability remains untested, and few-shot adaptation overfits by the 30-day window, eroding rather than extending the zero-shot advantage. The work following these results should continue by extend-ing relative positions to the atmospheric stream, training across multiple basins or through meta-learning to test whether general-ization compounds, stabilizing auto-regressive roll-out for multi-day forecasting, and calibrating probabilistic downscaling from the stochastic head under spread–skill evaluation. Beyond methodol-ogy, coupling outputs to front-aware fisheries management and coastal hazard forecasting would test whether preserved mesoscale structure yields decision-relevant value, closing the loop between representation quality and the real-world use of the proposal. 
+
+## Acknowledgments 
+
+This work was supported by the Natural Sciences and Engineering Research Council of Canada — NSERC, the Faculty of Computer Science of Dalhousie University, and the Conselho Nacional de Desenvolvimento Científico e Tecnológico — CNPq, Brasil. 
+
+## Data Availability 
+
+The ERA5 atmospheric reanalysis is publicly available from the Copernicus Climate Data Store, and the Multiscale Ultrahigh Res-olution (MUR) sea-surface temperature analysis from the NASA JPL Physical Oceanography Distributed Active Archive Center. The code that reproduces pre-processing, training, evaluation, and fig-ure generation is available at an anonymized repository for peer review (https://anonymous.4open.science/r/EddyFlow). Because every input product is publicly available, all reported forecasting, skill-score, and ablation results can be reproduced from open data. 
+
+## Responsible AI Use 
+
+Generative AI technologies supported initial manuscript drafting and the creation of preliminary code scaffolding. The authors inde-pendently reviewed, verified, and revised all AI-assisted material and retain full responsibility for the study’s methods, claims, anal-yses, interpretations, figures, and reported results. Mesoscale-Preserving SST Downscaling Across Ocean Basins KDD ’27, August, 2027, San Jose, CA, USA 
+
+## References 
+
+[1] C. Stock, K. Pegion, G. Vecchi, M. Alexander, D. Tommasi, N. Bond, P. Fratantoni, R. Gudgel, T. Kristiansen, T. O’Brien, Y. Xue, and X. Yang. 2015. Seasonal Sea Surface Temperature Anomaly Prediction for Coastal Ecosystems. Prog. Oceanogr. 
+
+137 (2015), 219–236. doi:10.1016/j.pocean.2015.06.007 [2] Q. Xing, Z. Gao, S. Ito, H. Yu, W. Yu, and X. Chen. 2026. Human-Induced Intensifi-cation of Sea Surface Temperature Regime Shifts Threatens Global Large Marine Ecosystems. Nat. Commun. 17 (2026), 4172. doi:10.1038/s41467-026-70986-z [3] N. Saxena and A. Sharma. 2020. Efficient Downscaling of Satellite Oceanographic Data with Convolutional Neural Networks. In Proc. ACM SIGSPATIAL . 1–4. doi:10. 1145/3397536.3429335 [4] S. Thiria, C. Sorror, T. Archambault, A. Charantonis, D. Béréziat, C. Mejia, J. Molines, and M. Crépon. 2023. Downscaling of Ocean Fields by Fusion of Het-erogeneous Observations Using Deep Learning Algorithms. Ocean Model. 182 (2023), 102174. doi:10.1016/j.ocemod.2023.102174 [5] J. Kim, T. Kim, and J. Ryu. 2023. Multi-Source Deep Data Fusion and Super-Resolution for Downscaling Sea Surface Temperature Guided by Generative Adversarial Network-Based Spatiotemporal Dependency Learning. Int. J. Appl. Earth Obs. Geoinf. 119 (2023), 103312. doi:10.1016/j.jag.2023.103312 [6] D. Lavoie, N. Lambert, M. Starr, J. Chassé, O. Riche, Y. Le Clainche, K. Azetsu-Scott, B. Béjaoui, J. Christian, and D. Gilbert. 2021. The Gulf of St. Lawrence Biogeochemical Model: A Modelling Tool for Fisheries and Ocean Management. 
+
+Front. Mar. Sci. 8 (2021), 732269. doi:10.3389/fmars.2021.732269 [7] H. Hersbach, B. Bell, P. Berrisford, S. Hirahara, A. Horányi, J. Muñoz-Sabater, J. Nicolas, C. Peubey, R. Radu, D. Schepers, A. Simmons, C. Soci, S. Abdalla, X. Abellan, G. Balsamo, P. Bechtold, G. Biavati, J. Bidlot, M. Bonavita, G. De Chiara, P. Dahlgren, D. Dee, M. Diamantakis, R. Dragani, J. Flemming, R. Forbes, M. Fuentes, A. Geer, L. Haimberger, S. Healy, R. Hogan, E. Hólm, M. Janisková, S. Keeley, P. Laloyaux, P. Lopez, C. Lupu, G. Radnoti, P. de Rosnay, I. Rozum, F. Vamborg, S. Villaume, and J. Thépaut. 2020. The ERA5 Global Reanalysis. Q. J. R. Meteorol. Soc. 146, 730 (2020), 1999–2049. doi:10.1002/qj.3803 [8] L. Lupin-Jimenez, M. Darman, S. Hazarika, T. Wu, M. Gray, R. He, A. Wong, and A. Chattopadhyay. 2025. Simultaneous Emulation and Downscaling with Physically-Consistent Deep Learning-Based Regional Ocean Emulators. J. Geophys. Res. Mach. Learn. Comput. 2, 3 (2025), e2025JH000851. doi:10.1029/2025JH000851 [9] M. Mardani, N. Brenowitz, Y. Cohen, J. Pathak, C. Chen, C. Liu, A. Vahdat, M. Nabian, T. Ge, A. Subramaniam, K. Kashinath, J. Kautz, and M. Pritchard. 2025. Residual Corrective Diffusion Modeling for km-scale Atmospheric Downscaling. 
+
+Communications Earth & Environment 6, 1 (2025), 124. doi:10.1038/s43247-025-02042-5 [10] S. Wang, X. Li, X. Zhu, J. Li, and S. Guo. 2024. Spatial Downscaling of Sea Surface Temperature Using Diffusion Model. Remote Sens. 16, 20 (2024), 3843. doi:10.3390/rs16203843 [11] Y. Liu, J. Doss-Gollin, Q. Dai, A. Veeraraghavan, and G. Balakrishnan. 2025. Downscaling Extreme Precipitation with Wasserstein Regularized Diffusion. 
+
+IEEE Trans. Geosci. Remote Sens. 63 (2025). doi:10.1109/TGRS.2025.3611872 [12] P. Hess, M. Aich, B. Pan, and N. Boers. 2025. Fast, Scale-Adaptive and Uncertainty-Aware Downscaling of Earth System Model Fields with Generative Machine Learning. Nat. Mach. Intell. 7, 3 (2025), 363–373. doi:10.1038/s42256-025-00980-5 [13] D. Lloyd, A. Abela, R. Farrugia, A. Galea, and G. Valentino. 2021. Optically Enhanced Super-Resolution of Sea Surface Temperature Using Deep Learning. 
+
+IEEE Trans. Geosci. Remote Sens. 60 (2021), 1–14. doi:10.1109/TGRS.2021.3094117 [14] A. Ducournau and R. Fablet. 2016. Deep Learning for Ocean Remote Sensing: An Application of Convolutional Neural Networks for Super-Resolution on Satellite-Derived SST Data. In Proc. IAPR Workshop Pattern Recognit. Remote Sens. (PRRS) .1–6. doi:10.1109/PRRS.2016.7867019 [15] C. Fanelli, D. Ciani, A. Pisano, and B. Buongiorno Nardelli. 2024. Deep Learning for the Super Resolution of Mediterranean Sea Surface Temperature Fields. Ocean Sci. 20, 4 (2024), 1035–1050. doi:10.5194/os-20-1035-2024 [16] C. Fanelli, T. Li, L. Biferale, B. Buongiorno Nardelli, D. Ciani, A. Pisano, and M. Buzzicotti. 2025. Super-Resolution of Satellite-Derived SST Data via Generative Adversarial Networks. arXiv preprint. arXiv:2511.22610 doi:10.48550/arXiv.2511. 22610 [17] M. Krestenitis, Y. Androulidakis, and Y. Krestenitis. 2024. Deep learning-based forecasting of sea surface temperature in the interim future: application over the Aegean, Ionian, and Cretan Seas (NE Mediterranean Sea). Ocean Dynamics .doi:10.1007/s10236-023-01595-3 [18] D. Hao, L. Famei, and W. Guomei. 2024. Sea surface temperature prediction by stacked generalization ensemble of deep learning. Deep Sea Research Part I: Oceanographic Research Papers 209 (2024). doi:10.1016/j.dsr.2024.104343 [19] Y. Cui, R. Wu, X. Zhang, Z. Zhu, B. Liu, J. Shi, J. Chen, H. Liu, S. Zhou, L. Su, Z. Jing, H. An, and L. Wu. 2025. Forecasting the Eddying Ocean with a Deep Neural Network. Nat. Commun. 16 (2025), 2268. doi:10.1038/s41467-025-57389-2 [20] R. Lam, A. Sanchez-Gonzalez, M. Willson, P. Wirnsberger, M. Fortunato, F. Alet, S. Ravuri, T. Ewalds, Z. Eaton-Rosen, W. Hu, A. Merose, S. Hoyer, G. Holland, O. Vinyals, J. Stott, A. Pritzel, S. Mohamed, and P. Battaglia. 2023. Learning Skillful Medium-Range Global Weather Forecasting. Science 382, 6677 (2023), 1416–1421. doi:10.1126/science.adi2336 [21] I. Price, A. Sanchez-Gonzalez, F. Alet, T. Andersson, A. El-Kadi, D. Masters, T. Ewalds, J. Stott, S. Mohamed, P. Battaglia, R. Lam, and M. Willson. 2024. Probabilistic Weather Forecasting with Machine Learning. Nature 637 (2024), 84–90. doi:10.1038/s41586-024-08252-9 [22] Y. Niu, Q. Huang, X. Zhong, A. Guo, L. Chen, D. Zhang, Z. Zhou, X. Jia, L. Wu, R. Zhang, J. Qi, X. Zhang, and H. Li. 2026. A Deep Learning Global Ocean Forecasting Model with Sub-Daily and Eddy-Resolving Resolution. npj Clim Atmos Sci (2026). doi:10.1038/s41612-026-01444-2 [23] M. Michel, S. Obakrim, N. Raillard, P. Ailliot, and V. Monbet. 2022. Deep Learning for Statistical Downscaling of Sea States. Adv. Stat. Climatol. Meteorol. Oceanogr. 
+
+8, 1 (2022), 83–95. doi:10.5194/ascmo-8-83-2022 [24] J. Ho, A. Jain, and P. Abbeel. 2020. Denoising Diffusion Probabilistic Models. In 
+
+Advances in Neural Information Processing Systems , Vol. 33. 6840–6851. [25] T. Karras, M. Aittala, T. Aila, and S. Laine. 2022. Elucidating the Design Space of Diffusion-Based Generative Models. 35 (2022), 26565–26577. [26] C. Bulgin, C. Merchant, and D. Ferreira. 2020. Tendencies, Variability and Persistence of Sea Surface Temperature Anomalies. Sci. Rep. 10 (2020), 7986. doi:10.1038/s41598-020-64785-9 [27] J. Knaff and C. Landsea. 1997. An El Niño–Southern Oscillation Climatology and Persistence (CLIPER) Forecasting Scheme. Weather Forecast. 12, 3 (1997), 633–652. doi:10.1175/1520-0434(1997)012<0633:AENOSO>2.0.CO;2 [28] D. Chelton, M. Schlax, and R. Samelson. 2011. Global Observations of Nonlinear Mesoscale Eddies. Prog. Oceanogr. 91, 2 (2011), 167–216. doi:10.1016/j.pocean. 2011.01.002 [29] A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit, and N. Houlsby. 2021. An Image is Worth 16 ×16 Words: Transformers for Image Recognition at Scale. In Proc. Int. Conf. Learn. Represent. (ICLR) .[30] G. Bertasius, H. Wang, and L. Torresani. 2021. Is Space-Time Attention All You Need for Video Understanding?. In Proc. Int. Conf. Mach. Learn. (ICML) . 813–824. [31] J. Su, M. Ahmed, Y. Lu, S. Pan, W. Bo, and Y. Liu. 2024. RoFormer: Enhanced Transformer with Rotary Position Embedding. Neurocomputing 568 (2024), 127063. doi:10.1016/j.neucom.2023.127063 [32] B. Heo, S. Park, D. Han, and S. Yun. 2024. Rotary Position Embedding for Vision Transformer. In Proc. Eur. Conf. Comput. Vis. (ECCV) . 289–305. doi:10.1007/978-3-031-72684-2_17 [33] A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, A. Desmaison, A. Köpf, E. Yang, Z. DeVito, M. Raison, A. Tejani, S. Chilamkurthy, B. Steiner, L. Fang, J. Bai, and S. Chintala. 2019. PyTorch: An Imperative Style, High-Performance Deep Learning Library. 
+
+NeurIPS 32 (2019), 8024–8035. [34] JPL MUR MEaSUREs Project. 2015. GHRSST Level 4 MUR Global Foundation Sea Surface Temperature Analysis (v4.1). NASA Physical Oceanography Distributed Active Archive Center (PO.DAAC). doi:10.5067/GHGMR-4FJ04 [35] Shoji Hirahara and Hans Hersbach. 2016. Sea Surface Temperature and Sea Ice Concentration for ERA 5. https://api.semanticscholar.org/CorpusID:201692081 [36] J. Song, C. Meng, and S. Ermon. 2021. Denoising Diffusion Implicit Models. In 
+
+Proc. Int. Conf. Learn. Represent. (ICLR) .[37] I. Loshchilov and F. Hutter. 2019. Decoupled Weight Decay Regularization. In 
+
+Proc. Int. Conf. Learn. Represent. (ICLR) .
+
+## Appendix 
+
+## A List of Acronyms B List of Notations C Domain Characterization and OOD Analysis 
+
+This appendix characterizes the three ocean domains used in the 
+
+EddyFlow evaluation: GSL (training domain), BOF, and GOM. It summarizes grid specifications, target SST distributions, ERA5 at-mospheric input statistics, bathymetric properties, the shared nor-malization pipeline, and the main out-of-distribution (OOD) differ-ences between the source domain and the two transfer domains. 
+
+## C.1 Domain overview 
+
+GSL covers 44.0–52.8 ◦N and 69.5–56.0 ◦W and is the only Phase 1 training domain. It is a sub-polar estuary with a large seasonal SST cycle, winter sea ice, strong freshwater influence, and mixed shelf/deep-channel bathymetry [ 6]. BOF covers 44.0–47.0 ◦N and KDD ’27, August, 2027, San Jose, CA, USA Doshi et al. 
+
+Table 3: Acronyms used throughout the paper. 
+
+Acronym Expansion 
+
+SST Sea Surface Temperature 
+
+RMSE Root-Mean-Square Error 
+
+PSD Power Spectral Density 
+
+OOD Out-Of-Distribution 
+
+GSL Gulf of St. Lawrence (training domain) 
+
+BOF Bay of Fundy (transfer domain) 
+
+GOM Gulf of Mexico (transfer domain) 
+
+ERA5 ECMWF Reanalysis v5 
+
+ECMWF European Centre for Medium-Range Weather Forecasts 
+
+MUR Multi-scale Ultra-high Resolution (SST product) 
+
+RoPE Rotary Positional Embedding 
+
+EDM Elucidated Diffusion Model 
+
+DDPM Denoising Diffusion Probabilistic Model 
+
+DDIM Denoising Diffusion Implicit Model 
+
+VAE Variational Autoencoder 
+
+MLP Multi-Layer Perceptron 
+
+CNN Convolutional Neural Network 
+
+MIG Multi-Instance GPU 
+
+67.0–63.0 ◦W and is a zero-shot and few-shot evaluation domain. It overlaps GSL in latitude and has a very similar SST range, but its tidal forcing is much stronger. GOM covers 18.0–31.0 ◦N and 98.0– 80.0 ◦W and is likewise used for zero-shot and few-shot evaluation. It is the most different domain, with much warmer SST, no ice, and circulation dominated by the Loop Current and warm-core eddies. 
+
+## C.2 Grid specifications 
+
+The MUR SST target is evaluated on a 0.01 ◦ grid, which corresponds to roughly 1 km resolution. The fine-grid sizes are 500 ×1200 for GSL, 301 ×401 for BOF, and 1301 ×1801 for GOM. ERA5 is provided at 0.25 ◦ resolution and is used as the coarse atmospheric input. The resulting downscaling factor is approximately 25 × in each spatial direction for GSL and GOM, and about 23–24 × for BOF. 
+
+## C.3 Target SST statistics 
+
+Table 5 summarizes the MUR SST target distribution for the 2022– 2023 test period. GSL and BOF have similar SST means and ranges, whereas GOM is shifted to much higher temperatures and lies mostly outside the GSL training SST distribution. The shared SST normalization uses the GSL training mean and standard deviation, 
+
+𝜇 = 5.9023 ◦C and 𝜎 = 6.3153 ◦C, for all domains. Under this nor-malization, BOF lies almost entirely within the GSL training SST range, whereas GOM lies predominantly above it. 
+
+## C.4 ERA5 input statistics 
+
+ERA5 atmospheric channels are normalized using per-channel mean and standard deviation computed on the GSL training period. The same statistics are applied to BOF and GOM without domain-specific rescaling. Table 6 shows the GSL training statistics together with the corresponding test-period percentiles. The GSL training and test distributions are close, suggesting that degradation on BOF and GOM is not due to a shift within the training domain. 
+
+Table 4: Mathematical notation used throughout the paper.                                                                                                                        
+
+> Symbol Description
+> 𝑡 Daily time index
+> 𝑥 𝑡 Coarse-resolution atmospheric input at time 𝑡 𝑜 𝑡 Ocean-state history input (Section 3)
+> 𝑦 𝑡 ,ˆ𝑦 𝑡 Ground-truth and predicted high-resolution SST field
+> 𝑟 𝑡 ,ˆ𝑟 𝑡 SST tendency 𝑦 𝑡 −𝑦 𝑡 −1and its prediction
+> ˆ𝑦 pers
+> 𝑡 Persistence predictor 𝑦 𝑡 −1
+> 𝑥 base Deterministic decoder’s tendency prediction
+> 𝛿 𝑡 Correction residual 𝑟 𝑡 −𝑥 base refined by diffusion (written 𝛿 )
+> 𝑓 𝜃 , 𝑅 𝜃 , 𝐹 𝜃 Full mapping, decoder, and diffusion network
+> u=(𝑢 1, 𝑢 2)Spatial position
+> 𝑦 ′(u)Mean-removed SST anomaly field
+> 𝜇 𝑦 Spatial mean of the SST field
+> k=(𝑘 𝑥 , 𝑘 𝑦 )Spatial wavenumber (Fourier frequency)
+> 𝑘 Radial wavenumber magnitude
+> 𝑌 (k),ˆ𝑌 (k)2-D Fourier transforms of target and prediction
+> 𝑃 𝑦 (k)2-D power spectrum of 𝑦
+> ¯𝑃 𝑦 (𝑘 )Radially-averaged (isotropic) power spectrum
+> Ω𝑘 Set of wavenumbers in radial bin 𝑘
+> PSDR (𝑘 )Power spectral density ratio (spectral fidelity)
+> 𝜀 Small stabilizing constant in the PSDR (distinct from the noise sample 𝜖 )
+> 𝑋 𝑎 , 𝑋 𝑜 Atmospheric (ERA5) and oceanic input tensors
+> 𝜏 Temporal frame index
+> ℎ𝑎,𝜏 , ℎ 𝑜,𝜏 Per-frame spatial embeddings
+> ˜𝑜 Ocean temporal summary before pooling
+> 𝑠, 𝑎, 𝑜 Atmospheric spatial, atmospheric temporal, and pooled ocean summaries
+> 𝑞 𝑖 , 𝑘 𝑗 Query and key vectors of tokens 𝑖 and 𝑗
+> (Δ𝑢 𝑖 𝑗 ,Δ𝑣 𝑖 𝑗 )Relative row–column displacement between tokens 𝑖 and 𝑗 𝜃 (·) RoPE rotation angle as a function of the displacement
+> 𝑧 Fused conditioning representation ( R𝑁 ×𝐷 )
+> 𝑁 , 𝐷 Fused token count and embedding dimension
+> 𝑁 𝑜 Ocean-stream token count per frame
+> 𝑛 𝐻 , 𝑛 𝑊 Latent grid height and width at the decoder input
+> ℎDecoder’s penultimate feature map
+> bathy Static bathymetry tensor injected at the decoder skip
+> LTotal training loss
+> Lrec ,Ldiff ,Lspec Reconstruction, diffusion, and spectral loss terms
+> 𝑤 (𝑘 )Spectral loss frequency weighting √1+20 𝑘 2
+> 𝐷 𝜃 , 𝑣 Diffusion denoiser and its noisy input
+> 𝜎, 𝜎 data Noise level and data standard deviation
+> 𝛾 EDM preconditioning normalizer 𝜎 2+𝜎 2data
+> 𝑐 skip , 𝑐 out , 𝑐 in EDM preconditioning coefficients
+> 𝜆 (𝜎 )Diffusion loss weighting
+> 𝜖 Standard Gaussian noise sample (distinct from the constant 𝜀 )
+> 𝑚 Valid-pixel (ocean) mask
+> 𝑛 Few-shot adaptation budget (days of target-domain data)
+> SS Persistence-relative skill score
+> 𝜇, 𝜎 GSL training SST normalization mean and scale (unrelated to the noise level 𝜎 )
+> ΔRMSE ,ΔSkill ,ΔPSD No-MUR ablation percentage deltas
+
+## C.5 Bathymetry 
+
+Bathymetry is a static auxiliary input coarsened to the ERA5 grid, transformed with log (1 + 𝑥 ), and normalized with GSL training statistics before encoder input. The GSL bathymetry contains the Laurentian Channel and a mixed shelf/deep-channel structure; BOF is much shallower, and GOM contains a much deeper open-ocean basin. These differences matter because the model uses bathymetry as a spatial prior for where fine-scale SST structure appears. 
+
+## C.6 Normalization pipeline 
+
+All three domains use the same normalization statistics from the GSL 2013–2020 training period. No domain-specific rescaling is applied in the encoder or baseline decoder. BOF and GOM are converted from Kelvin to degrees Celsius before the shared SST normalization is applied. Where domain conditioning is enabled (Section 4.9; Stage 5 in Table 1), the diffusion head additionally injects the target-domain SST mean and standard deviation. The SST target is converted to a z-score using the GSL training mean and standard deviation. Physical RMSE is recovered from normalized RMSE by multiplying by 𝜎 = 6.3153 ◦𝐶 . Because the models predict SST changes rather than absolute SST levels, the Mesoscale-Preserving SST Downscaling Across Ocean Basins KDD ’27, August, 2027, San Jose, CA, USA 
+
+Table 5: Geography, MUR SST target statistics over the 2022– 2023 test period, bathymetry, and OOD indicators for the three ocean basins; BOF and GOM SST values are converted to ◦C before statistics are computed. The indicators quantify the transfer-difficulty ordering used in the analysis; BOF is a mild OOD case (full SST overlap with the GSL training range, no shifted ERA5 channels), while GOM is a strong one (26% overlap, 14 of 21 channels shifted beyond 0.5 𝜎 ).                                                                        
+
+> Property GSL BOF GOM
+> Geography
+> Latitude range 44.0–52.8 ◦N44.0–47.0 ◦N18.0–31.0 ◦NLongitude range 69.5–56.0 ◦W67.0–63.0 ◦W98.0–80.0 ◦W
+> MUR SST target statistics ( ◦C)
+> Mean 6.68 5.61 25.96 Std 6.69 5.62 3.06 P1 -1.80 -1.80 15.94 P5 -1.52 -1.79 20.44 P95 18.16 15.87 29.97 P99 19.78 17.97 30.78 Min -1.80 -1.80 6.94 Max 22.82 20.07 32.76
+> Bathymetry
+> Fine grid 500 ×1200 301 ×401 1301 ×1801 Ocean fraction (%) 45.1 73 76 Mean ocean depth (m) 175 25 800 Maximum depth (m) 761 235 3750 10th percentile depth (m) 31 230 90th percentile depth (m) 375 65 2100
+> OOD indicators
+> SST shift from GSL (sig) 0.00 -0.05 +3.18 SST overlap with GSL range 100% 100% 26% ERA5 channels OOD >0.5𝜎 0/21 0/21 14/21 Sea ice present Yes Rarely Never ERA5 persistence RMSE ( ◦C) 2.0229 4.6698 2.8924 MUR-yesterday oracle RMSE ( ◦C) 0.5202 0.6818 0.3031
+
+constant GOM offset does not directly inflate the error; the day-to-day target is centered near zero in all domains. 
+
+## C.7 OOD analysis 
+
+The OOD gap is small for BOF and large for GOM. On SST, BOF sits inside the GSL training range, while GOM lies mostly above it. On ERA5 forcing, BOF stays close to the GSL training distribution, whereas GOM shifts across many channels, especially moisture, temperature, and wind structure. In bathymetry, BOF is shallow and coastal, whereas GOM features a deeper open-ocean regime. Table 5 summarizes the main domain-level differences. BOF is a mild OOD case, changing the local tidal and bathymetric context but not the broad SST scale. GOM is a strong OOD case, changing SST level, atmospheric forcing regime, and circulation structure. 
+
+## D Ablations 
+
+We report two ablations: a hyperparameter and seed sweep sum-marized through the few-shot transfer experiments, and an input ablation that removes the MUR history stream (Appendix D.1). The few-shot sweep covers all six stages, both transfer domains (BOF and GOM), three target-data budgets (1-, 7-, and 30-day windows), 
+
+Table 6: ERA5 per-channel normalization statistics computed on the GSL training period (2013–2020), applied unchanged to BOF and GOM, alongside GSL test-period 1st and 99th percentiles. The proximity of train and test distributions indicates that transfer degradation reflects cross-basin shift rather than temporal drift within the source domain. 
+
+Channel Units Train mean Train std Test P1 Test P99 u10 m/s 1.4096 4.4805 -10.1506 11.9952 v10 m/s -0.1007 4.3195 -10.9579 10.8044 msl Pa 101298.4766 1030.9015 98790.7500 103437.1250 sst_era5 K 279.0615 6.3021 271.4602 292.8271 t2m K 276.4195 10.4942 248.4009 295.6465 siconc 0–1 0.0578 0.1708 0.0000 0.6984 u850 m/s 5.0713 8.5292 -18.9237 21.7731 v850 m/s -0.1896 8.6014 -19.6215 24.0440 t850 K 271.4302 10.1253 248.6821 289.5664 z850 m2/s 2 13834.3350 930.4116 11629.2227 15505.4688 q850 kg/kg 0.0034 0.0027 0.0002 0.0110 u700 m/s 9.0247 9.3201 -15.6331 29.0035 v700 m/s 0.3513 9.3140 -19.4134 26.0006 t700 K 265.3427 9.0362 243.8658 281.1182 z700 m2/s 2 28823.8926 1301.7219 26069.1836 31150.6797 q700 kg/kg 0.0020 0.0018 0.0001 0.0071 u500 m/s 14.9958 13.0255 -17.9777 46.5566 v500 m/s 1.5033 12.9020 -27.6660 34.7296 t500 K 251.3449 8.4190 231.6444 266.2297 z500 m2/s 2 53825.8789 2039.6470 49469.4062 57373.8398 q500 kg/kg 0.0007 0.0010 0.0000 0.0033 
+
+and three random seeds (0, 42, 123), for 108 configurations; Tables 7 and 8 report the best and mean result per stage and budget. 
+
+## D.1 Evaluations Without MUR History 
+
+We assess how much the ocean stream depends on real target-domain MUR SST history by comparing the standard setup (with MUR) to a no-MUR variant in which the 60-day MUR input is re-placed by the z-scored climatological average. All other factors (checkpoints, evaluation dates, seeds) are held fixed. Table 9 reports percentage deltas, oriented so that positive ΔRMSE and ΔSkill al-ways indicate degradation when MUR is removed: 
+
+ΔRMSE (%) = 100 × RMSE no − RMSE with 
+
+RMSE with 
+
+,
+
+ΔSkill (%) = 100 × Skill with − Skill no 
+
+Skill with 
+
+,
+
+while ΔPSD (%) = 100 × ( PSDR no − PSDR with )/ PSDR with reports its signed relative change, positive when removal raises it. Across most stages, domains, and shot counts, these percentage deltas are small. RMSE changes are typically under 3%, and skill changes lie within ±1% for the majority of configurations. PSD ratios remain close to their original values, with most |ΔPSD | below 2%, indicating that spectral fidelity is largely preserved without real MUR history. Stage 6 is the most robust as RMSE and skill deltas are consistently near zero or slightly favorable (up to ≈ 1%improvement in skill), and PSD changes are negligible. Stage 4 shows mild sensitivity on BOF at 𝑛 = 1 (around 2–3% skill drop) KDD ’27, August, 2027, San Jose, CA, USA Doshi et al. 
+
+Table 7: Few-shot transfer results on the BOF across 1-, 7-, and 30-day adaptation budgets, reporting RMSE ( ◦C), skill score, and PSD ratio. Best and Mean are computed over three random seeds (0, 42, 123): Best is the minimum for RMSE, the maximum for Skill, and the value closest to 1.0 for PSD. The ERA5 persistence baseline RMSE on BOF is ≈ 4.67 ◦C (Table 5). Stage 5 (EDM diffusion) shows high seed variance at the 7-day budget ( 𝜎 RMSE = 0.073 ◦C) due to bimodal convergence dynamics. 
+
+1-day 7-day 30-day 
+
+Model RMSE Skill PSD RMSE Skill PSD RMSE Skill PSD 
+
+Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Stage 1 0.955 0.967 0.796 0.793 1.018 1.024 0.855 0.865 0.817 0.815 1.016 1.020 0.850 0.855 0.818 0.817 1.013 1.014 Stage 2 0.935 0.953 0.800 0.796 1.003 1.007 0.914 0.929 0.804 0.801 1.001 1.007 0.806 0.828 0.828 0.823 1.009 1.015 Stage 3 0.886 0.900 0.810 0.807 1.003 1.009 0.886 0.893 0.810 0.809 1.007 1.010 0.878 0.880 0.812 0.812 1.004 1.005 Stage 4 0.723 0.726 0.844 0.843 0.990 0.990 0.725 0.728 0.843 0.843 0.989 0.986 0.743 0.759 0.840 0.836 0.980 0.979 Stage 5 0.960 0.992 0.793 0.786 1.006 1.021 0.746 0.808 0.839 0.826 1.004 1.009 0.758 0.780 0.836 0.832 0.999 1.001 Stage 6 0.747 0.747 0.839 0.839 1.024 1.025 0.744 0.745 0.839 0.839 1.019 1.023 0.744 0.744 0.839 0.839 1.019 1.021 
+
+Table 8: Few-shot transfer results on the GOM under the same protocol and seed conventions as Table 7. RMSE is reported in normalized units. Stage 4 leads at the 1- and 7-day budgets, while by 30 days Stage 3 attains the best RMSE and skill and Stage 5 reaches spectral parity. 
+
+1-day 7-day 30-day 
+
+Model RMSE Skill PSD RMSE Skill PSD RMSE Skill PSD 
+
+Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Stage 1 0.078 0.078 0.830 0.829 0.984 0.984 0.077 0.077 0.833 0.833 0.988 0.988 0.077 0.078 0.832 0.830 0.988 0.985 Stage 2 0.089 0.090 0.805 0.804 1.010 1.010 0.090 0.091 0.803 0.802 1.010 1.010 0.090 0.090 0.804 0.803 1.010 1.010 Stage 3 0.073 0.073 0.841 0.841 0.987 0.987 0.072 0.072 0.843 0.843 0.990 0.989 0.072 0.073 0.843 0.842 0.989 0.988 Stage 4 0.060 0.061 0.859 0.857 0.976 0.975 0.058 0.063 0.864 0.854 0.980 0.977 0.077 0.079 0.820 0.816 0.976 0.971 Stage 5 0.070 0.071 0.837 0.834 0.992 0.990 0.066 0.070 0.846 0.838 0.996 0.992 0.074 0.076 0.828 0.823 1.000 1.000 Stage 6 0.097 0.101 0.775 0.764 0.958 0.956 0.096 0.100 0.777 0.767 0.969 0.966 0.080 0.081 0.814 0.812 0.979 0.979 
+
+Table 9: Percentage deltas for the no-MUR ablation, in which the 60-day MUR history is replaced by the z-scored climatological average; positive ΔRMSE and ΔSkill indicate degradation when MUR is removed, and ΔPSD reports its signed relative change (positive when removal raises it). Results average seeds {0, 42 , 123 }; zero-shot uses a single checkpoint. Deltas are small almost everywhere, isolating Stage 5 on GOM at zero shot (+34.2% RMSE, bold) as the only configuration with MUR dependence.                                                                                                                                                                                     
+
+> Zero-shot 1-day 7-day 30-day
+> Stage & Domain ΔRMSE ΔSkill ΔPSD ΔRMSE ΔSkill ΔPSD ΔRMSE ΔSkill ΔPSD ΔRMSE ΔSkill ΔPSD Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Best Mean Stage 4, BOF +3.0 +3.0 +0.6 +0.6 -0.5 -0.5 +11.4 +11.4 +2.1 +2.1 -1.2 -1.2 +3.2 +3.2 +0.6 +0.6 -0.7 -0.7 +5.3 +5.3 +1.1 +1.1 -0.6 -0.6 Stage 4, GOM -1.6 -1.6 -0.2 -0.2 -0.1 -0.1 +0.0 +0.0 -0.2 -0.2 -0.1 -0.1 +0.0 +0.0 +0.0 +0.0 -0.6 -0.6 -15.2 -15.2 -3.4 -3.4 -1.0 -1.0 Stage 5, BOF -1.5 -1.5 -0.4 -0.4 -1.3 -1.3 +3.8 +3.8 +1.0 +1.0 +0.8 +0.8 +1.5 +1.5 +0.4 +0.4 +0.2 +0.2 +1.7 +1.7 +0.4 +0.4 -0.2 -0.2 Stage 5, GOM +34.2 +34.2 +7.6 +7.6 -1.9 -1.9 +0.0 +0.0 -0.1 -0.1 +0.7 +0.7 +0.0 +0.0 +0.0 +0.0 +0.6 +0.6 +2.6 +2.6 +0.5 +0.5 +0.9 +0.9 Stage 6, BOF -1.1 -1.1 -0.1 -0.1 +0.3 +0.3 -0.9 -0.9 -0.2 -0.2 +0.3 +0.3 -0.9 -0.9 -0.2 -0.2 +0.3 +0.3 -0.9 -0.9 -0.2 -0.2 +0.3 +0.3 Stage 6, GOM -2.2 -2.2 -0.4 -0.4 +0.0 +0.0 -1.0 -1.0 -0.4 -0.4 +0.0 +0.0 -2.0 -2.0 -0.5 -0.5 +0.0 +0.0 -1.2 -1.2 -0.4 -0.4 +0.0 +0.0
+
+but is essentially neutral or slightly beneficial on GOM, especially at 𝑛 = 30 , where skill improves by about 3% without MUR. The clearest case of genuine MUR dependence appears for Stage 5 on GOM in the zero-shot setting , where removing MUR in-creases RMSE by roughly 34% and reduces skill by about 8%. This is the largest degradation in the ablation and stands out against the otherwise mild pattern. In few-shot, Stage 5 on GOM recovers by 𝑛 = 7–30 , RMSE and skill deltas shrink to within ±3%, and PSD changes remain small. Few-shot adaptation thus mitigates most sen-sitivity as 𝑛 increases from 1 to 30, skill and RMSE deltas contract, and PSD ratios stay stable. Overall, real target-domain MUR history is not uniformly essential; the framework is robust to its removal, with Stage 5 on GOM (zero-shot) as the primary exception. 
+
+Received 26 July 2026

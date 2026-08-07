@@ -1,0 +1,526 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-07T01:54:43.418330+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 11,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2608.04723v1",
+      "source": "arxiv",
+      "title": "A Vision-based Control Framework for Real-time Autonomous UUV Operations",
+      "abstract": "This paper presents a fully integrated vision-based framework for real-time and robust localization, autonomous navigation, and mapping for unmanned underwater vehicles (UUVs) in dynamic, visually challenging environments. The proposed pipeline enables both net-relative and global localization while generating continuous 3D maps of the surroundings in real-time. The framework was validated on synthetic datasets with ground truth and tested onboard an UUV during autonomous net-relative navigation experiments. Results demonstrate real-time performance and enhanced robustness, supporting vision-driven autonomous navigation and enabling the field deployment of marine robots for critical inspection and mapping tasks in complex underwater environments.",
+      "authors": [
+        "Erik Tjærand Frøland",
+        "Marco Job",
+        "Md Ether Deowan",
+        "Eleni Kelasidi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-05T11:43:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.04723v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Autonomous UUV vision-based control and mapping for marine operations",
+      "llm_evidence_cn": "面向海洋作业的自主水下机器人视觉控制与建图",
+      "llm_evidence": "面向海洋作业的自主水下机器人视觉控制与建图",
+      "canonical_evidence": "面向海洋作业的自主水下机器人视觉控制与建图",
+      "llm_tldr_en": "Presents a vision-based framework for real-time localization, navigation, and mapping of autonomous underwater vehicles in challenging marine environments.",
+      "llm_tldr_cn": "针对水下机器人（UUV）在动态和视觉退化环境中的自主作业需求，提出一套集成实时定位、自主导航和三维建图的视觉控制框架，支持相对与全局定位切换，并在仿真和实船试验中验证了实时性与鲁棒性。该框架直接推动了海洋机器人的现场部署，是智能体海洋应用的典型体现。",
+      "llm_tldr": "针对水下机器人（UUV）在动态和视觉退化环境中的自主作业需求，提出一套集成实时定位、自主导航和三维建图的视觉控制框架，支持相对与全局定位切换，并在仿真和实船试验中验证了实时性与鲁棒性。该框架直接推动了海洋机器人的现场部署，是智能体海洋应用的典型体现。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.04706v1",
+      "source": "arxiv",
+      "title": "Benchmarking Deep Learning Models for Dense Event Classification of Offshore Wind Infrastructure in Sentinel-1 Time Series",
+      "abstract": "Monitoring of offshore wind energy infrastructure life cycles, especially during the deployment phase, is an important contribution for stakeholders to make informed decisions in a phase of increasing deployment activities. ESA's Sentinel-1 Synthetic Aperture Radar (SAR) mission produces large data archives that enable the global monitoring of offshore wind infrastructure. Turning these high-volume archives into information requires algorithms that automatically extract single event labels from dense time series at a global scale. In this study, we present a structured comparison of ten deep learning model-training variants for the dense classification of Sentinel-1 based offshore wind infrastructure time series, aiming to advance rule-based event classification of this task. We trained LSTM, Transformer, and fully connected model variants with monotemporal, unidirectional, and bidirectional context awareness, each with and without self-supervised pretraining. Among these, the supervised BiLSTM performs best, raising the target AUC score from 0.7853 for the rule-based baseline to 0.8509, and the perfect match rate from 0.3508 to 0.5063. Combining the BiLSTM predictions with the existing baseline labels in a label-transition-minimising ensemble further improves agreement with the test data. Using these improved labels, we isolate the deployment phase of individual turbines at a global scale and conduct a regional and subregional analysis covering 2016-01-01 to 2025-03-31, reporting median deployment durations of 84 d (China), 242 d (EU), and 258 d (UK). Deployment-related drivers, including legal regulations such as subsidies, and environmental conditions, emerge clearly from the analysed results across multiple spatial scales.",
+      "authors": [
+        "Thorsten Hoeser",
+        "Felix Bachofer",
+        "Claudia Kuenzer"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-05T11:17:49+00:00",
+      "link": "https://arxiv.org/pdf/2608.04706v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "benchmarking deep learning models for dense classification of Sentinel-1 time series over offshore infrastructure",
+      "llm_evidence_cn": "对近海基础设施的Sentinel-1时间序列进行深度学习模型密集事件分类基准评测",
+      "llm_evidence": "对近海基础设施的Sentinel-1时间序列进行深度学习模型密集事件分类基准评测",
+      "canonical_evidence": "对近海基础设施的Sentinel-1时间序列进行深度学习模型密集事件分类基准评测",
+      "llm_tldr_en": "Compares ten deep learning model-training variants for dense event classification in Sentinel-1 SAR time series to monitor offshore wind infrastructure life cycles, supporting global-scale automated monitoring.",
+      "llm_tldr_cn": "近海风电基础设施的部署和运行需要从大体积Sentinel-1雷达时间序列中自动提取事件标签，但缺少系统性的模型对比。该研究对十种深度学习模型训练变体进行了结构化比较，用于密集事件分类，评估不同模型在近海基础设施监测中的表现。结果表明该方法可支持全球尺度的大规模设施生命周期自动监测，为海洋遥感时序分类任务提供了可借鉴的基准评测流程。",
+      "llm_tldr": "近海风电基础设施的部署和运行需要从大体积Sentinel-1雷达时间序列中自动提取事件标签，但缺少系统性的模型对比。该研究对十种深度学习模型训练变体进行了结构化比较，用于密集事件分类，评估不同模型在近海基础设施监测中的表现。结果表明该方法可支持全球尺度的大规模设施生命周期自动监测，为海洋遥感时序分类任务提供了可借鉴的基准评测流程。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.28306v2",
+      "source": "arxiv",
+      "title": "A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection",
+      "abstract": "Recent incidents of accidental damage and suspected sabotage to submarine telecommunication and power cables, particularly in the Baltic Sea, have underscored their vulnerability and the need for continuous monitoring solutions. Distributed acoustic sensing (DAS) applied to submarine optical-fiber cables enables wide-area monitoring of underwater acoustic activity.   We present the Marlinks-NS DAS dataset, comprising processed submarine DAS measurements and AIS-derived vessel information curated for cable-protection research. The dataset defines two machine-learning tasks (vessel detection and vessel-to-cable distance estimation) allowing reproducible research under realistic marine conditions.   The dataset contains 74,771 labeled data instances from ten days of continuous recording along a 2,554 m segment in a 28 km buried fiber-optic cable in the North Sea. Each instance includes spectral-energy features from 250 sensing channels, together with anonymized distance measurements and metadata from AIS information. The released HDF5 data, documentation, processing description, and example code support reproducible development and evaluation of DAS-based vessel-monitoring methods for submarine cable protection.",
+      "authors": [
+        "Erick Eduardo Ramirez-Torres",
+        "Javier Macias-Guarasa",
+        "Daniel Pizarro",
+        "Javier Tejedor",
+        "Sira Elena Palazuelos-Cagigas",
+        "Pedro J. Vidal-Moreno",
+        "María R. Fernández-Ruiz",
+        "Sonia Martin-Lopez",
+        "Miguel Gonzalez-Herraez",
+        "Roel Vanthillo"
+      ],
+      "primary_category": "physics.geo-ph",
+      "categories": [
+        "physics.geo-ph",
+        "cs.LG"
+      ],
+      "published": "2026-07-30T14:44:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.28306v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Submarine DAS dataset for vessel detection/localization supporting autonomous marine monitoring",
+      "llm_evidence_cn": "面向船舶探测与定位的海底分布式声学感知数据集，支持自主海洋监测",
+      "llm_evidence": "面向船舶探测与定位的海底分布式声学感知数据集，支持自主海洋监测",
+      "canonical_evidence": "面向船舶探测与定位的海底分布式声学感知数据集，支持自主海洋监测",
+      "llm_tldr_en": "This paper presents the Marlinks-NS DAS dataset, combining submarine distributed acoustic sensing and AIS vessel information for vessel detection and distance estimation, enabling reproducible marine monitoring research.",
+      "llm_tldr_cn": "海底电缆安全需要持续监测水下声学活动，分布式声学传感（DAS）可对水下光纤进行大范围监测。本文发布 Marlinks-NS DAS 数据集，包含处理过的海底 DAS 测量数据与 AIS 船舶信息，并定义船舶检测与船缆距离估计两个机器学习任务。该数据集为现实海洋条件下的电缆保护研究提供了可复现基准，也为自主海洋监测设施与智能分析算法训练奠定了基础。",
+      "llm_tldr": "海底电缆安全需要持续监测水下声学活动，分布式声学传感（DAS）可对水下光纤进行大范围监测。本文发布 Marlinks-NS DAS 数据集，包含处理过的海底 DAS 测量数据与 AIS 船舶信息，并定义船舶检测与船缆距离估计两个机器学习任务。该数据集为现实海洋条件下的电缆保护研究提供了可复现基准，也为自主海洋监测设施与智能分析算法训练奠定了基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.00870v1",
+      "source": "arxiv",
+      "title": "PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series",
+      "abstract": "Panoptic crop mapping requires both delineating individual agricultural parcels and assigning a crop type to each parcel from satellite image time series. Existing approaches typically rely on dense parcel-level annotations and task-specific model training, which limits their applicability to new regions and growing seasons. We introduce PhenoStitch, a panoptic crop-mapping pipeline that requires no task-specific gradient-based training. A frozen Segment Anything model first oversegments each patch into class-agnostic regions. For each region, optical NDVI and Sentinel-1 backscatter series are summarized by an analytic double-harmonic phenological signature. Adjacent regions are then merged into parcels by minimizing a Potts graph energy, and each parcel is classified by nearest-prototype matching using only (k) labeled parcels per class. A final topology-closure step produces the panoptic map. Under a matched budget of (k=20) parcels per class, corresponding to less than 1% of the available labels, PhenoStitch achieves 20.0 crop mIoU, 76.2 segmentation quality, and 6.2 panoptic quality on PASTIS-R under a 5-fold, 3-seed evaluation. It outperforms the evaluated frozen foundation-model, few-shot, and matched-budget supervised baselines under the same protocol, with a consistent ranking also observed on ZueriCrop. Ablation studies show that radar observations contribute the largest performance gain, while the graph-energy merge and compact phenological signature provide further improvements. These results demonstrate the effectiveness of combining label-free parcel delineation with few-shot phenological recognition for panoptic crop mapping under limited supervision.",
+      "authors": [
+        "Xuechen Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-01T21:11:01+00:00",
+      "link": "https://arxiv.org/pdf/2608.00870v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "training-free panoptic mapping from satellite image time series with phenology features, transferable to coral reef ecosystem mapping",
+      "llm_evidence_cn": "基于卫星影像时间序列的免训练全景制图方法，结合物候特征，可迁移用于珊瑚礁生态系统制图",
+      "llm_evidence": "基于卫星影像时间序列的免训练全景制图方法，结合物候特征，可迁移用于珊瑚礁生态系统制图",
+      "canonical_evidence": "基于卫星影像时间序列的免训练全景制图方法，结合物候特征，可迁移用于珊瑚礁生态系统制图",
+      "llm_tldr_en": "PhenoStitch uses frozen Segment Anything oversegmentation, double-harmonic phenological signatures, and Potts graph energy merging to perform training-free panoptic crop mapping from satellite image time series.",
+      "llm_tldr_cn": "现有的全景作物制图依赖密集地块标注和任务特定训练，难以快速推广到新区域和生长季。PhenoStitch提出免训练流程：先用冻结的Segment Anything将影像过分割为类别无关区域，再用解析双谐波物候特征概括光学NDVI与Sentinel-1后向散射序列，最后通过最小化Potts图能量合并相邻区域为地块。该方法无需梯度训练即可完成地块勾画与作物类型分配，为包括珊瑚礁在内的遥感地物制图提供了可迁移的弱监督方案。",
+      "llm_tldr": "现有的全景作物制图依赖密集地块标注和任务特定训练，难以快速推广到新区域和生长季。PhenoStitch提出免训练流程：先用冻结的Segment Anything将影像过分割为类别无关区域，再用解析双谐波物候特征概括光学NDVI与Sentinel-1后向散射序列，最后通过最小化Potts图能量合并相邻区域为地块。该方法无需梯度训练即可完成地块勾画与作物类型分配，为包括珊瑚礁在内的遥感地物制图提供了可迁移的弱监督方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.02315v1",
+      "source": "arxiv",
+      "title": "GEOID-Flood: A Large-Scale Multi-Modal Benchmark Dataset for Flood Segmentation",
+      "abstract": "Geospatial foundation models aim to learn representations that transfer across regions and sensors, yet evaluating them on specific tasks requires large, high-quality, multi-modal benchmarks that measure how well such models extract value from data. Concerning flood mapping, existing datasets rarely combine bi-temporal SAR and co-registered optical imagery at scale, leaving the value of foundation models for this downstream task largely untested. We introduce GEOID-Flood, a large-scale multi-modal flood segmentation benchmark, derived from Copernicus Emergency Management Service activations, spanning 219 events across 65 countries over ten years. The dataset provides more than 14,000 tiles with co-registered pre- and post-event Sentinel-1, in GRD and RTC format, pre-event Sentinel-2 composite, and DEM, including manually validated labels that separate background from permanent water and flooded water. Using this benchmark, we evaluate foundation models against conventional encoders across single-image, multi-temporal, and multi-modal protocols. We report three main findings: foundation models offer a consistent but modest advantage; optical-SAR fusion with finetuning best resolves transient flooding; and models trained on GEOID-Flood transfer to unseen events better than those trained on existing datasets. Dataset and code available at https://github.com/links-ads/geoid-flood.",
+      "authors": [
+        "Gaetano Chiriaco",
+        "Luca Barco",
+        "Andrea Bragagnolo",
+        "Claudio Rossi",
+        "Edoardo Arnaudo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T14:38:45+00:00",
+      "link": "https://arxiv.org/pdf/2608.02315v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "large-scale multi-modal satellite benchmark for segmentation, applicable to habitat mapping methods",
+      "llm_evidence_cn": "大规模多模态卫星分割基准数据集，可服务于生境制图方法",
+      "llm_evidence": "大规模多模态卫星分割基准数据集，可服务于生境制图方法",
+      "canonical_evidence": "大规模多模态卫星分割基准数据集，可服务于生境制图方法",
+      "llm_tldr_en": "GEOID-Flood is a large-scale multi-modal benchmark for flood segmentation, combining bi-temporal SAR and optical imagery from 219 events, enabling evaluation of geospatial foundation models on downstream segmentation.",
+      "llm_tldr_cn": "面向洪水制图任务，现有数据集很少同时包含双时相SAR和配准的光学影像，限制了地理空间基础模型在下游任务上的评估。为此，本文构建GEOID-Flood，一个覆盖65个国家、219次洪灾事件的大规模多模态基准数据集，提供超过1.4万幅双时相SAR与光学影像对。该数据集可系统评估基础模型在洪水分割上的性能，并为海洋和珊瑚礁等遥感分割任务提供类似基准构建与方法迁移的参考。",
+      "llm_tldr": "面向洪水制图任务，现有数据集很少同时包含双时相SAR和配准的光学影像，限制了地理空间基础模型在下游任务上的评估。为此，本文构建GEOID-Flood，一个覆盖65个国家、219次洪灾事件的大规模多模态基准数据集，提供超过1.4万幅双时相SAR与光学影像对。该数据集可系统评估基础模型在洪水分割上的性能，并为海洋和珊瑚礁等遥感分割任务提供类似基准构建与方法迁移的参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.02322v1",
+      "source": "arxiv",
+      "title": "Global-Scale Self-Supervised Spatiotemporal Learning for NDVI Time-Series Reconstruction",
+      "abstract": "Accurate and efficient reconstruction of cloud-contaminated and noise-corrupted NDVI time series remains a challenge in remote sensing. Deep learning provides a promising solution for modeling complex spatiotemporal dependencies; however, its application is often limited by the difficulty of obtaining paired clear-sky and degraded NDVI data for identical spatiotemporal locations. To address this issue, we propose GloSSR, a Global-scale Self-supervised Spatiotemporal framework for NDVI Reconstruction. The framework constructs supervisory signals by artificially degrading relatively clean NDVI observations with realistic cloud contamination patterns, producing self-supervised training pairs that closely mimic real-world degradation. It further introduces an end-to-end spatiotemporal learning network that jointly captures long-range temporal dependencies and short-term spatiotemporal correlation through a bidirectional Transformer with a ConvLSTM architecture. A temporal-channel attention-based reconstruction module is incorporated to enhance informative features, while a spatiotemporal prior constraint is designed to preserve both fine-scale structures and long-term phenological trends during optimization. Extensive evaluations on MODIS NDVI data demonstrate the effectiveness of the proposed framework across both artificial and real-world scenarios. In artificial degraded-pixel reconstruction experiments, GloSSR consistently outperforms the comparison methods. Time-series analyses based on real observations further demonstrate that the proposed framework can accurately characterize vegetation dynamics and capture the key phenological states. Long-term vegetation trend analysis and the transferability analysis to AVHRR data validate the scalability of the framework and illustrate its broad applicability for large-scale environmental monitoring.",
+      "authors": [
+        "Ang Li",
+        "Menghui Jiang",
+        "Xiaobin Guan",
+        "Dong Chu",
+        "Huanfeng Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T14:46:25+00:00",
+      "link": "https://arxiv.org/pdf/2608.02322v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "self-supervised spatiotemporal reconstruction of remote sensing time series, transferable to oceanographic data",
+      "llm_evidence_cn": "遥感时间序列自监督时空重建方法，可迁移至海洋遥感数据",
+      "llm_evidence": "遥感时间序列自监督时空重建方法，可迁移至海洋遥感数据",
+      "canonical_evidence": "遥感时间序列自监督时空重建方法，可迁移至海洋遥感数据",
+      "llm_tldr_en": "GloSSR proposes a global-scale self-supervised framework for reconstructing cloud-contaminated NDVI time series by artificially degrading clean observations with realistic cloud patterns, overcoming the lack of paired clear-sky and degraded data.",
+      "llm_tldr_cn": "针对云污染和噪声导致的NDVI时间序列不连续问题，现有深度学习方法受限于难以获得同一时空位置成对的清晰与退化NDVI数据。本文提出全球尺度自监督时空重建框架GloSSR，通过人工添加真实云污染模式到相对干净的观测，构造自监督训练样本模拟真实退化，从而在大型时间序列上训练重建模型。该方法无需配对清晰-退化真值即可学习复杂时空依赖，为海洋遥感时间序列（如海表温度、叶绿素）的重建提供了可借鉴的范式。",
+      "llm_tldr": "针对云污染和噪声导致的NDVI时间序列不连续问题，现有深度学习方法受限于难以获得同一时空位置成对的清晰与退化NDVI数据。本文提出全球尺度自监督时空重建框架GloSSR，通过人工添加真实云污染模式到相对干净的观测，构造自监督训练样本模拟真实退化，从而在大型时间序列上训练重建模型。该方法无需配对清晰-退化真值即可学习复杂时空依赖，为海洋遥感时间序列（如海表温度、叶绿素）的重建提供了可借鉴的范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.02448v1",
+      "source": "arxiv",
+      "title": "UAV-Based Environmental Monitoring of Rip-Current Indicators Using Wavelet-Derived Texture Features",
+      "abstract": "Rip currents are recurrent coastal natural hazards that threaten beachgoers and create operational challenges for lifeguards and coastal managers. Reliable monitoring from standard RGB (red-green-blue) imagery acquired by unmanned aerial vehicles (UAVs) remains difficult because hazardous channels often appear as subtle gaps in breaking waves, foam texture, or sediment patterns, and these signatures are affected by illumination, sea state, and environmental noise. This study presents a physically informed coastal environmental monitoring workflow for detecting visually expressed rip-current indicators that integrates wavelet-derived spatial-frequency texture features with deep learning. We evaluate multiple strategies for incorporating Discrete Wavelet Transform features into convolutional architectures, from computationally efficient channel replacement to dual-stream fusion with attention mechanisms. Performance is assessed against a standard RGB baseline using a task specific convolutional neural network for image-level presence classification and a YOLOv8 model for object-level localization. Under the evaluated dataset conditions, integrating wavelet derived texture features improves performance over RGB-only models. The dual-stream architecture achieves the strongest classification performance, exceeding 95% accuracy with high recall, while channel replacement is most effective for YOLOv8 object detection, reaching 94% mAP@50 for localization. Explainable artificial intelligence analyses provide qualitative evidence that the models attend to visually plausible wave-gap regions associated with rip currents. These results suggest that under the conditions of the evaluated dataset, physically informed wavelet integration may support UAV-based decision-support tools for interpretable beach-safety risk mitigation.",
+      "authors": [
+        "Yonatan Ben Avraham",
+        "Baruch Binyaminov",
+        "Yehudit Aperstein"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-03T16:24:05+00:00",
+      "link": "https://arxiv.org/pdf/2608.02448v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "UAV coastal environmental monitoring with wavelet and deep learning for rip-current detection",
+      "llm_evidence_cn": "基于无人机与深度学习的海岸裂流环境监测",
+      "llm_evidence": "基于无人机与深度学习的海岸裂流环境监测",
+      "canonical_evidence": "基于无人机与深度学习的海岸裂流环境监测",
+      "llm_tldr_en": "Presents a physically informed workflow combining wavelet texture features and deep learning for detecting rip-current indicators from UAV RGB imagery.",
+      "llm_tldr_cn": "针对无人机RGB影像中裂流指示物视觉特征细微、受环境噪声干扰的问题，提出一种结合小波空间-频率纹理特征与深度学习的物理感知监测流程，利用多种策略提升检测鲁棒性。该方法为海岸环境安全监测提供了低成本、可部署的自动化监测方案，也可迁移到海洋生态遥感分析。",
+      "llm_tldr": "针对无人机RGB影像中裂流指示物视觉特征细微、受环境噪声干扰的问题，提出一种结合小波空间-频率纹理特征与深度学习的物理感知监测流程，利用多种策略提升检测鲁棒性。该方法为海岸环境安全监测提供了低成本、可部署的自动化监测方案，也可迁移到海洋生态遥感分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.03804v1",
+      "source": "arxiv",
+      "title": "How Usable Are Geospatial Foundation Models? A Systematic Evaluation of 89 Models",
+      "abstract": "Geospatial foundation models (GeoFMs) offer transformative potential for environmental monitoring, yet adoption among ecologists is uneven. Most evaluations are model-centric, focusing on architecture and benchmark accuracy, which overlooks whether the systems are usable by their intended audiences. To address this gap, we first conducted a pilot expert elicitation survey with ecology and conservation scientists that helped us identify misalignments between current GeoFM development priorities and their needs. Informed by these findings and based on HCI theory, we created a seven-dimension evaluation covering Access & Deployment, Interaction & Customization, Trust & Transparency, Community & Support, Scientific Permanence, Multilingual Support, and Offline Usability. Then, two raters applied this rubric to 89 GeoFMs. We found distinct accessibility gaps where nearly a third provide no support to practitioners beyond their source code. Dimensions along which ratings were highly consistent function as field-level diagnostics, revealing where there is room for improvement for current GeoFMs.",
+      "authors": [
+        "Robin Young",
+        "Artyom Gabtraupov",
+        "Kenzy Soror",
+        "Srinivasan Keshav"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-08-04T15:16:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.03804v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "systematic usability evaluation of geospatial foundation models for environmental monitoring",
+      "llm_evidence_cn": "面向环境监测的地理空间基础模型可用性系统评测",
+      "llm_evidence": "面向环境监测的地理空间基础模型可用性系统评测",
+      "canonical_evidence": "面向环境监测的地理空间基础模型可用性系统评测",
+      "llm_tldr_en": "Systematically evaluates 89 geospatial foundation models across seven usability dimensions informed by ecologists and HCI theory, addressing misalignments between GeoFM development and conservation needs.",
+      "llm_tldr_cn": "地理空间基础模型有望助力环境监测，但生态学家采用度不高，现有评测过于关注模型精度而忽视可用性。该研究通过专家问卷调查和对89个模型的系统评估，构建了包含访问部署、交互定制、信任透明等七个维度的可用性评测框架。结果显示当前GeoFM开发与生态保护需求之间仍存在明显错位，为面向珊瑚遥感等应用的模型选择与开发提供指导。",
+      "llm_tldr": "地理空间基础模型有望助力环境监测，但生态学家采用度不高，现有评测过于关注模型精度而忽视可用性。该研究通过专家问卷调查和对89个模型的系统评估，构建了包含访问部署、交互定制、信任透明等七个维度的可用性评测框架。结果显示当前GeoFM开发与生态保护需求之间仍存在明显错位，为面向珊瑚遥感等应用的模型选择与开发提供指导。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.04106v1",
+      "source": "arxiv",
+      "title": "LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching",
+      "abstract": "Dense image matching establishes pixel-wise correspondences and underpins broad applications in computer vision and photogrammetry. However, extending dense matching to global-scale remote sensing remains challenging because image pairs may differ in acquisition time, season, viewpoint, spatial resolution, and land-cover state. The resulting large geometric offsets, partial overlap, and intrinsically unmatchable regions make direct dense correspondence prediction unreliable and inefficient. We thus reformulate dense matching as localization-and-registration: first localizing the matchable overlap and affine geometry, then refining dense residuals within the aligned frame. Based on this formulation, we propose LoRetta, a foundation model coupling matchability-aware affine localization with guided dense registration. We also introduce LEVIR-GM, a global-scale multi-temporal optical matching benchmark with dataset-native matchability labels (103K aligned, 827K augmented pairs, six continents, five years, 0.5-1024 m resolution). We further establish a unified evaluation protocol for sparse, semi-dense, and dense matchers. On LEVIR-GM, LoRetta achieves an area under the curve (AUC) of 83.3%, outperforming the strongest baseline RoMa v2 by 1.6 points, with larger percentage of correct keypoints (PCK) gains of 6.5 and 8.2 points at 1 and 2 pixels, while reducing inference latency by 47.8%. Astronaut-to-satellite and unmanned aerial vehicle (UAV)-to-satellite geolocalization experiments further demonstrate its transferability as a reusable geometric aligner.",
+      "authors": [
+        "Siwei Yu",
+        "Han Guo",
+        "Zhenwei Shi",
+        "Zhengxia Zou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.IV"
+      ],
+      "published": "2026-08-04T18:02:19+00:00",
+      "link": "https://arxiv.org/pdf/2608.04106v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Generalizable dense image matching pipeline for global-scale remote sensing, useful for 3D habitat mapping",
+      "llm_evidence_cn": "面向全球尺度遥感的高泛化稠密影像匹配方法，可用于三维栖息地制图",
+      "llm_evidence": "面向全球尺度遥感的高泛化稠密影像匹配方法，可用于三维栖息地制图",
+      "canonical_evidence": "面向全球尺度遥感的高泛化稠密影像匹配方法，可用于三维栖息地制图",
+      "llm_tldr_en": "LoRetta reformulates dense remote sensing image matching as localization-and-registration, building a foundation model and large-scale dataset to establish pixel-wise correspondences across different acquisition conditions.",
+      "llm_tldr_cn": "稠密影像匹配是摄影测量与三维重建的基础，但全球尺度遥感影像对常存在时相、季节、视角与分辨率差异，直接预测不可靠。LoRetta 将稠密匹配重构为定位-配准两步：先定位可匹配重叠区域与仿射几何，再在配准框架内细化稠密残差，并构建大规模数据集进行训练。该基础模型能在复杂跨域条件下建立可靠的像素对应，为遥感三维制图等下游应用提供支撑。",
+      "llm_tldr": "稠密影像匹配是摄影测量与三维重建的基础，但全球尺度遥感影像对常存在时相、季节、视角与分辨率差异，直接预测不可靠。LoRetta 将稠密匹配重构为定位-配准两步：先定位可匹配重叠区域与仿射几何，再在配准框架内细化稠密残差，并构建大规模数据集进行训练。该基础模型能在复杂跨域条件下建立可靠的像素对应，为遥感三维制图等下游应用提供支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.04175v1",
+      "source": "arxiv",
+      "title": "TriCLE: Tri-Modal Vision-Language Reasoning for Edge-Deployed Fine-Grained Clustering",
+      "abstract": "Edge platforms used for aerial observation must interpret aircraft imagery under limited memory, limited compute, and intermittent connectivity. This setting is difficult for standard RGB-only recognition models and general-purpose vision-language models, especially when calibrated thermal and LiDAR aircraft data are unavailable. We present TriCLE, an application-oriented tri-modal vision-language system for aircraft taxonomic grouping under edge constraints. From a single RGB aircraft image, TriCLE generates a structure-preserving FLIR-style thermal view and a pseudo-LiDAR depth projection, then fuses the aligned views with task instructions in a compact Qwen3-VL backbone. The model is aligned to an expert aircraft taxonomy based on propulsion, airframe family, size, design era, and configuration, so its outputs reflect engineering-relevant similarity rather than only surface appearance. We evaluate supervised fine-tuning, rotation-preserving SFT, and three policy-alignment strategies: GRPO, GSPO, and DAPO. Sequence-level GSPO gives the strongest validation performance, reaching 88.33\\% validation accuracy and 0.91 weighted F1 on valid aircraft outputs. On a held-out aircraft test partition, GSPO achieves 78.00\\% accuracy and 0.793 weighted F1 while preserving 94.00\\% parseable output formatting. After 4-bit quantization and attention-memory optimization, the aligned 4B model fits an 8GB deployment target and processes each tri-modal triplet in 1.48 seconds. These results support TriCLE as a practical prototype for interpretable, edge-feasible aircraft grouping, while emphasizing the need for further validation on real aligned thermal and LiDAR sensor streams.",
+      "authors": [
+        "Kishor Datta Gupta",
+        "Md. Mahfuzur Rahman",
+        "Fahad Rahman",
+        "Ahmed Rafi Hasan",
+        "Faysal Mehrab Chowdhury",
+        "Mohd Ariful Haque",
+        "Roy George"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-04T19:34:08+00:00",
+      "link": "https://arxiv.org/pdf/2608.04175v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "tri-modal vision-language reasoning for fine-grained classification, transferable to ocean multimodal analysis",
+      "llm_evidence_cn": "三模态视觉-语言推理用于细粒度分类，可迁移至海洋多模态分析",
+      "llm_evidence": "三模态视觉-语言推理用于细粒度分类，可迁移至海洋多模态分析",
+      "canonical_evidence": "三模态视觉-语言推理用于细粒度分类，可迁移至海洋多模态分析",
+      "llm_tldr_en": "Presents TriCLE, an edge-deployed tri-modal vision-language system that generates thermal and pseudo-LiDAR views from single RGB aircraft images and fuses them in Qwen3-VL for fine-grained taxonomic grouping.",
+      "llm_tldr_cn": "边缘平台对飞机影像进行细粒度识别受限于算力、内存和校准的多模态数据缺失。论文提出TriCLE，从单张RGB飞机图像生成结构保持的FLIR风格热成像和伪LiDAR深度投影，再与任务指令融合到轻量Qwen3-VL骨干中，实现边缘部署的飞机分类和聚类。该方法在有限资源下增强了视觉语言模型的多模态推理能力，其融合思路可迁移到海洋遥感影像与文本结合的分析任务。",
+      "llm_tldr": "边缘平台对飞机影像进行细粒度识别受限于算力、内存和校准的多模态数据缺失。论文提出TriCLE，从单张RGB飞机图像生成结构保持的FLIR风格热成像和伪LiDAR深度投影，再与任务指令融合到轻量Qwen3-VL骨干中，实现边缘部署的飞机分类和聚类。该方法在有限资源下增强了视觉语言模型的多模态推理能力，其融合思路可迁移到海洋遥感影像与文本结合的分析任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.04230v1",
+      "source": "arxiv",
+      "title": "Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling",
+      "abstract": "Deep learning models for scientific spatio-temporal downscaling often minimize reconstruction error while failing to preserve physically meaningful multi-scale structure. For sea surface temperature prediction, this can yield outputs that are numerically plausible yet overly smooth, missing mesoscale variability critical to regional ocean dynamics. Existing methods often focus on pixel-wise objectives or single-context conditioning, which limits their ability to preserve spectral fidelity and generalize across regions. To address this, we propose EddyFlow, a representation learning framework for kilometer-scale sea surface temperature downscaling that balances predictive accuracy, scale-dependent structure, and regional generalization. EddyFlow is trained on the Gulf of St.~Lawrence and evaluated in zero-shot and few-shot settings on the Bay of Fundy and the Gulf of Mexico. EddyFlow demonstrates that physics-informed representation learning reduces zero-shot RMSE by 21%, achieves up to 85.6% skill relative to persistence on unseen domains, and maintains near-ideal spectral fidelity with a PSD ratio of $\\approx 1.00$.",
+      "authors": [
+        "Parth Doshi",
+        "Priyanka Aravindan",
+        "Vaishnav Vaidheeswaran",
+        "Md Mahbub Alam",
+        "Gabriel Spadon"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-08-04T21:11:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.04230v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep learning for ocean remote sensing (sea surface temperature downscaling)",
+      "llm_evidence_cn": "面向海洋遥感的海表温度降尺度深度学习方法",
+      "llm_evidence": "面向海洋遥感的海表温度降尺度深度学习方法",
+      "canonical_evidence": "面向海洋遥感的海表温度降尺度深度学习方法",
+      "llm_tldr_en": "Introduces EddyFlow, a representation learning framework for kilometer-scale sea surface temperature downscaling that preserves mesoscale variability and transfers across regions.",
+      "llm_tldr_cn": "针对海表温度降尺度中重建结果过于平滑、中尺度动力结构丢失以及跨区域泛化差的问题，提出EddyFlow表示学习框架，通过双流结构和尺度感知约束在保证预测精度的同时保留中尺度变化，并支持跨区域迁移。该方法为海洋遥感数据挖掘与物理结构保持提供了有效的深度建模工具。",
+      "llm_tldr": "针对海表温度降尺度中重建结果过于平滑、中尺度动力结构丢失以及跨区域泛化差的问题，提出EddyFlow表示学习框架，通过双流结构和尺度感知约束在保证预测精度的同时保留中尺度变化，并支持跨区域迁移。该方法为海洋遥感数据挖掘与物理结构保持提供了有效的深度建模工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.04702v1",
+      "source": "arxiv",
+      "title": "Design Choices That Matter: A Functional ANOVA Analysis for Remote Sensing Multi-Label Classification",
+      "abstract": "Benchmarking deep learning (DL) models for multi-label classification (MLC) of remote sensing images (RSI) typically yields rankings that do not generalize beyond the evaluated datasets. In this work, we move beyond rankings by employing functional analysis of variance (fANOVA) to systematically quantify the contributions of individual design choices and their interactions to performance variability. We conduct two empirical analyses covering 48 and 20 DL models, respectively, spanning design choices such as network architecture, fine-tuning strategy, learning strategy, and initialization. By applying fANOVA across seven MLC RSI datasets, we construct dataset meta-representations that capture design-choice sensitivity profiles. Hierarchical clustering of these meta-representations reveals that datasets naturally group according to how they respond to design decisions, with patterns strongly linked to intrinsic dataset properties such as scale, spatial resolution, and label space complexity. Our findings show that for large-scale datasets, fine-tuning strategy and architecture are dominant factors, while in data-limited regimes, initialization becomes decisive. For intermediate regimes, the interaction between architecture and learning strategy governs performance.",
+      "authors": [
+        "Maryam Gholami Shiri",
+        "Eva Tuba",
+        "Sašo Džeroski",
+        "Tome Eftimov",
+        "Ana Nikolikj"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-08-05T11:12:48+00:00",
+      "link": "https://arxiv.org/pdf/2608.04702v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "functional ANOVA of design choices for remote sensing multi-label classification; informs model selection for coral reef classification",
+      "llm_evidence_cn": "遥感多标签分类设计选择的函数方差分析，为珊瑚礁分类模型选择提供依据",
+      "llm_evidence": "遥感多标签分类设计选择的函数方差分析，为珊瑚礁分类模型选择提供依据",
+      "canonical_evidence": "遥感多标签分类设计选择的函数方差分析，为珊瑚礁分类模型选择提供依据",
+      "llm_tldr_en": "This paper uses functional ANOVA to quantify how architecture, fine-tuning, learning strategy, and initialization affect remote sensing multi-label classification performance across datasets, moving beyond static rankings.",
+      "llm_tldr_cn": "本文认为遥感多标签分类的深度学习模型排名难以跨数据集泛化，因此采用函数方差分析（fANOVA）系统量化网络架构、微调策略、学习策略和初始化等设计选择对性能变异的贡献及其交互作用。基于48个和20个模型在七个遥感多标签数据集上的实验，构建了反映设计选择敏感性的数据集元表示，为特定任务如珊瑚礁分类的模型设计提供了实证指引。",
+      "llm_tldr": "本文认为遥感多标签分类的深度学习模型排名难以跨数据集泛化，因此采用函数方差分析（fANOVA）系统量化网络架构、微调策略、学习策略和初始化等设计选择对性能变异的贡献及其交互作用。基于48个和20个模型在七个遥感多标签数据集上的实验，构建了反映设计选择敏感性的数据集元表示，为特定任务如珊瑚礁分类的模型设计提供了实证指引。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Which deep learning models perform best for coral reef classification in satellite images?",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.04791v1",
+      "source": "arxiv",
+      "title": "On the Effectiveness of Adaptation Strategies for VLM-Based Federated Learning in Remote Sensing",
+      "abstract": "Federated learning (FL) enables collaborative training of deep learning models across decentralized image archives without requiring data centralization. This paradigm is particularly relevant in remote sensing (RS), where legal regulations, privacy concerns, and bandwidth constraints restrict data sharing. However, the presence of training data heterogeneity across clients (known as non-IID data) can impede convergence and limit the generalization capability of the aggregated global model. To mitigate the adverse effects of training data heterogeneity, vision-language models (VLMs) can be leveraged in FL due to their transferable representations, which have demonstrated robustness under distribution shifts. However, their large parameter size may substantially increase communication overhead and local computational complexity in federated settings. Therefore, it is crucial to select an appropriate VLM adaptation strategy that balances the generalization ability with the communication and computational constraints. To address this issue, in this paper, we present the first comparative study of VLM adaptation strategies for FL in the context of RS image classification. We investigate full fine-tuning, encoder-specific fine-tuning, prompt learning, and low-rank adaptation (LoRA) tuning, and analyze them with respect to three criteria: 1) generalization capability under non-IID data, 2) communication overhead, and 3) local computational complexity. Experiments on BigEarthNet-S2, EuroSAT, RESISC45, and ImageNet reveal distinct trade-offs between task specialization, cross-domain generalization, and efficiency. Based on our findings, we derive a guideline for the selection of an appropriate VLM adaptation strategy in FL for RS image classification under different operational constraints. The code of this work is publicly available at https://git.tu-berlin.de/rsim/FL-RS-VLM.",
+      "authors": [
+        "Simon Lösche",
+        "Barış Büyüktaş",
+        "Mathis Adler",
+        "Angelos Zavras",
+        "Ioannis Papoutsis",
+        "Begüm Demir"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-05T12:57:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.04791v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "vision-language models in remote sensing federated learning; relevant to multimodal imagery-text fusion for ocean science",
+      "llm_evidence_cn": "遥感联邦学习中的视觉-语言模型，与海洋科学中影像-文本多模态融合相关",
+      "llm_evidence": "遥感联邦学习中的视觉-语言模型，与海洋科学中影像-文本多模态融合相关",
+      "canonical_evidence": "遥感联邦学习中的视觉-语言模型，与海洋科学中影像-文本多模态融合相关",
+      "llm_tldr_en": "This paper studies adaptation strategies for vision-language model (VLM) based federated learning in remote sensing, mitigating client data heterogeneity (non-IID) while exploiting transferable multimodal representations for decentralized satellite image archives.",
+      "llm_tldr_cn": "本文针对遥感领域联邦学习中客户端数据异构（非IID）导致收敛和泛化困难的问题，研究基于视觉-语言模型（VLM）的自适应策略。由于VLM的迁移表征对分布偏移具有鲁棒性，论文探索在不共享原始影像的情况下借助VLM缓解数据异构。实验表明了合适的VLM自适应方法在遥感联邦学习中的有效性，为分散式多源遥感数据协同分析提供了新思路，可服务于海洋遥感应用。",
+      "llm_tldr": "本文针对遥感领域联邦学习中客户端数据异构（非IID）导致收敛和泛化困难的问题，研究基于视觉-语言模型（VLM）的自适应策略。由于VLM的迁移表征对分布偏移具有鲁棒性，论文探索在不共享原始影像的情况下借助VLM缓解数据异构。实验表明了合适的VLM自适应方法在遥感联邦学习中的有效性，为分散式多源遥感数据协同分析提供了新思路，可服务于海洋遥感应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
