@@ -1,9 +1,9 @@
 {
   "date": "20260807",
   "date_label": "",
-  "generated_at": "2026-08-07 02:06:24 UTC",
+  "generated_at": "2026-08-07 21:21:53 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
     {
       "paper_id": "2608.04723v1",
@@ -17,9 +17,25 @@
         }
       ],
       "score": 9.0,
-      "evidence": "面向海洋作业的自主水下机器人视觉控制与建图",
+      "evidence": "面向海洋应用的自主水下机器人，基于视觉实现定位、导航与建图",
       "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.04230v1",
+      "route": "202608/07/2608.04230v1-transferable-dual-stream-representations-for-mesoscale-preserving-sea-surface-temperature-downscaling",
+      "title": "Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向海表温度降尺度的深度学习方法，是海洋遥感数据挖掘的关键任务",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
     },
     {
       "paper_id": "2608.04706v1",
@@ -33,9 +49,137 @@
         }
       ],
       "score": 8.0,
-      "evidence": "对近海基础设施的Sentinel-1时间序列进行深度学习模型密集事件分类基准评测",
+      "evidence": "面向海洋遥感时间序列的深度学习基准方法",
       "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.05365v1",
+      "route": "202608/07/2608.05365v1-unified-planning-learning-framework-for-robust-uuv-navigation-under-partial-observability",
+      "title": "Unified Planning-Learning Framework for Robust UUV Navigation Under Partial Observability",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向自主水下航行器导航的智能体规划-学习框架",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.06059v1",
+      "route": "202608/07/2608.06059v1-darad-dual-adapters-and-ranking-aware-distillation-for-continual-remote-sensing-image-text-retrieval",
+      "title": "DARAD: Dual Adapters and Ranking-Aware Distillation for Continual Remote Sensing Image-Text Retrieval",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "持续遥感图像-文本检索，采用双适配器和排序感知蒸馏，直接支撑海洋科学中的多模态融合",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2607.28306v1",
+      "route": "202608/07/2607.28306v1-a-distributed-acoustic-sensing-dataset-for-vessel-detection-and-localization-in-submarine-cable-protection",
+      "title": "A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向船舶检测与定位的海洋监测数据集，支持自主海洋监测",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.00870v1",
+      "route": "202608/07/2608.00870v1-phenostitch-training-free-panoptic-crop-mapping-from-satellite-image-time-series",
+      "title": "PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于卫星影像时间序列的免训练全景作物制图，可迁移至珊瑚礁生态系统制图",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.02448v1",
+      "route": "202608/07/2608.02448v1-uav-based-environmental-monitoring-of-rip-current-indicators-using-wavelet-derived-texture-features",
+      "title": "UAV-Based Environmental Monitoring of Rip-Current Indicators Using Wavelet-Derived Texture Features",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于无人机遥感与深度学习检测离岸流指标，是海洋环境遥感应用",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.04106v1",
+      "route": "202608/07/2608.04106v1-loretta-a-foundation-model-and-extensive-dataset-for-global-scale-remote-sensing-dense-image-matching",
+      "title": "LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感影像稠密匹配的基座模型",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.04702v1",
+      "route": "202608/07/2608.04702v1-design-choices-that-matter-a-functional-anova-analysis-for-remote-sensing-multi-label-classification",
+      "title": "Design Choices That Matter: A Functional ANOVA Analysis for Remote Sensing Multi-Label Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感多标签分类的深度学习设计选择经验分析，可为珊瑚礁分类模型选择提供参考",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.05964v1",
+      "route": "202608/07/2608.05964v1-topology-aware-neighborhood-learning-for-source-free-cross-scene-hyperspectral-image-classification",
+      "title": "Topology-Aware Neighborhood Learning for Source-Free Cross-Scene Hyperspectral Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "无源域自适应的跨场景高光谱分类，适用于珊瑚礁生态系统制图",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
     },
     {
       "paper_id": "2607.28306v2",
@@ -54,9 +198,9 @@
       "updated_at": "2026-08-07 02:06:24 UTC"
     },
     {
-      "paper_id": "2608.00870v1",
-      "route": "202608/07/2608.00870v1-phenostitch-training-free-panoptic-crop-mapping-from-satellite-image-time-series",
-      "title": "PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series",
+      "paper_id": "2608.00950v1",
+      "route": "202608/07/2608.00950v1-swimm3r-splatting-with-medium-aware-sfm-for-underwater-3d-reconstruction",
+      "title": "Swimm3R: Splatting with Medium-aware SfM for Underwater 3D Reconstruction",
       "section": "quick",
       "tags": [
         {
@@ -65,9 +209,9 @@
         }
       ],
       "score": 6.0,
-      "evidence": "基于卫星影像时间序列的免训练全景制图方法，结合物候特征，可迁移用于珊瑚礁生态系统制图",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
+      "evidence": "水下三维重建方法，针对散射与衰减，可辅助珊瑚栖息地制图",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
     },
     {
       "paper_id": "2608.02315v1",
@@ -81,9 +225,41 @@
         }
       ],
       "score": 6.0,
-      "evidence": "大规模多模态卫星分割基准数据集，可服务于生境制图方法",
+      "evidence": "大规模多模态洪水分割基准，包含SAR与光学影像",
       "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.04791v1",
+      "route": "202608/07/2608.04791v1-on-the-effectiveness-of-adaptation-strategies-for-vlm-based-federated-learning-in-remote-sensing",
+      "title": "On the Effectiveness of Adaptation Strategies for VLM-Based Federated Learning in Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "研究遥感中VLM联邦学习自适应策略，与多模态大模型环境评估相关",
+      "first_seen_at": "2026-08-07 02:06:24 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
+    },
+    {
+      "paper_id": "2608.04792v1",
+      "route": "202608/07/2608.04792v1-above-ground-biomass-estimation-with-geospatial-foundation-models",
+      "title": "Above-ground Biomass Estimation with Geospatial Foundation Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "地理空间基础模型用于卫星影像回归的基准，可迁移至海洋栖息地制图",
+      "first_seen_at": "2026-08-07 21:21:53 UTC",
+      "updated_at": "2026-08-07 21:21:53 UTC"
     },
     {
       "paper_id": "2608.02322v1",
@@ -98,22 +274,6 @@
       ],
       "score": 6.0,
       "evidence": "遥感时间序列自监督时空重建方法，可迁移至海洋遥感数据",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
-    },
-    {
-      "paper_id": "2608.02448v1",
-      "route": "202608/07/2608.02448v1-uav-based-environmental-monitoring-of-rip-current-indicators-using-wavelet-derived-texture-features",
-      "title": "UAV-Based Environmental Monitoring of Rip-Current Indicators Using Wavelet-Derived Texture Features",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "基于无人机与深度学习的海岸裂流环境监测",
       "first_seen_at": "2026-08-07 02:06:24 UTC",
       "updated_at": "2026-08-07 02:06:24 UTC"
     },
@@ -134,22 +294,6 @@
       "updated_at": "2026-08-07 02:06:24 UTC"
     },
     {
-      "paper_id": "2608.04106v1",
-      "route": "202608/07/2608.04106v1-loretta-a-foundation-model-and-extensive-dataset-for-global-scale-remote-sensing-dense-image-matching",
-      "title": "LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "面向全球尺度遥感的高泛化稠密影像匹配方法，可用于三维栖息地制图",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
-    },
-    {
       "paper_id": "2608.04175v1",
       "route": "202608/07/2608.04175v1-tricle-tri-modal-vision-language-reasoning-for-edge-deployed-fine-grained-clustering",
       "title": "TriCLE: Tri-Modal Vision-Language Reasoning for Edge-Deployed Fine-Grained Clustering",
@@ -162,54 +306,6 @@
       ],
       "score": 6.0,
       "evidence": "三模态视觉-语言推理用于细粒度分类，可迁移至海洋多模态分析",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
-    },
-    {
-      "paper_id": "2608.04230v1",
-      "route": "202608/07/2608.04230v1-transferable-dual-stream-representations-for-mesoscale-preserving-sea-surface-temperature-downscaling",
-      "title": "Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "面向海洋遥感的海表温度降尺度深度学习方法",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
-    },
-    {
-      "paper_id": "2608.04702v1",
-      "route": "202608/07/2608.04702v1-design-choices-that-matter-a-functional-anova-analysis-for-remote-sensing-multi-label-classification",
-      "title": "Design Choices That Matter: A Functional ANOVA Analysis for Remote Sensing Multi-Label Classification",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "遥感多标签分类设计选择的函数方差分析，为珊瑚礁分类模型选择提供依据",
-      "first_seen_at": "2026-08-07 02:06:24 UTC",
-      "updated_at": "2026-08-07 02:06:24 UTC"
-    },
-    {
-      "paper_id": "2608.04791v1",
-      "route": "202608/07/2608.04791v1-on-the-effectiveness-of-adaptation-strategies-for-vlm-based-federated-learning-in-remote-sensing",
-      "title": "On the Effectiveness of Adaptation Strategies for VLM-Based Federated Learning in Remote Sensing",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "遥感联邦学习中的视觉-语言模型，与海洋科学中影像-文本多模态融合相关",
       "first_seen_at": "2026-08-07 02:06:24 UTC",
       "updated_at": "2026-08-07 02:06:24 UTC"
     }

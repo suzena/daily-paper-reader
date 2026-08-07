@@ -44,14 +44,14 @@
       <span class="dpr-home-dashboard-kicker">2026-08-07</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 13 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 19 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>5</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>14</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-07 02:06:24 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-07 21:21:53 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共处理13篇论文，精读2篇、速读11篇。最值得关注的是UUV实时自主操作的视觉控制框架，以及基于Sentinel-1的海上风电设施深度学习分类基准。下一步可深入探索分布式声学传感在海底电缆船只检测与定位中的应用。</p>
+<p>今日完成19篇海洋与遥感方向论文筛选，精读5篇、速读14篇。最值得关注UUV实时控制框架（9.0分）与海表温度降尺度新方法（8.0分），均聚焦水下自主作业与高精度遥感建模。建议优先精读这两篇，可结合速读中的电缆防护监测与无人机激流识别作拓展延伸。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">5 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Vision-based Control Framework for Real-time Autonomous UUV Operations">A Vision-based Control Framework for Real-time Autonomous UUV Operations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Benchmarking Deep Learning Models for Dense Event Classification of Offshore Wind Infrastructure in Sentinel-1 Time Series">Benchmarking Deep Learning Models for Dense Event Classification of Offshore Wind Infrastructure in Sentinel-1 Time Series</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Vision-based Control Framework for Real-time Autonomous UUV Operations">A Vision-based Control Framework for Real-time Autonomous UUV Operations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling">Transferable Dual-Stream Representations for Mesoscale-Preserving Sea Surface Temperature Downscaling</span></li><li><span class="dpr-home-dashboard-paper-title" title="Benchmarking Deep Learning Models for Dense Event Classification of Offshore Wind Infrastructure in Sentinel-1 Time Series">Benchmarking Deep Learning Models for Dense Event Classification of Offshore Wind Infrastructure in Sentinel-1 Time Series</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>5</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">14 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection">A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series">PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series</span></li><li><span class="dpr-home-dashboard-paper-title" title="GEOID-Flood: A Large-Scale Multi-Modal Benchmark Dataset for Flood Segmentation">GEOID-Flood: A Large-Scale Multi-Modal Benchmark Dataset for Flood Segmentation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection">A Distributed Acoustic Sensing Dataset for Vessel Detection and Localization in Submarine Cable Protection</span></li><li><span class="dpr-home-dashboard-paper-title" title="PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series">PhenoStitch: Training-Free Panoptic Crop Mapping from Satellite Image Time Series</span></li><li><span class="dpr-home-dashboard-paper-title" title="UAV-Based Environmental Monitoring of Rip-Current Indicators Using Wavelet-Derived Texture Features">UAV-Based Environmental Monitoring of Rip-Current Indicators Using Wavelet-Derived Texture Features</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>14</strong></span></div>
 </section>
 </div>
 
