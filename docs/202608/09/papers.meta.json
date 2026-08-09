@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-09",
+  "date": "2026-08-09",
+  "generated_at": "2026-08-09T20:25:57",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/09/2608.02387v1-an-end-to-end-workflow-for-fin-whale-song-detection-note-characterization-and-localization-with-distributed-acoustic-sensing",
+      "section": "deep",
+      "title_en": "An End-to-End Workflow for Fin Whale Song Detection, Note Characterization, and Localization with Distributed Acoustic Sensing",
+      "authors": "Dídac Diego-Tortosa, Miriam Romagosa, Arantza Ugalde, Hugo Latorre, Sergi Ventosa, Jose Enrique García, Antonio Villaseñor",
+      "date": "2026-08-03",
+      "pdf": "https://arxiv.org/pdf/2608.02387v1",
+      "score": "8.0",
+      "evidence": "面向海底分布式声学传感数据的鲸声检测、密度聚类与特征刻画数据挖掘流程",
+      "tldr": "海底光缆分布式声学传感（DAS）是长须鲸大范围连续监测的有效手段。针对密集DAS通道记录，本文提出一套端到端处理工作流：采用峰度拾取器检测窄带音符，通过密度时空聚类、聚类合并及双曲拟合剔除无效拾取，再以多通道相对到时网格搜索定位声源。在直布罗陀海峡与西阿尔沃兰海的两条海底光缆测试中，拾取级中位精度达0.990、召回0.744。该流程可分离重叠鸣声、区分A/B型音符并推断声源表观移动，为长须鲸监测提供了紧凑、可扩展的集成框架。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Submarine fiber-optic cables instrumented with distributed acoustic sensing (DAS) provide an effective approach for large-scale monitoring of fin whales. We present an end-to-end workflow for detecting, characterizing, and localizing fin whale notes, tested on two submarine telecom cables in the Strait of Gibraltar and western Alboran Sea. The workflow applies a kurtosis-value picker adapted to narrow-band fin whale notes. Channel-wise detections are grouped into individual notes using density-based spatio-temporal clustering, cluster agglomeration, and hyperbolic fitting to reject incoherent picks. The retained clusters are characterized through temporal, spectral, and energy-related descriptors that support note-type discrimination and estimation of inter-note intervals. Relative arrival times across DAS channels are then used in a grid-search procedure to estimate candidate source locations. Evaluation against manually annotated detections from six fin whale songs yielded median pick-level precision of 0.990 and recall of 0.744, and median cluster-level precision of 0.880 and recall of 0.806. Representative applications demonstrate separation of overlapping vocalizations, characterization of type-A and type-B notes, and the inference of apparent source movement. By transforming dense DAS recordings into compact note-level bioacoustic information, the workflow provides an integrated framework for fin whale monitoring and a basis for adaptation to other synchronized acoustic receiver arrays.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,58 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-09T20:24:29.863222+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2608.02387v1",
+      "source": "arxiv",
+      "title": "An End-to-End Workflow for Fin Whale Song Detection, Note Characterization, and Localization with Distributed Acoustic Sensing",
+      "abstract": "Submarine fiber-optic cables instrumented with distributed acoustic sensing (DAS) provide an effective approach for large-scale monitoring of fin whales. We present an end-to-end workflow for detecting, characterizing, and localizing fin whale notes, tested on two submarine telecom cables in the Strait of Gibraltar and western Alboran Sea. The workflow applies a kurtosis-value picker adapted to narrow-band fin whale notes. Channel-wise detections are grouped into individual notes using density-based spatio-temporal clustering, cluster agglomeration, and hyperbolic fitting to reject incoherent picks. The retained clusters are characterized through temporal, spectral, and energy-related descriptors that support note-type discrimination and estimation of inter-note intervals. Relative arrival times across DAS channels are then used in a grid-search procedure to estimate candidate source locations. Evaluation against manually annotated detections from six fin whale songs yielded median pick-level precision of 0.990 and recall of 0.744, and median cluster-level precision of 0.880 and recall of 0.806. Representative applications demonstrate separation of overlapping vocalizations, characterization of type-A and type-B notes, and the inference of apparent source movement. By transforming dense DAS recordings into compact note-level bioacoustic information, the workflow provides an integrated framework for fin whale monitoring and a basis for adaptation to other synchronized acoustic receiver arrays.",
+      "authors": [
+        "Dídac Diego-Tortosa",
+        "Miriam Romagosa",
+        "Arantza Ugalde",
+        "Hugo Latorre",
+        "Sergi Ventosa",
+        "Jose Enrique García",
+        "Antonio Villaseñor"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "physics.geo-ph"
+      ],
+      "published": "2026-08-03T15:30:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.02387v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Data-mining workflow for detecting, clustering and characterizing fin whale acoustic signals from submarine DAS ocean remote sensing data",
+      "llm_evidence_cn": "面向海底分布式声学传感数据的鲸声检测、密度聚类与特征刻画数据挖掘流程",
+      "llm_evidence": "面向海底分布式声学传感数据的鲸声检测、密度聚类与特征刻画数据挖掘流程",
+      "canonical_evidence": "面向海底分布式声学传感数据的鲸声检测、密度聚类与特征刻画数据挖掘流程",
+      "llm_tldr_en": "An end-to-end workflow detects, characterizes and localizes fin whale notes using submarine fiber-optic DAS, combining kurtosis picking, density-based clustering and hyperbolic fitting.",
+      "llm_tldr_cn": "针对海底光纤分布式声学传感大规模监测鳍鲸的需求，论文提出端到端检测、表征与定位工作流。方法采用峰度值拾取器识别窄带鲸声，通过密度时空聚类、簇聚合与双曲线拟合剔除不一致检测，并在直布罗陀海峡等地海底光缆数据上验证。该工作展示了数据挖掘流程在海洋遥感监测中的可操作性，为海洋生态声学大数据分析提供了有力工具。",
+      "llm_tldr": "针对海底光纤分布式声学传感大规模监测鳍鲸的需求，论文提出端到端检测、表征与定位工作流。方法采用峰度值拾取器识别窄带鲸声，通过密度时空聚类、簇聚合与双曲线拟合剔除不一致检测，并在直布罗陀海峡等地海底光缆数据上验证。该工作展示了数据挖掘流程在海洋遥感监测中的可操作性，为海洋生态声学大数据分析提供了有力工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
