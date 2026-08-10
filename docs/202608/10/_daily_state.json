@@ -1,0 +1,73 @@
+{
+  "date": "20260810",
+  "date_label": "",
+  "generated_at": "2026-08-10 20:57:56 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.06959v1",
+      "route": "202608/10/2608.06959v1-summarize-first-download-later-onboard-vlms-for-bandwidth-efficient-earth-observation",
+      "title": "Summarize First, Download Later: Onboard VLMs for Bandwidth-Efficient Earth Observation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "星载VLM生成遥感影像摘要并支持VQA查询，直接结合遥感数据与文本报告进行环境评估",
+      "first_seen_at": "2026-08-10 20:57:56 UTC",
+      "updated_at": "2026-08-10 20:57:56 UTC"
+    },
+    {
+      "paper_id": "2608.06948v1",
+      "route": "202608/10/2608.06948v1-lmm-modality-transfer-a-pre-requisite-for-autonomous-gis-agents",
+      "title": "LMM Modality Transfer: A Pre-requisite for Autonomous GIS Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向自主GIS智能体的多模态大模型模态转换，可迁移至海洋自主监测",
+      "first_seen_at": "2026-08-10 20:57:56 UTC",
+      "updated_at": "2026-08-10 20:57:56 UTC"
+    },
+    {
+      "paper_id": "2608.01202v1",
+      "route": "202608/10/2608.01202v1-fruit-hsnet-a-machine-learning-approach-for-hyperspectral-image-based-fruit-ripeness-prediction",
+      "title": "Fruit-HSNet: A Machine Learning Approach for Hyperspectral Image-Based Fruit Ripeness Prediction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向高光谱图像分类的机器学习架构，可迁移用于底栖覆盖分类",
+      "first_seen_at": "2026-08-10 20:57:56 UTC",
+      "updated_at": "2026-08-10 20:57:56 UTC"
+    },
+    {
+      "paper_id": "2608.03977v1",
+      "route": "202608/10/2608.03977v1-transfer-learning-for-avian-bioacoustics-under-sparse-positive-labels",
+      "title": "Transfer Learning for Avian Bioacoustics under Sparse Positive Labels",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向稀疏正标签的迁移学习方法，可迁移至珊瑚礁底栖覆盖分类。",
+      "first_seen_at": "2026-08-10 20:57:56 UTC",
+      "updated_at": "2026-08-10 20:57:56 UTC"
+    }
+  ]
+}

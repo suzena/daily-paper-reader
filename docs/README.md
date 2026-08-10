@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-09</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-10</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 1 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-09 20:25:50 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-10 20:57:56 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读 1 篇高分论文（8.0/10）：基于分布式声学传感的端到端流程，实现长须鲸歌声检测、音符刻画与声源定位。</p>
-<p>核心亮点在于把海底光缆当作大规模传感阵列，结合算法做到“听声+定位”一体，为鲸类监测提供了低成本新思路。</p>
-<p>下一步可关注该方法向多鲸种识别和实时海洋生态预警方向的拓展应用。</p>
+<p>今日精读1篇、速读3篇，共覆盖4篇论文，重点关注视觉语言模型在地球观测中的高效应用。最值得看的是《Summarize First, Download Later》提出的“先摘要后下载”带宽优化方案（8分），以及《LMM Modality Transfer》对自主GIS智能体模态迁移的探索（7分）。下一步建议可延伸关注多模态模型在遥感与地理信息系统的交叉落地。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -76,7 +74,7 @@
     <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="An End-to-End Workflow for Fin Whale Song Detection, Note Characterization, and Localization with Distributed Acoustic Sensing">An End-to-End Workflow for Fin Whale Song Detection, Note Characterization, and Localization with Distributed Acoustic Sensing</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Summarize First, Download Later: Onboard VLMs for Bandwidth-Efficient Earth Observation">Summarize First, Download Later: Onboard VLMs for Bandwidth-Efficient Earth Observation</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="LMM Modality Transfer: A Pre-requisite for Autonomous GIS Agents">LMM Modality Transfer: A Pre-requisite for Autonomous GIS Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="Fruit-HSNet: A Machine Learning Approach for Hyperspectral Image-Based Fruit Ripeness Prediction">Fruit-HSNet: A Machine Learning Approach for Hyperspectral Image-Based Fruit Ripeness Prediction</span></li><li><span class="dpr-home-dashboard-paper-title" title="Transfer Learning for Avian Bioacoustics under Sparse Positive Labels">Transfer Learning for Avian Bioacoustics under Sparse Positive Labels</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 </div>
 
