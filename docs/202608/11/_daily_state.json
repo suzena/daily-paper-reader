@@ -1,0 +1,201 @@
+{
+  "date": "20260811",
+  "date_label": "",
+  "generated_at": "2026-08-11 20:54:08 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.08871v1",
+      "route": "202608/11/2608.08871v1-hierarchical-topology-aware-planning-and-control-of-underwater-vehicle-manipulator-systems-in-confined-environments",
+      "title": "Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "水下车辆-机械臂智能体的分层规划与控制",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.08356v1",
+      "route": "202608/11/2608.08356v1-stochastic-physics-informed-neural-networks-on-lie-groups-for-learning-underwater-vehicle-dynamics",
+      "title": "Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "用于学习水下航行器动力学的物理信息神经网络，支持巡检与采样等海洋自主任务。",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.07982v1",
+      "route": "202608/11/2608.07982v1-adadino-pair-aware-in-backbone-adaptation-of-frozen-dino-for-efficient-remote-sensing-change-detection",
+      "title": "AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感变化检测的VFM适配，适用于珊瑚礁生态系统动态监测",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.08025v1",
+      "route": "202608/11/2608.08025v1-da-nbv-a-direction-aware-next-best-view-planner-for-efficient-3d-reconstruction-of-ships-at-sea",
+      "title": "DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "方向感知自动视角规划，用于海上船舶自主三维重建",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.09360v1",
+      "route": "202608/11/2608.09360v1-deep-learning-based-detection-of-fishing-vessels-and-fishing-monitoring-using-nightlight-images",
+      "title": "Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "利用卫星夜光影像和深度学习进行渔船检测与海洋监测",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.06406v1",
+      "route": "202608/11/2608.06406v1-deep-evidential-regression-for-sparse-forest-height-estimation-from-multimodal-satellite-imagery",
+      "title": "Deep Evidential Regression for Sparse Forest Height Estimation from Multimodal Satellite Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用多模态卫星影像的深度学习生态属性估计，类似珊瑚礁制图任务",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.06612v1",
+      "route": "202608/11/2608.06612v1-sled-scalable-location-encoding-via-distillation",
+      "title": "SLED: Scalable Location Encoding via Distillation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于蒸馏的可扩展位置编码器，可支持卫星影像海洋栖息地分析",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.08106v1",
+      "route": "202608/11/2608.08106v1-sctd-30-sonar-common-target-detection-in-the-wild---a-large-scale-multi-scene-dataset-from-real-marine-surveys",
+      "title": "SCTD 3.0: Sonar Common Target Detection in the Wild - A Large-Scale, Multi-Scene Dataset from Real Marine Surveys",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "来自真实海洋调查的大规模声呐目标检测数据集，支持水下目标识别的深度学习方法。",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.08874v1",
+      "route": "202608/11/2608.08874v1-aeroreformer2-spoken-query-referring-segmentation-for-aerial-images",
+      "title": "AeroReformer2: Spoken-Query Referring Segmentation for Aerial Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感图像的语音-视觉多模态分割方法，可迁移至海洋栖息地制图",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.09101v1",
+      "route": "202608/11/2608.09101v1-contrastive-mask-fidelity-reference-free-auditing-of-ground-truth-masks-in-remote-sensing-semantic-segmentation",
+      "title": "Contrastive Mask Fidelity: Reference-Free Auditing of Ground-Truth Masks in Remote Sensing Semantic Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遥感分割掩膜质量审计，支持珊瑚礁制图标注评估",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.09691v1",
+      "route": "202608/11/2608.09691v1-diffuse-the-object-keep-its-label-curating-detector-training-data-from-a-few-unlabeled-photographs-via-vlm-built-3d-vegetation-scenes",
+      "title": "Diffuse the object, keep its label: curating detector training data from a few unlabeled photographs via VLM-built 3D vegetation scenes",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用VLM构建3D场景从少量照片合成带标签的检测器训练数据",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    },
+    {
+      "paper_id": "2608.09821v1",
+      "route": "202608/11/2608.09821v1-an-open-source-scalable-workflow-for-organizing-echosounder-data-for-machine-learning-applications",
+      "title": "An open-source, scalable workflow for organizing echosounder data for machine learning applications",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋调查中机器学习应用的回声测深数据组织",
+      "first_seen_at": "2026-08-11 20:54:08 UTC",
+      "updated_at": "2026-08-11 20:54:08 UTC"
+    }
+  ]
+}

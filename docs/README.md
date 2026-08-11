@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-10</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-11</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-10 20:57:56 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-11 20:54:08 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读1篇、速读3篇，共覆盖4篇论文，重点关注视觉语言模型在地球观测中的高效应用。最值得看的是《Summarize First, Download Later》提出的“先摘要后下载”带宽优化方案（8分），以及《LMM Modality Transfer》对自主GIS智能体模态迁移的探索（7分）。下一步建议可延伸关注多模态模型在遥感与地理信息系统的交叉落地。</p>
+<p>今日共处理12篇论文，精读2篇、速读10篇，重点聚焦水下机器人系统与遥感智能感知方向。</p>
+<p>最值得关注的是精读的《Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments》（9.0分），以及《Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics》（8.0分），两者分别面向受限环境下的水下操作规划与高精度动力学建模。</p>
+<p>若想快速入门，可优先浏览上述两篇精读论文，再结合速读中关于舰船三维重建与渔船夜间监测的遥感应用，拓宽对海洋智能装备技术场景的理解。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Summarize First, Download Later: Onboard VLMs for Bandwidth-Efficient Earth Observation">Summarize First, Download Later: Onboard VLMs for Bandwidth-Efficient Earth Observation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments">Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments</span></li><li><span class="dpr-home-dashboard-paper-title" title="Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics">Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">10 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="LMM Modality Transfer: A Pre-requisite for Autonomous GIS Agents">LMM Modality Transfer: A Pre-requisite for Autonomous GIS Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="Fruit-HSNet: A Machine Learning Approach for Hyperspectral Image-Based Fruit Ripeness Prediction">Fruit-HSNet: A Machine Learning Approach for Hyperspectral Image-Based Fruit Ripeness Prediction</span></li><li><span class="dpr-home-dashboard-paper-title" title="Transfer Learning for Avian Bioacoustics under Sparse Positive Labels">Transfer Learning for Avian Bioacoustics under Sparse Positive Labels</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection">AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea">DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea</span></li><li><span class="dpr-home-dashboard-paper-title" title="Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images">Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
 </section>
 </div>
 

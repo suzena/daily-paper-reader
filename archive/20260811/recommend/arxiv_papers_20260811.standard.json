@@ -1,0 +1,489 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-11T20:45:43.293370+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [
+    {
+      "id": "2608.08871v1",
+      "source": "arxiv",
+      "title": "Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments",
+      "abstract": "This paper addresses autonomous intervention with an underwater vehicle--manipulator system (UVMS) in confined, cluttered, and partially known environments, where poor maneuverability, narrow passages, and uncertain execution may cause the robot to enter unrecoverable regions. We propose MANTA, a three-layer hierarchical planning-and-control framework that couples passage accessibility, manipulation feasibility, and closed-loop execution. The first layer performs global connectivity reasoning in a conservative reduced base space to extract traversable corridor candidates toward the task region. The second layer refines each candidate corridor by jointly optimizing the continuous base motion and arm trajectory, producing a collision-free base--arm trajectory. The third layer learns a reach-and-hold base policy using Gaussian-process model-based reinforcement learning (MBRL) through MC-PILCO, enabling trajectory tracking and station keeping at the planned manipulation state. During execution, the framework monitors map updates and can trigger recovery and route repair when the active passage becomes infeasible. MANTA is evaluated in confined UVMS planning and closed-loop tracking experiments. Across 120 matched planning queries, it achieves higher task success than full-state sampling-based baselines while producing larger clearance margins and lower arm motion. The learned MC-PILCO policy further reduces position and yaw tracking errors on both training and unseen tube-like references. These results show MANTA as a structured and data-efficient framework for safe autonomous underwater intervention in caves, tubes, and cluttered subsea structures.",
+      "authors": [
+        "Mohamed Abdelwahab",
+        "Ruggero Carli",
+        "Damiano Varagnolo",
+        "Alberto Dalla Libera"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-08-09T19:22:51+00:00",
+      "link": "https://arxiv.org/pdf/2608.08871v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Hierarchical planning and control for underwater vehicle-manipulator agents",
+      "llm_evidence_cn": "水下车辆-机械臂智能体的分层规划与控制",
+      "llm_evidence": "水下车辆-机械臂智能体的分层规划与控制",
+      "canonical_evidence": "水下车辆-机械臂智能体的分层规划与控制",
+      "llm_tldr_en": "MANTA is a three-layer hierarchical planning-and-control framework for underwater vehicle-manipulator systems in confined environments, coupling passage accessibility, manipulation feasibility, and closed-loop execution to avoid unrecoverable regions and enable safer autonomous intervention.",
+      "llm_tldr_cn": "针对水下车辆-机械臂系统在受限、杂乱且部分未知环境中自主干预的难题，提出MANTA三层分层规划与控制框架。该框架将通道可达性、操作可行性和闭环执行耦合，在保守降维基空间中推理全局连通性并提取可行通道，再联合优化基座运动与机械臂轨迹。实验表明能够避免机器人进入不可恢复区域，提升水下自主作业的安全性与成功率。",
+      "llm_tldr": "针对水下车辆-机械臂系统在受限、杂乱且部分未知环境中自主干预的难题，提出MANTA三层分层规划与控制框架。该框架将通道可达性、操作可行性和闭环执行耦合，在保守降维基空间中推理全局连通性并提取可行通道，再联合优化基座运动与机械臂轨迹。实验表明能够避免机器人进入不可恢复区域，提升水下自主作业的安全性与成功率。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.08356v1",
+      "source": "arxiv",
+      "title": "Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics",
+      "abstract": "Accurate models of underwater vehicle motion are needed for autonomous execution of marine tasks like infrastructure inspection and scientific sampling. However, such motion is challenging to characterize using traditional physics-based methods. This paper presents a novel data-driven framework for learning stochastic underwater vehicle dynamics. Using Euler-Poincaré dynamics and the geometry of Lie groups, we develop a stochastic physics-informed neural network architecture that respects the physical and geometric constraints of underwater vehicles. Our approach leverages structure-preserving stochastic integration and builds upon moment matching and finite dimensional matching to ensure geometrically-consistent training. We evaluate our approach in simulation and on an underwater vehicle navigating dock pylons in a harbor environment. The results demonstrate that our method learns accurate and robust dynamics models, enabling safe model-based control in challenging marine environments.",
+      "authors": [
+        "Evan F. Palmer",
+        "Ross L. Hatton",
+        "Geoffrey A. Hollinger"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-08T22:48:21+00:00",
+      "link": "https://arxiv.org/pdf/2608.08356v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Physics-informed neural network for learning underwater vehicle dynamics, enabling autonomous marine task execution such as inspection and sampling.",
+      "llm_evidence_cn": "用于学习水下航行器动力学的物理信息神经网络，支持巡检与采样等海洋自主任务。",
+      "llm_evidence": "用于学习水下航行器动力学的物理信息神经网络，支持巡检与采样等海洋自主任务。",
+      "canonical_evidence": "用于学习水下航行器动力学的物理信息神经网络，支持巡检与采样等海洋自主任务。",
+      "llm_tldr_en": "Proposes a stochastic physics-informed neural network on Lie groups that learns underwater vehicle dynamics while respecting geometric constraints for autonomous marine operations.",
+      "llm_tldr_cn": "针对传统物理方法难以刻画水下航行器随机运动的问题，提出基于李群几何与随机物理信息神经网络的动力学学习框架。该方法利用欧拉-庞加莱动力学和结构保持随机积分，在保证几何一致性的同时学习随机动力学模型，为基础设施巡检与科学采样等自主海洋任务提供更准确的运动预测，从而提升智能体在海洋环境中的作业能力。",
+      "llm_tldr": "针对传统物理方法难以刻画水下航行器随机运动的问题，提出基于李群几何与随机物理信息神经网络的动力学学习框架。该方法利用欧拉-庞加莱动力学和结构保持随机积分，在保证几何一致性的同时学习随机动力学模型，为基础设施巡检与科学采样等自主海洋任务提供更准确的运动预测，从而提升智能体在海洋环境中的作业能力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.07982v1",
+      "source": "arxiv",
+      "title": "AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection",
+      "abstract": "Vision foundation models (VFMs) such as DINO are pretrained for single-image representation, whereas remote sensing change detection requires reasoning over a bi-temporal pair. Existing VFM-based methods usually encode the two images independently and compare them only afterward, leaving the VFM backbone unaware of cross-temporal relations. To bridge this mismatch, we present AdaDINO, a pair-aware in-backbone adaptation framework that equips a frozen DINO encoder with bi-temporal interaction for efficient change detection. Its core component, Change-aware Gated Local Adaptation (CGLA), couples the two streams after selected frozen blocks and injects a shared temporal residual into them with opposite signs, enhancing genuine change responses while preserving the pair midpoint. Batch-Shared Chunk Selection (BSCS) further reduces feed-forward network (FFN) computation by retaining a batch-shared subset of channel chunks that can be executed as a compact dense FFN. A CGLA-Prior-Guided Refinement (CPGR) decoder reuses encoder-side change responses for coarse-to-fine prediction. Experiments on four remote sensing change detection benchmarks show that AdaDINO achieves competitive or superior performance against VFM-based baselines, with the largest gain on the category-agnostic SYSU-CD dataset. With 62.5% of the FFN hidden width removed, AdaDINO still achieves an F1 score of 85.29% on SYSU-CD while delivering a 1.41$\\times$ throughput speedup. The code will be released.",
+      "authors": [
+        "Xu Zhang",
+        "Xinqing Li",
+        "Jianpeng Xie",
+        "Zeshuai Zhu",
+        "Xin He",
+        "Yun Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T07:36:51+00:00",
+      "link": "https://arxiv.org/pdf/2608.07982v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "pair-aware adaptation of frozen DINO for remote sensing change detection",
+      "llm_evidence_cn": "遥感变化检测的VFM适配，适用于珊瑚礁生态系统动态监测",
+      "llm_evidence": "遥感变化检测的VFM适配，适用于珊瑚礁生态系统动态监测",
+      "canonical_evidence": "遥感变化检测的VFM适配，适用于珊瑚礁生态系统动态监测",
+      "llm_tldr_en": "Introduces AdaDINO, pair-aware in-backbone adaptation of a frozen DINO encoder for efficient remote sensing change detection, coupling bi-temporal streams through change-aware gated local adaptation.",
+      "llm_tldr_cn": "遥感变化检测需要对比双时相图像，而现有视觉基础模型通常独立编码两张图像，缺少时序交互。本文提出AdaDINO，在冻结DINO骨干内引入结对感知适配，通过变化感知门控局部适配模块共享时序残差。该方法在不重训练基础模型的前提下增强双时相交互，提高了变化检测的效率与精度，可支持珊瑚礁等生态系统的动态监测。",
+      "llm_tldr": "遥感变化检测需要对比双时相图像，而现有视觉基础模型通常独立编码两张图像，缺少时序交互。本文提出AdaDINO，在冻结DINO骨干内引入结对感知适配，通过变化感知门控局部适配模块共享时序残差。该方法在不重训练基础模型的前提下增强双时相交互，提高了变化检测的效率与精度，可支持珊瑚礁等生态系统的动态监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.06406v1",
+      "source": "arxiv",
+      "title": "Deep Evidential Regression for Sparse Forest Height Estimation from Multimodal Satellite Imagery",
+      "abstract": "Accurate estimation of forest height from satellite imagery is essential for applications such as carbon accounting, biodiversity monitoring, and ecosystem management. While recent deep learning approaches provide accurate predictions, they typically do not quantify predictive uncertainty. This limitation is particularly relevant in geospatial settings characterized by sparse supervision and geographic distribution shift. In this work, we investigate Deep Evidential Regression (DER) for forest height estimation on the TreeUQ benchmark, a large-scale dataset designed for the joint estimation of tree count and average tree height at 10 m resolution, based on Sentinel-1/-2 data as well as tree inventory data over the federal state of Bavaria. To account for the extreme label sparsity of the tree inventory data, we introduce a masked evidential loss for dense geospatial prediction. Using a U-Net architecture with multimodal Sentinel-1 and Sentinel-2 inputs, the proposed approach jointly predicts tree height and associated uncertainty estimates in a single forward pass. Experimental results show that DER achieves predictive performance comparable to a deterministic U-Net while additionally providing well-calibrated uncertainty estimates. These findings demonstrate the potential of evidential learning as an efficient framework for uncertainty-aware forest structure estimation from Earth observation data.",
+      "authors": [
+        "Laura Bader",
+        "Muhammad Ammar Ahmed",
+        "Xiao Xiang Zhu",
+        "Göran Kauermann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-03T09:46:14+00:00",
+      "link": "https://arxiv.org/pdf/2608.06406v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning on multimodal satellite imagery for ecosystem attribute estimation, analogous to coral mapping",
+      "llm_evidence_cn": "利用多模态卫星影像的深度学习生态属性估计，类似珊瑚礁制图任务",
+      "llm_evidence": "利用多模态卫星影像的深度学习生态属性估计，类似珊瑚礁制图任务",
+      "canonical_evidence": "利用多模态卫星影像的深度学习生态属性估计，类似珊瑚礁制图任务",
+      "llm_tldr_en": "Investigates Deep Evidential Regression for forest height estimation with sparse supervision, providing uncertainty quantification from multimodal satellite imagery.",
+      "llm_tldr_cn": "森林高度估计对于生态监测至关重要，但地理空间数据存在稀疏监督和分布漂移，且深度学习模型常缺乏不确定性量化。本文在TreeUQ基准上研究深度证据回归，基于Sentinel-1/2影像估计树高和数量，同时输出预测不确定性。该方法在稀疏标注和跨区域场景下提高了可靠性，对珊瑚礁等稀疏生态参数的遥感估计具有借鉴意义。",
+      "llm_tldr": "森林高度估计对于生态监测至关重要，但地理空间数据存在稀疏监督和分布漂移，且深度学习模型常缺乏不确定性量化。本文在TreeUQ基准上研究深度证据回归，基于Sentinel-1/2影像估计树高和数量，同时输出预测不确定性。该方法在稀疏标注和跨区域场景下提高了可靠性，对珊瑚礁等稀疏生态参数的遥感估计具有借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08025v1",
+      "source": "arxiv",
+      "title": "DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea",
+      "abstract": "Accurate 3D reconstruction of ships at sea is important for maritime supervision, damage assessment, and autonomous maritime operations. Although 3D reconstruction has advanced considerably, high-quality data acquisition still largely relies on manually designed trajectories or skilled operators, resulting in high costs and limited scalability. Next-best-view (NBV) planning automates this process by selecting subsequent viewpoints based on the current state. However, existing NBV policies mainly model spatial occupancy while overlooking directional observation history. This limitation is particularly problematic for ships: their complex superstructures and severe self-occlusions require observations from multiple viewpoints, and insufficient directional coverage often yields incomplete reconstructions. These challenges are further amplified at sea, where wave-induced heave, roll, and pitch continuously alter the ship's pose and surface visibility. Meanwhile, wind disturbances and limited onboard power impose stricter requirements on scanning efficiency. To address these challenges, we propose DA-NBV, a direction-aware NBV policy that augments the conventional occupancy state with directional observation statistics. We introduce a learnable Position Advantage Field (PAF) that uses directional information to guide viewpoint selection. The policy further adopts a locally constrained action space and a nonlinear coverage-shaping reward to improve scanning efficiency. We also develop the ship-oriented SeaShip-3D dataset and a configurable sea-state simulation environment. Experiments under varying heave, roll, and pitch conditions show that DA-NBV improves reconstruction completeness by approximately 3 percentage points and reduces Chamfer distance by 43% while achieving higher path efficiency.",
+      "authors": [
+        "Jiaming Chen",
+        "Juntao Yang",
+        "Zhentao Zou",
+        "Qi Ming",
+        "Yi Yu",
+        "Zhihang Zhong",
+        "Xue Yang",
+        "Xue Jiang",
+        "Yue Zhou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-08-08T09:19:31+00:00",
+      "link": "https://arxiv.org/pdf/2608.08025v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "direction-aware next-best-view planner for autonomous 3D reconstruction of ships",
+      "llm_evidence_cn": "方向感知自动视角规划，用于海上船舶自主三维重建",
+      "llm_evidence": "方向感知自动视角规划，用于海上船舶自主三维重建",
+      "canonical_evidence": "方向感知自动视角规划，用于海上船舶自主三维重建",
+      "llm_tldr_en": "Presents DA-NBV, a direction-aware next-best-view planner for efficient 3D reconstruction of ships at sea, leveraging directional observation history to handle complex superstructures and self-occlusion.",
+      "llm_tldr_cn": "海上船舶的三维重建对海事监管和自主作业很重要，但现有数据采集多依赖人工轨迹。针对船舶上层结构复杂和自遮挡严重的问题，本文提出DA-NBV，一种方向感知的下一最佳视角规划器，在选点过程中显式利用方向观测历史。该方法自动化地选择后续视角，减少人工干预，提高了船舶三维重建的数据采集效率与完整性。",
+      "llm_tldr": "海上船舶的三维重建对海事监管和自主作业很重要，但现有数据采集多依赖人工轨迹。针对船舶上层结构复杂和自遮挡严重的问题，本文提出DA-NBV，一种方向感知的下一最佳视角规划器，在选点过程中显式利用方向观测历史。该方法自动化地选择后续视角，减少人工干预，提高了船舶三维重建的数据采集效率与完整性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.06612v1",
+      "source": "arxiv",
+      "title": "SLED: Scalable Location Encoding via Distillation",
+      "abstract": "The plethora of readily available geospatial data offers exciting opportunities to learn high quality representations of the planet, but the sheer size of the Earth Observations (EO), differing modalities, and different sensor types pose significant challenges in doing so. Location encoders have emerged as an efficient way of compressing EOs into location-specific embeddings. However, current state-of-the-art location encoders rely on computationally expensive CLIP-style frameworks that require large batch sizes in the 16K--32K range, suffer from false negative samples, and scale poorly with additional modalities. We introduce the Scalable Location Encoder via Distillation (SLED), a distillation-based location encoder that uses geospatial location as a binding modality to pretrain location encoders with any modality of geospatial data. The resulting location encoder framework is lightweight, modular, and can flexibly incorporate multiple modes, while eliminating the need for spatiotemporal coregistration of samples. SLED is performant with batch sizes as small as 128, enabling pretraining at a fraction of the runtime and compute costs of current state-of-the-art models. We demonstrate our approach by pretraining unimodal and multimodal SLED models on Sentinel-1, Sentinel-2, and Landsat imagery. We show that both unimodal and multimodal SLED models keep pace with or outperform existing approaches on a diverse set of 19 human-centric benchmark tasks and explore the benefits of using additional modes in pretraining.",
+      "authors": [
+        "Kevin Lane",
+        "Zhongying Wang",
+        "Esther Rolf",
+        "Morteza Karimzadeh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-06T21:54:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.06612v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "scalable location encoder via distillation for Earth observation embeddings",
+      "llm_evidence_cn": "基于蒸馏的可扩展位置编码器，可支持卫星影像海洋栖息地分析",
+      "llm_evidence": "基于蒸馏的可扩展位置编码器，可支持卫星影像海洋栖息地分析",
+      "canonical_evidence": "基于蒸馏的可扩展位置编码器，可支持卫星影像海洋栖息地分析",
+      "llm_tldr_en": "Presents SLED, a distillation-based scalable location encoder that uses geospatial location as a binding modality, producing Earth observation embeddings more efficiently than expensive CLIP-style frameworks.",
+      "llm_tldr_cn": "地球观测数据规模巨大、模态多样，现有位置编码器依赖批量极大的CLIP式框架，存在负样本和扩展性差等问题。本文提出基于蒸馏的可扩展位置编码器SLED，以地理位置作为绑定模态压缩多模态地球观测数据。相比现有方法，SLED训练效率更高且便于引入更多传感器模态，为土地覆盖、生态与灾害建模等地理空间任务提供了紧凑而可复用的位置特征表示。",
+      "llm_tldr": "地球观测数据规模巨大、模态多样，现有位置编码器依赖批量极大的CLIP式框架，存在负样本和扩展性差等问题。本文提出基于蒸馏的可扩展位置编码器SLED，以地理位置作为绑定模态压缩多模态地球观测数据。相比现有方法，SLED训练效率更高且便于引入更多传感器模态，为土地覆盖、生态与灾害建模等地理空间任务提供了紧凑而可复用的位置特征表示。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.09360v1",
+      "source": "arxiv",
+      "title": "Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images",
+      "abstract": "The demand for maritime surveillance has given rise to the need for monitoring fishing vessel activities, particularly in addressing the challenge of \"dark vessels\" that operate without Automatic Identification System (AIS) transmission. This study presents a novel approach for detecting small-scale fishing vessels using nighttime light (NTL) imagery from the SDGSAT-1 satellite, combined with deep learning techniques to enhance fishing monitoring awareness along the western coast of India. A dual-branch YOLO11 architecture was developed to exploit both the 10-meter panchromatic and 40-meter RGB imagery from SDGSAT-1. The custom model architecture was specifically optimized for small object detection in NTL imagery, featuring parallel convolutional backbones that process both modalities before concatenation for enhanced feature extraction. The dual-branch YOLO11 model demonstrated optimal performance with a precision of 0.99, recall of 0.93, F1-score of 0.96, and mAP@50 of 0.96, significantly outperforming single-branch implementations of YOLOv5s, YOLOv8s, and standard YOLO11s architectures. When applied to the western coast of India, the model detected 31525 vessel instances across the temporal dataset spanning 2022-23. Cross-matching analysis with AIS data revealed that only 7146 (22.7%) of detected vessels had corresponding AIS transmissions, while 24379 (77.3%) were identified as potential dark vessels. Spatio-temporal analysis showed peak fishing activity during January-April, with a primary activity corridor parallel to the coastline within 50-100 km, corresponding to productive continental shelf areas. This research contributes to maritime surveillance capabilities by highlighting the effectiveness of nighttime lights satellite imagery for fishing vessel detection and provides valuable insights into fishing patterns and potential regulatory compliance issues in Indian waters.",
+      "authors": [
+        "Shantakar Mohanty",
+        "Prasun Kumar Gupta",
+        "Raian Vargas Maretto"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "eess.IV",
+        "stat.AP"
+      ],
+      "published": "2026-08-10T09:39:18+00:00",
+      "link": "https://arxiv.org/pdf/2608.09360v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Deep learning detection of fishing vessels from satellite nightlight imagery for maritime surveillance",
+      "llm_evidence_cn": "利用卫星夜光影像和深度学习进行渔船检测与海洋监测",
+      "llm_evidence": "利用卫星夜光影像和深度学习进行渔船检测与海洋监测",
+      "canonical_evidence": "利用卫星夜光影像和深度学习进行渔船检测与海洋监测",
+      "llm_tldr_en": "This study develops a dual-branch YOLO11 model to detect small-scale fishing vessels from SDGSAT-1 nightlight imagery, addressing dark vessels without AIS for maritime surveillance.",
+      "llm_tldr_cn": "海上监控需要发现不发射AIS的暗船，传统手段难以应对。本文基于SDGSAT-1卫星夜光和RGB影像，设计了双分支YOLO11架构，针对小目标检测进行优化，用于印度西海岸的小型渔船检测。夜光影像中的小目标检测更具挑战，所提方法通过多尺度特征融合提升精度。结果显示该方法能有效提升夜间渔船监测能力，为海洋遥感数据挖掘和渔业监管提供了新工具。",
+      "llm_tldr": "海上监控需要发现不发射AIS的暗船，传统手段难以应对。本文基于SDGSAT-1卫星夜光和RGB影像，设计了双分支YOLO11架构，针对小目标检测进行优化，用于印度西海岸的小型渔船检测。夜光影像中的小目标检测更具挑战，所提方法通过多尺度特征融合提升精度。结果显示该方法能有效提升夜间渔船监测能力，为海洋遥感数据挖掘和渔业监管提供了新工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.08106v1",
+      "source": "arxiv",
+      "title": "SCTD 3.0: Sonar Common Target Detection in the Wild - A Large-Scale, Multi-Scene Dataset from Real Marine Surveys",
+      "abstract": "Synthetic Aperture Sonar (SAS) is core for wide-area detection of small underwater targets. However, large-scale, high-quality SAS datasets are scarce, hindering data-driven recognition. Existing benchmarks are small and limited to single scenarios, failing to reproduce complex acoustic scattering, diverse seabeds, and multi-pose imaging in real detection. To fill this gap, we introduce SCTD 3.0 - a large-scale real-measured dataset for Sonar Common Target Detection in the Wild in natural waters. It contains over 10,000 high-quality real SAS image snippets from multi-frequency systems (240 kHz, 450 kHz, and others), covering ten typical target categories across varied seabed geomorphologies, with multiple observation angles, detection ranges, and frequency bands. We establish a rigorous hierarchical annotation protocol that decouples labeling of intrinsic physical properties, deployment characteristics, and scattering phenomena - covering material, geometry, internal structure, burial state, shadow integrity, specular highlights, edge diffraction, and resonance effects. This enables fine-grained target characterization. We also construct a multi-task benchmark for object detection, fine-grained classification, and attribute prediction, evaluating mainstream deep learning models under cross-domain, cross-scene, cross-frequency, and cross-view generalization. SCTD 3.0 is expected to provide a critical data cornerstone for robust underwater target perception in open-water environments. SCTD 3.0 is available at https://github.com/automlresearch/SCTD-3.0.",
+      "authors": [
+        "Peng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T12:39:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.08106v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Large-scale real sonar target detection dataset from marine surveys, enabling deep learning for underwater object recognition.",
+      "llm_evidence_cn": "来自真实海洋调查的大规模声呐目标检测数据集，支持水下目标识别的深度学习方法。",
+      "llm_evidence": "来自真实海洋调查的大规模声呐目标检测数据集，支持水下目标识别的深度学习方法。",
+      "canonical_evidence": "来自真实海洋调查的大规模声呐目标检测数据集，支持水下目标识别的深度学习方法。",
+      "llm_tldr_en": "Introduces SCTD 3.0, a large-scale real-measured synthetic aperture sonar dataset with 10k+ multi-frequency snippets covering ten target categories across diverse seabeds for underwater target detection.",
+      "llm_tldr_cn": "针对现有合成孔径声呐目标检测数据集规模小、场景单一的问题，提出SCTD 3.0大规模真实海域测量数据集，包含超过一万条多频声呐图像片段，覆盖十类典型目标与多种海底地貌。该数据集能够复现复杂声散射与多姿态成像，为水下目标识别提供了更贴近实际应用的数据基础，并进一步支持海洋自主监测相关技术的研发。",
+      "llm_tldr": "针对现有合成孔径声呐目标检测数据集规模小、场景单一的问题，提出SCTD 3.0大规模真实海域测量数据集，包含超过一万条多频声呐图像片段，覆盖十类典型目标与多种海底地貌。该数据集能够复现复杂声散射与多姿态成像，为水下目标识别提供了更贴近实际应用的数据基础，并进一步支持海洋自主监测相关技术的研发。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08874v1",
+      "source": "arxiv",
+      "title": "AeroReformer2: Spoken-Query Referring Segmentation for Aerial Images",
+      "abstract": "Spoken language offers a natural, hands-free interface for specifying an arbitrary target in dense remote-sensing imagery, yet existing referring remote-sensing image segmentation benchmarks accept only written expressions. To bridge this gap, we introduce \\dataset, a spoken-query benchmark derived from RISBench that adds accent- and voice-diverse speech while preserving the original image, mask, and data splits. Its hard evaluation sets combine rotor, wind, and mixed interference with three signal-to-noise levels. We also propose \\model, an efficient bilateral network that combines a boundary-preserving visual path with token-preserving speech encoding, kernel linear cross-modal attention, and a resolution refinement head. The design conditions visual features at two scales without materializing a dense speech--visual affinity matrix, then restores fine boundaries using high-resolution visual features. On the clean test split, \\model with Swin-Base achieves 62.09\\% mean intersection over union (mIoU) and 68.22\\% overall intersection over union (oIoU), outperforming the strongest audio-adapted remote-sensing baseline by 5.38 and 2.08 percentage points, respectively. It retains the best hard-set mIoU at 54.09\\%. To the best of our knowledge, this is the first benchmark and model study of full-sentence spoken-query referring segmentation for remote-sensing imagery. The code will be made publicly available.",
+      "authors": [
+        "Rui Li",
+        "Chenxi Duan",
+        "Haoyang Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-09T19:28:49+00:00",
+      "link": "https://arxiv.org/pdf/2608.08874v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal remote sensing segmentation using spoken queries, transferable to ocean habitat mapping",
+      "llm_evidence_cn": "面向遥感图像的语音-视觉多模态分割方法，可迁移至海洋栖息地制图",
+      "llm_evidence": "面向遥感图像的语音-视觉多模态分割方法，可迁移至海洋栖息地制图",
+      "canonical_evidence": "面向遥感图像的语音-视觉多模态分割方法，可迁移至海洋栖息地制图",
+      "llm_tldr_en": "Introduces a spoken-query benchmark and an efficient bilateral network for referring segmentation in aerial images, offering a hands-free cross-modal interface for locating targets in remote sensing.",
+      "llm_tldr_cn": "本文针对现有遥感指代分割仅支持文本查询的问题，提出AeroReformer2模型，结合语音编码与边界保持视觉路径，使操作者可通过自然语音在密集遥感影像中指定目标。通过引入来自RISBench的语音查询基准及其干扰评估集，验证了该方法在噪声条件下的有效性，为遥感多模态交互提供了新的接口，可应用于海洋或珊瑚礁的语音引导分割。",
+      "llm_tldr": "本文针对现有遥感指代分割仅支持文本查询的问题，提出AeroReformer2模型，结合语音编码与边界保持视觉路径，使操作者可通过自然语音在密集遥感影像中指定目标。通过引入来自RISBench的语音查询基准及其干扰评估集，验证了该方法在噪声条件下的有效性，为遥感多模态交互提供了新的接口，可应用于海洋或珊瑚礁的语音引导分割。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.09101v1",
+      "source": "arxiv",
+      "title": "Contrastive Mask Fidelity: Reference-Free Auditing of Ground-Truth Masks in Remote Sensing Semantic Segmentation",
+      "abstract": "Semantic segmentation models are trained and evaluated against human-drawn masks, yet remote-sensing annotations are often coarse, incomplete, or misaligned; high overlap scores may then reflect agreement with imperfect labels rather than faithfulness to the image, creating an evaluation paradox. We introduce Contrastive Mask Fidelity (CMF), a training-free, reference-free metric that scores competing class masks directly against image evidence. CMF composites keep and erase counterfactual views of each mask and asks a frozen vision-language judge whether class evidence is concentrated inside the mask and absent outside. We validate CMF on controlled mask corruptions, then audit 10,731 image-class pairs across ten remote-sensing benchmarks using candidate masks from Seg-Probe, a training-free open-vocabulary probe built on SegEarth-OV3 that outperforms prior baselines on nine of ten datasets. The audit reveals systematic, class-dependent annotation distortion: man-made classes such as buildings, roads, and cars favor the candidate mask on 62-85% of pairs, whereas ambiguous land cover more often favors human annotations. On a blinded three-annotator consensus, CMF matches expert judgment on 81% of pairs, exceeding keep-only scoring, model confidence, and a trained label-quality baseline. Finally, conservative class-wise arbitration yields supervision that improves cross-domain transfer over raw annotations and matched replacement controls, positioning CMF as a scalable tool for auditing ground truth rather than presuming it infallible.",
+      "authors": [
+        "Shuaishuai Cao",
+        "Shuwei Peng",
+        "Meng Tang",
+        "Min Huang",
+        "Youjin Wang",
+        "Jie Chen",
+        "Jing Ouyang",
+        "Zhiwei Zhai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-10T04:02:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.09101v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Reference-free mask auditing for remote sensing segmentation",
+      "llm_evidence_cn": "遥感分割掩膜质量审计，支持珊瑚礁制图标注评估",
+      "llm_evidence": "遥感分割掩膜质量审计，支持珊瑚礁制图标注评估",
+      "canonical_evidence": "遥感分割掩膜质量审计，支持珊瑚礁制图标注评估",
+      "llm_tldr_en": "CMF is a training-free, reference-free metric that audits ground-truth masks in remote sensing semantic segmentation by composing keep/erase counterfactual views and asking a frozen vision-language judge whether class evidence is inside the mask, validated on corrupted and real masks.",
+      "llm_tldr_cn": "遥感语义分割的标注掩膜常粗糙不完整，高重叠分数不一定反映真实图像证据。提出对比掩膜保真度（CMF），一种无需训练和参考的指标，通过保持/擦除反事实视角并让冻结视觉语言模型判断类别证据是否集中于掩膜内，从而直接依据图像证据给掩膜打分。在受控掩膜损坏和大量真实图像-类别对上验证了CMF的有效性。为遥感标注质量审计提供了新方法。",
+      "llm_tldr": "遥感语义分割的标注掩膜常粗糙不完整，高重叠分数不一定反映真实图像证据。提出对比掩膜保真度（CMF），一种无需训练和参考的指标，通过保持/擦除反事实视角并让冻结视觉语言模型判断类别证据是否集中于掩膜内，从而直接依据图像证据给掩膜打分。在受控掩膜损坏和大量真实图像-类别对上验证了CMF的有效性。为遥感标注质量审计提供了新方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.09691v1",
+      "source": "arxiv",
+      "title": "Diffuse the object, keep its label: curating detector training data from a few unlabeled photographs via VLM-built 3D vegetation scenes",
+      "abstract": "Labeled images of small objects hidden in vegetation are scarce, and detectors trained on them generalize poorly across sites. Rather than reusing labels collected at another site, we synthesize labeled training images from a handful of unlabeled photographs of the deployment site itself. A vision--language model generates a coarse 3D vegetation scene from one photograph; placing 3D object meshes in the scene yields bounding boxes, segmentation masks, and per-instance occlusion directly from the scene geometry, without manual annotation. A lightweight adapter fine-tuned on the photographs conditions a diffusion pass that re-textures the renders, and a graded mask-lock sets how much diffusion may touch the object itself. In our runs this grade was the most influential curation choice: lightly diffusing the object improves minority-class recall over fully protecting its pixels, while unrestricted diffusion dissolves it. Trained on these images, a standard detector matched or exceeded its counterpart trained on a larger labeled dataset of real images from a different site, consistently across seeds on a humanitarian-demining benchmark; the comparison is thus unsupervised site adaptation from a handful of photographs against conventional cross-site label reuse. In our ablations the gains were largely insensitive to the photograph and crop budgets, and in-domain accuracy did not predict cross-site performance.",
+      "authors": [
+        "Mario Malizia",
+        "Marnix Enting",
+        "Rob Haelterman",
+        "Ken Hasselmann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-10T14:56:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.09691v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses VLM-built 3D scenes to synthesize labeled detector training data from few photographs",
+      "llm_evidence_cn": "利用VLM构建3D场景从少量照片合成带标签的检测器训练数据",
+      "llm_evidence": "利用VLM构建3D场景从少量照片合成带标签的检测器训练数据",
+      "canonical_evidence": "利用VLM构建3D场景从少量照片合成带标签的检测器训练数据",
+      "llm_tldr_en": "To overcome scarce labeled images of small objects in vegetation, this work uses a VLM to build coarse 3D scenes from one photo, places object meshes, and applies a diffusion re-texturing pass to synthesize labeled training data without manual annotation.",
+      "llm_tldr_cn": "小目标探测器的标注图像稀缺且跨场地泛化差。作者从部署地点的少量未标注照片出发，用视觉-语言模型生成粗略3D植被场景，并放置3D物体网格获得边界框和分割掩膜。轻量适配器微调后引导扩散模型对渲染图重纹理，实现无手工标注的数据生成。该方法能低成本定制检测器训练数据，可直接借鉴到珊瑚礁遥感目标制图。",
+      "llm_tldr": "小目标探测器的标注图像稀缺且跨场地泛化差。作者从部署地点的少量未标注照片出发，用视觉-语言模型生成粗略3D植被场景，并放置3D物体网格获得边界框和分割掩膜。轻量适配器微调后引导扩散模型对渲染图重纹理，实现无手工标注的数据生成。该方法能低成本定制检测器训练数据，可直接借鉴到珊瑚礁遥感目标制图。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.09821v1",
+      "source": "arxiv",
+      "title": "An open-source, scalable workflow for organizing echosounder data for machine learning applications",
+      "abstract": "Echosounders, or high-frequency active sonar systems, have become standard tools for quantifying and mapping the distribution of marine organisms in fisheries or ecological surveys. Conventional echosounder data analysis often relies on human annotation of echograms, which are sonar imagery formed by echo intensity. Over the past decade, in parallel with the exponentially growing volume of echosounder data, there has been a corresponding increase in the development of machine learning (ML) methods that operate primarily on echograms as images. However, echograms are not simply images: they are associated with specific spatiotemporal coordinates that are essential for alignment with survey events, human annotations, and other oceanographic datasets. We present a generalizable two-stage workflow for constructing analysis-ready datasets for ML development tailored for echograms from transect-based surveys, in which (1) acoustic data are partitioned according to transect designation, and (2) masks are created from annotations referencing user-defined uniform spatiotemporal echo data grid. Importantly, ancillary information, such as geospatial coordinates and oceanographic measurements, is propagated across processing stages to preserve the essential contextual information for downstream analyses. We demonstrate the scalability of our workflow implementation based on two open-source software libraries, Echopype and Echoregions, using two example fisheries survey datasets. We additionally provide an executable tutorial that guides readers through the computational implementation of this workflow. Together, these elements provide a scalable and generalizable framework for creating analysis-ready echosounder datasets for ML applications.",
+      "authors": [
+        "Caesar Tuguinay",
+        "Wu-Jung Lee",
+        "Valentina Staneva",
+        "Elizabeth M. Phillips",
+        "Rebecca E. Thomas",
+        "Alicia Billings",
+        "Julia Clemons"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-08-10T16:40:05+00:00",
+      "link": "https://arxiv.org/pdf/2608.09821v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Echosounder data organization for ML applications in marine surveys",
+      "llm_evidence_cn": "面向海洋调查中机器学习应用的回声测深数据组织",
+      "llm_evidence": "面向海洋调查中机器学习应用的回声测深数据组织",
+      "canonical_evidence": "面向海洋调查中机器学习应用的回声测深数据组织",
+      "llm_tldr_en": "This paper presents an open-source scalable workflow to organize and align echosounder data with spatiotemporal coordinates, enabling machine learning on echograms for marine ecological surveys and ocean remote sensing data mining.",
+      "llm_tldr_cn": "回声测深仪数据通常依赖人工标注回声图，且数据量快速增长，但现有ML方法忽视了数据附带的时空坐标，导致数据难以对齐。本文提出一种开源可扩展的工作流，对回声测深仪数据进行组织和对齐，使其适配多种机器学习应用。该工作流可提升海洋生物资源调查和生态制图的自动化水平，为海洋遥感数据的挖掘与利用提供了基础设施，有助于推动海洋生态监测的智能化发展。",
+      "llm_tldr": "回声测深仪数据通常依赖人工标注回声图，且数据量快速增长，但现有ML方法忽视了数据附带的时空坐标，导致数据难以对齐。本文提出一种开源可扩展的工作流，对回声测深仪数据进行组织和对齐，使其适配多种机器学习应用。该工作流可提升海洋生物资源调查和生态制图的自动化水平，为海洋遥感数据的挖掘与利用提供了基础设施，有助于推动海洋生态监测的智能化发展。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
