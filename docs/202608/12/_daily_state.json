@@ -1,0 +1,169 @@
+{
+  "date": "20260812",
+  "date_label": "",
+  "generated_at": "2026-08-12 20:31:07 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.10022v1",
+      "route": "202608/12/2608.10022v1-deep-learning-based-statistical-downscaling-of-sea-surface-temperature-using-a-residual-corrective-neural-network",
+      "title": "Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于深度学习对海洋遥感系统海表温度进行统计降尺度",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.10426v1",
+      "route": "202608/12/2608.10426v1-geoseg-ov-bridging-geospatial-gaps-with-structural-guidance-for-open-vocabulary-remote-sensing-segmentation",
+      "title": "GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "开放词汇遥感分割，可用自然语言指定任意类别，可直接迁移到珊瑚礁生态系统的遥感制图",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.10494v1",
+      "route": "202608/12/2608.10494v1-geoforge-non-parametric-self-evolving-agents-for-earth-observation-reasoning",
+      "title": "GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向地球观测推理的自进化智能体架构，可迁移至海洋自主监测",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.10997v1",
+      "route": "202608/12/2608.10997v1-seeing-above-the-waves-a-modular-sensing-framework-for-data-acquisition-at-sea",
+      "title": "Seeing above the waves: A modular sensing framework for data acquisition at sea",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向海上自主性的模块化传感器平台，集成雷达、激光雷达、相机与气象传感器，支持智能海洋应用",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.08418v1",
+      "route": "202608/12/2608.08418v1-learning-deep-modality-shared-self-expressiveness-for-image-clustering-with-textual-information",
+      "title": "Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于文本信息的图像聚类方法，可应用于海洋科学图文融合",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.05201v1",
+      "route": "202608/12/2608.05201v1-asteld-a-six-axis-classification-framework-for-autonomous-ai-agents---design-evaluation-and-an-openclaw-case-study",
+      "title": "ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主AI代理的六轴分类框架，涵盖架构、自主性与工具集成，可迁移至海洋自主监测代理设计",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.07018v1",
+      "route": "202608/12/2608.07018v1-icehorizon-a-dataset-for-horizon-detection-in-ice-covered-maritime-environments-and-comparative-evaluation-of-detection-methods",
+      "title": "IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "冰覆盖海域地平线检测数据集与算法比较评估，支撑海上自主导航",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.08661v1",
+      "route": "202608/12/2608.08661v1-degradation-guided-underwater-image-restoration-with-task-oriented-latent-control",
+      "title": "Degradation-Guided Underwater Image Restoration with Task-Oriented Latent Control",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "退化引导的水下图像复原，可提升珊瑚礁底质影像分类输入质量",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.08965v1",
+      "route": "202608/12/2608.08965v1-core-uie-rethinking-coexisting-and-region-wise-degradation-for-underwater-image-enhancement",
+      "title": "CoRe-UIE: Rethinking Coexisting and Region-wise Degradation for Underwater Image Enhancement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "区域级水下图像增强专家协作框架，为珊瑚分类提供更清晰水下影像",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    },
+    {
+      "paper_id": "2608.10249v1",
+      "route": "202608/12/2608.10249v1-stcad-scalable-trajectory-clustering-and-anomaly-detection-on-terabyte-scale-ais-data",
+      "title": "STCAD: Scalable Trajectory Clustering and Anomaly Detection on Terabyte-Scale AIS Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "TB级AIS海上轨迹的聚类与异常检测",
+      "first_seen_at": "2026-08-12 20:31:07 UTC",
+      "updated_at": "2026-08-12 20:31:07 UTC"
+    }
+  ]
+}

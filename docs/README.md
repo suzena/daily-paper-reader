@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-11</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-12</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-11 20:54:08 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-12 20:31:07 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,9 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共处理12篇论文，精读2篇、速读10篇，重点聚焦水下机器人系统与遥感智能感知方向。</p>
-<p>最值得关注的是精读的《Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments》（9.0分），以及《Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics》（8.0分），两者分别面向受限环境下的水下操作规划与高精度动力学建模。</p>
-<p>若想快速入门，可优先浏览上述两篇精读论文，再结合速读中关于舰船三维重建与渔船夜间监测的遥感应用，拓宽对海洋智能装备技术场景的理解。</p>
+<p>今日共推荐10篇论文，含4篇精读与6篇速读，聚焦地球观测与AI交叉方向。最值得关注两项：残差校正神经网络用于海表温度统计降尺度（8.0分），以及结构引导的开放词汇遥感分割模型GeoSeg-OV（8.0分）。建议优先精读这两篇高分工作，并顺带浏览IceHorizon冰区船载视觉数据集以拓展应用视野。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -73,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments">Hierarchical Topology-Aware Planning and Control of Underwater Vehicle-Manipulator Systems in Confined Environments</span></li><li><span class="dpr-home-dashboard-paper-title" title="Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics">Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network">Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation">GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning">GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -86,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">10 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection">AdaDINO: Pair-Aware In-Backbone Adaptation of Frozen DINO for Efficient Remote Sensing Change Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea">DA-NBV: A Direction-Aware Next-Best-View Planner for Efficient 3D Reconstruction of Ships at Sea</span></li><li><span class="dpr-home-dashboard-paper-title" title="Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images">Deep Learning based Detection of Fishing Vessels and Fishing Monitoring using Nightlight Images</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information">Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information</span></li><li><span class="dpr-home-dashboard-paper-title" title="ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study">ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study</span></li><li><span class="dpr-home-dashboard-paper-title" title="IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods">IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
 </section>
 </div>
 

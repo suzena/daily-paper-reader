@@ -1,0 +1,432 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-12T20:25:00.866445+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 4,
+    "deep_cap": 6,
+    "deep_selected": 4,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2608.10022v1",
+      "source": "arxiv",
+      "title": "Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network",
+      "abstract": "The large-scale oceanic and atmospheric forecasts provided by global climate models typically lack sufficient resolution to accurately capture the response of the coastal ocean to atmospheric forcing and coastal circulation that drive fine-scale SST variability. Dynamical downscaling is computationally prohibitive, when applied to extensive coastlines, predictive ensembles, or long time periods. Therefore, this work presents a statistical downscaling of sea surface temperature (SST) from the seasonal coupled ocean-atmosphere forecast system (ACCESS-S2) using machine learning techniques. This study proposes a novel deep learning framework that uses a U-Net to generate an initial high-resolution SST estimate, which is subsequently refined using a residual corrective approach. The target SST fields are derived from the Regional Ocean Modeling System (ROMS). This two step approach called Residual Corrective Neural Network (RCNN) progressively refines initial U-Net predictions by incorporating dynamically scaled residuals at each step, enabling accurate capture of broad patterns and fine-grained features such as eddies and fronts. We also introduce a custom loss-assisted RCNN variant to improve performance during extreme events, which may be absent from training data due to climate-driven shifts in SST extremes. The framework efficiently downscales SST along the west coast of Australia. A 2011 marine heatwave case study shows that the RCNN improves ACCESS-S2 SST predictions by increasing horizontal resolution from 25 km to 2 km, enabling identification of fine-scale anomalies unresolved in the ACCESS-S2 dataset. This balance between computational efficiency and accuracy supports applications in coastal impact assessment and marine ecosystem studies.",
+      "authors": [
+        "Onkar Jadhav",
+        "Tim French",
+        "Ivica Janekovic",
+        "Nicole L. Jones",
+        "Matthew Rayson"
+      ],
+      "primary_category": "physics.ao-ph",
+      "categories": [
+        "physics.ao-ph",
+        "cs.LG"
+      ],
+      "published": "2026-08-09T11:30:16+00:00",
+      "link": "https://arxiv.org/pdf/2608.10022v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Deep learning statistical downscaling of sea surface temperature from oceanographic remote sensing system",
+      "llm_evidence_cn": "基于深度学习对海洋遥感系统海表温度进行统计降尺度",
+      "llm_evidence": "基于深度学习对海洋遥感系统海表温度进行统计降尺度",
+      "canonical_evidence": "基于深度学习对海洋遥感系统海表温度进行统计降尺度",
+      "llm_tldr_en": "The paper presents a deep learning framework with a U-Net and residual correction to statistically downscale sea surface temperature from ACCESS-S2 forecasts, yielding high-resolution coastal ocean predictions efficiently compared to dynamical downscaling.",
+      "llm_tldr_cn": "全球气候模型的海温预测分辨率不足，动力降尺度计算量庞大。本文提出基于深度学习的统计降尺度框架，先用U-Net生成高分辨率海温初值，再通过残差校正网络细化输出。以ACCESS-S2季节预报为输入，可以高效重建近岸细尺度海温变化。该方法为海洋遥感大数据分析提供低成本的降尺度工具。其对珊瑚栖息地水温环境建模也有参考价值。",
+      "llm_tldr": "全球气候模型的海温预测分辨率不足，动力降尺度计算量庞大。本文提出基于深度学习的统计降尺度框架，先用U-Net生成高分辨率海温初值，再通过残差校正网络细化输出。以ACCESS-S2季节预报为输入，可以高效重建近岸细尺度海温变化。该方法为海洋遥感大数据分析提供低成本的降尺度工具。其对珊瑚栖息地水温环境建模也有参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.10426v1",
+      "source": "arxiv",
+      "title": "GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation",
+      "abstract": "Open-vocabulary remote sensing segmentation has recently emerged as a promising paradigm that enables pixel-level recognition of arbitrary categories specified by natural language, including classes unseen during training. However, geospatial domain shifts caused by heterogeneous regions, spatial resolutions, and acquisition platforms weaken visual-text matching and limit cross-dataset generalization. Recent attempts have begun to incorporate auxiliary vision foundation models (VFMs), typically coupling their features with text embeddings as additional matching evidence. However, this strategy may introduce inconsistent matching signals while leaving the structure-sensitive representations of VFMs insufficiently exploited. We therefore propose GeoSeg-OV, which decouples auxiliary VFM features from visual-text matching and repurposes them as structural guidance for cost aggregation and decoding. GeoSeg-OV constructs an orientation-robust cost volume from multi-rotation CLIP features, while a frozen VFM extracts multi-scale structure-sensitive features in parallel. We propose Structure-Guided Aggregation (SGA), which integrates cost tokens and CLIP semantic guidance with VFM-derived pairwise structural biases for coherent spatial propagation, followed by text-conditioned class-wise reasoning. We further introduce Cost-Aware Decoding (CAD) to adaptively refine and fuse multi-scale semantic and structural guidance based on the current decoder context. On the global High-Resolution Land Cover (HRLC) benchmark spanning seven datasets across six continents, GeoSeg-OV outperforms the state-of-the-art by +2.5 and +2.7 average mIoU under two training settings. A large-scale zero-shot case study further demonstrates its generalization across geographic domains and category systems without target-domain annotations or retraining.",
+      "authors": [
+        "Ruizhong Liu",
+        "Tingzhang Luo",
+        "Zaiyan Zhang",
+        "Jundong Chen",
+        "Hongruixuan Chen",
+        "Shaoguang Huang",
+        "Hongyan Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T03:18:22+00:00",
+      "link": "https://arxiv.org/pdf/2608.10426v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "open-vocabulary remote sensing segmentation with natural language classes, directly applicable to coral reef ecosystem mapping from remote sensing",
+      "llm_evidence_cn": "开放词汇遥感分割，可用自然语言指定任意类别，可直接迁移到珊瑚礁生态系统的遥感制图",
+      "llm_evidence": "开放词汇遥感分割，可用自然语言指定任意类别，可直接迁移到珊瑚礁生态系统的遥感制图",
+      "canonical_evidence": "开放词汇遥感分割，可用自然语言指定任意类别，可直接迁移到珊瑚礁生态系统的遥感制图",
+      "llm_tldr_en": "An open-vocabulary remote sensing segmentation method that incorporates structure-sensitive vision foundation model features to counter geospatial domain shift, improving cross-dataset generalization for arbitrary language-specified categories.",
+      "llm_tldr_cn": "开放词汇遥感分割能按自然语言识别训练中未见过的类别，但地理空间域偏移限制了跨数据集泛化。作者引入辅助视觉基础模型的结构敏感特征，并将其作为匹配证据，避免与文本嵌入的匹配信号不一致，同时充分利用视觉结构信息。所提GeoSeg-OV框架通过结构引导弥合地理空间差异，提升任意类别在异构区域、分辨率和平台下的分割表现。该技术可直接服务于珊瑚礁等海洋生态系统的遥感制图与分类任务。",
+      "llm_tldr": "开放词汇遥感分割能按自然语言识别训练中未见过的类别，但地理空间域偏移限制了跨数据集泛化。作者引入辅助视觉基础模型的结构敏感特征，并将其作为匹配证据，避免与文本嵌入的匹配信号不一致，同时充分利用视觉结构信息。所提GeoSeg-OV框架通过结构引导弥合地理空间差异，提升任意类别在异构区域、分辨率和平台下的分割表现。该技术可直接服务于珊瑚礁等海洋生态系统的遥感制图与分类任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.10494v1",
+      "source": "arxiv",
+      "title": "GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning",
+      "abstract": "Earth observation (EO) agents construct scientifically valid tool workflows and ground their conclusions in current geospatial evidence. This is challenging because EO workflows are constrained by sensing semantics, product dependencies, spatial and temporal compatibility, and parameter requirements. Existing agents often search a broad operation space for each query, while recent self-evolving systems do not fully organize heterogeneous EO trajectories into reusable knowledge across different decision levels. To solve this problem, we present GeoForge, a training-free, self-evolving framework that transforms completed trajectories into a structured nonparametric execution state. GeoForge constrains the operation space according to the sensing context, then retrieves a task-conditioned prior from three complementary memories. Workflow Graph Memory captures global operation order, Action-Level Experiences provide local corrections, and the Adapted Skill Standard Operating Procedure preserves procedural and data constraints. The retrieved prior guides tool execution, while current observations remain the basis of the final answer. After each task, a safety-gated distillation process converts grounded trajectories into reusable execution knowledge for future retrieval. This execution, distillation, and reuse loop improves planning without updating the backbone LLM. Experiments on multiple geospatial benchmarks demonstrate that GeoForge consistently improves both task accuracy and tool-use trajectory quality across diverse LLM backbones, while substantially reducing tool-planning and reasoning errors for most LLMs.",
+      "authors": [
+        "Xin Xiao",
+        "Jiang Zhong",
+        "Junnan Zhu",
+        "Yingchao Feng",
+        "Peijin Wang",
+        "Yidan Zhang",
+        "Kaiwen Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-08-11T05:11:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.10494v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Earth-observation reasoning agent with self-evolving workflows, transferable to autonomous ocean monitoring",
+      "llm_evidence_cn": "面向地球观测推理的自进化智能体架构，可迁移至海洋自主监测",
+      "llm_evidence": "面向地球观测推理的自进化智能体架构，可迁移至海洋自主监测",
+      "canonical_evidence": "面向地球观测推理的自进化智能体架构，可迁移至海洋自主监测",
+      "llm_tldr_en": "GeoForge transforms completed EO trajectories into a structured nonparametric execution state, constraining the operation space to enable reusable self-evolving reasoning for Earth observation agents, applicable to autonomous ocean monitoring.",
+      "llm_tldr_cn": "地球观测智能体需要构建科学有效的工具工作流并将结论基于当前地理空间证据，但现有智能体常在大范围操作空间中搜索，且自进化系统未能在不同决策层面组织异构轨迹。GeoForge提出一种免训练的自进化框架，将已完成轨迹转化为结构化的非参数执行状态，从而约束操作空间并复用知识。该方法有望用于海洋遥感等领域的自主监测推理，提高工作流构建和结论证实的效率。",
+      "llm_tldr": "地球观测智能体需要构建科学有效的工具工作流并将结论基于当前地理空间证据，但现有智能体常在大范围操作空间中搜索，且自进化系统未能在不同决策层面组织异构轨迹。GeoForge提出一种免训练的自进化框架，将已完成轨迹转化为结构化的非参数执行状态，从而约束操作空间并复用知识。该方法有望用于海洋遥感等领域的自主监测推理，提高工作流构建和结论证实的效率。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.10997v1",
+      "source": "arxiv",
+      "title": "Seeing above the waves: A modular sensing framework for data acquisition at sea",
+      "abstract": "Advancing autonomy for surface vessels requires systematic evaluation of their sensing and perception subsystems. Yet, maritime environments impose unique challenges: sensor installation is constrained by vessel layout, environmental conditions such as fog or sea clutter are difficult to reproduce, and long-duration missions complicate data collection. This work addresses the question: How can we design a modular and reproducible sensor platform for maritime autonomy?   We present a comprehensive design blueprint that incorporates diverse modalities - RADAR, LiDAR, IMU, GNSS, AIS, RGB and LWIR cameras, and weather sensors - to enhance environmental awareness and vessel proprioception. Supported by a dedicated ROS2-based software framework for data management, our modular platform enables long-term data collection, hardware-in-the-loop testing, and integration with existing sensors and algorithms. By unifying hardware design and data capture methodology, the platform enhances reproducibility and comparability across vessels and research projects. The proposed framework bridges engineering implementation and research methodology, providing the foundation for standardized, verifiable datasets essential to advancing situational awareness and autonomous maritime navigation.",
+      "authors": [
+        "Jonathan E. Schmidt",
+        "Julius Wirbel",
+        "P. Nicholas Hansen",
+        "Morgan Louédec",
+        "Christian L. H. Westerdahl",
+        "Dimitrios Dagdilelis",
+        "Roberto Galeazzi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-11T14:48:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.10997v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "modular sensor platform for maritime autonomy with RADAR, LiDAR, cameras, and weather sensors, supporting intelligent marine applications",
+      "llm_evidence_cn": "面向海上自主性的模块化传感器平台，集成雷达、激光雷达、相机与气象传感器，支持智能海洋应用",
+      "llm_evidence": "面向海上自主性的模块化传感器平台，集成雷达、激光雷达、相机与气象传感器，支持智能海洋应用",
+      "canonical_evidence": "面向海上自主性的模块化传感器平台，集成雷达、激光雷达、相机与气象传感器，支持智能海洋应用",
+      "llm_tldr_en": "A modular and reproducible sensor architecture for maritime autonomy, integrating RADAR, LiDAR, IMU, GNSS, AIS, RGB and LWIR cameras, and weather sensors with a ROS2 software framework.",
+      "llm_tldr_cn": "水面船舶自主性的推进需要系统评估其感知子系统，但海洋环境中的传感器安装、海雾和海杂波复现以及长航时数据采集都是难题。本文提出一个模块化、可复现的海上感知平台设计蓝图，集成RADAR、LiDAR、IMU、GNSS、AIS、RGB/LWIR相机和气象传感器，并配套ROS2软件框架。该平台可增强环境感知与船舶本体感知，为海上自主性算法提供统一的数据采集基座。这是面向智能海洋应用的关键基础硬件与软件架构。",
+      "llm_tldr": "水面船舶自主性的推进需要系统评估其感知子系统，但海洋环境中的传感器安装、海雾和海杂波复现以及长航时数据采集都是难题。本文提出一个模块化、可复现的海上感知平台设计蓝图，集成RADAR、LiDAR、IMU、GNSS、AIS、RGB/LWIR相机和气象传感器，并配套ROS2软件框架。该平台可增强环境感知与船舶本体感知，为海上自主性算法提供统一的数据采集基座。这是面向智能海洋应用的关键基础硬件与软件架构。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.08418v1",
+      "source": "arxiv",
+      "title": "Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information",
+      "abstract": "Leveraging textual information for image clustering has emerged as a promising direction, largely owing to the powerful representations learned by Vision-Language Models (VLMs). Existing approaches typically retrieve a textual counterpart for each image and then refine multimodal representations by directly enforcing cross-modal agreement, e.g., maximizing image-text similarity inherited from pretrained VLMs. However, such a strategy aligns heterogeneous representations across modalities without explicitly modeling the intrinsic structure within each modality and thus might yield unreliable alignment or distort modality-specific structures that are crucial for clustering. In this paper, we propose a simple but principled approach, termed deep modality-shared self-expressive model (DeepMORSE), which discovers cross-modal structures via a modality-shared self-expressive model and simultaneously learns structured representations that conform to a union of modality-specific subspaces. Moreover, we theoretically justify that the modality-shared self-expressive coefficients suppress inter-class noise towards a subspace-preserving solution, and show that mini-batch optimization procedure introduces an implicit regularization onto the self-expressive model. We evaluate our DeepMORSE on six widely used image clustering benchmarks and observe performance improvements exceeding 3% on the UCF-101, DTD-47, and ImageNet-Dogs datasets. In addition, we demonstrate the strong transferability of the learned representations by achieving state-of-the-art performance on downstream tasks such as image retrieval and zero-shot classification---without requiring any task-specific losses or post-processing. The code is available at: https://github.com/mengxianghan123/DeepMORSE.",
+      "authors": [
+        "Xianghan Meng",
+        "Wei He",
+        "Zhiyuan Huang",
+        "Chun-Guang Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-09T02:23:49+00:00",
+      "link": "https://arxiv.org/pdf/2608.08418v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multimodal image-text clustering method usable for ocean science multimodal fusion",
+      "llm_evidence_cn": "基于文本信息的图像聚类方法，可应用于海洋科学图文融合",
+      "llm_evidence": "基于文本信息的图像聚类方法，可应用于海洋科学图文融合",
+      "canonical_evidence": "基于文本信息的图像聚类方法，可应用于海洋科学图文融合",
+      "llm_tldr_en": "Proposes deep modality-shared self-expressiveness for image clustering with textual information, explicitly modeling intra-modality structure to improve cross-modal alignment, transferable to multimodal fusion of ocean imagery and text.",
+      "llm_tldr_cn": "利用文本信息进行图像聚类近年来因视觉语言模型而快速发展，但现有方法直接最大化图文相似度，忽略了各模态内在结构，可能造成对齐不可靠。本文提出一种简洁而有原则的方法，显式建模模态内结构并学习模态共享的自表达表示，从而实现更稳定的图文协同聚类。该方法在多个图像文本数据集上验证了有效性。这种图文融合聚类策略可迁移到海洋科学中的遥感图像与文本报告联合分析。",
+      "llm_tldr": "利用文本信息进行图像聚类近年来因视觉语言模型而快速发展，但现有方法直接最大化图文相似度，忽略了各模态内在结构，可能造成对齐不可靠。本文提出一种简洁而有原则的方法，显式建模模态内结构并学习模态共享的自表达表示，从而实现更稳定的图文协同聚类。该方法在多个图像文本数据集上验证了有效性。这种图文融合聚类策略可迁移到海洋科学中的遥感图像与文本报告联合分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.05201v1",
+      "source": "arxiv",
+      "title": "ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study",
+      "abstract": "Autonomous AI agent platforms differ substantially in architecture, security, tool integration, execution, autonomy, and deployment, yet the field lacks a common classification scheme for comparing these design choices. We propose ASTELD, an operational six-axis classification framework for autonomous AI agents: Architecture pattern, Security posture, Tool integration model, Execution paradigm, Level of autonomy and human control, and Deployment topology. ASTELD is constructed by synthesizing prior agent taxonomies with observable platform properties and explicit category-assignment rules. We evaluate its discriminative and explanatory utility by mapping eight representative frameworks and by using OpenClaw as an in-depth case study. The resulting profiles separate all eight platforms under their dominant configurations and reveal three cross-platform patterns: a security-accessibility diagonal, strong execution-architecture coupling, and capability convergence with persistent architectural differentiation. We further classify 50+ OpenClaw derivatives and find that innovation concentrates on the Security, Execution, and Deployment axes, indicating that ASTELD can explain where ecosystem fragmentation occurs. The OpenClaw case study also supplies a six-category vulnerability taxonomy, evidence from five institutional assessments, and adoption and governance analyses that connect platform coordinates to observed risks. These results position ASTELD as a reproducible method for comparing agent platforms, identifying unoccupied design regions, guiding framework selection, and organizing future empirical research. The analysis also exposes a consequential empty region: none of the evaluated systems combines local-first deployment with enterprise-grade security.",
+      "authors": [
+        "Siyuan Li",
+        "Peng Shu",
+        "Churan Yu",
+        "Peilong Wang",
+        "Ruidong Zhang",
+        "Bowen Guo",
+        "Xinliang Li",
+        "Ruiyu Yan",
+        "Arif Hassan Zidan",
+        "Yi Pan",
+        "Wei Ruan",
+        "Lifeng Chen",
+        "Junhao Chen",
+        "Zhaojun Ding",
+        "Yiwei Li",
+        "Zhengliang Liu",
+        "Haixing Dai",
+        "Lin Zhao",
+        "Yu Bao",
+        "Xiang Li",
+        "Wei Zhang",
+        "Tianming Liu"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "published": "2026-08-05T05:05:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.05201v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous AI agent classification framework covering architecture, autonomy, and tool integration, transferable to autonomous ocean monitoring agent design",
+      "llm_evidence_cn": "面向自主AI代理的六轴分类框架，涵盖架构、自主性与工具集成，可迁移至海洋自主监测代理设计",
+      "llm_evidence": "面向自主AI代理的六轴分类框架，涵盖架构、自主性与工具集成，可迁移至海洋自主监测代理设计",
+      "canonical_evidence": "面向自主AI代理的六轴分类框架，涵盖架构、自主性与工具集成，可迁移至海洋自主监测代理设计",
+      "llm_tldr_en": "A six-axis classification framework for autonomous AI agents, synthesized from prior taxonomies with assignment rules, demonstrated by mapping eight representative agent platforms and an OpenClaw case study.",
+      "llm_tldr_cn": "自主AI代理平台在架构、安全、工具集成、执行、自主性和部署方面差异显著，但缺乏统一比较框架。作者提出ASTELD六轴分类体系，综合已有代理分类学与可观察平台属性，并给出显式分类规则，用于描述与比较不同代理设计。通过映射八个代表性框架并开展OpenClaw案例研究，验证了框架的判别力与解释力。该分类框架可为海洋自主监测等领域的智能体架构设计提供分析与评估工具。",
+      "llm_tldr": "自主AI代理平台在架构、安全、工具集成、执行、自主性和部署方面差异显著，但缺乏统一比较框架。作者提出ASTELD六轴分类体系，综合已有代理分类学与可观察平台属性，并给出显式分类规则，用于描述与比较不同代理设计。通过映射八个代表性框架并开展OpenClaw案例研究，验证了框架的判别力与解释力。该分类框架可为海洋自主监测等领域的智能体架构设计提供分析与评估工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.07018v1",
+      "source": "arxiv",
+      "title": "IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods",
+      "abstract": "Horizon detection in images of ice-covered waters is a challenging problem for maritime navigation due to low contrast between water and sky, cluttered ice structures, and varying illumination conditions. This paper presents a comparative evaluation of six horizon detection algorithms, including four classical computer vision methods and two hybrid approaches combining deep learning with classical line detection. A new bespoke IceHorizon dataset consisting of 30 ship-based and 8 drone-based videos is used to evaluate detection accuracy, horizon coverage, and computational performance. The results show that hybrid methods achieve the highest accuracy and most reliable horizon estimates. In contrast, purely classical methods exhibit reduced robustness, particularly in visually ambiguous scenes. Performance on ship-based imagery was consistently higher than on drone-based imagery, indicating a strong dependency on acquisition characteristics. The created dataset and codes used in this study are made publicly available to support further research on this topic. The code is available at https://github.com/allythe/HorizonDetection. The dataset is available at https://doi.org/10.5281/zenodo.20411867",
+      "authors": [
+        "Alisa Pesotskaia",
+        "Emin Zerman"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-08-07T09:26:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.07018v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "dataset and comparative evaluation of horizon detection algorithms for ice-covered maritime environments, supporting autonomous marine navigation",
+      "llm_evidence_cn": "冰覆盖海域地平线检测数据集与算法比较评估，支撑海上自主导航",
+      "llm_evidence": "冰覆盖海域地平线检测数据集与算法比较评估，支撑海上自主导航",
+      "canonical_evidence": "冰覆盖海域地平线检测数据集与算法比较评估，支撑海上自主导航",
+      "llm_tldr_en": "Introduces IceHorizon, a new dataset for horizon detection in ice-covered waters, and compares six algorithms, finding hybrid deep learning plus line detection approaches achieve the most reliable accuracy and coverage for maritime navigation.",
+      "llm_tldr_cn": "针对冰覆盖海域地平线检测的低对比度、杂波和光照变化挑战，论文构建了包含30段船载和8段无人机视频的IceHorizon数据集，并对四种经典视觉方法和两种深度学习与直线检测混合方法进行系统比较。结果表明混合方法在准确率和覆盖率上最优，计算性能也可满足需求，为海上自主导航中的视觉感知提供了新基准和方法选择依据。",
+      "llm_tldr": "针对冰覆盖海域地平线检测的低对比度、杂波和光照变化挑战，论文构建了包含30段船载和8段无人机视频的IceHorizon数据集，并对四种经典视觉方法和两种深度学习与直线检测混合方法进行系统比较。结果表明混合方法在准确率和覆盖率上最优，计算性能也可满足需求，为海上自主导航中的视觉感知提供了新基准和方法选择依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08661v1",
+      "source": "arxiv",
+      "title": "Degradation-Guided Underwater Image Restoration with Task-Oriented Latent Control",
+      "abstract": "Degradation information in underwater images plays a dual role: its spatial and spectral cues can guide adaptive restoration, while degradation-entangled features may be propagated without explicit regulation during decoding. Existing methods largely overlook this dual role, either underexploiting degradation cues or directly forwarding encoder features through skip connections. To address this issue, we propose PROTEUS, which couples degradation-guided feature adaptation with task?oriented latent control. PROTEUS tackles this problem from two complementary perspectives. At the feature level, the Guided Dynamic Feature Modulation Block exploits spatially varying degradation cues to adapt feature processing across network stages. At the representation level, the task-oriented latent controller learns a structured control code under discriminative regularisation and uses it for channel-wise modulation of skip features, without requiring the code to form a metrically cleaner embedding. Extensive experiments on five paired and four non-reference underwater benchmarks demonstrate that PROTEUS achieves highly competitive restoration performance, with a favourable balance between restoration quality and computational cost.",
+      "authors": [
+        "Xu Zhang",
+        "Xuhui Cao",
+        "Kangzhe Yuan",
+        "Laibin Chang",
+        "Yichu Xu",
+        "Shi Chen",
+        "Huan Zhang",
+        "Yong Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-09T12:08:34+00:00",
+      "link": "https://arxiv.org/pdf/2608.08661v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Underwater image restoration with degradation-guided feature adaptation, useful for coral reef imagery classification",
+      "llm_evidence_cn": "退化引导的水下图像复原，可提升珊瑚礁底质影像分类输入质量",
+      "llm_evidence": "退化引导的水下图像复原，可提升珊瑚礁底质影像分类输入质量",
+      "canonical_evidence": "退化引导的水下图像复原，可提升珊瑚礁底质影像分类输入质量",
+      "llm_tldr_en": "PROTEUS couples degradation-guided feature modulation with task-oriented latent control to restore underwater images, addressing the dual role of degradation cues and improving downstream analysis of underwater imagery such as coral reef benthic cover.",
+      "llm_tldr_cn": "水下图像常因空间变化退化而难以恢复，已有方法未充分利用退化信息或直接跳跃连接编码器特征。PROTEUS从特征层面提出引导动态特征调制块，利用空间变化的退化线索自适应调整处理；同时在表示层面加入任务导向潜空间控制。实验表明该双视角方案显著提升水下图像复原质量。复原后的影像可为珊瑚礁底质覆盖分类等下游任务提供更可靠的输入。",
+      "llm_tldr": "水下图像常因空间变化退化而难以恢复，已有方法未充分利用退化信息或直接跳跃连接编码器特征。PROTEUS从特征层面提出引导动态特征调制块，利用空间变化的退化线索自适应调整处理；同时在表示层面加入任务导向潜空间控制。实验表明该双视角方案显著提升水下图像复原质量。复原后的影像可为珊瑚礁底质覆盖分类等下游任务提供更可靠的输入。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08965v1",
+      "source": "arxiv",
+      "title": "CoRe-UIE: Rethinking Coexisting and Region-wise Degradation for Underwater Image Enhancement",
+      "abstract": "Underwater images often suffer from diverse and coexisting degradations, including color distortion, scattering haze, texture attenuation, and uneven illumination. These degradations vary across regions and may coexist locally, making conventional uniform restoration difficult to adapt to different degradation patterns. To address this problem, we propose Coexisting and Region-wise Degradation for Underwater Image Enhancement (\\textbf{CoRe-UIE}), a degradation-oriented expert collaboration framework. CoRe-UIE combines a content-preserving shared expert with four shared-backbone routed experts for color correction, scattering suppression, texture recovery, and illumination protection. The routed experts share the same architecture but have independent parameters, and are assigned to different regions through input-derived degradation cues and region-adaptive Top-\\(k\\) routing. We further introduce a Hilbert--Schmidt Independence Criterion (HSIC)-based representation constraint to reduce statistical dependence among expert features and alleviate redundant expert responses. Experiments on UIEB, LSUI, and U45 demonstrate that CoRe-UIE achieves competitive quantitative performance and visually balanced enhancement under diverse underwater degradation conditions.",
+      "authors": [
+        "Weifeng Kong",
+        "Chenghao Xu",
+        "Lin Chen",
+        "Ziheng Cao",
+        "Guanying Huo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-08-10T00:00:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.08965v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Region-wise underwater image enhancement with routed experts, improves underwater imagery for coral classification",
+      "llm_evidence_cn": "区域级水下图像增强专家协作框架，为珊瑚分类提供更清晰水下影像",
+      "llm_evidence": "区域级水下图像增强专家协作框架，为珊瑚分类提供更清晰水下影像",
+      "canonical_evidence": "区域级水下图像增强专家协作框架，为珊瑚分类提供更清晰水下影像",
+      "llm_tldr_en": "CoRe-UIE proposes a degradation-oriented expert collaboration framework that combines a content-preserving shared expert with four routed experts to handle coexisting and region-wise degradations in underwater images, improving restoration for ecological analysis.",
+      "llm_tldr_cn": "水下图像经常同时存在色彩失真、散射、纹理衰减和光照不均等多种退化，且随区域变化，统一恢复难以奏效。CoRe-UIE采用内容保持的共享专家和四个共享主干路由专家，分别处理颜色校正、散射抑制、纹理恢复和光照保护。通过退化导向的专家协作，对不同区域的混合退化进行自适应增强。该框架为珊瑚礁底质分类等水下生态分析提供了更高质量影像输入。",
+      "llm_tldr": "水下图像经常同时存在色彩失真、散射、纹理衰减和光照不均等多种退化，且随区域变化，统一恢复难以奏效。CoRe-UIE采用内容保持的共享专家和四个共享主干路由专家，分别处理颜色校正、散射抑制、纹理恢复和光照保护。通过退化导向的专家协作，对不同区域的混合退化进行自适应增强。该框架为珊瑚礁底质分类等水下生态分析提供了更高质量影像输入。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.10249v1",
+      "source": "arxiv",
+      "title": "STCAD: Scalable Trajectory Clustering and Anomaly Detection on Terabyte-Scale AIS Data",
+      "abstract": "We present a scalable framework for unsupervised clustering of maritime trajectories derived from terabyte-scale Automatic Identification System (AIS) archives. Variable-length trajectories are encoded with a custom BERT-based model trained via masked token modeling and clustered using CURE hierarchical clustering, producing physically interpretable trajectory groups without requiring a predefined number of clusters. An intrinsic unsupervised anomaly detection method based on reconstruction loss and clustering noise assignment identifies irregular navigation patterns. The framework is demonstrated on a national-scale AIS dataset comprising billions of messages spanning one year, yielding stable trajectory clusters and a clear separation between nominal and anomalous vessel behavior.",
+      "authors": [
+        "Bertram Hage",
+        "Alexander Schiøtz",
+        "Felix Thomsen",
+        "Christian Rand",
+        "Peder Heiselberg"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-10T21:32:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.10249v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "scalable clustering and anomaly detection on terabyte-scale AIS maritime trajectories",
+      "llm_evidence_cn": "TB级AIS海上轨迹的聚类与异常检测",
+      "llm_evidence": "TB级AIS海上轨迹的聚类与异常检测",
+      "canonical_evidence": "TB级AIS海上轨迹的聚类与异常检测",
+      "llm_tldr_en": "Presents a scalable BERT-based trajectory encoding and CURE hierarchical clustering framework for terabyte-scale AIS maritime data, with unsupervised anomaly detection via reconstruction loss and clustering noise assignment, demonstrated on billions of national-scale messages.",
+      "llm_tldr_cn": "海事轨迹数据规模已到TB级，传统聚类与异常检测难以处理长度可变且海量的AIS记录。本文提出STCAD框架，先用定制的BERT风格模型对轨迹进行掩码建模与向量化，再通过CURE层次聚类得到物理可解释的轨迹组，无需预设簇数。异常检测结合重构误差和聚类噪声分配，自动识别不规则航行模式。在一整年数十亿条国家尺度AIS消息上的实验表明，该方法能生成稳定的轨迹簇并清晰分离异常行为。这项工作为海洋大数据分析提供了可扩展的无监督方案，支持航道监管与安全应用。",
+      "llm_tldr": "海事轨迹数据规模已到TB级，传统聚类与异常检测难以处理长度可变且海量的AIS记录。本文提出STCAD框架，先用定制的BERT风格模型对轨迹进行掩码建模与向量化，再通过CURE层次聚类得到物理可解释的轨迹组，无需预设簇数。异常检测结合重构误差和聚类噪声分配，自动识别不规则航行模式。在一整年数十亿条国家尺度AIS消息上的实验表明，该方法能生成稳定的轨迹簇并清晰分离异常行为。这项工作为海洋大数据分析提供了可扩展的无监督方案，支持航道监管与安全应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

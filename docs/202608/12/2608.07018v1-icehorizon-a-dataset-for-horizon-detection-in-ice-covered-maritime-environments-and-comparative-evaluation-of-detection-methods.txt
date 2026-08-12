@@ -1,0 +1,163 @@
+Title: IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods
+
+URL Source: https://arxiv.org/pdf/2608.07018v1
+
+Published Time: Mon, 10 Aug 2026 00:42:39 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods 
+
+Alisa Pesotskaia 
+
+Department of Computer and Electrical Engineering Mid Sweden University , Sundsvall, Sweden 0009-0000-6247-279X 
+
+Emin Zerman 
+
+Department of Computer and Electrical Engineering Mid Sweden University , Sundsvall, Sweden 0000-0002-3210-8978 
+
+Abstract —Horizon detection in images of ice-covered waters is a challenging problem for maritime navigation due to low contrast between water and sky, cluttered ice structures, and varying illumination conditions. This paper presents a compara-tive evaluation of six horizon detection algorithms, including four classical computer vision methods and two hybrid approaches combining deep learning with classical line detection. A new bespoke IceHorizon dataset consisting of 30 ship-based and 8 drone-based videos is used to evaluate detection accuracy, horizon coverage, and computational performance. The results show that hybrid methods achieve the highest accuracy and most reliable horizon estimates. In contrast, purely classical methods exhibit reduced robustness, particularly in visually ambiguous scenes. Performance on ship-based imagery was consistently higher than on drone-based imagery, indicating a strong dependency on acquisition characteristics. The created dataset and codes used in this study are made publicly available to support further research on this topic. The code is available at https://github.com/allythe/HorizonDetection. The dataset is available at https://doi.org/10.5281/zenodo.20411867. 
+
+Index Terms —horizon detection, maritime environment, edge detection, water segmentation, deep learning. 
+
+I. I NTRODUCTION 
+
+Horizon detection plays a central role in ensuring safe navigation or aircrafts and ships, especially in diverse and challenging environments [1], [2]. Increasing global maritime activity and the opening of new Arctic shipping routes due to climate change are driving the demand for advanced surveillance systems capable of operating in the challenging environments of ice-covered waters [3]. The horizon, which in practice often manifests as a piecewise-linear contour rather than a perfect straight line, provides essential information for image stabilization on dynamic platforms [4], [5], camera auto-calibration [6], and platform attitude estimation for roll and pitch [1], [2]. Accurate horizon estimation can also support camera–IMU extrinsic calibration and the detection of extreme vessel motions [7]. Classical methods for horizon detection typically rely on traditional computer vision approaches, to estimate the horizon [8], such as edge detection, gradient analysis, and line fitting. While these methods can perform well under clear and simple 
+
+This work was supported by Mid Sweden University internal funding. 
+
+Fig. 1. Sample frames from existing open-water maritime datasets: (a) Singa-pore Maritime Dataset [9], (b) MarDCT [10], (c) Marine Obstacle Detection dataset [11], (d) Buoy dataset [12]. These datasets primarily represent open-water conditions and lack examples of ice-covered marine environments. 
+
+conditions, they often struggle in the presence of noise, occlusions, reflections from ice or water surfaces, and complex lighting conditions. Deep learning methods [13], particularly convolutional neu-ral networks (CNNs), have recently emerged as promising alternatives for maritime perception tasks, offering improved robustness by learning semantic representations of the sky and sea. However, their performance strongly depends on the diversity of the training data and architectural optimiza-tions [14]. Existing maritime datasets (see Fig. 1), including the Singapore Maritime Dataset [9], MarDCT [10], Marine Obstacle wDetection [11], and the Buoy dataset [12], primarily focus on open-water environments and therefore do not capture the visual challenges of ice-covered waters. More recently, datasets such as the Tangier Maritime Dataset [15] and several deep-learning-based horizon detection approaches have been proposed, however, these methods are still largely designed for ice-free maritime environments. For example, Chen et al. [16] introduced a hybrid pipeline that combines HED and Canny edge detection with a ConvNeXt-based edge classification arXiv:2608.07018v1 [eess.IV] 7 Aug 2026 Fig. 2. Overview of the horizon detection evaluation pipeline for ice-covered waters. Input videos are split into frames, with ground truth horizons manually annotated using CVAT. Six algorithms (H-HC, H-MED, H-LSC, H-COV-LUM, DexiNed, Segment) predict horizon lines for each frame. Performance is quantified using mean angle deviation (MAD) and normalized mean height deviation (NMHD), predicted horizon coverage, and time spent per frame, enabling comparative analysis to address the research questions. 
+
+network and RANSAC line fitting for sea-sky line detection in maritime imagery. The limited data diversity and the need for further al-gorithmic refinement to handle ice-induced visual artifacts were also highlighted in a recent CNN-based horizon de-tection study [13]. Existing methods and datasets do not adequately address horizon detection in ice-covered maritime environments, where visual ambiguity, reflections, and rapidly changing weather conditions introduce new challenges. This paper aims to provide new insights into horizon detection in ice-covered waters by creating a new annotated dataset of ship and drone-based videos recorded in ice-covered waters and performing a comparative evaluation of classical and hybrid methods that combine deep learning with classical approaches. The overview of the horizon detection and evalu-ation pipeline is shown in Fig. 2. In particular, this paper has two specific contributions:  
+
+> •
+
+A new IceHorizon dataset on icy-water horizon detection including 38 videos and ground truth annotations, which is made publicly available to serve as a reference for future research; and  
+
+> •
+
+A benchmark of traditional and hybrid horizon detection methods in the newly created icy-water horizon detection IceHorizon dataset, complete with statistical analyses. II. S ELECTED HORIZON DETECTION METHODS 
+
+The existing methods on horizon detection use either tra-ditional computer vision approaches [8] or deep-learning-based approaches [13]. While classical approaches use low-level features, deep-learning-based approaches utilize a data-oriented approach through feature extraction specific for the horizon detection task. Hybrid methods, on the other hand, can leverage both the robustness of the traditional approaches and a semantic understanding of the scene. In a recent survey on maritime horizon detection, Zardoua et al. [14] concluded that classical methods suffer from inherent trade-offs between robustness and real-time performance, with edge-based approaches being vulnerable to competitive lines and regional-based methods failing under class variation and non-homogeneous regions. They emphasized that learning-based approaches, particularly neural networks, show superior discrimination capability but require significant architectural optimization for real-time maritime applications. Similarly, Petkovi´ c et al. [17] concluded that while classical methods remain more practical for real-time maritime applications due to their computational efficiency, methods based on neural networks demonstrate superior robustness and accuracy. In this section, we describe how the selected horizon detec-tion methods work. 
+
+A. Classical methods 
+
+Classical horizon detection methods rely on low-level image features such as gradients, edges, and regional statistics. These approaches typically assume that the horizon corresponds to a strong linear discontinuity between the sky and the sea. While efficient and widely used, their performance can degrade under challenging conditions such as reflections, occlusions, and low-contrast ice-covered waters. The classical methods evaluated in this work are summarized below. 
+
+H-HC : This edge-detection and Hough transform–based algorithm first pre-processes the image using erosion or a low-pass filter to suppress noise. It then applies a Canny edge detector [18] and uses the Hough transform [19] to identify line candidates. The longest detected line is selected as the horizon. To improve robustness, a dilation step is introduced prior to the Hough transform to strengthen and connect edge segments. 
+
+H-LSC : The edge-detection and least-squares calibra-tion–based algorithm pre-processes the image using erosion or a low-pass filter, identifies the strongest edge in each image column, and then fits a line through these edge points using a least-squares estimator. 
+
+H-MED : Median filtering and linear regression based algo-rithm algorithm follows the same overall procedure as H-LSC but differs in how edges are defined. Instead of using standard edge detection based on the absolute intensity differences between adjacent pixels, H-MED computes edge strength as the difference of local medians. 
+
+H-COV-LUM : The regional covariance–based algorithm searches for an optimal partition of the image into two regions, sky and sea, using a candidate line that represents the horizon. The optimal horizon is selected by evaluating an objective function based on the determinants and traces of the covariance matrices computed for the two regions. 
+
+B. Hybrid Methods 
+
+Two hybrid methods are implemented for horizon detection to investigate the utility of merging the learning-based models with traditional approaches. 
+
+Segment : The first hybrid method uses a pre-trained UPERNet-ConvNeXt-Small [20], [21] model for semantic segmentation. The CNN-based ConvNeXt-Small backbone extracts features to generate a segmentation mask of a set of types. After that, all segments which are quantified as water are put in the segmentation mask. The H-HC algorithm is then applied to the segmentation mask to detect the longest line, which is considered the horizon. Processing the segmentation mask instead of the original image helps to reduce spurious edges caused by ice, waves, or clouds. 
+
+DexiNed : The second hybrid method employs the pre-trained edge detection CNN DexiNed [22]. It produces an edge map of the image, and the Hough transform is applied to detect the longest line as the horizon. By using DexiNed’s learned edge features, this approach similarly reduces noise from irrelevant edges while directly leveraging a CNN trained for precise edge detection. III. M ETHODOLOGY 
+
+The selected horizon detection methods were compared in an experiment. A new IceHorizon dataset with ice-covered water videos was created to make this comparison possible 1.
+
+A. Dataset 
+
+We created a new IceHorizon dataset to evaluate the horizon detection methods, which consists of frames extracted from six YouTube videos released under a Creative Commons Attribution license [23]–[28]. The first three videos primar-ily depict ice-covered waters from a ship-based perspective, while the remaining three are captured predominantly from a drone viewpoint. These videos were further segmented into                                                                                                         
+
+> 1The IceHorizon dataset is accessible on Zenodo: https://doi.org/10.5281/ zenodo.20411867 TABLE I IMAGE RESOLUTIONS OF USED VIDEOS .
+> Video [23] [24] [25] [26] [27] [28]
+> Ship 1-22 23 24 --25-30
+> Drone ---1-4 56-8
+> Height 1080 720 1080 720 676 1080
+> Width 1920 1280 1920 1280 1280 1920
+> Fig. 3. Representative frames from the IceHorizon dataset with ground-truth horizon annotations. TABLE II NUMBER OF FRAMES EXTRACTED FROM EACH VIDEO SEQUENCE .
+> Video Frames Video Frames Video Frames
+> Ship1 105 Ship11 1031 Ship21 159 Ship2 83 Ship12 207 Ship22 125 Ship3 86 Ship13 342 Ship23 724 Ship4 48 Ship14 452 Ship24 2046 Ship5 98 Ship15 199 Ship25 213 Ship6 152 Ship16 338 Ship26 178 Ship7 631 Ship17 152 Ship27 154 Ship8 412 Ship18 563 Ship28 134 Ship9 561 Ship19 144 Ship29 192 Ship10 201 Ship20 64 Ship30 211 Drone1 57 Drone4 461 Drone7 182 Drone2 203 Drone5 927 Drone8 143 Drone3 251 Drone6 131
+> Ship total 10005 Drone total 2355 Grand total 12360
+
+38 shorter clips, each maintaining a relatively consistent view-point. The horizon line in each frame was manually annotated using the Computer Vision Annotation Tool (CVAT) [29]. A summary of the video resolutions, the extracted frames, and representative examples with annotated horizons are provided in Table I, Table II, and Figure 3, respectively. 
+
+B. Selected metrics for evaluation 
+
+Horizon detection accuracy and performance were quanti-fied using Normalized Mean Height Deviation (NMHD), Mean Angle Deviation (MAD) [30], computational performance, and predicted horizon coverage. NMHD measures the average vertical difference between the detected and ground-truth horizons, normalized by the image height, and is defined as: 
+
+NMHD = 1
+
+W H 
+
+> W
+
+X
+
+> i=1
+
+hi − ˆhi , (1) where hi and ˆhi denote the ground-truth and detected horizon heights at column i, W is the image width in pixels, and H
+
+is the image height. MAD quantifies the average angular difference between the detected and true horizon orientations and can be expressed in terms of the horizon angles θ as: 
+
+MAD = 1
+
+W
+
+> W
+
+X
+
+> i=1
+
+ˆθi − θi , (2) where θi and ˆθi denote the ground-truth and detected horizon angles at column i.It should be noted that neither NMHD nor MAD can be reliably computed from only two horizon points, since the ground-truth horizon may be represented as a piecewise-linear curve rather than a single straight line. Computational performance is measured by the processing time (in seconds) per frame. PHC calculates the completeness of the detected horizon line. It is calculated as the ratio of the number of columns where the horizon is detected to the total number of columns where the horizon should appear: 
+
+PHC = Ndetected 
+
+Ntruth 
+
+, (3) where Ndetected is the count of columns with a valid detected horizon and Ntruth is the count of columns where the ground-truth horizon is defined. 
+
+C. Implementation Details 
+
+All experiments were conducted on Google Colab using a Python 3 runtime. Classical computer vision algorithms were executed on the CPU with 12.7GB of system RAM, while hybrid methods were run on a T4 GPU with 15GB of GPU memory. The available disk space was approximately 112GB. This setup allowed efficient processing of the dataset and reproducible evaluation of algorithm performance. IV. R ESULTS 
+
+After running horizon detection methods on the proposed IceHorizon dataset, the evaluation metrics were computed. Sample results showing predicted and ground truth horizons are presented in Figure 4. Boxplots of the quality metrics are shown in Figure 5, with separate representations for drone and ship-based datasets for NMHD, MAD, predicted horizon coverage, and time spent per frame. Numerical results are reported in Table III: hybrid methods provide up to x2.3-3.5 accuracy increase for ship-based videos and x1.6 accuracy increase for drone-based videos against the best traditional horizon detection methods (H-HC and H-Med, respectively). Results also show that horizon coverage                                                 
+
+> Fig. 4. Representative frames from several video category showing horizon detection results. Ground truth annotations (black dashed lines) are compared with predictions from six methods: four classical (H-HC, H-MED, H-LSC, H-COV-LUM) and two hybrid (DexiNed, Segment). TABLE III PERFORMANCE METRICS ,REPORTED AS ”M EAN (S TD )” FOR EACH ALGORITHM ON SHIP AND DRONE -BASED DATASETS .BOLD INDICATES THE BEST SCORE AND italic INDICATES THE SECOND BEST SCORE .
+> Method NMHD MAD PHC Ship
+> H-HC 0.07 (0.11) 3.13 (8.03) 44.7 (16.3) H-LSC 0.14 (0.11) 4.14 (3.50) 100 (0)
+> H-Med 0.14 (0.13) 3.00 (2.99) 100 (0)
+> H-Cov-Lum 0.22 (0.20) 6.26 (6.67) 100 (0)
+> Segment 0.03 (0.09) 0.87 (2.40) 41.9 (16.3) DexiNed 0.10 (0.17) 2.84 (8.79) 56.0 (17.8)
+> Drone
+> H-HC 0.29 (0.31) 3.77 (8.31) 38.4 (11.7) H-LSC 0.19 (0.15) 5.29 (6.78) 100 (0)
+> H-Med 0.13 (0.10) 3.16 (2.65) 100 (0)
+> H-Cov-Lum 0.26 (0.13) 10.4 (9.54) 100 (0)
+> Segment 0.08 (0.13) 2.51 (4.44) 30.5 (14.0) DexiNed 0.10 (0.12) 1.95 (3.05) 50.2 (14.3)
+
+significantly reduces for the hybrid methods, which yields a trade-off with accuracy results. As the results are not normally distributed, pairwise Mann–Whitney U tests with Holm-Bonferroni correction were conducted to identify the best-performing algorithms. 
+
+NMHD Analysis : For the drone and ship categories, the Fig. 5. Boxplots comparing performance metrics for classical and hybrid horizon detection methods: Normalized Mean Height Deviation (NMHD), Mean Angle Deviation (MAD), Processing Time per Frame, and Predicted horizon Coverage. Results are shown for drone-based and ship-based images across all six methods. 
+
+NMHD of Segment was significantly smaller than that of all other algorithms, with all pairwise Mann–Whitney U tests (Holm-corrected) yielding p < 0.001 . Dexined ranked second overall and was not significantly smaller only when compared with Segment .
+
+MAD Analysis : For the drone category, the MAD of 
+
+DexiNed was significantly smaller than that of all other al-gorithms except H-HC , while Segment and H-HC were not significantly smaller than DexiNed or each other. For the ship category, Segment was significantly smaller than all other methods, while DexiNed ranked second, with its values being significantly smaller than those of all methods except Segment .
+
+Time per Frame Analysis : For the whole IceHorizon dataset, H-LSC was the best-performing method, with Time per Frame being significantly smaller than that of all other methods. H-MED ranked second and was not significantly smaller only than H-LSC. 
+
+Predicted Horizon Coverage : For the drone category, the PHC of H-LSC and H-COV-LUM was significantly greater than that of all other algorithms except for each other, with all pairwise Mann-Whitney U tests (Holm-corrected) yielding 
+
+p < 0.001 . H-MED was the runner-up, being not significantly greater than only H-LSC and H-COV-LUM. For the ship category, the situation was the same. Overall, as in the NMHD and MAD analyses for drone and ship categories, hybrid methods Segment and Dexined are the optimal choices, yielding the smallest errors across both metrics. Regarding time per frame and predicted horizon cover-age, the classical methods H-LSC and H-MED demonstrate the strongest performance; however, their NMHD and MAD scores are not competitive with those of H-HC, Segment, or DexiNed. Among the top two algorithms, DexiNed attains the highest predicted coverage. Since the horizon line can be interpolated across the entire image, and given that it is nearly straight for most samples, predicted coverage should be treated as a supplementary metric rather than a primary one. Differences between the datasets follow a consistent pattern: both NMHD and MAD are lower for the ship category, whereas the drone category exhibits higher median error values. This performance gap can be attributed to greater scene complexity in the drone category, as discussed in Section V. V. D ISCUSSION 
+
+The Segment and DexiNed horizon detection methods achieved the best performance on ship-based and drone-based videos, respectively. All algorithms performed better on ship-based videos than on drone-based videos, despite the higher vantage point offered by the drone views, due to the increased scene complexity present in the latter. Both classical and hybrid horizon detection methods achieved substantially lower NMHD and MAD errors on ship-based videos compared to drone-based videos. This performance gap can be attributed to several characteristics of the drone-based subsets, including horizons that are partially obscured by fog, mountains, and large ice formations, which introduce strong distractor edges. In addition, some drone videos exhibit slightly curved horizon resulting from the high-altitude viewpoint and lens characteris-tics. These factors increase ambiguity and reduce the reliability of classical and hybrid methods when applied to drone-based imagery. Overall, a more controlled comparison would benefit from capturing the same scenes from both a ship and a drone, en-suring that observed performance differences reflect viewpoint effects rather than scene variability. Additionally, expanding the dataset with a larger number of drone-based videos is necessary to improve statistical reliability and better assess algorithm performance under diverse high-altitude conditions. Finally, it should be noted that all evaluated algorithms are restricted to predicting a straight horizon line, which limits their ability to accurately model curved horizons commonly observed in high-altitude drone imagery. VI. C ONCLUSION 
+
+In this study, we conducted a comprehensive evaluation of six horizon detection methods on a new IceHorizon dataset comprising 10 005 ship-based images and 2 355 drone-based images of ice-covered waters. The results show that the hybrid methods achieved the best performance on both types of categories (i.e., ship and drone). This confirms that hy-brid approaches offer a favorable trade-off between detection accuracy and computational efficiency. All selected horizon detection methods performed better on ship-based videos than on drone-based videos. This reflects the increased complexity and ambiguity inherent in the drone videos, which contained challenging conditions such as fog, ice formations, mountains, and curved horizons. Future work should focus on expanding the drone category to improve statistical reliability and creating paired drone and ship-based videos of the same scenes, enabling controlled comparisons that isolate the effect of viewpoint on horizon detection performance. REFERENCES [1] Bertil Grelsson, Michael Felsberg, and Folke Isaksson, “Highly accurate attitude estimation via horizon detection,” Journal of Field Robotics , vol. 33, no. 7, pp. 967–993, 2016. [2] Terry Donald Cornall, Gregory Kenneth Egan, and A Price, “Aircraft attitude estimation from horizon video,” Electronics Letters , vol. 42, no. 13, pp. 744–745, 2006. [3] Jinlei Chen, Shichang Kang, Wentao Du, Junming Guo, Min Xu, Yulan Zhang, Xinyue Zhong, Wei Zhang, and Jizu Chen, “Perspectives on future sea ice and navigability in the arctic,” The Cryosphere , vol. 15, no. 12, pp. 5473–5482, 2021. [4] Michael Schwendeman and Jim Thomson, “A horizon-tracking method for shipboard video stabilization and rectification,” Journal of Atmo-spheric and Oceanic Technology , vol. 32, no. 1, pp. 164–176, 2015. [5] Daniel D Morris, Brian R Colonna, and Franklin D Snyder, “Image-based motion stabilization for maritime surveillance,” in Image Process-ing: Algorithms and Systems V . SPIE, 2007, vol. 6497, pp. 128–136. [6] Wende Zhang and Sanjeev M Naik, “Camera auto-calibration by horizon estimation,” Sept. 4 2012, US Patent 8,259,174. [7] Borja Bovcon, Janez Perˇ s, Matej Kristan, et al., “Stereo obstacle detection for unmanned surface vehicles by IMU-assisted semantic segmentation,” Robotics and Autonomous Systems , vol. 104, 2018. [8] Tzvika Libe, Evgeny Gershikov, and Samuel Kosolapov, “Comparison of methods for horizon line detection in sea images,” Proceedings of the Content , pp. 79–85, 2012. [9] Dilip K Prasad, Deepu Rajan, Lily Rachmawati, Eshan Rajabally, and Chai Quek, “Video processing from electro-optical sensors for object detection and tracking in a maritime environment: A survey,” IEEE Transactions on Intelligent Transportation Systems , vol. 18, no. 8, 2017. [10] Domenico D Bloisi, Luca Iocchi, Andrea Pennisi, and Luigi Tombolini, “ARGOS-Venice boat classification,” in 12th IEEE International Con-ference on Advanced Video and Signal Based Surveillance . IEEE, 2015. [11] Matej Kristan, Vildana Suli´ c Kenk, Stanislav Kovaˇ ciˇ c, and Janez Perˇ s, “Fast image-based obstacle detection from unmanned surface vehicles,” 
+
+IEEE Transactions on Cybernetics , vol. 46, no. 3, pp. 641–654, 2015. [12] Sergiy Fefilatyev, Volha Smarodzinava, Lawrence O Hall, and Dmitry B Goldgof, “Horizon detection using machine learning techniques,” in 
+
+2006 5th International Conference on Machine Learning and Applica-tions (ICMLA’06) . IEEE, 2006, pp. 17–21. [13] Andrei Sandru, Pentti Kujala, and Arto Visala, “Horizon detection and tracking in sea-ice conditions using machine vision,” IFAC-PapersOnLine , vol. 56, no. 2, pp. 6724–6730, 2023. [14] Yassir Zardoua, Abdelali Astito, and Mohammed Boulaala, “A survey on horizon detection algorithms for maritime video surveillance: advances and future techniques,” The Visual Computer , vol. 39, no. 1, 2023. [15] Yassir Zardoua, Boulaala Mohammed, Mhamed El Mrabet, and Astito Abdelali, “A fast horizon detector and a new annotated dataset for maritime video processing,” arXiv preprint arXiv:2110.13694 , 2021. [16] Qiaochuan Chen, Zimo Wang, Dan Zhang, and Xiangyu Zhang, “Inno-vation in sea-sky line detection: Fusion of convnext classification, hed, and canny edge detection,” in Proceedings of the 2024 International Conference on Intelligent Perception and Pattern Recognition , 2024. [17] Miro Petkovi´ c, Igor Vujovi´ c, and Ivica Kuzmani´ c, “An overview on horizon detection methods in maritime video surveillance,” Transactions on Maritime Science , vol. 9, no. 1, pp. 106–112, 2020. [18] John Canny, “A computational approach to edge detection,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. PAMI-8, no. 6, pp. 679–698, 1986. [19] Richard O Duda and Peter E Hart, “Use of the Hough transformation to detect lines and curves in pictures,” Communications of the ACM ,vol. 15, no. 1, pp. 11–15, 1972. [20] Tete Xiao, Yingcheng Liu, Bolei Zhou, Yuning Jiang, and Jian Sun, “Unified perceptual parsing for scene understanding,” in Proceedings of the European Conference on Computer Vision (ECCV) , 2018. [21] Zhuang Liu, Hanzi Mao, Chao-Yuan Wu, Christoph Feichtenhofer, Trevor Darrell, and Saining Xie, “A ConvNet for the 2020s,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 11976–11986. [22] Xavier Soria, Angel Sappa, Patricio Humanante, and Arash Akbarinia, “Dense extreme inception network for edge detection,” Pattern Recog-nition , vol. 139, pp. 109461, 2023. [23] Bo Ventures, “Antarctica expedition: 10 days at sea (4K),” [Online Video] Available: https://www.youtube.com/watch?v=X13885ZPQTI. Accessed: 2025-10-09, Dec 2024. [24] P. Auteri, “Arctic sea ice with seal in Svalbard,” [Online Video] Available: https://www.youtube.com/watch?v=uHwOrPwagnY. Accessed: 2025-10-09, Feb 2020. [25] Wandering Spiritlust, “Antarctica expedition - cruising through sea ice,” [Online Video] Available: https://www.youtube.com/watch?v= B8cK8VgIE1A. Accessed: 2025-10-09, Feb 2023. [26] FLUENT, “Island besieged by sea ice in northeast China Liaodong Bay,” [Online Video] Available: http://youtube.com/watch?v=WCY2JzIx1aA. Accessed: 2025-10-09, Jan 2018. [27] Free Copyright Videos, “Fly above frozen panorama of an antarc-tica snow covered mountain range ice ocean wa 4K,” [Online Video] Available: https://www.youtube.com/watch?v=BnBKGiYTRkc. Accessed: 2025-10-09, Mar 2018. [28] Civil Disturbia, “The Weddell sea: Secret Antarctic sea,” [Online Video] Available: https://www.youtube.com/watch?v=R0NzNhXt 38& t=3s. Accessed: 2025-10-09, Mar 2018. [29] B. Sekachev et al., “opencv/cvat: v1.1.0,” Zenodo. https://doi.org/10. 5281/zenodo.4009388, 2020. [30] Evgeny Gershikov, Tzvika Libe, and Samuel Kosolapov, “Horizon line detection in marine images: which method to choose?,” International Journal on Advances in Intelligent Systems , vol. 6, no. 1, 2013.
