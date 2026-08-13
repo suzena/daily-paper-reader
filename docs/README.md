@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-12</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-13</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-12 20:31:07 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-13 20:21:24 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共推荐10篇论文，含4篇精读与6篇速读，聚焦地球观测与AI交叉方向。最值得关注两项：残差校正神经网络用于海表温度统计降尺度（8.0分），以及结构引导的开放词汇遥感分割模型GeoSeg-OV（8.0分）。建议优先精读这两篇高分工作，并顺带浏览IceHorizon冰区船载视觉数据集以拓展应用视野。</p>
+<p>今日共读12篇论文，其中1篇精读、11篇速读，重点聚焦海事导航与遥感分割方向。</p>
+<p>最值得关注的是精读文章《IoT-Enabled Autonomous Maritime Navigation in Smart Ports》，提出课程引导的共享策略学习框架，得分9.0；速读中开放词汇分割与船舶轨迹预测也值得一看。</p>
+<p>下步建议从精读框架出发，尝试将课程学习思路迁移到轨迹预测或多模态分割任务中，注意结合在线聚类采样等细节。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network">Deep Learning-Based Statistical Downscaling of Sea Surface Temperature Using a Residual Corrective Neural Network</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation">GeoSeg-OV: Bridging Geospatial Gaps with Structural Guidance for Open-Vocabulary Remote Sensing Segmentation</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning">GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="IoT-Enabled Autonomous Maritime Navigation in Smart Ports: A Curriculum-Guided Shared Policy Learning Framework">IoT-Enabled Autonomous Maritime Navigation in Smart Ports: A Curriculum-Guided Shared Policy Learning Framework</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">11 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information">Learning Deep Modality-Shared Self-Expressiveness for Image Clustering with Textual Information</span></li><li><span class="dpr-home-dashboard-paper-title" title="ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study">ASTELD: A Six-Axis Classification Framework for Autonomous AI Agents - Design, Evaluation, and an OpenClaw Case Study</span></li><li><span class="dpr-home-dashboard-paper-title" title="IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods">IceHorizon: A Dataset for Horizon Detection in Ice-Covered Maritime Environments and Comparative Evaluation of Detection Methods</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Test-Time Prototype Adaptation for Open-Vocabulary Semantic Segmentation">Test-Time Prototype Adaptation for Open-Vocabulary Semantic Segmentation</span></li><li><span class="dpr-home-dashboard-paper-title" title="CRHT: A Continuous Regression Hybrid Transformer for Vessel Trajectory Prediction with Online Cluster Sampling">CRHT: A Continuous Regression Hybrid Transformer for Vessel Trajectory Prediction with Online Cluster Sampling</span></li><li><span class="dpr-home-dashboard-paper-title" title="Evaluating Semantic and Spatial Guidance for Foundation Model Segmentation of Small-Scale PV in Remote Sensing Imagery">Evaluating Semantic and Spatial Guidance for Foundation Model Segmentation of Small-Scale PV in Remote Sensing Imagery</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
 </section>
 </div>
 

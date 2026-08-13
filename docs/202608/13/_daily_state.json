@@ -1,0 +1,201 @@
+{
+  "date": "20260813",
+  "date_label": "",
+  "generated_at": "2026-08-13 20:21:24 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.11597v1",
+      "route": "202608/13/2608.11597v1-iot-enabled-autonomous-maritime-navigation-in-smart-ports-a-curriculum-guided-shared-policy-learning-framework",
+      "title": "IoT-Enabled Autonomous Maritime Navigation in Smart Ports: A Curriculum-Guided Shared Policy Learning Framework",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "自主海上导航智能体，强化学习",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.08290v1",
+      "route": "202608/13/2608.08290v1-test-time-prototype-adaptation-for-open-vocabulary-semantic-segmentation",
+      "title": "Test-Time Prototype Adaptation for Open-Vocabulary Semantic Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "免训练的测试时原型自适应开放词汇分割，可用于生境分类",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.10256v1",
+      "route": "202608/13/2608.10256v1-crht-a-continuous-regression-hybrid-transformer-for-vessel-trajectory-prediction-with-online-cluster-sampling",
+      "title": "CRHT: A Continuous Regression Hybrid Transformer for Vessel Trajectory Prediction with Online Cluster Sampling",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海上安全的船舶轨迹预测",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.10801v1",
+      "route": "202608/13/2608.10801v1-evaluating-semantic-and-spatial-guidance-for-foundation-model-segmentation-of-small-scale-pv-in-remote-sensing-imagery",
+      "title": "Evaluating Semantic and Spatial Guidance for Foundation Model Segmentation of Small-Scale PV in Remote Sensing Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "视觉-语言基础模型通过文本提示进行遥感分割，可迁移至珊瑚栖息地制图",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.12227v1",
+      "route": "202608/13/2608.12227v1-domain-aware-lightweight-spectral-grouped-convolutions-for-hyperspectral-fish-freshness-classification",
+      "title": "Domain-Aware Lightweight Spectral-Grouped Convolutions for Hyperspectral Fish Freshness Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海洋生物对象的光谱分类模型",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.07382v1",
+      "route": "202608/13/2608.07382v1-skysealand-a-wide-format-satellite-transportation-benchmark-with-an-ultra-lightweight-detection-baseline",
+      "title": "SkySeaLand: A Wide-Format Satellite Transportation Benchmark with an Ultra-Lightweight Detection Baseline",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "包含海上场景的卫星目标检测基准",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.08308v1",
+      "route": "202608/13/2608.08308v1-open-world-semantic-segmentation-with-sensitivity-modeling",
+      "title": "Open-World Semantic Segmentation with Sensitivity Modeling",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "开放世界语义分割方法，可迁移用于珊瑚底栖覆盖分类",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.08895v1",
+      "route": "202608/13/2608.08895v1-latent-semantic-state-estimation-for-reliable-swarming-of-uavs-under-intermittent-connectivity",
+      "title": "Latent Semantic State Estimation for Reliable Swarming of UAVs under Intermittent Connectivity",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向间歇连接的多无人机集群潜在语义状态估计，可迁移至海洋机器人集群",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.11064v1",
+      "route": "202608/13/2608.11064v1-entropy-centric-explainable-ai-for-remote-sensing-image-segmentation",
+      "title": "Entropy-Centric Explainable AI for Remote Sensing Image Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遥感图像分割的可解释AI方法，可迁移用于珊瑚礁生境制图",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.11167v1",
+      "route": "202608/13/2608.11167v1-multimodal-code-switching-interleaving-visual-objects-into-language-for-explicit-object-level-alignment",
+      "title": "MultiModal Code-Switching: Interleaving Visual Objects into Language for Explicit Object-Level Alignment",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态大模型对象级对齐预训练",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.11663v1",
+      "route": "202608/13/2608.11663v1-zero-ovcd-bridging-training-free-foundation-models-and-pseudo-label-learning-for-open-vocabulary-change-detection",
+      "title": "Zero-OVCD: Bridging Training-Free Foundation Models and Pseudo-Label Learning for Open-Vocabulary Change Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "开放词表遥感变化检测与伪标签学习",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    },
+    {
+      "paper_id": "2608.11685v1",
+      "route": "202608/13/2608.11685v1-egm-det-entropy-guided-multimodal-adaptive-fusion-for-uav-rgb-ir-object-detection",
+      "title": "EGM-Det: Entropy-Guided Multimodal Adaptive Fusion for UAV RGB-IR Object Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向航空遥感目标检测的RGB与红外图像熵引导自适应融合",
+      "first_seen_at": "2026-08-13 20:21:24 UTC",
+      "updated_at": "2026-08-13 20:21:24 UTC"
+    }
+  ]
+}

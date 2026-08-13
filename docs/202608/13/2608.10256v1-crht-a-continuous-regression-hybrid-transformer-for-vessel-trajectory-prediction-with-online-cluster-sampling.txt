@@ -1,0 +1,119 @@
+Title: CRHT: A Continuous Regression Hybrid Transformer for Vessel Trajectory Prediction with Online Cluster Sampling
+
+URL Source: https://arxiv.org/pdf/2608.10256v1
+
+Published Time: Wed, 12 Aug 2026 00:24:26 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+# CRHT: A CONTINUOUS REGRESSION HYBRID TRANSFORMER FOR VESSEL TRAJECTORY PREDICTION WITH ONLINE CLUSTER SAMPLING 
+
+Alexander Schiøtz , Bertram Hage , Christian Rand , Felix Thomsen , Peder Heiselberg 
+
+Technical University of Denmark 
+
+Anker Engelunds Vej 101 2800 Kongens Lyngby, Denmark ph@space.dtu.dk 
+
+Abstract —Accurate vessel trajectory prediction is critical for maritime safety and anomaly detection, yet existing models often struggle with geographic bias and navigational realism. We propose the Continuous Regression Hybrid Transformer (CRHT), a deep learning framework designed to forecast vessel motion using Automatic Identification System (AIS) data. To mitigate spatial data imbalance, we introduce an online K-means cluster sampling strategy that ensures diverse exposure to rare maneuvers during training. Our hybrid architecture integrates 1D convolutional layers for local kinematic feature extraction with a multi-head attention mechanism for global temporal context. CRHT demonstrates superior performance in short-term forecasting, achieving the lowest errors at the 1-hour horizon. The results demonstrate that while discrete models provide high navigational stability over long horizons, CRHT offers an optimal balance of precision and maneuver tracking for real-time maritime surveillance. 
+
+Index Terms —Vessel Trajectory Prediction, Automatic Identi-fication System (AIS), Transformer, Maritime Domain Awareness (MDA), K-means Clustering. 
+
+I. I NTRODUCTION 
+
+The Automatic Identification System (AIS) provides the spatio-temporal foundation for Maritime Domain Awareness (MDA). In critical waterways like the Danish Straits, accurate vessel trajectory prediction is vital for collision avoidance and anomaly detection. However, modeling AIS data is compli-cated by irregular sampling, sensor noise, and bias where mod-els overfit to linear paths and fail during complex maneuvers. Vessel trajectory prediction research has evolved from clas-sical state-space models like the Kalman Filter [1], which struggle with nonlinear maneuvers, to deep learning archi-tectures. Recurrent Neural Networks (RNNs) and LSTMs [2] improved temporal modeling but are limited by the in-formation bottleneck of fixed-size context vectors. Recently, Transformer-based architectures [3, 4] have set new bench-marks by using self-attention to capture long-range dependen-
+
+© 2026 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works. 
+
+cies. While discrete generative models like the TrAISformer [3] offer navigational realism through coordinate binning, they often suffer from quantization errors and high inference latency. In this study we address the challenges of geographic data imbalance and regression precision by introducing the Con-tinuous Regression Hybrid Transformer (CRHT). This work contributes a scalable MapReduce preprocessing pipeline, an online K-Means cluster sampling strategy to capture diverse maneuvers, and a hybrid CNN-Transformer architecture that integrates local kinematic extraction with global attention for robust trajectory forecasting. II. D ATA 
+
+The Danish Maritime Authority provides historic archives of vessel data from Denmark since 2006 [5]. 3 months of data in the period July 24th - October 24th 2025 was gathered. This dataset included 1,818,441,680 AIS messages from 35,349 unique vessels based on their unique Maritime Mobile Service Identity (MMSI) number. In this study we focused on larger vessels, namely tankers and cargo ships and their basic geographical and kinetic features of such as latitude, longitude, Speed over Ground (SOG) in knots, and Course over Ground (COG) in degrees. Additional information was available, such as vessel type and navigational status. However, these features lack data completeness, especially for smaller vessels. The dataset was transformed from irregularly sampled and noisy single messages into regularly sampled coherent vessel trajectories. First, we excluded erroneous messages outside our defined geographical boundary of lat ∈ [54 , 59] , lon ∈ [5 , 17] 
+
+and removed messages not conforming to SOG ∈ [0 , 30] and 
+
+COG ∈ [0 , 360] . We then split the data by MMSI and perform further processing in parallel [6], reducing computation time and space while avoiding lossy simplification such as the otherwise popular Ramer–Douglas–Peucker (RDP) algorithm [7]. Following [3], we defined a voyage as a sequence of messages with time gaps smaller than 2 hours, partitioned voyages longer than 20 hours, and discarded those shorter than arXiv:2608.10256v1 [cs.LG] 10 Aug 2026 Encoder Stream Decoder Stream Future Steps t + 1 . . . t + L     
+
+> Input X
+> 1D Conv Block Feat. Emb.
+> Transf. Encoder
+> +PE
+> Queries Q
+> Transf. Decoder
+> +PE Memory
+> Linear Proj.
+> Pred ∆ˆ y
+> True ∆y
+> ×α
+> Scaled
+> Huber Loss
+
+Fig. 1: Architecture of the CRHT model. The dual-stream design separates the historical context encoding (bottom blue stream) from the future trajectory decoding (top orange stream). The decoder utilizes Positional Encoding (PE) and learnable queries combined with cross-attention to the en-coder’s memory to regress displacement deltas in parallel. 4 hours or containing fewer than 20 messages. Outliers where the calculated speed exceeded 40 knots were removed. Finally, we applied linear interpolation to resample the trajectories at 5-minute intervals. These steps reduced the dataset from 72,995 to 41,458 voyages spanning 1,203 unique vessels. III. M ETHODOLOGY 
+
+We frame vessel trajectory prediction task as a multi-variate sequence-to-sequence regression problem. Given an observed sequence of historical states X = {x1, . . . , x T }
+
+where xt ∈ R4, we predict the future sequence 
+
+Y = {yT +1 , . . . , y T +L} based on the feature set F =
+
+{Latitude, Longitude, SOG, COG }.We developed a Continuous Regression Hybrid Transformer (CRHT) for vessel trajectory prediction. It performs continu-ous regression of coordinate displacements via three stages: 
+
+1. Local-Global Encoder: The input sequence X is processed by a 1D Convolutional block ( Conv 1d → ReLU → Conv 1d)to extract local kinematic derivatives (velocity, acceleration) and smooth sensor noise. The result is augmented with sinusoidal positional encodings and passed to an N -layer Transformer Encoder, which uses multi-head self-attention to capture long-range dependencies across the 64-step history. 
+
+2. Query-Based Decoder: Unlike recurrent architectures, we utilize a Transformer Decoder with L learnable query embeddings Q ∈ RL×dmodel . These queries interact with the encoder’s memory via multi-head cross-attention , allowing the model to attend to specific historical maneuvers (e.g. turn entries) to predict future steps t + 1 . . . t + L in parallel. 
+
+3. Scaled Delta Learning: To ensure stability, inputs are MinMax normalized to [0 , 1] , and the model regresses inter-step displacements ∆ˆ yt. Predictions are denormalized during the forward pass and optimized using Huber Loss against scaled ground-truth targets to prevent gradient underflow: 
+
+LT P T rans = Huber (∆ˆ ypred , ∆ytrue · α) (1) where α = 100 .0 is a scaling factor applied to physical degree differences. 
+
+Fig. 2: Voronoi tessellation [10] of the coordinate space based on k = 50 centroids (red dots). The blue lines represent the boundaries between clusters, ensuring that training samples are drawn from diverse geographical regions. 
+
+A. Online K-Means Cluster Sampling 
+
+Transformer-based sequence models incur a quadratic mem-ory cost O(N 2) with respect to the input sequence length 
+
+N , which renders direct training on multi-hour vessel trajec-tories infeasible with limited resources. Consequently, long trajectories are truncated during training and fixed-length subsequences extracted to reduce memory cost. However, uniform random sampling introduces a strong bias toward geographically dense and low-speed regions, as commercial vessels repeatedly traverse established shipping lanes and spend extended periods maneuvering near ports. As a result, uniformly sampled subsequences overrepresent spatially re-dundant segments while underrepresenting rarer route devi-ations and sparsely trafficked areas. To mitigate this imbalance, we propose an online cluster-based sampling strategy based on spatial K-Means clustering [8]. K-Means is a highly efficient clustering method with distributed implementations that makes it effective for huge AIS datasets [9]. A K-Means algorithm with k = 50 clusters is fitted on the latitude–longitude coordinates of AIS messages in the dataset. Each AIS message is assigned a cluster index corresponding to its nearest centroid in Euclidean coordinate space (see Fig. 2). Online (during training) sampling is performed by first selecting a trajectory, after which a cluster is drawn uniformly from the clusters overlapping that segment. A starting index is then sampled uniformly over part of the sequence within the selected cluster, subject to the constraint that a contiguous subsequence can be formed. This procedure enforces approxi-mately uniform exposure across spatial clusters while preserv-ing temporal continuity within each sampled subsequence (see Fig. 3a and 3b). IV. E XPERIMENTS 
+
+As a non-learning baseline, we implemented a standard Kalman Filter assuming a Constant Velocity (CV) model based on the vessel’s last known heading and speed [1, 11]. We also implemented a CRHT using a Gated Recurrent Unit (GRU) decoder. However, it performed poorly compared to the Transformer decoder, which we attribute to the Information Bottleneck problem: the GRU is forced to compress the (a) 
+
+> (b)
+
+Fig. 3: Trajectory sampling start-point density. Top: Random sampling (blue). Bottom: K-Means sampling (orange). entire 64-step history into a single fixed-size context vector [12, 13]. Consequently, the Transformer Decoder was selected for the final model. Furthermore, we evaluated different model capacities during training. We found that a medium-sized architecture offered the optimal trade-off between performance and generalization. For the final CRHT implementation, we set the latent dimension dmodel = 512 with 8 attention heads, 8 encoder layers, and 8 decoder layers. 
+
+A. Evaluation 
+
+The dataset was partitioned into training, validation, and test sets in an 80:10:10 ratio split by MMSI to avoid data leakage and prevent the model from overfitting to individual vessels’ movement patterns. We train using the AdamW optimizer [14] with a batch size of 512 and an initial learning rate of 3×10 −4
+
+on a single NVIDIA A100 (80GB) GPU [15]. Training runs for a maximum of 200 epochs with early stopping (patience 50), utilizing a 5-epoch warm-up followed by validation-based learning rate decay (factor 0.5) triggered by loss stagnation. During training we fix T = 64 (past) and L = 12 (future). All evaluated models benefitted from the online K-Means cluster sampling, providing a fair comparison of kinematic performance. While [3] employs a ”Best-of-N” sampling strategy ( N =16 ), selecting the best prediction post-hoc, we reject this as unsuitable for real-world maritime surveillance (e.g., Real-time trajectory prediction, port prediction, anomaly detection, and collision avoidance), where the true future is unknown at inference time. Instead, we enforce strict deterministic evalua-tion to assess reliability: [3] uses greedy decoding ( T = 0 ) to select the most probable bin; CRHT regresses the deterministic TABLE I: Mean FDE and ADE prediction errors in kilometers (km). Bold indicates the best performance in each category.                  
+
+> 1 Hour Horizon 2 Hour Horizon Model ADE FDE ADE FDE
+> Kalman Filter 1.58 3.60 3.70 8.86
+> TrAISformer 1.38 2.41 2.62 5.42
+> CRHT 1.21 2.07 2.55 5.85
+
+mean of displacement deltas; and the Kalman Filter projects linearly without noise. To handle long horizons, we employ autoregressive gener-ation: [3] predicts step-by-step ( t → t + 1 ), while CRHT op-erates block-autoregressively, forecasting full 1-hour horizons (H = 12 ) iteratively by appending predictions to the history window. We evaluate performance in kilometers (km) using the Haversine distance function dhav (·). We report the Average Displacement Error (ADE), measuring the mean path de-viation, and the Final Displacement Error (FDE), assessing destination accuracy at step T + L:
+
+ADE = 1
+
+L
+
+> L
+
+X
+
+> t=1
+
+dhav (ˆ yT +t, y T +t) (2) FDE is the geospatial distance between the predicted and ground truth positions at the final time step ( T + L). This metric evaluates the model’s destination forecasting accuracy. 
+
+F DE = dhaversine (ˆ yT +L, y T +L) (3) The mean trip length was 4.17 hours. V. R ESULTS & D ISCUSSION 
+
+Table I reports trajectory prediction ADE and FDE across 1-hour and 2-hour horizons. The Continuous Regression Hy-brid Transformer (CRHT) consistently achieves the strongest overall performance profile across both horizons. At a 1-hour prediction horizon, CRHT achieves the lowest mean ADE (1.21 km) and the lowest mean FDE (2.07 km) among all evaluated models. At the 2-hour horizon, CRHT maintains the lowest mean ADE (2.55 km). For FDE, CRHT achieves a mean error of 5.85 km, which is slightly higher than TrAISformer (5.42 km). Across horizons, CRHT demon-strates a consistent reduction in displacement errors relative to classical filtering and discrete generative baselines. Fig. 4 showcases a difficult prediction scenario in which a vessel, following a long and nearly linear trajectory south of Sweden, executes a pronounced northward turn around Bornholm. In this setting, CRHT predicts a trajectory that follows the northward maneuver and remains feasible over the full forecast horizon, closely matching the true vessel path. By contrast, both the Kalman Filter and TrAISformer extrapolate the preceding motion pattern and project the trajectory into the island of Bornholm, reflecting an inability to represent the observed change in heading in this scenario. Fig. 4: Vessel trajectory turning north around Bornholm. 
+
+Fig. 5: Vessel trajectory with a slight curve. In Fig. 5, CRHT produces a trajectory that largely aligns with the ground truth, with only a small spatial deviation. The Kalman Filter continues along a straight-line path and achieves the lowest FDE in this instance, but its trajectory does not capture the executed maneuver and deviates from the actual vessel path. This example illustrates that low point-wise error metrics may coincide with qualitatively inconsistent motion representations. Fig. 6 depicts a highly ambiguous scenario in which none of the evaluated models accurately predict the realized vessel trajectory. CRHT and the Kalman Filter diverge early from the ground truth, while TrAISformer produces a trajectory 
+
+Fig. 6: Vessel trajectory in an ambiguous scenario. that would be realistic if the vessel had taken an eastward turn instead of the executed westward maneuver, effectively ”hallucinating” an alternative path. This example illustrates the challenge of modeling trajectories under high uncertainty, where multiple plausible routes exist and a model may gener-ate a navigationally valid path that does not correspond to the observed behavior. VI. C ONCLUSION 
+
+We introduced and evaluated the Continuous Regression Hybrid Transformer (CRHT) for AIS-based vessel trajectory prediction. CRHT achieves the lowest mean displacement errors across short- and intermediate-term horizons while producing smooth, continuous trajectories that handle nonlin-ear maneuvers. The results demonstrate its ability to follow complex paths realistically, in contrast to classical filtering and discrete generative models that either fail on sharp turns or generate plausible but unexecuted trajectories. By combining predictive accuracy with navigational feasibility, CRHT pro-vides a robust framework for maritime trajectory forecasting under both typical and uncertain conditions. All code for this study is available here REFERENCES  
+
+> [1] R. E. Kalman, “A new approach to linear filtering and pre-diction problems,” Transactions of the ASME–Journal of Basic Engineering , 1960.
+
+[2] X. Zhang, X. Fu, Z. Xiao, H. Xu, and Z. Qin, “Vessel trajec-tory prediction in maritime transportation: Current approaches and beyond,” IEEE Transactions on Intelligent Transportation Systems , vol. 23, no. 11, 2022. [3] D. Nguyen and R. Fablet, “Traisformer: A transformer network with sparse augmented data representation,” IEEE Transactions on Intelligent Transportation Systems , 2024. [4] W. Wang, W. Xiong et al. , “Tptrans: Vessel trajectory prediction model based on transformer using ais data,” ISPRS International Journal of Geo-Information , 2024. [5] Danish Maritime Authority (DMA), “Ais data,” https: //www.dma.dk/safety-at-sea/navigational-information/ais-data, 2025, accessed: November 21, 2025. [6] J. Dean and S. Ghemawat, “Mapreduce: simplified data pro-cessing on large clusters,” Communications of the ACM , vol. 51, no. 1, 2008. [7] U. Ramer, “An iterative procedure for the polygonal approxima-tion of plane curves,” Computer graphics and image processing ,vol. 1, no. 3, 1972. [8] J. MacQueen, “Multivariate observations,” in Proceedings ofthe 5th Berkeley Symposium on Mathematical Statisticsand Proba-bility , vol. 1, 1967, pp. 281–297. [9] M.-F. F. Balcan, S. Ehrlich, and Y. Liang, “Distributed k-means and k-median clustering on general topologies,” Advances in neural information processing systems , vol. 26, 2013. [10] Q. Du, V. Faber, and M. Gunzburger, “Centroidal voronoi tes-sellations: Applications and algorithms,” SIAM review , vol. 41, no. 4, pp. 637–676, 1999. [11] A. Mansour, V. Groza, and E. Petriu, “The use of kalman filter techniques for ship track estimation,” WSEAS TRANSACTIONS ON SYSTEMS , 2020. [12] D. Bahdanau, K. Cho, and Y. Bengio, “Neural machine trans-lation by jointly learning to align and translate,” arXiv preprint arXiv:1409.0473 , 2015. [13] K. Cho, B. van Merri¨ enboer, C. Gulcehre, D. Bahdanau, F. Bougares, H. Schwenk, and Y. Bengio, “Learning phrase representations using rnn encoder–decoder for statistical ma-chine translation,” in Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP) ,2014. [14] I. Loshchilov and F. Hutter, “Decoupled weight decay regular-ization,” arXiv preprint arXiv:1711.05101 , 2017. [15] D. C. Center, “Dtu computing center resources,” https://doi.org/ 10.48714/DTU.HPC.0001, 2025.

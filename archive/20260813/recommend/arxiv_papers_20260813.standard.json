@@ -1,0 +1,481 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-13T20:14:32.732554+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 13,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2608.11597v1",
+      "source": "arxiv",
+      "title": "IoT-Enabled Autonomous Maritime Navigation in Smart Ports: A Curriculum-Guided Shared Policy Learning Framework",
+      "abstract": "As smart port infrastructures increasingly rely on autonomous maritime devices enabled by the Internet of Things (IoT), ensuring reliable onboard navigation intelligence has become a critical challenge for safe and scalable operations in congested waterways. This paper investigates onboard autonomous navigation for such IoT devices under partial observability and dense traffic conditions. A curriculum-guided reinforcement learning framework with a shared recurrent policy is developed to enhance temporal reasoning, deployment scalability, and robustness of edge-level decision-making. Centralized training is adopted as an offline design-time strategy, while all navigation actions are executed fully onboard, consistent with IoT edge intelligence paradigms. Extensive simulations in multiple realistic port environments demonstrate that the proposed approach improves navigation reliability, collision avoidance, and training stability compared with standard baseline methods, and generalizes effectively to previously unseen high-density scenarios. The results indicate that curriculum-guided shared learning provides a practical solution for scalable deployment of IoT-enabled autonomous maritime devices in smart port operations.",
+      "authors": [
+        "Yuqing Lin",
+        "Rangya Zhang",
+        "Kum Fai Yuen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "published": "2026-08-12T03:08:53+00:00",
+      "link": "https://arxiv.org/pdf/2608.11597v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autonomous maritime navigation intelligent agent with reinforcement learning",
+      "llm_evidence_cn": "自主海上导航智能体，强化学习",
+      "llm_evidence": "自主海上导航智能体，强化学习",
+      "canonical_evidence": "自主海上导航智能体，强化学习",
+      "llm_tldr_en": "Proposes a curriculum-guided reinforcement learning framework with a shared recurrent policy for autonomous navigation of IoT-enabled maritime devices in congested smart ports, enhancing temporal reasoning, scalability, and onboard robustness.",
+      "llm_tldr_cn": "针对智能港口中物联网自主海事设备在部分可观测与密集交通条件下的可靠导航问题，提出课程引导的共享循环策略强化学习框架。集中训练作为离线策略，所有导航动作在端侧执行，从而提升时间推理、部署扩展性与边缘决策鲁棒性。该方法为智能体在海洋自主导航场景的应用提供了有效范式。",
+      "llm_tldr": "针对智能港口中物联网自主海事设备在部分可观测与密集交通条件下的可靠导航问题，提出课程引导的共享循环策略强化学习框架。集中训练作为离线策略，所有导航动作在端侧执行，从而提升时间推理、部署扩展性与边缘决策鲁棒性。该方法为智能体在海洋自主导航场景的应用提供了有效范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.08290v1",
+      "source": "arxiv",
+      "title": "Test-Time Prototype Adaptation for Open-Vocabulary Semantic Segmentation",
+      "abstract": "Open-vocabulary semantic segmentation (OVSS) repurposes a pretrained CLIP encoder for dense prediction without additional labeled supervision. Existing methods improve CLIP's spatial behavior either by redesigning its internal attention or by injecting features from auxiliary vision foundation models; both require access to the host's internal computation and are tailored to its specific forward pass. In this work, we propose Test-time Prototype Adaptation (TPA), a training-free plug-in that operates at the output level, leaving the host's forward pass and weights unmodified. By leveraging a lightweight transductive adaptation phase, TPA identifies confident anchor patches from the host's own output predictions on a small pool of unlabeled deployment-domain images, and aggregates their frozen DINO features into per-class prototypes; at inference, a single cosine similarity lookup against this frozen bank provides an auxiliary score fused linearly with the host's logits. TPA composes with five representative OVSS hosts spanning attention-redesign and VFM-injection designs, across three CLIP backbones, eight benchmarks, and multiple internal VFM choices. Under a single set of hyper-parameters and without per-host tuning or parameter updates, TPA consistently improves segmentation accuracy, with as few as approximately 10% of unlabeled deployment-domain images sufficing for effective bank construction on most benchmarks.",
+      "authors": [
+        "Haozhe Wang",
+        "Jintao Cheng",
+        "Weibin Li",
+        "Xiaoyu Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T18:51:16+00:00",
+      "link": "https://arxiv.org/pdf/2608.08290v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "training-free plug-in adapting CLIP prototypes at test time for open-vocabulary segmentation, applicable to habitat classification",
+      "llm_evidence_cn": "免训练的测试时原型自适应开放词汇分割，可用于生境分类",
+      "llm_evidence": "免训练的测试时原型自适应开放词汇分割，可用于生境分类",
+      "canonical_evidence": "免训练的测试时原型自适应开放词汇分割，可用于生境分类",
+      "llm_tldr_en": "Proposes Test-time Prototype Adaptation, a training-free plug-in that adapts CLIP prototypes at output level using confident anchors, improving open-vocabulary semantic segmentation without modifying host forward pass.",
+      "llm_tldr_cn": "针对开放词汇语义分割中CLIP编码器空间行为不足且现有改进需访问内部计算的问题，提出测试时原型自适应（TPA）。该方法作为免训练插件，在输出层利用模型自身预测中的高置信锚点补丁进行转导式自适应，不改动主干前向传播。在少量无标注部署图像上即可提升分割性能，可方便地用于珊瑚礁底栖覆盖等遥感影像的开放词汇分类。",
+      "llm_tldr": "针对开放词汇语义分割中CLIP编码器空间行为不足且现有改进需访问内部计算的问题，提出测试时原型自适应（TPA）。该方法作为免训练插件，在输出层利用模型自身预测中的高置信锚点补丁进行转导式自适应，不改动主干前向传播。在少量无标注部署图像上即可提升分割性能，可方便地用于珊瑚礁底栖覆盖等遥感影像的开放词汇分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.07382v1",
+      "source": "arxiv",
+      "title": "SkySeaLand: A Wide-Format Satellite Transportation Benchmark with an Ultra-Lightweight Detection Baseline",
+      "abstract": "Satellite object detection is challenged by small targets and wide-format scenes that lose detail under standard square-input resizing. We introduce SkySeaLand, a public dataset of 1,307 high-resolution satellite images and 19,101 verified bounding boxes across airplane, boat, car, and ship classes in terrestrial and maritime scenes. Native COCO and YOLO annotations are provided. The collection is dominated by large source images and wide scene geometry: 84.5 percent exceed 3,836 pixels on the longest side and 73.1 percent are near a 3:1 aspect ratio. We evaluate twelve detectors from the YOLO, RT-DETR, DETR, and Faster R-CNN families using a common split and COCO metrics. The tested YOLO and RT-DETR variants obtain 84.4--88.2 mAP50, with no consistent accuracy gain from larger parameter counts under the reported model-specific recipes. We also report SkyDet, a 1.22 M parameter anchor-free baseline that obtains 60.5 mAP50 and 24.32 mAP50-95 in a 4.90 MB footprint, with 13.74 ms latency (72.8 FPS) on a Tesla T4. SkySeaLand provides a compact benchmark for mixed land--maritime transportation detection, while SkyDet establishes a documented low-footprint reference rather than a state-of-the-art accuracy claim.",
+      "authors": [
+        "Md. Zahid Hasan Riad",
+        "Md Sultanul Islam Ovi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-07T16:23:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.07382v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Satellite object detection benchmark including maritime scenes",
+      "llm_evidence_cn": "包含海上场景的卫星目标检测基准",
+      "llm_evidence": "包含海上场景的卫星目标检测基准",
+      "canonical_evidence": "包含海上场景的卫星目标检测基准",
+      "llm_tldr_en": "Introduces SkySeaLand, a wide-format satellite benchmark with 1307 images and 19101 boxes for airplane, boat, car, ship detection, and evaluates twelve YOLO/RT-DETR/DETR/Faster R-CNN detectors.",
+      "llm_tldr_cn": "针对宽幅卫星图像中小目标检测难点，构建SkySeaLand基准，包含1307张高分辨率图像和19101个标注框，覆盖飞机、船舶、汽车等陆海场景。分析发现84.5%图像最长边超过3836像素，73.1%接近3:1宽高比。评测12种检测器（YOLO、RT-DETR、DETR、Faster R-CNN）并提供通用划分和COCO指标。该数据集和基线为海洋遥感目标检测提供了公开平台和方法参考。",
+      "llm_tldr": "针对宽幅卫星图像中小目标检测难点，构建SkySeaLand基准，包含1307张高分辨率图像和19101个标注框，覆盖飞机、船舶、汽车等陆海场景。分析发现84.5%图像最长边超过3836像素，73.1%接近3:1宽高比。评测12种检测器（YOLO、RT-DETR、DETR、Faster R-CNN）并提供通用划分和COCO指标。该数据集和基线为海洋遥感目标检测提供了公开平台和方法参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.10256v1",
+      "source": "arxiv",
+      "title": "CRHT: A Continuous Regression Hybrid Transformer for Vessel Trajectory Prediction with Online Cluster Sampling",
+      "abstract": "Accurate vessel trajectory prediction is critical for maritime safety and anomaly detection, yet existing models often struggle with geographic bias and navigational realism. We propose the Continuous Regression Hybrid Transformer (CRHT), a deep learning framework designed to forecast vessel motion using Automatic Identification System (AIS) data. To mitigate spatial data imbalance, we introduce an online K-means cluster sampling strategy that ensures diverse exposure to rare maneuvers during training. Our hybrid architecture integrates 1D convolutional layers for local kinematic feature extraction with a multi-head attention mechanism for global temporal context. CRHT demonstrates superior performance in short-term forecasting, achieving the lowest errors at the 1-hour horizon. The results demonstrate that while discrete models provide high navigational stability over long horizons, CRHT offers an optimal balance of precision and maneuver tracking for real-time maritime surveillance.",
+      "authors": [
+        "Alexander Schiøtz",
+        "Bertram Hage",
+        "Christian Rand",
+        "Felix Thomsen",
+        "Peder Heiselberg"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-10T21:42:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.10256v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vessel trajectory prediction for maritime safety",
+      "llm_evidence_cn": "面向海上安全的船舶轨迹预测",
+      "llm_evidence": "面向海上安全的船舶轨迹预测",
+      "canonical_evidence": "面向海上安全的船舶轨迹预测",
+      "llm_tldr_en": "CRHT forecasts vessel trajectories with online K-means resampling and a hybrid 1D-CNN plus multi-head attention transformer, mitigating geographic bias and improving maritime prediction accuracy.",
+      "llm_tldr_cn": "船舶轨迹预测对海上安全与异常检测至关重要，但现有模型常受地理偏差和航行真实性问题困扰。本文提出的连续回归混合Transformer（CRHT）结合一维卷积局部特征提取与多头注意力全局时序建模，并引入在线K-means聚类采样以缓解空间数据不平衡。该方法在短时轨迹预测等任务上取得了优越性能，为海洋智能监控系统中的运动预测提供了有力的深度学习工具。",
+      "llm_tldr": "船舶轨迹预测对海上安全与异常检测至关重要，但现有模型常受地理偏差和航行真实性问题困扰。本文提出的连续回归混合Transformer（CRHT）结合一维卷积局部特征提取与多头注意力全局时序建模，并引入在线K-means聚类采样以缓解空间数据不平衡。该方法在短时轨迹预测等任务上取得了优越性能，为海洋智能监控系统中的运动预测提供了有力的深度学习工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.08308v1",
+      "source": "arxiv",
+      "title": "Open-World Semantic Segmentation with Sensitivity Modeling",
+      "abstract": "Modern vision systems must operate in \"open-world\" settings, where models must recognize known categories and detect unseen or anomalous content. Conventional semantic segmentation models operate under a \"closed-world\" assumption, often producing overconfident misclassifications on novel content. We address open-world semantic segmentation, the joint task of segmenting known classes while detecting and grouping novel or anomalous content without additional supervision, by extending a dual-decoder baseline with a third, complementary decoder within a unified encoder-decoder design. The first decoder performs closed-set segmentation using Gaussian prototypes for known categories. The second uses contrastive feature learning to isolate unknown regions in embedding space. The third, our key contribution, is a sensitivity decoder that captures fine-grained texture irregularities and activation instabilities indicative of semantic uncertainty, which neither semantic prototypes nor contrastive norms can reliably detect. The three decoders provide genuinely complementary signals: class-level OOD distance in logit space, global feature energy in embedding space, and local activation instability across encoder scales. Experiments on Cityscapes and BDD-Anomaly show that our method improves anomaly segmentation and novel-class discovery while maintaining competitive closed-set accuracy, with gains of +2.4% AUROC and a 2.5 pp. reduction in FPR@95TPR on BDD-Anomaly over the baseline.",
+      "authors": [
+        "Anastasios Romanos Varvarigos",
+        "Nikos Giakoumoglou",
+        "Tania Stathaki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-08T19:37:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.08308v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "open-world semantic segmentation for known-class segmentation and novel-content detection, transferable to benthic cover mapping",
+      "llm_evidence_cn": "开放世界语义分割方法，可迁移用于珊瑚底栖覆盖分类",
+      "llm_evidence": "开放世界语义分割方法，可迁移用于珊瑚底栖覆盖分类",
+      "canonical_evidence": "开放世界语义分割方法，可迁移用于珊瑚底栖覆盖分类",
+      "llm_tldr_en": "Proposes an open-world semantic segmentation method with a third decoder for sensitivity modeling, jointly segmenting known classes and detecting/grouping novel content without extra supervision, useful for habitat mapping.",
+      "llm_tldr_cn": "针对传统语义分割在封闭世界假设下对新型地物过度自信误判的问题，提出一种开放世界语义分割方法。该方法在统一编解码器上增加第三个解码器进行敏感性建模，联合完成已知类别分割与未知/异常内容检测分组。该方法无需额外监督即可识别新类别，可迁移到珊瑚礁底栖覆盖等遥感图像分类与未知生境发现任务。",
+      "llm_tldr": "针对传统语义分割在封闭世界假设下对新型地物过度自信误判的问题，提出一种开放世界语义分割方法。该方法在统一编解码器上增加第三个解码器进行敏感性建模，联合完成已知类别分割与未知/异常内容检测分组。该方法无需额外监督即可识别新类别，可迁移到珊瑚礁底栖覆盖等遥感图像分类与未知生境发现任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.10801v1",
+      "source": "arxiv",
+      "title": "Evaluating Semantic and Spatial Guidance for Foundation Model Segmentation of Small-Scale PV in Remote Sensing Imagery",
+      "abstract": "Spatio-temporal PV data are essential for understanding adoption processes in off-grid regions, yet such data remain largely unavailable. Automated segmentation of remote sensing (RS) imagery offers a promising solution; yet, residential PV systems remain challenging targets because of their small size and sparse distribution, resulting in severe target-background imbalance. Vision-language foundation models (FMs) provide a data-efficient paradigm through prompt-based semantic and spatial guidance, but the relative contribution of different prompt types remains unclear. We systematically evaluate SAM3 for small-scale PV segmentation in RS imagery by comparing textual, geometric, and hybrid prompting, under varying supervision levels, training strategies, spatial resolutions, and imaging conditions. Multi-temporal aerial imagery from a large off-grid rural region serves as a study site, with findings validated across three additional datasets. Prompting strategy emerged as the dominant factor governing model behavior. Textual prompting consistently produced the lowest performance and showed the greatest sensitivity to supervision and imaging conditions. In contrast, spatial guidance substantially improved both segmentation accuracy and robustness. Hybrid prompting achieved the highest accuracy and stability, indicating that semantic and spatial guidance provide complementary information. Most performance gains were achieved with only a few hundred annotated samples, demonstrating strong data efficiency. Transfer learning had limited overall impact, with only modest improvements observed for textual prompting under limited supervision. Overall, our findings establish prompting strategy as a key determinant of SAM3 adaptation, robustness, and generalization, highlighting the potential of promptable FMs for scalable PV mapping in data-constrained off-grid regions.",
+      "authors": [
+        "Roni Blushtein-Livnon",
+        "Tal Svoray",
+        "Osher Rafaeli",
+        "Michael Dorman",
+        "Itay Fischhendler",
+        "Havazelet Yahel",
+        "Emir Galilee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T11:16:25+00:00",
+      "link": "https://arxiv.org/pdf/2608.10801v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vision-language foundation model with text prompts for segmentation in remote sensing, transferable to coral habitat mapping",
+      "llm_evidence_cn": "视觉-语言基础模型通过文本提示进行遥感分割，可迁移至珊瑚栖息地制图",
+      "llm_evidence": "视觉-语言基础模型通过文本提示进行遥感分割，可迁移至珊瑚栖息地制图",
+      "canonical_evidence": "视觉-语言基础模型通过文本提示进行遥感分割，可迁移至珊瑚栖息地制图",
+      "llm_tldr_en": "Systematically evaluates SAM3 with textual, geometric, and hybrid prompting for small-scale PV segmentation in remote sensing imagery, clarifying prompt contributions and offering guidelines for foundation-model-based object segmentation.",
+      "llm_tldr_cn": "小尺度光伏板在遥感影像中目标小、分布稀疏，存在严重的目标-背景不平衡问题。本文系统评估了SAM3基础模型在文本、几何和混合提示下的分割性能，厘清了不同提示类型的相对贡献。结果表明混合提示能更有效地利用语义与空间信息，为遥感小目标分割提供了方法指导。该工作对类似的小目标珊瑚礁栖息地遥感制图具有直接的方法参考价值。",
+      "llm_tldr": "小尺度光伏板在遥感影像中目标小、分布稀疏，存在严重的目标-背景不平衡问题。本文系统评估了SAM3基础模型在文本、几何和混合提示下的分割性能，厘清了不同提示类型的相对贡献。结果表明混合提示能更有效地利用语义与空间信息，为遥感小目标分割提供了方法指导。该工作对类似的小目标珊瑚礁栖息地遥感制图具有直接的方法参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.08895v1",
+      "source": "arxiv",
+      "title": "Latent Semantic State Estimation for Reliable Swarming of UAVs under Intermittent Connectivity",
+      "abstract": "Cooperative multi-unmanned aerial vehicle (UAV) reconnaissance is often hindered by intermittent air-to-air communications where link dropouts lead to uncoordinated exploration and redundant mapping. Existing approaches rely on explicit exchange of high-dimensional spatial data or raw observations, incurring significant overhead, and often revert to reactive individual exploration during outages. This paper proposes a memory-augmented framework in which each UAV maintains a structured latent state decomposed into map, task, and memory components. During dropout, a generative predictor conditioned on the memory state infers substitute peer messages in the latent space, making the estimation task more tractable and directly aligned with the cooperative objective. The framework is trained end-to-end under the centralized training with decentralized execution paradigm. Simulation results demonstrate that the proposed framework closely matches the performance of a fully connected swarm, while remaining robust across a wide range of link failure conditions.",
+      "authors": [
+        "Paris A. Karakasis",
+        "Walid Saad"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-08-09T20:16:36+00:00",
+      "link": "https://arxiv.org/pdf/2608.08895v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Latent semantic state estimation for multi-UAV swarming under intermittent connectivity, transferable to ocean robot swarms",
+      "llm_evidence_cn": "面向间歇连接的多无人机集群潜在语义状态估计，可迁移至海洋机器人集群",
+      "llm_evidence": "面向间歇连接的多无人机集群潜在语义状态估计，可迁移至海洋机器人集群",
+      "canonical_evidence": "面向间歇连接的多无人机集群潜在语义状态估计，可迁移至海洋机器人集群",
+      "llm_tldr_en": "Proposes a memory-augmented framework with structured latent states and generative predictors to maintain reliable UAV swarm coordination during communication dropouts, improving intermittent connectivity.",
+      "llm_tldr_cn": "多无人机协同侦察在通信中断时会出现探索失稳和重复建图，而显式交换高维数据开销大。本文提出记忆增强框架，将每架无人机的潜在状态分解为地图、任务和记忆组件；断联时由生成式预测器在潜在空间推断同伴消息。该方法在间歇连接条件下保障集群状态估计的一致性，对海洋机器人集群监测具有借鉴意义。",
+      "llm_tldr": "多无人机协同侦察在通信中断时会出现探索失稳和重复建图，而显式交换高维数据开销大。本文提出记忆增强框架，将每架无人机的潜在状态分解为地图、任务和记忆组件；断联时由生成式预测器在潜在空间推断同伴消息。该方法在间歇连接条件下保障集群状态估计的一致性，对海洋机器人集群监测具有借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.12227v1",
+      "source": "arxiv",
+      "title": "Domain-Aware Lightweight Spectral-Grouped Convolutions for Hyperspectral Fish Freshness Classification",
+      "abstract": "Hyperspectral imaging (HSI) offers nondestructive assessment of fish freshness by detecting biochemical alterations across spectral bands. However, conventional deep learning approaches do not fully address the particular characteristics of HSI data, such as spectral dominance over spatial textures, ordinal label structure, and a small number of training samples. We propose SGNet (Spectral-Grouped Network), a lightweight architecture that separates spectral and spatial feature extraction using grouped convolutions and a depthwise spatial pathway. A dual attention mechanism that couples channel-wise squeeze-and-excitation with spatial gating adaptively highlights informative features. SGNet achieves 97.8% classification accuracy and 0.64 days mean absolute error (MAE) with just 4.75M parameters when tested on our newly developed 16-day refrigerator-stored salmon fillet dataset. Ablation studies validate the contribution of each component, while comparisons demonstrate a five- to eighteen-fold parameter reduction relative to ResNet-50 and Vision Transformers. Our findings indicate that domain-aware design supports precise, real-time freshness prediction for industrial implementation.",
+      "authors": [
+        "Kazi Nabiul Alam",
+        "Pooneh Bagheri Zadeh",
+        "Akbar Sheikh-Akbari"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.AI",
+        "cs.CV",
+        "eess.SP"
+      ],
+      "published": "2026-08-12T16:25:19+00:00",
+      "link": "https://arxiv.org/pdf/2608.12227v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Spectral classification model for marine biological objects",
+      "llm_evidence_cn": "面向海洋生物对象的光谱分类模型",
+      "llm_evidence": "面向海洋生物对象的光谱分类模型",
+      "canonical_evidence": "面向海洋生物对象的光谱分类模型",
+      "llm_tldr_en": "Proposes SGNet, a lightweight architecture with spectral-grouped convolutions and dual attention, for hyperspectral fish freshness classification, achieving 97.8% accuracy while addressing spectral dominance and small-sample constraints.",
+      "llm_tldr_cn": "高光谱成像能够无损评估鱼鲜度，但传统深度学习未充分利用光谱主导、有序标签与少量样本等数据特点。该文提出轻量级SGNet，用分组卷积分离光谱/空间特征，并引入通道挤压激励与空间门控的双重注意力。在鱼鲜度分类任务上达到97.8%准确率。其光谱分类设计可迁移用于珊瑚礁底质覆盖等类似的高光谱遥感分类问题。",
+      "llm_tldr": "高光谱成像能够无损评估鱼鲜度，但传统深度学习未充分利用光谱主导、有序标签与少量样本等数据特点。该文提出轻量级SGNet，用分组卷积分离光谱/空间特征，并引入通道挤压激励与空间门控的双重注意力。在鱼鲜度分类任务上达到97.8%准确率。其光谱分类设计可迁移用于珊瑚礁底质覆盖等类似的高光谱遥感分类问题。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.11064v1",
+      "source": "arxiv",
+      "title": "Entropy-Centric Explainable AI for Remote Sensing Image Segmentation",
+      "abstract": "Artificial intelligence (AI) has become a powerful approach to solving complex problems in critical domains. Many concerns arise regarding the decision-making process of its models, mainly due to deep neural networks outperforming their peers at the cost of ambiguity in feature extraction and prediction. Consequently, in critical domains such as remote sensing, where high-resolution imagery must be analyzed using black-box models, the lack of transparency limits trust in these models and, thus, their adoption. In light of this reality, explaining and understanding the complex decision-making process of AI models has become essential. Explainable AI (XAI) aims to bridge this gap by providing insights into how and why certain decisions are made. While significant progress has been achieved in explaining image classification tasks, image segmentation still offers considerable room for improvement. In this context, this paper proposes an entropy-centric XAI method for semantic segmentation. Moreover, a new XAI evaluation methodology is proposed to efficiently measure the relevance of the regions highlighted by the proposed XAI method. Experimental results demonstrate the superiority of the proposed XAI method compared with recently adapted XAI methods for semantic segmentation.",
+      "authors": [
+        "Ali Saleh",
+        "Abdul Karim Gizzini",
+        "Mohamad Ghassany",
+        "Ali J. Ghandour"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-11T15:31:07+00:00",
+      "link": "https://arxiv.org/pdf/2608.11064v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Explainable AI for remote sensing image segmentation, transferable to coral reef habitat mapping",
+      "llm_evidence_cn": "遥感图像分割的可解释AI方法，可迁移用于珊瑚礁生境制图",
+      "llm_evidence": "遥感图像分割的可解释AI方法，可迁移用于珊瑚礁生境制图",
+      "canonical_evidence": "遥感图像分割的可解释AI方法，可迁移用于珊瑚礁生境制图",
+      "llm_tldr_en": "Proposes an entropy-centric explainable AI method for remote sensing image segmentation, improving transparency of black-box deep models. The technique is directly transferable to coral reef habitat mapping and other ecological monitoring.",
+      "llm_tldr_cn": "遥感图像分割常依赖黑盒深度模型，其决策过程难以信任。本文提出以熵为中心的可解释AI方法，通过熵分析揭示模型在分割时的特征提取和预测依据。实验表明该方法能提升遥感分割模型的可解释性。由于珊瑚礁生境制图同样依赖遥感图像分割，该技术可迁移到相关生态监测任务。",
+      "llm_tldr": "遥感图像分割常依赖黑盒深度模型，其决策过程难以信任。本文提出以熵为中心的可解释AI方法，通过熵分析揭示模型在分割时的特征提取和预测依据。实验表明该方法能提升遥感分割模型的可解释性。由于珊瑚礁生境制图同样依赖遥感图像分割，该技术可迁移到相关生态监测任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11167v1",
+      "source": "arxiv",
+      "title": "MultiModal Code-Switching: Interleaving Visual Objects into Language for Explicit Object-Level Alignment",
+      "abstract": "Existing Multimodal Large Language Models (MLLMs) predominantly rely on image-text pairs for modality alignment pretraining, mapping global image representations to long textual descriptions. However, this image-level alignment suffers from referential ambiguity: models struggle to infer the correspondences between multiple visual objects and textual entities from the global representation, leading to data inefficiency and suboptimal semantic grounding. To address this, we propose MultiModal Code-Switching (MMCS), a novel pretraining paradigm that provides explicit object-level supervision. Inspired by the linguistic phenomenon of code-switching, MMCS interleaves vision and language by replacing textual entities with their corresponding visual objects, enforcing local vision-language grounding. We further develop a scalable data synthesis pipeline to generate a pretraining dataset of 773K samples with accurate object-entity correspondences. Experiments show that MMCS is highly data-efficient: with only 50K samples, it matches or surpasses models trained on 600K image-text pairs. Furthermore, MMCS consistently improves visual grounding and perception capabilities across varying model scales.",
+      "authors": [
+        "Changhao Xiang",
+        "Shangyu Xing",
+        "Zhen Wu",
+        "Jianbing Zhang",
+        "Xinyu Dai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-08-11T17:28:52+00:00",
+      "link": "https://arxiv.org/pdf/2608.11167v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal large model object-level alignment pretraining",
+      "llm_evidence_cn": "多模态大模型对象级对齐预训练",
+      "llm_evidence": "多模态大模型对象级对齐预训练",
+      "canonical_evidence": "多模态大模型对象级对齐预训练",
+      "llm_tldr_en": "MultiModal Code-Switching interleaves visual objects into language tokens during pretraining, providing explicit object-level alignment that reduces referential ambiguity in multimodal LLMs.",
+      "llm_tldr_cn": "现有大规模多模态模型的预训练主要依赖图像-文本对的全局表征对齐，难以确定多个视觉对象与文本实体的对应关系，导致数据效率低且语义接地不佳。本文提出多模态代码切换（MMCS），将视觉对象直接交织到语言序列中，为对象级对齐提供显式监督，从而缓解指代歧义，增强细粒度视觉-语言建模。MMCS为多模态融合提供了更高效的解释性预训练范式，可迁移到遥感影像与文本结合的环境评估任务。",
+      "llm_tldr": "现有大规模多模态模型的预训练主要依赖图像-文本对的全局表征对齐，难以确定多个视觉对象与文本实体的对应关系，导致数据效率低且语义接地不佳。本文提出多模态代码切换（MMCS），将视觉对象直接交织到语言序列中，为对象级对齐提供显式监督，从而缓解指代歧义，增强细粒度视觉-语言建模。MMCS为多模态融合提供了更高效的解释性预训练范式，可迁移到遥感影像与文本结合的环境评估任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11663v1",
+      "source": "arxiv",
+      "title": "Zero-OVCD: Bridging Training-Free Foundation Models and Pseudo-Label Learning for Open-Vocabulary Change Detection",
+      "abstract": "Open-vocabulary change detection (OVCD) enables the identification of user-specified land-cover changes in bitemporal remote sensing images, but existing training-free pipelines remain vulnerable to inaccurate candidate masks, ambiguous semantic assignments, and accumulated inference errors. To address these issues, we propose Zero-OVCD, a two-stage framework that requires no pixel-level annotations from the target domain. In the first stage, high-quality change pseudo-labels are generated through complementary candidate-mask refinement, multiscale semantic similarity fusion with margin-based reliability filtering, and response-guided mask correction and completion. These components jointly suppress noisy candidates, enhance mask-level semantic discrimination, and recover missed change regions. In the second stage, a change detector is trained using the generated pseudo-labels, while checkpoint voting and high-agreement sample selection are introduced to mitigate residual pseudo-label noise. On LEVIR-CD, WHU-CD, and S2Looking, Stage I achieves F1 scores of 86.25%, 85.82%, and 50.48%, while Stage II further improves them to 88.65%, 88.85%, and 57.96%, respectively. On SECOND, the macro-average F1 across six category-wise one-vs-rest tasks increases from 47.91% to 50.92%. These results demonstrate that bridging training-free foundation-model inference with noise-aware pseudo-label learning provides an effective solution for open-vocabulary change detection without target-domain pixel-level annotations. Code will be available at https://github.com/1321663019/Zero-OVCD.",
+      "authors": [
+        "Daifeng Peng",
+        "Yuanke Peng",
+        "Haiyan Guan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T05:10:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.11663v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "open-vocabulary remote sensing change detection with pseudo-labels",
+      "llm_evidence_cn": "开放词表遥感变化检测与伪标签学习",
+      "llm_evidence": "开放词表遥感变化检测与伪标签学习",
+      "canonical_evidence": "开放词表遥感变化检测与伪标签学习",
+      "llm_tldr_en": "Zero-OVCD generates high-quality change pseudo-labels via candidate-mask refinement and multiscale semantic fusion, enabling open-vocabulary change detection in remote sensing without target-domain annotations.",
+      "llm_tldr_cn": "开放词表变化检测允许用户指定任意地物变化类型，但现有免训练流程易受候选掩码不精确、语义分配模糊和误差累积影响。Zero-OVCD提出两阶段框架，第一阶段通过互补候选掩码细化、多尺度语义相似度融合与响应引导掩码修正生成高质量变化伪标签，第二阶段利用这些伪标签学习变化检测模型。该方法无需目标域像素标注即可实现鲁棒的开放词表变化检测，为遥感变化检测与基础模型结合提供了可借鉴的伪标签学习方案。",
+      "llm_tldr": "开放词表变化检测允许用户指定任意地物变化类型，但现有免训练流程易受候选掩码不精确、语义分配模糊和误差累积影响。Zero-OVCD提出两阶段框架，第一阶段通过互补候选掩码细化、多尺度语义相似度融合与响应引导掩码修正生成高质量变化伪标签，第二阶段利用这些伪标签学习变化检测模型。该方法无需目标域像素标注即可实现鲁棒的开放词表变化检测，为遥感变化检测与基础模型结合提供了可借鉴的伪标签学习方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11685v1",
+      "source": "arxiv",
+      "title": "EGM-Det: Entropy-Guided Multimodal Adaptive Fusion for UAV RGB-IR Object Detection",
+      "abstract": "Joint use of RGB and infrared (IR) imagery can improve UAV-view object detection, but most existing methods fuse multimodal features with static or fixed weights and therefore overlook spatially varying modality reliability. We propose EGM-Det, an entropy-guided multimodal adaptive fusion framework for RGB-IR object detection. EGM-Det employs a dual-stream architecture to preserve modality-specific representations and introduces an Entropy Offset Gate Fusion module for adaptive multi-scale fusion. The module derives shallow entropy priors from input intensity, local entropy, and cross-modal discrepancy, and uses them to guide local offset alignment and spatial-channel gated fusion. It therefore selectively aggregates reliable RGB and infrared cues instead of uniformly combining heterogeneous features. We further introduce cross-modal distillation to regularize the learned fusion gates and reduce fusion degradation. Each student branch extracts complementary knowledge from the cross-modality teacher branch matched to the main branch, while entropy-adaptive supervision emphasizes uncertain modality decisions. Experiments on DroneVehicle, LLVIP, and VEDAI demonstrate state-of-the-art performance across all three benchmarks; in particular, EGM-Det outperforms prior approaches by more than 10 percentage points on VEDAI.",
+      "authors": [
+        "Cunzheng Fan",
+        "Dawei Yan",
+        "Guanlin Wang",
+        "Xingshuo Yang",
+        "Yupeng Jia",
+        "Jing Yang",
+        "Haokui Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T05:51:48+00:00",
+      "link": "https://arxiv.org/pdf/2608.11685v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "entropy-guided adaptive fusion of RGB and infrared imagery for object detection in aerial remote sensing",
+      "llm_evidence_cn": "面向航空遥感目标检测的RGB与红外图像熵引导自适应融合",
+      "llm_evidence": "面向航空遥感目标检测的RGB与红外图像熵引导自适应融合",
+      "canonical_evidence": "面向航空遥感目标检测的RGB与红外图像熵引导自适应融合",
+      "llm_tldr_en": "EGM-Det is an entropy-guided multimodal adaptive fusion framework for UAV RGB-IR object detection, using shallow entropy priors and gated fusion to adaptively combine reliable features across scales.",
+      "llm_tldr_cn": "针对无人机RGB-红外目标检测中固定权重融合忽视空间模态可靠性的问题，提出EGM-Det双流自适应融合框架。通过熵偏移门控融合模块提取输入强度、局部熵和跨模态差异作为先验，实现多尺度空间通道门控融合。在无人机视角检测基准上，该方法能有效整合可靠模态信息，提升复杂场景下的检测性能。该自适应融合思路可迁移至海洋遥感、生态监测等多模态遥感图像分析任务中。",
+      "llm_tldr": "针对无人机RGB-红外目标检测中固定权重融合忽视空间模态可靠性的问题，提出EGM-Det双流自适应融合框架。通过熵偏移门控融合模块提取输入强度、局部熵和跨模态差异作为先验，实现多尺度空间通道门控融合。在无人机视角检测基准上，该方法能有效整合可靠模态信息，提升复杂场景下的检测性能。该自适应融合思路可迁移至海洋遥感、生态监测等多模态遥感图像分析任务中。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
