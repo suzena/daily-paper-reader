@@ -1,0 +1,217 @@
+{
+  "date": "20260814",
+  "date_label": "",
+  "generated_at": "2026-08-14 21:12:34 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.12436v1",
+      "route": "202608/14/2608.12436v1-multi-auv-ad-hoc-network-based-target-tracking-a-value-gradient-guidance-multi-agent-diffusion-reinforcement-learning-approach",
+      "title": "Multi-AUV Ad-hoc network-based Target Tracking: A Value Gradient Guidance Multi-Agent Diffusion Reinforcement Learning Approach",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "多AUV自组网目标跟踪的多智能体扩散强化学习架构，用于自主海洋监测",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.12866v1",
+      "route": "202608/14/2608.12866v1-amr-pose-an-active-led-marker-based-relative-pose-estimation-framework-with-probabilistic-switching-pnp-for-cooperative-auvs",
+      "title": "AMR-Pose: An Active LED Marker-Based Relative Pose Estimation Framework With Probabilistic Switching PnP for Cooperative AUVs",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "协作AUV相对位姿估计，支撑海洋探测与多机器人协同",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.12995v1",
+      "route": "202608/14/2608.12995v1-ogr-marl-option-guided-residual-multi-agent-reinforcement-learning-for-heterogeneous-usv-cooperative-pursuit-in-constrained-port-waterways",
+      "title": "OGR-MARL: Option-Guided Residual Multi-Agent Reinforcement Learning for Heterogeneous USV Cooperative Pursuit in Constrained Port Waterways",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向受限港口水道异构无人艇协同的多智能体强化学习架构",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.12980v1",
+      "route": "202608/14/2608.12980v1-dicor-decoupled-referent-disambiguation-and-contour-recalibration-for-efficient-referring-remote-sensing-image-segmentation",
+      "title": "DiCoR: Decoupled Referent Disambiguation and Contour Recalibration for Efficient Referring Remote Sensing Image Segmentation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "解耦式指代遥感图像分割，融合自然语言与图像",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.13344v1",
+      "route": "202608/14/2608.13344v1-longearth-r1-benchmarking-and-aligning-vision-language-models-for-long-horizon-earth-observation-reasoning",
+      "title": "LongEarth-R1: Benchmarking and Aligning Vision-Language Models for Long-Horizon Earth Observation Reasoning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "提出面向长时程对地观测推理的视觉语言模型基准与对齐，直接支撑遥感与文本结合的环境评估。",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.09270v1",
+      "route": "202608/14/2608.09270v1-grasp-granularity-aware-region-alignment-and-semantic-prototype-learning-for-fine-grained-cross-modal-understanding-in-drone-views",
+      "title": "GRASP: Granularity-Aware Region Alignment and Semantic Prototype Learning for Fine-Grained Cross-Modal Understanding in Drone Views",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向无人机视角的细粒度跨模态区域对齐与语义原型方法可应用于海洋栖息地多模态制图。",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.12502v1",
+      "route": "202608/14/2608.12502v1-himec-directional-change-representation-and-fixed-interface-decoding-for-remote-sensing-image-change-captioning",
+      "title": "HIMEC: Directional Change Representation and Fixed-Interface Decoding for Remote Sensing Image Change Captioning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感图像变化描述结合图像与文本，可迁移至海洋栖息地监测",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.07886v1",
+      "route": "202608/14/2608.07886v1-vision-language-grounding-as-bidirectional-concept-correspondence",
+      "title": "Vision-Language Grounding as Bidirectional Concept Correspondence",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "双向视觉-语言概念对应将文本片段与图像区域关联，直接相关于多模态图文融合",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.07987v1",
+      "route": "202608/14/2608.07987v1-advantage-guided-gate-reshaping-open-ended-reasoning-for-vision-based-spatial-intelligence",
+      "title": "Advantage-Guided Gate: Reshaping Open-Ended Reasoning for Vision-Based Spatial Intelligence",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "优势引导门控提升多模态大模型空间推理稳定性，可支持遥感与文本结合的环评任务。",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.08555v1",
+      "route": "202608/14/2608.08555v1-sc-diff-semantically-calibrated-diffusion-for-visible-to-infrared-image-translation",
+      "title": "SC-Diff: Semantically Calibrated Diffusion for Visible-to-Infrared Image Translation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "可见光到红外的图像翻译扩散方法可迁移到海洋栖息地卫星影像的数据增强。",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.09497v1",
+      "route": "202608/14/2608.09497v1-swisscrop25-a-national-multi-year-benchmark-for-operational-crop-mapping",
+      "title": "SwissCrop25: A National Multi-Year Benchmark for Operational Crop Mapping",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于Sentinel-2时序与细粒度分类的多年份遥感制图基准可成为珊瑚礁生态系统制图的模板。",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.11142v1",
+      "route": "202608/14/2608.11142v1-sar2agri-learning-sar-intensity-representations-for-agricultural-monitoring",
+      "title": "SAR2Agri: Learning SAR Intensity Representations for Agricultural Monitoring",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向农业监测的SAR卫星表示学习，可迁移至海洋栖息地的卫星图像分析",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    },
+    {
+      "paper_id": "2608.11596v1",
+      "route": "202608/14/2608.11596v1-small-language-model-enabled-autonomous-agent-for-language-conditioned-cognitive-radar",
+      "title": "Small Language Model enabled Autonomous agent for Language-Conditioned Cognitive Radar",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "语言模型驱动的自主智能体进行工具选择与配置，可适配海洋监测",
+      "first_seen_at": "2026-08-14 21:12:34 UTC",
+      "updated_at": "2026-08-14 21:12:34 UTC"
+    }
+  ]
+}

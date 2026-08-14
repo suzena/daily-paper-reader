@@ -1,0 +1,535 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-14T21:05:27.733368+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 8,
+    "quick_skim_target": 11,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2608.12436v1",
+      "source": "arxiv",
+      "title": "Multi-AUV Ad-hoc network-based Target Tracking: A Value Gradient Guidance Multi-Agent Diffusion Reinforcement Learning Approach",
+      "abstract": "Multi-AUV ad-hoc network-based target tracking requires networked autonomous underwater vehicles (AUVs) to cooperatively track maneuvering targets under constrained acoustic communication, dynamic topology, and uncertain ocean disturbances. Although multi-agent reinforcement learning (MARL) enables decentralized coordination through centralized training, existing methods suffer from high-dimensional joint state-action modeling, noise-sensitive policy generation, leading to unstable training and degraded tracking. To address these issues, we propose VGG-MADiffRL, a value-gradient-guided multi-agent diffusion RL algorithm, and MDCA, a diffusion?based hierarchical control architecture. Leveraging underwater mission characteristics, we model sonar detection mechanisms and ocean current disturbances, formulating cooperative tracking for multi-AUV ad-hoc networks as an MDP. The proposed MDCA constitutes a three-tier closed-loop control framework: a global intelligent control layer, a local online training layer, and a physical action execution layer. This structure enables synergistic optimization across task allocation, local decision processes, and execution feedback. Within MDCA, the local online training layer is the policy learning framework; VGG-MADiffRL builds on diffusion policies and incorporates value gradients to guide action generation in the reverse denoising process, steering the generated actions towards higher expected returns. It employs twin value networks with joint optimization and soft target updates to mitigate overestimation and training oscillations, promoting more stable convergence. Experimental results show that VGG-MADiffRL consistently achieves faster convergence, higher tracking accuracy, and smoother training dynamics in cooperative tracking scenarios, validating its effectiveness and practical engineering value in dynamic underwater settings.",
+      "authors": [
+        "Jiaao Ma",
+        "Chuan Lin",
+        "Guangjie Han",
+        "Shengchao Zhu",
+        "Qian Zhu",
+        "Ying Liu",
+        "Zhenyu Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.MA",
+        "cs.NI"
+      ],
+      "published": "2026-08-12T14:15:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.12436v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-AUV ad-hoc target tracking with multi-agent diffusion reinforcement learning, an intelligent agent architecture for autonomous ocean monitoring",
+      "llm_evidence_cn": "多AUV自组网目标跟踪的多智能体扩散强化学习架构，用于自主海洋监测",
+      "llm_evidence": "多AUV自组网目标跟踪的多智能体扩散强化学习架构，用于自主海洋监测",
+      "canonical_evidence": "多AUV自组网目标跟踪的多智能体扩散强化学习架构，用于自主海洋监测",
+      "llm_tldr_en": "Proposes VGG-MADiffRL, a value-gradient-guided multi-agent diffusion RL method with hierarchical control for multi-AUV cooperative target tracking under acoustic communication constraints.",
+      "llm_tldr_cn": "针对多自主水下航行器（AUV）在受限声通信、动态拓扑和海洋扰动下的协同目标跟踪问题，提出值梯度引导的多智能体扩散强化学习算法VGG-MADiffRL及扩散层次控制架构。该方法缓解了高维联合状态建模和策略生成噪声敏感问题，提升了训练稳定性和跟踪性能，为自主海洋监测中的多智能体协同提供了先进框架。",
+      "llm_tldr": "针对多自主水下航行器（AUV）在受限声通信、动态拓扑和海洋扰动下的协同目标跟踪问题，提出值梯度引导的多智能体扩散强化学习算法VGG-MADiffRL及扩散层次控制架构。该方法缓解了高维联合状态建模和策略生成噪声敏感问题，提升了训练稳定性和跟踪性能，为自主海洋监测中的多智能体协同提供了先进框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.12866v1",
+      "source": "arxiv",
+      "title": "AMR-Pose: An Active LED Marker-Based Relative Pose Estimation Framework With Probabilistic Switching PnP for Cooperative AUVs",
+      "abstract": "Reliable relative pose estimation between autonomous underwater vehicles (AUVs) is critical for cooperative ocean exploration, sampling, and multi-robot coordination. However, achieving robust vision-based relative localization in underwater environments remains challenging due to severe optical degradation, including turbidity, illumination variations, reflections, and intermittent feature occlusions. This paper presents AMR-Pose, an active LED marker-based relative pose estimation framework for cooperative AUVs. A compact marker module consisting of one red central LED and three blue peripheral LEDs is developed and integrated onto the leader AUV to provide distinctive visual features under complex underwater conditions. Building upon the detected marker observations, a probabilistic switching Perspective-n-Point estimator (PSwPnP) is developed by combining Lie-group pose propagation on $SE(3)$, probabilistic marker association, and visibility-adaptive measurement fusion for robust six-degree-of-freedom relative pose estimation. The proposed framework dynamically adapts the estimation process according to marker visibility, maintaining geometric consistency and temporal stability during partial observations and visibility transitions. Extensive water-tank experiments with motion-capture ground truth validate that AMR-Pose achieves accurate, smooth, and robust relative pose estimation under challenging underwater conditions. Closed-loop leader-follower experiments further demonstrate its feasibility for real-time relative pose feedback in cooperative underwater robotics.",
+      "authors": [
+        "Zeyu Sha",
+        "Xiaorui Wang",
+        "Mingyang Yang",
+        "Feitian Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-13T06:29:43+00:00",
+      "link": "https://arxiv.org/pdf/2608.12866v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Relative pose estimation framework for cooperative AUVs in ocean exploration",
+      "llm_evidence_cn": "协作AUV相对位姿估计，支撑海洋探测与多机器人协同",
+      "llm_evidence": "协作AUV相对位姿估计，支撑海洋探测与多机器人协同",
+      "canonical_evidence": "协作AUV相对位姿估计，支撑海洋探测与多机器人协同",
+      "llm_tldr_en": "AMR-Pose uses active LED markers and probabilistic switching PnP to estimate relative pose between cooperative AUVs robustly in degraded underwater conditions.",
+      "llm_tldr_cn": "协作AUV进行海洋探测、采样和多机器人协同需要可靠的相对位姿估计，但水下浑浊、光照变化和遮挡使视觉定位困难。本文提出AMR-Pose，设计包含红心LED与三蓝LED的紧凑标记模块，并融合概率切换PnP进行相对位姿解算。该方法在严重光学退化和间歇遮挡下仍能保持稳健定位。该框架为AUV编队协同作业和自主海洋监测提供了关键感知能力。",
+      "llm_tldr": "协作AUV进行海洋探测、采样和多机器人协同需要可靠的相对位姿估计，但水下浑浊、光照变化和遮挡使视觉定位困难。本文提出AMR-Pose，设计包含红心LED与三蓝LED的紧凑标记模块，并融合概率切换PnP进行相对位姿解算。该方法在严重光学退化和间歇遮挡下仍能保持稳健定位。该框架为AUV编队协同作业和自主海洋监测提供了关键感知能力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.12995v1",
+      "source": "arxiv",
+      "title": "OGR-MARL: Option-Guided Residual Multi-Agent Reinforcement Learning for Heterogeneous USV Cooperative Pursuit in Constrained Port Waterways",
+      "abstract": "Heterogeneous USV cooperative pursuit in constrained port waterways requires evader interception under navigation, traffic, and role constraints. This paper proposes OGR-MARL, an option-guided residual multi-agent reinforcement learning framework that is decoupled from a specific MARL algorithm. OGR-MARL integrates shared evader belief, role-conditioned option targets, adaptive rule penalties, and residual policy learning, allowing different MARL algorithms to learn corrective actions on top of rule-guided behaviors rather than exploring constrained port environments from scratch. We instantiate OGR-MARL with representative continuous-control MARL backbones, including MADDPG, MATD3, MAPPO, and MASAC, yielding OGR-MADDPG, OGR-MATD3, OGR-MAPPO, and OGR-MASAC. Experiments in an abstract Xiazhimen port-waterway scenario show that the OGR-MASAC instantiation achieves a 75.0% capture rate, promising mission-effective rule compliance, and the best heterogeneous coordination among the tested methods. Without retraining, zero-shot transfer to a QGIS/AIS-informed Xiazhimen map achieves promising results, demonstrating the generalization potential of OGR-MARL in more complex port scenarios.",
+      "authors": [
+        "Mao Jiayang",
+        "Wang Lanfeng",
+        "Peng Zhao-Han"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-08-13T09:19:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.12995v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multi-agent reinforcement learning architecture for heterogeneous USV cooperation in port waterways",
+      "llm_evidence_cn": "面向受限港口水道异构无人艇协同的多智能体强化学习架构",
+      "llm_evidence": "面向受限港口水道异构无人艇协同的多智能体强化学习架构",
+      "canonical_evidence": "面向受限港口水道异构无人艇协同的多智能体强化学习架构",
+      "llm_tldr_en": "OGR-MARL integrates rule-guided options and residual policy learning to enable heterogeneous USVs to cooperatively pursue evaders in constrained port waterways.",
+      "llm_tldr_cn": "针对受限港口水道中异构无人艇的协同追踪问题，本文提出OGR-MARL框架，将共享逃逸者信念、角色条件选项目标、自适应规则惩罚和残差策略学习相结合，并与不同多智能体强化学习算法解耦。该方法使算法在规则引导行为之上学习纠正动作，而不是从零探索受限环境。在代表性连续控制强化学习骨干上验证，该框架能高效完成协同拦截任务，为港口水域智能自主作业提供了可扩展的多智能体解决方案。",
+      "llm_tldr": "针对受限港口水道中异构无人艇的协同追踪问题，本文提出OGR-MARL框架，将共享逃逸者信念、角色条件选项目标、自适应规则惩罚和残差策略学习相结合，并与不同多智能体强化学习算法解耦。该方法使算法在规则引导行为之上学习纠正动作，而不是从零探索受限环境。在代表性连续控制强化学习骨干上验证，该框架能高效完成协同拦截任务，为港口水域智能自主作业提供了可扩展的多智能体解决方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.12980v1",
+      "source": "arxiv",
+      "title": "DiCoR: Decoupled Referent Disambiguation and Contour Recalibration for Efficient Referring Remote Sensing Image Segmentation",
+      "abstract": "Referring remote sensing image segmentation (RRSIS) aims to delineate targets specified by natural language expressions in remote sensing imagery. Existing methods mainly follow joint fusion segmentation (JFS) or decoupled prompt segmentation (DPS). JFS is efficient but often suffers from limited accuracy because referent localization and mask delineation are optimized under a unified objective, whereas DPS separates localization from mask generation using spatial prompts and foundation segmenters at the cost of higher memory consumption and inference latency. To bridge this gap, we propose DiCoR, a decoupled referent disambiguation and contour recalibration framework built on an efficient JFS pipeline. DiCoR addresses two key challenges: distinguishing the correct referent from ambiguous candidates and refining coarse masks after localization. A disambiguation-aware localization guidance strategy ranks salient candidate regions with adaptive linguistic cues and injects the resulting localization prior into fused features. A lightweight contour recalibration module further predicts residual corrections to coarse logits under localized contour supervision, improving mask quality with limited computational overhead. Experiments on RefSegRS, RRSIS-D, and RISBench show that DiCoR achieves the best segmentation accuracy across all three benchmarks. On RefSegRS, it improves mIoU and gIoU by 5.28% and 2.87% over a competitive JFS method while running 4.7% faster than a representative DPS method, demonstrating a favorable accuracy-efficiency trade-off. Code is available at https://github.com/zyGao1126/DiCoR.",
+      "authors": [
+        "Ziyang Gao",
+        "Zhizhuo Jiang",
+        "Jingjing Chang",
+        "Yixin Yang",
+        "Yuwen Pan",
+        "Yong-Qiang Mao",
+        "Yu Liu",
+        "Hai-Bao Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T09:02:55+00:00",
+      "link": "https://arxiv.org/pdf/2608.12980v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "decoupled referring remote sensing image segmentation with natural language prompts, fusing imagery and text",
+      "llm_evidence_cn": "解耦式指代遥感图像分割，融合自然语言与图像",
+      "llm_evidence": "解耦式指代遥感图像分割，融合自然语言与图像",
+      "canonical_evidence": "解耦式指代遥感图像分割，融合自然语言与图像",
+      "llm_tldr_en": "DiCoR efficiently performs referring remote sensing image segmentation by decoupling referent disambiguation from contour recalibration, balancing accuracy and memory in language-guided segmentation.",
+      "llm_tldr_cn": "针对遥感图像指代分割中联合融合精度有限、解耦提示分割内存与延迟高的问题，提出DiCoR框架，在高效联合融合流程上解耦指代消解与轮廓重校准。该方法利用自然语言表达指定目标并优化掩膜生成，在效率和精度之间取得平衡，为遥感影像与文本多模态融合的海洋科学应用提供了高效技术路径。",
+      "llm_tldr": "针对遥感图像指代分割中联合融合精度有限、解耦提示分割内存与延迟高的问题，提出DiCoR框架，在高效联合融合流程上解耦指代消解与轮廓重校准。该方法利用自然语言表达指定目标并优化掩膜生成，在效率和精度之间取得平衡，为遥感影像与文本多模态融合的海洋科学应用提供了高效技术路径。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.13344v1",
+      "source": "arxiv",
+      "title": "LongEarth-R1: Benchmarking and Aligning Vision-Language Models for Long-Horizon Earth Observation Reasoning",
+      "abstract": "Long-horizon Earth observation reasoning requires models to organize multi-stage geographic evolution, localize spatial changes, detect temporal anomalies, and infer future from extended image sequences. However, existing remote sensing vision-language models mainly focus on isolated images, image pairs, or short sequences, limiting reliable grounding in the relevant frames and regions. We introduce LongEarth-Bench, a benchmark containing approximately 120k question-answering samples derived from 117k unique images. Its sequences average 15.14 frames and extend to 30 frames, covering 12 tasks across evolution summarization, spatial reasoning, anomaly identification, and logical prediction. A 30k-sample subset further provides structured reasoning traces linking key frames and changed regions to final answers. We develop LongEarth through supervised fine-tuning with explicit sequence identifiers and structured chain-of-thought supervision. Building on LongEarth, LongEarth-R1 applies group relative policy optimization with format, temporal, and spatial rewards. LongEarth-R1 achieves the best results on all 12 long-sequence tasks while remaining competitive on standard remote sensing benchmarks.",
+      "authors": [
+        "Yupan Ding",
+        "Jing Xiao",
+        "Zhenyuan Zhang",
+        "Chaofeng Chen",
+        "Liang Liao",
+        "Gui-Song Xia",
+        "Mi Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-13T15:14:59+00:00",
+      "link": "https://arxiv.org/pdf/2608.13344v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Benchmarks and aligns vision-language models for long-horizon Earth observation reasoning, directly supporting remote sensing and text environmental assessment.",
+      "llm_evidence_cn": "提出面向长时程对地观测推理的视觉语言模型基准与对齐，直接支撑遥感与文本结合的环境评估。",
+      "llm_evidence": "提出面向长时程对地观测推理的视觉语言模型基准与对齐，直接支撑遥感与文本结合的环境评估。",
+      "canonical_evidence": "提出面向长时程对地观测推理的视觉语言模型基准与对齐，直接支撑遥感与文本结合的环境评估。",
+      "llm_tldr_en": "Introduces LongEarth-Bench, a 120k-sample benchmark for long-horizon Earth observation reasoning, and aligns VLMs on 30k samples to improve spatial-temporal understanding across 12 tasks.",
+      "llm_tldr_cn": "现有遥感视觉语言模型主要处理单张图像或短序列，难以支撑多阶段地理演变、空间变化定位、时间异常检测和未来推断等长时程推理。本文构建LongEarth-Bench基准，包含约12万问答样本，序列平均15帧、最长30帧，覆盖12类任务；并利用3万子集对视觉语言模型进行对齐，提升其在长序列对地观测推理中的表现。该工作为遥感大模型的长时序理解提供了评测基准和方法，对海洋栖息地遥感监测等环境评估任务具有重要参考价值。",
+      "llm_tldr": "现有遥感视觉语言模型主要处理单张图像或短序列，难以支撑多阶段地理演变、空间变化定位、时间异常检测和未来推断等长时程推理。本文构建LongEarth-Bench基准，包含约12万问答样本，序列平均15帧、最长30帧，覆盖12类任务；并利用3万子集对视觉语言模型进行对齐，提升其在长序列对地观测推理中的表现。该工作为遥感大模型的长时序理解提供了评测基准和方法，对海洋栖息地遥感监测等环境评估任务具有重要参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.09270v1",
+      "source": "arxiv",
+      "title": "GRASP: Granularity-Aware Region Alignment and Semantic Prototype Learning for Fine-Grained Cross-Modal Understanding in Drone Views",
+      "abstract": "Fine-grained cross-modal understanding in drone views is essential for aerial vision-language navigation. However, the inherent wide field of view and overhead perspective of drone scenarios impose dual challenges on vision-language understanding. At the macro level, overwhelming background clutter in visual representations leads to Cross-Modal Focus Misalignment, where the model prioritizes global environmental similarities over specific object details. At the micro level, Visual Isomorphism creates ambiguity, where candidates share similar geometric structures yet differ only in subtle attributes. To address these challenges, we propose the Granularity-Aware Region Alignment and Semantic Prototype (GRASP) learning framework, enhancing discriminative capability through two synergistic strategies. Specifically, we introduce Region-Focused Alignment (RFA) to promote object-centric cross-modal alignment while suppressing background interference. Concurrently, to tackle visual isomorphism, we propose Semantic Perturbation Enhanced Matching (SPEM), which leverages a foreground-purified Semantic Prototype Codebook (SPC) to construct semantically perturbed negatives for fine-grained semantic discrimination. Extensive experiments on the GeoText-1652 benchmark and the unseen ERA dataset demonstrate that GRASP achieves competitive performance in drone-view fine-grained image-text retrieval, validating its effectiveness for cross-modal understanding in aerial scenarios. Our code implementation is available at https://github.com/UCAS-JC/GRASP.",
+      "authors": [
+        "Jiahui Cui",
+        "Yan Zhao",
+        "Kan Wei",
+        "Enze Zhu",
+        "Peirong Zhang",
+        "Lei Wang",
+        "Yiru Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.IR",
+        "cs.MM"
+      ],
+      "published": "2026-08-10T08:26:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.09270v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Fine-grained cross-modal region alignment and semantic prototypes for drone views are applicable to multimodal ocean habitat mapping.",
+      "llm_evidence_cn": "面向无人机视角的细粒度跨模态区域对齐与语义原型方法可应用于海洋栖息地多模态制图。",
+      "llm_evidence": "面向无人机视角的细粒度跨模态区域对齐与语义原型方法可应用于海洋栖息地多模态制图。",
+      "canonical_evidence": "面向无人机视角的细粒度跨模态区域对齐与语义原型方法可应用于海洋栖息地多模态制图。",
+      "llm_tldr_en": "Proposes GRASP for fine-grained cross-modal understanding in drone views, overcoming background clutter and visual isomorphism via granularity-aware region alignment and semantic prototype learning.",
+      "llm_tldr_cn": "无人机视角下的视觉语言理解面临背景杂乱和目标视觉同构等挑战，使得宏微观层面都难以对细粒度对象进行准确对齐。本文提出GRASP，通过粒度感知的区域对齐和语义原型学习，分别缓解跨模态关注点错位与视觉同构造成的歧义。该方法能增强模型对无人机影像中细粒度属性的理解。对于海洋遥感中的无人机影像与文本匹配任务，该框架可用于珊瑚礁等栖息地的精细识别与描述。",
+      "llm_tldr": "无人机视角下的视觉语言理解面临背景杂乱和目标视觉同构等挑战，使得宏微观层面都难以对细粒度对象进行准确对齐。本文提出GRASP，通过粒度感知的区域对齐和语义原型学习，分别缓解跨模态关注点错位与视觉同构造成的歧义。该方法能增强模型对无人机影像中细粒度属性的理解。对于海洋遥感中的无人机影像与文本匹配任务，该框架可用于珊瑚礁等栖息地的精细识别与描述。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.07886v1",
+      "source": "arxiv",
+      "title": "Vision-Language Grounding as Bidirectional Concept Correspondence",
+      "abstract": "Vision-language grounding connects language to visual content, yet most existing formulations reduce grounding to a unidirectional localization problem: given a prespecified text phrase or category name, identify the corresponding image region. This setup assumes that the relevant linguistic unit is already known, overlooking a more basic challenge in grounded communication: determining which parts of the text are visually referential and how they correspond to entities in the image. We formulate grounding as $\\textit{bidirectional concept correspondence}$ over an image-text pair. Given an image and its paired text, the goal is to recover all correspondences between visually referential text spans and instance-level image segments, without assuming that the relevant text spans are provided. This formulation unifies common grounding tasks, including phrase grounding, referring expression grounding, and open-vocabulary detection, by treating text segmentation, image segmentation, and cross-modal alignment as a single correspondence prediction problem. To address this task, we introduce $\\textbf{ConCor-1}$, a grounding model built on top of a pretrained vision-language model. It uses learnable $\\textit{bridge tokens}$ to represent candidate image-text correspondences and predicts, for each token, a text mask, an image mask, and a correspondence presence score. To train and evaluate this task, we convert diverse grounding and segmentation datasets into a unified correspondence format. Experiments show that $\\textbf{ConCor-1}$ consistently outperforms baselines, improving correspondence F1 by 48% on the long-caption dataset and by 29% on zero-shot LVIS, where the large category list serves as the text input.",
+      "authors": [
+        "Jieyu Zhang",
+        "Ziqi Gao",
+        "Luke Zettlemoyer",
+        "Ranjay Krishna"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-08-08T03:26:38+00:00",
+      "link": "https://arxiv.org/pdf/2608.07886v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "bidirectional vision-language concept correspondence for grounding text spans to image segments, directly relevant to multimodal image-text fusion",
+      "llm_evidence_cn": "双向视觉-语言概念对应将文本片段与图像区域关联，直接相关于多模态图文融合",
+      "llm_evidence": "双向视觉-语言概念对应将文本片段与图像区域关联，直接相关于多模态图文融合",
+      "canonical_evidence": "双向视觉-语言概念对应将文本片段与图像区域关联，直接相关于多模态图文融合",
+      "llm_tldr_en": "Formulates vision-language grounding as bidirectional concept correspondence, recovering alignments between visually referential text spans and instance-level image segments without prescribed phrases.",
+      "llm_tldr_cn": "针对现有视觉-语言定位通常假设文本短语已给定、只做单向区域定位的局限，提出双向概念对应框架。给定图像和配对文本，模型无需预设短语即可恢复所有可引用文本片段与实例级图像分割之间的对应关系。该工作为实现更通用的跨模态对齐与理解提供了新范式，可支撑海洋遥感影像与文本报告的深度融合与检索。",
+      "llm_tldr": "针对现有视觉-语言定位通常假设文本短语已给定、只做单向区域定位的局限，提出双向概念对应框架。给定图像和配对文本，模型无需预设短语即可恢复所有可引用文本片段与实例级图像分割之间的对应关系。该工作为实现更通用的跨模态对齐与理解提供了新范式，可支撑海洋遥感影像与文本报告的深度融合与检索。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.12502v1",
+      "source": "arxiv",
+      "title": "HIMEC: Directional Change Representation and Fixed-Interface Decoding for Remote Sensing Image Change Captioning",
+      "abstract": "Remote sensing image change captioning (RSICC) converts bitemporal imagery into a sentence describing semantic changes. Most RSICC methods condition caption decoders directly on fused visual features, leaving intermediate change structure and decoder-interface consistency less studied. We present HIMEC, combining Directional Change Representation (DCR) with fixed-interface decoding. DCR separates signed differences into appearance-oriented, disappearance-oriented, and shared-context streams before fusion. A learned-query encoder converts the fused representation into visually conditioned change-query tokens that form the scene decoder's only sample-dependent memory. A training-only auxiliary phrase decoder supplies caption-derived supervision. With a fixed zero input, the scene decoder maintains the same interface during training and inference. Separately, we evaluate a local-to-scene cascade conditioned on teacher-forced local states during training and autoregressive states at inference. On changed LEVIR-CC validation pairs, these states have a mean cosine distance of 0.69. Regime-matched conditioning recovers most of the associated deficit, whereas permuting state correspondence causes no detectable penalty. These findings are limited to the evaluated cascade. In a matched three-seed comparison, HIMEC reaches a Consensus-based Image Description Evaluation (CIDEr) score of $142.81\\pm0.60$ on LEVIR-CC, versus $139.51\\pm3.40$ for direct fused-feature memory. On SECOND-CC, fixed-zero and regime-matched diagnostic conditioning reach 75.67 and 76.99 CIDEr, respectively, versus 60.77 for the mismatched cascade. The source code will be made publicly available at https://github.com/ayshaashra/HIMEC upon publication.",
+      "authors": [
+        "Aysha Ashraf",
+        "Shaina Ashraf",
+        "Wafaa I. M. Hussin",
+        "Ali Haider",
+        "Zhi Lu",
+        "Zhenming Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T18:29:27+00:00",
+      "link": "https://arxiv.org/pdf/2608.12502v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Remote sensing image change captioning combining imagery and text, transferable to ocean habitat mapping",
+      "llm_evidence_cn": "遥感图像变化描述结合图像与文本，可迁移至海洋栖息地监测",
+      "llm_evidence": "遥感图像变化描述结合图像与文本，可迁移至海洋栖息地监测",
+      "canonical_evidence": "遥感图像变化描述结合图像与文本，可迁移至海洋栖息地监测",
+      "llm_tldr_en": "HIMEC improves remote sensing image change captioning with directional change representation and fixed-interface decoding, producing sentence descriptions of semantic changes.",
+      "llm_tldr_cn": "遥感图像变化描述任务需要将双时相图像转换为语义变化的句子。现有方法通常直接在融合视觉特征上解码，忽略了中间变化结构。本文提出HIMEC，通过方向性变化表示将增、消和共享上下文分离后再融合，并采用固定接口解码，使学习查询编码器生成视觉条件变化查询令牌，仅作为解码器的样本相关记忆。实验表明该方法在变化描述准确性和解码一致性上表现优异，为遥感图像的语言描述提供新思路，也可推广至海洋生态环境变化监测。",
+      "llm_tldr": "遥感图像变化描述任务需要将双时相图像转换为语义变化的句子。现有方法通常直接在融合视觉特征上解码，忽略了中间变化结构。本文提出HIMEC，通过方向性变化表示将增、消和共享上下文分离后再融合，并采用固定接口解码，使学习查询编码器生成视觉条件变化查询令牌，仅作为解码器的样本相关记忆。实验表明该方法在变化描述准确性和解码一致性上表现优异，为遥感图像的语言描述提供新思路，也可推广至海洋生态环境变化监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.07987v1",
+      "source": "arxiv",
+      "title": "Advantage-Guided Gate: Reshaping Open-Ended Reasoning for Vision-Based Spatial Intelligence",
+      "abstract": "Multimodal large language models (MLLMs) have demonstrated significant potential in complex spatial scene understanding and reasoning tasks. However, their open-ended reasoning process is prone to decision errors and error accumulation, leading to instability in answer quality. To address this, we propose an advantage-guided gating framework that dynamically intervenes in and corrects deviations during the reasoning process. Specifically, we model step-by-step reasoning as a finite-horizon decision process and introduce Monte Carlo value evaluation on the reasoning tree to provide intermediate supervision signals. The framework includes Step-Advantage Gate and Trajectory-Advantage Gate, which dynamically select high-value reasoning steps and high-quality complete reasoning trajectories, respectively. During training, we perform supervised learning for the gates using reasoning trees generated via multi-branch sampling, and combine shared-parameter initialization with task-specific heads to achieve cross-task robustness and diversity. During inference, the model greedily selects high-value prefix reasoning steps while choosing the optimal reasoning head based on the problem type, thereby significantly improving the accuracy of the final answer. Furthermore, we constructed the Reasoning-Tree-160k dataset and performed two-stage learning on it. Extensive experiments demonstrate that this advantage-guided gating framework effectively enhances the performance of benchmark MLLMs in visual-based spatial understanding and reasoning tasks. The code is open to the public for research: https://github.com/LingLin-ll/Advantage-Guided-Gate.",
+      "authors": [
+        "Ling Lin",
+        "Yang Bai",
+        "Congcong Zhu",
+        "Jiangming Shi",
+        "Meng Wang",
+        "Yang Long",
+        "Jingrun Chen",
+        "Ling Shao",
+        "Huazhu Fu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T07:46:04+00:00",
+      "link": "https://arxiv.org/pdf/2608.07987v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Advantage-guided gating improves MLLM spatial reasoning stability, supporting multimodal remote sensing and text environmental assessment.",
+      "llm_evidence_cn": "优势引导门控提升多模态大模型空间推理稳定性，可支持遥感与文本结合的环评任务。",
+      "llm_evidence": "优势引导门控提升多模态大模型空间推理稳定性，可支持遥感与文本结合的环评任务。",
+      "canonical_evidence": "优势引导门控提升多模态大模型空间推理稳定性，可支持遥感与文本结合的环评任务。",
+      "llm_tldr_en": "Proposes advantage-guided gating to correct MLLM spatial reasoning errors via Monte Carlo evaluation on reasoning trees, improving answer stability for vision-based spatial intelligence.",
+      "llm_tldr_cn": "多模态大模型在复杂空间场景理解与推理中容易出现决策错误和错误累积，导致回答质量不稳定。本文将逐步推理建模为有限视界决策过程，引入蒙特卡洛价值评估作为中间监督，并提出Step-Advantage Gate和Trajectory-Advantage Gate，动态选择高价值推理路径。该框架能有效纠正推理偏差，提升空间推理的稳定性和准确性。对于遥感图像与文本报告结合的环境评估等任务，这种推理校正机制有助于提高多模态模型输出的可靠性。",
+      "llm_tldr": "多模态大模型在复杂空间场景理解与推理中容易出现决策错误和错误累积，导致回答质量不稳定。本文将逐步推理建模为有限视界决策过程，引入蒙特卡洛价值评估作为中间监督，并提出Step-Advantage Gate和Trajectory-Advantage Gate，动态选择高价值推理路径。该框架能有效纠正推理偏差，提升空间推理的稳定性和准确性。对于遥感图像与文本报告结合的环境评估等任务，这种推理校正机制有助于提高多模态模型输出的可靠性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.08555v1",
+      "source": "arxiv",
+      "title": "SC-Diff: Semantically Calibrated Diffusion for Visible-to-Infrared Image Translation",
+      "abstract": "Visible-to-infrared image translation provides a practical way to expand infrared training data using abundant visible images. Diffusion models are promising for this task because of their strong generative performance. However, existing diffusion-based methods typically use semantic priors only as external conditions, without explicitly regulating token interactions within the denoising network. Consequently, they struggle to preserve object locations, shapes, and semantic layouts required for reliable annotation reuse. We propose SC-Diff, a semantically calibrated latent diffusion framework that uses semantic priors for both conditional guidance and internal self-attention calibration. A pretrained SAM3 model with predefined text prompts first extracts category-specific semantic masks from visible images. These masks are merged into a semantic map and fused with the visible image as the input condition. The same map is converted into token-level semantic labels to calibrate self-attention in the denoising network. Based on these labels, we introduce Semantic-Guided Self-Attention Calibration (SGSC), which adaptively applies positive biases to query-key pairs of the same category. The query-wise calibration strength depends on the dispersion of attention across semantic categories and the attention assigned to the query's own category. The original attention scores further modulate the bias, giving greater calibration to same-category keys with stronger responses. This soft calibration reduces cross-category interference while retaining global contextual interactions, thereby improving semantic consistency in generated infrared images. Extensive experiments show that SC-Diff improves perceptual quality and produces more effective synthetic training data for downstream infrared object detection.",
+      "authors": [
+        "Junyin Zhang",
+        "Siyu Huang",
+        "Jianxiong Ye",
+        "Haowei Gong",
+        "Ruicheng Zhang",
+        "Deyu Meng",
+        "Chenqiang Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-09T07:57:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.08555v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Visible-to-infrared image translation with diffusion models is transferable to satellite image augmentation for ocean habitat analysis.",
+      "llm_evidence_cn": "可见光到红外的图像翻译扩散方法可迁移到海洋栖息地卫星影像的数据增强。",
+      "llm_evidence": "可见光到红外的图像翻译扩散方法可迁移到海洋栖息地卫星影像的数据增强。",
+      "canonical_evidence": "可见光到红外的图像翻译扩散方法可迁移到海洋栖息地卫星影像的数据增强。",
+      "llm_tldr_en": "Proposes semantically calibrated latent diffusion for visible-to-infrared translation, explicitly regulating token interactions to preserve object layout, useful for remote sensing training data expansion.",
+      "llm_tldr_cn": "现有可见光到红外图像翻译扩散方法仅将语义先验作为外部条件，未显式约束去噪网络内部token交互，导致物体位置、形状和语义布局难以保持。本文提出SC-Diff，利用语义先验同时进行条件引导和内部自注意力校准，结合SAM3模型与文本提示生成高质量红外图像。该方法在保留结构布局方面具有优势，可用于扩充红外训练数据。对于遥感图像分析任务，该技术可帮助利用丰富可见光影像生成红外模态数据，提升海洋栖息地识别模型的泛化能力。",
+      "llm_tldr": "现有可见光到红外图像翻译扩散方法仅将语义先验作为外部条件，未显式约束去噪网络内部token交互，导致物体位置、形状和语义布局难以保持。本文提出SC-Diff，利用语义先验同时进行条件引导和内部自注意力校准，结合SAM3模型与文本提示生成高质量红外图像。该方法在保留结构布局方面具有优势，可用于扩充红外训练数据。对于遥感图像分析任务，该技术可帮助利用丰富可见光影像生成红外模态数据，提升海洋栖息地识别模型的泛化能力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.09497v1",
+      "source": "arxiv",
+      "title": "SwissCrop25: A National Multi-Year Benchmark for Operational Crop Mapping",
+      "abstract": "Operational crop mapping requires models that generalise across years, resolve fine-grained crop taxonomies, and distinguish cropland from surrounding landscapes. However, existing crop mapping datasets enable evaluation of these requirements only in isolation. We therefore introduce SwissCrop25, a national-scale crop mapping benchmark dataset spanning seven growing seasons (2019-2025). SwissCrop25 combines Sentinel-2 time series, daily temperature observations, a fine-grained 73 crop taxonomy including grassland management types, and 5 explicit non-crop land cover classes. To evaluate realistic deployment conditions, we define a leave-one-year-out protocol with joint cropland delineation and crop classification for benchmarking representative crop mapping architectures. Evaluating U-TAE (convolutional temporal-attention model), TSViT (transformer-based spatio-temporal model), and Galileo (EO foundation model) reveals differences between architectures hidden by conventional benchmarks. In this setting, domain-specific models outperform Galileo, with TSViT achieving the best overall performance and a 12 pp macro-mIoU advantage over U-TAE. SwissCrop25 also exposes substantial interannual distribution shifts and shows that incorporating temperature-derived phenological information improves robustness. Finally, in-season evaluation reveals a trade-off between models, with U-TAE performing better early in the season and TSViT gaining an advantage later through improved rare-class discrimination. SwissCrop25 provides a challenging testbed for evaluating crop mapping systems under realistic operational conditions and is publicly released at https://huggingface.co/datasets/EOA-team/SwissCrop25 .",
+      "authors": [
+        "Thomas Lauber",
+        "Mehmet Ozgur Turkoglu",
+        "Sélène Ledain",
+        "Helge Aasen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-10T12:03:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.09497v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-year remote sensing mapping benchmark with Sentinel-2 time series and fine-grained taxonomy is a template for coral reef ecosystem mapping.",
+      "llm_evidence_cn": "基于Sentinel-2时序与细粒度分类的多年份遥感制图基准可成为珊瑚礁生态系统制图的模板。",
+      "llm_evidence": "基于Sentinel-2时序与细粒度分类的多年份遥感制图基准可成为珊瑚礁生态系统制图的模板。",
+      "canonical_evidence": "基于Sentinel-2时序与细粒度分类的多年份遥感制图基准可成为珊瑚礁生态系统制图的模板。",
+      "llm_tldr_en": "Presents SwissCrop25, a national multi-year crop mapping benchmark combining Sentinel-2 time series and temperature data with a 73-class taxonomy and non-crop classes, defining leave-one-year-out evaluation for operational mapping.",
+      "llm_tldr_cn": "业务化作物制图要求模型跨年份泛化、区分细粒度作物类别并分离非耕地，但现有数据集难以同时评测这些要素。本文发布SwissCrop25，包含2019-2025年七个生长季的Sentinel-2时间序列和逐日气温数据，以及73类精细作物类别和5类非作物土地覆盖。该基准定义了留一年验证协议，支持作物地块勾勒与分类的联合评估。这种多模态遥感基准的设计方法可迁移到珊瑚礁生态系统制图，推动遥感生态监测的标准化评估。",
+      "llm_tldr": "业务化作物制图要求模型跨年份泛化、区分细粒度作物类别并分离非耕地，但现有数据集难以同时评测这些要素。本文发布SwissCrop25，包含2019-2025年七个生长季的Sentinel-2时间序列和逐日气温数据，以及73类精细作物类别和5类非作物土地覆盖。该基准定义了留一年验证协议，支持作物地块勾勒与分类的联合评估。这种多模态遥感基准的设计方法可迁移到珊瑚礁生态系统制图，推动遥感生态监测的标准化评估。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11142v1",
+      "source": "arxiv",
+      "title": "SAR2Agri: Learning SAR Intensity Representations for Agricultural Monitoring",
+      "abstract": "Agricultural monitoring faces unique challenges, arising from the landscape's complex temporal, phenological, and climate dynamics, yet monitoring them is critical for ensuring food security. Synthetic Aperture Radar (SAR) satellites offer all-weather day-night imaging capability supporting key monitoring tasks including crop type mapping, yield prediction and phenological event detection. Existing multimodal remote sensing foundation models including TerraMind and CopernicusFM learn SAR representations by grounding them in optical imagery using joint encoding and contrastive learning techniques, while SAR-specific foundation models such as SAR-JEPA, SARMAE, and SAR-W-MixMAE primarily focus on target detection, flood mapping, and land cover classification applications. Recent work has introduced phenology inspired temporal pretext tasks with optical imagery which has shown strong performance on agricultural downstream tasks. In this work, we propose the first self-supervised learning pipeline focused on using only SAR intensity imagery for agricultural applications. We improve the temporal pretext tasks through masking and curriculum learning to enhance the pretraining pipeline's ability to capture phenological features from SAR. On the SICKLE benchmark, our final model achieves 84.9% IoU on crop type mapping, outperforming optical baselines (by 15.3 pt) and existing SAR baselines (by 2.2 pt), demonstrating the effectiveness of our proposed pipeline for pretraining SAR intensity encoders for agricultural monitoring.",
+      "authors": [
+        "Moti Rattan Gupta",
+        "Anupam Sobti"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T17:01:26+00:00",
+      "link": "https://arxiv.org/pdf/2608.11142v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "SAR satellite representation learning for agricultural monitoring; transferable to satellite image analysis of ocean habitats",
+      "llm_evidence_cn": "面向农业监测的SAR卫星表示学习，可迁移至海洋栖息地的卫星图像分析",
+      "llm_evidence": "面向农业监测的SAR卫星表示学习，可迁移至海洋栖息地的卫星图像分析",
+      "canonical_evidence": "面向农业监测的SAR卫星表示学习，可迁移至海洋栖息地的卫星图像分析",
+      "llm_tldr_en": "Presents SAR2Agri, learning SAR intensity representations for agricultural monitoring via multimodal remote sensing foundation models; a transferable SAR representation method for habitat mapping.",
+      "llm_tldr_cn": "该文关注合成孔径雷达（SAR）在农业监测中的应用，提出SAR2Agri方法学习SAR强度表示，以支持作物类型制图、产量预测和物候事件检测。现有遥感基础模型在SAR与光学数据对齐及对比学习上仍有限，SAR2Agri通过专门的表示学习策略提升SAR特征在下游任务中的效果。实验结果验证了SAR2Agri在多个农业监测任务上的优越性。由于SAR卫星具备全天候成像能力，该方法可迁移至海洋栖息地遥感制图等应用。",
+      "llm_tldr": "该文关注合成孔径雷达（SAR）在农业监测中的应用，提出SAR2Agri方法学习SAR强度表示，以支持作物类型制图、产量预测和物候事件检测。现有遥感基础模型在SAR与光学数据对齐及对比学习上仍有限，SAR2Agri通过专门的表示学习策略提升SAR特征在下游任务中的效果。实验结果验证了SAR2Agri在多个农业监测任务上的优越性。由于SAR卫星具备全天候成像能力，该方法可迁移至海洋栖息地遥感制图等应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11596v1",
+      "source": "arxiv",
+      "title": "Small Language Model enabled Autonomous agent for Language-Conditioned Cognitive Radar",
+      "abstract": "Modern radar systems require adapting their processing strategies in response to changing interference, clutter, and data availability. This paper introduces a framework for a small language model (SLM)-driven autonomous agent designed for language-conditioned cognitive radar, functioning as an intelligent controller for a suite of array signal processing tools. Given a natural-language command, the agent extracts radar-operation-related cues, selects an appropriate sequence of signal-processing methods, configures parameters, and invokes executable tools for numerical computation. Experiments with a synthetic uniform linear array (ULA) radar demonstrate that, given a natural-language command, the agent performs meaningful algorithm selection across diverse scenarios for sidelobe control, jammer suppression, multiple-null beamforming, coherent-source handling, and low-snapshot direction-of-arrival (DOA) estimation. Ablation results show that radar-specific prompting and physics-grounded tool execution are both required for reliable decisions and hallucination-free numerical results.",
+      "authors": [
+        "Minhaj Uddin Ahmad",
+        "Zakia Zaman",
+        "Shunqiao Sun",
+        "Mizanur Rahman"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-08-12T03:08:40+00:00",
+      "link": "https://arxiv.org/pdf/2608.11596v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Language-model-driven autonomous agent for tool selection and configuration, adaptable to ocean monitoring",
+      "llm_evidence_cn": "语言模型驱动的自主智能体进行工具选择与配置，可适配海洋监测",
+      "llm_evidence": "语言模型驱动的自主智能体进行工具选择与配置，可适配海洋监测",
+      "canonical_evidence": "语言模型驱动的自主智能体进行工具选择与配置，可适配海洋监测",
+      "llm_tldr_en": "An SLM-driven autonomous agent interprets natural-language commands to select and configure radar signal processing tools, demonstrating foundational agent capabilities.",
+      "llm_tldr_cn": "现代雷达系统需要根据干扰和可用数据动态调整处理策略。本文提出一种小型语言模型驱动的自主智能体，作为认知雷达的智能控制器，根据自然语言命令提取雷达操作线索，选择合适的信号处理方法、配置参数并调用可执行数值计算工具。在合成均匀线性阵列雷达实验中，智能体能够根据指令执行有意义的算法选择。该框架展示了语言模型在自主控制与工具调用中的潜力，可被迁移到海洋遥感与监测智能体场景。",
+      "llm_tldr": "现代雷达系统需要根据干扰和可用数据动态调整处理策略。本文提出一种小型语言模型驱动的自主智能体，作为认知雷达的智能控制器，根据自然语言命令提取雷达操作线索，选择合适的信号处理方法、配置参数并调用可执行数值计算工具。在合成均匀线性阵列雷达实验中，智能体能够根据指令执行有意义的算法选择。该框架展示了语言模型在自主控制与工具调用中的潜力，可被迁移到海洋遥感与监测智能体场景。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
