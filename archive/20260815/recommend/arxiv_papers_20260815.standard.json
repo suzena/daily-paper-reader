@@ -1,0 +1,537 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-15T19:18:10.306066+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [
+    {
+      "id": "2608.11638v1",
+      "source": "arxiv",
+      "title": "Transferable Above-Ground Biomass (AGB) Estimation Model from Multi-Sensor Data with Sparse Field Calibration",
+      "abstract": "Spatially continuous quantification of forest above-ground biomass (AGB) is what makes carbon accounting credible and mitigation strategies actionable. While field inventories provide high localized accuracy, they are spatially sparse; conversely, spaceborne LiDAR from the Global Ecosystem Dynamics Investigation (GEDI) offers broad biomass samples but lacks spatial continuity and systematic underestimation of high-biomass forests. This paper presents an operational framework centered on a single globally trained convolutional neural network (CNN) that is seamlessly adapted to each new landscape through a lightweight empirical field-calibration workflow. The global model combines optical (Sentinel-2), C-band SAR (Sentinel-1), L-band SAR (ALOS-2 PALSAR-2), and terrain (DEM) data. It is trained once against GEDI Level-4A biomass reference data spanning multiple regions and both wet and dry seasons so that it learns the persistent woody-structure rather than a single-date appearance. To avoid retraining for every landscape, the framework applies a small number of local field plots to fit a scale-and-bias correction that aligns the global prediction with ground truth in each region. The pipeline harmonizes sensor data onto a shared 10 m grid, derives vegetation indices and polarimetric ratios, computes per-band normalization stats, and trains the CNN with a hybrid log-domain SmoothL1 with RMSE loss for skewed biomass distribution. On held-out validation the global GEDI-based model achieved R^2 approximately 0.78 and RMSE approximately 22 Mg/ha. A subsequent field calibration combining Random Forest fine-tuning under a 10-fold cross-validation eliminates localized regional biases. This improves local validation performance to R^2 approximately 0.82 and reduces RMSE to approximately 15 Mg/ha, outperforming both the uncalibrated global model and the ESA CCI Biomass product against field plots.",
+      "authors": [
+        "Pann Thinzar Seint",
+        "Bryan Atwood",
+        "Subas Chhatkuli"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-08-12T04:36:26+00:00",
+      "link": "https://arxiv.org/pdf/2608.11638v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Global CNN for above-ground biomass from multi-sensor remote sensing with sparse field calibration, transferable to coral reef mapping",
+      "llm_evidence_cn": "基于多传感器遥感和稀疏样地标定的全球CNN生物量估算，可迁移到珊瑚礁测绘",
+      "llm_evidence": "基于多传感器遥感和稀疏样地标定的全球CNN生物量估算，可迁移到珊瑚礁测绘",
+      "canonical_evidence": "基于多传感器遥感和稀疏样地标定的全球CNN生物量估算，可迁移到珊瑚礁测绘",
+      "llm_tldr_en": "This paper presents a globally trained CNN that fuses Sentinel-2, SAR and GEDI LiDAR, adapted via sparse field calibration, to map above-ground biomass with credible carbon accounting.",
+      "llm_tldr_cn": "该文针对大范围森林地上生物量估算中野外数据稀疏、星载LiDAR不连续且高估/低估的问题，提出一个全局训练的CNN框架，融合哨兵二号光学、C波段SAR和GEDI LiDAR数据，并通过轻量样地标定适配新景观。实验表明，该方法能无缝适应新地点并提高生物量估算可信度。该框架可直接套用到珊瑚礁底质等生态遥感制图任务。",
+      "llm_tldr": "该文针对大范围森林地上生物量估算中野外数据稀疏、星载LiDAR不连续且高估/低估的问题，提出一个全局训练的CNN框架，融合哨兵二号光学、C波段SAR和GEDI LiDAR数据，并通过轻量样地标定适配新景观。实验表明，该方法能无缝适应新地点并提高生物量估算可信度。该框架可直接套用到珊瑚礁底质等生态遥感制图任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.11883v1",
+      "source": "arxiv",
+      "title": "Warping Earth Observations for better ice labeling in the Marginal Marginal Ice Zone",
+      "abstract": "Multimodal satellite imagery provides complementary information for Earth Observation, but accurately combining heterogeneous sensors remains challenging in dynamic environments. Fast-changing regions, such as the Antarctic marginal ice zone, cannot fully exploit multimodal information from different satellite sensors because surface features move between image acquisitions. This spatial and temporal mismatch challenges effective perceptual grounding, violating the assumption of pixel-level correspondence that underpins most multimodal reasoning and downstream classification pipelines. Antarctic sea ice provides a challenging benchmark due to the rapid, heterogeneous drift of individual ice floes and the differing responses of sea ice to radar, visible and thermal sensing modalities. Accurate, dense supervision of sea ice remains scarce because generating pixel-wise labels requires time-consuming expert interpretation of noisy data, leading to historical reliance on coarse-resolution maritime ice charts for model training. This paper presents a novel architecture based on mutual information warping to align multi-satellite (Sentinel-1 and MODIS platforms) multimodal (visible, thermal, radar) satellite scenes. To demonstrate the approach, we introduce a sparse expert-labeled dataset of 2,088 pixel-wise annotations (7,046 expert point classifications) located at the ice-water margin interface across 43 scenes. Our results demonstrate that spatially grounding and aligning modalities prior to segmentation improves classification accuracy, and enables accurate, dense sea ice segmentation from sparse point-wise supervision.",
+      "authors": [
+        "Tom Kelly",
+        "Martin S. J. Rogers"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T10:09:53+00:00",
+      "link": "https://arxiv.org/pdf/2608.11883v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Combines multimodal satellite imagery with warping to improve ice labeling in ocean regions",
+      "llm_evidence_cn": "融合多模态卫星影像并做形变处理，提升海洋区域冰标定精度",
+      "llm_evidence": "融合多模态卫星影像并做形变处理，提升海洋区域冰标定精度",
+      "canonical_evidence": "融合多模态卫星影像并做形变处理，提升海洋区域冰标定精度",
+      "llm_tldr_en": "This paper warps multimodal satellite imagery to correct spatial and temporal mismatch from drifting ice floes, improving labeling in the Antarctic marginal ice zone.",
+      "llm_tldr_cn": "该文针对南极边缘冰区多模态卫星影像间因海冰漂移导致的时空错配问题，提出一种图像形变方法，以恢复像元级对应关系，从而提升分类和标注管线的可靠性。实验表明，校正后的多模态影像在冰标定任务上显著优于直接融合。该工作为解决动态海洋环境中的多传感器对齐问题提供了重要技术。",
+      "llm_tldr": "该文针对南极边缘冰区多模态卫星影像间因海冰漂移导致的时空错配问题，提出一种图像形变方法，以恢复像元级对应关系，从而提升分类和标注管线的可靠性。实验表明，校正后的多模态影像在冰标定任务上显著优于直接融合。该工作为解决动态海洋环境中的多传感器对齐问题提供了重要技术。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.13511v1",
+      "source": "arxiv",
+      "title": "A Browser-Native Digital Test Range for Benchmarking 4D Ocean-Glider Planning Algorithms",
+      "abstract": "Repeated in-situ evaluation of ocean-glider planners requires scarce vehicles, operators, deployment and recovery resources, and ocean conditions that cannot be reset for competing algorithms. We present a guided, installation-free browser-native digital test range that transforms a selected region into a reproducible four-dimensional experiment. The system leads users from regional domain selection through mission-scoped bathymetry, time/depth forcing, science objectives, optional task decomposition, route specification, current-advected execution, observation generation, and scoring. Its primary contribution is a common plan-to-observation contract unifying vehicle, sensing, and evaluator assumptions across manual routes, transparent built-in algorithms, and imported classical or learned-planner outputs, while exported artifacts form dataset-ready records. A controlled Observing System Simulation Experiment (OSSE) evaluates five classical planners in two episodes, three deterministic seeds, and a calibrated 60-hour horizon. All 54 missions completed and recovered without hard violations, while planner rankings and dive-policy effects revealed operational-scientific tradeoffs. An authentic public deployment supplied a field-referenced audit to scope current kinematic boundaries. Separately, source-locked GliderFlight 1.2.0 achieved native-to-browser parity through Pyodide/WebAssembly, establishing a pathway for high-fidelity multi-tier simulation. The resulting operational space is scientifically traceable and component-qualified for mission-scale pre-deployment experimentation.",
+      "authors": [
+        "Edward Holmberg",
+        "Elias Ioup",
+        "Mahdi Abdelguerfi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-13T17:34:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.13511v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "digital test range benchmarking ocean-glider planning algorithms",
+      "llm_evidence_cn": "面向海洋滑翔机规划算法基准测试的数字试验场",
+      "llm_evidence": "面向海洋滑翔机规划算法基准测试的数字试验场",
+      "canonical_evidence": "面向海洋滑翔机规划算法基准测试的数字试验场",
+      "llm_tldr_en": "A browser-native digital test range turns an ocean region into a reproducible 4D benchmark for ocean-glider planning, unifying plan-to-observation contracts to enable fair comparisons without scarce field resources.",
+      "llm_tldr_cn": "针对水下滑翔机规划算法实测评估依赖稀缺资源和不可重置海况的问题，论文提出一个浏览器原生的数字试验场，将选定海区转化为可复现的四维实验环境。系统覆盖从区域选择、任务分解、路径规划到随流执行与评分的完整链路，并提供统一的规划到观测契约。该平台可对人工与自动规划器进行标准化、可复现的对比，显著降低实测评估门槛，为海洋智能体规划算法的基准测试提供了公共基础设施。",
+      "llm_tldr": "针对水下滑翔机规划算法实测评估依赖稀缺资源和不可重置海况的问题，论文提出一个浏览器原生的数字试验场，将选定海区转化为可复现的四维实验环境。系统覆盖从区域选择、任务分解、路径规划到随流执行与评分的完整链路，并提供统一的规划到观测契约。该平台可对人工与自动规划器进行标准化、可复现的对比，显著降低实测评估门槛，为海洋智能体规划算法的基准测试提供了公共基础设施。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.07088v1",
+      "source": "arxiv",
+      "title": "RoRA: Role-Oriented Regional Allocation for Visual Token Pruning in MLLMs",
+      "abstract": "Multimodal large language models (MLLMs) encode images as long visual token sequences, making prefilling and KV-cache storage expensive. Existing training-free pruning methods select tokens by importance, diversity, or spatial coverage, but treat retained tokens as interchangeable and do not explicitly track which object-related regions are already covered. We present RoRA, a training-free framework that casts visual token pruning as role-oriented regional evidence allocation. Given a fixed budget, RoRA partitions tokens into a protected semantic core, complementary context, and fine-grained detail. It first calibrates text-conditioned attention with a positional prior and a prompt-calibrated object prior, then builds Attention-Anchored Regions (AARs) from high-confidence anchors as lightweight proxies for covered object support. Context is explored mainly outside AARs, while a small AAR-guided budget restores local detail; pairwise similarity is used only for context-stage redundancy filtering. Under matched budgets, RoRA consistently outperforms strong training-free baselines across LLaVA and Qwen-VL families, retaining most of the unpruned accuracy even at aggressive pruning ratios, e.g., 96.5% of full performance at 88.9% pruning on LLaVA-1.5, and improving over D2Pruner by about 5% on Qwen3-VL at 75-90% pruning. At a 66.7% pruning ratio, RoRA requires only 0.7 ms for token selection and reduces end-to-end inference time by 24.6%, corresponding to a 1.33x speedup over unpruned inference on an NVIDIA H800.",
+      "authors": [
+        "Qiyanhui Lu",
+        "Han Wu",
+        "Rongjian Xu",
+        "Tingzhang Luo",
+        "Cheng Fan",
+        "Xinghao Chen",
+        "Minjing Dong",
+        "Jufeng Yang",
+        "Jianyuan Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-07T10:39:47+00:00",
+      "link": "https://arxiv.org/pdf/2608.07088v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Visual token pruning for multimodal large language models, enabling efficient combination of imagery and text",
+      "llm_evidence_cn": "面向多模态大模型的视觉词元剪枝，提升图像与文本联合分析的效率",
+      "llm_evidence": "面向多模态大模型的视觉词元剪枝，提升图像与文本联合分析的效率",
+      "canonical_evidence": "面向多模态大模型的视觉词元剪枝，提升图像与文本联合分析的效率",
+      "llm_tldr_en": "RoRA casts MLLM visual token pruning as role-oriented regional evidence allocation, partitioning tokens into core/context/detail with attention-anchored regions, cutting the cost of processing large images.",
+      "llm_tldr_cn": "RoRA 针对多模态大模型处理大尺寸图像时视觉词元过多、预填充与缓存昂贵的问题，提出一种免训练的角色化区域证据分配剪枝框架。它在固定预算下将词元划分为受保护的语义核心、上下文和细节，并用注意力锚定区域校准文本条件注意力。该方法能在保持关键语义的同时大幅减少视觉词元，为遥感图像与文本联合分析等大规模多模态应用提供高效支撑。",
+      "llm_tldr": "RoRA 针对多模态大模型处理大尺寸图像时视觉词元过多、预填充与缓存昂贵的问题，提出一种免训练的角色化区域证据分配剪枝框架。它在固定预算下将词元划分为受保护的语义核心、上下文和细节，并用注意力锚定区域校准文本条件注意力。该方法能在保持关键语义的同时大幅减少视觉词元，为遥感图像与文本联合分析等大规模多模态应用提供高效支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.07409v1",
+      "source": "arxiv",
+      "title": "UniJEPA: A Unified Joint-Embedding Predictive Architecture for Task-Agnostic Visual World Modeling",
+      "abstract": "Joint-Embedding Predictive Architectures (JEPAs) have emerged as a principled framework for self-supervised learning of world models in compact latent spaces, yet existing methods are fragmented: some predict masked parts of a single image in latent space (I-JEPA), others learn to predict global photometric transformations (Image World Models), while video-scale JEPAs predict future temporal states and are post-trained for action-conditioned planning (V-JEPA~2, DINO-World, DINO-WM). These objectives are treated as distinct recipes with separate encoders, predictors, and anti-collapse regularizers, hindering a single model from unifying image-level and video-level world modeling. We present UniJEPA, a unified JEPA that jointly learns photometric prediction (image-level transformations) and temporal prediction (video-level next-state dynamics) in one shared latent space. A single end-to-end objective, composed of a next-embedding prediction loss and a Gaussian regularizer, yields a provably anti-collapse encoder-predictor pair trainable from raw pixels without EMA, stop-gradient, or pre-trained encoders. We show that the same latent space supports controllable abstraction: photometric prediction learns invariant structure while temporal prediction learns equivariant dynamics. After action-conditioned post-training on offline trajectories, UniJEPA enables zero-shot planning by treating goal features as prediction targets. On image, video, and control benchmarks, UniJEPA matches or surpasses task-specific JEPAs while requiring a single loss hyperparameter, and plans up to tens of times faster than generative world models at comparable accuracy.",
+      "authors": [
+        "An Lanji",
+        "Dawei Liu",
+        "Jin Li",
+        "Haoran Xu",
+        "Mei Chen",
+        "Yu Tian"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-07T16:55:58+00:00",
+      "link": "https://arxiv.org/pdf/2608.07409v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unified self-supervised visual world modeling, transferable to satellite image analysis of ocean habitats",
+      "llm_evidence_cn": "统一自监督视觉世界建模，可迁移至海洋栖息地卫星影像分析",
+      "llm_evidence": "统一自监督视觉世界建模，可迁移至海洋栖息地卫星影像分析",
+      "canonical_evidence": "统一自监督视觉世界建模，可迁移至海洋栖息地卫星影像分析",
+      "llm_tldr_en": "UniJEPA unifies image-level and video-level joint-embedding predictive architectures into a single self-supervised framework, producing task-agnostic visual representations that could support remote sensing analysis.",
+      "llm_tldr_cn": "现有JEPA方法将图像级与视频级自监督预测目标割裂，难以用单一模型统一建模视觉世界。UniJEPA提出统一的联合嵌入预测架构，以共享编码器和预测器同时处理两种尺度目标，学习任务无关的通用视觉表征。该表征可直接作为卫星影像分析等下游任务的预训练基础，为海洋栖息地遥感应用提供通用视觉建模工具。",
+      "llm_tldr": "现有JEPA方法将图像级与视频级自监督预测目标割裂，难以用单一模型统一建模视觉世界。UniJEPA提出统一的联合嵌入预测架构，以共享编码器和预测器同时处理两种尺度目标，学习任务无关的通用视觉表征。该表征可直接作为卫星影像分析等下游任务的预训练基础，为海洋栖息地遥感应用提供通用视觉建模工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.10724v1",
+      "source": "arxiv",
+      "title": "InterPruner: Interactive Structured Pruning via Taylor-Implicit Criterion and Language-Prior Modulator for Multimodal Object Detection",
+      "abstract": "Multimodal object detection proves effective in remote sensing, especially the RGB-Infrared paradigm. The parallel feature extractors provide rich multimodal information for robust detection, yet introduce substantial channel redundancy and computational overhead. Existing pruning methods can reduce channel redundancy, but they are designed for unimodal backbones, overlooking cross-modal interactions and dynamic scene-wise redundancy. In this paper, we propose InterPruner, the first interactive structured channel pruning framework for RGB-infrared object detectors. Specifically, we first derive a Taylor-Implicit Criterion(TIC) to quantify channel importance via high-order Taylor expansion and the implicit function theorem. Then, a Modality Interaction Redundancy Analyzer (MIRA) identifies redundant channels via mutual compensability assessment. Finally, a Scene-Prior Channel Anchor (SPCA) uses language priors as semantic anchors to measure channel-scene relevance for dynamic channel importance estimation. Cross-modality channel pruning for RGB-Infrared detection is yet unexplored. Extensive experiments on RGB-infrared object detection dataset demonstrate that InterPruner maintains high performance with negligible degradation. Specifically, it even achieves a 0.6% mAP increase on the FLIR dataset when pruning 50% of the channels. Code will be available on GitHub to facilitate future work.",
+      "authors": [
+        "Qi Ming",
+        "Zihan Yang",
+        "Shaoguang Huang",
+        "Si Sun",
+        "Hanqing Zhang",
+        "Nanqing Liu",
+        "Jiahui Lv",
+        "Juan Fang",
+        "Aleksandra Pizurica"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T09:42:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.10724v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multimodal RGB-Infrared remote sensing object detection with structured pruning, relevant to deep learning for satellite image analysis",
+      "llm_evidence_cn": "多模态RGB-红外遥感目标检测与结构化剪枝，直接服务于卫星影像深度学习分析",
+      "llm_evidence": "多模态RGB-红外遥感目标检测与结构化剪枝，直接服务于卫星影像深度学习分析",
+      "canonical_evidence": "多模态RGB-红外遥感目标检测与结构化剪枝，直接服务于卫星影像深度学习分析",
+      "llm_tldr_en": "InterPruner is an interactive structured channel pruning framework for RGB-infrared object detectors, using a Taylor-implicit criterion and language-prior modulator to reduce redundancy while preserving cross-modal performance in remote sensing.",
+      "llm_tldr_cn": "RGB-红外多模态目标检测在遥感中很有效，但并行特征提取器带来通道冗余和高计算开销。InterPruner提出首个交互式结构化剪枝框架，通过高阶泰勒展开推导通道重要性准则，并引入语言先验调制器感知场景级冗余。该方法在压缩模型的同时保留跨模态互补信息，为遥感卫星影像的轻量化深度学习模型提供了有效工具。",
+      "llm_tldr": "RGB-红外多模态目标检测在遥感中很有效，但并行特征提取器带来通道冗余和高计算开销。InterPruner提出首个交互式结构化剪枝框架，通过高阶泰勒展开推导通道重要性准则，并引入语言先验调制器感知场景级冗余。该方法在压缩模型的同时保留跨模态互补信息，为遥感卫星影像的轻量化深度学习模型提供了有效工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.07765v1",
+      "source": "arxiv",
+      "title": "Information-Aware Model Predictive Control for Satellite Inspection Missions",
+      "abstract": "Autonomous spacecraft inspection requires trajectories that satisfy safety and control constraints while enabling the collection of informative measurements about a target spacecraft. Traditional guidance and control methods typically decouple estimation from control, resulting in trajectories that do not explicitly optimize sensing geometry. This work presents a model predictive control (MPC) framework that incorporates estimation covariance in the control objective using a formulation inspired by dual control and covariance steering. The estimation covariance evolves according to a linear Kalman filter, and the measurement model depends on the relative geometry between the agent spacecraft and the target. By embedding the covariance dynamics within the MPC problem, the resulting trajectories account for measurement quality, actively reduce uncertainty, and improve observability in the estimated features of the target. The problem is formulated using relative motion dynamics via the Hill-Clohessy-Wiltshire equations with constraints on control input, relative distance, and terminal maximum covariance. Numerical simulations demonstrate that the proposed framework generates feasible inspection trajectories that actively reduce estimation covariance of points of interest on a target while satisfying input and safety constraints of the agent. A mesh analysis of initial conditions further illustrates how feasibility and the value function of the trajectory depend on the initial conditions and constraint activity.",
+      "authors": [
+        "Sarah E. Clees",
+        "Sean Phillips",
+        "Christopher Petersen"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-08-07T21:09:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.07765v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Information-aware MPC with covariance steering for autonomous inspection; transferable to autonomous ocean monitoring agents.",
+      "llm_evidence_cn": "信息感知模型预测控制优化自主观测轨迹，可迁移至海洋自主监测智能体设计。",
+      "llm_evidence": "信息感知模型预测控制优化自主观测轨迹，可迁移至海洋自主监测智能体设计。",
+      "canonical_evidence": "信息感知模型预测控制优化自主观测轨迹，可迁移至海洋自主监测智能体设计。",
+      "llm_tldr_en": "Presents an information-aware MPC framework that embeds estimation covariance in the control objective for autonomous spacecraft inspection, optimizing sensing geometry; applicable to informative trajectory planning for ocean monitoring agents.",
+      "llm_tldr_cn": "自主航天器检测需要在满足安全与控制约束的同时收集信息量大的测量数据，传统方法常将估计与控制分离。本文提出信息感知模型预测控制框架，将卡尔曼滤波协方差演化嵌入控制目标，并使用协方差控制思想显式优化观测几何。该方法可生成信息量更优的自主轨迹，其核心思路可迁移到自主水下航行器等海洋监测智能体的路径规划与自适应观测。",
+      "llm_tldr": "自主航天器检测需要在满足安全与控制约束的同时收集信息量大的测量数据，传统方法常将估计与控制分离。本文提出信息感知模型预测控制框架，将卡尔曼滤波协方差演化嵌入控制目标，并使用协方差控制思想显式优化观测几何。该方法可生成信息量更优的自主轨迹，其核心思路可迁移到自主水下航行器等海洋监测智能体的路径规划与自适应观测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.11838v1",
+      "source": "arxiv",
+      "title": "GeoBridge: Decoupled Semantic Conditioning for Generative Image Geolocalization",
+      "abstract": "Multimodal large language models (MLLMs) have advanced image geolocalization mainly by improving how they reason about geographic cues. How that reasoning isdecoded into coordinates, however, has lagged behind. Predicting a place name for a geocoding API is discrete and lossy: it ignores image evidence and collapses multi-granular semantics into a coarse lookup. We argue that the bottleneck has shifted from what a model reasons to how that reasoning is represented for a continuous, geometry-aware decoder. We present GeoBridge, a role-decoupled conditioning mechanism that connects a frozen semantic MLLM to a frozen Riemannian flow-matching head that generates coordinates on the sphere. The central obstacle is arole conflict: supervising the condition with discrete semantic labels biases its representation toward class-discriminative geometry, at odds with the smooth manifold the generative head requires. GeoBridge keeps the semantic supervision decoupled from the condition interface: a separate projection forms the continuous condition the frozen head expects, injecting geographic priors without disturbing the spherical decoder. On IM2GPS3K, GeoBridge reaches 38.67/52.89/70.37 at the 25/200/750 km thresholds, improving over a place-name-to-API pipeline and reasoning-augmented direct prediction at these precision-relevant scales. GeoBridge is a decode-side algorithmic contribution, orthogonal and complementary to chain-of-thought reasoning. Code will be made publicly available.",
+      "authors": [
+        "Zhiyang Dou",
+        "Xumeng Han",
+        "Fengde Peng",
+        "Zipeng Wang",
+        "Moxuan Zhao",
+        "Zhipei Huang",
+        "Zhenjun Han"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-12T09:21:02+00:00",
+      "link": "https://arxiv.org/pdf/2608.11838v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "MLLM-based geolocalization linking image semantics to coordinates",
+      "llm_evidence_cn": "基于多模态大模型的地理定位，连接图像语义与坐标",
+      "llm_evidence": "基于多模态大模型的地理定位，连接图像语义与坐标",
+      "canonical_evidence": "基于多模态大模型的地理定位，连接图像语义与坐标",
+      "llm_tldr_en": "GeoBridge connects a frozen semantic MLLM to a Riemannian flow-matching head via role-decoupled conditioning, enabling continuous coordinate generation for image geolocalization in remote sensing and ecological mapping.",
+      "llm_tldr_cn": "图像地理定位中，多模态大模型逐渐擅长提取地理线索，但把推理转换为坐标时仍依赖离散且损失信息的词汇查询。论文提出GeoBridge，用角色解耦条件机制把冻结的语义多模态模型与冻结的黎曼流匹配头连接，直接在球面上生成连续坐标，避免语义与几何监督的角色冲突。该方法在不训练语义模型的情况下提升定位连续性和准确性。该机制可服务于遥感图像中的地物/生态目标定位，例如珊瑚礁分布区域的自动标注。",
+      "llm_tldr": "图像地理定位中，多模态大模型逐渐擅长提取地理线索，但把推理转换为坐标时仍依赖离散且损失信息的词汇查询。论文提出GeoBridge，用角色解耦条件机制把冻结的语义多模态模型与冻结的黎曼流匹配头连接，直接在球面上生成连续坐标，避免语义与几何监督的角色冲突。该方法在不训练语义模型的情况下提升定位连续性和准确性。该机制可服务于遥感图像中的地物/生态目标定位，例如珊瑚礁分布区域的自动标注。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.11074v1",
+      "source": "arxiv",
+      "title": "CapProbe: Evaluating Detailed Image Captions via Full-Scene Dense Question Answering",
+      "abstract": "Evaluating detailed image captions from Vision-Language Models (VLMs) requires going beyond surface-level semantic similarity. Reference-based metrics (e.g., CIDEr and SPICE) and LLM-as-scorer protocols struggle to verify dense factual claims, while existing QA-based alternatives generally offer lower probe density, narrower domain coverage, or no explicit alignment between individual questions and segmented image regions. We introduce CapProbe, a full-scene dense QA benchmark that turns detailed caption evaluation into region-aligned factual checking. Each image is decomposed into coarse semantic regions covering both foreground and background elements; for every retained region, we generate multiple-choice questions spanning 10 semantic categories, forming a dense checklist of probed visual facts. Guided by a two-tier taxonomy of 37 L1 domains and 219 L2 sub-domains, CapProbe comprises 346 images, 1,868 regions, and 25,650 questions, averaging 74 QA pairs per image. A language judge answers from the caption alone; an Uncertain option and Effective Accuracy provide a judge-dependent proxy for distinguishing unanswered probes from incorrectly resolved ones, while density-based metrics penalize verbose yet uninformative captions. The protocol is cost-effective: by converting unconstrained scalar scoring into structured MCQ reading, it reduces open-ended scoring bias while remaining judge-conditioned and yields relatively stable model rankings under a fixed reader. Experiments on 13 VLMs show large Coverage gaps across models, a clear competency-efficiency trade-off, and failure modes that sparse or overlap-based evaluation often misses. The benchmark data, annotations, and evaluation code will be released soon.",
+      "authors": [
+        "Mouxiao Huang",
+        "Qiangyu Yan",
+        "Borui Jiang",
+        "Han Shu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T15:36:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.11074v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Region-aligned dense QA benchmark for evaluating VLM detailed captions; supports multimodal image-text environmental assessment.",
+      "llm_evidence_cn": "区域级密集问答基准评估VLM详细描述，可支撑多模态遥感影像与文本评估。",
+      "llm_evidence": "区域级密集问答基准评估VLM详细描述，可支撑多模态遥感影像与文本评估。",
+      "canonical_evidence": "区域级密集问答基准评估VLM详细描述，可支撑多模态遥感影像与文本评估。",
+      "llm_tldr_en": "Introduces CapProbe, a region-aligned dense QA benchmark that evaluates detailed image captions with per-region multiple-choice questions, enabling fine-grained factual checking of multimodal image-text outputs.",
+      "llm_tldr_cn": "现有指标难以核实视觉语言模型生成的详细图像描述中的密集事实性。CapProbe将图像分解为覆盖前景与背景的粗粒度语义区域，并为每个区域生成跨10个语义维度的多项选择题，把描述评估转化为区域对齐的事实核查。这种全场景密集QA评测能够更严格地验证多模态模型对图像细节的把握，为遥感图像与文本报告结合的环境评估系统提供可用评测工具。",
+      "llm_tldr": "现有指标难以核实视觉语言模型生成的详细图像描述中的密集事实性。CapProbe将图像分解为覆盖前景与背景的粗粒度语义区域，并为每个区域生成跨10个语义维度的多项选择题，把描述评估转化为区域对齐的事实核查。这种全场景密集QA评测能够更严格地验证多模态模型对图像细节的把握，为遥感图像与文本报告结合的环境评估系统提供可用评测工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.12763v1",
+      "source": "arxiv",
+      "title": "ARIES-Mission2: A Zero-Shot Vision-Language-Action Framework for Fast Large-Scale Aerial Mission Generation",
+      "abstract": "Multimodal Large Language Models (MLLMs) have shown strong semantic understanding capabilities, but their direct use in low-altitude Unmanned Aerial Vehicle (UAV) mission generation remains limited by weak spatial optimization and inefficient route planning. To address this issue, we propose ARIES-Mission2, a zero-shot Vision-Language-Action (VLA) framework that decouples visual-semantic perception from physical route optimization. Given natural-language instructions and satellite imagery, ARIES-Mission2 first uses DeepSeek-V3 for task parsing and Molmo-7B for zero-shot target grounding, and then converts detected pixel locations into GPS waypoints through geospatial interpolation. To reduce the redundant backtracking caused by raw VLM-generated visiting orders, the back end formulates multi-target UAV traversal as a Traveling Salesperson Problem (TSP) and compares four candidate routes, including the raw VLM order and the routes optimized by PSO, GPSO, and IPSO. The minimum-cost closed-loop route is then selected for mission generation. Experiments on the UAV-VLPA-nano-30 benchmark show that ARIES-Mission2 achieves a total flight distance of 62.43 km, reducing the route length by 21.6% compared with the unoptimized VLA baseline (79.66 km) and by 9.5% compared with manual human planning (69.00 km). The complete 30-task workflow takes 575.40 s, averaging 19.18 s per task, which is approximately 3.6 times faster than human expert planning. Component-level timing shows that VLM inference dominates the runtime with 19.02 s per task, while the TSP solver requires only 0.16 s per task. Scalability analysis further indicates that the TSP module maintains lower growth in computation time as the number of targets increases.",
+      "authors": [
+        "Junhao Wei",
+        "Yanxiao Li",
+        "Haochen Li",
+        "Yifu Zhao",
+        "Dexing Yao",
+        "Baili Lu",
+        "Zikun Li",
+        "Yapeng Wang",
+        "Sio-Kei Im",
+        "Dingcheng Yang",
+        "Xu Yang"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE"
+      ],
+      "published": "2026-08-13T03:12:50+00:00",
+      "link": "https://arxiv.org/pdf/2608.12763v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vision-language-action framework for autonomous mission generation",
+      "llm_evidence_cn": "视觉-语言-动作框架用于自主任务生成",
+      "llm_evidence": "视觉-语言-动作框架用于自主任务生成",
+      "canonical_evidence": "视觉-语言-动作框架用于自主任务生成",
+      "llm_tldr_en": "ARIES-Mission2 is a zero-shot vision-language-action framework that parses natural language and satellite imagery into GPS mission waypoints with reduced backtracking, providing a template for autonomous ocean monitoring task generation.",
+      "llm_tldr_cn": "多模态大模型虽有强语义理解，但在低空无人机任务生成中缺乏空间优化和路径规划能力。论文提出ARIES-Mission2，一个零样本视觉-语言-动作框架，将视觉语义感知与物理路径优化解耦：先用DeepSeek-V3解析任务并用Molmo-7B定位目标，再通过地理插值将像素位置转换为GPS航点，同时减少冗余回退。该方法在无需微调的情况下快速生成大规模航空任务。该范式可适配到海洋遥感与无人艇监测场景，辅助自主生成海域调查任务。",
+      "llm_tldr": "多模态大模型虽有强语义理解，但在低空无人机任务生成中缺乏空间优化和路径规划能力。论文提出ARIES-Mission2，一个零样本视觉-语言-动作框架，将视觉语义感知与物理路径优化解耦：先用DeepSeek-V3解析任务并用Molmo-7B定位目标，再通过地理插值将像素位置转换为GPS航点，同时减少冗余回退。该方法在无需微调的情况下快速生成大规模航空任务。该范式可适配到海洋遥感与无人艇监测场景，辅助自主生成海域调查任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.12230v1",
+      "source": "arxiv",
+      "title": "Few-Shot Ordinal Learning for Day-Wise Freshness Estimation with Hyperspectral Fish Images",
+      "abstract": "Non-destructive food quality assessment has increasingly benefited from hyperspectral imaging (HSI), which captures spectral signatures linked to biochemical changes during storage. Estimating day-wise freshness, however, remains challenging owing to strong inter-fillet variability and scarce labelled data per product. All existing deep learning approaches for HSI-based freshness prediction operate under full supervision, requiring densely annotated training sets that are costly to obtain at the individual-product level. We introduce, to the best of our knowledge, the first few-shot learning framework for HSI-based food quality estimation. Each fillet defines a distinct episodic task, and a CORAL-style ordinal prediction head captures the ranked nature of freshness progression through cumulative threshold modelling. Biologically grounded monotonicity and embedding smoothness constraints further guide predictions toward plausible trajectories. On a 16-day salmon HSI dataset under a strict unseen-fillet protocol, our method achieves a mean absolute error of 1.58 days and 2-day accuracy of 72.3% with only three labelled days per fillet, substantially outperforming scalar regression and label-distribution baselines under an identical unseen-fillet protocol.",
+      "authors": [
+        "Kazi Nabiul Alam",
+        "Pooneh Bagheri Zadeh",
+        "Akbar Sheikh-Akbari"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "eess.IV",
+        "eess.SP"
+      ],
+      "published": "2026-08-12T16:28:01+00:00",
+      "link": "https://arxiv.org/pdf/2608.12230v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot ordinal learning for hyperspectral image classification in marine food quality",
+      "llm_evidence_cn": "面向海洋食品质量的高光谱影像少样本序数学习",
+      "llm_evidence": "面向海洋食品质量的高光谱影像少样本序数学习",
+      "canonical_evidence": "面向海洋食品质量的高光谱影像少样本序数学习",
+      "llm_tldr_en": "This paper presents a few-shot ordinal learning framework for hyperspectral fish freshness estimation, casting each fillet as an episodic task and using a CORAL-style ordinal head, reducing the need for dense labels.",
+      "llm_tldr_cn": "现有高光谱深度学习鲜度预测需大量逐样本标注，成本高昂，且鱼类个体差异大。本文提出首个面向高光谱食品安全估计的少样本学习框架，将每个鱼片视为独立情节任务，并采用CORAL式序数预测头捕捉逐日新鲜度顺序。该方法在小样本条件下也能有效估计新鲜度等级，大幅降低标注需求。它为海洋水产食品高光谱遥感/近感数据的少样本分类提供了新思路。",
+      "llm_tldr": "现有高光谱深度学习鲜度预测需大量逐样本标注，成本高昂，且鱼类个体差异大。本文提出首个面向高光谱食品安全估计的少样本学习框架，将每个鱼片视为独立情节任务，并采用CORAL式序数预测头捕捉逐日新鲜度顺序。该方法在小样本条件下也能有效估计新鲜度等级，大幅降低标注需求。它为海洋水产食品高光谱遥感/近感数据的少样本分类提供了新思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.13463v1",
+      "source": "arxiv",
+      "title": "MLLM-Routed Heterogeneous Ensembles for Robust Cross-Dataset Image Classification",
+      "abstract": "Modern image classification models excel when trained on single task-specific datasets but often struggle to generalize across domains and difficulty levels. We propose ARMDIL, an Adaptive Router for Multi-Domain Image classification with LLMs. ARMDIL is an ensemble that uses a multimodal large language model (MLLM) agent to dynamically route each image to the most suitable vision backbone. Our diverse ensemble employs convolutional neural networks (ResNets), self-supervised representation learners (SSL), and vision-language models (VLMs), each trained on a unified label space constructed from multiple image datasets with differing distributions and characteristics. Empirical evaluations illuminate the distinct capabilities and vulnerabilities of each architecture across disparate visual domains. Crucially, we show that ARMDIL effectively navigates these trade-offs, performing competitively with specialized training-based routers. Furthermore, it drastically improves adaptability by allowing new information to be integrated via simple prompt modifications, while enhancing interpretability through natural language reasoning traces. These advances in cross-dataset image classification pave the way for more reliable general-purpose vision systems such as AI assistants and autonomous robots.",
+      "authors": [
+        "Daniel Perkins",
+        "John Squires",
+        "Janou Milligan",
+        "Chandra Raskoti",
+        "Linda Ungerboeck"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-08-13T16:45:24+00:00",
+      "link": "https://arxiv.org/pdf/2608.13463v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "MLLM agent architecture for image classification, transferable to autonomous ocean monitoring",
+      "llm_evidence_cn": "用于图像分类的MLLM智能体架构，可迁移至自主海洋监测",
+      "llm_evidence": "用于图像分类的MLLM智能体架构，可迁移至自主海洋监测",
+      "canonical_evidence": "用于图像分类的MLLM智能体架构，可迁移至自主海洋监测",
+      "llm_tldr_en": "ARMDIL uses a multimodal LLM agent to dynamically route each image to the most suitable vision backbone among CNNs, SSL models, and VLMs, improving cross-dataset image classification robustness.",
+      "llm_tldr_cn": "针对跨数据集图像分类泛化差的问题，提出ARMDIL集成框架。该框架利用多模态大语言模型智能体动态选择最合适的视觉骨干，集成ResNet、自监督表示学习器和视觉语言模型，构建统一标签空间。实验表明该路由机制能发挥各骨干优势，提高分类鲁棒性。该方法可迁移到海洋遥感图像分类等自主监测场景。",
+      "llm_tldr": "针对跨数据集图像分类泛化差的问题，提出ARMDIL集成框架。该框架利用多模态大语言模型智能体动态选择最合适的视觉骨干，集成ResNet、自监督表示学习器和视觉语言模型，构建统一标签空间。实验表明该路由机制能发挥各骨干优势，提高分类鲁棒性。该方法可迁移到海洋遥感图像分类等自主监测场景。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.12271v1",
+      "source": "arxiv",
+      "title": "Earth observation embeddings are effective sub-grid descriptors for probabilistic weather downscaling",
+      "abstract": "Global weather reanalyses and forecasts resolve the evolving atmospheric state on coarse grids, but site-specific applications require predictions at arbitrary locations where near-surface conditions also depend on unresolved terrain and land-surface properties. Existing probabilistic downscalers address this gap using hand-crafted topographic descriptors. We ask instead whether Earth observation foundation models can provide transferable sub-grid surface representations for probabilistic weather downscaling.   We augment a convolutional conditional neural process that downscales coarse ERA5 reanalysis fields at ~25 km resolution with a learned local surface descriptor, obtained by compressing a patch of TESSERA embeddings at 10 m resolution. Although these embeddings summarise surface conditions over annual timescales, they improve downscaling of instantaneous 2 m temperature and 10 m wind speed by encoding persistent surface properties that capture a location's departure from the coarse-grid atmospheric state. Across five climatically diverse regions, the embedding improves point and probabilistic skill at stations held out in both space and time, overall improving CRPS skill by 11.5% for 2 m temperature and 6.2% for 10 m wind speed. We further analyse how its contribution differs by variable, finding that topography explains more of temperature's sub-grid structure, while TESSERA provides additional surface information for wind speed.   These improvements persist when the coarse input is changed from ERA5 to forecasts from the Aurora AI forecasting model, and when predicting at newly deployed stations with no regional history. To our knowledge, this is the first evidence that long-timescale Earth-observation embeddings can support short-timescale weather downscaling where sub-grid departures are systematically structured by persistent surface properties.",
+      "authors": [
+        "Pedro Sousa",
+        "Will Tebbutt",
+        "Sadiq Jaffer",
+        "Robin Young",
+        "Anil Madhavapeddy",
+        "Richard E. Turner"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.ao-ph"
+      ],
+      "published": "2026-08-12T17:10:42+00:00",
+      "link": "https://arxiv.org/pdf/2608.12271v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Earth observation embeddings as surface descriptors for remote sensing downscaling",
+      "llm_evidence_cn": "将地球观测嵌入作为遥感降尺度的地表描述符",
+      "llm_evidence": "将地球观测嵌入作为遥感降尺度的地表描述符",
+      "canonical_evidence": "将地球观测嵌入作为遥感降尺度的地表描述符",
+      "llm_tldr_en": "This paper uses compressed Earth observation foundation model embeddings as learned sub-grid surface descriptors in a convolutional conditional neural process, showing they outperform hand-crafted descriptors for probabilistic weather downscaling.",
+      "llm_tldr_cn": "传统概率天气降尺度依赖手工地形描述符，难以捕捉未解析地表特征。本文利用地球观测基础模型TESSERA的嵌入，通过压缩局部影像获得可迁移的子网格表面描述符，并融入卷积条件神经过程。结果显示该方法比手工描述符更有效地提供局部地表信息，提升降尺度性能。这说明地球观测基础模型可为海洋/陆面遥感环境变量降尺度提供通用且可转移的表示。",
+      "llm_tldr": "传统概率天气降尺度依赖手工地形描述符，难以捕捉未解析地表特征。本文利用地球观测基础模型TESSERA的嵌入，通过压缩局部影像获得可迁移的子网格表面描述符，并融入卷积条件神经过程。结果显示该方法比手工描述符更有效地提供局部地表信息，提升降尺度性能。这说明地球观测基础模型可为海洋/陆面遥感环境变量降尺度提供通用且可转移的表示。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

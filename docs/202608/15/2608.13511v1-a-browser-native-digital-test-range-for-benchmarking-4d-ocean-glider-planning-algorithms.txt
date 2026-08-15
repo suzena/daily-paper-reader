@@ -1,0 +1,194 @@
+Title: A Browser-Native Digital Test Range for Benchmarking 4D Ocean-Glider Planning Algorithms
+
+URL Source: https://arxiv.org/pdf/2608.13511v1
+
+Published Time: Fri, 14 Aug 2026 01:22:30 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# A Browser-Native Digital Test Range for Benchmarking 4D Ocean-Glider Planning Algorithms 
+
+Edward Holmberg 
+
+Gulf States Center for Environmental Informatics LSU New Orleans, LA, USA eholmber@lsuneworleans.edu 
+
+Elias Ioup 
+
+Ocean Sciences Division U.S. Naval Research Lab Stennis Space Center, MS, USA elias.z.ioup.civ@us.navy.mil 
+
+Mahdi Abdelguerfi 
+
+Gulf States Center for Environmental Informatics LSU New Orleans, LA, USA gulfsceidirector@lsuneworleans.edu 
+
+Abstract —Repeated in-situ evaluation of ocean-glider planners requires scarce vehicles, operators, deployment and recovery resources, and ocean conditions that cannot be reset for competing algorithms. We present a guided, installation-free browser-native digital test range that transforms a selected region into areproducible four-dimensional experiment. The system leads users from regional domain selection through mission-scoped bathymetry, time/depth forcing, science objectives, optional task decomposition, route specification, current-advected execution, observation generation, and scoring. Its primary contribution is a common plan-to-observation contract unifying vehicle, sensing, and evaluator assumptions across manual routes, transparent built-in algorithms, and imported classical or learned-planner outputs, while exported artifacts form dataset-ready records. A controlled Observing System Simulation Experiment (OSSE) evaluates five classical planners in two episodes, three deterministic seeds, and a calibrated 60-hour horizon. All 54 missions completed and recovered without hard violations, while planner rankings and dive-policy effects revealed operational-scientific tradeoffs. An authentic public deployment supplied a field-referenced audit to scope current kinematic boundaries. Separately, source-locked GliderFlight 1.2.0 achieved native-to-browser parity through Pyodide/WebAssembly, establishing a pathway for high-fidelity multi-tier simulation. The resulting operational space is scientif-ically traceable and component-qualified for mission-scale pre-deployment experimentation. 
+
+Keywords -Browser-native simulation; ocean gliders; planning benchmark; digital test range; virtual laboratory; OSSE; WebAssem-bly; WebGL. 
+
+I. I NTRODUCTION 
+
+Underwater gliders enable persistent ocean observation by repeatedly diving and climbing while moving horizontally at low speed [1]. Their scientific return depends on the executed path in longitude, latitude, depth, and time, while currents, bathymetry, energy, and limited control authority complicate route execution [2][3]. Field trials remain essential, but they are expensive, logistically constrained, and cannot expose several planning strategies to an identical, resettable ocean. Comparisons are also difficult to reproduce when methods use different environmental fields, vehicle assumptions, sensing rules, or scores. We address this problem with a browser-native digital test range for pre-deployment experimentation. The browser hosts guided mission setup, data ingestion, planning, simulation, observation generation, evaluation, interactive 3D analysis, and artifact export. Static hosting reduces installation and administrative barriers on managed research and classroom machines. The work contributes: (1) an end-to-end plan-to-observation contract with planner/evaluator information separation; (2) a visible start-to-finish workflow for constructing a scientifically traceable 3D/4D operational experiment; (3) a common interface for manual, algorithmic, and imported learned planners; and (4) complementary qualification through controlled benchmarking, an authentic field-referenced audit, and native-to-browser execution of an established flight model. The primary contribution is a portable experimental contract through which heterogeneous planning methods can be com-pared from mission construction through executed observations and score. II. R ELATED WORK AND POSITIONING 
+
+Glider planning has been studied as current-aware, energy-aware, informative, and multi-objective optimization. Energy-optimal coastal planning accounts for time-varying currents [3]; informative waypoint selection balances travel cost and observation value [4], while broader observation strategies systematically analyze preferred glider trajectories [5]. Multi-objective studies jointly consider forcing, sampling goals, and vehicle constraints [6], often extending into complex spatiotem-poral multi-agent routing and sensor placement optimization [7][8][9]. OceanGNS demonstrates the operational value of a cloud portal that combines forecasts, bathymetry, glider data, planning, and pilot support [10], operations which rely heavily on the efficient querying and mining of underlying spatio-temporal information systems [11][12]. Vehicle-model and Observing System Simulation Experiment (OSSE) work addresses complementary layers. Published glider flight models represent buoyancy-driven motion and water-relative performance [13], while ocean OSSEs provide controlled references for comparing observing systems under explicit information policies [14]. Browser scientific computing provides a portable execution substrate: WebAssembly is a safe compilation target [15], Pyodide exposes CPython and scientific Python in the browser, and client-side scientific applications can eliminate backend computation [16]. Virtual laboratories can also support active STEM experimentation when their models and learning objectives are explicit [17]. The gap addressed here is integration: a static client-side environment that makes domain construction, planner inputs, executed 4D motion, observations, scoring, and evidence boundaries inspectable under one contract. arXiv:2608.13511v1 [cs.RO] 13 Aug 2026 Episode inputs 
+
+> domain, clock, fleet, currents, environment roles
+> Planner
+> permitted fields only: bathymetry, masks, cur-rents, prior, uncertainty, value
+> Mission execution
+> waypoints and dive policy produce current-advected 4D trajectory
+> Observation operator
+> records generated from executed trajectory
+> Evaluator
+> operational, dive-policy, and evaluator-only science metrics
+
+Mission View display and interaction branch 
+
+> Bathymetry, currents, science overlays, route geometry, trajectory inspection, camera, color, contours, and vertical exaggeration are visual interfaces. Display and camera state do not affect scientific results.
+> Figure 1. Scientific computation chain and display boundary. Mission View visualizes frozen inputs and outputs, but camera, color, contours, and vertical exaggeration do not affect the planner, mission execution, observations, or evaluator.
+
+III. G UIDED DIGITAL TEST -R ANGE WORKFLOW 
+
+Figure 1 summarizes the information boundary. The interface guides a user through Bathymetry → Currents → Science →
+
+Segments → Routes → Mission → Simulate → Validate . Table I identifies the principal choices and persisted object at each stage. A geographic bounding box defines the broad analysis domain. Mission-scoped bathymetry is extracted from the GEBCO_2026 15 arc-second grid [18]; valid-ocean, shallow/no-go, reachability, and optional task decomposition may further constrain operation. To remain static-host compatible, the client reads bounded raster windows to represent local terrain; the local WebGL view uses level-of-detail terrain, cached tiles, and packed height textures to support rapid 3D synthetic environment reconstruction [19]. NetCDF, HDF5, and JSON adapters preserve environmen-tal time/depth coordinates and source provenance, building on established frameworks for geographic data interchange, heterogeneous GIS interoperability, and web-service integra-tion [20][21][22][23]. Scientific depth arrays and masks are authoritative, whereas camera state and vertical exaggeration are display-only. The environment contract separates a scalar reference, planner prior, uncertainty, declared objective, sampling value, and quality/provenance information. The hidden reference is evaluator-only. Currents and scalar fields may be controlled analytic episodes or frozen imported subsets with explicit time/depth support. Segmentation is optional: it defines regions, targets, corridors, or responsibility areas; routing defines in-tended guidance; simulation determines actual current-advected motion. 
+
+A. Planning Modes and Dataset Generation 
+
+Routes can be entered manually, generated by transparent built-in baselines, or imported as ordered waypoints from an external classical or learned planner. The same bathymetry, forcing, mission, vehicle, sensing, and evaluator remain fixed, preventing a new planner from silently changing the experi-mental problem. A browser-hosted model may execute through JavaScript or a Web Worker/Pyodide adapter, while an external method may emit the same plan artifact. Each run exports frozen inputs, plan, executed trajectory, observation records, metrics, report, and checksums. Repeated episodes and seeds can therefore be assembled into trajectory-imitation, planner-ranking, offline policy-evaluation, or other training/evaluation datasets. This paper establishes the reproducible data and evaluation contract needed to do so. IV. M ISSION EXECUTION AND EVALUATION 
+
+The mission contract fixes deployment and recovery, clock, fleet, vehicle speed, dive policy, waypoint acceptance, dwell, clearance, observation schedule, and evaluation. The active benchmark engine advances the vehicle using mission-scale current-advection kinematics, 
+
+vg (t) = vw(t) + vc(x(t), y (t), z (t), t ) , (1) where vg is ground-relative velocity, vw is commanded through-water velocity, and vc is current sampled at the executed state. Heading and vertical-rate limits, a sawtooth dive policy, waypoint dwell, masks, and clearance rules are applied. The evaluator strictly scores the executed trajectory (λ, ϕ, z, t ).Observation candidates are scheduled from executed longi-tude, latitude, depth, and mission time. The reported OSSE uses noiseless pseudo-observations and a project-defined distance-weighted local-kernel update applied to the common prior; Barnes objective analysis supplies the methodological context for this spatial reconstruction [24]. All methods use the same schedule, quality rules, and evaluator. Scientific performance is 
+
+Srec = 1 − RMSE post 
+
+RMSE prior 
+
+, (2) with a prior-only control producing Srec = 0 . Operational, dive, and scientific metrics remain separate, and observation counts denote the total volume of accepted records. To demonstrate the complete contract, we instantiate every stage in two frozen OSSE episodes, submit five planners to the same mission engine, and evaluate the resulting observations with one common reconstruction operator. V. C ONTROLLED BENCHMARK DESIGN AND RESULTS 
+
+Two deterministic episodes represent a cross-shelf front (CSF) and a depth-shear eddy (DSE). Each contains georef-erenced bathymetry, masks, three current times and depths, a hidden scalar reference, prior, uncertainty, and sampling value. The one-glider mission uses through-water speed 0.42 m s −1,a 30-minute step, and 121 states over 60 hours. Preflight found TABLE I. G UIDED MISSION -CONSTRUCTION WORKFLOW , REPRESENTATIVE SOURCE /GENERATOR MODES , AND PERSISTED SCIENTIFIC OBJECTS .
+
+Stage / tab Representative modes and user-controlled dimensions Persisted scientific object 
+
+Bathymetry GEBCO mission-window extraction or frozen raster/GeoTIFF-derived domain; bounding box, grid resolution, reconstruction, and ocean/land/shallow/no-go definitions. Mission depth grid and operational masks. 
+
+Currents Off; controlled analytic generator; frozen current pack; NetCDF/HDF5; or historical HYCOM subset, with u/v , time/depth support, binding, and interpolation policy. Provenanced current field available to planning and execution. 
+
+Science Off; controlled front, eddy, plume, multiscale, or bathymetry-linked OSSE; or imported NetCDF/HDF5/environment pack, with reference, prior, uncertainty, objective, sampling value, and QC. Planner-visible roles plus evaluator-only reference. 
+
+Segments Off; sectors, survey corridors, target or reachable regions, or multi-vehicle responsibility partitions. Explicit planner search-space/task contract. 
+
+Routes Manual waypoints; direct/transect and A* baselines; or imported classical/learned-planner output, with acceptance and dwell semantics. Ordered waypoint plan with provenance. 
+
+Mission Clock, deployment/recovery, fleet, through-water speed, turn/vertical limits, dive policy, clearance, sensor, and observation schedule. Reproducible mission specification. 
+
+Simulate Timestep, common current-advection execution, completion/recovery, and constraint policy. Executed 4D trajectory (λ, ϕ, z, t ).
+
+Validate/export Common observation/QC and evaluator; operational, dive, and scientific metrics; arti-fact/checksum policy. MissionResult plus plan, trajectory, observations, report, and dataset-ready records. 
+
+Figure 2. From regional geographic context to a local 3D mission environment. Panel (a) shows Gulf Coast land, coastline, bathymetric relief, contours, and the selected mission window. Panel (b) shows the corresponding local 3D bathymetry, and panel (c) adds planner-visible sampling value and representative current vectors from one frozen mid-time/depth slice. The 3D relief is display-exaggerated for legibility; scientific depth arrays and calculations are unchanged. 
+
+Figure 3. Planned guidance and executed 4D motion for the representative cross-shelf-front science-aware A* run (fixed dive, seed 1). The current-advected trajectory, dive/climb cycle, observations, deployment, and recovery correspond to checksum fnv1a32:2f0262b7 . Depth is exaggerated 
+
+20 × for display only. 
+
+a 74 .772 km deployment-to-recovery separation and a 49.452-hour nominal no-current lower bound, making the original 12-hour design infeasible. All 54 ranking runs were numerically valid, operationally feasible, complete, and recovered, with zero hard violations. Completion and recovery occurred from 49 to 56 hours (mean 52.45 hours). In CSF, direct transit is shortest, while bathymetry- and current-aware A* achieve the highest mean skill. In DSE, science-aware A* is shortest, while direct transit achieves the −91.4 −91.3 −91.2 −91.1 −91.0 −90.9 −90.8 −90.7 −90.6 
+
+> Longitude
+> 28.6 28.7 28.8 28.9
+> Latitude
+
+(a) Cross-shelf front 
+
+> −91.4 −91.3 −91.2 −91.1 −91.0 −90.9 −90.8 −90.7 −90.6
+> Longitude
+> 28.6 28.7 28.8 28.9
+> Latitude
+
+(b) Depth-shear eddy        
+
+> 88.0 88.5 89.0 89.5 90.0 90.5 91.0
+> Mean executed distance (km)
+> 0.9655 0.9660 0.9665 0.9670
+> Mean reconstruction skill
+> Direct Transect Bathy A* Current A* Science A* Direct Transect Bathy A* Current A* Science A*
+
+(c) Fixed-dive operational/scientific tradeoff      
+
+> Cross-shelf front Depth-shear eddy Direct Transect Bathy A* Current A* Science A*
+
+Figure 4. Representative seed-1 Track A planned and executed trajectories for the two controlled OSSE episodes, with mean reconstruction skill versus executed distance. The clean geographic comparison complements the simulator-native 3D execution view in Fig. 3; the shortest method is not consistently the highest-skill method. TABLE II. T RANSPARENT TRACK A PLANNER DEFINITIONS .
+
+Method Principal behavior or cost 
+
+Direct transit Deployment and recovery waypoints only. 
+
+Cross-shelf transect Three deterministic seed-dependent intermediate waypoints. 
+
+Bathymetry A* Geodesic cost plus strong shallow-water and inverse-depth penalties. 
+
+Current A* Geodesic cost plus opposing- and cross-current penalties from permitted mean currents. 
+
+Science A* Geodesic cost minus 3500( V + 0 .15 σ), where V is planner-visible sampling value and σ prior uncertainty; five intermediate waypoints and 1800 s midpoint dwell. 
+
+TABLE III. T RACK A FIXED -DIVE MEANS OVER THREE DETERMINISTIC SEEDS .
+
+Episode Method Distance (km) Srec 
+
+CSF Direct transit 89.497 0.966834 CSF Cross-shelf transect 89.927 0.965819 CSF Bathymetry A* 90.660 0.966927 
+
+CSF Current A* 90.660 0.966927 
+
+CSF Science A* 90.776 0.966904 DSE Direct transit 88.857 0.966785 
+
+DSE Cross-shelf transect 88.275 0.965481 DSE Bathymetry A* 88.179 0.966698 DSE Current A* 91.085 0.966675 DSE Science A* 87.701 0.966076 
+
+highest mean skill. These metric-dependent rank reversals are stable across the three seeds, but the absolute skill spread is small. Deep policies increase maximum sampled depth by 94 m, mean observation depth by about 48.7–49.3 m, and accepted observations by 31–34 records, while reducing executed distance by about 4.88–5.05 km. They also change current exposure and trajectory geometry. Skill changes are much smaller, approximately −2.5 × 10 −4 to 2.9 × 10 −4. The evaluator is near saturated: 2112 lattice points, observation-to-lattice ratios of 0.091–0.114, and skill of 0.965–0.967. Smooth 
+
+TABLE IV. S CIENTIFIC QUALIFICATION EVIDENCE AND BOUNDARY .
+
+Evidence Outcome 
+
+Known-answer verifi-cation 
+
+Current advection, heading/depth conventions, waypoint logic, information separation, and regression gates passed. 
+
+Mission calibration 60 h horizon selected from preflight; 54/54 ranking missions completed and recovered. 
+
+Field-referenced audit Real deployment exposed data and model defects; held-out endpoint reproduction was not accepted. 
+
+Browser model parity Two native and two browser GliderFlight runs; eight fields deterministic with zero observed difference. 
+
+Benchmark inference Common inputs and evaluator; three seeds support descriptive comparisons, not significance. 
+
+fields, a strong prior, noiseless observations, and broad kernel influence are the most consistent explanation. Results highlight descriptive operational-scientific tradeoffs among the planners. VI. S CIENTIFIC QUALIFICATION AND REPRODUCIBILITY 
+
+The operational space is scientifically traceable and 
+
+component-qualified for simulation. Here, component-qualified means that individual data, computation, information-boundary, and browser-execution contracts have supporting evidence; this confirms bounded execution within the idealized simulator. Table IV separates verification, calibration, field-referenced auditing, reference-model portability, and benchmark inference. Known-answer cases cover zero and uniform current, spa-tially varying currents sampled at executed states, depth-shear reversal, heading/depth conventions, waypoint and clearance behavior, import/export stability, and browser/Node regression. In the passive-current oracle, an expected 120 m displacement was reproduced within 0.14 m , with current applied exactly once. These verify correct implementation and information boundaries. Figure 5. Matched shallow and deep dive policies. Deep minus shallow changes are +94 m maximum sampled depth, +33 accepted observations for the displayed case, and −4.95 km executed distance. 
+
+To conduct the field-referenced audit, we selected a historical deployment from the public IOOS Glider Data Assembly Center (dataset identifier: unit_308-20220826T2012 ). This dataset contained 512,157 records and 1,746 profiles reaching 193 .75 m [25][26]. Public DAC u/v were absent, so frozen HYCOM GOMu0.04 fields supplied forcing [27]. Across eight held-out replay segments, HYCOM improved three endpoint predictions and worsened five; median paired error changed by +1 .16 km . This outcome clarified the current engine’s fidelity, indicating that exact field-track reproduction requires higher-resolution forcing and complex nonlinear vehicle modeling, which motivates a future transition toward multi-fidelity simulation. To lay the groundwork for a high-fidelity simulation tier, a separate portability experiment evaluated the established GliderFlight 1.2.0 flight model. We executed unchanged GliderFlight 1.2.0 twice under native CPython and twice in a browser Web Worker through Pyodide 0.26.4 [13][28][29]. Eight outputs were deterministic with zero observed native-browser difference under absolute tolerance 10 −8 and relative tolerance 10 −7. Native runs took 2.42–2.45 s; browser model execution took 4.20–4.29 s after initialization. While the current kinematic engine provides the rapid execution necessary for iterative planner benchmarking, this result verifies that the browser can reliably host the computationally heavier scientific software required for future high-fidelity validation. Each certified run stores frozen inputs, plan, 4D trajectory, observations, report, and checksums; representative figures use seed 1 under a predeclared selection rule. Display/camera settings are excluded from scientific fingerprints. These artifacts support repeatable research comparisons and dataset production without requiring a native scientific stack. VII. A CCESSIBILITY , U SE MODES , L IMITATIONS , AND 
+
+CONCLUSION 
+
+A. Manual, Algorithmic, and Learning-Based Workflows 
+
+The common contract supports several ways to create a mission without changing how it is executed or scored. In a manual workflow, an operator or student authors waypoints, acceptance radii, and dwell behavior and compares the intended route with the current-advected result. In an algorithmic work-flow, built-in or external planners receive the same permitted bathymetry, masks, currents, prior, uncertainty, sampling value, and mission constraints. In a learning-based workflow, a browser-hosted or external model emits the same ordered-waypoint artifact; the hidden reference remains unavailable and only the executed trajectory is observed and scored. This preserves a fair comparison between manual judgment, transparent baselines, optimization methods, and future ML policies. The exported artifacts also define a dataset lifecycle. Frozen domain and environment packs describe the context; the route supplies the planner decision; the 4D trajectory and obser-vation records describe consequences; operational, dive, and reconstruction metrics provide labels; and checksums preserve provenance. Batches across domains, current regimes, science objectives, dive policies, and seeds can support imitation of selected routes, prediction of mission outcomes, planner ranking, curriculum generation, or offline policy evaluation. The package can therefore produce dataset-ready records for training and testing, and the present study outputs synthetic, model-derived labels for this purpose. B. Interactive STEM Virtual Laboratory 
+
+Static browser deployment lets researchers, students, and outreach participants inspect the same mission package on man-aged machines without installing Python, geospatial libraries, or a native simulator. The staged tabs and 3D Mission View support structured inquiry: learners can predict the effect of a current field, shallow mask, science objective, segmentation choice, route, or dive policy; change one factor while keeping the episode frozen; execute the mission; and compare the resulting trajectory, observations, and score. This design follows virtual-laboratory principles [17] and makes the distinction among a map, a plan, a physical trajectory, and a scientific result tangible. The present paper focuses strictly on demonstrating access, interaction, and reproducibility. 
+
+C. Limitations and Future Validation 
+
+The active engine is mission-scale kinematics rather than a field-validated nonlinear vehicle model; field replay did not reproduce authentic endpoints accurately; OSSE fields and observations are idealized; the experiment has three seeds; reconstruction skill is near saturated; no learned planner is evaluated; and the platform is not navigation-grade. Future work will couple the browser-hosted flight model to 4D forcing, val-idate held-out deployments across multiple missions, add noise and harder reference fields, evaluate manual/classical/learned planning modes under the same contract, and assess educational use. 
+
+D. Conclusion 
+
+The work establishes that an installation-free browser can host a complete and reproducible plan-to-observation benchmarking workflow and execute source-locked scientific software. The resulting digital test range constructs a traceable operating space, compares planning methods from intended route through executed observations and score, exports reusable artifacts, and provides a practical intermediate step between algorithm development and costly field deployment while broadening access to ocean-robotics experimentation. REFERENCES 
+
+[1] D. L. Rudnick, “Ocean research enabled by underwater gliders,” Annual Review of Marine Science , vol. 8, pp. 519–541, 2016. DOI : 10.1146/annurev-marine-122 414-033913 [2] N. E. Leonard, D. A. Paley, R. E. Davis, D. M. Fratantoni, F. Lekien, and F. Zhang, “Coordinated control of an underwater glider fleet in an adaptive ocean sampling field experiment in monterey bay,” Journal of Field Robotics , vol. 27, no. 6, pp. 718–740, 2010. DOI : 10.1002/rob.20366 [3] D. N. Subramani, P. J. Haley, and P. F. J. Lermusiaux, “Energy-optimal path planning in the coastal ocean,” Journal of Geophysical Research: Oceans , vol. 122, no. 5, pp. 3981–4003, 2017. DOI : 10.1002/2016JC012231 [4] J. Binney, A. Krause, and G. S. Sukhatme, “Optimizing waypoints for monitoring spatiotemporal phenomena,” The International Journal of Robotics Research ,vol. 32, no. 8, pp. 873–888, 2013. DOI : 10.1177/0278364913488427 [5] L. F. Smedstad, C. N. Barron, R. N. Bourg, and E. A. Holmberg, “An expansion of glider observation strategies to systematically transmit and analyze preferred waypoints of underwater gliders,” in SPIE Defense + Security, Proceedings of SPIE Vol. 9459 , 2015. DOI : 10.1117/12.2176560 [6] C. Lucas, D. Hernández-Sosa, D. Greiner, A. Zamuda, and R. Caldeira, “An approach to multi-objective path planning optimization for underwater gliders,” 
+
+Sensors , vol. 19, no. 24, p. 5506, 2019. DOI : 10.3390/s19245506 [7] T. Holmberg, E. Ioup, and M. Abdelguerfi, “A stochastic geo-spatiotemporal bipartite network to optimize gcoos sensor placement strategies,” in 2022 IEEE International Conference on Big Data (Big Data) , IEEE, 2022, pp. 3668–3674. 
+
+> DOI
+
+: 10.1109/BigData55660.2022.10020928 [8] T. Holmberg, E. Ioup, and M. Abdelguerfi, “Knowledge graph-based multi-agent path planning in dynamic environments using waitr,” in 2024 IEEE International Conference on Big Data (BigData) , IEEE, 2024. DOI : 10.1109/BigData62323.202 4.10825653 [9] T. Holmberg, E. Ioup, and M. Abdelguerfi, “A knowledge-graph translation layer for mission-aware multi-agent path planning in spatiotemporal dynamics,” in 2025 IEEE International Conference on Big Data (BigData) , IEEE, 2025. [10] N. von Oppeln-Bronikowski, M. Zhou, T. Bahadory, and B. de Young, “Overview of a new ocean glider navigation system: Oceangns,” Frontiers in Marine Science ,vol. 8, p. 671 103, 2021. DOI : 10.3389/fmars.2021.671103 [11] E. Ioup, K. Shaw, J. Sample, and M. Abdelguerfi, “Efficient aknn spatial network queries using the m-tree,” in Proceedings of the 15th annual ACM international symposium on Advances in geographic information systems , ACM, 2007, pp. 1–4. [12] R. Ladner, K. Shaw, and M. Abdelguerfi, Mining spatio-temporal information systems . Springer Science & Business Media, 2012, vol. 699. [13] L. Merckelbach, A. Berger, G. Krahmann, M. Dengler, and J. R. Carpenter, “A dynamic flight model for slocum gliders and implications for turbulence microstructure measurements,” Journal of Atmospheric and Oceanic Technology ,vol. 36, no. 2, pp. 281–296, 2019. DOI : 10.1175/JTECH-D-18-0168.1 [14] G. R. Halliwell, A. Srinivasan, V. Kourafalou, H. Yang, D. Willey, M. Le Hénaff, and R. Atlas, “Rigorous evaluation of a fraternal twin ocean OSSE system for the open gulf of mexico,” Journal of Atmospheric and Oceanic Technology , vol. 31, no. 1, pp. 105–130, 2014. DOI : 10.1175/JTECH-D-13-00011.1 [15] A. Haas, A. Rossberg, D. L. Schuff, B. L. Titzer, M. Holman, D. Gohman, L. Wagner, A. Zakai, and J. F. Bastien, “Bringing the web up to speed with webassembly,” in Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation , 2017, pp. 185–200. DOI :10.1145/3062341.3062363 [16] A. T. L. Lun and J. Kancherla, “Powering single-cell analyses in the browser with webassembly,” Journal of Open Source Software , vol. 8, no. 89, p. 5603, 2023. DOI : 10.21105/joss.05603 [17] T. de Jong, M. C. Linn, and Z. C. Zacharia, “Physical and virtual laboratories in science and engineering education,” Science , vol. 340, no. 6130, pp. 305–308, 2013. DOI : 10.1126/science.1230579 [18] GEBCO Bathymetric Compilation Group 2026, The gebco_2026 grid: A continu-ous terrain model for oceans and land at 15 arc-second intervals , NERC EDS British Oceanographic Data Centre NOC, 2026. DOI : 10.5285/4f68d5c7-45eb-f99 9-e063-7086abc036fa [19] M. Abdelguerfi, 3D synthetic environment reconstruction . Springer Science & Business Media, 2001, vol. 611. [20] R. Wilson, M. Cobb, F. McCreedy, R. Ladner, D. Olivier, T. Lovitt, K. Shaw, F. Petry, and M. Abdelguerfi, “Geographical data interchange using xml-enabled technology within the gidb system,” XML Data Management , 2003. [21] S. Tu, L. Xu, M. Abdelguerfi, and J. J. Ratcliff, “Achieving interoperability for integration of heterogeneous cots geographic information systems,” in Proceedings of the 10th ACM international symposium on Advances in geographic information systems , ACM, 2002, pp. 162–167. [22] S. Tu, E. Normand, S. Kuchimanchi, V. Bizot, S. Shu, M. Abdelguerfi, and K. Shaw, “Integrating web services into map image applications,” in Proceedings. ISCC 2004. Ninth International Symposium on Computers And Communications (IEEE Cat. No. 04TH8769) , IEEE, vol. 1, 2004, pp. 44–49. [23] M. Chung, R. Wilson, R. Ladner, T. Lovitt, M. Cobb, M. Abdelguerfi, and K. Shaw, “The geospatial information distribution system (gids),” in Succeeding with Object Databases , John Wiley and Sons, 2001, pp. 357–378. [24] S. L. Barnes, “A technique for maximizing details in numerical weather map analysis,” Journal of Applied Meteorology , vol. 3, no. 4, pp. 396–409, 1964. DOI :10.1175/1520-0450(1964)003<0396:ATFMDI>2.0.CO;2 [25] IOOS Glider DAC, Deployment unit_308-20220826t2012 , 2022. [26] U.S. Integrated Ocean Observing System, “Ioos national glider data assembly center: Overview,” 2026, Accessed: Aug. 10, 2026. [Online]. Available: https://io os.github.io/glider-dac/ [27] HYCOM Consortium, “HYCOM + NCODA Gulf of Mexico 1/25 Degree Analysis (GOMu0.04/expt_90.1m000),” 2026, Accessed: Aug. 10, 2026. [Online]. Available: https://www.hycom.org/data/gomu0pt04/expt-90pt1m000 [28] L. Merckelbach, Gliderflight , version 1.2.0, 2022. [29] Pyodide Contributors, Pyodide: Python with the scientific stack compiled to webassembly , version 0.26.4, 2024.

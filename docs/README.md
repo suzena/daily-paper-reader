@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-14</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-15</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
     <strong class="dpr-home-dashboard-count">共 13 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>5</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>8</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-14 21:12:34 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-15 19:26:24 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精选13篇论文，聚焦多AUV协同感知与智能决策。最值得关注的是两项满分精读：基于价值梯度扩散强化学习的多AUV目标跟踪，以及LED标记点概率切换PnP的高精度相对位姿估计。此外，无人机视角跨模态理解和遥感图像变化描述也值得速览。若想深入，建议优先精读两篇AUV协同方向，实践经典。</p>
+<p>今日精读13篇论文，聚焦遥感估产与多模态模型优化；其中最值得关注多传感器生物量估算（8.0分）及冰区标签修正技术，速读中视觉Token剪枝与地理定位亦有亮点；建议普通读者优先了解稀疏场校准提升模型迁移性的实际价值。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">5 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-AUV Ad-hoc network-based Target Tracking: A Value Gradient Guidance Multi-Agent Diffusion Reinforcement Learning Approach">Multi-AUV Ad-hoc network-based Target Tracking: A Value Gradient Guidance Multi-Agent Diffusion Reinforcement Learning Approach</span></li><li><span class="dpr-home-dashboard-paper-title" title="AMR-Pose: An Active LED Marker-Based Relative Pose Estimation Framework With Probabilistic Switching PnP for Cooperative AUVs">AMR-Pose: An Active LED Marker-Based Relative Pose Estimation Framework With Probabilistic Switching PnP for Cooperative AUVs</span></li><li><span class="dpr-home-dashboard-paper-title" title="OGR-MARL: Option-Guided Residual Multi-Agent Reinforcement Learning for Heterogeneous USV Cooperative Pursuit in Constrained Port Waterways">OGR-MARL: Option-Guided Residual Multi-Agent Reinforcement Learning for Heterogeneous USV Cooperative Pursuit in Constrained Port Waterways</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Transferable Above-Ground Biomass (AGB) Estimation Model from Multi-Sensor Data with Sparse Field Calibration">Transferable Above-Ground Biomass (AGB) Estimation Model from Multi-Sensor Data with Sparse Field Calibration</span></li><li><span class="dpr-home-dashboard-paper-title" title="Warping Earth Observations for better ice labeling in the Marginal Marginal Ice Zone">Warping Earth Observations for better ice labeling in the Marginal Marginal Ice Zone</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Browser-Native Digital Test Range for Benchmarking 4D Ocean-Glider Planning Algorithms">A Browser-Native Digital Test Range for Benchmarking 4D Ocean-Glider Planning Algorithms</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>5</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -84,12 +84,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">8 篇</strong>
+    <strong class="dpr-home-dashboard-count">10 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="GRASP: Granularity-Aware Region Alignment and Semantic Prototype Learning for Fine-Grained Cross-Modal Understanding in Drone Views">GRASP: Granularity-Aware Region Alignment and Semantic Prototype Learning for Fine-Grained Cross-Modal Understanding in Drone Views</span></li><li><span class="dpr-home-dashboard-paper-title" title="HIMEC: Directional Change Representation and Fixed-Interface Decoding for Remote Sensing Image Change Captioning">HIMEC: Directional Change Representation and Fixed-Interface Decoding for Remote Sensing Image Change Captioning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Vision-Language Grounding as Bidirectional Concept Correspondence">Vision-Language Grounding as Bidirectional Concept Correspondence</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RoRA: Role-Oriented Regional Allocation for Visual Token Pruning in MLLMs">RoRA: Role-Oriented Regional Allocation for Visual Token Pruning in MLLMs</span></li><li><span class="dpr-home-dashboard-paper-title" title="InterPruner: Interactive Structured Pruning via Taylor-Implicit Criterion and Language-Prior Modulator for Multimodal Object Detection">InterPruner: Interactive Structured Pruning via Taylor-Implicit Criterion and Language-Prior Modulator for Multimodal Object Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoBridge: Decoupled Semantic Conditioning for Generative Image Geolocalization">GeoBridge: Decoupled Semantic Conditioning for Generative Image Geolocalization</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>8</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
 </section>
 </div>
 
