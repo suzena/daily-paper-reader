@@ -1,0 +1,334 @@
+Title: SLAP: Selective Local Vision-Language Alignment for Fish Re-Identification via Partial Optimal Transport
+
+URL Source: https://arxiv.org/pdf/2608.08840v1
+
+Published Time: Tue, 11 Aug 2026 01:55:25 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# SLAP: Selective Local Vision-Language Alignment for Fish Re-Identification via Partial Optimal Transport 
+
+Cigdem Beyan 1 ⋆, Tonje Knutsen Sørdalen 2,3 , and Kim Tallaksen Halvorsen 2 
+
+> 1
+
+Department of Computer Science, University of Verona, 37134 Verona, Italy 
+
+cigdem.beyan@univr.it  
+
+> 2
+
+Institute of Marine Research, Nye Flødevigveien 20, 4817 His, Norway 
+
+{tonje.sordalen,kim.halvorsen}@hi.no  
+
+> 3
+
+University of Agder, Centre for Coastal Research, 4604 Grimstad, Norway 
+
+Abstract. Individual fish re-identification (ReID) is a fine-grained recog-nition problem in which identity-discriminative cues are often localized to specific body regions rather than distributed uniformly across the ani-mal. Nevertheless, recent CLIP-based ReID methods rely predominantly on global image-text alignment, allowing background and weakly dis-criminative regions to contribute to cross-modal supervision. We propose a selective local vision-language alignment framework that establishes localized correspondences between visual patch embeddings and multi-ple identity-aware prompt embeddings through Partial Optimal Trans-port (POT). Rather than enforcing exhaustive correspondence, POT enables selective matching between visual patches and prompt embed-dings, allowing the model to emphasize the strongest cross-modal corre-spondences while avoiding forced alignment of weakly matching regions, thereby yielding more discriminative visual representations for retrieval. The framework is trained end-to-end, while only the adapted visual en-coder is retained during inference. Experiments on the longitudinal Sym-phodus melops dataset demonstrate consistent improvements over recent CLIP-based ReID methods under both closed-set and open-set evalua-tion protocols. Additional evaluations on other datasets further demon-strate the generalization capability of the proposed method across diverse marine ReID benchmarks. 
+
+Keywords: Marine Vision · Re-Identification · Partial Optimal Trans-port · Vision-Language Models · Cross-Modal Alignment 
+
+## 1 Introduction 
+
+Animal re-identification (ReID) refers to recognizing previously observed indi-viduals across repeated encounters and is an important component of wildlife  
+
+> ⋆
+
+Corresponding author. arXiv:2608.08840v1 [cs.CV] 9 Aug 2026 2 C. Beyan et al.  
+
+> Fig. 1: Comparison between conventional global alignment and our SLAP. (a) The image encoder produces a single global visual representation aligned with an aggregated identity-aware textual representation. Since alignment is performed globally, all image regions contribute similarly to the matching process, including weakly discriminative or background regions. (b) SLAP instead aligns local visual patches with multiple identity-aware prompt embeddings through POT. Resulting transport plan emphasizes regions receiving strong cross-modal correspondence while suppressing weakly aligned regions.
+
+monitoring, behavioral ecology, and longitudinal population studies [20]. In com-puter vision, animal ReID specifically denotes identifying individuals from im-ages or video sequences without requiring invasive physical tagging during in-ference [5, 10, 18]. Automated visual ReID therefore requires models to learn discriminative identity representations capable of matching the same individual despite substantial appearance variability across observations acquired under natural and unconstrained conditions [1, 15, 21, 25]. Animal ReID remains particularly challenging due to long-term temporal variation and subtle inter-individual differences [1,25]. Animals exhibit deformable body structures, large pose variability, occlusions, and fine-grained identity-specific patterns that are often difficult to distinguish visually. In addition, ap-pearance may evolve substantially over time because of growth, aging, seasonal coloration changes, or life-stage transitions, increasing intra-individual varia-tion and complicating identity matching across repeated observations spanning months or years [1, 3, 12, 25]. In this work, we investigate fish ReID using the Melops dataset [27,28], a lon-gitudinal benchmark collected from wild corkwing wrasse ( Symphodus melops ). The dataset captures realistic long-term appearance variation under in-the-wild conditions, where individuals may undergo substantial changes in body size, pig-SLAP for Fish Re-Identification 3
+
+mentation, and overall appearance across repeated observations spanning months or years. In addition, strong left-right asymmetry in fish pigmentation and body patterns further increases intra-individual variability, while the identity distribu-tion remains highly imbalanced because many individuals are observed only once. These properties make Melops a particularly challenging benchmark for studying long-term fish ReID and temporally robust identity representation learning. Recent animal ReID approaches have increasingly adopted vision-language models (VLMs), particularly CLIP [24], to leverage transferable representa-tions learned from image-text supervision. These methods adapt pretrained vision-language encoders through prompt learning, cross-modal alignment, and parameter-efficient fine-tuning strategies [12, 16, 17, 30, 34]. For example, CLIP-ReID [16] introduces learnable identity-aware prompts together with visual adap-tation modules to transfer pretrained vision-language knowledge into the ReID setting. Similarly, IndivAID [34] employs individual-aware textual descriptions to guide visual representation learning through cross-modal supervision. More recently, metadata-aware vision-language adaptation has also been explored for longitudinal animal ReID [30], where biological metadata, learnable prompts, and parameter-efficient visual adaptation are jointly incorporated to improve robustness against temporal appearance variation. Despite their strong performance, existing CLIP-based animal ReID ap-proaches still rely primarily on global image-level alignment between visual and textual representations. CLIP-ReID [16] and IndivAID [34] both employ multi-stage optimization strategies in which textual representations are first constructed or optimized before subsequently guiding visual adaptation through cross-modal supervision. Similarly, MetaPrompt-ReID [30] incorporates learnable prompts, metadata conditioning, and parameter-efficient visual adaptation within a global alignment framework. However, under global alignment, textual supervision mainly acts as a coarse semantic constraint while the visual branch continues to domi-nate the representation learning process. As a result, local identity-discriminative regions may contribute weakly to the cross-modal interaction, while background regions and weakly discriminative body parts can still influence the learned rep-resentation. This limitation becomes particularly important in longitudinal fish ReID, where identity-relevant cues are often localized and may evolve unevenly across body regions over time. Biological studies further suggest that stable identity-related cues in fish frequently concentrate around localized morphologi-cal structures such as the operculum, eye, and snout regions [6]. This observation is additionally supported by the findings in MetaPrompt-ReID [30], where head-only and full-body experiments exhibit different retrieval performance, indicat-ing that identity-discriminative information is not uniformly distributed across the fish body. These observations motivate the need for a more selective cross-modal alignment mechanism capable of establishing localized prompt-to-patch correspondences while suppressing weak or noisy matches during representation learning. Consequently, we propose a vision-language adaptation framework for longi-tudinal animal ReID based on selective local vision-language alignment , called 4 C. Beyan et al. 
+
+SLAP . Instead of relying solely on global image-text correspondence, SLAP es-tablishes localized interactions between visual patch embeddings and multiple identity-aware prompt embeddings through Partial Optimal Transport (POT) [31]. This formulation enables the model to selectively emphasize informative local re-gions while potentially suppressing weakly aligned or noisy correspondences dur-ing representation learning (See Fig. 1). In addition, SLAP combines parameter-efficient visual adaptation and learnable prompt tuning to preserve transferable pretrained representations while adapting the model to the fine-grained and temporally varying nature of fish identities. Experimental results on the Melops dataset demonstrate that SLAP consistently improves ReID performance across various evaluation protocols compared to state-of-the-art (SOTA) methods. Ad-ditional evaluations on multiple marine animal ReID datasets further demon-strate the robustness and generalization capability of our method across diverse species and acquisition conditions. The main contributions are threefold: (1) We introduce a selective local vision-language alignment formulation for animal ReID that establishes prompt-to-patch correspondences through POT, replacing conventional global image-text alignment. (2) We develop a lightweight vision-language adaptation frame-work that integrates the proposed POT formulation with learnable identity-aware prompts while retaining a purely visual inference pipeline. (3) Our SLAP improves performance on the challenging Melops dataset and further demon-strates strong generalization on additional marine animal ReID benchmarks. 
+
+## 2 Related Work 
+
+Vision-Language Adaptation for Animal ReID. Recent animal ReID ap-proaches have increasingly adopted VLMs, to exploit transferable representa-tions learned from large-scale image-text supervision and provide cross-modal guidance even when only identity labels are available. CLIP-ReID [16] first adapts CLIP to ReID through learnable identity-aware prompts, but relies on staged optimization in which prompt learning and visual adaptation are per-formed sequentially. IndivAID [34] extends this idea by generating image- and individual-specific textual representations to guide visual feature learning, intro-ducing additional modules and a multi-stage training pipeline. Jiao et al. [12] further incorporate large language models (LLMs) to construct semantic prompts for cross-species and open-world animal ReID, increasing model complexity and dependence on external prompt generation. Beyond language-only supervision, MetaWild [17] incorporates environmental metadata through adapter-style fu-sion modules, while MetaPrompt-ReID [30] introduces metadata-aware vision-language adaptation through learnable prompts, metadata conditioning, and parameter-efficient visual adaptation. Despite these advances, existing meth-ods continue to rely primarily on global image-level alignment between visual and textual representations, while auxiliary information is typically incorporated through discrete textual conversion or additional fusion modules, increasing ar-chitectural complexity and limiting localized cross-modal interaction. SLAP for Fish Re-Identification 5
+
+Parameter-Efficient Fine-Tuning & Prompt Learning. PEFT adapts large pretrained models by updating only a small subset of parameters, reducing com-putational cost and overfitting compared with full fine-tuning [8, 35]. Represen-tative approaches include adapter modules, bias-only tuning, prompt learning, and low-rank adaptation. Among these, LoRA [9] has become one of the most widely adopted methods by introducing trainable low-rank updates without in-creasing inference complexity. Other lightweight adaptation strategies include residual adapters [8], visual prompt tuning [11], and Tip-Adapter [36]. Prompt learning provides a complementary adaptation mechanism by optimizing contin-uous prompts while keeping the backbone frozen. CoOp [37] first demonstrated the effectiveness of this strategy for vision–language adaptation, with subsequent works extending it through class-specific prompts, deeper prompt insertion, and hybrid prompt-adapter formulations [11, 37]. Since the effectiveness of PEFT strategies is task-dependent, we adopt LoRA following the comparative anal-ysis in MetaPrompt-ReID [30], where it consistently outperformed alternative adaptation methods on the Melops benchmark while maintaining parameter ef-ficiency. 
+
+Optimal Transport. OT [22,31] is for modeling correspondences between prob-ability distributions and has found applications in domain adaptation [13], noisy-label learning [7], causal inference [29], anomaly detection [26], and federated learning [14]. Partial OT extends OT by relaxing full mass preservation, en-abling selective matching when only a subset of elements should participate in the alignment. Within vision-language learning, PLOT [4] introduces OT-based local prompt learning for fine-grained image-text alignment. However, the appli-cation of OT and POT to localized vision-language alignment for animal ReID under long-term appearance variation remains largely unexplored. 
+
+## 3 Proposed Method 
+
+Given a training set of image-identity pairs {(xi, y i)}Ni=1 , where xi ∈ RH×W ×3
+
+denotes an input image and yi ∈ { 1, . . . , C } the corresponding identity label, the objective of animal Re-ID is to learn an embedding function f : X → Rd
+
+that maps images of the same individual close together while separating dif-ferent identities in the learned feature space. To this end, we propose SLAP, a vision-language adaptation framework that combines learnable identity-aware prompts with selective local cross-modal alignment through POT [23]. Unlike conventional global alignment, SLAP establishes localized correspondences be-tween local visual embeddings and multiple identity-aware prompt embeddings, allowing only a subset of visual patches to participate in the alignment process. This formulation reduces the influence of background clutter, pose changes, and other non-informative visual patterns while capturing complementary identity-related appearance cues through multiple prompt embeddings. The text branch is used exclusively during training to provide structured cross-modal supervi-sion for learning discriminative visual representations. At inference time, only 6 C. Beyan et al. 
+
+Fig. 2: Overview of SLAP. A frozen CLIP image encoder is adapted using LoRA mod-ules inserted into the query, key, and value projection layers of the transformer attention blocks. The image encoder produces both global visual representations (fv , f proj  
+
+> v
+
+) and local patch embeddings V. Identity-aware prompts composed of fixed tokens and learn-able context tokens are processed by a frozen CLIP text encoder to produce multiple prompt embeddings Ty . POT establishes selective local cross-modal alignment between visual patch embeddings and prompt embeddings through a transport plan Π. SLAP is jointly optimized using batch-hard triplet losses, POT-based alignment loss, and auxiliary identity classification losses. During inference, only the LoRA-adapted image encoder is retained. The normalized global and projected visual representations are concatenated and re-normalized to form the final descriptor used for nearest-neighbor retrieval. 
+
+the visual representations are retained for nearest-neighbor retrieval, resulting in a purely visual deployment pipeline. An overview of the proposed framework is shown in Fig. 2. 
+
+Visual Feature and Prompt Encoding. SLAP employs frozen transformer-based image and text encoders to preserve the transferable vision-language knowl-edge learned during large-scale pretraining. The visual branch is adapted through Low-Rank Adaptation (LoRA) [9], while the text branch is adapted using learn-able prompt tokens. Given an input image x, the image encoder produces a sequence of visual token embeddings from which both a global representation fv and local patch embeddings V = {v1, . . . , vNp } are obtained, where Np denotes the number of visual patches. The global representation is projected into the shared vision-language embedding space as f proj  
+
+> v
+
+= fv Wproj , where Wproj ∈ Rdv ×dt maps SLAP for Fish Re-Identification 7
+
+the visual features to the text embedding dimension dt. The projected global embeddings are ℓ2-normalized before metric learning. On the text side, each identity y is associated with a set of prompts Py =
+
+{p1 
+
+> y
+
+, . . . , p Ky }, where K denotes the number of prompt instances. Each prompt consists of fixed template tokens and learnable context tokens, producing identity-aware prompt embeddings tky = TextEncoder( pky ). The resulting prompt embed-dings are grouped as Ty = {t1 
+
+> y
+
+, . . . , tKy }. Since both the local visual patch em-beddings V and the prompt embeddings Ty are extracted from the pretrained CLIP encoders, they naturally reside in the shared vision-language embedding space. SLAP performs selective local cross-modal alignment between V and Ty
+
+through POT, producing a transport plan that establishes soft prompt-to-patch correspondences for cross-modal supervision during training. 
+
+Low-Rank Adaptation. Rather than updating the full set of encoder parame-ters, LoRA [9] introduces trainable low-rank residual updates into the attention projection layers of the transformer architecture. In particular, the adaptation is applied to the query, key, and value projections within each multi-head self-attention block. Let W0 ∈ Rdout ×din denote a pretrained linear projection ma-trix. LoRA parameterizes the adaptation as a low-rank decomposition added to the original projection, modifying the forward projection as h = W0u + αr BAu ,where A ∈ Rr×din and B ∈ Rdout ×r are trainable low-rank matrices with rank 
+
+r ≪ min( dout , d in ). The scalar α scales the contribution of the low-rank update during training. Equivalently, the adapted projection matrix can be expressed as 
+
+W = W0 + αr BA . During optimization, only the low-rank matrices are updated, while the pretrained encoder parameters remain fixed. This enables lightweight adaptation of the visual representations while maintaining the general semantic knowledge encoded in the pretrained backbone. 
+
+Learnable Prompt-Based Text Representation. To adapt the frozen text encoder to the animal ReID task, SLAP employs learnable prompt tuning in-spired by CoOp [37]. This adaptation is achieved through learnable context to-kens inserted into a fixed textual template. For each identity y, the prompt set 
+
+Py = {p1 
+
+> y
+
+, . . . , p Ky } introduced above is parameterized by an independent set of learnable context tokens together with a fixed identity-specific token embedding. Unlike proxy representations commonly used in metric learning, these identity tokens exist exclusively in the text embedding space and are used only during training. The identity token is shared across all samples belonging to the same identity, remains fixed throughout training, and provides identity-aware condi-tioning of the prompt representations. To improve robustness to prompt structure, SLAP adopts three prompt lay-outs following [30,37]: end, middle, and front, obtained by varying the placement of the learnable context tokens relative to the fixed template tokens. Specifically, the layouts are defined as [eprefix , ecls , C(k), e y
+
+> id
+
+], [eprefix , C(k)1 , ecls , C(k)2 , e y
+
+> id
+
+],and [eprefix , C(k), ecls , e y
+
+> id
+
+], where C(k) ∈ RM ×dt denotes the M learnable con-8 C. Beyan et al. 
+
+text tokens and C(k)1 , C(k)2 correspond to their first and second halves. The three layouts share the same learnable context tokens and identity token, producing al-ternative token arrangements of the same prompt rather than distinct prompts. The resulting embeddings are averaged after ℓ2 normalization, yielding one em-bedding per prompt instance. In training, only the learnable context tokens are optimized jointly with the LoRA parameters, while the pretrained text encoder, identity tokens, and fixed template tokens remain frozen. The resulting prompt embeddings provide identity-aware cross-modal supervision and are discarded in inference. 
+
+Partial Optimal Transport. Unlike conventional global alignment strategies that establish a single correspondence between an image and a text representa-tion, SLAP employs POT to perform selective local alignment between visual patch embeddings and multiple identity-aware prompt embeddings. Given local visual embeddings V = {v1, . . . , vNp } and prompt embeddings 
+
+Ty = {t1 
+
+> y
+
+, . . . , tKy }, we construct a transport cost matrix C ∈ RNp×K in the shared vision-language embedding space, where each element is defined as the cosine distance Cik = 1 − v⊤   
+
+> itky
+> ∥vi∥2∥tky∥2
+
+. Lower transport costs therefore corre-spond to stronger visual-text similarity. Let μ ∈ RNp and ν ∈ RK denote uniform source and target distributions over visual patches and prompt embed-dings, respectively. The transport plan is represented by a non-negative matrix 
+
+Π ∈ RNp×K 
+
+> +
+
+, where Πik denotes the transported mass between vi and tky . Fol-lowing [23, 31], the transport problem is formulated as min Π≥0⟨C, Π⟩, subject to the relaxed marginal constraints Π1 K ≤ μ, Π⊤1Np ≤ ν, and the partial mass constraint 1⊤ 
+
+> Np
+
+Π1 K = m, where m = ρ min( ∥μ∥1, ∥ν∥1), ρ ∈ (0 , 1] de-notes the transported mass ratio, ⟨· , ·⟩ is the Frobenius inner product, and 1d
+
+denotes a d-dimensional vector of ones. Compared with standard OT, the re-laxed constraints allow only a subset of visual patches to participate in the alignment process. To improve optimization stability, we employ entropic regu-larization, yielding min Π≥0⟨C, Π⟩ − λH(Π), where H(Π) = − P 
+
+> i,k
+
+Πik log Πik 
+
+is the entropy regularizer and λ controls its strength. In training, the transport objective is computed between the local visual embeddings of each sample and the prompt embeddings associated with its ground-truth identity. The resulting transport plan establishes soft prompt-to-patch correspondences that provide selective local cross-modal supervision. 
+
+Auxiliary Identity Supervision. Although the prompt embeddings provide identity-aware cross-modal supervision, they do not explicitly enforce identity separation within the visual embedding space. To further improve discrimina-tive feature learning, auxiliary identity supervision is applied to both the global visual representation fv ∈ Rdv and its projected counterpart f proj  
+
+> v
+
+∈ Rdt . Specif-ically, sv = W(v)aux BN( fv ) and sp = W(p)aux BN( f proj  
+
+> v
+
+), where W(v)aux ∈ RC×dv and 
+
+W(p)aux ∈ RC×dt denote trainable classification matrices. The resulting logits are supervised using the cross-entropy loss with identity labels. Supervising both fea-SLAP for Fish Re-Identification 9
+
+ture spaces promotes identity discrimination before and after projection into the shared vision-language embedding space, stabilizing optimization and improv-ing feature separability. The auxiliary classification heads are used only during training and discarded during inference. 
+
+Loss Function. SLAP is optimized using a composite objective that com-bines metric learning, POT-based cross-modal alignment, and auxiliary iden-tity supervision. The POT objective serves as the cross-modal alignment loss, 
+
+Lpot = ⟨C, Π⟩ − λH(Π), where C denotes the transport cost matrix, Π the optimal transport plan, H(Π) = − P 
+
+> i,k
+
+Πik log Πik the entropy regularization term, and λ its weighting factor. Batch-hard triplet losses are independently ap-plied to the global image representation fv and its projected counterpart f proj  
+
+> v
+
+,yielding Ltri = L(v)tri (fv , y ) + L(p)tri (f proj  
+
+> v
+
+, y ). Triplet supervision is computed inde-pendently within each embedding space using ℓ2-normalized embeddings, while Euclidean distance is employed for both optimization and retrieval. Auxiliary identity supervision is applied to the classification logits sv and sp through the cross-entropy loss, Laux = LCE (sv , y ) + LCE (sp, y ). The overall objective is defined as L = λtri Ltri + λpot Lpot + Laux , where λtri and λpot balance the contributions of metric learning and POT-based cross-modal alignment, respec-tively. During optimization, only the LoRA parameters, learnable context tokens, auxiliary classification heads, and normalization layers are updated, while the pretrained image and text encoders remain frozen. 
+
+Inference. Only the LoRA-adapted image encoder is retained, while all text-related components, prompt representations, POT-based alignment, and aux-iliary supervision heads are discarded. Given a query image and a gallery set, ReID is performed through nearest-neighbor retrieval using Euclidean distance between visual descriptors. Specifically, the global image representation fv and its projected counterpart f proj  
+
+> v
+
+are individually ℓ2-normalized, concatenated as 
+
+[norm( fv ); norm( f proj  
+
+> v
+
+)] , and normalized once more to obtain the final descriptor 
+
+z = norm([norm( fv ); norm( f proj  
+
+> v
+
+)]) . The fusion combines complementary infor-mation from the original visual and shared vision-language embedding spaces without introducing additional trainable parameters. Following [30], fish Re-ID is formulated as an image retrieval problem rather than a closed-set identity classification task, enabling generalization to previously unseen identities with-out requiring a fixed identity label space during inference. 
+
+## 4 Experimental Analysis 
+
+Melops Dataset. This is [27, 28], a large-scale longitudinal dataset for individ-ual ReID of wild corkwing wrasse ( Symphodus melops ). It contains 24578 im-ages of 9861 PIT-tagged individuals collected between 2018 and 2024 in Western Norway under a long-term capture-mark-recapture program. Each fish was pho-tographed from both lateral sides under standardized imaging conditions using a uniform background and color reference card. Among the recorded individuals, 10 C. Beyan et al. 
+
+1883 were recaptured at least once, resulting in 2916 resighting events (8524 im-ages) spanning intervals from within-season recaptures to multiple years. These repeated observations introduce substantial variation in body size, pigmenta-tion, and appearance, while the majority of individuals are observed only once, resulting in a highly imbalanced identity distribution. Furthermore, Sympho-dus melops exhibits pronounced left-right asymmetry in pigmentation and body patterns, increasing intra-individual appearance variation and preventing trivial matching between mirrored views. 
+
+Evaluation Protocols. The evaluation is performed under two protocols differ-ing in the identity overlap between the training and test sets. In the closed-set 
+
+(CS) protocol, all test identities are observed during training, while training and testing images remain disjoint. Approximately 70% of the images of each iden-tity are assigned to training, and the remainder is divided into query and gallery sets following standard ReID practice [2, 3, 12, 15, 16, 33]. Identities with fewer than three samples are assigned entirely to the training split, resulting in 9814 training identities (20656 images), 1843 query images, and 1953 gallery images. Following [2], the open-set (OS) protocol additionally evaluates generalization to unseen identities. Approximately 20% of the test identities are excluded from training, while the remaining identities overlap with the training split. Query and gallery sets contain both seen and unseen identities, resulting in 9470 train-ing identities (19761 images), 2254 query images, and 2533 gallery images. 
+
+Evaluation Metrics. ReID performance is evaluated using standard retrieval metrics based on Euclidean distances between image embeddings. For each query, gallery samples are ranked according to ascending distance in the learned em-bedding space. Cumulative Matching Characteristic (CMC) measures whether at least one correct match appears within the top-k retrieved gallery samples. We report Rank-1 and Rank-5 accuracy in line with earlier meth-ods. Mean Average Precision (mAP) accounts for multiple correct matches per query and is computed as the mean of the average precision values across all queries [1, 25]. 
+
+Implementation Details. We employ a CLIP ViT-B/16 backbone [24] ini-tialized from publicly available pretrained weights, following recent CLIP-based ReID methods [16,30,34]. For the Melops dataset, standard ReID augmentations are applied, including random horizontal flip, padding, random crop, normaliza-tion, and random erasing [16, 33]. All pretrained backbone parameters remain frozen throughout training. Only the LoRA parameters [9], learnable prompt context tokens, auxiliary identity classification heads, and normalization layers are optimized. LoRA modules are inserted into the query, key, and value pro-jection layers of each transformer attention block with rank r = 16 and scaling factor α = 16 . Each identity is associated with K = 4 prompt instances [4, 26], each containing M = 4 learnable context tokens. The three prompt layouts are averaged after ℓ2 normalization, while identity tokens remain fixed throughout SLAP for Fish Re-Identification 11 
+
+training and are discarded during inference. For POT, the transported mass ra-tio is set to ρ = 0 .8 based on an ablation study, while the entropy regularization strength is fixed to λ = 0 .1 following [26]. The maximum number of Sinkhorn it-erations is 100 with early stopping using a convergence threshold of 10 −3. Triplet losses are independently applied in both the global and projected embedding spaces. Euclidean distance is used for triplet optimization and retrieval, whereas cosine distance is used to construct the POT transport cost matrix. Training uses AdamW [19] with a learning rate of 5 × 10 −4, weight decay of 10 −5, and PK sampling with P = 16 identities and N = 4 images per identity (batch size 64). Models are trained for up to 50 epochs on a single NVIDIA GeForce RTX 5090 GPU. During inference, only the LoRA-adapted image encoder is retained. The final descriptor is obtained by concatenating the individually ℓ2-normalized representations fv and f proj  
+
+> v
+
+, followed by a second ℓ2 normalization. Nearest-neighbor retrieval is then performed using Euclidean distance. 
+
+Implementation of Compared Methods. We compare SLAP with recent CLIP-based ReID approaches, including Full Fine-Tuning (Full FT), CLIP-ReID [16], IndivAID [34], ReID-AW [12], MetaWild [17], and MetaPrompt-ReID [30]. To ensure a fair comparison, all methods use the same CLIP back-bone, data splits, image preprocessing, optimizer, batch composition, and eval-uation metrics. Full FT jointly optimizes the CLIP image and text encoders. CLIP-ReID follows its original two-stage prompt-learning and visual adaptation strategy [16]. IndivAID adopts its original identity-driven formulation based on image- and individual-specific textual descriptions [34], while ReID-AW follows the original LLM-guided prompt generation and cross-modal supervision frame-work [12]. For MetaWild [17], all environmental metadata are removed while retaining the visual expert, textual expert, and gated cross-attention modules, allowing the architecture to operate using identity-aware prompts only. Sim-ilarly, for MetaPrompt-ReID [30], all metadata-conditioning components are disabled, leaving the LoRA-based visual adaptation, learnable identity-aware prompts, global cross-modal alignment, and auxiliary supervision unchanged. Unless otherwise stated, all baseline methods retain their original architectures under the common experimental protocol, enabling direct comparison between conventional global alignment and our POT-based selective local alignment. 
+
+Comparisons with CLIP-based SOTA. Table 1 compares SLAP with recent CLIP-based ReID methods under both the closed-set (CS) and open-set (OS) evaluation protocols. SLAP achieves the best performance across all evaluation metrics. Under the CS protocol, it improves the mAP from 53.0% to 55.2% and the Rank-1 accuracy from 44.8% to 46.6% compared with the strongest competing method MetaPrompt-ReID [30]. Under the more challenging OS pro-tocol, SLAP further improves the mAP from 37.9% to 40.3% and the Rank-1 accuracy from 31.6% to 33.7%. These results demonstrate that replacing conven-tional global image-text alignment with selective local vision-language alignment yields more discriminative visual representations and improves generalization to previously unseen identities. The consistent improvements over CLIP-ReID [16], IndivAID [34], ReID-AW [12], and MetaWild [17] further confirm the effective-12 C. Beyan et al. 
+
+Table 1: Performance comparison under the closed-set (CS) and open-set (OS) eval-uation protocols on the Melops dataset. Results are reported as mean ± standard deviation over five random seeds. Bold indicates the best result in each column. Method Closed-Set (CS) Open-Set (OS) mAP Rank-1 Rank-5 mAP Rank-1 Rank-5 Full FT 52.1 ± 0.63 44.5 ± 0.80 61.7 ± 0.70 36.8 ± 0.55 31.2 ± 0.72 48.1 ± 0.63                                                                        
+
+> CLIP-ReID [16] 44.3 ±0.22 37.9 ±0.19 52.4 ±0.61 30.9 ±0.20 26.0 ±0.36 39.0 ±0.41
+> IndivAID [34] 44.0 ±0.43 37.6 ±0.62 52.6 ±0.56 30.1 ±0.58 25.1 ±0.24 38.9 ±0.21
+> ReID-AW [12] 46.8 ±0.42 39.0 ±0.53 53.5 ±0.54 34.8 ±0.41 29.8 ±0.36 42.6 ±0.44
+> MetaWild [17] 48.6 ±0.35 40.9 ±0.42 56.1 ±0.47 35.9 ±0.31 30.7 ±0.36 44.3 ±0.28
+> MetaPrompt-ReID [30] 53.0 ±0.70 44.8 ±0.75 64.3 ±0.62 37.9 ±0.22 31.6 ±0.28 48.2 ±0.13
+> SLAP (Ours) 55.2 ±0.42 46.6 ±0.51 66.1 ±0.44 40.3 ±0.29 33.7 ±0.31 50.2 ±0.21
+
+Table 2: Ablation of cross-modal alignment strategies under closed-set (CS) and open-set (OS) protocols. All variants are trained under identical optimization settings. Method Closed-Set (CS) Open-Set (OS) mAP Rank-1 Rank-5 mAP Rank-1 Rank-5 No CM 50.8 ± 0.61 42.1 ± 0.66 60.9 ± 0.58 35.2 ± 0.37 29.4 ± 0.41 45.1 ± 0.32 
+
+Global Alignment 53.0 ± 0.70 44.8 ± 0.75 64.3 ± 0.62 37.9 ± 0.22 31.6 ± 0.28 48.2 ± 0.13 
+
+OT 54.3 ± 0.48 45.7 ± 0.54 65.1 ± 0.49 39.1 ± 0.31 32.6 ± 0.34 49.1 ± 0.25 
+
+POT (Ours) 55.2 ± 0.42 46.6 ± 0.51 66.1 ± 0.44 40.3 ± 0.29 33.7 ± 0.31 50.2 ± 0.21 
+
+ness of the proposed POT-based formulation. 
+
+Cross-Modal Alignment Ablation Study. To isolate the contribution of the proposed alignment strategy, we compare four variants. No CM removes cross-modal supervision entirely, optimizing only the triplet and auxiliary identity losses, i.e., L = λtri Ltri + Laux . Global Alignment replaces the proposed POT loss with conventional global image-text alignment between the projected global image representation and the aggregated identity-aware prompt representation, yielding L = λtri Ltri + λcm Lglobal + Laux . Optimal Transport (OT) replaces POT with standard OT, enforcing complete transport between all local visual patches and prompt embeddings, i.e., L = λtri Ltri + λot LOT + Laux . Finally, 
+
+POT (Ours) employs the proposed selective local alignment, L = λtri Ltri +
+
+λpot LPOT + Laux . Unlike standard OT, POT relaxes the transport constraints, allowing only a subset of local patch-prompt correspondences to participate in the alignment process. Table 2 presents an ablation study of the proposed cross-modal alignment strategy. Removing cross-modal supervision entirely (No CM) results in the lowest retrieval performance under both evaluation protocols, confirming that cross-modal guidance provides complementary supervision beyond metric learn-ing alone. Replacing the proposed POT formulation with conventional global image-text alignment substantially improves the results, demonstrating the ef-fectiveness of incorporating vision-language supervision during training. Intro-ducing local alignment through standard OT yields further gains, indicating SLAP for Fish Re-Identification 13 
+
+Table 3: Loss component ablation under the closed-set and open-set protocols. Configuration CS OS mAP Rank-1 Rank-5 mAP Rank-1 Rank-5 w/o Laux 54.4 ± 0.44 45.8 ± 0.47 65.3 ± 0.43 39.5 ± 0.31 32.9 ± 0.32 49.5 ± 0.24                                       
+
+> w/o LPOT 53.0 ±0.70 44.8 ±0.75 64.3 ±0.62 37.9 ±0.22 31.6 ±0.28 48.2 ±0.13
+> w/o Ltri 49.8 ±0.51 41.6 ±0.54 60.9 ±0.49 35.4 ±0.35 29.8 ±0.39 45.7 ±0.28
+> Full model (SLAP) 55.2 ±0.42 46.6 ±0.51 66.1 ±0.44 40.3 ±0.29 33.7 ±0.31 50.2 ±0.21
+
+that modeling patch-level correspondences is more effective than relying solely on global image-level alignment. Finally, replacing OT with the proposed POT consistently achieves the best results under both the CS and OS protocols. This improvement suggests that allowing only a subset of local patch-prompt corre-spondences to participate in the alignment process is more effective than enforc-ing complete transport. Notably, the improvement is more pronounced under the OS protocol, further supporting the effectiveness of selective local alignment for generalizing to previously unseen identities. 
+
+Loss Component Ablation. To quantify the contribution of each optimiza-tion objective, we independently remove the POT-based cross-modal alignment loss, the triplet loss, and the auxiliary identity supervision while keeping all re-maining training settings unchanged. The best retrieval performance (Table 3) is achieved when all three objectives are jointly optimized, demonstrating that each loss contributes to the final representation. Removing the auxiliary identity supervision leads to a relatively small performance degradation under both the CS and OS protocols, suggesting that this objective primarily acts as an opti-mization regularizer. In contrast, removing the proposed POT loss results in a substantially larger performance drop, highlighting the importance of selective local cross-modal alignment during representation learning. The largest degrada-tion is observed after removing the triplet loss, confirming that metric learning remains the primary optimization objective for ReID. These results show that the three objectives play distinct yet complementary roles: triplet supervision establishes the retrieval embedding space, POT strengthens local cross-modal supervision, and auxiliary identity supervision stabilizes optimization. 
+
+Transport Ratio Analysis. We further investigate the effect of the transported mass ratio ρ, which determines the fraction of visual patches participating in the POT objective. ρ is varied from 0.4 to 0.9 in increments of 0.1 while keeping all remaining hyperparameters fixed. Performance is sensitive to the transported mass ratio, with the best results obtained for intermediate values. Small trans-port ratios discard excessive informative visual regions, whereas large ratios ap-proach full OT and force the alignment of weakly discriminative or background patches. Consistent with these observations, we set ρ = 0 .8 in all subsequent experiments, providing the best balance between selective local alignment and sufficient cross-modal coverage. 14 C. Beyan et al. 
+
+Table 4: Evaluation on additional marine animal ReID datasets (mAP %). Dataset CLIP-ReID IndivAID ReID-AW MetaWild MetaPrompt-ReID SLAP (Ours)                 
+
+> [16] [34] [12] [17] [30] SeaStarReID2023 [32] 57.4 58.2 59.0 59.4 60.1 61.8
+> SeaTurtleID2022 [2] 32.4 35.8 37.2 38.2 39.3 41.2
+
+Additional Ablation Studies. Analyses of: (i) triplet supervision in different embedding spaces, (ii) the LoRA configuration, and (iii) an efficiency analysis of SLAP in terms of trainable parameters and inference characteristics, are pro-vided in the Supp. Mat. 
+
+Evaluation on Additional Marine ReID Datasets. To evaluate the effec-tiveness of SLAP beyond fish ReID, we conduct additional experiments on two publicly available marine animal ReID datasets, namely SeaStarReID2023 [32] and SeaTurtleID2022 [2]. All datasets are accessed through the WildlifeDatasets toolkit [3,38], ensuring consistent data loading and preprocessing. We adopt the same training configuration and hyperparameters used for the Melops dataset without any dataset-specific tuning. Across both datasets (Table 4), SLAP con-sistently achieves the highest performance. In particular, it improves the mAP by +1.7% on SeaStarReID2023 and +1.9% on SeaTurtleID2022 compared with the strongest competing method [30]. These results indicate that the proposed POT-based selective local alignment is not limited to fish ReID, but generalizes effectively across diverse marine animal ReID benchmarks without requiring dataset-specific architectural modifications or hyperparameter tuning. 
+
+## 5 Conclusions 
+
+This work investigated whether replacing conventional global vision-language alignment with selective local cross-modal alignment can improve fine-grained fish ReID. By formulating the interaction between local visual patches and multi-ple identity-aware prompt embeddings as a POT problem, the proposed method consistently improves retrieval performance over recent CLIP-based ReID meth-ods while retaining a lightweight visual-only inference pipeline. The experimen-tal results suggest that explicitly modeling local cross-modal correspondences provides more effective supervision than conventional global alignment for fine-grained marine animal ReID. The proposed method also opens several promising research directions. Future work will investigate adaptive and learnable transport formulations capable of dynamically selecting transported mass and transport regularization during optimization. We also plan to explore biologically informed transport priors and visualization techniques to better interpret the learned cor-respondences, as well as extend the framework to temporal, video-based, and multimodal marine animal monitoring scenarios involving a broader range of species and habitats. SLAP for Fish Re-Identification 15 
+
+Table 5: Effect of triplet supervision in different embedding spaces under the closed-set (CS) and open-set (OS) evaluation protocols. Triplet Supervision Closed-Set (CS) Open-Set (OS) mAP Rank-1 Rank-5 mAP Rank-1 Rank-5                                        
+
+> fvonly 50.4 ±0.48 42.8 ±0.51 62.5 ±0.45 36.8 ±0.34 30.8 ±0.38 47.2 ±0.29
+> fproj
+> vonly 51.3 ±0.44 43.7 ±0.47 63.4 ±0.42 37.9 ±0.31 31.8 ±0.33 48.3 ±0.25
+> Both (Ours) 55.2 ±0.42 46.6 ±0.51 66.1 ±0.44 40.3 ±0.29 33.7 ±0.31 50.2 ±0.21
+
+## Acknowledgments 
+
+This work was supported by the Research Council of Norway through the Com-puter Vision to Expand Monitoring and Accelerate Assessment of Coastal Fish project (CoastVision), project number 325862. 
+
+## 6 Supplementary Materials 
+
+6.1 Additional Ablation Studies 
+
+This supplementary document provides additional experimental analyses that complement the main paper. The following experiments further investigate the behavior of SLAP by analyzing (a) the effect of supervising different embedding spaces, (b) the sensitivity to the LoRA configuration, and (c) the parameter efficiency of the SLAP. 
+
+Dual-Space Triplet Supervision. SLAP applies batch-hard triplet supervi-sion independently to the visual embedding fv and the projected vision-language embedding f proj  
+
+> v
+
+. To evaluate the contribution of each embedding space, we com-pare three training configurations: triplet supervision applied only to fv , only to f proj  
+
+> v
+
+, and simultaneously to both embeddings. All remaining components of SLAP, including the POT-based cross-modal alignment and auxiliary identity supervision, remain unchanged. Table 5 shows that both embedding spaces are individually capable of learn-ing discriminative retrieval representations, with the projected embedding con-sistently outperforming the original visual representation. Nevertheless, jointly supervising both embedding spaces yields the best performance under both eval-uation protocols. These results suggest that the original visual embedding and its projected counterpart capture complementary identity information, and that jointly supervising both embedding spaces leads to more discriminative repre-sentations than optimizing either space independently. 
+
+Choice of LoRA Configuration. To investigate the influence of the visual adaptation capacity, we evaluate SLAP using different LoRA configurations 16 C. Beyan et al.  
+
+> Table 6: Sensitivity analysis of the LoRA rank and scaling factor.
+
+LoRA (r, α ) Closed-Set (CS) Open-Set (OS) mAP Rank-1 Rank-5 mAP Rank-1 Rank-5 
+
+(8 , 8) 50.4 ± 0.46 42.5 ± 0.49 62.0 ± 0.52 36.6 ± 0.35 30.4 ± 0.38 46.9 ± 0.30 
+
+(16 , 16) 55.2 ± 0.42 46.6 ± 0.51 66.1 ± 0.44 40.3 ± 0.29 33.7 ± 0.31 50.2 ± 0.21 
+
+(512 , 1) 35.0 ± 0.58 28.4 ± 0.61 46.5 ± 0.55 24.8 ± 0.47 20.5 ± 0.43 33.9 ± 0.39 
+
+while keeping all remaining hyperparameters fixed. Specifically, we evaluate three LoRA configurations: (r, α ) = (8 , 8) , (16 , 16) , and (512 , 1) . The transported mass ratio, prompt configuration, and all optimization settings remain identical to those of the SLAP. Results are reported in Table 6. As expected, the LoRA configuration has a noticeable influence on retrieval performance. The configuration (r, α ) = (16 , 16) consistently achieves the best performance under both the closed-set and open-set protocols, indicating that it provides sufficient adaptation capacity while preserving the transferable repre-sentations learned during CLIP pretraining. Reducing the rank to r = 8 results in a moderate performance degradation, whereas the substantially lower perfor-mance obtained with (r, α ) = (512 , 1) suggests that excessively large low-rank updates disturb the pretrained CLIP representations, highlighting the impor-tance of balancing adaptation capacity with knowledge preservation. 
+
+Efficiency Analysis. The proposed POT formulation is employed exclusively during training to guide cross-modal supervision. Consequently, the proposed POT formulation introduces no additional learnable parameters, since the trans-port plan is computed directly from the visual and prompt embeddings rather than through parameterized network layers. Table 7 compares the number of trainable parameters required by recent CLIP-based ReID methods. While sev-eral existing CLIP-based ReID methods require approximately 150–160M train-able parameters, our SLAP requires only 72.9M trainable parameters while main-taining state-of-the-art retrieval performance. During inference, all text-related components together with the POT com-putation are discarded, and retrieval is performed using only the LoRA-adapted CLIP image encoder. Consequently, SLAP introduces no additional computa-tional overhead during deployment, and its inference complexity is identical to that of the underlying LoRA-adapted visual encoder. Under our experimental setup (NVIDIA RTX 5090 GPU, batch size = 1), the average inference time is approximately 8 ms per image. 
+
+## References  
+
+> 1. From species-specific models to universal re-id: a survey of animal re-identification. Information Fusion 133 , 104323 (2026)
+
+SLAP for Fish Re-Identification 17 
+
+Table 7: Comparison of trainable parameters and inference time. Method Trainable Parameters (M) Inference (ms) Full FT 150.0 8.0 CLIP-ReID [16] 154.3 8.0 IndivAID [34] 154.3 8.0 ReID-AW [12] 155.0 8.0 MetaWild [17] 158.0 8.0 MetaPrompt-ReID [30] 72.9 8.0 
+
+Ours 72.9 8.0 
+
+2. Adam, L., Čermák, V., Papafitsoros, K., Picek, L.: Seaturtleid2022: A long-span dataset for reliable sea turtle re-identification. In: IEEE WACV (2024) 3. Cermak, V., Picek, L., Adam, L., Neumann, L., Matas, J.: Wildfusion: In-dividual animal identification with calibrated similarity fusion. arXiv preprint arXiv:2408.12934 (2024) 4. Chen, G., et al.: Plot: Prompt learning with optimal transport for vision-language models. arXiv preprint arXiv:2210.01253 (2022) 5. Compte, A., Yan, Y., Cortés, X., Escalera, S., Jacques-Junior, J.C.: Housed pig identification and tracking for precision livestock farming. Expert Systems with Applications 293 , 128466 (2025) 6. Ellis, B.A., Sørdalen, T.K., Briffa, M., Skiftesvik, A.B., Wilson, A.D.M., Halvorsen, K.T.: Visual cues elicit differential aggression towards female and female mimics in the corkwing wrasse. Behavioral Ecology p. arag022 (Feb 2026). https://doi. org/10.1093/beheco/arag022 
+
+7. Feng, C., et al.: Ot-filter: An optimal transport filter for learning with noisy labels. In: CVPR. pp. 16164–16174 (2023) 8. Houlsby, N., Giurgiu, A., Jastrzebski, S., Morrone, B., De Laroussilhe, Q., Ges-mundo, A., Attariyan, M., Gelly, S.: Parameter-efficient transfer learning for nlp. In: International conference on machine learning. pp. 2790–2799. PMLR (2019) 9. Hu, E.J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., Chen, W.: Lora: Low-rank adaptation of large language models. In: ICLR (2022) 10. Huang, J., Yu, X., An, D., Ning, X., Liu, J., Tiwari, P.: Uniformity and deformation: A benchmark for multi-fish real-time tracking in the farming. Expert Systems with Applications 264 , 125653 (2025) 11. Jia, M., Tang, L., Chen, B.C., Cardie, C., Belongie, S., Hariharan, B., Lim, S.N.: Visual prompt tuning. In: European conference on computer vision. pp. 709–727. Springer (2022) 12. Jiao, B., Liu, L., Gao, L., Wu, R., Lin, G., Wang, P., Zhang, Y.: Toward re-identifying any animal. Neurips 36 , 40042–40053 (2023) 13. Li, B., Shi, Y., Yu, Q., Wang, J.: Unsupervised cross-domain image retrieval via prototypical optimal transport. In: AAAI. vol. 38, pp. 3009–3017 (2024) 14. Li, H., et al.: Global and local prompts cooperation via optimal transport for federated learning. In: CVPR. pp. 12151–12161 (2024) 15. Li, S., Li, J., Tang, H., Qian, R., Lin, W.: Atrw: A benchmark for amur tiger re-identification in the wild. In: ACM MM (2020) 16. Li, S., Sun, L., Li, Q.: Clip-reid: exploiting vision-language model for image re-identification without concrete text labels. In: Proceedings of the AAAI conference on artificial intelligence. vol. 37, pp. 1405–1413 (2023) 18 C. Beyan et al. 17. Li, Y., Zhao, D., Qiao, T., Wu, Y., Pang, B., Koh, Y.S.: Metawild: A multimodal dataset for animal re-identification with environmental metadata. In: Proceedings of the 33rd ACM International Conference on Multimedia. pp. 13009–13015 (2025) 18. Liu, Y., Li, B., Zhou, X., Li, D., Duan, Q.: Fishtrack: Multi-object tracking method for fish using spatiotemporal information fusion. Expert Systems with Applications 
+
+238 , 122194 (2024) 19. Loshchilov, I., Hutter, F.: Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101 (2017) 20. McClintock, B.T., Hill, J.M., Fritz, L., Chumbley, K., Luxa, K., Diefenbach, D.R.: Mark-resight abundance estimation under incomplete identification of marked in-dividuals. Methods in Ecology and Evolution 5(12), 1294–1304 (2014) 21. Nepovinnykh, E., Eerola, T., Kalviainen, H.: Siamese network based pelage pattern matching for ringed seal re-identification. In: IEEE WACVw (2020) 22. Peyré, G.e.a.: Computational optimal transport: With applications to data science. Foundations and Trends in Machine Learning 11 (5-6), 355–607 (2019) 23. Phatak, A., et al.: Computing all optimal partial transports. In: ICLR (2023) 24. Radford, A., Kim, J.W., Hallacy, C., et al.: Learning transferable visual models from natural language supervision. In: ICML. pp. 8748–8763 (2021) 25. Ravoor, P., T.s.b., S.: Deep learning methods for multi-species animal re-identification and tracking: a survey. Computer Science Review (2020) 26. Shiri, M., Beyan, C., Murino, V.: Madpot: Medical anomaly detection with clip adaptation and partial optimal transport. In: International Conference on Image Analysis and Processing. pp. 247–259. Springer (2025) 27. Sordalen, T.K., Malde, K., Skiftesvik, A.B., Sauvaitre, C., Beyan, C., Larsen, T.and Halvorsen, K.T.: A wild fish image dataset for individual re-identification and phenotyping. Scientific data (2026) 28. Sørdalen, T.K., Halvorsen, K.T.: MelopsReID: A wild fish image dataset for re-identification. Zenodo (2025). https://doi.org/10.5281/zenodo.17099925 ,
+
+https://doi.org/10.5281/zenodo.17099925 , version 1.0 29. Tu, R., et al.: Optimal transport for causal discovery. arXiv:2201.09366 (2022) 30. Tur, A.O., Sørdalen, T.K., Halvorsen, K.T., Beyan, C.: Parameter-efficient vision-language adaptation with continuous metadata conditioning for animal re-identification. Expert Systems with Applications 332 , 133618 (2026) 31. Villani, C., et al.: Optimal transport: old and new, vol. 338 (2008) 32. Wahltinez, O., Wahltinez, S.J.: An open-source general purpose machine learning framework for individual animal re-identification using few-shot learning. Methods in Ecology and Evolution 15 (2), 373–387 (2024) 33. Wu, W., Tao, D., Li, H., Yang, Z., Cheng, J.: Deep features for person re-identification on metric learning. Pattern Recognition 110 (2021) 34. Wu, Y., Zhao, D., Zhang, J., Koh, Y.S.: An individual identity-driven framework for animal re-identification. arXiv preprint arXiv:2410.22927 (2024) 35. Zaken, E.B., Goldberg, Y., Ravfogel, S.: Bitfit: Simple parameter-efficient fine-tuning for transformer-based masked language-models. In: Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers). pp. 1–9 (2022) 36. Zhang, R., Fang, R., Zhang, W., Gao, P., Li, K., Dai, J., Qiao, Y., Li, H.: Tip-adapter: Training-free clip-adapter for better vision-language modeling. In: Euro-pean Conference on Computer Vision (ECCV) (2022) 37. Zhou, K., Yang, J., Loy, C.C., Liu, Z.: Learning to prompt for vision-language models. In: CVPR (2022) SLAP for Fish Re-Identification 19 38. Čermák, V., Picek, L., Adam, L., Papafitsoros, K.: Wildlifedatasets: An open-source toolkit for animal re-identification. In: IEEE WACV (2024)

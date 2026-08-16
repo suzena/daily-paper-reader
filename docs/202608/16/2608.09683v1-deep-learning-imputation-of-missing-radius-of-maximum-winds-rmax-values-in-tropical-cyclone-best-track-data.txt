@@ -1,0 +1,439 @@
+Title: 2608.09683v1.pdf
+
+URL Source: https://arxiv.org/pdf/2608.09683v1
+
+Published Time: Tue, 11 Aug 2026 02:26:46 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+1
+
+# Deep Learning Imputation of Missing Radius of Maximum Winds (Rmax) Values in Tropical Cyclone Best-Track Data 
+
+Swastik Agrawal 1,† , Nishkal Hundia 1,† , Ziyue Liu 2,3,* , Michelle Bensi 2
+
+> 1
+
+Department of Computer Science, University of Maryland, College Park, MD, USA 
+
+> 2
+
+Department of Civil and Environmental Engineering, University of Maryland, College Park, MD, USA 
+
+> 3
+
+Edwardson School of Industrial Engineering, Purdue University, West Lafayette, IN, USA 
+
+> †
+
+These authors contributed equally to this work 
+
+> *
+
+Corresponding author: ziyue20@terpmail.umd.edu 
+
+Abstract 
+
+Probabilistic coastal hazard assessments support risk-informed design of critical infrastructure and require characterization of the joint distribution of tropical cyclone (TC) parameters. However, TC datasets often contain missing records for the radius of maximum winds (Rmax), a key variable in Joint Probability Method analyses. Although conventional machine learning methods have been used to estimate missing Rmax, the potential of deep learning and physics-informed input augmentation remains insufficiently explored. This study evaluates data-driven strategies for Rmax imputation, including one-dimensional Convolutional Neural Networks (1DCNNs), Long Short-Term Memory (LSTM) networks, and conventional machine learning models. Physics-informed input augmentation and temporal modeling are examined, together with transfer learning using the synthetic RAFT and STORM datasets for pre-training and observational data from the International Best Track Archive for Climate Stewardship (IBTrACS) for fine-tuning. Results show that including the radius of 34-knot winds (R34) substantially improves performance across all model types. Temporal models achieve higher average correlations than non-temporal models despite being trained on approximately an order of magnitude fewer samples, indicating a stronger ability to preserve relative Rmax variability across storms. This advantage becomes more pronounced when R34 is unavailable, suggesting that temporal information can partially compensate for missing storm-size predictors. Transfer learning does not improve performance, likely because the synthetic datasets contain lower and less variable Rmax distributions than the observational IBTrACS data. These findings demonstrate the potential of temporal deep learning for reconstructing incomplete TC records and highlight the importance of physics-informed inputs, observational data availability, and distributional consistency for coastal hazard assessment. 
+
+Keywords: machine learning, deep learning, radius of maximum winds, historical storm data, data imputation 
+
+Plain Language Summary 
+
+Historical tropical cyclone records are important for estimating coastal hazards. However, these records often have missing values for the radius of maximum winds (Rmax), which describes the distance from the storm center to the location of the strongest winds. Because Rmax is an important indicator of storm structure and size, missing values can reduce the accuracy of coastal hazard assessments. This study explores whether deep learning models can be used to estimate missing Rmax values in tropical cyclone best-track data. We compare temporal deep learning models, including one-dimensional convolutional neural networks and long short-term memory networks, with non-temporal machine learning models. We also test model performance under different model input variable sets. In addition, we investigate whether 2
+
+pre-training models on large synthetic datasets can improve performance when applied to observational data. The results show that temporal deep learning models can effectively impute missing Rmax values, especially when physics-informed input variables are used, but there are trade-offs that arise due to the relatively smaller size of datasets available for training. However, transfer learning from synthetic tropical cyclone datasets does not improve performance, likely because of differences in the Rmax data distributions between the synthetic datasets and the observational best-track data. These findings highlight both the promise of deep learning for improving historical storm records and the importance of matching synthetic training data to real observational distributions. 
+
+## 1. Introduction 
+
+Storm-induced coastal hazards can impose a variety of adverse loads and conditions on infrastructure systems. The probabilistic hazard assessments of coastal hazards often rely on historical storm data (e.g., Nadal-Caraballo et al. 2022; Liu et al. 2024a, 2025a, 2025b; Liu and Bensi 2026; Cheng et al. 2026). However, historical storm records are often temporally or spatially incomplete, particularly in the earlier years of record (Liu et al. 2024b). One particularly important yet often missing storm parameter is the radius of maximum winds ( 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 ), which is a representation of the size of a storm. Due to its physical characteristics, 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 plays a critical role in the generation of multiple coastal hazards, and it is necessary to characterize its distribution as part of probabilistic hazard assessments (Chavas et al. 2015; Chavas and Knaff 2022). Thus, it is important to accurately estimate the value of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 in datasets where it is missing. 
+
+The ultimate goal of this study is to predict missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values in global historical tropical cyclone (TC) datasets by developing and comparing multiple deep learning approaches.  Figure 1  shows an example of the imputation process. Given a storm track containing gaps in its observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 record (highlighted by red squares), we aim to impute these missing values to return a fully reconstructed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 time history. 3
+
+Figure 1. Illustration of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 imputation along a storm track: (a) available observations, shown as blue circles scaled by 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , and missing values, shown as red squares; and (b) the reconstructed track after the missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values are imputed. 
+
+1.1 Classical methods for estimating 𝑹𝑹𝒎𝒎𝒎𝒎𝒎𝒎 
+
+Classical approaches to estimating 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 are primarily based on physics-derived or empirical relationships. Vickery and Wadhera (2008) proposed a regression-based formulation that incorporates latitude and pressure deficit for Atlantic storms. Chavas et al. (2015) developed physically based models for the radial structure of tropical cyclones, linking 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 to the overall wind structure through angular momentum conservation. This framework was further refined by Chavas and Knaff (2022), who emphasized the dependence of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 on storm size and structure. In particular, they used the radius of 34-kt winds ( 𝑅𝑅34 ) as a key predictor in a regression-based model for estimating 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , demonstrating strong model performance. Empirical formulations have also been proposed that estimate 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 directly from the radius of 50-kt winds (𝑅𝑅50 ). Using typhoon observations and best-track data over the western North Pacific, Takagi and Wu (2016) derived a simple relationship 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 = 0.23 𝑅𝑅50 , and demonstrated that accounting for variability in 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 
+
+is critical for accurate storm surge simulations. While these methods provide physically interpretable estimates, their applicability can be limited across basins, storm intensities, and climatological regimes. Additionally, in some cases the input parameters for these methods are less frequently available than 
+
+𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 itself, limiting their applicability in imputing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 .
+
+1.2 Machine learning for 𝑹𝑹𝒎𝒎𝒎𝒎𝒎𝒎 imputation 
+
+ML techniques have been successfully applied to a range of TC hazard modeling tasks (e.g., Jia and Taflanidis 2013; Al Kajbaf and Bensi 2020; Lee et al. 2021; Liu et al. 2024c, 2025c). However, they have seen limited application in 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 estimation. Liu et al. (2024b) used ML methods to impute missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 
+
+values in best-track datasets. Their results demonstrated improved robustness and reduced bias compared to classical approaches. Nevertheless, these models typically treat individual storm observations independently and are limited in their ability to capture the temporal dependencies inherent in storm evolution. 
+
+1.3 Deep learning for Tropical Cyclone hazards and 𝑹𝑹𝒎𝒎𝒎𝒎𝒎𝒎 imputation 
+
+Deep learning models provide a natural extension of traditional ML by enabling the representation of complex nonlinear and temporal relationships in storm evolution. Architectures such as Long Short-Term Memory (LSTM) networks have demonstrated strong performance in TC track and intensity prediction (Tong et al. 2022), while one-dimensional convolutional neural networks (1DCNNs) have been applied to TC-related time series tasks such as peak storm surge prediction (Lee et al. 2021). More broadly, convolutional neural networks (CNNs), LSTMs, and hybrid CNN-LSTM architectures have been shown to outperform traditional machine learning methods for storm surge forecasting and other coastal hazard applications (Tiggeloven et al. 2020; Wang et al. 2020). Recent studies have further explored advanced architectures, including bidirectional LSTMs, transformers, and attention-based networks, achieving additional improvements in TC prediction skill (Mulia et al. 2025). 
+
+Despite these successes, the application of deep learning to the imputation of missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values in historical best-track datasets has not been widely implemented. Xu et al. (2024a) employed a CNN to reconstruct 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 from ERA5-derived gridded wind profile input data, demonstrating that deep learning can reduce systematic biases in reanalysis-based storm size estimates. However, deep learning methods have not been implemented to address the data imputation problem within incomplete storm observational records. 4
+
+1.4 Study objective and contributions 
+
+In this study, we compare several approaches to impute missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values within the global best-track dataset. We consider several model input configurations, including a physics-augmented configuration. We evaluate temporal deep learning architectures that preserve storm-level temporal structure and compare the performance trade-offs of considering temporal architectures through comparison against pointwise prediction approaches. We further investigate transfer learning strategies using synthetic TC datasets (RAFT (Xu et al. 2024b) and STORM (Bloemendaal et al. 2020)) to mitigate data scarcity and improve generalization. 
+
+## 2 Data and Methods 
+
+This section presents the data and methods workflow of the study.  Figure 2  provides an overview of the analysis procedure, from observational data processing to model development, performance evaluation, and transfer learning analysis. 
+
+Figure 2. Overview of the data processing, model development, and evaluation workflow. 5
+
+2.1 Observational data sources 
+
+We use historical TC reanalysis data sourced from the International Best Track Archive for Climate Stewardship (IBTrACS) as the observational data source (Demuth et al. 2006; NOAA 2021). The IBTrACS compiles initial storm observations and subsequent reanalysis from sources such as reports from ships, land stations, radars, satellites, etc. We use the USA_AGENCY data series in IBTrACS, covering records from 1842 to 2023, because it provides the most consistent spatial and temporal coverage and broad availability across variables. The temporal resolution of the data is generally 3 hours, and the spatial resolution is 0.1 degrees (NOAA 2021). The availability of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 records in IBTrACS across all basins from the USA_AGENCY (which also provides the most complete 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 records in the IBTrACS dataset) is shown in  Figure 3 .
+
+Figure 3. 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 reanalysis data availability (values represent the ratio of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 recorded in each single storm) in each basin in IBTrACS dataset USA_AGENCY data. White portions in each bar indicate periods with no historical storm data recorded. 
+
+2.2 Data processing 
+
+As illustrated in  Figure 2 , Box [1], we begin by filtering the input dataset to include only USA_AGENCY data, ensuring consistency in the extracted data and measurement standards. We retain only the variables relevant to our model development, as given in  Table 1 . These variables were chosen based on previous work imputing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 using ML (Liu et al. 2024b). 
+
+Table 1. Extracted input/output variables from IBTrACS 
+
+Variable  Symbol  Unit 
+
+Radius of maximum winds  𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚  nmile (nautical miles) 
+
+Minimum pressure at sea level  𝑃𝑃 𝑐𝑐  hPa 6
+
+Maximum sustained wind speed  𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚  knots 
+
+Longitude  𝑙𝑙𝑙𝑙𝑙𝑙  degrees, [-180, 180] 
+
+Latitude  𝑙𝑙𝑙𝑙𝑙𝑙  degrees, [-90, 90] 
+
+Wind radii of 34 knots (mean of non-zero quadrants)  𝑅𝑅34  nmile (nautical miles) 
+
+Distance of the storm point to land  𝑑𝑑  nmile (nautical miles) 
+
+Storm forward speed  𝑉𝑉 𝑓𝑓  knots 
+
+Storm heading direction  𝜃𝜃  degrees [0,360], clockwise with due north as 0 degrees 
+
+We next compute several derived input variables (see  Figure 2 , Box [2]). We introduce a categorical flag (𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙 ) in our input variables indicating whether the storm data point is over land or water. This flag is obtained by identifying whether each storm data point's coordinates fall over land or water, using a global reference grid that labels every location (~1km resolution) on Earth (Karin 2020). To account for the circular nature of storm heading, we represent the direction angle using its sine and cosine components and include both as derived input variables. To improve the representation of spatial information in the neural network models, we transform latitude and longitude into three-dimensional Earth-centered, Earth-fixed (ECEF) Cartesian coordinates (X, Y, Z) (UNOOSA 2012). This transformation avoids the discontinuities and distance distortions associated with raw latitude-longitude coordinates and provides a continuous Euclidean representation of storm location. The equations used to compute the ECEF coordinates are provided in Appendix A.  Table 2  summarizes the derived input variables. 
+
+Table 2. Derived input variables 
+
+Variable  Symbol(s)  Unit 
+
+Land indicator flag (binary)  𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙  N/A 
+
+Sine of storm heading direction  sin( 𝜃𝜃 ) N/A 
+
+Cosine of storm heading direction  cos( 𝜃𝜃 ) N/A 
+
+ECEF X, Y, Z-coordinates  𝑋𝑋 , 𝑌𝑌 , 𝑍𝑍  km 
+
+2.3 Input configuration 
+
+We experiment with three different ML model input configurations, as shown in  Table 3  and reflected in the overall modeling framework as  Figure 2 , Box [3]. In  Table 3 , the first column indicates the naming convention that will be used in the study to refer to each configuration, and the second column provides the constituent input variables. 
+
+Table 3. Input configurations 
+
+Configuration  Input Variables  Output Variable 
+
+With 𝑅𝑅34  𝑃𝑃 𝑐𝑐 , 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 , 𝑅𝑅34 , 𝑑𝑑 , 𝑉𝑉 𝑓𝑓 , 𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙 , sin( 𝜃𝜃 ) , cos( 𝜃𝜃 ), 𝑋𝑋 , 𝑌𝑌 , 𝑍𝑍  𝑅𝑅max 
+
+Without 𝑅𝑅34  𝑃𝑃 𝑐𝑐 , 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 , 𝑑𝑑 , 𝑉𝑉 𝑓𝑓 , 𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙 , sin( 𝜃𝜃 ) , cos( 𝜃𝜃 ), 𝑋𝑋 , 𝑌𝑌 , 𝑍𝑍  𝑅𝑅max 
+
+Physics-augmented  𝑃𝑃 𝑐𝑐 , 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 , 𝑅𝑅34 , 𝑑𝑑 , 𝑉𝑉 𝑓𝑓 , 𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙 , sin( 𝜃𝜃 ) , cos( 𝜃𝜃 ), 𝑋𝑋 , 𝑌𝑌 , 𝑍𝑍 , 𝑅𝑅34 2 , sin( lat ), 𝑓𝑓 , 𝑀𝑀𝑚𝑚𝑚𝑚𝑚𝑚 𝑀𝑀34 
+
+𝑅𝑅max 
+
+The first two input configurations are the same except for the inclusion of 𝑅𝑅34 . We test both the inclusion and exclusion of 𝑅𝑅34 because 𝑅𝑅34 is known to be highly correlated with 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 but is not widely available in historical datasets (Liu et al. 2024b). The physics-augmented input configuration is based on Chavas and Knaff (2022) and introduces additional parameters derived from empirical relationships. The hypothesis is 7
+
+that incorporating these known physical relationships can reduce the number of training steps required for the model compared to when the model must learn them independently. This effectively embeds established TC physics into the dataset, potentially enhancing model performance. 
+
+The additional input variables in the physics-augmented input configuration were derived from the equations (2), (3), (4), and (7) in Chavas and Knaff (2022) after accounting for the differences in units. These include 𝑅𝑅34 2 , 𝑓𝑓 , sin( lat ), and the ratio 𝑀𝑀max /𝑀𝑀34 , where 𝑓𝑓 is the Coriolis parameter, 𝑀𝑀max is the absolute angular momentum at 𝑅𝑅max , and 𝑀𝑀34 is the absolute angular momentum at 𝑅𝑅34 . The terms are defined as: 
+
+𝑓𝑓 = 2 Ωsin( lat ) (1) 
+
+𝑀𝑀34 = 𝑅𝑅34 × 17.5 𝑚𝑚𝑠𝑠 −1 + 0.5 𝑓𝑓𝑅𝑅34 2 (2) 
+
+𝑀𝑀𝑚𝑚𝑚𝑚𝑚𝑚 𝑀𝑀34  = 0.699 exp[ −0 .00618 (𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 − 17.5 𝑚𝑚𝑠𝑠 −1 ) − 0 .00210 (𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 − 17.5 𝑚𝑚𝑠𝑠 −1 )0.5 𝑓𝑓𝑅𝑅34 2 ] (3) 
+
+where Ω = 7.292 × 10 −5 s−1 is Earth's rotation rate. 
+
+To enable the use of non-temporal models, all available data are pooled into a single non-temporal dataset (see  Figure 2 , Box [4]). Even though data is pooled, storm indices are retained to support later storm-based cross-validation. This allows us to enforce storm-level data separation for training, testing, and validation. To enable the use of temporal models, the workflow proceeds to the specification of temporal blocks, as shown in  Figure 2 , Boxes [5]-[6], and described in the next section. 
+
+2.4 Block length optimization and generation of block samples 
+
+We structure the time series data for input into sequential models such as CNNs and LSTMs by dividing each storm's track into fixed-length segments, referred to herein as blocks. Each block represents a contiguous subsequence of the storm's time series, capturing the evolution of relevant variables over a fixed window of time. 
+
+Blocks are generated separately for each storm and are temporally homogeneous. Typically, though not exclusively, there exists a consistent 3-hour time interval between two consecutive data points reported in IBTrACS. As with the pooled non-temporal data, we store metadata about each block's origin (i.e., storm ID as well as start and end indices of each block in the original dataset) to support later storm-based cross-validation. 
+
+To identify the optimal block length, we perform a preliminary sensitivity study in which we train 1DCNN and LSTM models using a four-fold cross-validation split across the entire dataset. The workflow of this block length optimization is provided in  Figure 4 .8
+
+Figure 4. Workflow of block length optimization 
+
+For each fold, blocks are partitioned into training and testing sets, maintaining strict isolation between storms across these sets. That is, all blocks from a given storm are assigned exclusively to one of two sets in each fold and are never split across them. Multiple fixed lengths for the blocks were tested (10, 15, 20, 25, and 30 time steps). The average Pearson correlation coefficients ( 𝑅𝑅 ) between observed and predicted 
+
+𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values across cross-validation folds for each block length and model type are reported in  Figure 5 .
+
+Figure 5. Averaged Pearson correlation coefficients between observed and predicted 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values of various block lengths. Error bars indicate the range (min, max) across folds. 
+
+As is evident in  Figure 5 , a block length of 10 yields the highest correlation coefficient between observed and predicted 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values. We observe a gradual reduction in model performance as block length increases. This is primarily due to the reduction in the number of usable training samples. Blocks require contiguous 9
+
+time steps, and longer contiguous sequences become less available as block length increases, resulting in fewer constructed blocks. Furthermore, since many storms contain gaps in their 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 observational records, longer blocks are more likely to include at least one missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 value, resulting in a decrease in the number of valid training samples. Other evaluation metrics, including Mean Absolute Error (MAE) and Mean Squared Error (MSE), corroborate this finding. Thus, we conclude that 10 is the most effective block length. 
+
+2.5 Model development and evaluation 
+
+We evaluate deep learning models, specifically 1DCNNs and LSTMs, because of their ability to capture temporal dependencies in storm evolution. The deep learning models are compared against non-temporal ML models, namely XGBoost (eXtreme Gradient Boosting) and ANN (artificial neural network). The model development and evaluation portion of the workflow is reflected in  Figure 2 , Box [7]. 
+
+1DCNNs operate by sliding convolutional filters over the input sequence to detect local temporal patterns. These models have been shown to be effective in predicting short-term dependencies and trends in TC storm surge time series data (Lee et al. 2021). This architecture consists of convolutional layers followed by pooling layers, which reduce dimensionality as information passes through the model. 
+
+LSTMs, on the other hand, are designed to model long-term dependencies in sequential inputs using gated memory cells (Hochreiter and Schmidhuber 1997). This makes them suitable candidates for capturing the progression of storm characteristics over time (Gao et al. 2018). By maintaining both long-term and short-term memory, LSTMs are capable of retaining localized information about storm points near the current timestep, while also preserving broader contextual information about the overall storm track. 
+
+To evaluate the effectiveness of temporal deep learning models, we compare the performance of the temporal deep learning models (1DCNN and LSTM) against the two non-temporal ML models: XGBoost and ANN. These non-temporal ML models are limited in their ability to capture the temporal dependencies and evolving dynamics within a storm's lifecycle. However, because they operate on pointwise observations and do not require sequential time blocks, substantially more data is available for training. 
+
+XGBoost helps capture complex nonlinear relationships and interactions within the data by sequentially constructing an ensemble of decision trees, where each tree corrects residuals via regularized gradient descent (Chen and Guestrin 2016). The ANN, on the other hand, approximate nonlinear input-output relationships through stacked layers of learned weights. Additionally, we benchmark against the empirical formula outlined in Chavas and Knaff (2022), herein referred to as CK22, which serves as a physics-informed regression model for comparison against our data-driven approaches. 
+
+The overall model development and evaluation workflow is summarized in  Figure 6 . The process begins with architecture selection and hyperparameter tuning. For 1DCNN and LSTM models, we perform a random search with 100 trials for each model over hyperparameters such as the number of layers, number of neurons, and activation functions (Bergstra and Bengio 2012). For XGBoost, the hyperparameters were selected using a coarse grid search over predefined candidate values for learning rate, maximum tree depth, and number of estimators. The ANN architecture used in this study is adopted from Liu et al. (2024b). The neural network architectures employed in this study, including 1DCNN, LSTM, and ANN, are presented in  Figure 7 .
+
+Model training and performance assessment is performed using four-fold cross-validation in which storms are assigned exclusively to either the testing set or the training set in each fold and are never split across them. We apply min-max scaling to all variables except sin( 𝜃𝜃 ), cos( 𝜃𝜃 ), and 𝐼𝐼𝑆𝑆𝑙𝑙 𝑚𝑚 𝑙𝑙𝑙𝑙 :10 
+
+𝑥𝑥 scaled = 𝑥𝑥 − 𝑥𝑥min 𝑥𝑥max − 𝑥𝑥min 
+
+(4) 
+
+To prevent information leakage, the scaling parameters are estimated separately within each training set and then applied to the corresponding testing set. 
+
+Models are trained and tested using the normalized data set. A reverse normalization is applied before the performance assessment so that performance metrics are computed in the physical units. Due to data scarcity, the same dataset is used for architecture selection, hyperparameter optimization, and model training. This reuse may introduce limited data leakage in the model performance comparison. 
+
+Figure 6. Workflow of model development and evaluation 11 
+
+Figure 7. Flowchart depicting model architecture for the tested neural networks. 
+
+We also experimented with Gaussian Process Regression (GPR) using the configuration identified as most effective in Liu et al. (2024b), training the model on a random subsample of 2,000 data points from the training set. However, we exclude GPR from the final comparison because its training complexity scales cubically with the number of training samples.  Figure 8  illustrates this limitation by comparing total training floating-point operations (FLOPs), a hardware-agnostic measure of computational cost, for GPR, LSTM, and 1DCNN models as a function of dataset size. The cubic scaling associated with GPR kernel matrix inversion rapidly leads to substantially higher computational cost than the other methods. While GPR achieves comparable performance when trained on 2,000 points, its cubic scaling in training complexity renders it impractical for larger datasets, which is why it has been excluded from the results presented in the remainder of this paper. 12 
+
+Figure 8. Comparison of total training FLOPs across GPR (GPy), LSTM, and 1DCNN as a function of training set size on a log-log scale. 
+
+2.6 Synthetic data-based transfer learning 
+
+To address the data scarcity challenges that can affect the performance of temporal deep learning models, we explored a transfer learning approach using synthetically generated TC datasets ( Figure 2 , Box [8]). The underlying hypothesis was that pre-training models on larger synthetic datasets would enable them to learn broader correlations between storm parameters, followed by fine-tuning on IBTrACS data to capture real-world interactions and edge cases that may not be adequately represented in synthetic data. We employed two synthetic datasets for this investigation: 
+
+ RAFT (Risk Assessment of coastal Flooding from Tropical cyclones): The RAFT dataset (Xu et al. 2024a) simulates 40,000 synthetic TCs for the North Atlantic using a hybrid framework combining statistical methods, physical models, and deep learning. It provides high-resolution synthetic storm tracks, intensities, and rainfall patterns at 6-hour intervals, capturing key risk factors like wind, precipitation, and landfall behavior. 
+
+ STORM (Synthetic Tropical cyclOne geneRation Model): The STORM dataset (Bloemendaal et al. 2020) uses a fully statistical resampling model to extend 38 years of historical cyclone data into 10,000 years of global TC activity. It generates storm tracks, intensities, and sizes across all major basins. 
+
+Both datasets include the same key parameters as IBTrACS ( 𝑃𝑃 𝑐𝑐 , 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 , 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , latitude, longitude, etc.), and provide substantially larger sample sizes than IBTrACS, potentially allowing temporal models to better learn underlying storm dynamics before exposure to real-world data complexities. 
+
+The transfer learning methodology involved first pre-training the 1DCNN and LSTM architectures on the synthetic datasets using the same block-based approach described in Section 2.4. The pre-trained models were then fine-tuned on IBTrACS data, with the expectation that this approach would leverage the benefits of both synthetic data abundance and real-world data fidelity. 
+
+## 3 Results and Discussion 
+
+3.1 Model performance analysis 
+
+To evaluate model performance, we use two primary metrics: the correlation coefficient ( R) and the root mean squared error (RMSE) between predicted and observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values. These metrics provide complementary insights into each model's ability to impute missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values in storm data sequences. 13 
+
+Specifically, R provides insights into each model's ability to capture variation and patterns across storms. RMSE captures the average magnitude of prediction errors and provides insights regarding overall prediction accuracy. We compare the deep learning models (1DCNN and LSTM) against the non-temporal baselines (XGBoost and ANN). Performance metrics are computed across four cross-validation folds, and 
+
+Table 4  summarizes the model performance across all folds. 
+
+It is important to note that temporal deep learning models (LSTM and 1DCNN) are trained on significantly fewer samples than non-temporal models such as XGBoost and ANN. This is due to the need to construct temporally coherent input sequences (e.g., 10 time steps per sample), which limits the number of usable blocks in the dataset.  Table 4  includes the sizes of the training and testing sets, which differ by an order of magnitude between temporal and non-temporal models. 
+
+Table 4. Model performance comparison. All reported metrics are presented as mean [min, max] across five random seeds; metrics were first averaged across the four cross-validation folds within each seed. 
+
+## Model  𝑹𝑹 value  RMSE (nm)  Train Samples *
+
+## Test Samples *
+
+## Temporal models 
+
+1DCNN with 𝑅𝑅34  0.770 [0.765, 0.775]  12.91 [12.75, 13.07]  3,300  1,100 
+
+1DCNN without 𝑅𝑅34  0.616 [0.611, 0.621]  17.35 [17.21, 17.49]  5,500  1,800 
+
+1DCNN with physics-augmented  0.771 [0.765, 0.777]  12.89 [12.77, 13.01]  3,300  1,100 
+
+LSTM with R34  0.779 [0.777, 0.781]  12.70 [12.53, 12.87]  3,300  1,100 
+
+LSTM without 𝑅𝑅34  0.620 [0.617, 0.623]  17.28 [17.16, 17.40]  5,500  1,800 
+
+LSTM with physics-augmented  0.781 [0.777, 0.785]  12.66 [12.44, 12.88]  3,300  1,100 
+
+## Non-temporal models 
+
+XGBoost with 𝑅𝑅34  0.760 [0.758, 0.762]  13.31 [13.27, 13.35]  45,000  14,400 
+
+XGBoost without 𝑅𝑅34  0.570 [0.566, 0.574]  18.28 [18.21, 18.35]  70,900  23,500 
+
+XGBoost with physics-augmented  0.759 [0.758, 0.760]  13.31 [13.27, 13.35]  44,000  15,400 
+
+ANN with 𝑅𝑅34  0.658 [0.640, 0.676]  15.45 [15.08, 15.82]  44,600  14,800 
+
+ANN without 𝑅𝑅34  0.536 [0.525, 0.547]  18.70 [18.43, 18.97]  71,200  23,200 
+
+ANN with physics-augmented  0.669 [0.664, 0.674]  15.38 [15.24, 15.52]  44,700  14,800 
+
+CK22 with 𝑅𝑅34  0.705 [0.704, 0.706]  17.72 [17.71, 17.73]  — 61,200 †
+
+> *The sample sizes correspond to one representative fold and vary slightly across folds.
+> †Because CK22 is an existing parametric model fitted in an independent study, no training within this study is required, and all data points are used for testing.
+
+Overall, the performance metric results indicate that the direct inclusion of 𝑅𝑅34 , as well as the use of the physics-augmented input configurations, results in notably better model performance than configurations excluding 𝑅𝑅34 . This improvement is evident in both correlation and RMSE. Among models leveraging 𝑅𝑅34 ,the temporal models consistently achieved higher average correlation than the non-temporal models evaluated in this study, despite being trained on datasets approximately an order of magnitude smaller. The physics-augmented LSTM also achieved the lowest average RMSE (12.66 nm), although RMSE differences among the best-performing 𝑅𝑅34 -based models were relatively small. These results suggest that temporal models are particularly effective at preserving relative variation in 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 across storms. As shown in  Figure 9 , all three physics-augmented models reproduce the overall positive correlation between predicted and observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , although predictions become increasingly dispersed and tend to underestimate the largest observed values. 14 
+
+Figure 9. Scatter plot comparing the predicted and observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values for (a) LSTM, (b) 1DCNN, and (c) XGBoost using the physics-augmented configuration. The plots displayed include testing data across all folds. 
+
+However, as noted above, 𝑅𝑅34 is not widely available in recorded datasets. Thus, models relying on 𝑅𝑅34 as an input variable have limited applicability for imputing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 data for historical storms, despite their higher predictive performance. In the absence of 𝑅𝑅34 , the correlation advantage of the temporal models becomes more evident, amplifying their ability to capture variation and patterns in the data. In fact, the reduction in correlation when excluding 𝑅𝑅34 is more substantial for the best performing non-temporal model (XGBoost) than for either temporal model, suggesting that the ability to leverage temporal dependencies within the storm data partially compensates for the missing 𝑅𝑅34 variable in the model's ability to recognize patterns. Across all models, the results suggest that inclusion of temporal information partially compensates for the reduced number of training samples by encoding the evolution of storm structure over multiple time steps rather than a single independent observation. 
+
+3.2 Error distribution analysis 
+
+To further assess model behavior, we visualize predicted 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 , and prediction error against storm variables for the LSTM model with the physics-augmented input configuration, which is the best performing temporal model, and for the LSTM model with the input configuration excluding 𝑅𝑅34 .Results are shown in  Figure 10  and  Figure 11 . Similar trends are observed across both input configurations. Results show that storms characterized by high 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 and low 𝑃𝑃 𝑐𝑐 tend to exhibit smaller prediction errors, suggesting that the model imputes 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 more reliably for stronger, more structurally consistent storms compared to weaker systems. However, this pattern may also reflect the observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values themselves being relatively lower for stronger storms as compared to cases when the 𝑃𝑃 𝑐𝑐 is higher, and the 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 are lower, resulting in lower errors. The inclusion of the physics-augmented information results in smaller errors associated with less intense storms. It is also possible to observe the effects of the reduced data availability associated with the physics-augmented input configuration, as reflected by the smaller range of observed 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values contained in the testing sets. 15 
+
+Figure 10. Relationship between observed 𝑅𝑅 max , predicted 𝑅𝑅 max , and prediction error with 𝑃𝑃 𝑐𝑐 and 𝑉𝑉 max for the LSTM model using the physics-augmented input configuration. Points are colored by basin. WP: West North Pacific, EP: East North Pacific, NAtl: North Atlantic, SI: South Indian, SP: South Pacific, NI: North Indian. 16 
+
+Figure 11. Relationship between observed 𝑅𝑅 max , predicted 𝑅𝑅 max , and prediction error with 𝑃𝑃 𝑐𝑐 and 𝑉𝑉 max for the LSTM model using the input configuration without 𝑅𝑅34 . Points are colored by basin. WP: West North Pacific, EP: East North Pacific, NAtl: North Atlantic, SI: South Indian, SP: South Pacific, NI: North Indian. 
+
+3.3 Transfer learning 
+
+Comparative analysis revealed that models pre-trained on synthetic data and subsequently fine-tuned on IBTrACS did not demonstrate improved performance over models trained exclusively on IBTrACS data. To investigate this unexpected result, we conducted a comprehensive distributional analysis comparing the synthetic datasets (RAFT and STORM) with IBTrACS reanalysis data, as shown in  Figure 12 .17 
+
+Figure 12. Distribution comparison of key TC parameters across IBTrACS, STORM, and RAFT datasets. The distributions reveal systematic differences in parameter characteristics between real-world observations and synthetic data. 
+
+The latitude and longitude distributions indicate broadly comparable geographic coverage across the three datasets, although the relative frequency of observations varies within this coverage. In particular, STORM is more concentrated at lower latitudes, whereas RAFT contains a greater proportion of higher-latitude observations; IBTrACS exhibits features of both distributions. The distributional analysis for other variables reveals several critical differences between synthetic and real-world datasets. 
+
+All three datasets show right-skewed distributions for maximum sustained wind speed ( 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 ), which is consistent with the greater frequency of lower-intensity TCs relative to high-intensity hurricanes or typhoons. However, IBTrACS demonstrates a much higher concentration of storms with lower maximum wind speeds, with the mode around 30-40 knots. The RAFT dataset follows this trend but is shifted to the left. The STORM dataset is shifted further to the right, indicating that higher wind speeds are more likely. 
+
+The minimum central pressure distributions are also consistent with the trends in the 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 distributions. IBTrACS shows a much narrower peak at higher pressure values ( ∼1000 hPa). The distributions for the synthetic datasets form relatively lower peaks, with the 𝑃𝑃 𝑐𝑐 in the STORM dataset peaking at a lower value (∼990 hPa) than in the RAFT dataset ( ∼1000 hPa). 
+
+𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 shows the most significant differences. Comparative analysis of 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 and 𝑃𝑃 𝑐𝑐 revealed that IBTrACS data have a higher concentration of storm data points with lower 𝑉𝑉 𝑚𝑚𝑚𝑚𝑚𝑚 and higher 𝑃𝑃 𝑐𝑐 , which typically result in more weakly developed storms. This is also evident from the 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 distribution of the IBTrACS dataset, which has a much longer tail and extends to higher 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values than the synthetic datasets. 18 
+
+Figure 12  suggests that the synthetic datasets are generally centered at lower 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values and exhibit a narrower spread than IBTrACS. This indicates that the synthetic data generation processes may not fully capture the range and variability of 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 observed in real storms. This may be due to the parametric or simplified physical models underlying synthetic storm generation, which prioritize computational efficiency and physical consistency over reproducing the full statistical variability of observed storms. 
+
+This distributional mismatch likely contributed to the limited effectiveness of the transfer learning approach, as the pre-trained models learned patterns and correlations that were not representative of real-world storm behavior. Specifically, models pre-trained on synthetic data learned to predict smaller 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values on average and did not encounter the wide variability present in observations. When subsequently fine-tuned on IBTrACS data, these models had to "unlearn" synthetic data biases while simultaneously learning real-world patterns, potentially resulting in worse performance than models trained exclusively on IBTrACS. 
+
+These findings suggest that for transfer learning to be effective in TC parameter imputation, synthetic datasets must be specifically calibrated to match the statistical distributions of real observations, particularly for the output variable. Future work should investigate methods for post-processing synthetic data to better align with observed distributions or for developing hybrid synthetic-observed training strategies that can leverage the sample size advantages of synthetic data while maintaining distributional fidelity to observations. 
+
+## 4 Conclusion 
+
+This study evaluates temporal deep learning models, including LSTM networks and 1DCNNs, for imputing missing 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values in TC best-track records. Their performance was compared with non-temporal ML models, including XGBoost and an ANN, as well as the CK22 physics-based parametric model. 
+
+The results demonstrate that incorporating 𝑅𝑅34 substantially improves 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 imputation across all model types. Among the evaluated models, the physics-augmented LSTM achieved the highest average correlation and the lowest average RMSE. More broadly, the temporal models consistently achieved higher average correlations than the non-temporal models despite being trained on approximately an order of magnitude fewer samples. This finding indicates that temporal models can effectively use information on storm evolution to preserve variations in 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 across storms. 
+
+When 𝑅𝑅34 was excluded, the performance of all models declined. However, the temporal models retained a clearer performance advantage over the non-temporal models, suggesting that temporal dependencies partially compensate for the absence of this important storm size predictor. This result is particularly relevant for historical 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 imputation because 𝑅𝑅34 is frequently unavailable in earlier best-track records. Nevertheless, constructing temporally continuous input blocks substantially reduces the number of usable training samples, highlighting a trade-off between representing storm evolution and maximizing data availability. 
+
+Transfer learning using the RAFT and STORM synthetic TC datasets did not improve model performance relative to training exclusively on IBTrACS data. Distributional comparisons showed that the synthetic datasets contain systematically smaller and less variable 𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values than the observational data. Consequently, pre-trained models learned relationships that were not fully representative of observed storm behavior. These findings demonstrate that the size of a pre-training dataset alone is insufficient to support effective transfer learning. The synthetic data must also reproduce the statistical distribution and variability of the target observational dataset, particularly for the predicted variable. 19 
+
+Future work should investigate temporal architectures that dynamically incorporate available observed 
+
+𝑅𝑅𝑚𝑚𝑚𝑚𝑚𝑚 values within otherwise incomplete storm sequences. Additional efforts should focus on distribution-alignment or domain-adaptation methods for synthetic data, hybrid synthetic-observational training strategies, and evaluation frameworks that separate hyperparameter selection from final model assessment. These developments could improve the generalizability and reliability of deep learning methods for reconstructing incomplete TC records and supporting probabilistic coastal hazard assessments. 
+
+## 5 Statements and Declarations 
+
+Acknowledgments 
+
+This work builds upon the collaboration in Liu et al. (2024b). The authors gratefully acknowledge previous collaborations with Dr. Meredith L. Carr, Dr. Norberto C. Nadal-Caraballo, Madison C. Yawn, and Dr. Alexandros A. Taflanidis. 
+
+Funding 
+
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors. 
+
+Data Availability 
+
+The observational data used in this study were obtained from the International Best Track Archive for Climate Stewardship (IBTrACS) ( https://www.ncei.noaa.gov/products/international-best-track-archive ). Synthetic tropical cyclone data from the North Atlantic synthetic tropical cyclone track, intensity, and rainfall dataset (RAFT) ( https://data.pnnl.gov/group/nodes/dataset/33569 ) and Synthetic Tropical cyclOne geneRation Model (STORM) ( https://research.vu.nl/en/datasets/storm-ibtracs-present-climate-synthetic-tropical-cyclone-tracks/ ) datasets were also used to investigate transfer learning. 
+
+Competing Interests 
+
+The authors have no relevant financial or non-financial interests to disclose. 
+
+Author Contributions 
+
+SA: Conceptualization, Methodology, Software, Investigation, Formal analysis, Data Curation, Visualization, Writing-Original Draft, Writing-Review & Editing. NH: Conceptualization, Methodology, Software, Investigation, Formal analysis, Data Curation, Visualization, Writing-Original Draft, Writing-Review & Editing. ZL: Conceptualization, Methodology, Software, Investigation, Formal analysis, Data Curation, Visualization, Writing-Original Draft, Writing-Review & Editing, Supervision. MB: Conceptualization, Data Curation, Methodology, Visualization, Supervision, Writing-Review & Editing. 
+
+## 6 References 
+
+Al Kajbaf, A., and M. Bensi. 2020. “Application of surrogate models in estimation of storm surge:A comparative assessment.” Applied Soft Computing , 91: 106184. https://doi.org/10.1016/j.asoc.2020.106184. 
+
+Bergstra, J., and Y. Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” The Journal of Machine Learning Research , 13: 281–305. 20 
+
+Bloemendaal, N., I. D. Haigh, H. de Moel, S. Muis, R. J. Haarsma, and J. C. J. H. Aerts. 2020. “Generation of a global synthetic tropical cyclone hazard dataset using STORM.” Scientific Data ,7 (1): 40. Nature Publishing Group. https://doi.org/10.1038/s41597-020-0381-2. 
+
+Chavas, D. R., and J. A. Knaff. 2022. “A simple model for predicting the hurricane radius of maximum wind from outer size.” Weather and Forecasting , (37.5): 563–579. https://doi.org/https://doi.org/10.1175/WAF-D-21-0103.1. 
+
+Chavas, D. R., N. Lin, and K. Emanuel. 2015. “A Model for the Complete Radial Structure of the Tropical Cyclone Wind Field. Part I: Comparison with Observed Structure.” Journal of the Atmospheric Sciences , 72 (9): 3647–3662. American Meteorological Society. https://doi.org/10.1175/JAS-D-15-0014.1. 
+
+Chen, T., and C. Guestrin. 2016. “XGBoost: A Scalable Tree Boosting System.” In: Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining , 785– 794. 
+
+Cheng, E., Z. Liu, and M. Bensi. 2026. “Spatial Variability of Tropical Cyclone Heading Angles: Implications for Probabilistic Coastal Hazard Assessment.” Pittsburgh, Pennsylvania. 
+
+Demuth, J. L., M. DeMaria, and J. A. Knaff. 2006. “Improvement of Advanced Microwave Sounding Unit Tropical Cyclone Intensity and Size Estimation Algorithms.” Journal of Applied Meteorology and Climatology , 45 (11): 1573–1581. American Meteorological Society. https://doi.org/10.1175/JAM2429.1. 
+
+Gao, S., P. Zhao, B. Pan, Y. Li, M. Zhou, J. Xu, S. Zhong, and Z. Shi. 2018. “A nowcasting model for the prediction of typhoon tracks based on a long short term memory neural network.” Acta Oceanologica Sinica , 37 (5): 8–12. https://doi.org/10.1007/s13131-018-1219-z. 
+
+Hochreiter, S., and J. Schmidhuber. 1997. “Long Short-Term Memory.” Neural Computation , 9 (8): 1735–1780. https://doi.org/10.1162/neco.1997.9.8.1735. 
+
+Jia, G., and A. A. Taflanidis. 2013. “Kriging metamodeling for approximation of high-dimensional wave and surge responses in real-time storm/hurricane risk assessment.” Computer Methods in Applied Mechanics and Engineering , 261–262: 24–38. https://doi.org/10.1016/j.cma.2013.03.012. 
+
+Karin, T. 2020. “toddkarin/global-land-mask: Release of version 1.0.0.” Zenodo. 
+
+Lee, J.-W., J. L. Irish, M. T. Bensi, and D. C. Marcy. 2021. “Rapid prediction of peak storm surge from tropical cyclone track time series using machine learning.” Coastal Engineering , 170: 104024. https://doi.org/10.1016/j.coastaleng.2021.104024. 
+
+Liu, Z., M. L. Carr, N. C. Nadal-Caraballo, L. A. Aucoin, M. C. Yawn, and M. Bensi. 2024a. “Comparative Analysis of Joint Distribution Models for Tropical Cyclone Atmospheric Parameters in Probabilistic Coastal Hazard Analysis.” Stochastic Environmental Research and Risk Assessment, 38: 1741–1767. https://doi.org/https://doi.org/10.1007/s00477-023-02652-5. 
+
+Liu, Z., M. L. Carr, N. C. Nadal-Caraballo, M. C. Yawn, A. A. Taflanidis, and M. Bensi. 2024b. “Machine Learning Motivated Data Imputation of Storm Data Used in Coastal Hazard Assessments.” 190. https://doi.org/10.1016/j.coastaleng.2024.104505. 
+
+Liu, Z., A. Al Kajbaf, and M. Bensi. 2024c. “Applications of Statistical Learning Methods in Natural Hazard Assessment.” Sendai, Japan. 21 
+
+Liu, Z., and M. Bensi. 2026. “A Multi-Hazard Assessment Framework for Tropical Cyclones in South Korea: Data Development and Joint Probability Analysis.” Pittsburgh, Pennsylvania. 
+
+Liu, Z., M. L. Carr, N. C. Nadal-Caraballo, L. A. Aucoin, M. C. Yawn, and M. T. Bensi. 2025a. “A Multi-Tiered Bayesian Network Coastal Compound Flood Analysis Framework.” Coastal Engineering , 104895. https://doi.org/10.1016/j.coastaleng.2025.104895. 
+
+Liu, Z., M. L. Carr, N. C. Nadal-Caraballo, M. C. Yawn, and M. T. Bensi. 2025b. “A Bayesian Network Method for Deaggregation: Identification of Tropical Cyclones Driving Coastal Hazards.” arXiv:2505.14374. 
+
+Liu, Z., M. A. Gharehtoragh, B. K. Losch, and D. R. Johnson. 2025c. “An Efficient Regional Storm Surge Surrogate Model Training Strategy Under Evolving Landscape and Climate Scenarios.” arXiv:2511.07269. 
+
+Mulia, I. E., U. Shimada, N. Ueda, T. Miyoshi, and M. T. Maulana. 2025. “Multi-horizon prediction of tropical cyclone intensity and its interpretability with temporal fusion transformer.” Scientific Reports , 15 (1): 31284. Nature Publishing Group. https://doi.org/10.1038/s41598-025-15522-7. 
+
+Nadal-Caraballo, N. C., M. C. Yawn, L. A. Aucoin, M. L. Carr, J. A. Melby, E. Ramos-Santiago, V. M. Gonzalez, T. C. Massey, A. A. Taflanidis, A. A. Kyprioti, Z. Cobell, and A. T. Cox. 2022. 
+
+Coastal Hazards System–Louisiana Coastal Study (CHS-LA) . Vicksburg, MS: US Army Engineer Research and Development Center. 
+
+NOAA. 2021. “International Best Track Archive for Climate Stewardship (IBTrACS).” National Centers for Environmental Information (NCEI) . Accessed November 11, 2023. https://www.ncei.noaa.gov/products/international-best-track-archive. 
+
+Takagi, H., and W. Wu. 2016. “Maximum wind radius estimated by the 50 kt radius: improvement of storm surge forecasting over the western North Pacific.” Natural Hazards and Earth System Sciences , 16 (3): 705–717. Copernicus GmbH. https://doi.org/10.5194/nhess-16-705-2016. 
+
+Tiggeloven, T., H. de Moel, H. C. Winsemius, D. Eilander, G. Erkens, E. Gebremedhin, A. Diaz Loaiza, S. Kuzma, T. Luo, C. Iceland, A. Bouwman, J. van Huijstee, W. Ligtvoet, and P. J. Ward. 2020. “Global-scale benefit–cost analysis of coastal flood adaptation to different flood risk drivers using structural measures.” Natural Hazards and Earth System Sciences , 20 (4): 1025–1044. Copernicus GmbH. https://doi.org/10.5194/nhess-20-1025-2020. 
+
+Tong, B., X. Wang, J. Y. Fu, P. W. Chan, and Y. C. He. 2022. “Short-term prediction of the intensity and track of tropical cyclone via ConvLSTM model.” Journal of Wind Engineering and Industrial Aerodynamics , 226: 105026. https://doi.org/10.1016/j.jweia.2022.105026. 
+
+UNOOSA. 2012. “World Geodetic System 1984.” 
+
+Vickery, P. J., and D. Wadhera. 2008. “Statistical Models of Holland Pressure Profile Parameter and Radius to Maximum Winds of Hurricanes from Flight-Level Pressure and H*Wind Data.” 
+
+Journal of Applied Meteorology and Climatology , 47 (10): 2497–2517. American Meteorological Society. https://doi.org/10.1175/2008JAMC1837.1. 
+
+Wang, D., R. A. Davidson, L. K. Nozick, J. E. Trainor, and J. L. Kruse. 2020. “Computational Framework to Support Government Policy-Making for Hurricane Risk Management.” Natural Hazards Review , 21 (1): 04019012. https://doi.org/10.1061/(ASCE)NH.1527-6996.0000348. 22 
+
+Xu, Z., J. Guo, G. Zhang, Y. Ye, H. Zhao, and H. Chen. 2024b. “Global tropical cyclone size and intensity reconstruction dataset for 1959–2022 based on IBTrACS and ERA5 data.” Earth System Science Data , 16 (12): 5753–5766. Copernicus GmbH. https://doi.org/10.5194/essd-16-5753-2024. 
+
+Xu, W., K. Balaguru, D. R. Judi, J. Rice, L. R. Leung, and S. Lipari. 2024a. “A North Atlantic synthetic tropical cyclone track, intensity, and rainfall dataset.” Scientific Data , 11 (1): 130. Nature Publishing Group. https://doi.org/10.1038/s41597-024-02952-7. 
+
+Appendix A – Earth-centered, Earth-fixed Coordinate Transformation 
+
+Latitude and longitude were converted to ECEF Cartesian coordinates using the WGS84 reference ellipsoid. The ECEF coordinates 𝑋𝑋 , 𝑌𝑌 , and 𝑍𝑍 are computed as: 
+
+𝑋𝑋 = ( 𝑁𝑁 + ℎ)cos( lat )cos( lon ) (5) 
+
+Y = ( 𝑁𝑁 + ℎ)cos( lat )sin( lon ) (6) 
+
+𝑍𝑍 = [(1 − 𝑒𝑒 2)𝑁𝑁 + ℎ]sin( lat ) (7) 
+
+where 
+
+𝑁𝑁 = 𝑙𝑙 
+
+�1 − 𝑒𝑒 2sin 2(lat )
+
+(8) 
+
+Here, lat is the geodetic latitude in radians, lon is the longitude in radians, ℎ is the ellipsoidal height,  𝑙𝑙  is the semi-major axis of the WGS84 ellipsoid, and 𝑒𝑒 2 is the first eccentricity squared. The first eccentricity squared is defined as: 
+
+𝑒𝑒 2 = 𝑓𝑓 WGS84 (2 − 𝑓𝑓 WGS84 ) (9) 
+
+where 𝑓𝑓 WGS84 = 1/ 298 .26 is the WGS84 flattening factor. Because the storm track data do not include elevation, ℎ is set to zero in this study.
