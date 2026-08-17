@@ -41,17 +41,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-16</span>
+      <span class="dpr-home-dashboard-kicker">2026-08-17</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-16 20:05:15 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-17 19:47:16 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,7 +62,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日聚焦视觉-语言模型应用与气象数据修复，共精读2篇、速读7篇。最值得关注：鱼类重识别借助部分最优传输实现局部对齐（9.0分），以及深度学习填补台风最大风速半径缺失值（8.0分）。建议普通读者优先浏览这两项研究，可了解多模态与数据修复的前沿落地方式。</p>
+<p>今日聚焦多无人艇协同感知与遥感弱监督分割，精读两篇高分论文。最值得关注的是面向多USV协同的仿真平台MMUSV-Sim，以及基于Sentinel-1 SAR的极地低压弱监督分割方法。建议普通读者优先浏览这两篇论文的框架与实验结果，以把握感知协同与极地遥感的前沿趋势。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -71,12 +71,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SLAP: Selective Local Vision-Language Alignment for Fish Re-Identification via Partial Optimal Transport">SLAP: Selective Local Vision-Language Alignment for Fish Re-Identification via Partial Optimal Transport</span></li><li><span class="dpr-home-dashboard-paper-title" title="Deep Learning Imputation of Missing Radius of Maximum Winds (Rmax) Values in Tropical Cyclone Best-Track Data">Deep Learning Imputation of Missing Radius of Maximum Winds (Rmax) Values in Tropical Cyclone Best-Track Data</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception">MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception</span></li><li><span class="dpr-home-dashboard-paper-title" title="Weakly Supervised Polar Low Segmentation in Sentinel-1 SAR Imagery">Weakly Supervised Polar Low Segmentation in Sentinel-1 SAR Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="FIRM: Fine-Grained Intra-Token Representation of Masks for Remote Sensing Reasoning Segmentation">FIRM: Fine-Grained Intra-Token Representation of Masks for Remote Sensing Reasoning Segmentation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -87,7 +87,7 @@
     <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="LAD-COD: Language-Aligned Dense Perception for Camouflaged Object Detection">LAD-COD: Language-Aligned Dense Perception for Camouflaged Object Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="AgriField-40K: Adapting Vision Models to Agriculture With Efficient Continual Pretraining">AgriField-40K: Adapting Vision Models to Agriculture With Efficient Continual Pretraining</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Semantic Grounding to Decision Optimization: A Unified Framework for Long-Horizon UAV Vision-Language Navigation">From Semantic Grounding to Decision Optimization: A Unified Framework for Long-Horizon UAV Vision-Language Navigation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Kolmogorov-Arnold Networks for Spatially Independent Multispectral Land Classification">Kolmogorov-Arnold Networks for Spatially Independent Multispectral Land Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="HERMES: a multi-agent framework for structured knowledge extraction from ultra-long documents in geoscience">HERMES: a multi-agent framework for structured knowledge extraction from ultra-long documents in geoscience</span></li><li><span class="dpr-home-dashboard-paper-title" title="Can Frontier LLMs Match Natively Multimodal Embeddings? A Comparison on Hard-Negative Text-to-Image Retrieval">Can Frontier LLMs Match Natively Multimodal Embeddings? A Comparison on Hard-Negative Text-to-Image Retrieval</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>7</strong></span></div>
 </section>

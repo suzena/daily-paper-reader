@@ -1,0 +1,417 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-17T19:38:23.459864+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 7,
+    "quick_skim_target": 11,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2608.14207v1",
+      "source": "arxiv",
+      "title": "MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception",
+      "abstract": "Cooperative perception among multiple unmanned surface vehicles (USVs) combines complementary observations to extend maritime target sensing beyond the view range and field of a single platform. Developing such systems at scale calls for a unified workflow for configurable multi-USV scenarios, multimodal acquisition, and shared annotations. We present MMUSV-Sim, a perception-oriented maritime simulation and data-generation platform built on Unreal Engine 5 and Project AirSim. It provides island, open-sea, and port environments; configurable weather, time of day, and wave conditions; a diverse vessel asset library; and spline-based multi-vessel motion. MMUSV-Sim acquires RGB, depth, semantic, LiDAR, and radar observations across multiple USVs and captures a common world state for per-agent annotation export. Experiments verify that the configured wave settings produce the intended changes in vessel heave, roll, and pitch, and evaluate the geometric consistency between projected annotations and semantic renderings. In LiDAR-based cooperative BEV vessel detection experiments on the generated multi-USV dataset, Early Fusion achieves an AP@0.5 of 72.74, compared with 45.54 using a single USV.",
+      "authors": [
+        "Ziao Li",
+        "Jianxiong Ye",
+        "Biao Tang",
+        "Leping Zhang",
+        "Kun Zuo",
+        "Siyu Huang",
+        "Chenqiang Gao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-08-14T11:32:30+00:00",
+      "link": "https://arxiv.org/pdf/2608.14207v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-USV cooperative perception simulation platform for marine intelligent agents",
+      "llm_evidence_cn": "面向多无人水面艇协同感知的仿真与数据生成平台，服务海洋智能体应用",
+      "llm_evidence": "面向多无人水面艇协同感知的仿真与数据生成平台，服务海洋智能体应用",
+      "canonical_evidence": "面向多无人水面艇协同感知的仿真与数据生成平台，服务海洋智能体应用",
+      "llm_tldr_en": "To support development of cooperative perception for multiple unmanned surface vehicles, this paper proposes MMUSV-Sim, a maritime simulation and data-generation platform built on Unreal Engine 5 and Project AirSim, providing configurable island/open-sea/port scenes, multi-modal sensor data, and shared annotations for marine intelligent agents.",
+      "llm_tldr_cn": "针对多无人水面艇协同感知系统开发缺乏统一仿真与数据生成工作流的问题，提出基于虚幻引擎5的MMUSV-Sim平台，构建海岛、开阔海与港口等多场景，支持可配置天气与波浪，以及RGB、深度、语义、激光雷达和雷达等多模态数据生成，为海洋智能体感知算法提供可扩展的评测与训练环境。",
+      "llm_tldr": "针对多无人水面艇协同感知系统开发缺乏统一仿真与数据生成工作流的问题，提出基于虚幻引擎5的MMUSV-Sim平台，构建海岛、开阔海与港口等多场景，支持可配置天气与波浪，以及RGB、深度、语义、激光雷达和雷达等多模态数据生成，为海洋智能体感知算法提供可扩展的评测与训练环境。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.14366v1",
+      "source": "arxiv",
+      "title": "Weakly Supervised Polar Low Segmentation in Sentinel-1 SAR Imagery",
+      "abstract": "Polar lows are intense maritime cyclones that form rapidly at high latitudes. Deep learning can detect them in Synthetic Aperture Radar (SAR) imagery, but pixel-level segmentation remains an open challenge. No pixel-level masks are available for training, and a polar low's extent is inherently subjective, with diffuse boundaries that even experts delineate inconsistently. We propose Constrained Region Erasing with Soft Targets (CREST), a Weakly Supervised Semantic Segmentation (WSSS) framework that generates masks solely from image-level labels. Our approach builds on Adversarial Erasing (AER), which iteratively mines discriminative regions, erases them, and retrains a classifier to reveal complementary cues that become pseudo-labels for segmentation. However, standard AER also collects irrelevant background features, degrading pseudo-label quality. CREST addresses this with (i) a Constrained Ordinal Region Expansion (CORE) module that encodes the spatial-connectedness prior of polar lows, constraining region expansion from a high-confidence seed, and (ii) a Dynamic Bootstrapping (DB) loss that treats the mining order as a proxy for label reliability, attenuating supervision from noisier, later-mined regions. On Sentinel-1 SAR data, CREST follows the cyclone structure more closely than standard AER, and returns a multi-class rather than binary mask whose classes indicate the reliability assigned to each region. We further evaluate on BUS-UCLM breast ultrasound and PASCAL VOC person data, whose targets satisfy the same connectedness prior but come with the dense masks the SAR data lacks. On both datasets, CREST performs better than the equivalent AER pipeline under identical settings.",
+      "authors": [
+        "Andrea Federici",
+        "Jakob Grahn",
+        "Giacomo Boracchi",
+        "Filippo Maria Bianchi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-14T15:05:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.14366v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Weakly supervised deep learning segmentation for maritime polar lows in Sentinel-1 SAR imagery",
+      "llm_evidence_cn": "基于Sentinel-1 SAR影像的弱监督深度学习分割，用于海洋极地低压检测",
+      "llm_evidence": "基于Sentinel-1 SAR影像的弱监督深度学习分割，用于海洋极地低压检测",
+      "canonical_evidence": "基于Sentinel-1 SAR影像的弱监督深度学习分割，用于海洋极地低压检测",
+      "llm_tldr_en": "CREST applies constrained region erasing with soft targets to segment polar lows in Sentinel-1 SAR using only image-level labels, advancing ocean remote sensing data mining.",
+      "llm_tldr_cn": "该文提出CREST弱监督语义分割框架，解决极地低压在Sentinel-1 SAR影像中无像素级标注而难以分割的问题。方法在对抗擦除基础上引入约束区域擦除和软目标，仅用图像级标签生成伪标签，以捕捉边界弥散的低压区域。针对弱监督分割的完整性缺陷，通过擦除判别区域来挖掘互补线索。实验结果显示了较好的分割性能，为海洋气象遥感提供了一种新颖的数据挖掘方法。",
+      "llm_tldr": "该文提出CREST弱监督语义分割框架，解决极地低压在Sentinel-1 SAR影像中无像素级标注而难以分割的问题。方法在对抗擦除基础上引入约束区域擦除和软目标，仅用图像级标签生成伪标签，以捕捉边界弥散的低压区域。针对弱监督分割的完整性缺陷，通过擦除判别区域来挖掘互补线索。实验结果显示了较好的分割性能，为海洋气象遥感提供了一种新颖的数据挖掘方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.13980v1",
+      "source": "arxiv",
+      "title": "FIRM: Fine-Grained Intra-Token Representation of Masks for Remote Sensing Reasoning Segmentation",
+      "abstract": "Reasoning segmentation requires multimodal large language models (MLLMs) to translate implicit instructions into precise pixel-level masks. MLLMs encode an image as visual tokens, each of which merges a group of image patches. In remote sensing images, small targets, thin structures, and adjacent instances can occupy different parts of the same visual token. Assigning a single binary mask label to such a token loses its internal spatial structure, causing nearby targets to merge and object boundaries to become coarse. To bridge this representational gap, we introduce FIRM, a Fine-grained Intra-token Representation of Masks. For each visual token, FIRM predicts a mask code that specifies an $r\\times r$ binary sub-cell pattern rather than a single foreground/background label. Given a target identified by the MLLM, the complete grid of mask codes is predicted in one mask pass. Fixed lookup converts the predicted codes into a discrete sub-cell mask, while marginalizing the code distribution yields a soft structural field. To further recover fine-grained boundaries within each sub-cell, we introduce a lightweight continuous renderer that refines this field using pre-merge visual features and image details. Across five reasoning and referring segmentation benchmarks on satellite and UAV images, FIRM achieves leading results, including $70.5/80.5$ gIoU/cIoU on LaSeRS and a $3.0$-point average gain on EarthReason. These results demonstrate the value of explicitly representing intra-token mask patterns for fine-grained MLLM segmentation.",
+      "authors": [
+        "Weidong Tang",
+        "Kaiyu Li",
+        "Yikai Wang",
+        "Yanan Wu",
+        "Haotian Gan",
+        "Shihong Wang",
+        "Xiangyong Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-14T05:40:36+00:00",
+      "link": "https://arxiv.org/pdf/2608.13980v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal large language model produces fine-grained intra-token masks for remote sensing reasoning segmentation",
+      "llm_evidence_cn": "多模态大语言模型为遥感推理分割生成细粒度token内掩膜",
+      "llm_evidence": "多模态大语言模型为遥感推理分割生成细粒度token内掩膜",
+      "canonical_evidence": "多模态大语言模型为遥感推理分割生成细粒度token内掩膜",
+      "llm_tldr_en": "FIRM addresses MLLM remote sensing segmentation by predicting an r by r binary sub-cell pattern inside each visual token, preserving fine-grained mask structure that standard token-level binary labels lose.",
+      "llm_tldr_cn": "多模态大语言模型在遥感推理分割中按视觉token分配二进制掩膜，会丢失小目标和细结构。论文提出FIRM，对每个视觉token预测r×r二进制子格掩码，保留token内部的精细空间结构，避免邻近目标粘连和边界粗糙。这使得MLLM能够依据隐含指令生成更精确的遥感像元级掩膜，为珊瑚礁等小目标遥感制图提供支持。",
+      "llm_tldr": "多模态大语言模型在遥感推理分割中按视觉token分配二进制掩膜，会丢失小目标和细结构。论文提出FIRM，对每个视觉token预测r×r二进制子格掩码，保留token内部的精细空间结构，避免邻近目标粘连和边界粗糙。这使得MLLM能够依据隐含指令生成更精确的遥感像元级掩膜，为珊瑚礁等小目标遥感制图提供支持。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2608.13769v1",
+      "source": "arxiv",
+      "title": "Kolmogorov-Arnold Networks for Spatially Independent Multispectral Land Classification",
+      "abstract": "Land classification from satellite imagery is important for land management, environmental monitoring, and urban planning. Machine learning methods such as random forests and multilayer perceptrons have shown strong performance on multispectral data, while the Kolmogorov-Arnold network has emerged as an alternative architecture with compact model structures. This study evaluates the Kolmogorov-Arnold network for land classification using Landsat 8 imagery and compares it with random forest and multilayer perceptron models. The models were trained and tested on data from Edmonton, Alberta and evaluated on an independent dataset from Calgary, Alberta across five land classes: agriculture, urban, water, forest, and bare ground. For the Calgary dataset, the Kolmogorov-Arnold network matched the accuracy of the random forest and outperformed the multilayer perceptron, while requiring substantially fewer trainable parameters and providing greater interpretability.",
+      "authors": [
+        "Katherine L. Bauer",
+        "Teemu Harkonen",
+        "Simo Sarkka",
+        "Arturo Sanchez-Azofeifa"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-13T20:53:49+00:00",
+      "link": "https://arxiv.org/pdf/2608.13769v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluates Kolmogorov-Arnold networks against random forest and MLP for multispectral satellite image land classification",
+      "llm_evidence_cn": "使用KAN与随机森林、MLP对比进行多光谱卫星图像土地分类",
+      "llm_evidence": "使用KAN与随机森林、MLP对比进行多光谱卫星图像土地分类",
+      "canonical_evidence": "使用KAN与随机森林、MLP对比进行多光谱卫星图像土地分类",
+      "llm_tldr_en": "This study benchmarks Kolmogorov-Arnold networks for Landsat 8 multispectral land classification against random forests and MLPs, training on Edmonton and testing on an independent Calgary dataset across five land classes.",
+      "llm_tldr_cn": "卫星多光谱影像的土地分类对资源管理和环境监测很重要。论文在Landsat 8影像上评估Kolmogorov-Arnold网络，并与随机森林和多层感知机比较，在埃德蒙顿训练、卡尔加里独立测试五类地物。结果显示KAN在跨区域泛化上具有竞争力和紧凑结构，为多光谱分类模型选型提供了参考，可迁移到珊瑚礁底质等遥感分类任务。",
+      "llm_tldr": "卫星多光谱影像的土地分类对资源管理和环境监测很重要。论文在Landsat 8影像上评估Kolmogorov-Arnold网络，并与随机森林和多层感知机比较，在埃德蒙顿训练、卡尔加里独立测试五类地物。结果显示KAN在跨区域泛化上具有竞争力和紧凑结构，为多光谱分类模型选型提供了参考，可迁移到珊瑚礁底质等遥感分类任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.11343v1",
+      "source": "arxiv",
+      "title": "Can Frontier LLMs Match Natively Multimodal Embeddings? A Comparison on Hard-Negative Text-to-Image Retrieval",
+      "abstract": "Multimodal retrieval and classification across different types of media, spanning text, images,video and audio, has traditionally relied on dual-encoder models that align visual and textual representations through contrastive learning. The March 2026 release of Gemini Embedding 2, Google's first natively multimodal embedding model to map text, images, video, audio, and documents into a single shared space, raises competition among multimodal retrieval systems. Simultaneously, frontier Large language models (LLMs) have also demonstrated strong visual understanding, raising the question of whether they can serve as effective zero-shot rankers. Our study provides the first direct comparison of native multimodal embeddings against LLM-based visual ranking on Flickr30k. We observe that GPT-4.1 and Claude Sonnet 4.6 perform on par with Gemini Embedding 2. Additionally, once embeddings are precomputed, multimodal embeddings are better suited for low-latency applications.",
+      "authors": [
+        "Archan Dutta",
+        "Vyanktesh Kanungo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.IR",
+        "cs.LG"
+      ],
+      "published": "2026-08-11T18:49:08+00:00",
+      "link": "https://arxiv.org/pdf/2608.11343v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "comparison of LLM rankers vs multimodal embeddings for text-to-image retrieval; relevant to ocean multimodal retrieval",
+      "llm_evidence_cn": "在硬负样本文本-图像检索中对比LLM与多模态嵌入，对海洋多模态检索有参考价值",
+      "llm_evidence": "在硬负样本文本-图像检索中对比LLM与多模态嵌入，对海洋多模态检索有参考价值",
+      "canonical_evidence": "在硬负样本文本-图像检索中对比LLM与多模态嵌入，对海洋多模态检索有参考价值",
+      "llm_tldr_en": "This study compares frontier LLMs and native multimodal embedding models on hard-negative text-to-image retrieval, showing trade-offs between zero-shot ranking and embedded retrieval.",
+      "llm_tldr_cn": "多模态检索通常依赖双编码器对齐视觉与文本表示，而Gemini Embedding 2等原生多模态模型以及前沿LLM的出现带来了新的竞争。该文首次在硬负样本文本-图像检索上直接对比前沿LLM与原生多模态嵌入，考察零样本排序与嵌入检索的能力。结果显示LLM能作为零样本排序器但与传统嵌入模型各有优劣。该比较为海洋遥感图像与文本多模态融合检索的模型选型提供了实证依据。",
+      "llm_tldr": "多模态检索通常依赖双编码器对齐视觉与文本表示，而Gemini Embedding 2等原生多模态模型以及前沿LLM的出现带来了新的竞争。该文首次在硬负样本文本-图像检索上直接对比前沿LLM与原生多模态嵌入，考察零样本排序与嵌入检索的能力。结果显示LLM能作为零样本排序器但与传统嵌入模型各有优劣。该比较为海洋遥感图像与文本多模态融合检索的模型选型提供了实证依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.14055v1",
+      "source": "arxiv",
+      "title": "HERMES: a multi-agent framework for structured knowledge extraction from ultra-long documents in geoscience",
+      "abstract": "Authoritative scientific knowledge in geoscience remains largely trapped in legacy monographs and historical literature, where unstructured text and complex layouts hinder computational access. We introduce HERMES, a scalable multi-agent framework that extracts structured data from ultra-long scientific documents. Using a coordinating large language model, HERMES integrates domain constraints, validation rules and evidence tracing within a unified document-level extraction process that incorporates parsed text, tables, figures and captions. Applied to the 55-volume Treatise on Invertebrate Paleontology, the system produced a structured database of 32,277 fossil taxonomic entities and 451,878 attributes, released online at https://treatise.geolex.org. Extraction performance remained stable across fossil groups (average F1 scores of approximately 0.90 for entities and 0.91 for attributes), improving per-volume efficiency approximately sixfold relative to the tested fully manual baseline. Evaluation in palaeomagnetism and geochemistry, conducted without additional model training, demonstrated transfer across distinct geoscience domains. This work provides a practical pathway to transform historical scientific literature into FAIR-oriented structured data, offering a sustainable infrastructure for data-intensive disciplines and large-scale knowledge integration.",
+      "authors": [
+        "Ziqi Song",
+        "Zongyuan Xiang",
+        "James G. Ogg",
+        "Bruce S. Lieberman",
+        "Gabi Ogg",
+        "Natalia López Carranza",
+        "Wen Du",
+        "Yufei Ye",
+        "Shuan Li",
+        "Zhong Peng",
+        "Shaoqi Yu",
+        "Juye Wei",
+        "Ying Zhou",
+        "Jieping Ye",
+        "Jiang Yang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-08-14T07:59:58+00:00",
+      "link": "https://arxiv.org/pdf/2608.14055v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multi-agent LLM framework for structured knowledge extraction from geoscience documents, central to LLM and agent applications in Earth science.",
+      "llm_evidence_cn": "面向地球科学文档结构化知识抽取的多智能体大模型框架，是地球科学中大模型与智能体应用的核心。",
+      "llm_evidence": "面向地球科学文档结构化知识抽取的多智能体大模型框架，是地球科学中大模型与智能体应用的核心。",
+      "canonical_evidence": "面向地球科学文档结构化知识抽取的多智能体大模型框架，是地球科学中大模型与智能体应用的核心。",
+      "llm_tldr_en": "Introduces HERMES, a scalable multi-agent framework using a coordinating LLM to extract structured knowledge from ultra-long geoscience documents, integrating domain constraints and evidence tracing; applied to paleontology treatises, it produced a large structured database, demonstrating the power of LLM agents for scientific knowledge extraction.",
+      "llm_tldr_cn": "针对地球科学权威知识大多封存在古旧专著和历史文献中、难以计算化访问的问题，本文提出可扩展的多智能体框架HERMES，由协调大模型统一文档级抽取流程，融合领域约束、验证规则与证据溯源，同时解析文本、表格、图形和标题。将该框架应用于55卷无脊椎古生物学论著后，生成了包含32277个化石分类实体和451878个属性的结构化数据库。该工作展示了多智能体大模型在地球科学知识工程中的巨大潜力，可为珊瑚礁文献知识库构建提供借鉴。",
+      "llm_tldr": "针对地球科学权威知识大多封存在古旧专著和历史文献中、难以计算化访问的问题，本文提出可扩展的多智能体框架HERMES，由协调大模型统一文档级抽取流程，融合领域约束、验证规则与证据溯源，同时解析文本、表格、图形和标题。将该框架应用于55卷无脊椎古生物学论著后，生成了包含32277个化石分类实体和451878个属性的结构化数据库。该工作展示了多智能体大模型在地球科学知识工程中的巨大潜力，可为珊瑚礁文献知识库构建提供借鉴。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.11425v1",
+      "source": "arxiv",
+      "title": "VLMs Win a Systematic Evaluation of Underwater Image Reconstruction",
+      "abstract": "Underwater image restoration consists of recovering an image which looks like there is no water present. To date, evaluation has not been systematic. This paper describes a systematic evaluation pipeline for underwater reconstruction, which can be used to assess a method for accuracy; consistency of reconstruction over camera moves; and the effect of water parameters. We use this pipeline to evaluate a range of current procedures, from models constructed using explicit but approximate physical models of scattering to Vision-Language Models (VLMs which are not currently trained with explicit physical models). Overall, VLMs wholly and significantly outperform physically based models in our evaluation, likely because of the importance of a strong image prior. Results on images of real underwater scenes strongly confirm the evaluation.",
+      "authors": [
+        "Sara Aghajanzadeh",
+        "Yingxue Wang",
+        "Ieva Bagdonaviciute",
+        "David Forsyth"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-11T20:46:46+00:00",
+      "link": "https://arxiv.org/pdf/2608.11425v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Vision-language models evaluated for underwater image reconstruction, multimodal ocean image processing.",
+      "llm_evidence_cn": "视觉语言模型用于水下图像重建评估，属多模态海洋图像处理。",
+      "llm_evidence": "视觉语言模型用于水下图像重建评估，属多模态海洋图像处理。",
+      "canonical_evidence": "视觉语言模型用于水下图像重建评估，属多模态海洋图像处理。",
+      "llm_tldr_en": "Provides a systematic evaluation pipeline for underwater image reconstruction, assessing accuracy, consistency, and water parameter effects, and finds that vision-language models significantly outperform physically based models, highlighting the role of strong image priors in ocean image processing.",
+      "llm_tldr_cn": "针对水下图像重建缺乏系统评估方法的问题，本文提出一套可复现的评估流程，从准确性、相机移动下的一致性以及水体参数影响等多个维度衡量重建算法，并系统比较了基于显式物理散射模型的传统方法与视觉语言模型。实验显示视觉语言模型全面显著优于物理模型，主要得益于其强大的图像先验。该评估框架与结论对海洋图像分析尤其是水下生态监测具有实用价值。",
+      "llm_tldr": "针对水下图像重建缺乏系统评估方法的问题，本文提出一套可复现的评估流程，从准确性、相机移动下的一致性以及水体参数影响等多个维度衡量重建算法，并系统比较了基于显式物理散射模型的传统方法与视觉语言模型。实验显示视觉语言模型全面显著优于物理模型，主要得益于其强大的图像先验。该评估框架与结论对海洋图像分析尤其是水下生态监测具有实用价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.12743v1",
+      "source": "arxiv",
+      "title": "Spatial Memory Agent: Experience-Grounded Procedure Memory for Spatial Intelligence",
+      "abstract": "Spatial intelligence is becoming a foundation for embodied agents, robotic planning, and multimodal assistants. To improve the spatial reasoning ability of VLM agents, existing work has mainly followed two lines. One line uses post-training methods, such as supervised fine-tuning and reinforcement learning. Another line adopts an agentic paradigm in which the model calls external spatial tools, such as depth estimation and 3D reconstruction tools, to gather intermediate spatial evidence. We study a complementary and underexplored route: Can a frozen VLM agent improve its spatial reasoning through \\textbf{parameter-update-free self-evolution}, without depending on external expert spatial tools at inference time? We present \\textbf{Spatial Memory Agent (SMA)}, an \\textbf{experience-grounded runtime framework} that converts verified spatial experience into reusable transferable lessons. In a verifiable spatial environment, SMA queries the frozen VLM, obtains a predicted answer and reward, and uses \\textbf{verifier-guided reflection} to distill compact transferable lessons from spatial experience. SMA further assigns each lesson a \\textbf{Transfer Reliability Score (TRS)}, which is initialized uniformly and calibrated from later retrieval outcomes as visit evidence of future transfer reliability. During \\textbf{read-only deployment}, SMA retrieves lessons by semantic filter and similarity-TRS combined ranking, allowing the retrieved memory to guide frozen model inference. Across five representative spatial benchmarks and four base VLMs, SMA achieves the highest macro average in every base-model block and the best accuracy among the evaluated methods in most of the 20 evaluations, establishing a practical parameter-update-free path for spatial self-evolution across the evaluated frozen model scales and environments.",
+      "authors": [
+        "Haokai Zhang",
+        "Yuhang Ding",
+        "Yunshu Zhou",
+        "Xinze Du",
+        "Shengtao Zhang",
+        "Zhiyue Zhao",
+        "Yuling Xi",
+        "Hao Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-08-13T02:42:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.12743v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Agent architecture with experience-grounded spatial memory for spatial reasoning, applicable to autonomous ocean monitoring agents.",
+      "llm_evidence_cn": "具备经验空间记忆的智能体架构用于空间推理，可应用于自主海洋监测智能体。",
+      "llm_evidence": "具备经验空间记忆的智能体架构用于空间推理，可应用于自主海洋监测智能体。",
+      "canonical_evidence": "具备经验空间记忆的智能体架构用于空间推理，可应用于自主海洋监测智能体。",
+      "llm_tldr_en": "This paper presents Spatial Memory Agent, which lets a frozen VLM agent improve spatial reasoning through parameter-update-free self-evolution, storing experience-grounded procedure memory without external spatial tools. The approach enhances spatial intelligence for embodied agents and multimodal assistants relevant to navigation and monitoring.",
+      "llm_tldr_cn": "本文提出空间记忆智能体，使冻结的视觉语言模型无需参数更新即可通过经验积累提升空间推理能力，构建过程记忆并在推理时无需外部空间工具。该方法在空间智能基准上有效，可为机器人和自主监测系统的空间决策提供新机制。",
+      "llm_tldr": "本文提出空间记忆智能体，使冻结的视觉语言模型无需参数更新即可通过经验积累提升空间推理能力，构建过程记忆并在推理时无需外部空间工具。该方法在空间智能基准上有效，可为机器人和自主监测系统的空间决策提供新机制。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.14306v1",
+      "source": "arxiv",
+      "title": "Sensor-Driven Mission Synthesis for UAV/UGV Swarms: A TB-CSPN Coordination Architecture with Hardware-Enforced Safety",
+      "abstract": "This paper presents a coordination architecture for heterogeneous UAV/UGV swarms that synthesises mission actions from uncertain, multi-modal sensor evidence while preserving hardware-enforced safety at the actuation boundary. The approach combines radar, RF, acoustic, and visual observations with Topic-Based Communication Space Petri Net (TB-CSPN) orchestration to support incremental mission formation under partial and evolving information. Consultant agents transform sensor outputs into temporally bounded semantic tokens, while supervisor agents provide authorisation and policy-governed release of mission transitions. This separation between interpretation, coordination, and execution yields auditable decision paths, constrains non-determinism within the coordination layer through guards and synchronisation, and enables bounded-time integration of heterogeneous evidence. To improve resilience in contested environments, including cyber compromise, spoofing, jamming, and communication loss, the digital coordination layer is complemented by independent analogue safety envelopes that clamp or veto unsafe actuator commands issued to individual vehicles. A coastal-surveillance case study illustrates how the proposed architecture enables dependable, governed, and physically safe swarm coordination under operational uncertainty.",
+      "authors": [
+        "Uwe M. Borghoff",
+        "Paolo Bottoni",
+        "Remo Pareschi"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "eess.SY"
+      ],
+      "published": "2026-08-14T13:44:10+00:00",
+      "link": "https://arxiv.org/pdf/2608.14306v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-agent coordination architecture for mission synthesis from multi-modal sensor evidence, with safety enforcement, applicable to autonomous ocean monitoring swarms.",
+      "llm_evidence_cn": "面向多模态传感器证据任务合成的多智能体协同架构，具备安全强制机制，可用于自主海洋监测集群。",
+      "llm_evidence": "面向多模态传感器证据任务合成的多智能体协同架构，具备安全强制机制，可用于自主海洋监测集群。",
+      "canonical_evidence": "面向多模态传感器证据任务合成的多智能体协同架构，具备安全强制机制，可用于自主海洋监测集群。",
+      "llm_tldr_en": "Proposes a sensor-driven coordination architecture for heterogeneous UAV/UGV swarms using Topic-Based Communication Space Petri Nets, where consultant agents convert sensor outputs into semantic tokens and supervisor agents govern mission transitions with hardware-enforced safety; the architecture is relevant to multi-agent autonomous monitoring in marine environments.",
+      "llm_tldr_cn": "针对异构无人机与无人车集群需在不完整和动态信息下合成任务的问题，本文提出基于主题通信空间Petri网的协同架构，将雷达、射频、声学与视觉等多模态传感器输出转换为语义令牌，并由监督智能体在硬件强制安全边界内授权任务转换。该架构将解释、协调与执行分离，支持增量式任务形成。该多智能体协同模式可推广至海洋环境中的自主监测任务。",
+      "llm_tldr": "针对异构无人机与无人车集群需在不完整和动态信息下合成任务的问题，本文提出基于主题通信空间Petri网的协同架构，将雷达、射频、声学与视觉等多模态传感器输出转换为语义令牌，并由监督智能体在硬件强制安全边界内授权任务转换。该架构将解释、协调与执行分离，支持增量式任务形成。该多智能体协同模式可推广至海洋环境中的自主监测任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.14372v1",
+      "source": "arxiv",
+      "title": "Catching the Imposter: Self-Supervised Learning of Physical Coherence with Cross-Entity Feature Permutations",
+      "abstract": "Scientific data often describe entities whose features are jointly governed by the laws of physics, yet existing self-supervised learning (SSL) objectives largely ignore this physical coherence. We introduce imposter, a discriminative pretext task that replaces subsets of an entity's features with real observations donated by another entity and trains the encoder to identify the swapped features. Because every donated value is individually plausible, the task can only be solved by learning cross-feature physical dependencies. We evaluate the proposed objectives on global ERA5-Land reanalysis data using 21 environmental variables and assess the learned representations on seven downstream tasks spanning climate classification, carbon flux estimation, and streamflow prediction. Our study includes, to our knowledge, the first systematic comparison of self-supervised objectives for land-surface modeling under a shared architecture and pre-training budget. We find that the most effective pretext task depends on the downstream task family rather than any single objective's superiority, and that imposter provides complementary information when combined with existing SSL objectives. These results suggest that physical coherence is a valuable new source of self-supervision for scientific foundation models.",
+      "authors": [
+        "Aleksei Rozanov",
+        "Arvind Renganathan",
+        "Vipin Kumar"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-14T15:15:19+00:00",
+      "link": "https://arxiv.org/pdf/2608.14372v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "self-supervised learning of physical coherence on gridded environmental data with cross-entity feature permutations",
+      "llm_evidence_cn": "基于跨实体特征置换的环境网格数据物理一致性自监督学习",
+      "llm_evidence": "基于跨实体特征置换的环境网格数据物理一致性自监督学习",
+      "canonical_evidence": "基于跨实体特征置换的环境网格数据物理一致性自监督学习",
+      "llm_tldr_en": "The imposter pretext task replaces features with plausible observations from another entity and trains an encoder to identify swaps, forcing physical-coherence learning; it is evaluated on ERA5-Land with 21 variables and seven climate downstream tasks.",
+      "llm_tldr_cn": "科学数据中实体特征常由物理规律共同决定，现有自监督目标却忽略这种物理一致性。论文提出imposter鉴别式前置任务：用另一实体的真实特征替换当前实体部分特征，让编码器识别被替换的维度，从而学习跨特征物理依赖。在ERA5-Land的21个环境变量和七个下游气候任务上验证，该方法可学到更具物理一致性的表征，适用于地球系统数据挖掘。",
+      "llm_tldr": "科学数据中实体特征常由物理规律共同决定，现有自监督目标却忽略这种物理一致性。论文提出imposter鉴别式前置任务：用另一实体的真实特征替换当前实体部分特征，让编码器识别被替换的维度，从而学习跨特征物理依赖。在ERA5-Land的21个环境变量和七个下游气候任务上验证，该方法可学到更具物理一致性的表征，适用于地球系统数据挖掘。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "date": "20260817",
+  "date_label": "",
+  "generated_at": "2026-08-17 19:47:16 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.14207v1",
+      "route": "202608/17/2608.14207v1-mmusv-sim-a-perception-oriented-simulation-and-data-generation-platform-for-multi-usv-cooperative-perception",
+      "title": "MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向多无人水面艇协同感知的仿真与数据生成平台，服务海洋智能体应用",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.14366v1",
+      "route": "202608/17/2608.14366v1-weakly-supervised-polar-low-segmentation-in-sentinel-1-sar-imagery",
+      "title": "Weakly Supervised Polar Low Segmentation in Sentinel-1 SAR Imagery",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "基于Sentinel-1 SAR影像的弱监督深度学习分割，用于海洋极地低压检测",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.13980v1",
+      "route": "202608/17/2608.13980v1-firm-fine-grained-intra-token-representation-of-masks-for-remote-sensing-reasoning-segmentation",
+      "title": "FIRM: Fine-Grained Intra-Token Representation of Masks for Remote Sensing Reasoning Segmentation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多模态大语言模型为遥感推理分割生成细粒度token内掩膜",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.13769v1",
+      "route": "202608/17/2608.13769v1-kolmogorov-arnold-networks-for-spatially-independent-multispectral-land-classification",
+      "title": "Kolmogorov-Arnold Networks for Spatially Independent Multispectral Land Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "使用KAN与随机森林、MLP对比进行多光谱卫星图像土地分类",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.14055v1",
+      "route": "202608/17/2608.14055v1-hermes-a-multi-agent-framework-for-structured-knowledge-extraction-from-ultra-long-documents-in-geoscience",
+      "title": "HERMES: a multi-agent framework for structured knowledge extraction from ultra-long documents in geoscience",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向地球科学文档结构化知识抽取的多智能体大模型框架，是地球科学中大模型与智能体应用的核心。",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.11343v1",
+      "route": "202608/17/2608.11343v1-can-frontier-llms-match-natively-multimodal-embeddings-a-comparison-on-hard-negative-text-to-image-retrieval",
+      "title": "Can Frontier LLMs Match Natively Multimodal Embeddings? A Comparison on Hard-Negative Text-to-Image Retrieval",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在硬负样本文本-图像检索中对比LLM与多模态嵌入，对海洋多模态检索有参考价值",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.11425v1",
+      "route": "202608/17/2608.11425v1-vlms-win-a-systematic-evaluation-of-underwater-image-reconstruction",
+      "title": "VLMs Win a Systematic Evaluation of Underwater Image Reconstruction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型用于水下图像重建评估，属多模态海洋图像处理。",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.12743v1",
+      "route": "202608/17/2608.12743v1-spatial-memory-agent-experience-grounded-procedure-memory-for-spatial-intelligence",
+      "title": "Spatial Memory Agent: Experience-Grounded Procedure Memory for Spatial Intelligence",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "具备经验空间记忆的智能体架构用于空间推理，可应用于自主海洋监测智能体。",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.14306v1",
+      "route": "202608/17/2608.14306v1-sensor-driven-mission-synthesis-for-uavugv-swarms-a-tb-cspn-coordination-architecture-with-hardware-enforced-safety",
+      "title": "Sensor-Driven Mission Synthesis for UAV/UGV Swarms: A TB-CSPN Coordination Architecture with Hardware-Enforced Safety",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向多模态传感器证据任务合成的多智能体协同架构，具备安全强制机制，可用于自主海洋监测集群。",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    },
+    {
+      "paper_id": "2608.14372v1",
+      "route": "202608/17/2608.14372v1-catching-the-imposter-self-supervised-learning-of-physical-coherence-with-cross-entity-feature-permutations",
+      "title": "Catching the Imposter: Self-Supervised Learning of Physical Coherence with Cross-Entity Feature Permutations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于跨实体特征置换的环境网格数据物理一致性自监督学习",
+      "first_seen_at": "2026-08-17 19:47:16 UTC",
+      "updated_at": "2026-08-17 19:47:16 UTC"
+    }
+  ]
+}

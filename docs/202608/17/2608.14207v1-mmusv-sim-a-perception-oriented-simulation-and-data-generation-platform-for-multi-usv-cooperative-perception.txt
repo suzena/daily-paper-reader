@@ -1,0 +1,212 @@
+Title: MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception
+
+URL Source: https://arxiv.org/pdf/2608.14207v1
+
+Published Time: Mon, 17 Aug 2026 00:43:51 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# MMUSV-Sim: A Perception-Oriented Simulation and Data-Generation Platform for Multi-USV Cooperative Perception 
+
+Ziao Li 1, Jianxiong Ye 1, Biao Tang 1, Leping Zhang 2,Kun Zuo 1, Siyu Huang 1, and Chenqiang Gao 1,∗
+
+Abstract — Cooperative perception among multiple un-manned surface vehicles (USVs) combines complementary ob-servations to extend maritime target sensing beyond the view range and field of a single platform. Developing such systems at scale calls for a unified workflow for configurable multi-USV scenarios, multimodal acquisition, and shared annotations. We present MMUSV-Sim, a perception-oriented maritime simula-tion and data-generation platform built on Unreal Engine 5 and Project AirSim. It provides island, open-sea, and port environ-ments; configurable weather, time of day, and wave conditions; a diverse vessel asset library; and spline-based multi-vessel motion. MMUSV-Sim acquires RGB, depth, semantic, LiDAR, and radar observations across multiple USVs and captures a common world state for per-agent annotation export. Exper-iments verify that the configured wave settings produce the intended changes in vessel heave, roll, and pitch, and evaluate the geometric consistency between projected annotations and semantic renderings. In LiDAR-based cooperative BEV vessel detection experiments on the generated multi-USV dataset, Early Fusion achieves an AP@0.5 of 72.74, compared with 45.54 using a single USV. 
+
+I. I NTRODUCTION 
+
+Unmanned surface vehicles (USVs) are increasingly de-ployed in maritime operations such as port inspection, wa-terway monitoring, and autonomous navigation. Reliable detection of surrounding vessels [1], [2] is essential for safe operation in complex maritime environments. However, onboard perception from a single USV is constrained by sensing range, limited field of view, and occlusions caused by islands, shoreline structures, port infrastructure, and nearby vessels. Cooperative perception can mitigate these limita-tions by integrating complementary observations acquired by multiple USVs from different viewpoints into a shared reference frame, as illustrated in Fig. 1. Progress toward such systems is hindered by the limited availability of maritime datasets that provide multi-USV observations and consistent annotations. A direct way to study maritime cooperative perception is to collect real-world multi-USV data. However, field collection is costly and difficult because it requires multiple instru-mented USVs, calibrated sensor systems, trained operators, and carefully planned sea trials. Weather, safety constraints,    
+
+> 1School of Intelligent Systems Engineering, Sun Yat-sen University, Shenzhen 518107, Guangdong, China. ∗Corresponding author: Chenqiang Gao (e-mail: gaochq6@mail.sysu.edu.cn).
+> 2School of Intelligent Imagery Engineering, Beijing Film Academy, Beijing, China. This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible. USV 1 USV 2 USV 3
+> USV 1 View
+> USV 2 View
+> USV 3 View Scene Overview
+> Fig. 1. Motivating cooperative perception scenario in MMUSV-Sim. The target vessel is occluded from USV 1 by the island, while USV 2 and USV 3 observe it from complementary viewpoints. Their observations can be expressed in a shared BEV frame for cooperative perception.
+
+maritime traffic, and limited test time further restrict the cov-erage of scenes, viewpoints, target ranges, vessel sizes, and occlusion conditions. More importantly, observations from different USVs have to be synchronized and transformed into a common reference frame, while target states have to be annotated consistently across agents and time. Control-lable scenarios are also needed to systematically vary USV layouts, target ranges, and occlusion patterns. Most public real-world maritime perception datasets are still designed for single-platform perception. Vision-oriented datasets such as MaSTr1325 [3] and KOLOMVERSE [4] mainly provide image or video data with 2D annotations, while multimodal datasets such as SeePerSea [5] and USVTrack [6] intro-duce additional sensing modalities but remain ego-centric. Consequently, these datasets provide limited support for synchronized multi-USV cooperative BEV perception. Simulation has become a common way to complement costly real-world data collection. In road and aerial domains, resources such as CARLA [7], OpenCDA [8], OPV2V [9], V2X-Sim [10], U2USim [11], and Griffin [12] have demon-strated the value of controllable multi-agent simulation and standardized evaluation for cooperative perception. However, these resources are developed around road or aerial settings and do not directly represent maritime characteristics such as open-water layouts, island and port occlusions, large vari-ations in vessel scale, and sensor attitude changes under dif-ferent wave settings. Existing maritime simulators, including the Gazebo [13]-based UUV Simulator [14], Stonefish [15], MARUS [16], and ASVSim [17], provide valuable support for marine robotics simulation, vessel dynamics, navigation, arXiv:2608.14207v1 [cs.RO] 14 Aug 2026 Parameterized Environment (Weather, Time, Light, Sea State) Project AirSim Plugin UE5-Based Maritime Simulation Engine Vessel Fleet (Trajectories, Kinematics) Mounted on Instrumented USVs    
+
+> Maritime Environment (Islands, Open Sea, Ports) Instrumented USV Sensors: RGB, Segmentation, Depth Cameras BEV Cameras LiDAR Maritime Radar Ground Truth Generator Frame Acquisition Control USV Kinematics Control Offline Post-processing: Coordinate Transform, Per-Agent 2D/3D/BEV Annotations, PPI Generation, Standardized Export Synchronized Data Fetch (Sensors & GT) RPC Control Flow Dataset Recorder (Metadata Storage) Synchronized Control and Data Acquisition Interface Scenario Configuration and Orchestration Parsed Config Scenario Config Manual Configuration (BEV Map) Rule-based Config Generator Batch Generation Settings Fig. 2. Overall architecture of MMUSV-Sim. Manual and batch-generated scenario configurations instantiate the UE5 and Project AirSim environment. The control and acquisition interface coordinates vessel motion, multimodal recording while scene evolution is paused, world-state capture, and offline generation of per-agent annotations and structured exports.
+
+control, and sensor simulation, but are not primarily designed as integrated pipelines for multi-USV cooperative perception data generation and evaluation. S2S-Sim [18] provides a Unity3D-based dataset and benchmark for LiDAR-based cooperative ship detection. Its released benchmark focuses on cooperative LiDAR acquisition and 3D detection and does not provide the RGB, depth, semantic, or radar obser-vations considered in MMUSV-Sim. MMUSV-Sim focuses on integrating configurable multi-USV traffic, multimodal acquisition from a shared paused scene state, annotations derived from shared world states, and structured export for cooperative-perception experiments. We present MMUSV-Sim, a perception-oriented maritime simulation and data-generation platform built on Unreal Engine 5 (UE5) and Project AirSim [19]. MMUSV-Sim supports island, open-sea, and port environments, config-urable multi-USV traffic scenarios, state-consistent multi-modal acquisition, and shared world-state capture with per-agent 2D, 3D, and BEV annotation generation. The platform combines configuration-driven spline vessel motion with controllable synthetic heave, roll, and pitch perturbations to vary sensor viewpoints and attitudes. It further provides structured data export, including OPV2V-compatible records, for downstream cooperative-perception studies. The main contributions are summarized as follows:  
+
+> •
+
+Perception-Oriented Maritime Simulation Platform: 
+
+We develop a maritime simulation platform that in-tegrates island, open-sea, and port environments, ves-sel assets spanning a wide range of scales, config-urable multimodal sensor suites, manual construction and constraint-checked batch generation of multi-USV scenarios, and perception-oriented vessel motion.  
+
+> •
+
+Multi-USV Data-Generation Pipeline: We implement an acquisition and annotation pipeline that records sen-sor observations while scene evolution is paused, groups them with USV poses and target-vessel states under a common acquisition index, and generates per-agent 2D, 3D, and BEV annotations from shared world-frame states.  
+
+> •
+
+Platform and Cooperative-Perception Evaluation: 
+
+We quantify synthetic heave and attitude variations across configured wave settings, evaluate annotation-rendering agreement, benchmark LiDAR-based cooper-ative BEV vessel detection, and measure its sensitivity to fixed delay and cooperative localization noise. II. MMUSV-S IM SYSTEM DESIGN 
+
+As shown in Fig. 2, MMUSV-Sim integrates configurable maritime scenario generation, state-consistent multimodal acquisition, world-state annotation generation and per-agent projection, and structured data export. It consists of three core components: a UE5-based maritime simulation engine, a scenario configuration and orchestration module, and a control and data acquisition interface. The scenario module specifies the environment, vessels, trajectories, sensors, and acquisition settings, while the simulation engine executes the configured scenario. The acquisition interface records multimodal observations and shared world states, after which offline post-processing generates per-agent annotations and structured exports. 
+
+A. UE5-Based Maritime Simulation Engine 
+
+MMUSV-Sim adopts UE5 as the simulation backbone for maritime scene rendering, multi-vessel instantiation, sen-sor mounting, and perception-oriented data generation. We construct three representative maritime environments: island, open sea, and port, which provide different spatial layouts and shoreline structures for maritime perception studies. The engine provides parameterized control over time of day, weather, illumination, and wave settings within a common simulation framework. To represent the substantial variations in maritime target geometry and scale, the platform integrates more than 30 vessel assets, with lengths ranging from approximately 3 m for speedboats to approximately 300 m for cargo vessels. Together with the scenario configuration module, this asset library supports diverse multi-vessel lay-outs, target ranges, and occlusion conditions for multi-USV cooperative perception, as shown in Fig. 3. Island Port Open sea Vessel 7:00 12:00 19:00 2:00 Cloud Fog Rain Snow Fig. 3. Visual diversity and environmental controllability of MMUSV-Sim. Top row: representative island, port, and open sea topologies, together with the vessel asset library. Middle row: time-of-day variations under a fixed scene configuration. Bottom row: weather variations under a fixed scene configuration. 
+
+Through a customized integration of Project AirSim within UE5, MMUSV-Sim provides instrumented USVs with aconfigurable multimodal sensor suite, including surround-view RGB cameras, depth cameras, semantic segmentation cameras, top-view cameras for BEV rendering, a spinning LiDAR, and a ray-cast maritime radar. Scenario configura-tions specify sensor resolution, field of view, mounting pose, update rate, LiDAR channels, and sensing range. The ray-cast radar models configurable geometric visibility and range through sparse range–azimuth–elevation returns for offline PPI generation. Each sequence uses fixed sensor-to-USV extrinsics for annotation projection and spatial cross-modal alignment. 
+
+B. Scenario Configuration and Orchestration 
+
+MMUSV-Sim supports two complementary modes for constructing executable maritime scenarios: manual configu-ration for fine-grained scenario design and batch generation for automatically producing multiple executable configura-tions. In manual mode, users place USVs and target vessels and define their spline trajectories through a bird’s-eye-view (BEV) configuration interface, as shown in Fig. 4(a). Environment presets, vessel assets, platform attributes, sen-sor settings, and motion parameters can also be specified through the interface. These inputs are stored in a structured scenario configuration that describes the map, participating vessels, trajectories, environmental conditions, and sensor setups. The orchestration module parses the configuration and instantiates the corresponding UE5 runtime scene, as shown in Fig. 4(b). Manually designed and batch-generated scenarios share the same executable representation, scene-instantiation process, and data-acquisition pipeline. For batch generation, users specify generation settings, including scenario families, platform roles, difficulty levels, role combinations, and sample quotas. A rule-based genera-tor combines these settings with scenario templates and map priors to sample vessel assets, initial and terminal poses, and spline trajectories. The map priors describe water-region masks, valid sampling zones, shoreline and port-structure boundaries, and optional occlusion-related regions. Each candidate configuration is checked against geometric and perception-related constraints, including water-region feasi-bility, shoreline clearance, minimum vessel and trajectory separation, sensing range, inter-USV cooperation distance, and optional line-of-sight or occlusion requirements. Invalid candidates are rejected and resampled, while candidates that pass the configured checks are stored using the same exe-cutable format as manually designed scenarios. Both manual and batch configurations are then processed by the same downstream simulation and acquisition pipeline. 
+
+C. Perception-Centric Vessel Motion Model 
+
+MMUSV-Sim separates configuration-driven route motion from controllable local pose perturbations. For each vessel v,the scenario configuration specifies a spline trajectory cv (d)
+
+and a nominal speed uv . Using distance along the spline as the path parameter, the traveled distance, horizontal position, USV-1 USV-2 USV-3 USV-4 USV-1 USV-2 USV-3 USV-4         
+
+> (a) BEV scenario configuration (b) UE5 runtime instantiation Fig. 4. Manual scenario configuration and runtime instantiation in MMUSV-Sim. (a) The BEV interface specifies vessel assets, spline tra-jectories, and environment settings. (b) The corresponding UE5 scene is instantiated from the stored scenario configuration.
+
+and yaw are computed as 
+
+
+
+dv (t) = uv t, 
+
+ xwv (t), y wv (t) = cv,xy 
+
+ dv (t),θwv (t) = atan2   ˙cv,y 
+
+ dv (t), ˙cv,x 
+
+ dv (t) .
+
+(1) This formulation provides controllable vessel routes and multi-USV spatial layouts. To introduce perception-relevant sensor attitude variations, synthetic heave, roll, and pitch perturbations are superim-posed on the route motion: 
+
+∆zv (t)∆ϕv (t)∆ϑv (t)
+
+ = Swave αv
+
+rz,v gz,v (t)
+
+rϕ,v gϕ,v (t)
+
+rϑ,v gϑ,v (t)
+
+ . (2) Here, Swave is a configurable perturbation scale associated with the scene wave setting. The factor αv is computed from the approximate bounding-box volume and scales the perturbation so that smaller vessels receive larger pose vari-ations than larger vessels. The coefficients rz,v , rϕ,v , and 
+
+rϑ,v specify the base heave, roll, and pitch amplitudes for vessel v, while g·,v (t) denotes bounded periodic functions with vessel-specific phase and frequency settings. The resulting six-dimensional world-frame pose of vessel 
+
+Algorithm 1 Multi-USV Acquisition and Annotation Export 
+
+Require: Scenario configuration C, nominal frequency f ,USV set U, target set O
+
+Ensure: Frame-indexed records D, world-state records G,and per-agent annotations A 
+
+> 1:
+
+Initialize the scenario and sensor streams from C 
+
+> 2:
+
+∆t ← 1/f  
+
+> 3:
+
+for each acquisition frame k do  
+
+> 4:
+
+Pause scene evolution and keep sensors active  
+
+> 5:
+
+Wait for sensor buffers to refresh  
+
+> 6:
+
+Zk ← CollectLatestObservations( U) 
+
+> 7:
+
+Gk ← QueryWorldStates( U, O) 
+
+> 8:
+
+Dk ← AssociateFrame( k, Zk, Gk) 
+
+> 9:
+
+Resume scenario evolution for the nominal interval 
+
+∆t 
+
+> 10:
+
+end for  
+
+> 11:
+
+G ← {G k}k 
+
+> 12:
+
+A ← ProjectAnnotations( G, C) 
+
+> 13:
+
+D ← GenerateDerivedRepresentations( {D k}k, A) 
+
+> 14:
+
+ExportStructuredRecords( D, G, A)
+
+v is represented as 
+
+ηwv (t) = xwv (t), y wv (t), z wv, base + ∆ zv (t),
+
+∆ϕv (t), ∆ϑv (t), θ wv (t)T. (3) The model prioritizes controllable route motion and perception-relevant sensor-attitude variation over hydrody-namic fidelity. 
+
+D. Multi-USV Data Acquisition and Export 
+
+The control and data-acquisition interface connects sce-nario execution with the Project AirSim sensor streams. A configured acquisition frequency f defines the simulation-time interval ∆t = 1/f between successive acquisition states. At each acquisition index, the interface pauses scene evolution while keeping the sensor streams active. After a configured buffer-refresh interval, it records the refreshed multi-view camera, LiDAR, and radar outputs and queries the current USV poses and target-vessel states. The fixed vessel poses and target geometry make these multimodal observa-tions and world-state records consistent with one scene state, represented by a common acquisition index. Scene evolution then resumes for ∆t. Algorithm 1 summarizes the acquisition and annotation-export procedure. Target-vessel states are first recorded in the shared world frame. During offline post-processing, the recorded USV poses and configuration-defined sensor extrinsics are used to transform these states into the corresponding USV body and sensor frames. The platform then generates camera-projected 2D boxes, LiDAR-frame 3D boxes, ego-centric BEV boxes, and plan position indicator (PPI) representations rasterized from sparse radar returns. The processed records are orga-nized into structured exports for downstream cooperative-perception tasks; the retained per-agent records also support RGB left view RGB front view RGB right view RGB back view Depth left view Depth front view Depth right view Depth back view Segmentation left view Segmentation front view Segmentation right view Segmentation back view Radar PPI Top-view semantic map (2km) 3D LiDAR Point Top-view semantic map (200m) Fig. 5. Sensor and annotation visualizations generated by MMUSV-Sim, including surround-view RGB images, depth maps, semantic segmentation, radar PPI, top-view semantic maps, and BEV-projected LiDAR points. TABLE I VESSEL -POSE PERTURBATIONS UNDER FOUR SIMULATOR WAVE SETTINGS .                       
+
+> Wave Setting Heave RMS (m) Roll RMS ( ◦)Pitch RMS ( ◦)W0 ( H= 0 .5m) 0.0274 0.2054 0.0684 W1 ( H= 1 .5m) 0.0818 0.6134 0.2062 W2 ( H= 2 .5m) 0.1379 1.0345 0.3395 W3 ( H= 3 .5m) 0.1923 1.4421 0.4774
+
+corresponding single-agent baselines. Representative multi-modal outputs recorded under this acquisition protocol are shown in Fig. 5. III. E XPERIMENTS 
+
+The experiments evaluate three capabilities of MMUSV-Sim: controllable vessel-pose perturbations under config-urable wave conditions, agreement between projected an-notations and semantic rendering, and downstream utility for LiDAR-based cooperative BEV detection. The pose-perturbation experiment uses a controlled island-port sce-nario. The annotation and detection studies use an evaluation subset containing 41 sequences and 3,129 multi-USV acqui-sition frames from island, open-sea, and port environments. This subset includes 28 manually configured and 13 batch-generated sequences processed through the same acquisition and export pipeline. 
+
+TABLE II PROJECTED -BOX COVERAGE AND CENTER ALIGNMENT WITH TOP -VIEW SEMANTIC RENDERINGS .                    
+
+> Scene Valid Samples Med. Center Err. (px) Mask Contain. Hull Occup. Island 4,835 2.26 1.000 0.428 Open Sea 1,663 2.07 0.999 0.420 Port 3,856 1.85 0.999 0.420 Overall 10,354 2.08 0.999 0.424
+
+A. Controllable Pose Perturbations 
+
+We quantify how the synthetic vessel-pose perturbations change across configurable wave settings. We hold the con-trolled island-port scenario, vessel routes, and sensor settings fixed and vary only the wave preset. Four wave settings are defined: W0 (0–1 m), W1 (1–2 m), W2 (2–3 m), and W3 (3– 4 m). Each setting uses the midpoint H of its interval to set the simulator wave amplitude according to A = H/ 2. Here, 
+
+H denotes the simulator’s geometric wave-height control. Heave RMS is computed after subtracting each USV’s mean vertical position over the sequence, while roll and pitch RMS are reported in degrees. The reported statistics are aggregated over all instrumented USVs and acquisition frames. As shown in Table I, heave, roll, and pitch RMS increase monotonically from W0 to W3, demonstrating direct control over sensor-pose variation. TABLE III LIDAR-BASED COOPERATIVE BEV VESSEL DETECTION ON THE EVALUATION SUBSET . AP@ τ USES A BEV I OU THRESHOLD OF τ ; ALL METRICS ARE PERCENTAGES .                                     
+
+> Overall AP@0.5 by Range Method AP@0.3 AP@0.5 AP@0.7 P@0.5 R@0.5 0–50 m 50–100 m 100–150 m 150–200 m No Fusion 51.24 45.54 30.24 78.68 49.04 78.91 62.04 46.28 31.22 Late Fusion 59.66 55.47 39.82 74.39 62.02 80.60 63.03 56.11 55.09 Early Fusion 76.80 72.74 55.49 83.58 77.58 89.04 76.25 77.77 68.04
+
+B. Annotation-Rendering Agreement 
+
+We quantify geometric agreement between the exported annotations and top-view semantic renderings. For each visible target vessel, the eight corners of its exported 3D bounding box are projected onto the top-view camera and enclosed by a 2D convex hull Hproj . The corresponding vessel mask Mlocal is obtained by selecting the nearby connected component with the largest overlap with Hproj .Only projections with valid image coordinates and non-empty vessel masks are included. We compute the center error between the projected box center and the centroid of the overlapping region Mlocal ∩ Hproj , and report its median together with the mask containment 
+
+Cmask = |Mlocal ∩ Hproj ||Mlocal | , (4) which measures the fraction of the rendered vessel region covered by the projected annotation hull. We additionally report the hull occupancy 
+
+Ohull = |Mlocal ∩ Hproj ||Hproj | . (5) It measures the fraction of the projected hull occupied by rendered vessel pixels and complements the one-sided containment measure. Across 10,354 valid target projections, Table II reports a median center error of 2.08 pixels, mean mask containment of 0.999, and mean hull occupancy of 0.424. The lower occupancy reflects the difference between an enclosing 3D-box projection and the visible, non-rectangular vessel silhou-ette. Together, these results confirm the internal geometric consistency of the coordinate-transformation and camera-projection pipeline on the evaluated projections. 
+
+C. LiDAR-Based Cooperative BEV Detection 
+
+Using the OPV2V-compatible exports [9], we evalu-ate single-class LiDAR BEV vessel detection on 41 se-quences, split before agent-as-ego expansion into 32 training sequences (2,463 keyframes) and 9 test sequences (666 keyframes). Each instrumented USV is selected as ego in turn. Its 64-channel LiDAR operates at 5 Hz with 131,072 points per second and a nominal 200-m range, and metrics are reported over ego-centric radial intervals up to 200 m. We evaluate three fusion settings. No Fusion uses only the ego-USV LiDAR. Late Fusion transforms independently predicted boxes into the ego frame and merges them using rotated non-maximum suppression at an IoU threshold of 0.10. Early Fusion transforms neighboring point clouds into                                   
+
+> TABLE IV SENSITIVITY OF COOPERATIVE BEV DETECTION TO POSE NOISE AND TEMPORAL DELAY . AP@0.5 VALUES ARE PERCENTAGES ;POSE SETTINGS DENOTE (σxyz , σ rpy ).
+> Perturbation Setting Late Fusion Early Fusion Clean –55.47 72.74 Delay 200 ms 52.25 69.26 Delay 400 ms 51.33 65.21 Delay 600 ms 46.25 58.06 Pose noise (0 .5 m ,0.5◦)48.11 63.64 Pose noise (1 .0 m ,1.0◦)40.46 46.94 Pose noise (2 .0 m ,2.0◦)28.95 25.17
+
+the ego frame and aggregates them before detection. No Fu-sion and Late Fusion share a 30-epoch single-agent detector, while Early Fusion is trained separately on aggregated point clouds using the same PointPillars encoder [20], CenterPoint head [21], augmentation, optimizer, and schedule. Point clouds are discretized into 0.4 × 0.4 m BEV pillars over 
+
+[−200 , 200] m along both horizontal axes and [−20 , 40] mvertically. All models use Adam with an initial learning rate of 2 × 10 −3 and a batch size of 4; we report the final-epoch checkpoint for each model. Evaluation GT is transformed from clean world-frame target boxes into the ego LiDAR frame using the same range filter; instrumented USVs are excluded from the target class, and detections centered in their platform regions are ignored. We evaluate the test-time sensitivity of models trained on clean data, following the Gaussian localization-noise convention used by OPV2V [9] and extending it to six-DoF USV poses. For every non-ego USV and frame, independent zero-mean Gaussian noise is applied to translation and roll, pitch, and yaw with standard deviations σxyz and σrpy ; the ego pose and GT remain clean, and Late and Early Fusion use the same sampled perturbations. Fixed delay instead uses each non-ego USV’s observation and pose from one to three earlier frames while retaining the current ego frame and GT. At 5 Hz, these offsets correspond to 200–600 ms. Pose noise and delay are evaluated separately. Table III shows that, under clean conditions, Late and Early Fusion improve AP@0.5 from the No Fusion baseline of 45.54 to 55.47 and 72.74, respectively. Early Fusion also raises AP@0.5 at 150–200 m from 31.22 to 68.04. Fig. 6 qualitatively illustrates the differences among the three fusion settings in a port scene. Table IV shows that performance decreases gradually under fixed delay: at 600 ms, Early Fusion retains an AP@0.5 of 58.06, remaining 12.52 points above No Fusion, whereas Late Fusion decreases to 46.25. Under pose noise, Early Fusion achieves an AP@0.5 of 63.64 No fusion Late fusion Early fusion Fig. 6. Qualitative comparison of No Fusion, Late Fusion, and Early Fusion in a port scene. Red and blue boxes denote ground truth and predictions, respectively. In this port scene, Early Fusion better aligns the partially observed large-vessel box. 
+
+at 0.5 m/ 0.5◦, while its margin over No Fusion narrows to 1.40 points at 1.0 m/ 1.0◦. At 2.0 m/ 2.0◦, Late and Early Fusion decrease to 28.95 and 25.17, respectively, both below No Fusion; Early Fusion is also lower than Late Fusion at this setting. IV. C ONCLUSIONS 
+
+This paper presented MMUSV-Sim, a perception-oriented maritime simulation and data-generation platform for multi-USV cooperative perception. MMUSV-Sim integrates con-figurable maritime environments, perception-oriented ves-sel motion, state-consistent multimodal acquisition, shared world-state capture, and per-agent annotation generation. Configured wave levels produce monotonic increases in heave, roll, and pitch RMS across the tested settings, while the projected annotations agree geometrically with seman-tic renderings. In the clean-pose evaluation, Early Fusion improves AP@0.5 from 45.54 to 72.74 relative to the ego-only baseline; fixed-delay and pose-noise experiments further characterize degradation under stale and misaligned cooper-ative observations. REFERENCES [1] J. Kim, C. Lee, D. Chung, and J. Kim, “Navigable area detection and perception-guided model predictive control for autonomous navigation in narrow waterways,” IEEE Robotics and Automation Letters , vol. 8, no. 9, pp. 5456–5463, 2023. [2] T. Clunie, M. DeFilippo, M. Sacarny, and P. Robinette, “Development of a perception system for an autonomous surface vehicle using monocular camera, lidar, and marine radar,” in 2021 IEEE Interna-tional Conference on Robotics and Automation (ICRA) , 2021, pp. 14 112–14 119. [3] B. Bovcon, J. Muhoviˇ c, J. Perˇ s, and M. Kristan, “The mastr1325 dataset for training deep usv obstacle detection models,” in 2019 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2019, pp. 3431–3438. [4] A. Nanda, S. W. Cho, H. Lee, and J. H. Park, “Kolomverse: Korea open large-scale image dataset for object detection in the maritime universe,” IEEE Transactions on Intelligent Transportation Systems ,vol. 25, no. 12, pp. 20 832–20 840, 2024. [5] M. Jeong, A. Chadda, Z. Ren, L. Zhao, H. Liu, A. Zhang, Y. Jiang, S. Achong, S. Lensgraf, M. Roznere, and A. Q. Li, “Seepersea: Multimodal perception dataset of in-water objects for autonomous surface vehicles,” IEEE Transactions on Field Robotics , vol. 2, pp. 737–752, 2025. [6] S. Yao, R. Guan, Y. Ni, S. Xu, Y. Yue, X. Zhu, and R. W. Liu, “Usv-track: Usv-based 4d radar-camera tracking dataset for autonomous driving in inland waterways,” in 2025 IEEE/RSJ International Con-ference on Intelligent Robots and Systems (IROS) , 2025, pp. 19 016– 19 023. [7] A. Dosovitskiy, G. Ros, F. Codevilla, A. Lopez, and V. Koltun, “CARLA: An open urban driving simulator,” in Proceedings of the 1st Annual Conference on Robot Learning , 2017, pp. 1–16. [8] R. Xu, Y. Guo, X. Han, X. Xia, H. Xiang, and J. Ma, “Opencda: An open cooperative driving automation framework integrated with co-simulation,” in 2021 IEEE International Intelligent Transportation Systems Conference (ITSC) , 2021, pp. 1155–1162. [9] R. Xu, H. Xiang, X. Xia, X. Han, J. Li, and J. Ma, “Opv2v: An open benchmark dataset and fusion pipeline for perception with vehicle-to-vehicle communication,” in 2022 International Conference on Robotics and Automation (ICRA) . IEEE, 2022, pp. 2583–2589. [10] Y. Li, D. Ma, Z. An, Z. Wang, Y. Zhong, S. Chen, and C. Feng, “V2x-sim: Multi-agent collaborative perception dataset and benchmark for autonomous driving,” IEEE Robotics and Automation Letters , vol. 7, no. 4, pp. 10 914–10 921, 2022. [11] F. Han, L. Zhang, X. Wang, K.-A. Zhao, Y. Zhong, Z. Su, T. Feng, and W. Zhu, “U2usim-a uav telepresence simulation platform with multi-agent sensing and dynamic environment,” in Proceedings of the 32nd ACM International Conference on Multimedia , 2024, pp. 11 258– 11 260. [12] J. Wang, X. Cao, J. Zhong, Y. Zhang, Z. Han, H. Yu, C. Zhang, L. He, S. Xu, and J. Wang, “Griffin: Aerial-ground cooperative detection and tracking dataset and benchmark,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 40, no. 12, 2026, pp. 9867– 9875. [13] N. Koenig and A. Howard, “Design and use paradigms for gazebo, an open-source multi-robot simulator,” in 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , vol. 3, 2004, pp. 2149–2154. [14] M. M. M. Manh˜ aes, S. A. Scherer, M. Voss, L. R. Douat, and T. Rauschenbach, “Uuv simulator: A gazebo-based package for un-derwater intervention and multi-robot simulation,” in OCEANS 2016 MTS/IEEE Monterey , 2016, pp. 1–8. [15] M. Grimaldi, P. Cie´ slak, E. Ochoa, V. Bharti, H. Rajani, I. Carlucho, M. Koskinopoulou, Y. R. Petillot, and N. Gracias, “Stonefish: Sup-porting machine learning research in marine robotics,” in 2025 IEEE International Conference on Robotics and Automation (ICRA) , 2025, pp. 1–7. [16] I. Lonˇ car, J. Obradovi´ c, N. Kraˇ sevac, L. Mandi´ c, I. Kvasi´ c, F. Ferreira, V. Sloˇ si´ c, D. Nad, and N. Miˇ skovi´ c, “Marus - a marine robotics simulator,” in OCEANS 2022, Hampton Roads , 2022, pp. 1–7. [17] B. Lesy, S. Herremans, R. Kerstens, J. Steckel, W. Daems, S. Mercelis, and A. Anwar, “Asvsim (airsim for surface vehicles): A high-fidelity simulation framework for autonomous surface vehicle research,” arXiv preprint arXiv:2506.22174 , 2025. [18] W. Yang, X. Wang, X. Luo, S. Xie, and J. Chen, “S2s-sim: A bench-mark dataset for ship cooperative 3d object detection,” Electronics ,vol. 13, no. 5, 2024. [19] S. Shah, D. Dey, C. Lovett, and A. Kapoor, “Airsim: High-fidelity visual and physical simulation for autonomous vehicles,” in Field and Service Robotics , M. Hutter and R. Siegwart, Eds. Cham: Springer International Publishing, 2018, pp. 621–635. [20] A. H. Lang, S. Vora, H. Caesar, L. Zhou, J. Yang, and O. Beijbom, “Pointpillars: Fast encoders for object detection from point clouds,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2019, pp. 12 697–12 705. [21] T. Yin, X. Zhou, and P. Krahenbuhl, “Center-based 3d object detec-tion and tracking,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2021, pp. 11 784– 11 793.
