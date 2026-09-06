@@ -1,0 +1,231 @@
+Title: BEACON: Behavioral and Semantic Enrichment of AlphaEarth Embeddings through Tri-Modal Contrastive Learning
+
+URL Source: https://arxiv.org/pdf/2608.29553v1
+
+Published Time: Tue, 01 Sep 2026 01:06:49 GMT
+
+Number of Pages: 4
+
+Markdown Content:
+# BEACON: Behavioral and Semantic Enrichment of AlphaEarth Embeddings through Tri-Modal Contrastive Learning 
+
+## Hao Tian 
+
+Department of Geography Texas A&M University College Station, TX, USA haotian@tamu.edu 
+
+## Heng Cai ∗
+
+Department of Geography Texas A&M University College Station, TX, USA hengcai@tamu.edu 
+
+## Yifan Yang 
+
+Department of Geography Texas A&M University College Station, TX, USA yyang295@tamu.edu 
+
+Abstract 
+
+Geospatial foundation models such as the AlphaEarth Foundation produce compact and globally consistent representations of the Earth’s surface that transfer effectively to a wide range of down-stream tasks. However, because these models are trained primarily on Earth-observation imagery, their embeddings mainly capture physical and spectral characteristics while encoding human ac-tivity and urban function only weakly. To address this limitation, we propose BEACON, a tri-modal contrastive learning framework that aligns three complementary views of urban space: physical representations from AE embeddings, semantic representations from point-of-interest (POI) text, and human behavioral represen-tations from hourly POI visitation, while keeping the deployed representation image-only. Using the Houston Metropolitan Area as a case study area, we evaluated the performance of the BEACON framework on nine downstream tasks, including seven regression and two classification tasks against six baselines (raw coordinates, Space2Vec, SatCLIP, TESSERA, Clay and AlphaEarth), using frozen linear and MLP probes over five seeds. Under a linear probe, BEA-CON improves relative 𝑅 2 over AlphaEarth by up to 43% for obesity prevalence, 34% for poor mental health, and 22% for median house-hold income, while remaining competitive in the prediction of physical and environmental variables. These findings highlight the value of augmenting geospatial foundation models with semantic and behavioral signals, extending their applicability from physical Earth observation to human-centered urban analytics. 
+
+CCS Concepts 
+
+• Information systems → Geographic information systems ;• Computing methodologies → Learning latent representa-tions .
+
+Keywords 
+
+Geospatial Foundation Models, Multimodal Learning, Contrastive Learning, Human Mobility, Urban Representation Learning 
+
+> ∗Corresponding author.
+> This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+> SIGSPATIAL ’26, Riverside, CA, USA
+> © 2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2950-8/2026/11 https://doi.org/10.1145/3841645.3843383
+
+ACM Reference Format: 
+
+Hao Tian, Heng Cai, and Yifan Yang. 2026. BEACON: Behavioral and Se-mantic Enrichment of AlphaEarth Embeddings through Tri-Modal Con-trastive Learning. In The 34th ACM International Conference on Advances in Geographic Information Systems (SIGSPATIAL ’26), November 03–06, 2026, Riverside, CA, USA. ACM, New York, NY, USA, 4 pages. https://doi.org/10. 1145/3841645.3843383 
+
+1 Introduction 
+
+Geospatial foundation models are changing the way in which ur-ban and environmental prediction tasks are approached. Rather than constructing task-specific covariates for every outcome, ana-lysts can now start from transferable spatial embeddings learned from large-scale Earth-observation data. This is especially useful in urban studies, where labels are sparse, spatial supports vary across agencies, and the same representation may need to be aggre-gated from pixels to parcels, census units, and regular grids. Recent geospatial foundation-style models, including SatCLIP, TESSERA, Clay, Prithvi and AlphaEarth, show strong transfer across remote-sensing and mapping tasks. AlphaEarth is particularly relevant because it provides a globally consistent annual embedding field at 10 m resolution [1]. However, many urban phenomena are governed by functional and behavioral processes that are not directly observable from over-head imagery. Socioeconomic conditions, public health outcomes, and human activity patterns emerge from interactions among the built environment, institutional functions, and mobility behaviors. This raises a critical question for geospatial foundation models: do image-derived embeddings capture the functional and behavioral organization of urban space, or primarily its physical morphology? Physical appearance and urban function are often partially aligned. Visually similar locations may perform very different social and economic roles, such as a medical office, a retail center, a school, or a government facility embedded within comparable built forms. Meanwhile, visually distinct locations may exhibit similar behav-ioral or functional profiles when serve comparable roles within the urban system. Consequently, models trained solely on Earth-observation imagery may have insufficient capacity to distinguish places according to their social, economic, and behavioral charac-teristics. Such limitations constrain their effectiveness for human-centered urban analytics, where accurate representation of urban function and behavior is essential for understanding accessibility, equity, public health, and socioeconomic dynamics. Point-of-Interests (POIs) information provide human-centered location semantics by recording the functional, social and contex-tual meaning associated with a geographic location. Prior work arXiv:2608.29553v1 [cs.LG] 30 Aug 2026 SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Tian et al. 
+
+uses POI embeddings to infer urban functional use [3], and re-cent language-location pretraining aligns urban space with POI descriptions [4]. AETHER is the closest predecessor to our work: it adapts AlphaEarth through POI-guided contrastive learning and shows that Earth-observation embeddings can be enriched with human-centered urban semantics [2]. However, POI text mainly describes intended or registered function. It does not directly tell us how strongly a place is used, when people visit it, or whether its temporal role differs from visually similar places. Human mobility provides a complementary behavioral view. Hourly and seasonal visitation profiles reveal commuter peaks, weekend leisure, late-night activity, routine service visits, and sea-sonal demand. MoRA argues that mobility can serve as a back-bone for large-scale geospatial representation learning [5]. Our goal is more targeted: rather than replacing AlphaEarth with a mobility backbone, we use POI-level mobility as supervision to human-contextualize an already strong physical embedding field. We introduce BEACON, a tri-modal contrastive learning frame-work that human-contextualizes AlphaEarth embeddings by in-tegrating location semantics and human behavioral signals into earth-observation representations. BEACON uses POIs as anchors and aligns three views of urban space: AlphaEarth embeddings representing physical context, textual POI descriptions, and tem-poral visitation profiles. BEACON aligns AlphaEarth embeddings with POI semantics and mobility behavior during training. Once trained, however, the model produces enriched representations from AlphaEarth inputs alone, without requiring POI or mobility data at inference time. Our contributions are: (1) a lightweight tri-modal contrastive objective for adapting AlphaEarth with se-mantic and behavioral supervision; (2) a Houston metropolitan benchmark spanning socioeconomic, health, activity, environmen-tal, land-cover, and land-use prediction tasks; and (3) evidence that human-contextualized embeddings improve human-centered pre-diction while largely preserving physical mapping performance. 
+
+2 Data and Methodology 
+
+Figure 1 illustrates the overall BEACON framework. Panel (a) visual-izes the three complementary views of urban space. Panel (b) shows the tri-modal contrastive learning framework, where AlphaEarth embeddings, POI description text, and mobility representations are projected into a shared latent space and aligned using an InfoNCE objective. Panel (c) demonstrates the downstream application work-flow. After pretraining, the frozen AlphaEarth projector generates BEACON embeddings from AlphaEarth inputs, which are subse-quently evaluated across a diverse set of physical/environmental and human-centered urban prediction tasks. 
+
+2.1 Study Area and Data 
+
+All experiments are conducted in the Houston–The Woodlands–Sugar Land Metropolitan Statistical Area using data from 2024. AlphaEarth embeddings serve as the physical representation backbone, while POI attributes and hourly visitation patterns provide semantic and behavioral supervision during pretraining. Downstream evaluation spans socioeconomic, health, environmental, land-cover, and land-use tasks (Table 1), enabling assessment of both human-centered and physical representations of urban space. 
+
+Figure 1: Overview of BEACON. Physical, semantic, and be-havioral views are aligned through tri-modal contrastive learning to produce human-contextualized embeddings. Table 1: Downstream benchmark tasks, spatial supports, and common-support sample sizes.                                
+
+> Target Support 𝑁 Task Median household income Block groups 4,174 Reg. Obesity prevalence Tracts 1,613 Reg. Poor mental health Tracts 1,613 Reg. Nighttime lights 500 m px 139,186 Reg. LST daytime 1 km px 27,424 Reg. LST nighttime 1 km px 27,424 Reg. PM 2.50.01 ◦px 24,338 Reg. Land cover (15 classes) 10 m samples 298,944 Cls. Functional land use (10 classes) Parcels 255,431 Cls.
+
+2.2 AlphaEarth Encoder 
+
+AlphaEarth provides a 64-dimensional embedding for each 10 m grid cell. For each POI 𝑖 , we extract two complementary AlphaEarth spatial views centered on the POI [2]. Let 𝑎 𝑝 ∈ R64 be the embedding at grid cell 𝑝 . We define a smaller view over a local neighborhood 
+
+Ω(𝑠 ) 
+
+> 𝑖
+
+(a 9 × 9 window) and a larger context view over a larger neighborhood Ω(𝑐 ) 
+
+> 𝑖
+
+⊃ Ω(𝑠 ) 
+
+> 𝑖
+
+(a 19 × 19 window), via average pooling: 
+
+𝑎 (𝑠 ) 
+
+> 𝑖
+
+= 1  
+
+> |Ω(𝑠 )
+> 𝑖 |
+
+∑︁ 𝑝 ∈Ω(𝑠 )
+
+> 𝑖
+
+𝑎 𝑝 , 𝑎 (𝑐 ) 
+
+> 𝑖
+
+= 1  
+
+> |Ω(𝑐 )
+> 𝑖 |
+
+∑︁ 𝑝 ∈Ω(𝑐 )
+
+> 𝑖
+
+𝑎 𝑝 . (1) Both pooled embeddings are projected into the shared latent space using a shared projector and subsequently ℓ2-normalized. The re-sulting embeddings are denoted by 𝑧 𝐴𝐸 𝑠  
+
+> 𝑖
+
+and 𝑧 𝐴𝐸 𝑐  
+
+> 𝑖
+
+.
+
+2.3 POI Description Encoder 
+
+Let 𝑠 𝑖 , 𝑐 𝑖 , 𝑛 𝑖 , 𝑘 𝑖 denote the sub-category, top-level category, name, and NAICS code of POI 𝑖 . We form a textual description with the tem-plate “ A place of 𝑠 𝑖 , a type of 𝑐 𝑖 , named 𝑛 𝑖 . The NAICS code is 𝑘 𝑖 ” (omit-ting missing attributes), and denote the resulting description by 
+
+𝑡 𝑖 . A pretrained encoder 𝐸 (·) (OpenAI text-embedding-3-large )produces a 384-dimensional semantic embedding, which a text BEACON SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+projector 𝑔 𝜙 (·) maps into the shared space: 
+
+𝑧 𝑇 𝑒𝑥𝑡 𝑖 = Norm  𝑔 𝜙 (𝐸 (𝑡 𝑖 ))  . (2) The location semantic view supplies functional context that is of-ten not observable from overhead imagery, helping to distinguish visually similar locations with different urban functions. 
+
+2.4 Mobility Pattern Encoder 
+
+For each POI 𝑖 , we construct a 184-dimensional mobility profile 𝑚 𝑖 
+
+by concatenating a normalized hour-of-week pattern 𝑤 𝑖 ∈ R168 , a normalized monthly pattern 𝑜 𝑖 ∈ R12 , and four scalar descriptors 
+
+𝜓 𝑖 ∈ R4:
+
+𝑚 𝑖 = [𝑤 𝑖 ; 𝑜 𝑖 ;𝜓 𝑖 ] ∈ R184 . (3) The descriptor vector 𝜓 𝑖 contains four summary statistics: log total visits, Shannon entropy of the hour-of-week distribution, weekday–weekend gap, and monthly coefficient of variation. The entropy is computed as 
+
+𝐻 (𝑤 𝑖 ) = −∑︁ 
+
+> 𝑘
+
+𝑤 𝑖𝑘 log 𝑤 𝑖𝑘 . (4) We retain only POIs with complete mobility records throughout 2024, resulting in 160,944 POIs for representation learning. The mobility profile is mapped into the shared latent space using a two-layer MLP (184 → 256 → 128, GELU) followed by ℓ2 normalization to produce the mobility embedding 𝑧 𝑀𝑜𝑏 𝑖 .
+
+2.5 Tri-Modal Contrastive Alignment 
+
+For a minibatch of 𝑁 POIs, each sample yields four ℓ2-normalized embeddings: 𝑧 𝐴𝐸 𝑠  
+
+> 𝑖
+
+, 𝑧 𝐴𝐸 𝑐  
+
+> 𝑖
+
+, 𝑧 𝑇 𝑒𝑥𝑡 𝑖 , and 𝑧 𝑀𝑜𝑏 𝑖 . For any two modalities 
+
+𝑢, 𝑣 we use a symmetric CLIP-style objective, where matched POIs form positive pairs: 
+
+L( 𝑢, 𝑣 ) = 12
+
+h
+
+CE 
+
+ 𝑍 𝑢 (𝑍 𝑣 )⊤ 
+
+> 𝜏
+
+, 𝑦 
+
+
+
++ CE 
+
+ 𝑍 𝑣 (𝑍 𝑢 )⊤ 
+
+> 𝜏
+
+, 𝑦 
+
+i 
+
+, (5) with 𝑍 𝑢 , 𝑍 𝑣 ∈ R𝑁 ×𝑑 , temperature 𝜏 , and labels 𝑦 = (1, . . . , 𝑁 ). The overall objective combines four alignment terms: 
+
+Ltotal = 𝜆 𝑠𝑡 L( 𝑧 𝐴𝐸 𝑠 , 𝑧 𝑇 𝑒𝑥𝑡 ) + 𝜆 𝑠𝑚 L( 𝑧 𝐴𝐸 𝑠 , 𝑧 𝑀𝑜𝑏 )+ 𝜆 𝑡𝑚 L( 𝑧 𝑇 𝑒𝑥𝑡 , 𝑧 𝑀𝑜𝑏 ) + 𝜆 𝑠𝑐 L( 𝑧 𝐴𝐸 𝑠 , 𝑧 𝐴𝐸 𝑐 ). (6) We set 𝜏 = 0.07 and (𝜆 𝑠𝑡 , 𝜆 𝑠𝑚 , 𝜆 𝑡𝑚 , 𝜆 𝑠𝑐 ) = (0.35 , 0.35 , 0.15 , 0.15 ), and train with AdamW (learning rate 1 ×10 −3, weight decay 1 ×10 −4,cosine schedule, batch size 512, 100 epochs) on an 80/10/10 POI split. 
+
+2.6 Inference and Downstream Evaluation 
+
+After pretraining, the frozen AE projector is applied to the full Al-phaEarth embedding field, transforming each 64-dimensional em-bedding into a 128-dimensional BEACON representation. Regional embeddings are obtained by mean pooling over target spatial units. We compare BEACON against six baselines (coordinates, Space2Vec, SatCLIP, TESSERA, Clay v1.5, and AlphaEarth) using frozen em-beddings with linear and single-hidden-layer MLP probes. Perfor-mance is evaluated using five random 70/10/20 train-validation-test splits, reporting mean ± standard deviation of 𝑅 2 for regression and Macro-F1 for classification tasks. 
+
+3 Results 3.1 Pretraining Dynamics and Cross-Modal Alignment 
+
+The tri-modal objective converges stably with little evidence of overfitting (Figure 2a). Analysis of the validation loss components (Figure 2b) shows that alignment is driven primarily by the intra-modal AE 𝑠 –AE 𝑐 term and the cross-modal AE 𝑠 –Mobility term, while text-based alignments contribute more modestly. Consistent with this observation, cross-modal retrieval results (Figure 2c) indi-cate that mobility provides the strongest supervisory signal among the human-centered modalities. The similarity matrices further re-veal a substantial increase in AlphaEarth–mobility correspondence after training (Figure 2d). Together, these results demonstrate that BEACON effectively injects human-activity information into Al-phaEarth representations, with mobility serving as the dominant source of behavioral context. 
+
+Figure 2: Pretraining dynamics of BEACON. (a) Train-ing/validation contrastive loss. (b) Relative validation loss of the four objective terms. (c) Held-out cross-modal retrieval Recall@1/5/10. (d) AlphaEarth–mobility cosine-similarity before/after training. 
+
+3.2 Downstream Prediction Performance 
+
+Across the nine downstream tasks, BEACON exhibits a clear special-ization toward human-centered prediction while remaining com-petitive on physical and environmental benchmarks (Tables 2–3). For the four human-related regression targets, BEACON achieves the best performance among all representations. Relative to Al-phaEarth, 𝑅 2 improves from 0.379 to 0.463 for median household income (+22%), from 0.431 to 0.614 for obesity prevalence (+43%), and from 0.393 to 0.528 for poor mental health (+34%). Nighttime lights also achieve the highest score (0.680 versus 0.663 for Al-phaEarth). These gains are most pronounced for outcomes closely tied to collective human behavior and place usage. In contrast, the ranking differs for physical and environmental targets. Clay achieves the strongest performance on daytime and nighttime land-surface temperature and PM 2.5, while TESSERA is generally second. BEACON performs nearly identically to Al-phaEarth on these tasks. For example, PM 2.5 improves only marginally SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Tian et al. 
+
+Table 2: Regression performance ( 𝑅 2, linear probe) across seven downstream tasks (mean ± s.d. over five seeds). Best in bold, second-best underlined. 
+
+Human-related Physical / Environmental Model Income Obesity Mental health NTL LST day LST night PM 2.5
+
+Coordinates 0.012 ± 0.007 0.032 ± 0.020 0.040 ± 0.021 0.002 ± 0.000 0.246 ± 0.009 0.304 ± 0.006 0.110 ± 0.004 Space2Vec 0.280 ± 0.027 0.472 ± 0.038 0.328 ± 0.060 0.419 ± 0.071 0.464 ± 0.014 0.331 ± 0.009 0.386 ± 0.007 SatCLIP 0.024 ± 0.010 0.062 ± 0.025 0.047 ± 0.020 0.316 ± 0.050 0.644 ± 0.009 0.584 ± 0.003 0.617 ± 0.009 TESSERA 0.420 ± 0.027 0.519 ± 0.046 0.431 ± 0.041 0.667 ± 0.111 0.824 ± 0.009 0.779 ± 0.008 0.868 ± 0.004 Clay 0.413 ± 0.034 0.557 ± 0.048 0.429 ± 0.031 0.603 ± 0.087 0.860 ± 0.004 0.813 ± 0.007 0.905 ± 0.002 
+
+AlphaEarth 0.379 ± 0.031 0.431 ± 0.040 0.393 ± 0.053 0.663 ± 0.112 0.840 ± 0.007 0.792 ± 0.005 0.845 ± 0.004 
+
+BEACON 0.463 ± 0.025 0.614 ± 0.035 0.528 ± 0.022 0.680 ± 0.114 0.843 ± 0.006 0.787 ± 0.006 0.856 ± 0.003 
+
+from 0.845 to 0.856 (+1.3%), while LST performance remains essen-tially unchanged. This indicates that incorporating human context does not substantially alter the physical environmental information already encoded by Earth-observation foundation models. The classification results reveal a contrasting pattern (Table 3). For land-cover classification, which reflects physical surface mor-phology, AlphaEarth achieves the highest Macro-F1 (0.584), with BEACON second (0.567). In contrast, for functional land use, which is a human-defined construct, BEACON is best (Macro-F1 0.471 vs. 0.456), with the same ordering for accuracy. This land-cover/land-use contrast cleanly separates physical from human-defined struc-ture. Similar patterns hold under nonlinear MLP probes, and the gains on human targets are most pronounced under the linear probe, indicating that the alignment primarily increases the linear decodability of human signal already latent in AlphaEarth. Abla-tions further confirm the complementary roles of semantic and behavioral supervision (Table 4). AE-Mobility and AE-POI both outperform AE-only on human-related prediction, while the full tri-modal BEACON model achieves the best average performance on both human-related and physical/environmental regression tasks. 
+
+Table 3: Classification performance (linear probe; mean ± s.d. over five seeds). Best in bold, second-best underlined. 
+
+Land cover Functional land use Model Macro-F1 Acc. Macro-F1 Acc. Coordinates 0.152 ± 0.001 0.266 ± 0.007 0.144 ± 0.007 0.241 ± 0.007 Space2Vec 0.190 ± 0.002 0.253 ± 0.002 0.270 ± 0.001 0.333 ± 0.003 SatCLIP 0.230 ± 0.002 0.338 ± 0.005 0.153 ± 0.002 0.252 ± 0.008 TESSERA 0.521 ± 0.003 0.635 ± 0.004 0.421 ± 0.003 0.518 ± 0.003 Clay 0.357 ± 0.004 0.464 ± 0.005 0.279 ± 0.003 0.355 ± 0.004 AlphaEarth 0.584 ± 0.002 0.701 ± 0.002 0.456 ± 0.002 0.549 ± 0.002 
+
+BEACON 0.567 ± 0.002 0.687 ± 0.002 0.471 ± 0.002 0.565 ± 0.002 
+
+4 Conclusion and Future Work 
+
+We presented BEACON, a tri-modal contrastive framework that enriches AlphaEarth embeddings with semantic and behavioral urban context while retaining an image-only representation at deployment. Across nine downstream tasks, BEACON substantially improves human-centered prediction while largely preserving the physical and environmental information encoded in AlphaEarth. 
+
+Table 4: Ablation results of different modality combinations using linear probes. 
+
+Variant Human-related Avg. 𝑅 2 Physical / Environmental Avg. 𝑅 2
+
+Mobility only 0.011 ± 0.030 0.015 ± 0.007 POI only 0.288 ± 0.047 0.199 ± 0.009 Concat Raw 0.294 ± 0.059 0.644 ± 0.007 AlphaEarth 0.401 ± 0.037 0.743 ± 0.008 AE-Mobility 0.475 ± 0.029 0.736 ± 0.006 AE-POI 0.494 ± 0.023 0.750 ± 0.007 
+
+BEACON 0.535 ± 0.022 0.759 ± 0.008 
+
+More importantly, our findings suggest that physical appearance and urban function constitute distinct representational dimensions of geographic space. While current geospatial foundation mod-els provide strong representations of the physical environment, aligning them with semantic and behavioral signals substantially improves their ability to represent human activity and urban func-tion. Future work should evaluate the generality of this approach across cities, time periods, and mobility data sources, and explore incorporating behavioral alignment directly into foundation-model pretraining. 
+
+References

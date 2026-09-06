@@ -1,0 +1,1212 @@
+Title: 2609.01800v1.pdf
+
+URL Source: https://arxiv.org/pdf/2609.01800v1
+
+Published Time: Thu, 03 Sep 2026 00:09:32 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+1> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+C.J. Moore, Student Member, IEEE , Alex Hurt, Member, IEEE , and Jordan Malof., Member, IEEE 
+
+Abstract —Automatic Target Recognition (ATR) in Synthetic 
+
+Aperture Sonar (SAS) is a task largely dominated by deep neural 
+
+networks (DNNs). Most SAS-ATR models use convolutional 
+
+neural network (CNN) architectures whereas transformer-based 
+
+architectures have had much less representation in the literature 
+
+despite being state of the art in general computer vision (CV) 
+
+research. Additionally, researchers have had mixed results in 
+
+attempting to overcome challenges presented by a scarcity of 
+
+labeled training data by using methods such as data augmentation 
+
+and the use of pretrained weights from a variety of imaging 
+
+modalities. In this work, we compare the performance of modern 
+
+CNN and transformer-based DNNs to determine which 
+
+architecture and training configurations elicit the highest 
+
+performance in SAS-ATR. We investigate how network size, 
+
+architecture, pretraining method, data augmentation and other 
+
+forms of regularization affect SAS-ATR performance with a focus 
+
+on producing the highest-performing model and providing a 
+
+roadmap for training state-of-the-art SAS-ATR models. 
+
+Index Terms — Automatic Target Recognition, Deep Learning, Synthetic Aperture Sonar 
+
+I. INTRODUCTION 
+
+This work focuses on the problem of automatic target recognition (ATR) for synthetic aperture sonar (SAS) data. Many objects of interest can be detected and classified in SAS imagery [1], [2], [3], [4], but SAS imagery of the seafloor is voluminous, making it costly to inspect it manually. SAS-ATR algorithms are designed to efficiently process large volumes of SAS imagery and indicate where target objects are likely to exist. One promising class of SAS-ATR algorithms is based upon deep neural networks (DNNs) [5], [6], [7]. DNNs are a class of mathematical models of the form  𝑦 = 𝑓 𝜃 (𝑥)  with adjustable parameters  𝜃  that control the mapping from input,  𝑥 ,to output,  𝑦 . In the context of SAS-ATR,  𝑥  may correspond to a SAS image, and  𝑦  may correspond to a binary label indicating whether a target object is present. The DNN model is trained 
+
+to produce accurate output using pairs of real-world SAS imagery and their true labels (i.e., target or non-target), termed 
+
+training data . During the training process (Fig. 1), the parameters  𝜃  are gradually adjusted so that the DNN makes accurate predictions on the training data. Once trained, DNNs can be deployed to make predictions for novel settings of  𝑥  that were not present in the training data. 
+
+One potential problem with DNNs is that they can learn spurious correlations between the input and output in their training data, causing them to make poor predictions on novel input data, termed poor generalization. This is a widely studied phenomenon in machine learning termed overfitting. Until recently, the theory of machine theory predicts that the risk of overfitting increases in proportion to model capacity (i.e., number of free parameters), or as the quantity of training data decreases [8]. Motivated by this theory, most recent SAS-ATR research has explored DNNs with relatively low capacity (i.e., few trainable parameters) (e.g., [7], [9], [10], [11]), due to the tendency for there to be limited quantities of labeled data to train SAS-ATR models [12], [13]. However, recent research on deep learning (often focused on DNNs) has provided both empirical and theoretical evidence that higher-capacity DNNs are often more performant than small DNNs, even when training data is relatively limited [14], [15]. This phenomenon, 
+
+known as “Double Descent” [16] has shown that while models initially begin to overfit as their capacity increases, their 
+
+# Improved Automatic Target Recognition in Synthetic Aperture Sonar Imagery Using Large Deep Neural Networks 
+
+Fig. 1. Illustration of training deep neural networks (DNNs) for SAS-ATR. 2> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+generalization eventually begins to improve again as the number of trainable parameters increases (see  Fig. 2). Crucially, the most performant networks are often highly overparameterized (i.e. they have many more trainable parameters than training data points). This observation has motivated the use of large networks in many application areas even when training on small datasets [17], [18]. 
+
+A. Contributions of This Work. 
+
+In this work we seek to leverage these recent findings on double descent to improve the overall performance of SAS-ATR . The overarching question for this paper is then as follows: can recent large vision models achieve state-of-the-art accuracy on SAS-ATR? To this end, we investigate DNNs for SAS-ATR with substantially higher capacity than those used in previous studies. Motivated by this goal, we also investigate transformer-based DNNs. Transformers are DNN models with fundamentally different connectivity, or architecture, compared to convolutional models, but they also often possess greater capacity than convolutional models as well. Although transformers have received state-of-the-art performance on many vision tasks, they have received relatively limited attention in the SAS-ATR literature thus far [11]. 
+
+Our main hypothesis in this study is that DNNs with greater capacity are more performant for SAS-ATR. To address this hypothesis, we evaluate the recognition accuracy of six different DNN architectures on a large collection of SAS-ATR data comprising three distinct geographic locations. To evaluate model accuracy, we utilize a realistic leave-one-location-out cross-validation procedure. For each DNN architecture we evaluate high-capacity and low-capacity versions, so that we can isolate the impact of capacity. Of our six DNN architectures, we use three CNN models and three transformer-based models, to isolate the impact of architecture. 
+
+While highly overparameterized DNNs often achieve greater generalization, they have also been found more challenging to optimize (i.e., train) [19] particularly in the case of transformer networks [20], [21]. A variety of methods to overcome these challenges have been developed, sometimes termed 
+
+regularization . In pursuit of our overall goal of using high-capacity DNNs, we systematically investigate the use of several major regularization techniques for SAS-ATR: e.g., parameter pretraining, data augmentation [22], Drop Path [23] and Weight Decay [24]. Each of these parameters have hyperparameters (i.e., user-chosen parameters) that can be tailored to a specific application, and we systematically investigate good hyperparameter settings for SAS-ATR. For example, pretraining entails training the SAS-ATR model on a related dataset first where training data is much more abundant, and we investigate pretraining on several different sources: optical imagery, Synthetic Aperture Radar, ultrasound imagery. Regarding augmentation, we investigate eleven individual augmentations and optimize their hyperparameters. We also optimize key hyperparameters associated with Drop Path and Weight Decay. We summarize our contributions as follows: 
+
+1)  The first systematic evaluation of high-capacity DNNs for SAS-ATR. We evaluate six different DNN architectures, including three transformer-based models and three convolution-based models. 
+
+2)  A systematic investigation of major regularization techniques for SAS-ATR. We identify appropriate adaptations of these approaches to SAS-ATR, and we find that their use substantially improves the accuracy of high-capacity DNNs for SAS-ATR. 
+
+3)  We compare high-capacity and low-capacity DNN models, including some recent models from the SAS-ATR literature. We find that high-capacity models generally outperform low-capacity models, leading to state-of-the-art SAS-ATR accuracy. 
+
+The remainder of this paper is organized as follows: section II covers related work; section III discusses training DNNs for SAS-ATR; section IV presents the methods utilized in our experiments; section V and VI describe our experiments and present results; section VII presents our conclusions and future work. We also include an appendix for supplemental content. 
+
+II. RELATED WORK 
+
+A. SAS-ATR and Neural Network Capacity. 
+
+There has been limited research into how model size relates to 
+
+DNN performance on SAS datasets. One paper discussing this 
+
+topic focuses on training tiny CNNs on SAS to address 
+
+overfitting concerns formerly associated with large network 
+
+capacity and scarce training data [10]. Recent machine learning 
+
+(ML) research suggests that such concerns may be overstated 
+
+[14], [15], [25], specifically due to the so-called Double 
+
+Descent phenomenon. [16], This has motivated a new general 
+
+approach to ML where larger networks are generally preferred 
+
+for maximum test performance [17], dubbed the 
+
+“overparameterized re gim e” [26], [27], [28]. In this work, for 
+
+the first time in SAS-ATR, we adopt double descent as a design 
+
+principle and focus on effectively training especially high-
+
+capacity DNN models.         
+
+> Fig. 2. Illustration of the Double Descent phenomenon. Model generalization error (e.g., performance on novel input) at first increases as model capacity increases and then reduces once model capacity exceeds the interpolation threshold, where there are more model parameters than can be uniquely determined by the available training data.
+
+3> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+B. CNNs and Transformers in SAS-ATR. 
+
+CNNs have historically been the method of choice for SAS-
+
+ATR [11]. Having been found superior to the formerly used 
+
+feature-based classifiers [6] there has been much research into 
+
+the use of CNNs for this application. Early adoption of CNNs 
+
+for SAS-ATR included their use for semantic segmentation of 
+
+the seafloor in a semi-supervised manner [29], as ATR 
+
+networks that ingest multiple representations of SAS data [30], 
+
+and as phase-informed classifiers that leverage the complex 
+
+nature of SAS data to bolster performance [31], among others. 
+
+Since these early innovations of CNN-based SAS-ATR there 
+
+has been further work in improving these systems, such as the 
+
+incorporation of wavenumber domain partitioning in training 
+
+data [7], the inclusion of structural priors to diminish false 
+
+alarm rates [32], and insights into the effects distribution shifts 
+
+of SAS data have on CNN performance [33]. 
+
+More recently Vision Transformers (ViT) [34] and its 
+
+extensions [35], [36] have led to state-of-the-art performance 
+
+on general CV tasks, and some studies have explored them for 
+
+SAS-ATR. CNN/transformer hybrid networks have been used 
+
+for volumetric target classification in 3D SAS data [37], and 
+
+detection methods leveraging the attention mechanism from 
+
+transformer-based networks have been investigated for SAS 
+
+data [38]. A comparison for ATR in side-scan sonar (SSS) 
+
+seems to suggest transformer-based networks can outperform 
+
+CNNs on sonar ATR tasks [39], [40]. While transformers are 
+
+now being investigated, they remain underutilized in SAS-ATR 
+
+[11]. In this work we make the first systematic comparison of 
+
+CNN and transformer-based models for SAS-ATR. 
+
+C. Pretraining Neural Networks for SAS. 
+
+While there is research that suggests transfer learning between 
+
+SAS-ATR networks with different sensors is superior to “from 
+
+scratch” training [41], the same work disputes whether 
+
+transferring from networks trained on optical imagery has the 
+
+same benefits. On the contrary, other research has shown that 
+
+transferring weights from networks trained on optical imagery 
+
+can improve SAS-ATR performance [42]. Beyond strictly 
+
+optical imagery, there has been work that suggests pretraining 
+
+on other imaging modalities such as ultrasound and synthetic 
+
+aperture radar (SAR) data offers some performance 
+
+improvements when applied to SSS classification [43], 
+
+although no such study exists for SAS-ATR. Further 
+
+comparisons of pretrained model performance in SAS 
+
+applications have seen very limited investigation. Considering 
+
+the lack of consensus on the utility of models pretrained on non-
+
+sonar imagery for SAS-ATR, this question requires further 
+
+investigation. In this work we compare the performance of 
+
+CNN and transformer-based networks using pretrained weights 
+
+from SAR, ultrasound imagery, and optical imagery against a 
+
+randomly initialized baseline. 
+
+D. SAS Data Augmentation. 
+
+Given the lack of labeled SAS training samples there has been 
+
+some research on applying data augmentation to SAS-ATR. 
+
+There are two categories of augmentation when it comes to SAS 
+
+data: those that preserve SAS’s unique scene geometry and 
+
+physical properties (i.e. “physical” augmentations) and those 
+
+that do not (“non -physical” augmentations). Physical 
+
+augmentations have seen more investigation with authors 
+
+finding the use of small affine transformations [6], [10], and the 
+
+incorporation of spectral information [7], [31] to offer 
+
+performance improvements in SAS-ATR. Non-physical 
+
+augmentations, however, have also been found to hold potential 
+
+benefits in more recent years with two separate studies finding 
+
+non-physical augmentations to elicit even higher performance 
+
+gains than their physical counterparts [44], [45]. Given these 
+
+findings it seems well established that data augmentation is 
+
+helpful for improving SAS-ATR performance. In this work we 
+
+perform the first large-scale and systematic evaluation of 
+
+augmentation on networks of varying capacities and 
+
+architectures. 
+
+E. Network Regularization in SAS-ATR. 
+
+Research into the regularization of SAS-ATR networks is not 
+
+new. Perhaps the most direct contributions to this inquiry has 
+
+been work on the incorporation of SAS-specific structural 
+
+priors as regularization terms in loss functions [32] as well as 
+
+statistical regularizers that urge favorable statistical patterns 
+
+onto weight values [46]. Th e former’s direct incorporation of 
+
+SAS domain knowledge into a CNN ’s learning process was 
+
+found to improve performance beyond that of other performant 
+
+SAS-ATR networks of the time , and the latter’s enforcement of 
+
+statistical independence between weight values was found to 
+
+benefit performance. Neither of these works, however, includes 
+
+a controlled comparison of how such regularization compares 
+
+to traditional CV methods of weight decay [24], DropPath [23], 
+
+and data augmentation [22], nor do they compare how networks 
+
+of varying architectures and capacities are impacted by these 
+
+methods. In this work we provide the first systematic 
+
+comparison of the impacts of weight decay, DropPath, and data 
+
+augmentation on six network architectures (three CNN and 
+
+three transformer-based) with multiple capacity variants. 
+
+III. PROBLEM SETTING 
+
+The goal of our SAS-ATR problem is to classify real-valued beamformed patches of SAS-ATR data into one of two labels: target or non-target. More formally, we wish to assign a binary label  𝑦 ∈ {0,1}  to some beamformed SAS data,  𝑥 ∈ ℝℎ×𝑤 , indicating whether it corresponds to some pre-defined object of interest ( 𝑦 = 1 ), or target, or not ( 𝑦 = 0) . In our context the data  𝑥  corresponds to the magnitude component of a beamformed SAS image. We assume that data is drawn from some unknown distribution (𝑥 𝑖 , 𝑦 𝑖 )~𝑃 𝑋𝑌  and goal is to find some mapping of the form  𝑦 = 𝑓(𝑥)  that achieves low expected classification error, given by Eq.  (1 ).
+
+## 𝒇 ∗ = 𝒂𝒓𝒈𝒎𝒊𝒏 𝒇 𝔼 ~𝑷 𝑿𝒀 [𝓛(𝒇(𝒙), 𝒚)]  (1) 4> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+where  ℒ is some measure of error, or loss , between the prediction  𝑦̂ = 𝑓 𝜃 (𝑥)  and the ground truth  𝑦  (e.g., cross-entropy). In practice we approximate Eq.  (1 ) empirically by minimizing an empirical loss , given by Eq.  (2) 
+
+## 𝒇 ∗ = 𝒂𝒓𝒈𝒎𝒊𝒏 𝒇 ∑ [𝓛(𝒇(𝒙 𝒊 ), 𝒚 𝒊 )] 
+
+> (𝒙 𝒊 ,𝒚 𝒊 )∈𝑫
+
+## (2) 
+
+where  𝐷 = (𝑥 𝑖 , 𝑦 𝑖 )𝑖=1 𝐼  is a dataset of i.i.d. samples from  𝑃 𝑋𝑌 .This problem setup is typical within SAS-ATR [5], [6], [7], [9], [10], [11] etc. Our work investigates the use of data-driven models to solve this problem, in which we employ aparameterized function  𝑦 = 𝑓 𝜃 (𝑥) , where  𝜃  are parameters that influence the mapping between  𝑥  and  𝑦 . Then our data-driven modeling problem takes the form of Eq.  (3) 
+
+## 𝜽 ∗ = 𝒂𝒓𝒈𝒎𝒊𝒏 𝜽 ∑ [𝓛(𝒇 𝜽 (𝒙 𝒊 ), 𝒚 𝒊 )] 
+
+> (𝒙 𝒊 ,𝒚 𝒊 )∈𝑫
+
+## (3) 
+
+where our goal is now to find the parameters that minimize our empirical loss instead of the function. 
+
+IV. METHODS 
+
+This section provides a brief introduction to the methods utilized in our experiments, and their most essential details, such as key hyperparameters (i.e., parameters set by the designer) that we manipulate in our experiments. 
+
+A. Deep Neural Networks (DNNs) 
+
+In this work we utilize DNNs to solve the SAS-ATR problem posed in Sec.  III . DNNs are a broad class of parameterized functions of the form  𝑦 = 𝑓 𝜃 (𝑥) , where the parameters  𝜃 ∈ ℝ 𝑝 
+
+influence the input-to-output mapping. It has been shown that, with the proper settings of  𝜃 , DNNs can accurately classify SAS-ATR patches. The process of identifying good parameters 
+
+𝜃  is called training and is discussed in Sec.  IV -B.
+
+The effectiveness of a DNN for a given problem, such as SAS-ATR can vary substantially based upon its design. We discuss here two key design choices that we will utilize and vary in our experiments: model architecture , and model capacity .The DNN architecture refers to the functional form of  𝑓 𝜃 , which can strongly influence its efficacy for a particular problem [34], [47]. Most modern DNNs consist of multiple functional layers 
+
+of the form  𝑓 𝜃 = 𝑓 𝜃 𝐿 ∘ … ∘ 𝑓 𝜃 2 ∘ 𝑓 𝜃 1 (𝑥) , where  𝜃 𝑙 ∈ ℝ 𝑝 𝑙 
+
+represents the parameters associated with layer  𝑙 . The number of layers  𝐿  is typically called the network depth, and  𝑝 𝑙  typically called the width of the  𝑙 𝑡ℎ  network layer. DNN capacity is defined by the total number of parameters,  𝑝 , which can be mediated by varying the depth and width of a network. The individual layers in a DNN often have different functional forms, often suited to a particular purpose, or type of data. Two widely utilized DNN layers are convolutional layers, and transformer layers. Note that these layer types correspond to general classes of layer structures that have shared properties, rather than just one specific structure. 
+
+A DNN architecture is defined by a specific combination of layer types: often a combination that has been found effective for certain problems, such as image recognition. Modern DNN architectures are often dichotomized into Convolutional Neural Networks (CNNs ), which primarily comprise convolutional layers, and Transformer Networks (Transformers), that primarily comprise transformer layers . Both CNNs and Transformers have been found highly effective for processing imagery data, depending upon the context. A full discussion of these architectures is beyond the scope of this paper, however, we highlight two key differences. In principle, transformers more easily learn relationships between distant input values (e.g., on opposite sides of the input,  𝑥 ) than convolution. Second, transformers employ “attention” processing, whereby the importance assigned to each portion of the input can easily vary, relative to CNNs [34]. 
+
+Architecture and Capacity Choices. In this work we compare the SAS-ATR performance of six different DNNs: three CNNs (ResNet [47], ResNeXt [48], and ConvNext [49]) and three transformers (ViT [34], SWIN [35], and HiViT [50]). To evaluate the impact of network capacity we vary the capacity for each architecture, resulting in 14 total networks, as summarized in Table 1 .
+
+B. DNN Training 
+
+Here we describe the process of finding good parameters,  𝜃 
+
+,which is fundamentally achieved by solving Eq.  (3) with a DNN model. A solution to Eq.  (3) is typically found using some type of gradient descent algorithm, which uses the gradient of the loss with respect  𝜽  to iteratively adjust  𝜽  in a way that reduces the empirical loss over the data  𝑫 . A single iteration of gradient descent training takes the generic form 
+
+## 𝜽 ← 𝜽 − 𝛌𝛁 𝜽 𝓛 (𝒇 𝜽 (𝒙 𝒊 ), 𝒚 𝒊  ) (4)
+
+where  𝛁 𝜽  denotes the gradient operator, and  𝜆  is ahyperparameter (i.e., set by the designer) that controls the relative magnitude of change made to  𝜽  in each iteration. 
+
+Training Optimizer Choice. There are several widely-used variations of gradient-based training, such as Stochastic Gradient Descent [51], Adam [52], and AdamW [53] optimizers. In this work we will use the AdamW optimizer, 
+
+which introduces two key hyperparameters: minibatch size  𝛽 ,and weight decay rate,  𝜏 . Eq.  (4)  only ingests a single data sample, but in AdamW the gradients are computed over  𝛽 
+
+training data samples, and then averaged, before updating  𝜽 . It is termed an “epoch” once every data sample in  𝐷  has been utilized in a minibatch, and training often continues for several epochs. The weight decay in AdamW is a form of regularization and will be discussed further in Sec.  IV -C.
+
+Loss Function Choice. One other training consideration is the choice of loss function  𝓛 . In classification settings such as ours, it is most common to use the cross-entropy loss. However, we have far more non-target training instances, many of which 5> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+are easily classified. To address this, we utilize focal loss [54] (Eq.  (7) ), which modifies the cross-entropy loss to reduce the influence of abundant easily-classified input, as we have. Focal 
+
+loss uses two hyperparameters: the focusing parameter (γ) that 
+
+reduces loss on correctly classified samples and the class 
+
+balance parameter (α) that magnifies the loss for predictions 
+
+made on samples from the minority class. For our experiments we us e γ = 2.0 and α = 0.25. Further information about focal loss can be found in subsection [1]D  of the appendix. 
+
+Performance Evaluation . Once training is complete, it is useful to evaluate the classification accuracy of the trained DNN and compare it to other competing trained models. It is well-established that the data used to train the model – the training data -- often yields optimistic accuracy estimates, making it unsuitable for evaluating models. Therefore, it is common to withhold two subsets of the data,  𝐷 , from training so that they can later be used for model evaluations. One set, 
+
+termed the “validation” set is often used to monitor the progress of training. Another set, the “testing set”, is utilized to estimate 
+
+real-world performance, or compare performance of competing models. In this work we utilize a systematic procedure for splitting up the available data, termed k-fold cross-validation 
+
+[55], which is designed to make efficient use of available data when training and evaluating models. This process splits the data into  𝑘  disjoint sets, each of which serve once as a testing set, while the remaining folds are aggregated into a training (and/or validation) set. 
+
+Performance Metrics . In this study we report our results using two metrics: Average Precision (AP) [56] and Optimal F1. F1-score is defined as the harmonic mean of precision and recall. To obtain a precision and recall, it is necessary to apply a decision threshold,  𝑡 , to the classifier output, such that all predictions greater than  𝑡  are assigned a label  𝑦 = 1 , and  𝑦 = 0 
+
+otherwise. Typically,  𝑡 = 0.5 , however, this can result in pessimistic F1 scores for poorly calibrated classifiers, such as those using Focal Loss, as in our experiments. Optimal F1 refers to the F1 score obtained when we select the setting of  𝑡 
+
+that maximizes F1. This results in a score that is more resilient to poorly calibrated classifiers. 
+
+C. DNN Regularization 
+
+Although high-capacity DNNs often perform better, they can still suffer from high variance between training data points and thereby fail to generalize well to test data. It has been found helpful to use regularization techniques to mitigate this tendency, which encourages the model to interpolate more effectively (e.g., smoothly) between training data points. In this work we investigate several regularization techniques: pretraining, DropPath, weight decay and data augmentation. We discuss each approach, and key hyperparameters that we optimize in our experiments. 
+
+DropPath [23] involves muting network connections by sampling from a Bernoulli distribution using a hyperparameter 
+
+𝑝 ∈ (0,1]  as outlined in Eq.  (5) .
+
+## 𝒓 𝒊 ~ 𝐁𝐞𝐫𝐧𝐨𝐮𝐥𝐥𝐢(𝐩)  (5)
+
+When  𝑟 𝑖  is zero this path is dropped, preventing its output from contributing to the final representation. This encourages generalizability by preventing parameters from adjusting too heavily to fit training data. Our experiments in Sec.  VI -C vary the hyperparameter p to modulate the aggressiveness of Drop Path and evaluate how these changes impact performance. DropPath (also known as “stochastic depth") is based on traditional dropout [57], however DropPath has become the more favored due to superior empirical performance. 
+
+Weight Decay[24]. Weight decay forces the parameters of the networks to shrink towards zero in each iteration of training, which has been found to result in smoother interpolation between training points. To implement weight decay we use the Adam-W optimizer [53], which modifies the widely-used Adam optimizer [52] to include weight decay. 
+
+Pretraining involves initializing networks with weights from networks that have already been trained on other data. 
+
+Compared to training “from scratch” (i.e. not using pretrained 
+
+weights) this is typically preferred as it allows networks to be initialized with some understanding of spatial phenomena (edges, corners, blobs etc.) which can be fine-tuned to fit the training data. In CV, the use of pretrained weights from ImageNet [58] is generally regarded as widely beneficial to performance, however in SAS-ATR there are lingering questions as to whether such weights from networks trained on optical imagery provide similar such benefits, or if it would be more advantageous to use weights from networks trained on an imaging modality closer to SAS (such as SAR). We address these questions in this work. 
+
+Data Augmentation [22]. Data augmentation is the practice of creating novel representations of data samples by transforming them. This typically improves a network’s 
+
+generalizability by providing unique samples from existing ones, effectively simulating unseen samples by making changes to the data. For a data sample  𝑥 𝑖  a given augmentation  𝑎(𝑥 𝑖 ) is applied based on a probability parameter  𝑝 𝑎 ∈ [0,1]  replacing 
+
+𝑥 𝑖  with the sample  𝑥̂ 𝑖 .
+
+## 𝒙̂ 𝒊 ← 𝒎 𝒊 𝒂(𝒙 𝒊 ) + (𝟏 − 𝒎 𝒊 )𝒙 𝒊 
+
+## 𝒘𝒉𝒆𝒓𝒆 𝒎 𝒊 ~ 𝐁𝐞𝐫𝐧𝐨𝐮𝐥𝐥𝐢(𝒑 𝒂 ) (6)
+
+Historically in SAS-ATR literature there is some discussion 
+
+about the superiority of “physical” over “non -physical” 
+
+augmentations with the former being augmentations that produce images that preserve the essential physical properties of SAS images (i.e. platform track orientation, acoustic shadow, scattering characteristics etc.) and the latter being those that do not. In more recent years results have shown that both can be beneficial to performance [44], [45]. 6> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+V. MAIN EXPERIMENTS 
+
+We conduct experiments that seek to address two main questions for SAS-ATR: (i) do high-capacity DNN models tend to outperform smaller models; and (ii) do transformer-based architectures outperform convolutional ones? 
+
+A. Experimental Design Details 
+
+To address question (i) above, we evaluate SAS-ATR performance of multiple DNN architectures, respectively, as we vary their capacity. SAS-ATR performance is evaluated in terms of binary classification accuracy, where the model must classify beamformed SAS images into those representing a target, or not. We train and evaluate each model using the same procedure, which includes optimization of several hyperparameters to help ensure that each model achieves its full potential performance. This design is intended to isolate the impact of capacity from that of model architecture. To address question (ii) we conduct these experiments with several different transformer and convolution-based architectures. 
+
+Experimental SAS Dataset. Our dataset consists of 500,000 beamformed SAS image patches, drawn from three different geographic locations with unique oceanic and bathymetric conditions. The patches comprise regions of interest selected from a larger beamformed images of the seafloor using an energy-based detector. This process is depicted in  Fig 3 . Each extracted patch is the same size, but they are later resized to a height and width of 256 pixels for ingestion by deep learning models. Each patch is independently mapped to 8-bit intensity values by mapping the minimum intensity in each patch to 0 and the maximum to 255. Each geographic region comprises a similar number of targets, but very different numbers of non-targets. In preparation for experiments, we randomly subsample, or replicate, the non-target patches so that each location contains ~18500 images and thereby approximately a 30:7 clutter to target ratio. This ratio was chosen to achieve greater balance between target and non-target data, but without omitting too much non-target data. 
+
+Model Training and Performance Assessment . To provide a real-world performance assessment, we use a challenging leave-one-region-out cross-validation scheme. Each model was trained for 40 epochs using the ADAM-W optimizer [53] and a learning rate schedule consisting of a linear warmup from 1e-5 to 1e-4 for the first ten epochs and cosine annealing for the remaining epochs. To help ensure this training schedule was sufficiently-long for all models to converge, we monitored training loss of all models in  Table 1  and found every model reached near-perfect classification of the training set (i.e., a loss of  ≤ 1𝑒 − 3 ). In similar fashion we used a validation set to verify that none of the networks were overfitting. The validation set consists of ~160,00 SAS images with a 1:159 ratio of targets to non-targets. Performance of each model was evaluated on the test folds using Average Precision (AP) and Optimal F1 score (Opt. F1), as discussed in Sec.  IV -B. Fig 4 
+
+depicts a high-level overview of this process. 
+
+Hyperparameter and Regularization Optimization . We perform a thorough hyperparameter optimization for each model (i.e., each combination of an architecture and its capacity) to help ensure that it reaches its full potential performance. As discussed in Sec.  IV -C, effective regularization strategies are often important to realize the benefits of high-capacity models studied here. We sequentially considered and optimized several forms of regularization for each model in our study: weight pretraining, Drop Path, weight decay, and data augmentation (in this order). In each step of the optimization, we choose the settings that leads to the best performance, as evaluated by the average optimal F1-score across each of the three folds in our cross-validation scheme. We first considered use of ImageNet pretrained weights, versus training from scratch. We then jointly search over combinations of weight decay of 5%, 10% and 20% and the drop path rates of 10%, 20% and 30%. Lastly, we evaluate whether each model benefited from inclusion of a SAS-optimized data 
+
+> Fig 3: Process used to create our location-based 3-fold SAS Dataset. Three missions covering different geographical regions of seafloor are conducted to create SAS images which are fed to an energy-based prescreener to produce samples containing objects of high reflectivity.
+
+7> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+augmentation. Sec.  VI -B describes the augmentation policy and the process used to optimize it for SAS. 
+
+B. Experimental Results 
+
+Our main results are reported in  Table 1  and we next discuss each of our major findings with respect to the results. 
+
+Impact of model capacity. The results indicate that, given a fixed architecture, model performance generally increases (often substantially) as model capacity increases. For example, the ResNeXt-152 improves by 10% AP over the ResNeXt-50, leading to the highest AP among convolutional models. The Swin-Base improves 10% AP over the Swin-Tiny model, leading to the highest performance among transformer models. These results suggest the benefits of capacity are not unique to convolution or transformers. However, the performance impact does vary in general, with some models exhibiting little or no improvement. For example, the HiViT and ResNet models exhibit more modest improvements, or even a (slight) performance degradation in one case. Importantly, while capacity increases do sometimes lead to degradation, they are usually very small compared to the improvements often yielded, and so there is little risk of reducing performance by using higher-capacity models. 
+
+Comparison with Existing SAS-ATR Models. Existing SAS-ATR classifiers are low-capacity models. Here we train two models adopted from the literature and compare them with the models in our experiments: a ResNet utilized in two recent studies [13] [ 32], and the “TinyCNN” [ 10]. To ensure a fair comparison between networks we use the same training/optimization scheme used for our other models, as outlined in Sec.  Main Experiments -A. Our results indicate that every one of our proposed high-capacity models outperforms these two existing SAS-ATR networks, with many of our proposed models having substantially greater performance. 
+
+Best Overall Performing Model? While our results do not suggest a singular best performing SAS-ATR model there are network architectures that show superior performance. SWIN, ResNeXt and ConvNeXt are the most performant networks tested in this work, with their largest variants having the best performance. This suggests the superiority of these methods over alternatives for SAS-ATR, which is consistent with broader computer vision literature where SWIN and ConvNeXt often obtain state-of-the-art performance on natural imagery. 
+
+VI. ADDITIONAL ANALYSIS 
+
+In this section we report additional experiments to isolate the impact of different modeling choices. 
+
+A. Impact of Pretraining 
+
+Pretraining has been found to be most helpful when it is done with data from a similar modality. Therefore, we perform a controlled comparison between pretrained parameters from three imaging modalities, including some that are potentially more qualitatively similar to SAS. To determine the optimal modality upon which to pretrain SAS-ATR networks we compared pretraining on ImageNet (optical), SAR (radar), and Ultrasound imagery (acoustic). In these experiments we only use ResNet and ViT networks because we could not find all of the necessary pretrained weights for other networks. Beyond 
+
+> Fig 4: SAS-ATR classifier training process. The use of data augmentation, network regularization, and pretrained weights (all in dotted boxes) are each methods of improving classifier performance that we experiment with in Sec. VI.
+
+Network  Variant  Capacity (× 10 6) AP  Opt. F1 
+
+> Convolutional
+
+ResNet 
+
+50  24  79.52  88.38 
+
+101  43  82.71  90.05 
+
+152  58  82.54  90.29 
+
+ResNeXt  50  23  79.94  88.93 
+
+152  58  89.54  90.04 
+
+ConvNext  Tiny  28  57.19  74.60 
+
+Base  88  84.36  91.17 
+
+> Transformers
+
+ViT 
+
+Small  22  67.62  81.80 
+
+Base  86  67.95  81.60 
+
+Large  303  67.07  80.80 
+
+SWIN  Tiny  28  73.30  85.93 
+
+Base  87  84.69  92.24 
+
+HiViT  Small  37  67.94  84.07 
+
+Base  78  69.84  84.41 
+
+TinyCNN [10]  <1  55.41  71.02 
+
+ResNet18 [13] [32]  11  56.96  69.87  
+
+> Table 1. Average Precision and Optimal F1 Scores for each model, categorized as a Transformer or a Convolutional model type. Models that we implemented from the literature include a reference. The Capacity of each model is rounded. Bolded performance is the best within its category: transformer or convolutional.
+
+8> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+this, all other training procedures used in these experiments are identical to the experiments in Sec.  Main Experiments . Our results are reported in  Table 2  and indicate that pretraining is generally beneficial compared to training from scratch. Furthermore, ImageNet pretraining was always superior compared to other pretraining strategies. Based upon these results, we conducted a second experiment wherein we trained a large number of our models from scratch, as well as with ImageNet pretraining. The results of this experiment are reported in  Table 4  and show that ImageNet pretraining is beneficial (often substantially) for every single model, and by both of our performance metrics. These results suggest that ImageNet pretraining is consistently beneficial for SAS-ATR, compared to training from scratch, or compared to other pretraining. 
+
+The superiority of ImageNet weights compared to others may be surprising, given the greater apparent visual similarity of SAR or Ultrasound data to SAS. We hypothesize that the superiority of ImageNet weights may be explained by the substantially greater size and diversity of the ImageNet dataset, and greater relative attention given to ImageNet models within the vision community. It is plausible that pretraining on other modalities (e.g., SAR) would be superior for SAS-ATR if the advantages of ImageNet weights were mitigated, however, this is challenging, and beyond the scope of this work. 
+
+B. Impact of Augmentation 
+
+Data augmentation has recently been found beneficial for training DNN-based SAS-ATR models [44], [45]. We seek to leverage these recent findings to help regularize our high-capacity models, and to generally improve performance of the models in our study. To do this we consider ten different individual augmentations recently found to be beneficial for SAS [45], and search for a combination of them, termed a 
+
+policy , that performs well for our SAS ATR data. Each individual augmentation possesses one (or more) hyperparameters, which can strongly impact its performance on SAS-ATR [45]. For each augmentation we measure its performance as we vary its hyperparameter settings to identify the best one. We perform this search separately for one convolutional model (ConvNeXt) and one transformer model (SWIN), since it has been found that the best hyperparameters may depend upon the DNN architecture [45]. The results of this search indicate that ConvNeXt was only able to achieve marginal performance improvements with optimized hyperparameters while SWIN saw consistent improvements. The hyperparameter values found to be optimal are shown in 
+
+Table 7  of the appendix. 
+
+Following hyperparameter optimization, we conduct a greedy sequential search (SS) to construct an augmentation policy that maximizes performance. Performance comparisons of SWIN-base and ConvNeXt-base with no augmentations, the best single augmentation, and SS policy are reported in  Table 4  and 
+
+Network  Variant  Capacity 
+
+(× 10 6) AP  Pretrained AP  Opt. F1  Pretrained Opt. F1 
+
+> Convolutional
+
+ResNet 
+
+50  24  57.38  67.84  71.98  78.46 
+
+101  43  54.40  73.69  68.81  84.09 
+
+152  58  54.43  74.40  70.67  85.20 
+
+ResNeXt  50  23  57.59*  74.83  71.77*  84.27 
+
+152  58  53.16  71.42  71.06  82.06 
+
+ConvNext  Tiny  28  19.36  49.73  32.06  63.96 
+
+Base  88  19.7  78.63  32.92  87.69 
+
+> Transformers
+
+ViT 
+
+Small  22  50.69  52.03  68.45  64.50 
+
+Base  86  57.98*  64.27  73.11*  76.73 
+
+Large  303  53.98  63.00  71.54  73.98 
+
+SWIN  Tiny  28  57.10  57.61  70.82  71.13 
+
+Base  87  52.22  75.88  68.14  87.31 
+
+HiViT  Small  37  53.56  53.70  63.43  65.09 
+
+Base  78  54.66  57.51  65.64  66.84 
+
+> Table 3. Average Precision and Optimal F1 Scores for each network and their variants. Results are divided by CNNs (top), transformer-based networks (bottom), non-pretrained networks (left) and pretrained networks (right)
+
+Network  Pretraining  AP  Opt. F1 
+
+ResNet50 
+
+None  57.38  71.98 
+
+ImageNet  67.84  78.46 
+
+SAR  65.74  76.75 
+
+Ultrasound  62.79  75.07 
+
+ResNet101 
+
+None  54.40  68.81 
+
+ImageNet  73.69  84.09 
+
+SAR  65.53  76.62 
+
+Ultrasound  N/A  N/A 
+
+ViT-b 
+
+None  57.98  73.11 
+
+ImageNet  64.27  76.73 
+
+SAR  57.37  71.10 
+
+Ultrasound  57.75  71.34 
+
+ViT-l 
+
+None  53.98  71.54 
+
+ImageNet  63.00  73.98 
+
+SAR  55.55  68.69 
+
+Ultrasound  51.88  72.85 
+
+> Table 2: Results of each ViT and ResNet variant using pretrained weights from networks trained on each different imaging modality.
+
+9> REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+Table 5 . Our results indicate that ConvNeXt-base receives only a marginal improvement in AP with the inclusion of Zoom. Additional augmentations provided no improvement. This is contrasted with SWIN-base which benefitted from almost every augmentation and was able to achieve a near 10-point gain in AP and 5 points in optimal F1-score by including both Zoom and Rotation augmentations. These results provide some evidence that transformers may benefit more from augmentation and ultimately provide better performance with more training data and/or regularization. This is consistent with the broader computer vision literature [59], [60]. 
+
+C. Impact of Regularization 
+
+Here we evaluate the aggregate impact of regularization on our models. In these experiments, “regularization” comprises 
+
+weight decay, DropPath, and data augmentation. The regularization hyperparameters were optimized in the manner described in Sec.  Main Experiments A. We evaluate the performance of models with regularization, and without, respectively. All models in these experiments include ImageNet pretraining.  Table 6  compares the performance of networks with and without regularization.  Table 9  in the appendix details which hyperparameter values were found to elicit the strongest performance for each network. Regularization was found to be generally helpful as it improved the performance of each network. The magnitude of such improvements was consistent across architectures; however smaller networks often saw the most substantial improvements. These networks were still outperformed by their larger counterparts. 
+
+VII. CONCLUSIONS 
+
+In this work we examine the performance impacts of network capacity, network architecture, and regularization on DNN models for SAS-ATR. To understand how architecture impacts performance we examined six popular classification architectures (three transformer-based and three CNNs) under controlled optimization and evaluation regimes and compared their performance in terms of average precision and optimal F1-score. We also included two recent DNN models from the SAS-ATR literature in our comparisons. Our main findings are as follows: 
+
+• Increasing network capacity usually improves SAS-
+
+ATR performance, often substantially. It is never 
+
+significantly detrimental. 
+
+• Model architecture has a significant impact on SAS-
+
+ATR performance. The best overall performance was 
+
+achieved by SWIN, ResNeXt and ConvNeXt models 
+
+with high-capacity variants. These models 
+
+substantially outperformed the two baseline models 
+
+from the SAS-ATR literature. 
+
+• Regularization is crucial for realizing the advantages 
+
+of increasing model capacity. 
+
+• Regularization using pretrained ImageNet parameters 
+
+was always beneficial compared to random model 
+
+parameter initialization. Pretraining on ImageNet was 
+
+ConvNeXt-base  AP  Opt. F1 
+
+No Augmentations  78.63  87.69 
+
+Best Single Aug. (Zoom)  79.05  86.90 
+
+End of Sequential Search  79.05  86.90 
+
+> Table 5. Results for greedy sequential search of augmentation policy for ConvNeXt-base
+
+SWIN-base  AP  Opt. F1 
+
+No Augmentations  75.88  87.31 
+
+Best Single Aug. (Zoom)  83.18  90.62 
+
+End of Sequential Search  85.05  92.28 
+
+> Table 4. Results for greedy sequential search of augmentation policy for SWIN-base
+
+Network  Variant  AP – No Reg.  AP – Best Reg  Opt. F1 – No Reg.  Opt. F1 – Best Reg. 
+
+ResNet 
+
+50  67.84  79.52  78.46  88.38 
+
+101  73.69  82.71  84.09  90.05 
+
+152  74.40  82.54  85.20  90.29 
+
+ResNeXt  50  74.83  79.94  84.27  88.93 
+
+152  71.42  89.54  82.06  90.04 
+
+ConvNext  Tiny  49.73  57.19  63.96  74.60 
+
+Base  78.63  84.36  87.69  91.17 
+
+ViT 
+
+Small  52.03  67.62  64.50  81.80 
+
+Base  64.27  67.95  76.73  81.60 
+
+Large  63.00  67.07  73.98  80.80 
+
+SWIN  Tiny  57.61  73.30  71.13  85.93 
+
+Base  75.88  84.69  87.31  92.24 
+
+HiViT  Small  53.70  67.94  65.09  84.07 
+
+Base  57.51  69.84  66.84  84.41 
+
+> Table 6. Best Average Precision and Optimal F1 Scores for each network using no regularization and the best regularization scheme found in this study. Each network is pretrained with ImageNet weights.
+
+10 > REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+always superior to pretraining on SAR or Ultrasound 
+
+data. 
+
+• Regularization with DropPath and weight decay was 
+
+generally beneficial 
+
+• Regularization with data augmentation was highly 
+
+beneficial for transformers, but less-so for 
+
+convolutional models. 
+
+Collectively our results suggest that high-capacity DNNs, when properly regularized, represent a promising methodology for SAS-ATR. Our results here provide insight into how to train and properly regularize such models to maximize their performance on SAS-ATR. 
+
+Limitations and Future Work. We have limitations regarding our pretraining conclusions as we only consider transfer-style pretraining. While ImageNet pretraining was found universally helpful, we cannot determine if it is truly the optimal pretraining method as we do not compare other methods such as self-supervised learning. Future work should be done to compare ImageNet pretraining to self-supervised learning to determine which is truly best for SAS-ATR. There are further opportunities for future work that we have not yet outlined. It is unclear from our experiments exactly how network architecture type (transformer-based or CNN) interacts with other aspects of training in SAS-ATR. We find no significant trends to such an effect, suggesting that more work should be done to compare CNNs and transformer-based networks for SAS-ATR as our results imply that both are viable, but neither is definitively superior. 
+
+VIII. APPENDIX 
+
+A. Non-SAS Pretrained Weights 
+
+All ImageNet weights are sourced from Torchvision [61]. Hugging Face [62] is used to source ultrasound weights and the SAR weights we use for our ResNet models are from an open-source project with the goal of providing such weights for SAR applications [63] which they make publicly accessible on GitHub. For the sake of replicability,  Table 8  includes links to these weights. 
+
+B. Training Software and Acceleration Hardware 
+
+All training in this study was conducted using the MMPretrain package [64]. We perform data parallel training on a cluster of 4 NVIDIA A100X GPUs totaling 320GBs of high bandwidth memory for accelerated training. 
+
+C. Augmentation Techniques 
+
+For replicability we include the 10 augmentations we use as well as the hyperparameters that we jointly optimize using a grid-search in  Table 7 . Each augmentation comes from the Torchvision or MMPretrain library except for the speckle noise augmentation which is implemented using details from [65]. 
+
+Table 7  also contains the optimized hyperparameter values that were found using SWIN-base. We use this network as it saw the highest performance using augmentation out of all networks tested. 
+
+D. Focal Loss 
+
+Focal Loss improves this by introducing a parameter  α to 
+
+address class imbalance and γ to minimize the impact of trivial predictions. 
+
+## 𝑭𝑳 = −𝜶(𝟏 − 𝒑 𝒄𝒐𝒓𝒓𝒆𝒄𝒕 )𝜸 𝒍𝒐𝒈(𝒑 𝒄𝒐𝒓𝒓𝒆𝒄𝒕 ) (7)
+
+By using a weight of α when making predictions on samples 
+
+from the negative class and (1-α) for samples from the positive class, an α value of 0.25 (what we use) forces loss values of 
+
+predictions on targets to be more impactful to learning than those of non-targets. The use of γ allows for high-confidence predictions to have minimal impact on training. When the network makes high-confidence predictions that are correct (e.g. pcorrect = 0.99) a γ greater than 1 will cause the resulting 
+
+loss to be much lower than it otherwise would be, thereby minimizing the impact of such predictions on training. 
+
+Augmentation  Key Hyperparameter(s)  Optimal Hyperparameter Value(s) 
+
+Contrast Shift  contrast_factor - contrast scaling factor  contrast_factor = 1.0 
+
+Color Jitter  contrast – range of scaling factors for random contrast shifts 
+
+brightness – range of scaling factors for random brightness shifts 
+
+contrast = 0.25, brightness = 0.25 
+
+Speckle Noising 
+
+rate – controls decay rate of exponential distribution from which noise is sampled 
+
+filterSize – defines size of square median filter 
+
+filterSize = 3, rate = 4 
+
+Gaussian Blur  kernel_size – size of blur kernel 
+
+sigma – standard deviation of kernel 
+
+kernel_size = 3, sigma = 1 
+
+Zoom  scale – range of potential scaling  scale = [0.5, 1.35] 
+
+Center Shift  translate – range of translation in x and y axes  translate = [-1.0, 1.0] 
+
+Rotation  degrees – range of potential clockwise and counterclockwise rotations.  degrees = [-40, 40] 
+
+Mixup  alpha – controls mixing ratio  alpha = 0.2 
+
+ResizeMix  alpha – controls mixing ratio  alpha = 0.5 
+
+CutMix  alpha – controls mixing ratio  alpha = 0.2 
+
+> Table 7. Each augmentation tested in this work, their respective hyperparameters, and the values found to elicit the strongest performance from our most performant network (SWIN-base).
+
+11 > REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+E. Best Hyperparameters – Regularization 
+
+The highest performance achieved with each network in our regularization hyperparameter search is reported in  Table 6 ,however this table does not report the values found to be optimal in each case. We report those values here in  Table 9 .
+
+IX. REFERENCES 
+
+[1] R. E. Hansen, “Introduction to Synthetic Aperture Sonar,” in Sonar Systems , IntechOpen, 2011. doi: 10.5772/23122. 
+
+[2] V. Myers and J. Fawcett, “A Template Matching 
+
+Procedure for Automatic Target Recognition in Synthetic 
+
+Aperture Sonar Imagery,” IEEE Signal Process. Lett. , vol. 17, no. 7, pp. 683 –686, Jul. 2010, doi: 10.1109/LSP.2010.2051574. 
+
+[3] A. D. Matthews, T. C. Montgomery, D. A. Cook, J. W. 
+
+Oeschger, and J. S. Stroud, “12.75" Synthetic Aperture Sonar (SAS), High Resolution and Automatic Target Recognition,” in 
+
+OCEANS 2006 , Sep. 2006, pp. 1–7. doi: 10.1109/OCEANS.2006.307046. 
+
+[4] J. Del Rio Vera, E. Coiras, J. Groen, and B. Evans, 
+
+“Automatic Target Recognition in Synthetic Aperture Sonar Images Based on Geometrical Feature Extraction,” EURASIP J. Adv. Signal Process. , vol. 2009, no. 1, p. 109438, Apr. 2009, doi: 10.1155/2009/109438. 
+
+[5] M. S. Emigh, “SUPERVISED DEEP LEARNING 
+
+CLASSIFICATION FOR MULTI-BAND SYNTHETIC 
+
+APERTURE SONAR,” Accessed: Apr. 15, 2026. [Online]. 
+
+Available: https://www.semanticscholar.org/paper/SUPERVISED-DEEP-LEARNING-CLASSIFICATION-FOR-SONAR-Emigh/145bbf552002266805db5dd015ed2e99c11a8b4e 
+
+[6] D. P. Williams, “Underwater target classification in 
+
+synthetic aperture sonar imagery using deep convolutional 
+
+neural networks,” in 2016 23rd International Conference on Pattern Recognition (ICPR) , Dec. 2016, pp. 2497 –2502. doi: 10.1109/ICPR.2016.7900011. 
+
+[7] D. P. Williams and D. C. Brown, “Spectral 
+
+Partitioning of Synthetic Aperture Sonar Imagery for Improved 
+
+ATR,” IEEE Geosci. Remote Sens. Lett. , vol. 22, no. 1501605, 2025, doi: 10.1109/LGRS.2025.3554335. 
+
+[8] T. Hastie, R. Tibshirani, and J. Friedman, The Elements of Statistical Learning: Data Mining, Inference and Prediction .2nd ed. New York, NY, USA: Springer, 2009, ch. 7 
+
+[9] I. D. Gerg and V. Monga, “Deep Multi -Look Sequence Processing for Synthetic Aperture Sonar Image 
+
+Segmentation,” IEEE Trans. Geosci. Remote Sens. , vol. 61, pp. 1–15, 2023, doi: 10.1109/TGRS.2023.3234229. 
+
+[10] D. P. Williams, “On the Use of Tiny Convolutional 
+
+Neural Networks for Human-Expert-Level Classification 
+
+Performance in Sonar Imagery,” IEEE J. Ocean. Eng. , vol. 46, 
+
+Network  Variant  Weight Decay  DropPath 
+
+ResNet  50  5%  30% 
+
+101  5%  20% 
+
+152  10%  10% 
+
+ResNeXt  50  5%  30% 
+
+152  10%  30% 
+
+ConvNeXt  Tiny  20%  30% 
+
+Base  20%  30% 
+
+ViT  Small  10%  30% 
+
+Base  5%  30% 
+
+Large  5%  30% 
+
+SWIN  Tiny  20%  30% 
+
+Base  5%  20% 
+
+HiViT  Small  10%  20% 
+
+Base  5%  20% 
+
+> Table 9. Values for Weight Decay and DropPath the elicited the highest performance for each network tested
+
+Network  ImageNet  SAR  Ultrasound 
+
+ResNet50  MMPretrain 
+
+https://mmpretrain.readt 
+
+hedocs.io 
+
+/en/latest/papers/resnet.h tml 
+
+XAI4SAR 
+
+https://github.com /XAI4SAR/SAR-HUB /tree/main 
+
+Hugging Face 
+
+https://huggingface.co/agent593 
+
+/Thyroid-Ultrasound-Image-
+
+Classification-Resnet50Model 
+
+ResNet101  N/A 
+
+ViT-b  Torchvision 
+
+https://docs.pytorch.org /vision/main /models/vision_transfor mer.html 
+
+HuggingFace 
+
+https://huggingface. 
+
+co 
+
+/Wenquandan777 
+
+/SARMAE/tree/mai 
+
+n
+
+HuggingFace 
+
+https://huggingface.co/agent593 
+
+/Thyroid-Ultrasound-Image-
+
+Classification-ViTModel 
+
+ViT-l  HuggingFace 
+
+https://huggingface.co/sergiopaniego 
+
+/fine_tuning_vit_custom_dataset_breastcancer-
+
+ultrasound-images/blob/main/model.safetensors 
+
+> Table 8. The source of weights for each network that in the pretraining modality comparison study. Links are included for replicability.
+
+12 > REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+no. 1, pp. 236 –260, Jan. 2021, doi: 10.1109/JOE.2019.2963041. 
+
+[11] Y. Steiniger, D. Kraus, and T. Meisen, “Survey on deep learning based computer vision for sonar imagery,” Eng. Appl. Artif. Intell. , vol. 114, p. 105157, Sep. 2022, doi: 10.1016/j.engappai.2022.105157. 
+
+[12] K. Denos, M. Ravaut, A. Fagette, and H.-S. Lim, 
+
+“Deep learning applied to underwater mine warfare,” in 
+
+OCEANS 2017 - Aberdeen , Jun. 2017, pp. 1–7. doi: 10.1109/OCEANSE.2017.8084910. 
+
+[13] B. W. Sheffield, F. E. Bobe, B. Marchand, and M. S. 
+
+Emigh, “Advances in Self -Supervised Learning for Synthetic Aperture Sonar Data Processing, Classification, and Pattern 
+
+Recognition,” in OCEANS 2023 - MTS/IEEE U.S. Gulf Coast ,Sep. 2023, pp. 1–5. doi: 10.23919/OCEANS52994.2023.10337196. 
+
+[14] M. Belkin, D. Hsu, S. Ma, and S. Mandal, 
+
+“Reconciling modern machine -learning practice and the classical bias –variance trade-off,” Proc. Natl. Acad. Sci. , vol. 116, no. 32, pp. 15849 –15854, Aug. 2019, doi: 10.1073/pnas.1903070116. 
+
+[15] M. Lafon and A. Thomas, “Understanding the Double Descent Phenomenon in Deep Learning,” Mar. 15, 2024, arXiv :arXiv:2403.10459. doi: 10.48550/arXiv.2403.10459. 
+
+[16] S. J. D. Prince, “Understanding Deep Learning”. 
+
+[17] J. Kaplan et al. , “Scaling Laws for Neural Language Models,” Jan. 23, 2020, arXiv : arXiv:2001.08361. doi: 10.48550/arXiv.2001.08361. 
+
+[18] J. Hestness et al. , “Deep Learning Scaling is Predictable, Empirically,” Dec. 01, 2017, arXiv :arXiv:1712.00409. doi: 10.48550/arXiv.1712.00409. 
+
+[19] T. Pethick, K. Antonakopoulos, A. Silveti-Falls, L. 
+
+Chennuru Vankadara, and V. Cevher, “Training Neural Networks at Any Scale,” Nov. 01, 2025, arXiv . doi: 10.48550/arXiv.2511.11163. 
+
+[20] X. Chen, S. Xie, and K. He, “An Empirical Study of 
+
+Training Self-Supervised Vision Transformers,” arXiv.org. 
+
+Accessed: May 01, 2026. [Online]. Available: https://arxiv.org/abs/2104.02057v4 
+
+[21] L. Liu, X. Liu, J. Gao, W. Chen, and J. Han, 
+
+“Understanding the Difficulty of Training Transformers,” in 
+
+Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP) , B. Webber, T. Cohn, Y. He, and Y. Liu, Eds., Online: Association for Computational Linguistics, Nov. 2020, pp. 5747 –5763. doi: 10.18653/v1/2020.emnlp-main.463. 
+
+[22] C. Shorten and T. M. Khoshgoftaar, “A survey on Image Data Augmentation for Deep Learning,” J. Big Data ,vol. 6, no. 1, p. 60, Jul. 2019, doi: 10.1186/s40537-019-0197-0. 
+
+[23] G. Huang, Y. Sun, Z. Liu, D. Sedra, and K. Q. 
+
+Weinberger, “Deep Networks with Stochastic Depth,” in 
+
+Computer Vision – ECCV 2016 , B. Leibe, J. Matas, N. Sebe, and M. Welling, Eds., Cham: Springer International Publishing, 2016, pp. 646 –661. doi: 10.1007/978-3-319-46493-0_39. 
+
+[24] C. M. Bishop, Pattern recognition and machine learning . in Information science and statistics. New York: Springer, 2006. 
+
+[25] Y. Dar, V. Muthukumar, and R. G. Baraniuk, “A 
+
+Farewell to the Bias-Variance Tradeoff? An Overview of the 
+
+Theory of Overparameterized Machine Learning,” Sep. 06, 
+
+2021, arXiv : arXiv:2109.02355. doi: 10.48550/arXiv.2109.02355. 
+
+[26] Y. Xie, H.-H. Chou, H. Rauhut, and R. Ward, 
+
+“Overparameterization and generalization error: weighted trigonometric interpolation,” Oct. 27, 2021, arXiv :arXiv:2006.08495. doi: 10.48550/arXiv.2006.08495. 
+
+[27] M. Li, M. Soltanolkotabi, and S. Oymak, “Gradient 
+
+Descent with Early Stopping is Provably Robust to Label Noise 
+
+for Overparameterized Neural Networks,” Jul. 03, 2019, arXiv :arXiv:1903.11680. doi: 10.48550/arXiv.1903.11680. 
+
+[28] O. Cohen, O. Malka, and Z. Ringel, “Learning curves 
+
+for overparametrized deep neural networks: A field theory 
+
+perspective,” Phys. Rev. Res. , vol. 3, no. 2, p. 023034, Apr. 2021, doi: 10.1103/PhysRevResearch.3.023034. 
+
+[29] J. Chen and J. E. Summers, “Deep convolutional 
+
+neural networks for semi-supervised learning from synthetic 
+
+aperture sonar (SAS) images,” Proc. Meet. Acoust. , vol. 30, no. 1, p. 055018, Jul. 2019, doi: 10.1121/2.0001018. 
+
+[30] D. P. Williams, R. Hamon, and I. D. Gerg, “ON THE 
+
+BENEFIT OF MULTIPLE REPRESENTATIONS WITH CONVOLUTIONAL NEURAL NETWORKS FOR IMPROVED TARGET CLASSIFICATION USING SONAR 
+
+DATA”. 
+
+[31] I. Gerg and D. Williams, “Additional Representations 
+
+for Improving Synthetic Aperture Sonar Classification Using 
+
+Convolutional Neural Networks,” Oct. 15, 2018, arXiv :arXiv:1808.02868. doi: 10.48550/arXiv.1808.02868. 
+
+[32] I. D. Gerg and V. Monga, “Structural Prior Driven Regularized Deep Learning for Sonar Image Classification,” 
+
+Oct. 26, 2020, arXiv : arXiv:2010.13317. doi: 10.48550/arXiv.2010.13317. 
+
+[33] I. D. Gerg and V. Monga, “Preliminary Results on 
+
+Distribution Shift Performance of Deep Networks for Synthetic 
+
+Aperture Sonar Classification,” in OCEANS 2022, Hampton Roads , Oct. 2022, pp. 1–9. doi: 10.1109/OCEANS47191.2022.9977362. 
+
+[34] A. Dosovitskiy et al. , “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” ArXiv ,Oct. 2020, Accessed: Apr. 22, 2026. [Online]. Available: https://www.semanticscholar.org/paper/An-Image-is-Worth-16x16-Words%3A-Transformers-for-at-Dosovitskiy-Beyer/268d347e8a55b5eb82fb5e7d2f800e33c75ab18a 
+
+[35] Z. Liu et al. , “Swin Transformer: Hierarchical Vision Transformer using Shifted Windows,” in 2021 IEEE/CVF International Conference on Computer Vision (ICCV) ,Montreal, QC, Canada: IEEE, Oct. 2021, pp. 9992 –10002. doi: 10.1109/ICCV48922.2021.00986. 
+
+[36] N. Carion, F. Massa, G. Synnaeve, N. Usunier, A. 
+
+Kirillov, and S. Zagoruyko, “End -to-End Object Detection with 
+
+Transformers,” in Computer Vision – ECCV 2020 , vol. 12346, A. Vedaldi, H. Bischof, T. Brox, and J.-M. Frahm, Eds., in Lecture Notes in Computer Science, vol. 12346. , Cham: Springer International Publishing, 2020, pp. 213 –229. doi: 10.1007/978-3-030-58452-8_13. 
+
+[37] G. D. Vetaw, O. S. Vengurlekar, D. C. Brown, and S. 
+
+Jayasuriya, “A Hybrid ViT -CNN Architecture for Volumetric Target Classification with Sub-Bottom SAS Data,” in OCEANS 13 > REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+2024 - Halifax , Sep. 2024, pp. 01 –05. doi: 10.1109/OCEANS55160.2024.10754426. 
+
+[38] J. Su, D. Xu, L. Qiu, Z. Xu, L. Lin, and J. Zheng, “A 
+
+High-Accuracy Underwater Object Detection Algorithm for 
+
+Synthetic Aperture Sonar Images,” Remote Sens. , vol. 17, no. 13, Jun. 2025, doi: 10.3390/rs17132112. 
+
+[39] L. Vasankari, A. Borzyszkowski, L. Zelioli, and J. 
+
+Heikkonen, “Deep Mix: AI in Littoral Sonar Operations,” J. Mar. Sci. Appl. , May 2025, doi: 10.1007/s11804-025-00695-4. 
+
+[40] B. W. Sheffield, J. Ellen, and B. Whitmore, “On 
+
+Vision Transformers for Classification Tasks in Side-Scan 
+
+Sonar Imagery,” Sep. 18, 2024, arXiv : arXiv:2409.12026. doi: 10.48550/arXiv.2409.12026. 
+
+[41] D. P. Williams, “Transfer Learning with SAS -Image Convolutional Neural Networks for Improved Underwater 
+
+Target Classification,” in IGARSS 2019 - 2019 IEEE International Geoscience and Remote Sensing Symposium , Jul. 2019, pp. 78 –81. doi: 10.1109/IGARSS.2019.8898611. 
+
+[42] “(PDF) TRANSFER -LEARNING WITH DEEP NEURAL NETWORKS FOR MINE RECOGNITION IN 
+
+SONAR IMAGES,” in ResearchGate , Accessed: Apr. 23, 2026. [Online]. Available: https://www.researchgate.net/publication/328019058_TRANS FER-LEARNING_WITH_DEEP_NEURAL_NETWORKS_FOR_ MINE_RECOGNITION_IN_SONAR_IMAGES 
+
+[43] Y. Steiniger, J. L. Q. Gonzalez, D. Kraus, and B. 
+
+Lehmann, “Selection of Pre -training Datasets for Sonar Image 
+
+Classification,” Trans. Marit. Sci. , vol. 14, no. 3, Jul. 2025, doi: 10.7225/toms.v14.n03.w03. 
+
+[44] M. Orescanin, B. Harrington, D. Olson, M. Geilhufe, 
+
+R. E. Hansen, and N. Warakagoda, “A Study on the Effect of 
+
+Commonly Used Data Augmentation Techniques on Sonar 
+
+Image Artifact Detection Using Deep Neural Networks,” in 
+
+IGARSS 2023 - 2023 IEEE International Geoscience and Remote Sensing Symposium , Jul. 2023, pp. 360 –363. doi: 10.1109/IGARSS52108.2023.10282626. 
+
+[45 ] C. J. Moore, G. D. Vetaw, and J. Malof, “A Comparison 
+
+of Data Augmentation Methods for Training Deep Neural 
+
+Networks on Synthetic Aperture Sonar,” arXiv: 
+
+arXiv:2607.23770. doi: 10.48550/arXiv.2607.23770 
+
+[46] I. Gerg, Examining Statistical Regularization &Learning Dynamics of a Convolutional Neural Network for Synthetic Aperture Sonar Imagery Classification. 2023. 
+
+[47] K. He, X. Zhang, S. Ren, and J. Sun, “Deep Residual Learning for Image Recognition,” Dec. 10, 2015, arXiv :arXiv:1512.03385. doi: 10.48550/arXiv.1512.03385. 
+
+[48] S. Xie, R. Girshick, P. Dollár, Z. Tu, and K. He, 
+
+“Aggregated Residual Transformations for Deep Neural Networks,” Apr. 11, 2017, arXiv : arXiv:1611.05431. doi: 10.48550/arXiv.1611.05431. 
+
+[49] Z. Liu, H. Mao, C.-Y. Wu, C. Feichtenhofer, T. 
+
+Darrell, and S. Xie, “A ConvNet for the 2020s,” Mar. 02, 2022, 
+
+arXiv : arXiv:2201.03545. doi: 10.48550/arXiv.2201.03545. 
+
+[50] X. Zhang et al. , “HiViT: Hierarchical Vision Transformer Meets Masked Image Modeling,” May 30, 2022, 
+
+arXiv : arXiv:2205.14949. doi: 10.48550/arXiv.2205.14949. 
+
+[51] L. Bottou, “Large -Scale Machine Learning with 
+
+Stochastic Gradient Descent,” in Proceedings of 
+
+COMPSTAT’2010 , Y. Lechevallier and G. Saporta, Eds., Heidelberg: Physica-Verlag HD, 2010, pp. 177 –186. doi: 10.1007/978-3-7908-2604-3_16. 
+
+[52] D. P. Kingma and J. Ba, “Adam: A Method for Stochastic Optimization,” arXiv.org. Accessed: Jun. 04, 2026. 
+
+[Online]. Available: https://arxiv.org/abs/1412.6980v9 
+
+[53] I. Loshchilov and F. Hutter, “Decoupled Weight Decay Regularization,” presented at the International 
+
+Conference on Learning Representations, Sep. 2018. Accessed: Jun. 02, 2026. [Online]. Available: https://openreview.net/forum?id=Bkg6RiCqY7 
+
+[54] T.-Y. Lin, P. Goyal, R. Girshick, K. He, and P. Dollár, 
+
+“Focal Loss for Dense Object Detection,” in 2017 IEEE International Conference on Computer Vision (ICCV) , Oct. 2017, pp. 2999 –3007. doi: 10.1109/ICCV.2017.324. 
+
+[55] R. Kohavi, “A study of cross -validation and bootstrap 
+
+for accuracy estimation and model selection,” in Proceedings of the 14th international joint conference on Artificial intelligence - Volume 2 , in IJCAI’95. San Francisco, CA, USA: 
+
+Morgan Kaufmann Publishers Inc., Aug. 1995, pp. 1137 –1143. 
+
+[56] C. Manning, P. Raghavan, and H. Schuetze, 
+
+“Introduction to Information Retrieval,” 2009. 
+
+[57] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, 
+
+and R. Salakhutdinov, “Dropout: A Simple Way to Prevent Neural Networks from Overfitting”. 
+
+[58] O. Russakovsky et al. , “ImageNet Large Scale Visual Recognition Challenge,” Jan. 30, 2015, arXiv :arXiv:1409.0575. doi: 10.48550/arXiv.1409.0575. 
+
+[59] A. Steiner, A. Kolesnikov, X. Zhai, R. Wightman, J. Uszkoreit, and L. Beyer, "How to train your ViT? Data, Augmentation and Regularization in Vision Transformers," Jun. 23, 2022, arXiv: arXiv:2106.10270. doi: 10.48550/arXiv.2106.10270 
+
+[60] H. Touvron, M. Cord, M. Douze, F. Massa, A. 
+
+Sablayrolles, and H. Jegou, “Training data -efficient image 
+
+transformers & distillation through attention,” Jan. 15, 2021, 
+
+arXiv: arXiv:2012.12877. doi: 10.48550/arXiv.2012.12877 
+
+[61] A. Paszke et al. , “PyTorch: An Imperative Style, 
+
+High-Performance Deep Learning Library,” arXiv.org. 
+
+Accessed: Jun. 02, 2026. [Online]. Available: https://arxiv.org/abs/1912.01703v1 
+
+[62] T. Wolf et al. , “Transformers: State -of-the-Art Natural 
+
+Language Processing,” in Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations , Q. Liu and D. Schlangen, Eds., Online: Association for Computational Linguistics, Oct. 2020, pp. 38 –
+
+45. doi: 10.18653/v1/2020.emnlp-demos.6. 
+
+[63] H. Yang, X. Kang, L. Liu, Y. Liu, and Z. Huang, 
+
+“SAR -HUB: Pre-Training, Fine-Tuning, and Explaining,” 
+
+Remote Sens. , vol. 15, no. 23, Nov. 2023, doi: 10.3390/rs15235534. 
+
+[64] MMPreTrain Contributors, OpenMMLab’s Pre -training Toolbox and Benchmark . (Apr. 2023). Python. Accessed: Jun. 02, 2026. [Online]. Available: https://github.com/open-mmlab/mmpretrain 
+
+[65 ] J. Ding, B. Chen, H. Liu, and M. Huang, “Convolutional 
+
+Neural Network With Data Augmentation for SAR Target 
+
+Recognition.” IEEE Geoscience and Remote Sensing Letters, 14 > REPLACE THIS LINE WITH YOUR MANUSCRIPT ID NUMBER (DOUBLE-CLICK HERE TO EDIT) < 
+
+vol. 13, no. 3, pp. 364-368, Mar. 2016, doi: 10.1109/LGRS.2015.2513754.

@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-08-28 ~ 2026-09-06</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-06</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 17 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 13 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>6</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-06 10:13:27 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-06 22:17:38 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>本期共处理17篇论文，精读6篇、速读11篇，核心聚焦水下自主智能与视觉导航。最值得看的是AUV共享自主认知架构（9.0）与CAVE-NAV水下洞穴VLM导航（8.0），共同指向“人机协同+多模态感知”的无人系统前沿。若想轻松扩展，可顺速读方向关注滑坡、礁岛与高光谱等地球观测中的视觉语言应用。</p>
+<p>今日聚焦南极海冰季节预测与遥感多智能体系统，精读2篇高分论文、速读3篇相关智能体工作。</p>
+<p>最值得关注：混合卷积-Transformer模型有效提升海冰浓度预测精度；Hierarchical Multi-Agent系统在长时序遥感任务中表现出高可靠性。</p>
+<p>建议优先精读这两篇高分研究，并追踪多智能体在灾害制图与自进化科研中的应用趋势。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -78,12 +80,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Cognitive Architecture for Shared Autonomy in AUV Operations">A Cognitive Architecture for Shared Autonomy in AUV Operations</span></li><li><span class="dpr-home-dashboard-paper-title" title="CAVE-NAV: VLM-Based Autonomous 3D Navigation in Underwater Cave Environments">CAVE-NAV: VLM-Based Autonomous 3D Navigation in Underwater Cave Environments</span></li><li><span class="dpr-home-dashboard-paper-title" title="OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones">OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Season-Aware Hybrid Convolutional-Transformer for Antarctic Sea Ice Concentration Forecasting">Season-Aware Hybrid Convolutional-Transformer for Antarctic Sea Ice Concentration Forecasting</span></li><li><span class="dpr-home-dashboard-paper-title" title="HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving">HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving</span></li><li><span class="dpr-home-dashboard-paper-title" title="Ten Architectures, One Error: Shared Failure Modes in Hyperspectral Classification under Spatially Disjoint Evaluation">Ten Architectures, One Error: Shared Failure Modes in Hyperspectral Classification under Spatially Disjoint Evaluation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -91,12 +93,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="EarthLD: Towards Unified Open-World Landslide Understanding via Vision-Language Guided Diffusion Models">EarthLD: Towards Unified Open-World Landslide Understanding via Vision-Language Guided Diffusion Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="Learning the Shoreline: A Very High-Resolution Approach to Reef Island Dynamics">Learning the Shoreline: A Very High-Resolution Approach to Reef Island Dynamics</span></li><li><span class="dpr-home-dashboard-paper-title" title="Agentic Multimodal Models for Environmental Hyperspectral Unmixing">Agentic Multimodal Models for Environmental Hyperspectral Unmixing</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning">SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning</span></li><li><span class="dpr-home-dashboard-paper-title" title="RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery">RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="RingMoClaw: An Experience-Inspired Multi-Agent Framework for Self-Evolving Research in Remote Sensing">RingMoClaw: An Experience-Inspired Multi-Agent Framework for Self-Evolving Research in Remote Sensing</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
 </section>
 </div>
 

@@ -1,0 +1,217 @@
+{
+  "date": "20260906",
+  "date_label": "",
+  "generated_at": "2026-09-06 22:17:38 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.30654v1",
+      "route": "202609/06/2608.30654v1-season-aware-hybrid-convolutional-transformer-for-antarctic-sea-ice-concentration-forecasting",
+      "title": "Season-Aware Hybrid Convolutional-Transformer for Antarctic Sea Ice Concentration Forecasting",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向南极海冰密集度的混合卷积-Transformer预测，直接涉及海洋遥感数据驱动分析",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2608.30672v1",
+      "route": "202609/06/2608.30672v1-hirs-agent-a-hierarchical-multi-agent-system-for-reliable-long-horizon-remote-sensing-task-solving",
+      "title": "HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向长周期遥感任务的分层多智能体系统，契合智能体加遥感应用主题",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.01786v1",
+      "route": "202609/06/2609.01786v1-ten-architectures-one-error-shared-failure-modes-in-hyperspectral-classification-under-spatially-disjoint-evaluation",
+      "title": "Ten Architectures, One Error: Shared Failure Modes in Hyperspectral Classification under Spatially Disjoint Evaluation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "针对高光谱遥感分类的十个深度学习架构做空间不相交无泄漏评测，与珊瑚礁分类模型基准测评高度相关",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.03391v1",
+      "route": "202609/06/2609.03391v1-exploring-the-potential-of-contrastive-language-image-pre-training-for-multi-source-remote-sensing-data",
+      "title": "Exploring the Potential of Contrastive Language-Image Pre-training for Multi-Source Remote Sensing Data",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向多源遥感传感器的语言-图像对比预训练；可服务于海洋遥感影像与文本融合建模",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2608.30277v1",
+      "route": "202609/06/2608.30277v1-simcraft-distilling-remote-sensing-agents-via-synthetic-trajectories-and-contextual-retrieval-augmented-fine-tuning",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于大模型与工具的遥感智能体通过情境检索增强微调进行蒸馏，贴合大模型和智能体在遥感影像任务中的应用",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.00046v2",
+      "route": "202609/06/2609.00046v2-rapidmap-rapid-multi-agent-pipeline-for-interpretable-disaster-mapping-from-satellite-and-street-view-imagery",
+      "title": "RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "结合卫星与街景影像的多智能体灾害制图流水线，属于智能体遥感应用",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.00814v1",
+      "route": "202609/06/2609.00814v1-ringmoclaw-an-experience-inspired-multi-agent-framework-for-self-evolving-research-in-remote-sensing",
+      "title": "RingMoClaw: An Experience-Inspired Multi-Agent Framework for Self-Evolving Research in Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "自演化遥感多智能体框架，可适配为海洋自主观测与珊瑚遥感分析的智能体架构",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.03480v1",
+      "route": "202609/06/2609.03480v1-tree-species-mapping-in-denmark-a-comparison-of-spectral-temporal-features-with-geospatial-foundation-model-embeddings",
+      "title": "Tree species mapping in Denmark: A comparison of spectral-temporal features with geospatial foundation model embeddings",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "通过光谱-时相特征与地理空间基础模型嵌入进行遥感生态系统分类，可迁移至珊瑚礁底质覆盖分类任务",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2608.29553v1",
+      "route": "202609/06/2608.29553v1-beacon-behavioral-and-semantic-enrichment-of-alphaearth-embeddings-through-tri-modal-contrastive-learning",
+      "title": "BEACON: Behavioral and Semantic Enrichment of AlphaEarth Embeddings through Tri-Modal Contrastive Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用三模态对比学习将遥感嵌入、文本与行为数据对齐，为环境评估中遥感数据与文本融合提供可迁移方法",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2608.29626v1",
+      "route": "202609/06/2608.29626v1-splg-mamba-structure-preserving-local-global-mamba-network-for-salient-object-detection-in-optical-remote-sensing-images",
+      "title": "SPLG-Mamba: Structure-Preserving Local-Global Mamba Network for Salient Object Detection in Optical Remote Sensing Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向光学遥感图像的结构保持显著目标检测深度网络，可作为海洋或珊瑚栖息地遥感分割的迁移方法",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2608.29923v1",
+      "route": "202609/06/2608.29923v1-towards-continual-test-time-adaptation-of-vision-language-models-in-open-vocabulary-semantic-segmentation",
+      "title": "Towards Continual Test-Time Adaptation of Vision-Language Models in Open-Vocabulary Semantic Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向开放词汇语义分割的视觉语言模型测试时持续自适应，与文本引导的珊瑚礁栖息地制图方法同源",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.01392v1",
+      "route": "202609/06/2609.01392v1-scale-based-approach-for-active-wildfire-segmentation-on-satellite-imagery",
+      "title": "Scale-based Approach for Active Wildfire Segmentation on Satellite Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "在卫星影像稀疏目标分割中比较U-Net等模型，为珊瑚底质覆盖分类的模型选择提供方法借鉴",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    },
+    {
+      "paper_id": "2609.01800v1",
+      "route": "202609/06/2609.01800v1-improved-automatic-target-recognition-in-synthetic-aperture-sonar-imagery-using-large-deep-neural-networks",
+      "title": "Improved Automatic Target Recognition in Synthetic Aperture Sonar Imagery Using Large Deep Neural Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用深度网络比较水下声纳图像目标分类性能，对样本稀少的珊瑚底质覆盖分类有借鉴",
+      "first_seen_at": "2026-09-06 22:17:38 UTC",
+      "updated_at": "2026-09-06 22:17:38 UTC"
+    }
+  ]
+}
