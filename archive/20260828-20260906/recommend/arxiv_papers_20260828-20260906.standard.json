@@ -1,0 +1,684 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-06T10:04:15.617619+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 11,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 26,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2608.29347v1",
+      "source": "arxiv",
+      "title": "A Cognitive Architecture for Shared Autonomy in AUV Operations",
+      "abstract": "Operators remain essential to Remotely Operated Vehicle (ROV) operation, yet often suffer from low situational awareness and high workload, both of which negatively affect safety. This paper presents a cognitive architecture consisting of an ontology and multiple Large Language Models (LLMs) to assist the operator at all stages of the mission. Each LLM is grounded with domain-specific information from the ontology and given a simple role to create a system that can support the operator at all stages of an operation. We are aiming to prove that using the two together will allow decisions to be grounded in the relevant domain knowledge, but also benefit from the reasoning capabilities of the LLM. Our framework determines if a mission is possible for a given Unmanned Underwater Vehicle (UUV), performs mission planning, and executes a given mission in simulation. The operator can be involved in planning and execution, ensuring the resulting plan is valid and that the vehicle behaves safely during execution. We compare different LLMs, Llama3, GPT-OSS, and Qwen2.5, to determine which are best suited to the different roles within our framework. We find that GPT-OSS performs best for feasibility assessment, planning, and execution, while Qwen2.5 is best suited to identifying mission types from natural language input.",
+      "authors": [
+        "Niamh Ellis",
+        "Thi Tran",
+        "Ignacio Carlucho",
+        "Yvan R. Petillot"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-29T16:06:32+00:00",
+      "link": "https://arxiv.org/pdf/2608.29347v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "intelligent LLM cognitive architecture for AUV/ROV marine operations",
+      "llm_evidence_cn": "多LLM认知架构用于AUV/ROV海上作业，直接对应海洋智能体应用",
+      "llm_evidence": "多LLM认知架构用于AUV/ROV海上作业，直接对应海洋智能体应用",
+      "canonical_evidence": "多LLM认知架构用于AUV/ROV海上作业，直接对应海洋智能体应用",
+      "llm_tldr_en": "An LLM-and-ontology cognitive architecture assists operators throughout AUV/ROV missions, grounding decisions in marine domain knowledge while leveraging LLM reasoning.",
+      "llm_tldr_cn": "针对AUV/ROV操作中操作员态势感知低、工作负荷高的问题，论文提出一种由本体和多个大语言模型构成的认知架构，为大语言模型赋予不同角色并在任务各阶段为操作员提供支持。借助本体提供海洋领域知识，系统既能保证决策有领域依据，又能利用大语言模型的推理能力，还可判断给定无人平台能否完成作业任务。该工作将智能体架构与领域知识结合，为海洋自主作业的人机共享自主提供了可落地框架。",
+      "llm_tldr": "针对AUV/ROV操作中操作员态势感知低、工作负荷高的问题，论文提出一种由本体和多个大语言模型构成的认知架构，为大语言模型赋予不同角色并在任务各阶段为操作员提供支持。借助本体提供海洋领域知识，系统既能保证决策有领域依据，又能利用大语言模型的推理能力，还可判断给定无人平台能否完成作业任务。该工作将智能体架构与领域知识结合，为海洋自主作业的人机共享自主提供了可落地框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.27793v1",
+      "source": "arxiv",
+      "title": "CAVE-NAV: VLM-Based Autonomous 3D Navigation in Underwater Cave Environments",
+      "abstract": "Autonomous navigation in underwater cave environments is essential for search-and-rescue operations, scientific exploration, and emergency egress. Traditional navigation systems commonly depend on dense visual features for localization and mapping. In underwater caves, however, visual degradation can undermine feature-based localization, sonar-based mapping may yield overly conservative obstacle representations, and communication constraints preclude real-time human guidance. To address these limitations, we propose an autonomous underwater cave navigation framework that leverages a vision-language model (VLM) with Chain-of-Thought (CoT) reasoning to infer navigable directions from environmental cues, including light intensity gradients, passage morphology, and geometric complexity, captured through multimodal inputs comprising RGB imagery, depth maps, and sonar-based vertical-clearance measurements, thereby supporting safe 3D navigation through confined cave passages. High-fidelity simulations across multiple cave topologies demonstrate that the proposed framework completes all evaluated end-to-end traversals without collisions while maintaining safe clearance from cave boundaries.",
+      "authors": [
+        "Zhenqi Wu",
+        "Yuanjie Lu",
+        "Yisheng Zhang",
+        "Miao Yu",
+        "Xuesu Xiao",
+        "Jaejeong Shin",
+        "Xiaomin Lin"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-08-28T00:16:09+00:00",
+      "link": "https://arxiv.org/pdf/2608.27793v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "VLM and chain-of-thought reasoning for autonomous underwater cave navigation",
+      "llm_evidence_cn": "利用视觉语言模型与思维链实现水下洞穴自主导航",
+      "llm_evidence": "利用视觉语言模型与思维链实现水下洞穴自主导航",
+      "canonical_evidence": "利用视觉语言模型与思维链实现水下洞穴自主导航",
+      "llm_tldr_en": "Presents an autonomous underwater cave navigation framework that uses a vision-language model with chain-of-thought reasoning to infer navigable directions from environmental cues such as light gradients and passage geometry, addressing degradation of visual features, sonar conservatism, and communication constraints.",
+      "llm_tldr_cn": "水下洞穴中的传统导航依赖密集视觉特征，但在浑浊或退化条件下易失效，声纳建图常偏保守且无法实时人工引导。本文提出基于视觉语言模型与思维链推理的自主水下洞穴导航框架，利用光强梯度、通道形态等线索推断可航方向。系统在真实退化场景中展现出稳健的导航决策能力，为其在搜救与科学考察等水下自主任务中的应用提供了基础。",
+      "llm_tldr": "水下洞穴中的传统导航依赖密集视觉特征，但在浑浊或退化条件下易失效，声纳建图常偏保守且无法实时人工引导。本文提出基于视觉语言模型与思维链推理的自主水下洞穴导航框架，利用光强梯度、通道形态等线索推断可航方向。系统在真实退化场景中展现出稳健的导航决策能力，为其在搜救与科学考察等水下自主任务中的应用提供了基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30672v1",
+      "source": "arxiv",
+      "title": "HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving",
+      "abstract": "Recent advances in large language models and multimodal models have pushed remote sensing (RS) processing from simple perception models to agentic systems designed to tackle complex, long-horizon RS tasks. However, existing systems often rely on monolithic decision-making frameworks, which fail to accommodate the multi-stage, interdependent nature of RS tasks. This centralized approach leads to challenges such as unstable task execution, incorrect tool usage, and error propagation across stages. To address these issues, we propose HiRS-Agent, a hierarchical multi-agent system for long-horizon RS task solving. HiRS-Agent adopts a two-level collaborative architecture: the Manager Layer handles dynamic routing, step-level verification, replanning, and termination control, while the Specialist Layer organizes domain-specific tools according to the RS workflow and is responsible for subtask reasoning and tool execution. To further enhance the system's capability, we introduce a two-stage supervised tuning strategy and a verification-guided hierarchical reinforcement learning stage to jointly optimize coordination and tool-use policies. Experiments on Earth-Agent Benchmark and ThinkGeo show that HiRS-Agent substantially improves long-horizon tool-use capability and final-task correctness, demonstrating the effectiveness of structured multi-agent collaboration for reliable RS agents. The code is publicly available at https://github.com/IntelliSensing/HiRS-Agent.",
+      "authors": [
+        "Boyang Mu",
+        "Zhiwei Wei",
+        "Mugen Peng",
+        "Wenjia Xu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA",
+        "cs.MM"
+      ],
+      "published": "2026-08-31T12:13:41+00:00",
+      "link": "https://arxiv.org/pdf/2608.30672v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "large-language-model-based hierarchical multi-agent system for long-horizon remote sensing tasks aligns with LLM-agent remote sensing requirement",
+      "llm_evidence_cn": "大模型驱动的层次化多智能体系统解决长时序遥感任务，契合大模型智能体与遥感应用主题",
+      "llm_evidence": "大模型驱动的层次化多智能体系统解决长时序遥感任务，契合大模型智能体与遥感应用主题",
+      "canonical_evidence": "大模型驱动的层次化多智能体系统解决长时序遥感任务，契合大模型智能体与遥感应用主题",
+      "llm_tldr_en": "HiRS-Agent is a hierarchical multi-agent system for long-horizon remote sensing tasks, with a Manager layer for dynamic routing and step verification and worker agents for tool execution, reducing error propagation and enabling reliable LLM-driven remote sensing workflows such as habitat mapping.",
+      "llm_tldr_cn": "遥感任务常是多阶段且相互依赖的复杂过程，现有系统多采用集中式决策，导致工具使用错误和错误跨阶段传播。HiRS-Agent提出两级协作架构：管理层负责任务动态路由和步骤级验证，执行层完成具体遥感工具调用与结果输出。这种层次化多智能体设计将大语言模型与多模态模型从单步感知扩展到可靠的长时序遥感任务求解。该框架可复用于珊瑚礁栖息地制图等遥感科研工作流，是遥感智能体的重要实现范式。",
+      "llm_tldr": "遥感任务常是多阶段且相互依赖的复杂过程，现有系统多采用集中式决策，导致工具使用错误和错误跨阶段传播。HiRS-Agent提出两级协作架构：管理层负责任务动态路由和步骤级验证，执行层完成具体遥感工具调用与结果输出。这种层次化多智能体设计将大语言模型与多模态模型从单步感知扩展到可靠的长时序遥感任务求解。该框架可复用于珊瑚礁栖息地制图等遥感科研工作流，是遥感智能体的重要实现范式。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.29661v1",
+      "source": "arxiv",
+      "title": "OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones",
+      "abstract": "Meteorological reanalysis encodes extreme weather through continuous, physically constrained fields, posing a fundamental challenge for vision-language models (VLMs) whose perceptual assumptions are shaped by natural images. Tropical cyclones exemplify this mismatch: critical properties such as intensity extrema, asymmetry, spatial extent, and physical impacts arise from field-level organization rather than object-centric visual cues. Existing approaches address this gap through text alignment or annotation, treating the problem as multimodal supervision rather than representation design. We introduce Physics-Aware Visual Abstraction (PAVA), a plug-and-play physics-aware representation and annotation interface that maps physical reanalysis fields to visually identifiable and semantically grounded perceptual abstractions for supervision and evaluation in vision-language reasoning. Building on PAVA, we construct OmniClimate-TC, a benchmark for tropical cyclone analysis spanning five classes of reasoning and nine tasks, with 243,890 physically grounded instruction-tuning pairs. Using PAVA-aligned supervision, we adapt VLMs and provide evidence that this representation design improves reasoning over tropical cyclone hazard fields. Our results position OmniClimate-TC as a benchmark for multimedia reasoning over structured geophysical fields, and highlight representation design as a key ingredient for physically grounded reasoning in scientific media.",
+      "authors": [
+        "Luwei Xiao",
+        "Xin Wang",
+        "Keane Ong",
+        "Jiawen Wei",
+        "Chenyu Dong",
+        "Rui Mao",
+        "Erik Cambria",
+        "Gianmarco Mengaldo"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE"
+      ],
+      "published": "2026-08-30T08:54:20+00:00",
+      "link": "https://arxiv.org/pdf/2608.29661v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Physics-aware visual abstractions enable VLMs to reason over tropical cyclone fields; multimodal fusion of remote-sensing-style imagery and text for ocean/climate science",
+      "llm_evidence_cn": "为VLM提出物理感知视觉抽象以推理热带气旋场数据，是遥感类图像+文本多模态海洋气候科学推理",
+      "llm_evidence": "为VLM提出物理感知视觉抽象以推理热带气旋场数据，是遥感类图像+文本多模态海洋气候科学推理",
+      "canonical_evidence": "为VLM提出物理感知视觉抽象以推理热带气旋场数据，是遥感类图像+文本多模态海洋气候科学推理",
+      "llm_tldr_en": "Introduces PAVA, plug-and-play physics-aware visual representations and annotations that let vision-language models reason about tropical cyclone fields from geophysical or satellite-style sources.",
+      "llm_tldr_cn": "热带气旋的强度极值、非对称性与物理影响以连续场形式编码，与自然图像预训练的视觉语言模型感知假设不一致。现有方法仅靠文本对齐或标注处理多模态监督，未改善表征。本文提出物理感知视觉抽象(PAVA)，将物理场映射为适合VLM的视觉表示与标注接口，保持和物理约束一致的上下文。该方案使多媒体模型能在卫星/再分析式图像与文本间推理气旋属性，为海洋-大气遥感科学中图像与文本结合的多模态推理提供通用设计思路。",
+      "llm_tldr": "热带气旋的强度极值、非对称性与物理影响以连续场形式编码，与自然图像预训练的视觉语言模型感知假设不一致。现有方法仅靠文本对齐或标注处理多模态监督，未改善表征。本文提出物理感知视觉抽象(PAVA)，将物理场映射为适合VLM的视觉表示与标注接口，保持和物理约束一致的上下文。该方案使多媒体模型能在卫星/再分析式图像与文本间推理气旋属性，为海洋-大气遥感科学中图像与文本结合的多模态推理提供通用设计思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30817v1",
+      "source": "arxiv",
+      "title": "A Composition-Aware Pretraining Framework for Geospatial Foundation Models",
+      "abstract": "Geospatial foundation models have emerged as state-of-the-art methods for downstream Earth observation tasks. However, existing pretraining methodologies process imagery through a single-concept lens, failing to capture the highly compositional nature of complex satellite scenes. We propose a composition-aware pretraining framework that explicitly encodes fractional land-cover mixtures. Each satellite image cell is mapped to a histogram representing its fractional land-cover distribution, which we term the \"composition target\". These targets serve as the primary prediction objective and are distilled into the backbone using Earth Mover's Distance. Experimental evaluation shows that composition-aware pretraining yields substantial gains on region-level understanding tasks requiring semantic similarity judgment, including zero-shot image retrieval and scene classification, while remaining competitive on tasks requiring fine-grained spatial precision, such as segmentation and object detection. With a 36.8M-parameter backbone, our framework outperforms SatMAE and Prithvi-EO-2.0, which contain 303M and 600M parameters, respectively, in most retrieval and scene classification settings. On the fine-grained ForestNet-12 dataset, a rigorous testbed for compositional discrimination, our method boosts baseline mAP@10 from 0.279 to 0.434, a 55.6% relative improvement, providing direct evidence for the effectiveness of explicit composition modeling. The code implementation can be found at https://github.com/05kashyap/GFM_Composition_Pretraining",
+      "authors": [
+        "Aryan Kashyap Naveen",
+        "Abhishek Srinivas",
+        "Pranav Moothedath",
+        "Shrutilipi Bhattacharjee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-31T14:00:12+00:00",
+      "link": "https://arxiv.org/pdf/2608.30817v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Composition-aware pretraining of geospatial foundation models from satellite imagery; land-cover fraction targets are analogous to habitat and benthic cover mapping",
+      "llm_evidence_cn": "卫星影像地理空间基础模型的成分感知预训练，土地覆盖分数目标与生境和底栖覆盖遥感制图高度对应",
+      "llm_evidence": "卫星影像地理空间基础模型的成分感知预训练，土地覆盖分数目标与生境和底栖覆盖遥感制图高度对应",
+      "canonical_evidence": "卫星影像地理空间基础模型的成分感知预训练，土地覆盖分数目标与生境和底栖覆盖遥感制图高度对应",
+      "llm_tldr_en": "Existing geospatial pretraining treats satellite scenes as single concepts. This composition-aware framework predicts fractional land-cover histograms per image cell with Earth Mover Distance distillation, yielding substantial gains on downstream Earth observation tasks and providing a transferable pretraining idea for ocean habitat mapping.",
+      "llm_tldr_cn": "现有地理空间基础模型的预训练将卫星影像当作单一概念学习，难以表达复杂场景的混合组成。论文提出成分感知预训练：把影像单元映射为其土地覆盖成分直方图，并用Earth Mover距离作为预测目标蒸馏到骨干网络。实验表明，该方法能显著提升区域级下游地球观测任务的性能。这为基于卫星影像的珊瑚礁、滨海生境等覆盖分类提供了可迁移的基础模型训练思路。",
+      "llm_tldr": "现有地理空间基础模型的预训练将卫星影像当作单一概念学习，难以表达复杂场景的混合组成。论文提出成分感知预训练：把影像单元映射为其土地覆盖成分直方图，并用Earth Mover距离作为预测目标蒸馏到骨干网络。实验表明，该方法能显著提升区域级下游地球观测任务的性能。这为基于卫星影像的珊瑚礁、滨海生境等覆盖分类提供了可迁移的基础模型训练思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.00628v1",
+      "source": "arxiv",
+      "title": "Restrict, Don't Retrain: Inference-Time VLM Guidance for Zero-Shot Aerial Segmentation",
+      "abstract": "Global welfare often depends on the correct interpretation of aerial and satellite imagery. Acting on such imagery (mapping flooded ground, crop extent, or damaged infrastructure) demands pixel-level segmentation to ensure perfect class localization. Pretrained general foundation models, when applied directly, often miss important features and cannot always find all the classes belonging to a given scene, overlooking smaller objects that matter most. We use a single consumer-grade GPU running a vision-language model (VLM) to supply this missing guidance, improving segmentation while producing structured, auditable evidence that drives the result and can be inspected on its own. We fuse three approaches: the frozen foundation model that labels every pixel, and two queries to a VLM, one to choose the classes that matter, and one to locate the small objects the base model misses. Evaluating across four aerial datasets, we see consistent gains at each stage where the base model is competent.",
+      "authors": [
+        "Teresa DiMeola",
+        "Charles Walter",
+        "Hong Xiao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-01T03:07:38+00:00",
+      "link": "https://arxiv.org/pdf/2609.00628v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "inference-time VLM guidance for zero-shot aerial segmentation, multimodal RS for environmental assessment",
+      "llm_evidence_cn": "推理时VLM引导零样本航空分割，多模态遥感用于环境评估",
+      "llm_evidence": "推理时VLM引导零样本航空分割，多模态遥感用于环境评估",
+      "canonical_evidence": "推理时VLM引导零样本航空分割，多模态遥感用于环境评估",
+      "llm_tldr_en": "Uses a vision-language model to guide frozen segmentation backbones at inference for zero-shot aerial imagery, producing auditable evidence for environmental mapping.",
+      "llm_tldr_cn": "论文针对预训练基础模型直接应用在航拍与卫星图像分割时会漏检小目标的问题，提出推理时用消费级GPU上的视觉语言模型VLM提供缺失引导，而无需重训。它融合冻结基础模型、VLM生成的结构化证据等多种信号，逐像素分割洪涝、农作物或受损基础设施等场景，并输出可审计的证据。实验表明该方法在零样本航空分割上改善了目标定位与类别覆盖，说明多模态大模型能有效结合遥感影像与证据用于环境评估。这对于海洋环境遥感评估具有直接方法参考价值。",
+      "llm_tldr": "论文针对预训练基础模型直接应用在航拍与卫星图像分割时会漏检小目标的问题，提出推理时用消费级GPU上的视觉语言模型VLM提供缺失引导，而无需重训。它融合冻结基础模型、VLM生成的结构化证据等多种信号，逐像素分割洪涝、农作物或受损基础设施等场景，并输出可审计的证据。实验表明该方法在零样本航空分割上改善了目标定位与类别覆盖，说明多模态大模型能有效结合遥感影像与证据用于环境评估。这对于海洋环境遥感评估具有直接方法参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.00712v1",
+      "source": "arxiv",
+      "title": "EarthLD: Towards Unified Open-World Landslide Understanding via Vision-Language Guided Diffusion Models",
+      "abstract": "Landslides are widespread geological hazards, yet their automated detection and mapping in remote sensing imagery remain challenging because of their irregular morphology, ambiguous spectral signatures, and substantial domain shifts across imaging platforms. To overcome these challenges, we propose EarthLD, a vision-language-guided diffusion framework for open-world landslide understanding, enabling unified landslide recognition, mapping, and trigger interpretation. At its core, EarthLD formulates landslide understanding as a diffusion process that progressively infers the presence, spatial extent, and pixel-level boundaries of landslides from noisy latent representations. This probabilistic formulation enables the model to jointly perform image-level landslide recognition and mapping while characterizing predictive uncertainty. By integrating visual observations with contextual knowledge in the denoising process, EarthLD distinguishes diverse landslides from backgrounds, produces confidence-aware predictions for suspected regions, and maps landslide ranges. We additionally construct a global-scale open-world landslide benchmark by systematically harmonizing multiple publicly available remote sensing data collected by diverse institutions. Extensive experiments across regions, sensors, and triggering events demonstrate that EarthLD consistently outperforms existing landslide detection methods, highlighting its potential as a unified and robust solution for global geological-hazard monitoring and emergency response.",
+      "authors": [
+        "Yuanchao Su",
+        "Lianru Gao",
+        "Mengying Jiang",
+        "Jiangyi Chen",
+        "Jiaxin Cheng",
+        "Yicong Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T04:41:50+00:00",
+      "link": "https://arxiv.org/pdf/2609.00712v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "vision-language guided diffusion for unified open-world landslide mapping from remote sensing imagery",
+      "llm_evidence_cn": "利用视觉-语言引导的扩散模型进行遥感影像滑坡统一开放世界制图",
+      "llm_evidence": "利用视觉-语言引导的扩散模型进行遥感影像滑坡统一开放世界制图",
+      "canonical_evidence": "利用视觉-语言引导的扩散模型进行遥感影像滑坡统一开放世界制图",
+      "llm_tldr_en": "EarthLD recasts open-world landslide understanding as a diffusion process that progressively infers presence, extent and pixel boundaries from noisy latent representations with vision-language guidance, yielding unified landslide recognition, mapping and trigger interpretation across imaging platforms and domain shifts.",
+      "llm_tldr_cn": "滑坡形态不规则且不同遥感平台间域差异大，现有自动检测与制图精度有限。本文提出EarthLD，将滑坡理解建模为视觉-语言引导的扩散过程，从噪声潜变量逐步推断是否存在、范围及像素级边界，从而统一完成识别、制图和触发原因解读。实验表明该方法能适应开放世界场景并改善跨平台滑坡制图的一致性，为地学灾害遥感解译提供了新范式。",
+      "llm_tldr": "滑坡形态不规则且不同遥感平台间域差异大，现有自动检测与制图精度有限。本文提出EarthLD，将滑坡理解建模为视觉-语言引导的扩散过程，从噪声潜变量逐步推断是否存在、范围及像素级边界，从而统一完成识别、制图和触发原因解读。实验表明该方法能适应开放世界场景并改善跨平台滑坡制图的一致性，为地学灾害遥感解译提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.27795v1",
+      "source": "arxiv",
+      "title": "uScenes: A Multimodal RGB and 3D Sonar Dataset for Underwater Robot Perception",
+      "abstract": "Robust perception is essential for the deployment of autonomous underwater robots. However, optical cameras become unreliable under poor illumination and backscatter. Forward looking (2D) acoustic sensors remain effective under these conditions, but they measure range and bearing while leaving elevation unresolved, creating an ambiguity that prevents individual sonar returns from being localized in three dimensional (3D) space. This complicates the sensor use for 3D scene understanding and precise object detection. We introduce \\textbf{uScenes}, a multimodal underwater dataset containing synchronized 3D multibeam sonar point clouds and RGB imagery. The dataset contains 110 scenes and 95,834 synchronized observation, representing 277.6 minutes of data collected across multiple field sessions. uScenes establishes a foundation for underwater sensor fusion, cross modal representation learning and 3D scene understanding. Code and datasets are given at https://github.com/era-research-lab/uScenes.",
+      "authors": [
+        "Trung Tien Dong",
+        "Zhenqi Wu",
+        "Aditya Penumarti",
+        "Zi-Hao Zhang",
+        "Micaiah Bartlett",
+        "Jane Shin",
+        "Xiaomin Lin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-28T00:21:16+00:00",
+      "link": "https://arxiv.org/pdf/2608.27795v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal RGB and 3D sonar dataset for autonomous underwater robot perception, directly supporting marine intelligent agent applications",
+      "llm_evidence_cn": "面向自主水下机器人的RGB与三维声呐多模态数据集，直接支持海洋智能体应用",
+      "llm_evidence": "面向自主水下机器人的RGB与三维声呐多模态数据集，直接支持海洋智能体应用",
+      "canonical_evidence": "面向自主水下机器人的RGB与三维声呐多模态数据集，直接支持海洋智能体应用",
+      "llm_tldr_en": "Introduces uScenes, a multimodal underwater dataset with synchronized 3D multibeam sonar point clouds and RGB imagery, enabling robust underwater robot perception in poor visibility conditions.",
+      "llm_tldr_cn": "水下机器人感知依赖光学相机，但弱光与后向散射常使RGB相机失效，二维声纳又缺少高程信息。为此论文发布uScenes多模态水下数据集，包含同步采集的三维多波束声纳点云与RGB影像，覆盖110个场景和95,834组观测。该数据集为水下三维场景理解与目标检测提供基准资源，可支撑自主水下航行器在浑浊水域中的可靠感知与海洋监测应用。",
+      "llm_tldr": "水下机器人感知依赖光学相机，但弱光与后向散射常使RGB相机失效，二维声纳又缺少高程信息。为此论文发布uScenes多模态水下数据集，包含同步采集的三维多波束声纳点云与RGB影像，覆盖110个场景和95,834组观测。该数据集为水下三维场景理解与目标检测提供基准资源，可支撑自主水下航行器在浑浊水域中的可靠感知与海洋监测应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.27971v1",
+      "source": "arxiv",
+      "title": "GAAT: Geometry-Aware Alignment Transformer for Multimodal UAV Perception",
+      "abstract": "Unmanned aerial vehicle (UAV) multimodal perception integrates visible (RGB), infrared (IR), synthetic aperture radar (SAR), and depth sensors for scene understanding under diverse conditions. However, differences in optics, resolution, and mounting often limit practical systems to global or image-center alignment. After tokenization, parallax, platform motion, and lens distortion can shift corresponding patch centers across modalities, weakening the spatial correspondence assumed by dense contrastive learning and cross-modal fusion. We propose GAAT (Geometry-Aware Alignment Transformer), an alignment-first pretrained model that estimates local correspondence reliability before cross-modal interaction. GAAT introduces syncPATC, which learns patch-center consistency under synchronized view transformations without correspondence annotations. It emits geometric priors, including token and query confidence, query centers, and sub-token offsets, that identify reliable local anchors across residual misalignment. Guided by these priors, MG-Sparse-MMA performs query-mediated sparse fusion over top-K_s reliable regions, replacing dense all-patch interaction with geometry-calibrated local updates. RA-QCGCL aligns pretraining supervision with this sparse query bottleneck through reliable patch-to-patch, patch-to-query, and query-to-query contrastive branches. We introduce UAVMeta and StateBench, which provide four acquisition-state scores derived from platform telemetry and image statistics: camera reliability, observation scale, viewpoint stability, and flight maneuver complexity. Extensive experiments across six downstream tasks demonstrate consistently superior transfer performance, establishing GAAT as a state-of-the-art multimodal foundation model for UAV perception. StateBench further enables a systematic diagnosis of real-world acquisition conditions.",
+      "authors": [
+        "Jingpu Yang",
+        "Debin Tang",
+        "Yilin Sun",
+        "Fengxian Ji",
+        "Jiahua Zhu",
+        "Wenrui Ding",
+        "Yufeng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-28T06:36:17+00:00",
+      "link": "https://arxiv.org/pdf/2608.27971v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal alignment transformer for UAV remote sensing with SAR/RGB/IR/depth",
+      "llm_evidence_cn": "多模态无人机遥感（含SAR、RGB、红外、深度）的对齐Transformer",
+      "llm_evidence": "多模态无人机遥感（含SAR、RGB、红外、深度）的对齐Transformer",
+      "canonical_evidence": "多模态无人机遥感（含SAR、RGB、红外、深度）的对齐Transformer",
+      "llm_tldr_en": "GAAT addresses local misalignment across UAV optical, infrared, SAR and depth modalities after tokenization by introducing a geometry-aware alignment module and syncPATC patch-center reliability estimation before cross-modal fusion, preserving dense correspondences for robust multimodal UAV scene understanding.",
+      "llm_tldr_cn": "无人机多模态感知要把RGB、红外、SAR与深度等异源图像融合，但各传感器存在视差、运动与畸变，逐补丁对应关系易被破坏。GAAT提出对齐优先的预训练模型，在跨模态交互前估计局部对应可信度，通过syncPATC学习补丁中心偏移并校正空间错位，缓解多模态对齐漂移。实验表明其对多源图像融合与场景理解性能提升有帮助，间接支撑海岸带与浅海生境的多源遥感制图。",
+      "llm_tldr": "无人机多模态感知要把RGB、红外、SAR与深度等异源图像融合，但各传感器存在视差、运动与畸变，逐补丁对应关系易被破坏。GAAT提出对齐优先的预训练模型，在跨模态交互前估计局部对应可信度，通过syncPATC学习补丁中心偏移并校正空间错位，缓解多模态对齐漂移。实验表明其对多源图像融合与场景理解性能提升有帮助，间接支撑海岸带与浅海生境的多源遥感制图。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.00957v1",
+      "source": "arxiv",
+      "title": "Learning the Shoreline: A Very High-Resolution Approach to Reef Island Dynamics",
+      "abstract": "Pacific atoll islets are often described as stable in global-scale studies, typically based on long-term shoreline proxies such as vegetation line or morphometrics like planform surface area. While informative, these approaches can obscure short-term, localized coastal dynamics -including changes in island shape and position -that are critical for ecosystem function, cultural practices, and coastal infrastructure resilience. This study presents a transferable, automated approach to shoreline monitoring using very high-resolution Pl{é}iades imagery and a XGBoost classifier. The method integrates spectral indices and textural features to delineate the outer limit of emerged land, including vegetated areas, beaches, man-made surfaces, and beach rock. This shoreline definition supports finescale, spatially explicit monitoring of reef island dynamics, even in morphologically complex environments. Developed and tested on multiple atolls in French Polynesia (Tetiaroa, Tikehau, Hao, and Puka Puka), the model achieves high accuracy (mean Intersection over Union $\\approx$ 0.99; Mean Absolute Positional Error $\\approx$ 1.28 m) and demonstrates strong performance on both training and held-out sites, validating its spatial transferability. The extracted shorelines reveal subtle but significant island-scale changes in extent, configuration, and spatial position that remain undetected by conventional shoreline proxies and surface metrics. By enabling highprecision, scalable shoreline monitoring, this method provides a more nuanced understanding of atoll change processes. It supports Pacific efforts to move beyond narratives of passive loss toward frameworks of resilience and adaptation, while providing spatial tools tailored to low-lying island realities.",
+      "authors": [
+        "Tobias Fischer",
+        "B Stoll"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV"
+      ],
+      "published": "2026-09-01T09:14:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.00957v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Very high-resolution satellite mapping of reef island shoreline dynamics; directly serves coral reef ecosystem remote sensing",
+      "llm_evidence_cn": "利用甚高分辨率卫星影像与XGBoost自动绘制礁屿海岸线动态，直接服务于珊瑚礁生态系统遥感监测",
+      "llm_evidence": "利用甚高分辨率卫星影像与XGBoost自动绘制礁屿海岸线动态，直接服务于珊瑚礁生态系统遥感监测",
+      "canonical_evidence": "利用甚高分辨率卫星影像与XGBoost自动绘制礁屿海岸线动态，直接服务于珊瑚礁生态系统遥感监测",
+      "llm_tldr_en": "Presents a transferable automated shoreline mapping approach using very high-resolution Pleiades imagery and XGBoost with spectral and textural features to reveal short-term reef island dynamics at fine scale.",
+      "llm_tldr_cn": "针对全球尺度研究常用植被线或平面面积等代理量而掩盖珊瑚礁岛屿短期、局地海岸演变的问题，本文提出一种可迁移的自动海岸线监测方法。方法使用甚高分辨率Pléiades影像，融合光谱指数与纹理特征，用XGBoost分类器提取出露陆地外缘，将植被、海滩与人工表面纳入制图。在太平洋环礁小岛上的应用表明，该方法能清晰捕捉岛屿形态与位置变化，对生态功能评估和海岸工程韧性分析有实际价值，也展示了机器学习分类在珊瑚礁生态系统高分辨率遥感监测中的潜力。",
+      "llm_tldr": "针对全球尺度研究常用植被线或平面面积等代理量而掩盖珊瑚礁岛屿短期、局地海岸演变的问题，本文提出一种可迁移的自动海岸线监测方法。方法使用甚高分辨率Pléiades影像，融合光谱指数与纹理特征，用XGBoost分类器提取出露陆地外缘，将植被、海滩与人工表面纳入制图。在太平洋环礁小岛上的应用表明，该方法能清晰捕捉岛屿形态与位置变化，对生态功能评估和海岸工程韧性分析有实际价值，也展示了机器学习分类在珊瑚礁生态系统高分辨率遥感监测中的潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.30277v1",
+      "source": "arxiv",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "abstract": "The unprecedented surge in Earth observation data volume and diversity has exposed a critical bottleneck for traditional manual workflows, catalyzing the emergence of Remote Sensing (RS) Agents. However, the practical deployment of these advanced agents is severely hindered by their heavy reliance on large-scale general-purpose LLMs, which lack deep domain expertise and impose prohibitive infrastructure demands. To resolve this, we propose SimCRAFT, a model-agnostic framework that distills sophisticated RS orchestration capabilities into a compact 7B-scale model. Addressing data scarcity, we first pair a multiagent synthesis engine with a Mock Execution Engine that checks schema correctness, inter-tool dependencies, and sensor/tool compatibility, producing SimRS-14k, a large-scale, constraint-validated workflow planning corpus. Second, we propose Contextual Retrieval-Augmented Fine-Tuning (CRAFT) that finetunes the model to reason analogically by adapting retrieved Standard Operating Procedures to novel queries under a noise-robust objective, generalizing RAFT to multi-step RS workflow planning without mechanical copying. Extensive experiments demonstrate that SimCRAFT-7B significantly outperforms openweights LLMs and rivals advanced closedsource models and specialized RS agents, while reproducing across three 7B backbones. This work contributes a competitive open-weights baseline for lightweight RS intelligence, enabling efficient autonomous deployment under resource-constrained or resource-conserving conditions.",
+      "authors": [
+        "Haoran Wang",
+        "Jing Yao",
+        "Xu Yang",
+        "Zeqing Wang",
+        "Yang Zhang",
+        "Pedram Ghamisi",
+        "Zhengchao Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-08-31T05:45:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.30277v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "domain-agnostic LLM-agent distillation framework for remote sensing, enabling specialized agents for reef mapping",
+      "llm_evidence_cn": "面向遥感智能体的大模型蒸馏与检索增强框架，可支撑珊瑚礁制图等专业智能体",
+      "llm_evidence": "面向遥感智能体的大模型蒸馏与检索增强框架，可支撑珊瑚礁制图等专业智能体",
+      "canonical_evidence": "面向遥感智能体的大模型蒸馏与检索增强框架，可支撑珊瑚礁制图等专业智能体",
+      "llm_tldr_en": "SimCRAFT distills remote-sensing orchestration into a 7B model via synthetic trajectories, mock execution checks and retrieval-augmented fine-tuning. It reduces reliance on huge LLMs and can ground specialized agents for coral-reef habitat mapping.",
+      "llm_tldr_cn": "远程遥感智能体通常依赖大规模通用大模型，导致领域知识不足且部署成本高。SimCRAFT用多智能体合成引擎生成轨迹，配合模拟执行引擎校验，并通过上下文检索增强微调，将编排能力蒸馏到7B级模型中。该方法缓解了训练数据稀缺，可让专用珊瑚礁遥感映射智能体在低资源条件下运行，从而支撑大模型辅助珊瑚栖息地制图。",
+      "llm_tldr": "远程遥感智能体通常依赖大规模通用大模型，导致领域知识不足且部署成本高。SimCRAFT用多智能体合成引擎生成轨迹，配合模拟执行引擎校验，并通过上下文检索增强微调，将编排能力蒸馏到7B级模型中。该方法缓解了训练数据稀缺，可让专用珊瑚礁遥感映射智能体在低资源条件下运行，从而支撑大模型辅助珊瑚栖息地制图。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.28270v1",
+      "source": "arxiv",
+      "title": "Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations",
+      "abstract": "We present a real-time semantic navigation framework for Unmanned Aerial Vehicles (UAVs) focused on improving time efficiency in the Object Goal Navigation (ObjectNav) task. Central to our approach is a Large Language Model (LLM) that interprets user-provided natural language instructions and performs semantic reasoning over detected objects and spatial context to prioritize high-probability search regions. The system combines real-time object detection, 3D spatial mapping, and polynomial spline interpolation for smooth and feasible UAV trajectory planning. Unlike prior methods that rely on offline reasoning or simulator-constrained action spaces, our framework can operate in real time, continuously updating semantic relevance based on new observations. Experiments in both simulated and real-world settings demonstrate reductions in mission duration while maintaining high search accuracy, underscoring the effectiveness of LLM-guided reasoning for time- efficient UAV-based ObjectNav.",
+      "authors": [
+        "Marin Maletic",
+        "Marijana Peti",
+        "Tamara Petrovic",
+        "Stjepan Bogdan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-08-28T12:33:49+00:00",
+      "link": "https://arxiv.org/pdf/2608.28270v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM-based spatial-semantic reasoning agent for efficient UAV search",
+      "llm_evidence_cn": "基于LLM的空间语义推理智能体用于高效无人机搜索",
+      "llm_evidence": "基于LLM的空间语义推理智能体用于高效无人机搜索",
+      "canonical_evidence": "基于LLM的空间语义推理智能体用于高效无人机搜索",
+      "llm_tldr_en": "Presents a real-time UAV Object Goal Navigation framework where a large language model interprets natural-language instructions and performs spatial-semantic reasoning over detected objects and 3D context to prioritize likely search regions, then plans smooth trajectories via spline interpolation, enabling efficient open-world search.",
+      "llm_tldr_cn": "无人机目标导航中，传统方法常依赖离线推理或固定动作空间，难以及时利用高层语义。本文提出实时框架，由大语言模型理解自然语言指令，结合实时目标检测、三维空间地图对周围目标与空间语义进行推理，优先搜索高概率区域，并用多项式样条规划平滑可行轨迹。实验表明该方法能动态更新语义相关性并显著提高搜索效率。",
+      "llm_tldr": "无人机目标导航中，传统方法常依赖离线推理或固定动作空间，难以及时利用高层语义。本文提出实时框架，由大语言模型理解自然语言指令，结合实时目标检测、三维空间地图对周围目标与空间语义进行推理，优先搜索高概率区域，并用多项式样条规划平滑可行轨迹。实验表明该方法能动态更新语义相关性并显著提高搜索效率。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.01289v1",
+      "source": "arxiv",
+      "title": "Agentic Multimodal Models for Environmental Hyperspectral Unmixing",
+      "abstract": "Hyperspectral unmixing is a key task in remote sensing that aims to decompose mixed pixels in hyperspectral images into their constituent material signatures, or endmembers, and their fractional abundances. Conventional modular approaches estimate the scene composition through successive model-order estimation, endmember extraction, and abundance estimation stages, whose errors can lead to redundant or ambiguous candidate components and ultimately affect the recovered decomposition. We introduce an algorithm-agnostic, large vision-language model (LVLM)-driven agentic framework that refines the outputs of such pipelines rather than replacing their underlying numerical algorithms. Starting from an initial decomposition, the agent iteratively gathers complementary spectral and spatial evidence through dedicated tools, including spectral-library retrieval and abundance-map visualization, and modifies the active endmember set through merge and discard operations followed by abundance re-estimation. We apply the same refinement procedure to several modular pipelines combining different model-order, extraction, and abundance-estimation methods, and evaluate it on HYDICE Urban, Jasper Ridge, and Stonewall Playa. Experiments show that the proposed agent consistently improves endmember cardinality and generally improves the recovered spectral signatures and abundance maps across heterogeneous modular pipelines, while remaining competitive with integrated end-to-end unmixing methods, including CNN-AE, uDAS, and R-CoNMF. These results highlight the potential of tool-using LVLM agents to combine spectral and spatial evidence for algorithm-agnostic refinement of physically grounded hyperspectral unmixing decompositions. Code is publicly available at https://anonymous.4open.science/r/agentic-hu.",
+      "authors": [
+        "Michał Cholewa",
+        "Luca Ciampi",
+        "Nicola Messina",
+        "Przemysław Głomb",
+        "Giuseppe Amato"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T14:24:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.01289v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "LVLM-driven agentic framework refines environmental hyperspectral unmixing; multimodal-large-model remote-sensing environmental assessment",
+      "llm_evidence_cn": "大视觉语言模型智能体框架改进环境高光谱解混，契合多模态大模型用于遥感环境评估",
+      "llm_evidence": "大视觉语言模型智能体框架改进环境高光谱解混，契合多模态大模型用于遥感环境评估",
+      "canonical_evidence": "大视觉语言模型智能体框架改进环境高光谱解混，契合多模态大模型用于遥感环境评估",
+      "llm_tldr_en": "Proposes an algorithm-agnostic, LVLM-driven agentic framework that iteratively refines hyperspectral unmixing pipelines rather than replacing numerical algorithms.",
+      "llm_tldr_cn": "高光谱解混采用分阶段模块化流程，前序误差造成候选分量冗余或歧义并影响最终环境成分分析。该文提出一种算法无关、由大视觉语言模型驱动的智能体框架，不替换底层数值算法，而是从初始分解出发迭代收集互补证据并修正管线输出。该方法展示大模型与智能体作为遥感环境制图增强层的通用性，可向珊瑚底质高光谱解混和栖息地制图任务迁移。",
+      "llm_tldr": "高光谱解混采用分阶段模块化流程，前序误差造成候选分量冗余或歧义并影响最终环境成分分析。该文提出一种算法无关、由大视觉语言模型驱动的智能体框架，不替换底层数值算法，而是从初始分解出发迭代收集互补证据并修正管线输出。该方法展示大模型与智能体作为遥感环境制图增强层的通用性，可向珊瑚底质高光谱解混和栖息地制图任务迁移。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2608.30471v1",
+      "source": "arxiv",
+      "title": "HorizonNet for visual terrain navigation",
+      "abstract": "This paper investigates the problem of position estimation of unmanned surface vessels (USVs) operating in coastal areas or in the archipelago. We propose a position estimation method where the horizon line is extracted in a 360 degree panoramic image around the USV. We design a CNN architecture to determine an approximate horizon line in the image and implicitly determine the camera orientation (the pitch and roll angles). The panoramic image is warped to compensate for the camera orientation and to generate an image from an approximately level camera. A second CNN architecture is designed to extract the pixelwise horizon line in the warped image. The extracted horizon line is correlated with digital elevation model (DEM) data in the Fourier domain using a MOSSE correlation filter. Finally, we determine the location of the maximum correlation score over the search area to estimate the position of the USV. Comprehensive experiments are performed in a field trial in the archipelago. Our approach provides promising results by achieving position estimates with GPS-level accuracy.",
+      "authors": [
+        "Bertil Grelsson",
+        "Andreas Robinson",
+        "Michael Felsberg",
+        "Fahad Shahbaz Khan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-08-31T08:58:13+00:00",
+      "link": "https://arxiv.org/pdf/2608.30471v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "horizon-based CNN localization for autonomous surface vehicles in coastal marine environment",
+      "llm_evidence_cn": "面向沿海海洋环境中自主水面航行器的CNN地平线定位",
+      "llm_evidence": "面向沿海海洋环境中自主水面航行器的CNN地平线定位",
+      "canonical_evidence": "面向沿海海洋环境中自主水面航行器的CNN地平线定位",
+      "llm_tldr_en": "Proposes a CNN pipeline that extracts horizon lines from 360-degree panoramic imagery on unmanned surface vessels, estimates camera pitch/roll, and correlates the horizon with DEM via a MOSSE filter for coastal position estimation.",
+      "llm_tldr_cn": "无人水面艇在沿海或群岛水域的定位常受复杂地形影响。作者提出一种基于全景图像的CNN两阶段方法，先估计近似地平线与相机姿态角，再在矫正图像上逐像素提取地平线，并与数字高程模型在频域用MOSSE相关滤波匹配，从而实现不依赖GPS的视觉位置估计。实验表明该方法能有效支持海岸带与群岛环境下的自主航行。",
+      "llm_tldr": "无人水面艇在沿海或群岛水域的定位常受复杂地形影响。作者提出一种基于全景图像的CNN两阶段方法，先估计近似地平线与相机姿态角，再在矫正图像上逐像素提取地平线，并与数字高程模型在频域用MOSSE相关滤波匹配，从而实现不依赖GPS的视觉位置估计。实验表明该方法能有效支持海岸带与群岛环境下的自主航行。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.28524v1",
+      "source": "arxiv",
+      "title": "Texture Image Classification Using DWT AlexNet Feature Fusion and Deep Neural Networks",
+      "abstract": "Texture image classification plays a significant role in computer vision applications, including industrial inspection, medical image analysis, remote sensing, and object recognition. Handcrafted features can capture local texture characteristics but may have limited capability to represent complex visual patterns. In contrast, deep learning models automatically learn discriminative representations but may not fully exploit the multiscale spatial-frequency information inherent in texture images. This paper proposes a hybrid feature fusion framework, termed DWT_AlexNet_DNN, which combines Discrete Wavelet Transform (DWT) features with deep features extracted using AlexNet for texture image classification.",
+      "authors": [
+        "Arun D. Kulkarni"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-08-28T17:00:48+00:00",
+      "link": "https://arxiv.org/pdf/2608.28524v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep texture classification with wavelet and CNN feature fusion adaptable to benthic cover remote sensing",
+      "llm_evidence_cn": "小波与深度特征融合的纹理分类方法可迁移至海底底质或珊瑚覆盖分类",
+      "llm_evidence": "小波与深度特征融合的纹理分类方法可迁移至海底底质或珊瑚覆盖分类",
+      "canonical_evidence": "小波与深度特征融合的纹理分类方法可迁移至海底底质或珊瑚覆盖分类",
+      "llm_tldr_en": "Combines handcrafted wavelet and deep AlexNet features into a DNN classifier, improving texture classification in remote-sensing-like imagery.",
+      "llm_tldr_cn": "纹理分类在遥感与目标识别中至关重要，纯手工特征表达复杂模式有限，纯深度特征又难以利用多尺度空间频率信息。论文提出DWT_AlexNet_DNN混合框架，将离散小波变换特征与AlexNet深度特征融合后送入深度神经网络分类。方法兼顾手工特征与深层特征的互补优势，为珊瑚礁底栖覆盖等遥感影像纹理分类提供可借鉴方案。",
+      "llm_tldr": "纹理分类在遥感与目标识别中至关重要，纯手工特征表达复杂模式有限，纯深度特征又难以利用多尺度空间频率信息。论文提出DWT_AlexNet_DNN混合框架，将离散小波变换特征与AlexNet深度特征融合后送入深度神经网络分类。方法兼顾手工特征与深层特征的互补优势，为珊瑚礁底栖覆盖等遥感影像纹理分类提供可借鉴方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.02187v1",
+      "source": "arxiv",
+      "title": "Lightweight Adaptation of General-Purpose VLMs for Multispectral and SAR Image Understanding",
+      "abstract": "General-purpose vision-language models (VLMs) now support strong visual recognition, instruction following, and generation. However, most pretrained visual encoders are built around three-channel natural images and do not directly accommodate observations such as native multispectral measurements or synthetic aperture radar (SAR). Adapting VLMs to these sensors typically requires dedicated encoders and domain pretraining, slowing the reuse of stronger general-purpose checkpoints. We show that the multi-image interface of general-purpose VLMs offers a lightweight alternative. Our protocol renders each observation as five optical views and one SAR view, names them in the prompt, and adapts the language network and selected visual transformer blocks with LoRA. This exposes band composites, spectral indices, and radar backscatter through an existing visual interface. For land-cover recognition, structured supervision couples predicted classes with sensor evidence. We further construct preference pairs in which a true label is omitted while its supporting evidence is retained, encouraging complete predictions that remain consistent with the observations. On a balanced six-class land-cover benchmark derived from BigEarthNet-v2, the adapted Qwen3-VL reaches 0.8275 micro F1. The same input and adaptation protocol improves all four tested VLM architectures and transfers to Sen1Floods11 flood verification and BigEarthNet.txt captioning. Image removal and mismatch controls show that the adapted models use the supplied sensor observations. Together, these results demonstrate that VLMs can be repurposed for multispectral and SAR tasks through rendered inputs and compact LoRA adaptation, without training a new foundation model.",
+      "authors": [
+        "Shanji Liu",
+        "Kelu Yao",
+        "Junxiao Xue",
+        "Chenghui Lv",
+        "Xiangyang Miao",
+        "Yekai Huang",
+        "Yaying Chen",
+        "Chao Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T06:50:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.02187v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Adapts general-purpose VLMs to multispectral/SAR remote sensing; supports multimodal large models for environmental assessment",
+      "llm_evidence_cn": "将通用视觉语言模型轻量化适配多光谱和SAR遥感影像，为多模态大模型用于环境评估提供途径",
+      "llm_evidence": "将通用视觉语言模型轻量化适配多光谱和SAR遥感影像，为多模态大模型用于环境评估提供途径",
+      "canonical_evidence": "将通用视觉语言模型轻量化适配多光谱和SAR遥感影像，为多模态大模型用于环境评估提供途径",
+      "llm_tldr_en": "Shows that general-purpose VLMs can understand multispectral and SAR imagery through a multi-image prompt interface, avoiding dedicated encoders and pretraining, enabling text-capable remote sensing multimodal analysis.",
+      "llm_tldr_cn": "针对通用视觉语言模型视觉编码器主要为三通道自然图像设计、难以直接处理原生多光谱和SAR遥感观测的问题，本文提出利用VLM的多图像接口进行轻量适配：将每种观测渲染成多个光学与SAR视图并在提示文本中命名，仅微调语言网络与部分视觉变换器。该方法无需专用编码器和领域预训练即可复用更强的通用模型权重，完成遥感图像理解与指令回答。这一方案为遥感影像结合自然语言的多模态环境评估，包括珊瑚礁等海洋栖息地制图，提供了高效可复用的技术路线。",
+      "llm_tldr": "针对通用视觉语言模型视觉编码器主要为三通道自然图像设计、难以直接处理原生多光谱和SAR遥感观测的问题，本文提出利用VLM的多图像接口进行轻量适配：将每种观测渲染成多个光学与SAR视图并在提示文本中命名，仅微调语言网络与部分视觉变换器。该方法无需专用编码器和领域预训练即可复用更强的通用模型权重，完成遥感图像理解与指令回答。这一方案为遥感影像结合自然语言的多模态环境评估，包括珊瑚礁等海洋栖息地制图，提供了高效可复用的技术路线。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2609.01394v1",
+      "source": "arxiv",
+      "title": "Autonomous robotic bridging using distributed swarm control without inter-agent communication",
+      "abstract": "We describe SCARAB--Swarm-Capable Autonomous Robotic Aquatic Bridging. Using distributed swarm control and multi-model sensing of agents and docking targets, agents can localize themselves, join into formations and proceed to desired target locations. Our technologies would eventually allow the Army to perform unpredictable, dispersed river crossings, enhance crew survivability, and minimize the logistics footprint compared to the current Improved Ribbon Bridge. Our methods operate without GPS or RF communications, though these can be used in non-contested environments (e.g., civilian disaster relief for flooding, etc.). We demonstrate our system via physics-engine-based simulation of several agents using unmanned surface vehicles (USVs) in the presence of currents and wind.",
+      "authors": [
+        "Vishwaak C. Thamaraiselvan",
+        "Cody L. Lundberg",
+        "Michail Theofandis",
+        "Suhas Chelian",
+        "Nicholas R. Gans"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-01T15:21:12+00:00",
+      "link": "https://arxiv.org/pdf/2609.01394v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Distributed swarm-controlled aquatic robots with USVs and multi-model sensing; intelligent multi-agent marine application beyond ocean monitoring",
+      "llm_evidence_cn": "采用分布式群体控制与多传感融合的水上USV智能体，属海洋智能体应用但非珊瑚/生态环境监测",
+      "llm_evidence": "采用分布式群体控制与多传感融合的水上USV智能体，属海洋智能体应用但非珊瑚/生态环境监测",
+      "canonical_evidence": "采用分布式群体控制与多传感融合的水上USV智能体，属海洋智能体应用但非珊瑚/生态环境监测",
+      "llm_tldr_en": "SCARAB controls autonomous aquatic robotic bridging without GPS/RF communication using distributed swarm control and multi-model sensing, demonstrated in physics-based simulation with USVs.",
+      "llm_tldr_cn": "战场和非对抗环境下需要不可预测的分散渡河能力，而现有架桥装备依赖通信且机动性差。论文提出SCARAB，一种基于无人水面艇(USV)的水上自主架桥系统，采用分布式群体控制与多模态感知，使智能体无需GPS或射频通信即可定位、组队并到达目标。系统在物理引擎仿真中验证了多智能体协调能力。该成果为海洋智能体协同与自主作业提供了有益的架构参考，但目标不是珊瑚/海洋环境监测。",
+      "llm_tldr": "战场和非对抗环境下需要不可预测的分散渡河能力，而现有架桥装备依赖通信且机动性差。论文提出SCARAB，一种基于无人水面艇(USV)的水上自主架桥系统，采用分布式群体控制与多模态感知，使智能体无需GPS或射频通信即可定位、组队并到达目标。系统在物理引擎仿真中验证了多智能体协调能力。该成果为海洋智能体协同与自主作业提供了有益的架构参考，但目标不是珊瑚/海洋环境监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

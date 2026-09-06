@@ -1,0 +1,281 @@
+{
+  "date": "20260828-20260906",
+  "date_label": "2026-08-28 ~ 2026-09-06",
+  "generated_at": "2026-09-06 10:13:27 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.29347v1",
+      "route": "20260828-20260906/2608.29347v1-a-cognitive-architecture-for-shared-autonomy-in-auv-operations",
+      "title": "A Cognitive Architecture for Shared Autonomy in AUV Operations",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "多LLM认知架构用于AUV/ROV海上作业，直接对应海洋智能体应用",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.27793v1",
+      "route": "20260828-20260906/2608.27793v1-cave-nav-vlm-based-autonomous-3d-navigation-in-underwater-cave-environments",
+      "title": "CAVE-NAV: VLM-Based Autonomous 3D Navigation in Underwater Cave Environments",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "利用视觉语言模型与思维链实现水下洞穴自主导航",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.29661v1",
+      "route": "20260828-20260906/2608.29661v1-omniclimate-tc-physics-aware-visual-abstractions-for-multimedia-reasoning-over-tropical-cyclones",
+      "title": "OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "为VLM提出物理感知视觉抽象以推理热带气旋场数据，是遥感类图像+文本多模态海洋气候科学推理",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.30672v1",
+      "route": "20260828-20260906/2608.30672v1-hirs-agent-a-hierarchical-multi-agent-system-for-reliable-long-horizon-remote-sensing-task-solving",
+      "title": "HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "大模型驱动的层次化多智能体系统解决长时序遥感任务，契合大模型智能体与遥感应用主题",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.30817v1",
+      "route": "20260828-20260906/2608.30817v1-a-composition-aware-pretraining-framework-for-geospatial-foundation-models",
+      "title": "A Composition-Aware Pretraining Framework for Geospatial Foundation Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "卫星影像地理空间基础模型的成分感知预训练，土地覆盖分数目标与生境和底栖覆盖遥感制图高度对应",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.00628v1",
+      "route": "20260828-20260906/2609.00628v1-restrict-dont-retrain-inference-time-vlm-guidance-for-zero-shot-aerial-segmentation",
+      "title": "Restrict, Don't Retrain: Inference-Time VLM Guidance for Zero-Shot Aerial Segmentation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "推理时VLM引导零样本航空分割，多模态遥感用于环境评估",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.00712v1",
+      "route": "20260828-20260906/2609.00712v1-earthld-towards-unified-open-world-landslide-understanding-via-vision-language-guided-diffusion-models",
+      "title": "EarthLD: Towards Unified Open-World Landslide Understanding via Vision-Language Guided Diffusion Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "利用视觉-语言引导的扩散模型进行遥感影像滑坡统一开放世界制图",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.00957v1",
+      "route": "20260828-20260906/2609.00957v1-learning-the-shoreline-a-very-high-resolution-approach-to-reef-island-dynamics",
+      "title": "Learning the Shoreline: A Very High-Resolution Approach to Reef Island Dynamics",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "利用甚高分辨率卫星影像与XGBoost自动绘制礁屿海岸线动态，直接服务于珊瑚礁生态系统遥感监测",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.01289v1",
+      "route": "20260828-20260906/2609.01289v1-agentic-multimodal-models-for-environmental-hyperspectral-unmixing",
+      "title": "Agentic Multimodal Models for Environmental Hyperspectral Unmixing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "大视觉语言模型智能体框架改进环境高光谱解混，契合多模态大模型用于遥感环境评估",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.02187v1",
+      "route": "20260828-20260906/2609.02187v1-lightweight-adaptation-of-general-purpose-vlms-for-multispectral-and-sar-image-understanding",
+      "title": "Lightweight Adaptation of General-Purpose VLMs for Multispectral and SAR Image Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "将通用视觉语言模型轻量化适配多光谱和SAR遥感影像，为多模态大模型用于环境评估提供途径",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.27795v1",
+      "route": "20260828-20260906/2608.27795v1-uscenes-a-multimodal-rgb-and-3d-sonar-dataset-for-underwater-robot-perception",
+      "title": "uScenes: A Multimodal RGB and 3D Sonar Dataset for Underwater Robot Perception",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向自主水下机器人的RGB与三维声呐多模态数据集，直接支持海洋智能体应用",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.30277v1",
+      "route": "20260828-20260906/2608.30277v1-simcraft-distilling-remote-sensing-agents-via-synthetic-trajectories-and-contextual-retrieval-augmented-fine-tuning",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感智能体的大模型蒸馏与检索增强框架，可支撑珊瑚礁制图等专业智能体",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.30471v1",
+      "route": "20260828-20260906/2608.30471v1-horizonnet-for-visual-terrain-navigation",
+      "title": "HorizonNet for visual terrain navigation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向沿海海洋环境中自主水面航行器的CNN地平线定位",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2609.01394v1",
+      "route": "20260828-20260906/2609.01394v1-autonomous-robotic-bridging-using-distributed-swarm-control-without-inter-agent-communication",
+      "title": "Autonomous robotic bridging using distributed swarm control without inter-agent communication",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "采用分布式群体控制与多传感融合的水上USV智能体，属海洋智能体应用但非珊瑚/生态环境监测",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.27971v1",
+      "route": "20260828-20260906/2608.27971v1-gaat-geometry-aware-alignment-transformer-for-multimodal-uav-perception",
+      "title": "GAAT: Geometry-Aware Alignment Transformer for Multimodal UAV Perception",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态无人机遥感（含SAR、RGB、红外、深度）的对齐Transformer",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.28270v1",
+      "route": "20260828-20260906/2608.28270v1-spatial-semantic-reasoning-using-large-language-models-for-efficient-uav-search-operations",
+      "title": "Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于LLM的空间语义推理智能体用于高效无人机搜索",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    },
+    {
+      "paper_id": "2608.28524v1",
+      "route": "20260828-20260906/2608.28524v1-texture-image-classification-using-dwt-alexnet-feature-fusion-and-deep-neural-networks",
+      "title": "Texture Image Classification Using DWT AlexNet Feature Fusion and Deep Neural Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "小波与深度特征融合的纹理分类方法可迁移至海底底质或珊瑚覆盖分类",
+      "first_seen_at": "2026-09-06 10:13:27 UTC",
+      "updated_at": "2026-09-06 10:13:27 UTC"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+Title: uScenes: A Multimodal RGB and 3D Sonar Dataset for Underwater Robot Perception
+
+URL Source: https://arxiv.org/pdf/2608.27795v1
+
+Published Time: Mon, 31 Aug 2026 00:21:29 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# uScenes: A Multimodal RGB and 3D Sonar Dataset for Underwater Robot Perception 
+
+Trung Tien Dong 1, Zhenqi Wu 1, Aditya Penumarti 2, Zi-Hao Zhang 2, Micaiah Bartlett 1, Jane Shin 3, Xiaomin Lin 1
+
+Abstract —Robust perception is essential for the deployment of autonomous underwater robots. However, optical cameras become unreliable under poor illumination and backscatter. Forward looking (2D) acoustic sensors remain effective under these conditions, but they measure range and bearing while leaving elevation unresolved, creating an ambiguity that prevents individual sonar returns from being localized in three dimensional (3D) space. This complicates the sensor use for 3D scene understanding and precise object detection. We introduce uScenes, a multimodal underwater dataset containing synchronized 3D multibeam sonar point clouds and RGB imagery. The dataset contains 110 scenes and 95,834 synchronized observation, representing 277.6 minutes of data collected across multiple field sessions. uScenes establishes a foundation for underwater sensor fusion, cross modal representation learning and 3D scene understanding. Code and datasets are given at https://github.com/era-research-lab/uScenes. 
+
+I. I NTRODUCTION 
+
+Underwater robots are increasingly used to perform missions that are difficult, costly, or dangerous for human divers, including marine infrastructure inspection [1], environmental monitoring [2], habitat observation [3], mapping [4], search and recovery [5], [6], and navigation [7]. The success of these missions depends on the ability of a robot to interpret its surroundings despite poor illumination, suspended particles, changing water conditions, and complex environments. Under such conditions, optical cameras are not as helpful, even though they provide rich appearance, texture, and semantic information. This is because light attenuation, color distortion, and backscatter can substantially degrade visual observations [8]. A robot that relies primarily on optical sensing may therefore lose important perceptual information when environmental conditions become variable or adverse. Acoustic sensors remain effective under many of these conditions and are widely used for underwater perception [9]. However, forward looking sonar (2D imaging) sonars measure range and bearing while leaving elevation unresolved. An individual return can therefore correspond to multiple possible positions within the vertical field of view rather than a unique location in three dimensional (3D) space [10]. This ambiguity complicates the use of conventional sonar measurements for 
+
+> 1
+
+Embodied Robotics and Automation Lab, University of South Florida, Tampa, FL 33610, USA. Emails: {dongt, xlin2}@usf.edu .
+
+> 2
+
+Mechanical and Aerospace Engineering Department, University of Florida, Gainesville, FL 32611, USA 
+
+> 3
+
+Naval Architecture and Ocean Engineering at the Seoul National University, Seoul 08826, South Korea {janeshin}@snu.ac.kr 
+
+Figure 1. Field collection of the dataset at Blue Grotto, Florida. 
+
+3D scene understanding and precise spatial localization of detected objects. 3D multibeam imaging sonar provides a different acoustic representation [4]. By measuring returns across both horizontal and vertical angular dimensions, it allows each valid range observation to be mapped directly to a 3D Cartesian point. Unlike mechanical scanning systems, which accumulate measurements as the sensor rotates, compact multibeam systems can produce volumetric observations in real time from a moving platform. These observations provide explicit scene geometry under poor optical visibility, while RGB cameras provide appearance and semantic information that is difficult to recover from acoustic measurements alone. Pairing the two modalities therefore offers a complementary representation of underwater scenes. Existing underwater datasets do not fully support this combination. Multimodal datasets such as RGBS50 [11], HODOR [12], and R-S9 pair optical observations with forward looking sonar imagery [13]. In contrast, BrSPCD [1] and SUOP [14] provide sonar derived 3D point clouds without synchronized RGB imagery. MAOUD [15] contains both optical and acoustic data, but its 3D geometry is obtained from a laser scanner rather than directly from the sonar. To address this gap, we introduce uScenes , a multimodal underwater dataset containing synchronized RGB images and 3D multibeam sonar point clouds. The data were collected from a mobile BlueROV2 at Blue Grotto, Florida, across multiple sessions, as illustrated in Fig. 1. The dataset contains 110 scenes and 95,834 synchronized observation pairs, representing 277.6 minutes of underwater recordings. arXiv:2608.27795v1 [cs.CV] 28 Aug 2026 Figure 2. Representative synchronized observations from uScenes. The top row shows RGB images, and the bottom row shows bird’s eye view projections of the corresponding 3D sonar point clouds. 
+
+The scenes contain divers, fish, underwater robots, submerged structures, pipes, platforms, and cave passages observed under varied trajectories and visibility conditions. Each synchronized observation associates RGB appearance with acoustic returns expressed directly in the sonar coordinate frame, as shown in Fig. 2. The released data include RGB images, metric 3D sonar points, normalized signal strength, timestamps, scene metadata, and explicit coordinate conventions. The resulting dataset provides a foundation for underwater sensor fusion, cross modal representation learning, 3D scene understanding, and perception under degraded optical conditions [16], [17]. The main contributions of this work are summarized as follows:  
+
+> •
+
+We introduce uScenes, a field collected underwater dataset containing 110 scenes, 95,834 synchronized RGB and 3D multibeam sonar observations, and 277.6 minutes of recordings acquired from a mobile robotic platform.  
+
+> •
+
+We provide metric sonar point clouds containing 3D position and normalized signal strength, together with paired RGB images, timestamps, scene metadata, and clearly documented coordinate conventions.  
+
+> •
+
+We describe the complete dataset construction methodology, including the sensing platform, temporal association, point cloud generation, data organization, and optic acoustic calibration procedures. II. RELATED WORK 
+
+A. Underwater Perception Modalities 
+
+Underwater perception systems commonly combine optical, acoustic, and navigation sensors because each modality captures different properties of the environment [9], [21]. Optical cameras provide color, texture, and detailed appearance information, but image quality deteriorates because of wavelength dependent attenuation, scattering, turbidity, and insufficient illumination [8]. Acoustic sensors depend on sound propagation rather than visible light and can observe structures when optical visibility becomes poor [22]. However, acoustic images contain speckle, weak texture, and sensor dependent distortions that complicate the direct application of conventional visual feature detectors [23]. Most imaging sonars represent acoustic measurements in a two dimensional range and bearing image. Because elevation is not directly resolved, a return within a single sonar frame can correspond to multiple positions in 3D space. Negahdaripour estimated 3D sensor motion from feature tracks observed across two dimensional forward looking sonar video [24]. Huang and Kaess further demonstrated that acoustic structure from motion can recover scene geometry from multiple sonar observations [10]. More recent work reconstructs underwater objects from multiple forward looking sonar views while modeling multipath reflections near the water surface [ ?]. These approaches demonstrate that two dimensional sonar does not prevent 3D reconstruction, but reconstruction requires platform motion, reliable correspondences, and additional geometric constraints. In contrast, 3D multibeam sonar measures both horizontal and vertical angles within each scan, allowing valid range observations to be represented directly as metric 3D points [4]. 
+
+B. Optical and Acoustic Datasets 
+
+Public underwater optical datasets have supported image enhancement, object detection, and semantic or instance segmentation. USIS16K contains 16,151 underwater images with annotations spanning 158 object categories and provides benchmarks for salient instance segmentation and object detection [18]. Such datasets capture substantial appearance diversity but do not contain acoustic measurements that remain available when optical visibility deteriorates. Acoustic datasets provide an alternative representation for underwater perception. UATD contains more than 9,000 multibeam forward looking sonar images with annotations for ten target categories collected in lake and shallow water environments [19]. The Marine Debris Forward Looking Sonar datasets extend this setting across water tank, turntable, and flooded quarry environments and support classification, Table I                                                   
+
+> COMPARISON WITH REPRESENTATIVE UNDERWATER PERCEPTION DATASETS .
+> Dataset Optical data Sonar output 3D geometry Time-synchronized Collection setting USIS16K [18] RGB images None None N/A †Diverse sources UATD [19] None 2D images None N/A †Lake and shallow water Marine Debris [20] None 2D images None N/A †Water tank and quarry RGBS50 [11] RGB video 2D video None Yes Deep water pool HODOR [12] Stereo video Sonar video None Yes Fixed field station R-S9 [13] RGB images 2D images None Yes Field environment MAOUD [15] RGB images 2D images and video Laser point cloud Yes Simulated environment SUOP [14] None 3D scans Sonar point cloud N/A †Stationary seafloor
+> uScenes RGB images 3D returns Sonar point cloud YES Mobile field robot
+> †Single sensing modality; cross-modal synchronization is not applicable.
+
+detection, segmentation, and feature learning [20]. These datasets have advanced learning from sonar imagery, although their acoustic observations remain two dimensional and are not paired with simultaneous optical measurements as. 
+
+C. Multimodal Optic Acoustic Datasets 
+
+Optic acoustic fusion has been studied as a geometric sensing problem before the development of recent multimodal datasets. Negahdaripour derived the epipolar geometry relating optical and acoustic image measurements and showed how the different sensor projection models constrain cross modal correspondences [22]. Negahdaripour et al. subsequently introduced joint system calibration and 3D reconstruction methods based on corresponding optical and sonar measurements [25]. More recent work extended this framework to GoPro cameras and forward looking sonar, using ray tracing to model refraction through the camera housing and estimate the relative sensor poses [26]. These studies establish the geometric foundation for optic acoustic fusion and emphasize that synchronized observations require an appropriate calibration model before precise spatial association can be performed. Recent datasets have begun to provide synchronized optical and acoustic observations for learning based perception. RGBS50 contains 50 temporally aligned RGB and sonar video sequences with more than 87,000 bounding box annotations for underwater object tracking [11]. The R-S9 dataset provides 3,732 aligned RGB and sonar image pairs for underwater fusion classification [13]. Both datasets demonstrate the value of learning complementary features across optical and acoustic images. HODOR offers over 400 hours of synchronized stereo camera and sonar video from a stationary underwater fish observatory in the Kiel Fjord [12], making it valuable for fish monitoring, biomass estimation, and long-term behavioral analysis. Its stationary platform and video-based acoustic representation, however, target a different setting from mobile robot perception with metric 3D acoustic measurements. Simulation provides another mechanism for generating multimodal underwater data under controlled conditions. HoloOcean and OceanSim support repeatable marine robotics experiments and configurable sensor simulation [27], [28]. MAOUD [15] combines RGB images, acoustic images and videos, and laser point clouds collected in a controlled underwater simulation environment. Its laser point clouds provide geometric information, while its acoustic modality is represented through images and videos. Real field recordings remain complementary because they capture platform motion, natural visibility changes, acoustic reflections, and environmental structures encountered during deployment, as summarized in Table I. 
+
+D. 3D Sonar Perception 
+
+Three dimensional sonar point clouds have recently been investigated for inspection, object recognition, and mapping. BrSPCD provides labeled sonar point clouds of underwater bridge structures for semantic segmentation [1]. The SUOP dataset contains 1,555 mechanical scanning sonar point clouds of five small underwater object categories, together with raw sonar scans, metadata, and corresponding two dimensional sonar images [14]. These datasets demonstrate the value of acoustic point clouds for recovering object shape and structural geometry, but they focus on stationary scanning and do not include synchronized RGB observations from a mobile robot. Burgul et al. mounted a compact 3D multibeam sonar on a BlueROV2 and demonstrated its use for scan registration, localization, and dense underwater mapping [4]. Their work also introduced an optic acoustic calibration procedure based on corresponding cinder block corners observed by the camera and sonar. The resulting 3D and 2D correspondences were formulated as a perspective (n) point problem and solved using EPnP [29]. This work establishes the sensing and geometric potential of compact 3D sonar, with its primary emphasis placed on calibration, state estimation, and mapping. uScenes complements these efforts by providing a large, scene organized collection of synchronized RGB images and compact 3D sonar point clouds acquired from a mobile underwater robot. Its distinguishing characteristic is not simply the presence of optical and acoustic sensors, but that the acoustic modality itself provides metric 3D returns for every synchronized observation. This representation supports CAM’s 
+
+> Center
+> 31.71mm
+> 120mm
+> 200mm
+> 40mm
+> Sonar’s
+> Center Figure 3. The uScenes data collection platform. A BlueROV2 carries an RGB camera and a 3D multibeam sonar in a rigid, forward facing configuration.
+
+research connecting visual appearance with acoustic geometry across dynamic field recordings. III. DATASET 
+
+A. Sensor Platform and Data Collection 
+
+The uScenes sensing platform consists of a BlueROV2 equipped with a DWE underwater RGB camera and a Water Linked Sonar 3D-15 [30]. The sensor arrangement is shown in Fig. 3, and the specifications of both sensors are summarized in Table II. The sonar was mounted near the center of the vehicle, while the camera was positioned laterally with an overlapping forward field of view. The sensor centers were separated by 120 mm laterally and 31.71 mm vertically, corresponding to a total displacement of approximately 124 mm. The rigid mounting configuration remained unchanged throughout data collection. The RGB camera records (1280 × 720 ) images at approximately 30 Hz, while the sonar produces ( 256 × 64 )range observations at approximately 6 Hz. Each valid sonar measurement provides range and registered signal strength, from which a 3D point cloud is constructed. Depending on the observed scene, a sonar frame contains between 1 and 12,627 returns, with an average of 6,805 returns. Data were collected at Blue Grotto in Williston, Florida, during seven field sessions. The vehicle recorded natural and human influenced underwater environments containing divers, fish, underwater robots, submerged platforms, pipes, and cave passages. Dedicated sequences containing calibration targets were also collected. The recordings were divided into 110 scenes representing 39 collection tasks, resulting in 95,834 synchronized observations and 277.6 minutes of data. 
+
+B. Temporal Association 
+
+The camera and sonar operate at different acquisition rates and produce independent timestamps. Each sonar observation is associated with the camera image having the nearest timestamp. Given a sonar timestamp ( ts) and camera timestamps ( tc,i ), the selected camera observation is 
+
+> Table II SENSOR CONFIGURATION .
+
+Sensor Property Value Camera Resolution 1280 × 720 pixels Rate Approximately 30 Hz Model Pinhole with five radial and tangential distortion terms Intrinsics fx = 922 .26 , fy = 920 .86 ,
+
+cx = 694 .06 , cy = 387 .33 
+
+pixels Radial k1 = −0.3496 , k2 = 0 .3192 
+
+k3 = −0.2017 
+
+Tangential p1 = −0.0045 
+
+p2 = −0.0051 
+
+3D sonar Range image 256 × 64 samples Field of view 90 ◦ horizontal, 40 ◦ vertical Rate Approximately 6 Hz Output Range and registered signal strength Returns 1 to 12,627 points per frame, mean 6,805 
+
+i∗ = arg min  
+
+> i
+
+|tc,i − ts| , |tc,i ∗ − ts| ≤ 83 ms . (1) The 83 ms threshold corresponds to approximately half of one sonar acquisition interval. Across the accepted observation pairs, the mean absolute timestamp difference is 13.2 ms, the median is 11.2 ms, and 95 percent of the pairs differ by no more than 32.8 ms. The sonar timestamp represents the midpoint of its sequential scan. The association therefore aligns each camera image with the center of the sonar acquisition period, although motion occurring within a sonar scan remains present. 
+
+C. Sonar Point Cloud Construction 
+
+Let ((u,v)) represent a location in the sonar range image, with width (W), height (H), horizontal field of view ( ϕh), and vertical field of view ( ϕv ). The corresponding horizontal and vertical angles are 
+
+θ = uW − 1 ϕh − ϕh
+
+2 , ψ = vH − 1 ϕv − ϕv
+
+2 . (2) For a measured range (r), the Cartesian return in the vendor sonar coordinate frame is computed as 
+
+ps = r cos ψ cos θ cos ψ sin θ sin ψ . (3) This coordinate frame is right handed, with (x) pointing forward, (y) pointing right, and (z) pointing downward. The processed binary files use the opposite lateral sign. Consequently, points loaded from the dataset are converted to the vendor frame using 
+
+ps = diag(1 , −1, 1) pbin (4) before applying a rigid sensor transformation. The acoustic signal (a) is compensated for range using ( es =
+
+ar 2). It is then normalized by the 99th percentile within the current sonar observation and clipped to the interval ([0,1]). (a) (b) (c)                                     
+
+> Figure 4. Calibration target configurations used during uScenes data collection. (a) Four dimension constrained concrete blocks placed on the submerged platform. (b) A diver holding a calibration board containing round headed pins. (c) Two calibration boards containing flat headed screws and positioned at different depths. Within each group, the RGB observation is shown alongside the corresponding 3D sonar returns used for selecting calibration points. Table III SCENE LEVEL SUMMARY BY PRIMARY OBJECT OF INTEREST .Class Scenes %Pairs %Minutes None 46 41.8 42,957 44.8 125.7 Human 24 21.8 24,167 25.2 69.6 Structure 30 27.3 20,979 21.9 60.5 ROV 43.6 4,312 4.5 12.1 Fish 65.5 3,419 3.6 9.7
+> Total 110 100.0 95,834 100.0 277.6
+
+The normalized value represents relative signal strength within a frame rather than calibrated acoustic reflectivity. 
+
+D. Dataset Organization 
+
+Each scene contains the paired camera images, sonar point clouds, and timestamp metadata. Camera observations are stored as JPEG images. Each sonar observation is stored as a binary floating point array with shape (N × 4) , where each row contains ([x,y,z,s]). The fourth value is the normalized acoustic signal strength. A JSON Lines manifest records the camera timestamp, sonar timestamp, temporal difference, frame identifier, and number of sonar returns for every pair. A global scene index records session information, duration, and scene level task descriptions. These descriptions provide coarse information about the primary content of a recording and are not intended as frame level detection annotations. Table III summarizes the dataset according to the primary object of interest assigned to each scene. Human and structure recordings account for 54 of the 110 scenes, while 46 scenes contain no designated object of interest and instead capture general underwater environments. These categories provide a coarse index for selecting recordings rather than object annotations. 
+
+E. Optic Acoustic Calibration Methodology 
+
+Optic acoustic calibration establishes the spatial relationship between the camera and sonar. Temporal synchronization identifies observations acquired at approximately the same time, but it does not determine where a 3D sonar return appears in the camera image. This association requires the camera intrinsics and a rigid transformation from the sonar coordinate frame to the camera coordinate frame. Camera intrinsics were estimated underwater using multiple observations of an ( 8 × 8) white pin circle grid. A pinhole camera model with radial and tangential distortion was fitted to the detected grid points. Performing this procedure underwater allows the effective projection model to account for the dominant imaging effects introduced by the camera housing and water interface. We consider three target configurations for estimating the optic acoustic extrinsic transformation, as illustrated in Fig. 4. Each configuration provides identifiable 3D points in the sonar coordinate frame and their corresponding 2D locations in the camera image. The first configuration follows the concrete block target [4]. Four concrete masonry blocks with known dimensions are placed within the overlapping fields of view of the sensors. In each RGB image, the visible corners of the upper block surfaces are selected as 2D image points. In the sonar point cloud, returns belonging to each upper surface are isolated and fitted with a rectangle constrained by the known block dimensions. The corners of the fitted rectangle provide the corresponding 3D sonar points. A consistent ordering of the corners is maintained for every block and observation. The second configuration follows the round headed pin board [26]. The board contains an (8 × 8) grid of pins with known spacing and is held at different positions and orientations within the common sensor view. The center of each visible pin is selected in the RGB image. Corresponding acoustic peaks are then identified in the 3D sonar point cloud. The known row and column arrangement of the grid determines the correspondence between each image point and sonar return. The third configuration uses calibration boards containing flat headed screws. We observed that the flat screw heads produce more isolated acoustic responses than the round headed pins by reducing responses across neighboring sonar beams. This makes individual reflectors easier to identify in the 3D point cloud. Two boards are positioned at different depths to provide correspondences across a larger spatial volume. Screw centers are selected in the RGB images, while the corresponding compact acoustic returns are selected from the sonar point clouds. Board identity and grid position are used to maintain consistent correspondence labels. For all three configurations, let psj denote a selected 3D sonar point and let qj denote its corresponding 2D image location. The rigid transformation from the sonar coordinate frame to the camera coordinate frame is 
+
+pcj = Rcs psj + tcs , (5) where Rcs ∈ SO (3) is the rotation matrix and tcs ∈
+
+R3 is the translation vector. The extrinsic parameters are estimated by minimizing the reprojection error over the collected correspondences: 
+
+min  
+
+> Rcs ,tcs
+
+X
+
+> j
+
+π Rcs psj + tcs 
+
+ − qj 
+
+> 22
+
+. (6) where ( π(·)) denotes the underwater camera projection and distortion model, and ( ρ(·)) is a robust penalty. EPnP [29] is used to initialize the rotation and translation, followed by nonlinear refinement over all selected correspondences. Because the camera and sonar are rigidly mounted, all target configurations and observations share a single rotation matrix and translation vector. IV. DISCUSSION 
+
+A. Research Opportunities 
+
+uScenes addresses a gap between underwater optical datasets, which provide appearance information without measured 3D geometry, and conventional sonar datasets, which primarily contain two dimensional acoustic images. The synchronized observations provide complementary descriptions of the same underwater scenes. RGB images capture color, texture, and object appearance, while the sonar point clouds provide range and three dimensional structure under poor optical conditions. This combination supports research in cross modal representation learning, sonar assisted object perception, and multimodal 3D scene understanding. Temporal synchronization also allows models to learn relationships between the modalities without requiring direct point to pixel correspondence. With additional annotations, the dataset can support future benchmarks for underwater object detection, segmentation, and semantic understanding using optical and acoustic observations. 
+
+B. Calibration Considerations 
+
+Precise spatial association between the modalities requires an accurate transformation between the sonar and camera coordinate frames. Section IV describes the calibration targets, correspondence construction, and optimization procedure considered for the sensing platform. The current dataset should therefore be treated as temporally synchronized but not spatially registered. The paired observations can be used for tasks based on temporal correspondence, scene level association, or independent modality processing. Tasks that require projecting individual sonar points into the camera image should first establish and validate an appropriate optic acoustic calibration. The included calibration sequences provide material for developing and comparing such methods. 
+
+C. Limitations 
+
+The current dataset was collected using one robotic platform at a single freshwater site. Although the recordings contain varied objects, structures, visibility conditions, and vehicle trajectories, they do not establish generalization across different sensors, platforms, geographic locations, or saltwater environments. Dense object annotations are not included in the current release. Scene descriptions indicate the primary content of each recording but should not be interpreted as frame level ground truth. Additional 2D and 3D annotations will be required to establish supervised detection and segmentation benchmarks. The released acoustic signal strength is compensated for range and normalized independently within each sonar frame. It represents relative signal strength rather than calibrated acoustic reflectivity and should not be directly compared across frames. In addition, each sonar observation is acquired sequentially and timestamped at the midpoint of the scan. Motion of the vehicle or observed objects during acquisition can therefore distort the reconstructed point cloud. Finally, the underwater camera calibration uses an effective pinhole model, while the physical effect of the flat port housing has not been fully validated. V. C ONCLUSIONS AND FUTURE WORK 
+
+We introduced uScenes, a multimodal underwater dataset containing synchronized RGB images and 3D multibeam sonar point clouds collected from a mobile field robot. The dataset contains 95,834 paired observations across 110 scenes, representing 277.6 minutes of recordings from seven field sessions. We described the sensing platform, data collection process, temporal association, sonar point cloud construction, dataset organization, and the calibration methods considered for the platform. By pairing optical appearance with directly measured acoustic geometry, uScenes provides a foundation for underwater sensor fusion, cross modal representation learning, and 3D scene understanding. Future work will focus on establishing a reliable optic acoustic calibration, expanding the annotations, and collecting data across additional platforms and underwater environments. ACKNOWLEDGMENT 
+
+The authors would like to thank Andres Pulido, Nikhil Iyer, Cayman Christ, and Cheryl Thacker for their help with diving, and Blue Grotto Dive Resort for the facilities for data collection. This work was supported by New Faculty Startup Fund from Seoul National University, CRADA22-0034-J003, and NVIDIA Academic Grant Program. REFERENCES [1] Z. Huang, Y. Zhu, W. Xiong, and S. Zhang, “Lightweight learning-based sonar point cloud semantic segmentation for underwater bridge inspection,” Automation in Construction , vol. 178, p. 106387, 2025. [2] X. Lin, N. Jha, M. Joshi, N. Karapetyan, Y. Aloimonos, and M. Yu, “Oystersim: Underwater simulation for enhancing oyster reef monitoring,” in OCEANS 2022, Hampton Roads . IEEE, 2022, pp. 1–6. [3] B. Sadrfaridpour, Y. Aloimonos, M. Yu, Y. Tao, and D. Webster, “Detecting and counting oysters,” in 2021 IEEE International Conference on Robotics and Automation (ICRA) . IEEE, 2021, pp. 2156–2162. [4] C. Burgul, Y. Huang, M. Chatzispyrou, I. Rekleitis, A. Q. Li, and M. Xanthidis, “Underwater dense mapping with the first compact 3D sonar,” in 2026 IEEE International Conference on Robotics and Automation (ICRA) , 2026. [5] X. Cao, D. Zhu, and S. X. Yang, “Multi-auv target search based on bioinspired neurodynamics model in 3-d underwater environments,” 
+
+IEEE Transactions on Neural Networks and Learning Systems , vol. 27, no. 11, pp. 2364–2374, 2016. [6] E. Simetti, G. Casalino, S. Torelli, A. Sperindé, and A. Turetta, “Floating underwater manipulation: Developed control methodology and experimental validation within the trident project,” Journal of Field Robotics , vol. 31, no. 3, pp. 364–385, 2014. [7] N. Karapetyan, J. V. Johnson, and I. Rekleitis, “Human diver-inspired visual navigation: Towards coverage path planning of shipwrecks,” 
+
+Marine Technology Society Journal , vol. 55, no. 4, pp. 24–32, 2021. [8] Y. Hao, Y. Yuan, H. Zhang, and Z. Zhang, “Underwater optical imaging: Methods, applications and perspectives,” Remote Sensing , vol. 16, no. 20, p. 3773, 2024. [9] D. Q. Huy, N. Sadjoli, A. B. Azam, B. Elhadidi, Y. Cai, and G. Seet, “Object perception in underwater environments: A survey on sensors and sensing methodologies,” Ocean Engineering , vol. 267, p. 113202, 2023. [10] T. A. Huang and M. Kaess, “Towards acoustic structure from motion for imaging sonar,” in 2015 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2015, pp. 758–765. [11] Y. Li, B. Wang, J. Sun, X. Wu, and Y. Li, “RGB-Sonar tracking benchmark and spatial cross-attention transformer tracker,” IEEE Transactions on Circuits and Systems for Video Technology , vol. 35, no. 3, pp. 2260–2275, 2025. [12] T. Wilts, G. Böer, J. Winkler, B. Cisewski, H. Schramm, and S. Badri-Hoeher, “Descriptor: Hydroacoustic and optical dataset for oceanic research (HODOR),” IEEE Data Descriptions , vol. 2, pp. 262–270, 2025. [13] X. Zhang, Y. Zhao, J. Li, H. Xu, L. Liu, and H. Gu, “SVFNet: Underwater RGB-Sonar fusion classification via cross-modal contrastive learning and global query spatial attention,” Ocean Engineering , vol. 362, p. 126328, 2026. [14] J.-W. Ha, W.-S. Choi, H.-S. Choi, J.-H. Woo, S. Park, G.-H. Byun, R.-H. Kang, M.-K. Kim, and M.-S. Son, “Small underwater objects 3d point cloud dataset using mechanical scanning sonar,” Scientific Data , vol. 13, p. 863, 2026. [15] X. Chu, S. Zhou, J. Tian, D. Zou, X. Zhao, R. Wang, B. Cheng, Y. Dong, S. Zhao, H. Chen, Z. Jiang, J. An, M. Xu, X. Fu, and S. Liu, “A multimodal acousto-optic dataset for underwater image enhancement, detection, and reconstruction,” Scientific Data , vol. 13, p. 822, 2026. [16] U. Grover, R. Ranjan, M. Mao, T. T. Dong, S. Praveen, Z. Wu, J. M. Chang, T. Mohsenin, Y. Sheng, A. Polyzou, et al. , “Embodied foundation models at the edge: A survey of deployment constraints and mitigation strategies,” arXiv preprint arXiv:2603.16952 , 2026. [17] T. T. Dong, D. Thakkar, A. Sargolzaei, and X. Lin, “Post fusion bird’s eye view feature stabilization for robust multimodal 3d detection,” arXiv preprint arXiv:2603.05623 , 2026. [18] L. Hong, X. Wang, Y. Li, and X. Wang, “USIS16K: High-quality dataset for underwater salient instance segmentation,” 2025. [19] K. Xie, J. Yang, and K. Qiu, “A dataset with multibeam forward-looking sonar for underwater object detection,” Scientific Data , vol. 9, no. 1, p. 739, 2022. [20] M. Valdenegro-Toro, D. C. Padmanabhan, D. Singh, B. Wehbe, and Y. Petillot, “The marine debris forward-looking sonar datasets,” in 
+
+OCEANS 2025 Brest , 2025, pp. 1–10. [21] Y. Cong, C. Gu, T. Zhang, and Y. Gao, “Underwater robot sensing technology: A survey,” Fundamental Research , vol. 1, no. 3, pp. 337–345, 2021. [22] S. Negahdaripour, “Epipolar geometry of opti-acoustic stereo imaging,” 
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence ,vol. 29, no. 10, pp. 1776–1788, 2007. [23] H. Kyatham, S. Negahdaripour, M. Xu, X. Lin, M. Yu, and Y. Aloimonos, “Performance assessment of feature detection methods for 2-d fs sonar imagery,” in OCEANS 2024 Halifax , 2024, pp. 1–7. [24] S. Negahdaripour, “On 3-d motion estimation from feature tracks in 2-d fs sonar video,” IEEE Transactions on Robotics , vol. 29, no. 4, pp. 1016–1030, 2013. [25] S. Negahdaripour, H. Sekkati, and H. Pirsiavash, “Opti-acoustic stereo imaging: On system calibration and 3-d target reconstruction,” IEEE Transactions on Image Processing , vol. 18, no. 6, pp. 1203–1214, 2009. [26] S. Negahdaripour, H. Kyatham, M. Xu, X. Lin, Y. Aloimonos, and M. Yu, “Gopro modeling and application in opti-acoustic stereo imaging,” in OCEANS 2024-Halifax . IEEE, 2024, pp. 1–7. [27] E. Potokar, K. Lay, K. Norman, D. Benham, S. Ashford, R. Peirce, T. B. Neilsen, M. Kaess, and J. G. Mangelson, “Holoocean: A full featured marine robotics simulator for perception and autonomy,” IEEE Journal of Oceanic Engineering , vol. 49, no. 4, pp. 1322–1336, 2024. [28] J. Song, H. Ma, O. Bagoren, A. V. Sethuraman, Y. Zhang, and K. A. Skinner, “OceanSim: A GPU-Accelerated underwater robot perception simulation framework,” in 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) , 2025. [29] V. Lepetit, F. Moreno-Noguer, and P. Fua, “Epnp: An accurate o(n) solution to the pnp problem,” International Journal of Computer Vision ,vol. 81, no. 2, pp. 155–166, 2009. [30] Water Linked, Sonar 3D-15 Datasheet , [Online]. Available: https://www. waterlinked.com/datasheets/sonar-3D-15. Accessed: Aug. 26, 2026.

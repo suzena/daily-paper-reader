@@ -1,0 +1,474 @@
+Title: OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones
+
+URL Source: https://arxiv.org/pdf/2608.29661v1
+
+Published Time: Tue, 01 Sep 2026 01:34:25 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones 
+
+## Luwei Xiao ∗
+
+National University of Singapore Singapore, Singapore 
+
+## Xin Wang ∗
+
+National University of Singapore Singapore, Singapore 
+
+## Keane Ong 
+
+National University of Singapore Singapore, Singapore 
+
+## Jiawen Wei 
+
+National University of Singapore Singapore, Singapore 
+
+## Chenyu Dong 
+
+National University of Singapore Singapore, Singapore 
+
+## Rui Mao 
+
+Nanyang Technological University Singapore, Singapore 
+
+## Erik Cambria 
+
+Nanyang Technological University Singapore, Singapore 
+
+## Gianmarco Mengaldo †
+
+National University of Singapore Singapore, Singapore 
+
+## Abstract 
+
+Meteorological reanalysis encodes extreme weather through contin-uous, physically constrained fields, posing a fundamental challenge for vision–language models (VLMs) whose perceptual assumptions are shaped by natural images. Tropical cyclones exemplify this mismatch: critical properties such as intensity extrema, asymmetry, spatial extent, and physical impacts arise from field-level organi-zation rather than object-centric visual cues. Existing approaches address this gap through text alignment or annotation, treating the problem as multimodal supervision rather than representation design. We introduce Physics-Aware Visual Abstraction (PAVA), a plug-and-play physics-aware representation and annotation in-terface that maps physical reanalysis fields to visually identifiable and semantically grounded perceptual abstractions for supervision and evaluation in vision–language reasoning. Building on PAVA, we construct OmniClimate-TC, a benchmark for tropical cyclone analysis spanning five classes of reasoning and nine tasks, with 243,890 physically grounded instruction-tuning pairs. Using PAVA-aligned supervision, we adapt VLMs and provide evidence that this representation design improves reasoning over tropical cyclone haz-ard fields. Our results position OmniClimate-TC as a benchmark for multimedia reasoning over structured geophysical fields, and highlight representation design as a key ingredient for physically grounded reasoning in scientific media. 
+
+## CCS Concepts 
+
+• Applied computing → Environmental sciences ; Earth and atmospheric sciences .
+
+> ∗Both authors contributed equally to this research.
+> †Corresponding author: mpegim@nus.edu.sg
+> This work is licensed under a Creative Commons Attribution 4.0 International License.
+> MM ’26, Rio de Janeiro, Brazil.
+> © 2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2213-4/2026/11 https://doi.org/10.1145/3767308.3836120
+
+## Keywords 
+
+Tropical cyclones, Multimedia reasoning, Multimodal reasoning, Vision–language models, Meteorological reanalysis 
+
+ACM Reference Format: 
+
+Luwei Xiao, Xin Wang, Keane Ong, Jiawen Wei, Chenyu Dong, Rui Mao, Erik Cambria, and Gianmarco Mengaldo. 2026. OmniClimate-TC: Physics-Aware Visual Abstractions for Multimedia Reasoning over Tropical Cyclones. In 
+
+Proceedings of the 34th ACM International Conference on Multimedia (MM ’26), November 10–14, 2026, Rio de Janeiro, Brazil. ACM, New York, NY, USA, 10 pages. https://doi.org/10.1145/3767308.3836120 
+
+## 1 Introduction 
+
+Extreme weather events pose fundamental challenges for visual-language models (VLMs), because the relevant signals are encoded in high-dimensional numerical data representing physically con-strained spatiotemporal fields [2, 5]. Among these phenomena, tropical cyclones are an important testbed: their evolution and hazard footprint arise from tightly coupled physical variables and coherent organization across scales [10, 34], that are captured by numerical datasets, such as meteorological reanalysis products (e.g., ERA5 [12]). These numerical datasets are composed of continuous fields, and the semantics they encode differ fundamentally from the object-centric visual structure of natural images [18]. The rapid growth of AI-based weather models further sharpens the need for automated semantic interpretation, as high-fidelity forecast fields increasingly exceed what can be analyzed consistently by human experts at scale [5, 9, 34]. VLMs have recently shown strong multimodal perception and reasoning capabilities [36, 47, 48]. However, their visual encoders and pretraining corpora are dominated by natural images, favor-ing object-centric semantics and image-native inductive biases [21, 22, 49]. Meteorological reanalysis does not conform to these as-sumptions, as it comprises continuous spatiotemporal fields in which meaning arises from extrema, gradients, coherence, asym-metry, and scale-dependent structure rather than from discrete objects [18, 32, 37]. The result is a representational mismatch: the standard “image” interface does not make explicit the phys-ically meaningful attributes to which language-based reasoning must refer to. Recent studies have attempted to bridge this gap by aligning reanalysis plots with text, including captioning [23], arXiv:2608.29661v1 [cs.CE] 30 Aug 2026 MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. Luwei Xiao et al. 
+
+question answering over climate maps [27], report generation [38], and LLM-assisted annotation [7]. While effective for producing multimodal supervision, these approaches implicitly assume that the relevant physical semantics are visually available and can be learned end-to-end from paired data. In practice, many core meteo-rological concepts (e.g., intensity extrema, asymmetry, and extent) are operator-defined over space and scale, not directly readable as “objects” in raw heatmaps. Consequently, annotations are expensive and difficult to standardize, and scaling supervision alone does not resolve the underlying perceptual gap. This suggests that the central challenge is representation design: constructing physics-consistent per-ceptual abstractions that render field semantics visually identifiable and language-addressable. 
+
+Seen through a multimedia-reasoning lens, the problem is not just multimodal alignment; it is how to expose the right perceptual structure from scientific fields so that downstream reasoning re-mains grounded in the underlying physics. Guided by this diagnosis, we formalize our approach as Physics-Aware Visual Abstraction (PAVA), a plug-and-play paradigm that reframes extreme-weather understanding as a representation design problem rather than a data-alignment problem. Instead of introducing an auxiliary inference-time modality, PAVA serves as a physics-aware representation and annotation interface that exposes semantically meaningful struc-ture from meteorological reanalysis for benchmark construction, supervision design, and controlled evaluation. In the context of tropical cyclones, we instantiate PAVA by transforming continu-ous wind, precipitation, and sea-level pressure fields into cyclone-centric, visually identifiable abstractions that encode where ex-tremes occur, how intensity is organized, how structure departs from symmetry, and how hazards extend over space. These abstrac-tions constitute a shared perceptual interface that makes physically grounded concepts accessible to multimodal reasoning and en-ables systematic construction of supervision across complementary reasoning dimensions. Building on this framework, we introduce OmniClimate-TC, a novel benchmark that spans recognition and impact-level reasoning over tropical cyclones, and use it to validate ClimateTCX, a two-stage adaptation of vision–language models that progressively composes perceptual grounding into physical impact analysis. In a ntushell, our contributions are as follows: 
+
+• We introduce Physics-Aware Visual Abstraction (PAVA) ,a physics-grounded representation/annotation interface that maps continuous reanalysis fields to visually identifiable and semantically grounded perceptual abstractions for supervi-sion and evaluation in vision–language reasoning. 
+
+• We construct OmniClimate-TC , a tropical-cyclone bench-mark for multimedia reasoning that spans five categories of visual perception and compositional reasoning, cover-ing nine tasks and comprising 243,890 physically grounded instruction-tuning pairs. 
+
+• We develop ClimateTCX , a family of vision–language mod-els adapted to OmniClimate-TC for physics-grounded multi-media reasoning. Across multiple tasks, ClimateTCX consis-tently outperforms strong baselines, supporting the utility of PAVA-aligned representation design for physics-grounded reasoning over hazard fields. 
+
+## 2 Related Work 
+
+Vision-Language Models for Weather and Climate. The in-tersection of meteorology and multimodal learning has seen rapid growth, driven by the need to interpret complex geoscientific data, such as reanalysis products. Early benchmarks like WeatherQA [27] and CLLMate [23] established text-field alignment, while OmniEarth-Bench [42] broadened the scope to comprehensive Earth systems. Recent specialized works like ClimateIQA [7] and MeteorPred [38] have further integrated contour tracking and 4D spatiotemporal data. While these contributions have established a strong founda-tion for meteorological VLMs, they predominantly adopt an im-plicit visual learning paradigm, relying on the model to infer meteorological semantics directly from heatmap textures via end-to-end supervision. However, meteorological fields differ funda-mentally from natural images, as their interpretability relies on rigorous physical constraints (e.g., conservation laws) rather than object-centric visual cues. PAVA seeks to bridge this gap by in-troducing explicit physical abstractions , that is: transforming continuous fields into discrete, physically grounded attributes that provide a structured interface between raw physical signals and the reasoning capabilities of vision–language models. As shown in Tab. 1, OmniClimate-TC, built on PAVA, offers a complemen-tary benchmark with explicit physics-grounded supervision and physical-impact reasoning. 
+
+Extreme Weather Hazards and the Semantic Interpretation Gap. In weather forecasting, the field has rapidly evolved from early baselines (e.g., Pangu-Weather [3], GraphCast [20]) to advanced architectures like GenCast [33] and Aurora [4]. AI approaches in climate modeling have advanced from pioneering hybrid model-ing like NNCAM [45] and differentiable NeuralGCM [17] to recent frameworks like CondensNet [44] and ACE2 [46] that enforce phys-ical constraints for stable multi-decadal simulation. However, the raw outputs produced by these and more traditional models lack explicit hazard semantics , creating a critical dependency on manual expert interpretation that is both unscalable and error-prone. As data volume explodes, the widening gap between information avail-ability and human cognitive capacity [5, 34] risks obscuring vital warning signals. In this work, we mitigate this bottleneck by propos-ing PAVA , a physics-aware interface that distills high-dimensional numerical fields into structured hazard representations, supporting more systematic hazard-oriented interpretation. 
+
+## 3 Method 
+
+Problem Setup and Motivation. For a tropical cyclone event, the input consists of spatiotemporal physical fields:           
+
+> F={𝐹 (𝑘 )
+> 𝑡 (𝜙, 𝜆 ) | 𝑘 =1, . . . , 𝐾, 𝑡 ∈ T } ,(1)
+
+where (𝜙, 𝜆 ) denote latitude and longitude, and 𝐹 (𝑘 ) 
+
+> 𝑡
+
+is the 𝑘 -th physical variable (e.g., wind, precipitation, or sea-level pressure) at time 𝑡 . In this work, F is derived from daily ERA5 reanalysis over the event duration T . Unlike object-centric visual inputs, re-analysis fields encode event semantics through spatial organization and physically constrained patterns rather than discrete entities, creating a fundamental mismatch with multimodal perceptual in-terfaces and motivating physics-aligned visual abstractions. The overall framework of our proposed method is shown in Fig. 1. OmniClimate-TC MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. 
+
+Table 1: Comparison to related Earth-system multimodal benchmarks relevant to multimedia reasoning. Physics-grounded label indicates whether labels/questions are derived from physical continuous fields, rather than post-hoc textual annotation. Dataset Event type Variables Volume Coverage Time span Physics-grounded Physical impact labels reasoning included? 
+
+Mesogeos [19] Wildfire / Earth system Reanalysis 25,722 Regional 2006–2022 ✗ ✗
+
+WeatherQA [27] Severe convection Reanalysis, Obs. 8,511 Regional 2014–2020 ✗ ✗
+
+RadarQA [11] Radar-based weather Reanalysis 70,000 Worldwide N/A ✗ ✗
+
+ClimateIQA [7] General weather Reanalysis 762,120 Worldwide 2023 ✗ ✗
+
+CLLMate [23] Weather events Reanalysis 7,747 Worldwide 2015–2023 ✗ ✗
+
+OmniEarth-Bench [42] Multi-sphere Earth obs. Remote sensing 29,855 Worldwide 2010–2025 ✗ ✗
+
+MP-Bench [38] Severe weather Reanalysis 421,363 Regional 2023–2024 ✗ ✗
+
+OmniClimate-TC Tropical cyclone Reanalysis 243,890 Worldwide 1979–2025 ✓ ✓A Data curation EM-DAT + ReliefWeb records align with ERA5 daily fields 2,489 tropical cyclone events  
+
+> B
+
+Physics-aware visual abstraction (PAVA)    
+
+> physically grounded operators turn continuous fields into discrete, checkable labels
+> 10 m wind precipitation
+> Spatial localization
+> where extremes occur
+> Intensity estimation
+> Beaufort and WMO classes
+> Structural pattern
+> asymmetry · rainbands
+> Field-scale extent
+> area above threshold
+> Discrete labels rain wind
+> Rain Max Loc. Rain Intensity Rainband Structure Rain Coverage Wind Max Loc. Wind Intensity Wind Symmtry Wind Coverage LLM-assisted synthetic dataset generation
+> C
+
+OmniClimate-TC benchmark  
+
+> 9 tasks in 5 categories · 243,890 pairs expert refined templates · chronological split
+> D
+
+Two-stage instruction tuning (ClimateTCX)  
+
+> Stage 1 · perceptual alignment Stage 2 · mixed with impact (ρ)
+> Labels become supervision and verification targets
+
+Figure 1: Overall architecture of the proposed framework. This pipeline consists of four components: Dataset Collection & Curation, Physics-Aware Visual Abstraction (PAVA), OmniClimate-TC Construction and Two-stage Instruction-tuning. 
+
+## 3.1 Dataset Collection & Curation 
+
+We construct an event-centric tropical cyclone corpus by aligning historical disaster records with global meteorological reanalysis. Meteorological fields are obtained from ERA5 daily single-level reanalysis [12]. We opt for variables that are directly relevant to TC hazards and consistently available worldwide: 10 m wind com-ponents ( 𝑢 10 , 𝑣 10 ), daily total precipitation ( 𝑡𝑝 ), and mean sea-level pressure ( 𝑚𝑠𝑙 ). The dataset covers tropical cyclone events from January 1979 to October 2025. Event records are compiled from EM-DAT and ReliefWeb, merged across sources to remove duplicates and overlaps, yielding 2,489 unique TC events. Each event is associ-ated with a spatiotemporal window and a geographic subregion of interest. Since disaster records typically report affected countries rather than precise storm coordinates, we infer event-level loca-tions via a dedicated geocoding procedure: subnational locations are resolved using standardized gazetteers 1, and unresolved cases are assigned country-level centroids. 
+
+> 1https://www.geonames.org/
+
+## 3.2 Physics-Aware Visual Abstraction (PAVA) 
+
+To bridge the representation gap mentioned above, we propose physics-aware visual abstractions (PAVA) that maps continuous reanalysis fields to discrete, interpretable labels. We first localize a tropical cyclone by combining the subregional event-level locations with sea-level pressure fields. 
+
+Spatial Localization. Spatial localization aligns visually salient regions in hazard maps with physically dominant locations. Let Ω𝑒 
+
+denote the event-specific spatial domain (i.e., the set of spatial grid points within the event-centric subregion bounding box). Following the definition in Eq. 1, let 𝑃 𝑡 and 𝑊 𝑡 denote the instantaneous precip-itation and wind fields in F . We construct the event-aggregated 
+
+hazard field 𝐹 𝑒 for a physical variable 𝐹 ∈ { 𝑃,𝑊 } by taking the temporal maximum over the duration T :
+
+𝐹 𝑒 (𝜙, 𝜆 ) = max   
+
+> 𝑡 ∈T
+
+𝐹 𝑡 (𝜙, 𝜆 ). (2) 
+
+The spatial location of the hazard extremum is identified as: 
+
+(𝜙 𝑓 , 𝜆 𝑓 ) = arg max 
+
+> (𝜙,𝜆 ) ∈ Ω𝑒
+
+𝐹 𝑒 (𝜙, 𝜆 ). (3) MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. Luwei Xiao et al. 400 350 300 250 200 150 100 50 0
+
+> B12 B11 B10 B9 B8 B7 B6 B5 B4 B3 B2 B1 B0
+
+PAVA perception labels         
+
+> Rain max location Quintana Roo region, Mexico
+> Rain intensity Extreme rain
+> Rainband structure Diffuse rainband structure
+> Rain coverage Compact rainfall area
+> Wind max location Quintana Roo region, Mexican
+> Wind intensity Beaufort 9, Strong gale
+> Wind symmetry Moderately asymmetric
+> Wind coverage Compact wind field
+
+Physical impact analysis · composed from the labels above 
+
+Rainfall-driven flooding dominates over wind damage. 
+
+> Extreme, core-concentrated rain (rain intensity and coverage) drives rapid runoff, flash flooding in small catchments, and localized slope failures, especially if the system stalls or repeatedly tracks over Quintana Roo. Strong-gale winds confined near the center and concentrated in the northern semicircle (wind intensity, symmetry, and coverage) bring localized tree damage near landfall and along exposed coasts, together with rough, hazardous seas.
+
+Daily precipitation (mm) 10 m wind (Beaufort scale) 
+
+Figure 2: An example from OmniClimate-TC. Blue and Orange denote PAVA-derived labels from the precipitation field and the wind field (e.g., spatial location, intensity, structure, and coverage), respectively. 
+
+Instantiating 𝐹 with 𝑃 and 𝑊 yields the peak coordinates (𝜙 𝑟 , 𝜆 𝑟 )
+
+and (𝜙 𝑤 , 𝜆 𝑤 ), respectively. The labels Rain-Max-Loc and Wind-Max-Loc 
+
+provide spatial anchors that tie visual peaks in heatmaps to physi-cally meaningful extrema. These coordinates are then mapped, via the Google Geocoding API, to standardized country and first-level administrative units, yielding multi-scale evaluation targets rather than free-form place names. 
+
+Intensity Estimation. Intensity estimation maps physical mag-nitude to visually interpretable severity. We compute event-level intensity maxima: 
+
+𝑃 max = max 
+
+> (𝜙,𝜆 ) ∈ Ω𝑒
+
+𝑃 𝑒 (𝜙, 𝜆 ),𝑊 max = max 
+
+> (𝜙,𝜆 ) ∈ Ω𝑒
+
+𝑊 𝑒 (𝜙, 𝜆 ). (4) 
+
+These maxima are discretized into standard intensity categories: wind strength follows the Beaufort scale [15], and rainfall intensity uses physics-informed thresholds consistent with WMO-style daily extreme precipitation classifications[8]. We formulate intensity estimation as classification since the benchmark is designed to recover meaningful severity categories rather than raw continuous magnitudes. This yields the Max-Wind and Max-Rain labels. 
+
+Structural Pattern. Structural patterns capture mesoscale orga-nization that is visually evident yet not reducible to pointwise val-ues, such as asymmetry and banded precipitation structure. These patterns reflect dynamical processes of tropical cyclones. 
+
+Wind Symmetry. Using the wind-maximum location (𝜙 𝑤 , 𝜆 𝑤 ) as a reference, inspired by [16], we partition Ω𝑒 into four quadrants 
+
+Q ∈ { NE , NW , SE , SW }. For each quadrant, we compute: 
+
+𝑆 (𝑤 )Q =∑︁ 
+
+> (𝜙,𝜆 ) ∈Q
+
+𝑊 𝑒 (𝜙, 𝜆 ). (5) 
+
+We quantify the visual imbalance of the wind field using a normal-ized quadrant-contrast index: 
+
+𝛼 𝑤 = max Q 𝑆 (𝑤 )Q − min Q 𝑆 (𝑤 )Q
+
+ÍQ 𝑆 (𝑤 )Q + 𝜀 , (6) 
+
+where 𝜀 is a small constant for numerical stability (avoid division by zero). In implementation, we discretize 𝛼 𝑤 as symmetric (𝛼 𝑤 ≤
+
+0.15), moderately asymmetric (0 .15 < 𝛼 𝑤 ≤ 0.35), and strongly asymmetric (𝛼 𝑤 > 0.35) to produce the Wind-Sym label. 
+
+Rainband Structure. Rainband structure characterizes whether precipitation is organized into multiple coherent clusters or remains spatially diffuse. Given the event-aggregated precipitation field 
+
+𝑃 𝑒 (𝜙, 𝜆 ), we normalize it by: 
+
+˜𝑃 𝑒 (𝜙, 𝜆 ) = 𝑃 𝑒 (𝜙, 𝜆 )
+
+max Ω𝑒 𝑃 𝑒 + 𝜀 , 𝑀 𝑟 (𝜙, 𝜆 ) = 1 ˜𝑃 𝑒 (𝜙, 𝜆 ) ≥ 𝜏 𝑟 
+
+ , (7) 
+
+where 𝜏 𝑟 is set to the 85th percentile of the normalized precipitation field, following common practice to isolate physically dominant rainfall structures[35]. Connected-component analysis is applied to 
+
+𝑀 𝑟 to identify spatially contiguous precipitation clusters [14]; in im-plementation, we assign clustered for 𝑁 𝑐 ≥ 3, weakly clustered 
+
+for 𝑁 𝑐 = 2, and diffuse otherwise. 
+
+Field-scale Extent. Field-scale extent quantifies how broadly hazards are distributed in space, connecting physical footprint size to perceived spatial spread in visual representations. Let 𝑎 (𝜙 ) de-note the physical area of a grid cell at latitude 𝜙 , which scales as 
+
+𝑎 (𝜙 ) ∝ cos (𝜙 ) to correct for map projection distortions on the spherical Earth. Rain coverage [26] is computed as: 
+
+Cov 𝑟 =
+
+Í𝑖 ∈Ω𝑒 1[𝑃 𝑒 (𝑖 ) ≥ 𝜃 𝑟 ] 𝑎 (𝜙 𝑖 )
+
+Í𝑖 ∈Ω𝑒 𝑎 (𝜙 𝑖 ) , (8) OmniClimate-TC MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. 
+
+where 𝜃 𝑟 = 50 mm is a fixed heavy-rain threshold. For wind, we adopt a relative threshold 𝛾 [29] tied to event intensity; we set 
+
+𝛾 = 0.55 and compute the wind coverage [13] as follows: 
+
+𝜃 𝑤 = 𝛾𝑊 max , Cov 𝑤 =
+
+Í𝑖 ∈Ω𝑒 1[𝑊 𝑒 (𝑖 ) ≥ 𝜃 𝑤 ] 𝑎 (𝜙 𝑖 )
+
+Í𝑖 ∈Ω𝑒 𝑎 (𝜙 𝑖 ) , (9) 
+
+The resulting labels Rain-Cov and Wind-Cov capture the spatial footprint of hazards, aligning physical coverage with visual extent in reanalysis maps. 
+
+Unified Operator View of PAVA. We formalize PAVA as a family of physically grounded operators that map continuous re-analysis fields to discrete, visually interpretable representations. Concretely, given an event-centric physical input as Eq. 1, PAVA defines a set of abstraction operators: 
+
+A = {𝑎 𝑗 }𝐽 𝑗 =1, 𝑎 𝑗 : F𝑒 → Y 𝑗 , (10) 
+
+where each operator 𝑎 𝑗 extracts a physically meaningful attribute 
+
+Y𝑗 from the underlying fields. By construction, each attribute is grounded in established meteorological diagnostics, discriminable across severity or structural categories, and expressed in standard terminology amenable to language-based reasoning. 
+
+## 3.3 OmniClimate-TC Construction 
+
+Building on PAVA, we construct OmniClimate-TC , a structured benchmark designed to evaluate multimedia reasoning over tropical cyclone hazard fields. 
+
+Event-centric visualization. For each record, Wind is visu-alized using a Beaufort-scale color mapping [15]. Precipitation is visualized as a continuous field in physical units (mm), following common practice in reanalysis-based precipitation analysis [12]. All heatmaps are rendered within an event-centric geographic context defined by subregion based on the United Nations M49 [30]. 
+
+Instruction-tuning data. For each tropical cyclone event, we construct instruction–response pairs from templates constrained by PAVA-derived physical labels. Templates are refined with domain experts, and GPT-5.1 is used only as a constrained text-realization backend after labels and templates are fixed. For the first four per-ception categories, PAVA labels are deterministic supervision tar-gets used only in benchmark construction and training, not auxil-iary inference inputs. For Physical Impact Analysis, PAVA attributes constrain reference construction and verification. OmniClimate-TC spans five task categories covering nine tasks. The first four categories correspond to visual perception tasks that require direct interpretation of hazard-field patterns: Spatial Localization , In-tensity Estimation , Structural Pattern , and Field-scale Extent .The fifth category, Physical Impact Analysis , is a compositional 
+
+reasoning task that synthesizes multiple physical cues into a con-cise, mechanism-focused hazard summary. 
+
+Dataset statistics. Our proposed OmniClimate-TC comprises 4,978 high-resolution wind and precipitation heatmaps derived from 2,489 tropical cyclone events, covering ∼130 countries and 46 oceanic regions (Fig. 3). From these inputs, we construct 243,890 instruction-tuning examples spanning five task categories, with perceptual tasks evenly distributed (24.5% each) and Physical Impact Analysis accounting for 2% (Fig. 4). Data are split chronologically into training (1979–2015), validation (2016–2019), and test (2020– 2025) sets, with proportions approximately following a 7:1:2 ratio. 
+
+Figure 3: Density of tropical cyclone–affected areas from OmniClimate-TC, showing broad coverage across the world. Physic Impact 2.0% Spatial Localization 24.5% Intensity Estimation 24.5% Structural Pattern 24.5% Field-scale Extent 24.5% 
+
+> Rain-Max-Loc 12.2% Wind-Max-Loc 12.2% Max-Rain 12.2% Max-Wind 12.2% Rainband 12.2% Wind-Sym 12.2% Rain-Coverage 12.2% Wind-Coverage 12.2%
+> very heavy rain 4.1% extreme rain 4.1% others 4.1% Beaufort 7, Near gale 3.4% Beaufort 6, Strong breeze 3.4% Beaufort 5, Fresh breeze 2.0% others 3.5% clustered 9.2% others 3.1% strongly asymmetric 8.4% moderately asymmetric 3.0% others 0.8% very limited rainfall area 6.5% compact rainfall area 4.2% others 1.6% moderately sized wind field 5.1% compact wind field 4.0% others 3.1%
+
+Figure 4: Task and label distribution of OmniClimate-TC. La-bel classes below 2% are grouped as Others for visualization. 
+
+## 3.4 ClimateTCX: Two-Stage Instruction Tuning 
+
+Each example consists of two hazard heatmaps (wind and precipita-tion) paired with a textual instruction. We consider eight perceptual 
+
+tasks spanning spatial localization, intensity, structure, and field-scale extent, together with one compositional reasoning task for physical impact analysis. 
+
+Stage-1: Vision Perceptual Alignment. In Stage-1, we fine-tune the model on the eight perceptual tasks using supervised instruction tuning. Let D1 = {( 𝑥 𝑖 , 𝑦 𝑖 , 𝑡 𝑖 )} denote the training set, where 𝑥 𝑖 is the multimodal input and 𝑡 𝑖 the task label. We optimize the autoregressive objective: 
+
+LSFT (𝜃 ) = −E(𝑥,𝑦,𝑡 )∼D 1∑︁ 𝑗 
+
+log 𝑝 𝜃 (𝑦 𝑗 | 𝑥, 𝑦 <𝑗 ), (11) 
+
+using task-balanced sampling to avoid dominance by high-frequency tasks. This stage establishes visually grounded perceptual primi-tives for interpreting cyclone structure. 
+
+Stage-2: Mixed Training with Impact Reasoning. Stage-2 continues training from the Stage-1 checkpoint and introduces the physical impact analysis task 𝑡 imp , which requires synthesizing wind and precipitation cues into a mechanism-focused hazard summary. MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. Luwei Xiao et al. 
+
+Training is performed on a mixed dataset D2 with a task mixture:             
+
+> 𝑃 (𝑡 )=
+> 
+> 𝜌, 𝑡 =𝑡 imp ,
+> 1−𝜌
+> 8,𝑡 ∈ T perc ,(12)
+
+which is implemented via weighted sampling 𝑤 𝑖 ∝ 𝑃 (𝑡 𝑖 )/ 𝑁 (𝑡 𝑖 ).Stage-2 mixes impact and perceptual supervision to promote com-positional transfer from visually grounded cues to physical hazard interpretation without catastrophic forgetting. 
+
+## 4 Experiment 
+
+Experimental Setup . We fine-tune three representative VLMs: LLaVA-v1.6-34B [25], Qwen2.5-VL-32B-Instruct [40], and Qwen3-VL-32B-Instruct [41]. We further evaluate a range of open- and closed-source VLMs on OmniClimate-TC, including models from the Qwen, LLaVA, InternVL, ChatGPT, and Gemini families [1, 39, 43]. All compared models are evaluated on the same benchmark tasks; only ClimateTCX is trained on OmniClimate-TC. Implemen-tation details are in Appendix. 
+
+## 4.1 Evaluation Metrics 
+
+We evaluate the eight perception tasks using task-aligned metrics that reflect their physical and semantic requirements. 
+
+Classification-style tasks. Three task categories (Intensity Estimation, Structural Pattern, and Field-scale Extent) are formu-lated as closed-set classification problems. We report Accuracy and 
+
+Macro-F1 to measure exact label agreement. 
+
+Spatial localization tasks. Spatial Localization requires identi-fying the geographic location of hazard extrema. Predictions are evaluated at multiple administrative scales using an Element Match Score (EMS) [7]. We report EMS at the country level (EMS 𝑐 ), admin-1 level (EMS 𝑎 ), and their aggregate (EMS 𝑡 ). 
+
+Physics-aware rule-based metrics. We evaluate physical im-pact analysis using complementary metrics that assess faithfulness and hazard attribution. Hazard Severity Faithfulness (HSF) mea-sures whether stated wind and rainfall severities are supported by the underlying PAVA-derived physical attributes, penalizing hallu-cinated or exaggerated claims [28]. Hazard Attribution Accuracy (HAA) evaluates whether the dominant hazard mechanism is cor-rectly identified, consistent with IPCC definitions of multi-hazard impacts [6]. Both metrics rely on a physics-grounded hazard-impact lexicon curated from NOAA/NWS, WMO, and IPCC (see Appendix). 
+
+Lexical similarity metrics. We additionally report BLEU [31] and ROUGE [24] to quantify surface-level similarity with reference summaries. Because the references are generated under fixed GPT-5.1 prompt constraints, BLEU and ROUGE are best interpreted as measures of agreement with a controlled reference style rather than direct evidence of physical validity. 
+
+LLM-as-judge evaluation. We employ an LLM-based judge (Gemini-3-Pro) to assess higher-level semantic properties, includ-ing attribute consistency, dominant hazard correctness, mechanism support, and overall completeness. Here the judge serves as a con-strained semantic verifier conditioned only on PAVA-derived at-tributes. The expert audit reported in Fig. 5 and Tab. 5 therefore acts as the primary external check on target quality, while lexical and judge-based scores are secondary diagnostics. Details are provided in the Supplementary material. 
+
+## 4.2 Main results. 
+
+Perception tasks. Tab. 2 shows that general-purpose VLMs remain poorly matched to tropical-cyclone hazard fields. Open-source mod-els display substantial variability across tasks: some capture salient morphology, but most fail on physically calibrated quantities such as peak-wind intensity and field extent, often approaching chance-level performance. These patterns suggest that visual saliency alone does not yield stable understanding of magnitude or spatial foot-print. Closed-source models improve aggregate accuracy and are of-ten effective on mesoscale pattern recognition, yet they continue to exhibit systematic weakness in intensity grounding and extent rea-soning, consistent with a bias toward shape-level cues rather than field-consistent physical interpretation. In contrast, ClimateTCX 
+
+achieves the strongest and most balanced results across localization, intensity, structure, and extent, supporting PAVA-aligned represen-tation design and supervision as an effective interface for reasoning over hazard fields. 
+
+Physical impact analysis. Tab. 3 underscores the difficulty of converting visual hazard cues into physically faithful impact summaries. Open-source models perform poorly on HSF and HAA, indicating frequent overstatement of hazard severity or incorrect attribution of the dominant mechanism despite reasonable fluency. Closed-source models improve both faithfulness and attribution, but a substantial gap remains between lexical similarity and physics-aware correctness, showing that fluent text is not, by itself, evi-dence of physical consistency. ClimateTCX performs best across metric groups. Stage-1 perceptual training alone (ClimateTCX_VPA) yields clear gains over generic baselines, indicating that perceptual grounding transfers to impact reasoning. Adding impact supervi-sion (ClimateTCX_MIX) improves attribution and textual quality, while the proposed mixed strategy (ClimateTCX_MT) provides the strongest overall balance among faithfulness, hazard attribution, and judge-based semantic consistency. This interpretation is con-sistent with the expert verification reported in Fig. 5 and Tab. 5, which provide the primary external check on benchmark fidelity. In conclusion, these results suggest that accurate physical impact analysis depends more on perceptual grounding and task composi-tion than on model scale or linguistic fluency alone. 
+
+## 4.3 Ablation analysis. 
+
+Tab. 4 shows that each perceptual abstraction contributes mea-surably to both task-specific prediction and downstream impact reasoning. Removing any single component degrades not only the corresponding perceptual task, but also the quality of physical impact analysis, indicating that these abstractions function as a coupled representation rather than as independent auxiliaries. Ex-tent removal produces the sharpest decline in extent prediction and the largest downstream losses in ROUGE and Gemini Score, under-scoring the importance of hazard footprint in judging impact scale and spatial reach. Removing intensity substantially weakens mag-nitude recognition and yields consistent losses in HSF and HAA, showing that calibrated severity cues are central to faithful haz-ard interpretation. Structural ablation primarily impairs mesoscale pattern recognition and propagates to impact reasoning, consis-tent with the role of organization and asymmetry in determining OmniClimate-TC MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. 
+
+Table 2: Model performance on OmniClimate-TC. For spatial localization, we report multi-scale scores (EMS 𝑐 , EMS 𝑎 ; higher is better, values closer to 0 indicate more accurate localization). For other tasks, we report Accuracy and Macro-F1 (%). Overall Acc/F1 average the six non-localization tasks, and Overall EMS 𝑡 averages Rain-Max-Loc and Wind-Max-Loc. Within each model category (open-source, closed-source, ours), the best and second-best results are highlighted in bold and underlined. 
+
+Spatial Localization Intensity Estimation Structural Pattern Field-scale Extent Overall Category Model Rain-Max-Loc Wind-Max-Loc Max-Rain Max-Wind Rainband Wind-Sym Rain-Cov Wind-Cov Acc ↑ F1 ↑ EMS 𝑡 ↑
+
+EMS 𝑐 ↑ EMS 𝑎 ↑ EMS 𝑐 ↑ EMS 𝑎 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑
+
+Open-source 
+
+InternVL3.5-14B -0.431 -0.986 -0.301 -0.991 31.0 10.2 19.8 11.5 35.7 18.1 53.4 21.2 22.1 12.1 18.4 10.6 30.1 14.0 -0.773 InternVL3.5-38B -0.618 -0.986 -0.543 -0.979 28.9 13.8 20.7 13.9 35.9 14.1 46.2 20.4 30.8 16.4 20.0 9.9 30.4 14.8 -0.837 LLaVA-v1.6-13B -0.646 -1.000 -0.795 -1.000 30.4 10.3 0.0 0.0 20.5 9.4 59.0 22.3 2.9 2.8 16.6 8.5 21.5 8.9 -0.907 LLaVA-v1.6-34B -0.756 -0.992 -0.871 -0.999 7.8 3.1 0.0 0.0 20.1 10.6 16.2 16.8 20.7 12.8 28.9 15.4 15.6 9.8 -0.932 Qwen2.5-VL-7B -0.361 -0.980 -0.392 -0.974 33.2 8.3 1.2 1.1 55.6 15.9 23.9 9.8 2.7 2.0 19.1 9.1 22.6 7.7 -0.762 Qwen2.5-VL-32B -0.239 -0.946 -0.346 -0.959 37.1 17.8 0.0 0.0 50.6 22.8 25.8 15.8 15.5 15.3 28.8 15.8 26.3 14.6 -0.700 
+
+Qwen2.5-VL-72B -0.235 -0.973 -0.497 -0.959 33.6 10.8 0.7 1.5 65.1 23.4 38.2 19.8 27.5 19.6 25.1 13.8 31.7 14.8 -0.745 Qwen3-VL-8B -0.308 -0.976 -0.413 -0.968 33.4 11.6 0.1 0.1 37.5 18.0 49.1 25.6 18.6 11.5 19.7 13.1 26.4 13.3 -0.750 Qwen3-VL-32B -0.242 -0.967 -0.327 -0.964 36.2 17.8 0.3 0.7 32.2 17.1 53.1 18.7 20.9 12.7 23.5 11.9 27.7 13.2 -0.717 Qwen3-VL-235B -0.284 -0.963 -0.420 -0.963 36.6 21.8 5.3 6.3 51.4 23.8 40.9 20.8 30.3 19.9 18.5 7.2 30.5 16.6 -0.742 
+
+Closed-source 
+
+GPT-4o-mini -0.329 -0.967 -0.380 -0.970 34.7 15.9 7.9 4.8 64.8 23.6 59.0 27.3 6.5 6.3 18.4 10.3 31.9 14.7 -0.759 GPT-4o -0.175 -0.960 -0.552 -0.977 37.8 15.6 2.3 1.6 68.8 21.2 23.5 13.0 29.6 21.4 15.6 7.6 29.6 13.4 -0.746 GPT-5-mini -0.268 -0.937 -0.487 -0.963 45.0 16.0 29.1 12.1 68.5 24.8 62.7 35.2 36.1 23.4 19.1 17.3 43.4 21.5 -0.724 GPT-5.1 -0.170 -0.921 -0.361 -0.953 42.7 19.9 5.4 5.2 64.3 23.7 41.3 28.6 38.9 30.3 16.8 12.2 34.9 20.0 -0.678 Gemini-2.0-Flash -0.487 -0.988 -0.375 -0.979 31.8 16.0 9.4 5.8 64.7 18.1 36.1 20.8 28.0 18.3 14.0 5.7 30.7 14.1 -0.791 Gemini-2.5-Flash -0.287 -0.944 -0.594 -0.981 44.5 16.3 7.9 5.0 66.7 18.8 68.1 36.8 36.6 19.9 10.0 8.6 39.0 17.6 -0.766 Gemini-Lite-Latest -0.361 -0.965 -0.403 -0.979 31.9 14.7 4.7 3.8 68.3 18.3 28.4 11.1 37.1 23.2 19.6 11.8 31.7 13.8 -0.759 Gemini-3-Flash -0.226 -0.846 -0.580 -0.939 45.7 17.9 34.3 16.2 69.5 19.4 65.0 21.2 42.7 26.3 15.9 10.2 45.5 18.5 -0.660 ClimateTCX (Ours) 
+
+LLaVA-v1.6-34B -0.389 -0.932 -0.543 -0.942 37.8 23.9 13.1 12.7 76.2 27.3 82.5 54.3 72.0 51.2 66.4 33.3 58.0 33.8 -0.738 Qwen2.5-VL-32B -0.108 -0.714 -0.075 -0.717 57.3 42.7 51.0 31.0 79.7 24.9 81.5 67.0 74.2 60.5 69.2 39.3 68.9 44.2 -0.558 Qwen3-VL-32B -0.119 -0.713 -0.122 -0.697 58.3 43.4 47.7 31.1 79.8 32.6 82.5 70.8 69.7 60.3 66.4 33.1 67.4 45.2 -0.554 
+
+Table 3: Physical impact analysis evaluation. ClimateTCX variants are based on Qwen3-VL-32B. We group metrics into physics-aware rule-based, lexical text similarity, and LLM-as-judge. Higher is better ( ↑). 
+
+Physics-aware Text Similarity LLM-as-Judge Model HSF ↑ HAA ↑ BLEU ↑ ROUGE ↑ Gemini Score ↑
+
+Open-source models 
+
+Qwen3-VL-32B 0.1612 0.2207 0.0268 0.1670 0.4457 Qwen2.5-VL-32B 0.1440 0.1808 0.0251 0.1361 0.4268 LLaVA-v1.6-34B 0.1627 0.2605 0.0232 0.1489 0.5221 
+
+Closed-source models 
+
+GPT-5.1 0.2097 0.3873 0.0337 0.1799 0.6876 Gemini-3-Flash 0.1886 0.3075 0.0186 0.1044 0.6530 GPT-4o 0.2089 0.4366 0.0196 0.1092 0.6419 GPT-5-mini 0.1964 0.3568 0.0239 0.1325 0.5895 Gemini-Lite-Latest 0.1338 0.2606 0.0253 0.1344 0.5719 Gemini-2.5-Flash 0.1017 0.1221 0.0144 0.0908 0.4114 ClimateTCX_MIX 0.2496 0.5000 0.1326 0.3183 0.7514 ClimateTCX_VPA 0.1573 0.3779 0.0236 0.1202 0.6425 ClimateTCX_MT 0.2449 0.4906 0.1347 0.3233 0.7599 
+
+dominant hazard mechanisms. Spatial ablation mainly affects local-ization metrics and has comparatively smaller impact on abstract impact synthesis, suggesting that for this task, geolocation is less consequential than magnitude, structure, and extent. Overall, the full model yields the strongest balance across metrics, indicating that robust physical impact understanding depends on the joint availability of complementary perceptual abstractions. 4.0 4.2 4.4 4.6         
+
+> Mean score
+> Spatial Intensity Structural Extent Impact Analysis Overall
+> Consistency
+> 4.0 4.2 4.4 4.6
+> Mean score
+> Plausibility
+> 4.0 4.2 4.4 4.6
+> Mean score
+> Informativeness
+> 0.65 0.70 0.75
+> Agreement
+> Weighted Cohen's κ
+
+Figure 5: Expert evaluation of OmniClimate-TC across task categories. The first three panels report consistency, plausi-bility, and informativeness on a 5-point Likert scale, and the fourth reports weighted Cohen’s 𝜅 ; points show means with 95% bootstrap confidence intervals. 
+
+## 4.4 Expert evaluation and Dataset Reliability 
+
+We assess benchmark reliability by sampling 40 TC cases and re-viewing the nine associated tasks per case, yielding 360 expert-reviewed instances. Two tropical-meteorology experts indepen-dently rate visual–physical consistency, physical plausibility, and informativeness on a 5-point Likert scale. Fig. 5 shows consistently strong scores across categories, with all three criteria above 4.0 and narrow confidence intervals. Weighted Cohen’s 𝜅 ranges from 0.69 to 0.75 across categories, with an overall 𝜅 of 0.72. Overall scores reach 4.32 for consistency, 4.47 for plausibility, and 4.23 for informativeness, supporting the reliability of OmniClimate-TC. Tab. 5 further audits whether the generated targets remain faithful to the underlying physical la-bels. Perceptual annotations achieve 86.6% expert-verified accuracy MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. Luwei Xiao et al. 
+
+Table 4: Ablation study on ClimateTCX (Qwen3-VL-32B). For Spatial Localization, EMS 𝑐 and EMS 𝑎 are averaged over Rain-Max-Loc and Wind-Max-Loc. For other categories, Accuracy and Macro-F1 are averaged over the two tasks within each category. Best and second-best results across ablation settings are shown in bold and underline, respectively. 
+
+Setting Spatial Intensity Structural Extent Impact Analysis 
+
+EMS 𝑐 ↑ EMS 𝑎 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ Acc ↑ F1 ↑ HSF ↑ HAA ↑ ROUGE ↑ Gemini Score ↑
+
+Full (no ablation) -0.121 -0.705 53.0 37.3 81.2 51.7 68.1 46.7 0.2449 0.4906 0.3233 0.7599 
+
+w/o Extent -0.118 -0.713 52.6 37.1 80.7 53.7 0.1 0.3 0.2351 0.4847 0.3014 0.7490 w/o Intensity -0.128 -0.716 11.9 7.8 80.9 53.5 69.3 46.4 0.2300 0.4742 0.3138 0.7466 w/o Spatial -0.368 -0.767 52.3 36.5 80.0 54.1 68.6 46.1 0.2404 0.4870 0.3152 0.7506 w/o Structural -0.144 -0.707 52.3 37.1 7.1 7.3 67.6 45.5 0.2324 0.4707 0.3173 0.7452 
+
+Table 5: Expert verification of generated perceptual labels and impact-summary acceptability on 40 sampled TC cases (360 reviewed instances). 
+
+Task Correct/Total Rate (%) Spatial 68/80 85.0 Intensity 69/80 86.3 Structural 73/80 91.3 Extent 67/80 83.8 Perceptual overall 277/320 86.6 Impact reasoning 33/40 82.5 10 20 30 40 50 60 70    
+
+> Perception overall accuracy (%)
+> 0.4 0.5 0.6 0.7 0.8
+> Physical impact analysis (Gemini score)
+> LLaVA-34B Qwen2.5-32B Qwen3-32B GPT-4o GPT-5.1 GPT-5-mini Gemini-2.5 Gemini-Lite Gemini-3 ClimateTCX
+> LLaVA Qwen Gemini OpenAI
+
+Figure 6: Perception–reasoning relation across representative open- and closed-source models. 
+
+overall. Impact summaries achieve 82.5% expert acceptability. Fig. 5 and Tab. 5 support the reliability of the annotations and generated targets for benchmark construction and instruction tuning. 
+
+## 4.5 Perception–reasoning relation 
+
+Fig. 6 shows the relation between perceptual grounding and down-stream impact reasoning across model families. Models with stronger event-level perception generally achieve better impact-analysis per-formance. This descriptive association supports our premise that reliable impact reasoning benefits from accurate perceptual ground-ing, without implying causality. The figure also shows that this relation is not explained by model family or scale alone. Closed-source models generally occupy a stronger regime than open-source baselines, but their gains remain uneven: some attain moderate impact-analysis scores despite only modest perceptual accuracy, whereas others improve perception without a commensurate gain in reasoning quality. ClimateTCX lies in the upper-right corner and is separated from the rest of the model set on both axes, indicating that the proposed training strategy improves not only perceptual recognition, but also the conversion of perceptual evidence into coherent physical impact judgments. In this sense, the figure complements Tabs. 2 and 3 by showing that the strongest impact-analysis behavior is attained when perceptual grounding and reasoning are improved jointly rather than in isolation. 
+
+## 5 Conclusion 
+
+This study frames multimodal extreme-weather understanding as a representation problem. We introduce PAVA, a physics-grounded in-terface that makes meaningful structure in continuous geophysical fields accessible to VLMs. PAVA is studied primarily as a supervision and evaluation interface rather than as an auxiliary inference-time modality. Built on this interface, OmniClimate-TC and ClimateTCX show that PAVA-aligned supervision improves both perceptual pre-diction and impact reasoning over tropical-cyclone hazard fields. More broadly, our results highlight representation design, beyond model scale, as a key factor in multimedia reasoning over scien-tific fields. Our study is limited to tropical cyclones and the cur-rent PAVA-aligned annotation pipeline; disentangling PAVA from broader domain adaptation will require matched non-PAVA con-trols. Future work will extend this interface-design recipe to other hazards and annotation schemes. 
+
+## Acknowledgments 
+
+GM acknowledges MOE Tier 2 grant no. T2EP20124-0043: AR-TIFICIAL INTELLIGENCE + DATA ASSIMILATION (AIDA) FOR WEATHER AND CLIMATE MODELS. OmniClimate-TC MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. 
+
+## References 
+
+[1] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Floren-cia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al. 2023. Gpt-4 technical report. arXiv preprint arXiv:2303.08774 
+
+(2023). [2] Karianne J Bergen, Paul A Johnson, Maarten V de Hoop, and Gregory C Beroza. 2019. Machine learning for data-driven discovery in solid Earth geoscience. 
+
+Science 363, 6433 (2019), eaau0323. [3] Kaifeng Bi, Lingxi Xie, Hengheng Zhang, Xin Chen, Xiaotao Gu, and Qi Tian. 2022. Pangu-weather: A 3d high-resolution model for fast and accurate global weather forecast. arXiv preprint arXiv:2211.02556 (2022). [4] Cristian Bodnar, Wessel P Bruinsma, Ana Lucic, Megan Stanley, Anna Allen, Johannes Brandstetter, Patrick Garvan, Maik Riechert, Jonathan A Weyn, Haiyu Dong, et al. 2025. A foundation model for the Earth system. Nature (2025), 1–8. [5] Gustau Camps-Valls, Miguel-Ángel Fernández-Torres, Kai-Hendrik Cohrs, Adrian Höhl, Andrea Castelletti, Aytac Pacal, Claire Robin, Francesco Martinuzzi, Ioannis Papoutsis, Ioannis Prapas, et al. 2025. Artificial intelligence for modeling and understanding extreme weather and climate events. Nature Communications 16, 1 (2025), 1919. [6] Intergovernmental Panel On Climate Change. 2001. Climate change 2007: Impacts, adaptation and vulnerability. Genebra, Suíça (2001). [7] Jian Chen, Peilin Zhou, Yining Hua, Dading Chong, Meng Cao, Yaowei Li, Wei Chen, Bing Zhu, Junwei Liang, and Zixuan Yuan. 2025. ClimateIQA: A New Dataset and Benchmark to Advance Vision-Language Models in Meteorology Anomalies Analysis. In Proceedings of the 31st ACM SIGKDD Conference on Knowl-edge Discovery and Data Mining V. 2 . 5322–5333. [8] THER Clima and W Te. 2023. Guidelines on the definition and characterization of extreme weather and climate events. World Meteorological Organization, Geneva, Switzerland (2023). [9] Chenyu Dong, Davide Faranda, Adriano Gualandi, Valerio Lucarini, and Gi-anmarco Mengaldo. 2025. Time-lagged recurrence: A data-driven method to estimate the predictability of dynamical systems. Proceedings of the National Academy of Sciences 122, 20 (2025), e2420252122. [10] Chenyu Dong, Robin Noyelle, Gabriele Messori, Adriano Gualandi, Lucas Fery, Pascal Yiou, Mathieu Vrac, Fabio D’andrea, Suzana J Camargo, Erika Coppola, et al. 2024. Indo-Pacific regional extremes aggravated by changes in tropical weather patterns. Nature Geoscience 17, 10 (2024), 979–986. [11] Xuming He, Zhiyuan You, Junchao Gong, Couhua Liu, Xiaoyu Yue, Peiqin Zhuang, Wenlong Zhang, and LEI BAI. 2025. RadarQA: Multi-modal Quality Analysis of Weather Radar Forecasts. In The Thirty-ninth Annual Conference on Neural Information Processing Systems .[12] Hans Hersbach, Bill Bell, Paul Berrisford, Shoji Hirahara, András Horányi, Joaquín Muñoz-Sabater, Julien Nicolas, Carole Peubey, Raluca Radu, Dinand Schepers, et al. 2020. The ERA5 global reanalysis. Quarterly journal of the royal meteorolog-ical society 146, 730 (2020), 1999–2049. [13] Greg J Holland. 1980. An Analytic Model of the Wind and Pressure Profiles in Hurricanes. Monthly Weather Review 108, 8 (1980), 1212–1218. [14] Joseph Hoshen and Raoul Kopelman. 1976. Percolation and cluster distribution. I. Cluster multiple labeling technique and critical concentration algorithm. Physical Review B 14, 8 (1976), 3438. [15] Scott Huler. 2007. Defining the wind: the Beaufort scale and how a 19th-century admiral turned science into poetry . Crown. [16] Bradley W Klotz and Haiyan Jiang. 2017. Examination of surface wind asym-metries in tropical cyclones. Part I: General structure and wind shear impacts. 
+
+Monthly Weather Review 145, 10 (2017), 3989–4009. [17] Dmitrii Kochkov, Janni Yuval, Ian Langmore, Peter Norgaard, Jamie Smith, Griffin Mooers, Milan Klöwer, James Lottes, Stephan Rasp, Peter Düben, et al. 2024. Neural general circulation models for weather and climate. Nature 632, 8027 (2024), 1060–1066. [18] Diana Koldasbayeva, Polina Tregubova, Mikhail Gasanov, Alexey Zaytsev, Anna Petrovskaia, and Evgeny Burnaev. 2024. Challenges in data-driven geospatial modeling for environmental research and practice. Nature Communications 15, 1 (2024), 10700. [19] Spyridon Kondylatos, Ioannis Prapas, Gustau Camps-Valls, and Ioannis Papoutsis. 2023. Mesogeos: A multi-purpose dataset for data-driven wildfire modeling in the mediterranean. Advances in Neural Information Processing Systems 36 (2023), 50661–50676. [20] Remi Lam, Alvaro Sanchez-Gonzalez, Matthew Willson, Peter Wirnsberger, Meire Fortunato, Ferran Alet, Suman Ravuri, Timo Ewalds, Zach Eaton-Rosen, Weihua Hu, et al. 2023. Learning skillful medium-range global weather forecasting. 
+
+Science 382, 6677 (2023), 1416–1421. [21] Hugo Laurençon, Léo Tronchon, Matthieu Cord, and Victor Sanh. 2024. What matters when building vision-language models? Advances in Neural Information Processing Systems 37 (2024), 87874–87907. [22] Tony Lee, Haoqin Tu, Chi H Wong, Wenhao Zheng, Yiyang Zhou, Yifan Mai, Josselin S Roberts, Michihiro Yasunaga, Huaxiu Yao, Cihang Xie, et al. 2024. Vhelm: A holistic evaluation of vision language models. Advances in Neural Information Processing Systems 37 (2024), 140632–140666. [23] Haobo Li, Zhaowei Wang, Jiachen Wang, YueYa Wang, Alexis Kai Hon Lau, and Huamin Qu. 2025. Cllmate: A multimodal benchmark for weather and climate events forecasting. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing . 17547–17573. [24] Chin-Yew Lin. 2004. Rouge: A package for automatic evaluation of summaries. In Text summarization branches out . 74–81. [25] Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. 2023. Improved Baselines with Visual Instruction Tuning. arXiv:2310.03744 [cs.CV] [26] Manuel Lonfat, Frank D Marks Jr, and Shuyi S Chen. 2004. Precipitation distribu-tion in tropical cyclones using the Tropical Rainfall Measuring Mission (TRMM) Microwave Imager: A global perspective. Monthly Weather Review 132, 7 (2004), 1645–1660. [27] Chengqian Ma, Zhanxiang Hua, Alexandra Anderson-Frey, Vikram Iyer, Xin Liu, and Lianhui Qin. 2024. Weatherqa: Can multimodal language models reason about severe weather? arXiv preprint arXiv:2406.11217 (2024). [28] Joshua Maynez, Shashi Narayan, Bernd Bohnet, and Ryan McDonald. 2020. On Faithfulness and Factuality in Abstractive Summarization. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics . 1906–1919. [29] Yilong Niu, Danielle Touma, Mingfang Ting, Suzana J Camargo, and Ruishan Chen. 2022. Assessing heavy precipitation risk associated with tropical cyclones in China. Journal of Applied Meteorology and Climatology 61, 5 (2022), 577–591. [30] United Nations. Statistical Office. 1982. Standard country or area codes for statisti-cal use . Number 49. UN. [31] Kishore Papineni, Salim Roukos, Todd Ward, and Wei-Jing Zhu. 2002. Bleu: a method for automatic evaluation of machine translation. In Proceedings of the 40th annual meeting of the Association for Computational Linguistics . 311–318. [32] Christopher J Patrick, John S Kominoski, William H McDowell, Benjamin Bra-noff, David Lagomasino, Miguel Leon, Enie Hensel, Marc JS Hensel, Bradley A Strickland, T Mitchell Aide, et al. 2022. A general pattern of trade-offs between ecosystem resistance and resilience to tropical cyclones. Science advances 8, 9 (2022), eabl9155. [33] Ilan Price, Alvaro Sanchez-Gonzalez, Ferran Alet, Tom R Andersson, Andrew El-Kadi, Dominic Masters, Timo Ewalds, Jacklynn Stott, Shakir Mohamed, Peter Battaglia, et al. 2025. Probabilistic weather forecasting with machine learning. 
+
+Nature 637, 8044 (2025), 84–90. [34] Markus Reichstein, Gustau Camps-Valls, Bjorn Stevens, Martin Jung, Joachim Denzler, Nuno Carvalhais, and Prabhat. 2019. Deep learning and process under-standing for data-driven Earth system science. Nature 566, 7743 (2019), 195–204. doi:10.1038/s41586-019-0912-1 [35] Christoph Schär, Nikolina Ban, Erich M Fischer, Jan Rajczak, Jürg Schmidli, Christoph Frei, Filippo Giorgi, Thomas R Karl, Elizabeth J Kendon, Albert MG Klein Tank, et al. 2016. Percentile indices for assessing changes in heavy precipitation events. Climatic Change 137, 1 (2016), 201–216. [36] Mark Steyvers, Heliodoro Tejeda, Aakriti Kumar, Catarina Belem, Sheer Karny, Xinyue Hu, Lukas W Mayer, and Padhraic Smyth. 2025. What large language models know and what people think they know. Nature Machine Intelligence 7, 2 (2025), 221–231. [37] Joshua Studholme, Alexey V Fedorov, Sergey K Gulev, Kerry Emanuel, and Kevin Hodges. 2022. Poleward expansion of tropical cyclone latitudes in warming climates. Nature Geoscience 15, 1 (2022), 14–28. [38] Shuo Tang, Jian Xu, Jiadong Zhang, Yi Chen, Qizhao Jin, Lingdong Shen, Chenglin Liu, and Shiming Xiang. 2025. MeteorPred: A Meteorological Multimodal Large Model and Dataset for Severe Weather Event Prediction. arXiv preprint arXiv:2508.06859 (2025). [39] Gemini Team, Rohan Anil, Sebastian Borgeaud, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut, Johan Schalkwyk, Andrew M Dai, Anja Hauth, Katie Millican, et al. 2023. Gemini: a family of highly capable multimodal models. arXiv preprint arXiv:2312.11805 (2023). [40] Qwen Team. 2024. Qwen2.5: A Party of Foundation Models. https://qwenlm. github.io/blog/qwen2.5/ [41] Qwen Team. 2025. Qwen3 Technical Report. arXiv:2505.09388 [cs.CL] https: //arxiv.org/abs/2505.09388 [42] Fengxiang Wang, Mingshuo Chen, Xuming He, Yueying Li, YiFan Zhang, Feng Liu, Zijie Guo, Zhenghao Hu, Jiong Wang, Jingyi Xu, et al. 2025. OmniEarth-Bench: Towards Holistic Evaluation of Earth’s Six Spheres and Cross-Spheres Interac-tions with Multimodal Observational Earth Data. arXiv preprint arXiv:2505.23522 
+
+(2025). [43] Weiyun Wang, Zhangwei Gao, Lixin Gu, Hengjun Pu, Long Cui, Xingguang Wei, Zhaoyang Liu, Linglin Jing, Shenglong Ye, Jie Shao, et al. 2025. InternVL3.5: Ad-vancing Open-Source Multimodal Models in Versatility, Reasoning, and Efficiency. 
+
+arXiv preprint arXiv:2508.18265 (2025). [44] Xin Wang, Jianda Chen, Juntao Yang, Jeff Adie, Simon See, Kalli Furtado, Chen Chen, Troy Arcomano, Romit Maulik, Wei Xue, and Gianmarco Mengaldo. 2026. CondensNet: enabling stable long-term climate simulations via hybrid deep learning models with adaptive physical constraints. npj Climate and Atmospheric Science 9, 1 (2026), 7. doi:10.1038/s41612-025-01269-5 MM ’26, November 10–14, 2026, Rio de Janeiro, Brazil. Luwei Xiao et al. 
+
+[45] Xin Wang, Yilun Han, Wei Xue, Guangwen Yang, and Guang J Zhang. 2022. Stable climate simulations using a realistic general circulation model with neural network parameterizations for atmospheric moist physics and radiation processes. 
+
+Geoscientific Model Development 15, 9 (2022), 3923–3940. [46] Oliver Watt-Meyer, Brian Henn, Jeremy McGibbon, Spencer K. Clark, Anna Kwa, W. Andre Perkins, Elynn Wu, Lucas Harris, and Christopher S. Bretherton. 2025. ACE2: accurately learning subseasonal to decadal atmospheric variability and forced responses. npj Climate and Atmospheric Science 8, 1 (2025), 205. doi:10.1038/s41612-025-01090-0 [47] Senqiao Yang, Yukang Chen, Zhuotao Tian, Chengyao Wang, Jingyao Li, Bei Yu, and Jiaya Jia. 2025. Visionzip: Longer is better but not necessary in vision language models. In Proceedings of the Computer Vision and Pattern Recognition Conference . 19792–19802. [48] Jingyi Zhang, Jiaxing Huang, Sheng Jin, and Shijian Lu. 2024. Vision-language models for vision tasks: A survey. IEEE transactions on pattern analysis and machine intelligence 46, 8 (2024), 5625–5644. [49] Lanyun Zhu, Deyi Ji, Tianrun Chen, Peng Xu, Jieping Ye, and Jun Liu. 2025. Ibd: Alleviating hallucinations in large vision-language models via image-biased decoding. In Proceedings of the Computer Vision and Pattern Recognition Conference .1624–1633.
