@@ -1,0 +1,257 @@
+Title: AquaBEV: Monocular Underwater BEV Occupancy with 3D Sonar Supervision
+
+URL Source: https://arxiv.org/pdf/2609.04411v1
+
+Published Time: Mon, 07 Sep 2026 00:09:54 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# AquaBEV: Monocular Underwater BEV Occupancy with 3D Sonar Supervision 
+
+## Trung Tien Dong 1, Shengji Jin 2, Chen Chen 3, Yi Sheng 2 and Xiaomin Lin 11ERA Lab, University of South Florida, Tampa, Florida, USA. 
+
+> 2
+
+## YES Lab, University of South Florida, Tampa, Florida, USA. 
+
+> 3
+
+## University of Central Florida, Orlando, Florida, USA. 
+
+dongt@usf.edu xlin2@usf.edu 
+
+## Abstract 
+
+Autonomous underwater robots are widely used for explo-ration, monitoring, and inspection, where safe navigation depends on understanding the surrounding free and occu-pied space. Bird’s eye view (BEV) occupancy provides such a representation, but predicting it from a single underwater RGB image is difficult due to limited, unreliable geometric cues from appearance alone. 3D imaging sonar offers com-plementary geometric measurements to supervise this task. We introduce AquaBEV , a monocular underwater oc-cupancy model that predicts local BEV occupancy from a single RGB image, using paired 3D imaging sonar as ge-ometric supervision during training. AquaBEV maps vi-sual features into a calibration free polar representation and applies causal decoding along the range dimension be-fore reconstructing the prediction in Cartesian BEV coor-dinates. A controlled underwater occupancy benchmark was established, adapting representative occupancy meth-ods to the same RGB to sonar task under a unified pro-tocol. AquaBEV achieves 31 .4 Visible IoU and 38 .6 Ob-served IoU, 4.0% and 4.3% relative improvements over the strongest transferred baseline. 
+
+## 1. Introduction 
+
+Underwater environments remain among the most challeng-ing domains for autonomous robotic operation, with appli-cations spanning exploration, ecological monitoring, and infrastructure inspection [20, 21, 32]. Recent deployments demonstrate increasingly capable autonomy, including au-tonomous mapping of coral reef biodiversity hotspots [20] and cooperative surface underwater vehicle operation [29]. However, these advances hinge on reliable navigation in un-structured, GPS denied environments with degraded visual observations [33]. Reliable navigation requires a robot to understand the spatial arrangement of surrounding structures and distin-guish occupied from navigable space. Recent frameworks Monocular RGB Field of View 
+
+> sensors sonar ±48° camera ± 32°
+> Three-state Target
+> observed free
+> unknown occupied
+> BEV Occupancy
+
+Figure 1. A single RGB image is used to predict local BEV occu-pancy. 
+
+such as DREAM [27] and CORAL [28] address this by maintaining a persistent BEV occupancy map as a shared representation between perception, reasoning and naviga-tion. Unlike voxel or point based alternatives, Bird’s eye view (BEV) occupancy organizes free, occupied, and un-known space in a single ground plane frame that can be di-rectly consumed by downstream planning [6]. Constructing an accurate BEV occupancy underwater is extremely challenging. Cameras provide rich visual and semantic information but are strongly affected by attenu-ation, scattering, illumination variation, and limited visibil-ity. Acoustic sensors provide complementary geometric ob-servations but are typically sparse and difficult to fuse with camera due to different sensing characteristics. Current sys-tems sidestep this by relying on monocular depth estima-tion alone, CORAL [28] being a representative example, but the resulting occupancy maps inherit the limitations of the depth estimate, which degrades under changing visual conditions. This motivates learning BEV occupancy directly from visual observations, without depth as an intermediate step. Using both sensors at inference increases hardware and in-tegration complexity. Instead, sonar provides geometric su-pervision during training while the model predicts occu-pancy from RGB alone at inference. The architecture there-fore captures sonar’s ordered range structure during learn-ing, as shown in Fig. 1. Existing BEV and occupancy methods provide several possible foundations, including learned BEV queries [18], dense monocular scene completion [3], voxel representa-tions [17, 35], and sparse geometric primitives [12]. How-1arXiv:2609.04411v1 [cs.RO] 3 Sep 2026 Cross-view Transformer  
+
+> Monocular RGB Input Encoder
+> RGB Feat.
+> Polar Queries
+> BEV Occupancy Output
+> Polar Feat.
+> θ
+> r
+> F(θ, r)
+> Casual Range Decoder
+> Tokens
+> Self-Attention
+> Cross-Attention
+> FFN
+> Cross-Attention
+> FFN
+> Cross-Attention
+> FFN
+> FFN
+> Q
+> K,V
+
+Figure 2. Overview of AquaBEV. AquaBEV encodes a single RGB image into a learned polar representation ( θ, r), applies causal reasoning along the range dimension, and differentiably transforms the resulting polar occupancy prediction into Cartesian BEV coordinates (x, y). 
+
+ever, these methods were designed for terrestrial settings and do not explicitly model range ordered sonar supervi-sion. Their transfer to underwater imagery, sparse acous-tic targets, and uncertain sensor geometry therefore remains unclear. We investigate this gap through a controlled bench-mark under a unified evaluation protocol. Beyond benchmarking existing methods, we design AquaBEV to reflect the native organization of sonar mea-surements, as shown in Fig. 2. Imaging sonar records ob-servations by azimuth and range, giving each azimuth a nat-ural near to far order. Rather than directly decoding occu-pancy in Cartesian space, AquaBEV constructs a learned polar representation with causal range decoding to model the ordered range dimension. The predicted polar occu-pancy is then differentiably transformed into Cartesian BEV coordinates for supervision and evaluation. To the best of our knowledge, this is the first work to study monocular BEV occupancy in the underwater domain. We introduce our contributions as follows: • We formulate monocular underwater BEV occupancy us-ing 3D imaging sonar as training supervision and estab-lish the first controlled benchmark for this setting. We adapt representative occupancy methods under a unified training and evaluation protocol. • We introduce AquaBEV , the first monocular BEV oc-cupancy model designed for underwater perception. AquaBEV uses a calibration free polar representation with causal range decoding and outperforms the strongest transferred baseline by 4.0% in Visible IoU and 4.3% in Observed IoU. 
+
+## 2. Related Work 
+
+2.1. Underwater Navigation and Spatial Mapping 
+
+Autonomous underwater navigation is challenging because GPS signals do not propagate underwater. Without GPS, AUV navigation relies on inertial estimates, acoustic posi-tioning, geophysical information, and SLAM [23], with vi-sual odometry and visual SLAM further reducing drift [7, 33]. Perception has expanded these capabilities through adaptive exploration [8], active visual SLAM [15], uncer-tainty aware inspection planning [4], and autonomous map-ping of biodiversity hotspots [20]. Learned caveline detec-tion [31], semantic visual servoing [1], and integrated per-ception and control [9] further connect visual understanding to underwater navigation. Recent systems also maintain persistent spatial represen-tations for planning. DREAM combines perception and spatial reasoning for underwater monitoring [27], while CORAL uses occupancy for local planning and collision avoidance [28]. However, these representations generally rely on SLAM, geometric sensing, or estimated depth. Dense occupancy prediction directly from monocular un-derwater imagery remains largely unexplored. 
+
+2.2. BEV and Occupancy Prediction 
+
+Terrestrial BEV methods transform image features using explicit geometry, as in Lift Splat Shoot [24], or learned queries, as in BEVFormer [18]. Dense occupancy meth-ods extend this idea through monocular scene comple-tion [3], sparse voxel queries [17], and tri planar represen-tations [10]. To reduce volumetric cost, SparseOcc uses sparse representations [25], COTR compresses volumetric features [19], and GaussianFormer models occupancy with semantic Gaussian primitives [12, 13]. SelfOcc instead learns geometric structure from video based rendering su-pervision [11]. These methods balance geometric structure, representa-tional density, and efficiency [10, 12, 25]. However, they were developed for terrestrial imagery, established camera geometry, and large datasets. Their transfer to degraded un-derwater imagery, sparse sonar supervision, and uncertain sensor geometry remains unclear. Cartesian representations are also poorly matched to supervision produced by a radial sensor. 22.3. Polar and Range Structured Representations 
+
+Polar and cylindrical representations preserve the radial or-ganization of bearing and range measurements. PolarNet addresses range dependent LiDAR density through polar BEV partitioning [34], Panoptic PolarNet extends this rep-resentation to panoptic segmentation [36], and Cylinder3D preserves three dimensional structure through cylindrical partitioning [37]. Because angular cells cover larger physical regions with increasing range, polar grids introduce scale and feature dis-tortions. PolarStream applies range aware feature correc-tion [5], PolarFormer uses multiscale polar features [14], and PARTNER realigns features according to range and heading [22]. PVP addresses polar occupancy distortion and cross modal misalignment [30], while range condi-tioned convolution [2] and RangeFormer [16] adapt pro-cessing to range view geometry. These methods primarily operate directly on LiDAR measurements for segmentation, detection, or occupancy prediction [5, 16, 22, 30, 34]. AquaBEV instead uses polar space as an intermediate representation for predicting sonar supervised occupancy from a perspective RGB image. 
+
+## 3. Methodology 
+
+3.1. Task Formulation and Sonar Supervision 
+
+Given an underwater RGB image (It ∈ RH×W ×3), AquaBEV predicts a local occupancy map in the sonar co-ordinate frame: 
+
+fϕ(It) = ˆBt. (1) During training, It is paired with 3D imaging sonar returns 
+
+P ∗ t = ( xi, y i, z i) ∗ i = 1 N , (2) which are used only to construct supervision. Sonar mea-surements are not provided to the network at inference. Sonar returns within a short temporal window are ex-pressed in the reference frame at time (t) and projected onto the horizontal plane: 
+
+(xi, y i, z i) 7 → (xi, y i). (3) Each projected return marks an occupied cell. Under the first return assumption, cells traversed by the corresponding ray from the sonar origin are marked as observed free. All remaining cells are unknown because the sonar provides no evidence that they are free or occupied. We separate binary occupancy from observation validity. Let (Yt(x, y ) ∈ 0, 1) denote free or occupied space and define 
+
+Mt(x, y ) = 
+
+(
+
+1, (x, y ) is acoustically observed ,
+
+0, otherwise . (4) Unknown cells therefore have (Mt(x, y ) = 0) and are ex-cluded from training. Figure 1 summarizes this training and inference formulation. 
+
+3.2. AquaBEV Overview 
+
+As shown in Fig. 2, AquaBEV predicts Cartesian occupancy through an intermediate polar representation. A visual en-coder first extracts image features. Learned polar queries then aggregate these features into a latent field indexed by azimuth and range. A causal decoder processes the field from near to far, after which a differentiable transformation maps the polar prediction into Cartesian BEV: 
+
+It → Fimg → Fpolar → Hpolar → ˆBt. (5) AquaBEV does not consume explicit camera to sonar extrinsic parameters. Instead, it learns the mapping from image features to the sonar aligned occupancy frame from paired training supervision. The formulation therefore avoids explicit extrinsic calibration, although the learned mapping remains tied to the sensor configuration repre-sented during training. 
+
+3.3. Cross View Transformer 
+
+AquaBEV uses a cross view transformer to map perspective image features into a polar latent representation. A Con-vNeXt B encoder first extracts a visual feature map from It.The features are flattened and projected into image tokens 
+
+Timg ∈ RNimg ×C , (6) where Nimg is the number of tokens and C is the latent dimension. The polar representation is initialized using one learned query for each azimuth and range location. We use Nθ =
+
+Nr = 96 , covering azimuths from −48 ◦ to 48 ◦ and ranges from 0.4 m to 10 m. Range positional encoding is added to distinguish locations associated with different distances. 
+
+CrossAttn 
+
+
+
+Q(ℓ−1) , T img , T img 
+
+
+
+. (7) Through repeated refinement, the transformer learns the correspondence between perspective image content and lo-cations in the polar prediction space. The refined queries are reshaped into the dense polar field 
+
+Fpolar ∈ RNθ ×Nr ×C , (8) which is passed to the causal range decoder. 
+
+3.4. Causal Range Decoder 
+
+A conventional two dimensional decoder treats azimuth and range symmetrically. AquaBEV instead models range as an ordered dimension. For azimuth (θ), let 
+
+Fθ = [ Fθ, 1, . . . , F θ,N r ] (9) 3Method Design Occupancy Range Geometry Representation Geometry Visible ↑ Observed ↑ Near ↑ Mid ↑ Far ↑ R Macro ↑ bF1@2 ↑ Chamfer ↓                                                                                 
+
+> SurroundOcc [26] Dense voxel Projection based 29.8 34.9 38.9 40.6 18.9 32.8 48.4 0.355 BEVFormer [18] BEV queries Projection based 28.7 34.6 39.7 39.5 18.4 32.6 45.1 0.398 VoxFormer [17] Sparse voxel Projection based 29.2 35.7 38.8 39.6 19.7 32.7 47.0 0.371 MonoScene [3] Dense voxel Projection based 29.8 35.8 40.8 39.7 20.3 33.6 45.4 0.381 TPVFormer [10] Tri perspective Projection based 29.0 34.2 37.4 39.3 18.9 31.8 47.2 0.382 OccFormer [35] Dual path voxel Projection based 28.8 36.0 38.5 40.0 19.6 32.7 46.4 0.378 GaussianFormer †[12] Sparse Gaussian Calibration free 30.2 37.0 41.9 39.6 21.4 35.0 41.3 0.412
+> AquaBEV (ours) Polar occupancy Calibration free 31.4 38.6 43.0 42.1 22.2 35.8 45.9 0.340
+
+Table 1. Comparison of monocular underwater BEV occupancy methods on the proposed benchmark. All methods use the same RGB input, three state sonar supervision, data split, ConvNeXt B backbone, training schedule, and evaluation protocol ( BEST /SECOND BEST). 
+
+denote latent features ordered from near to far. The decoder output at range (r) depends only on the current and nearer polar features: 
+
+Hθ,r = D(Fθ, 1: r). (10) Within the polar decoder, this constraint requires 
+
+∂H θ,r 
+
+∂F θ,r ′
+
+= 0 , r′ > r. (11) We implement D using four gated causal convolution blocks along range, with dilation rates (d ∈ 1, 2, 4, 8) .Lightweight angular interaction additionally exchanges in-formation between neighboring azimuth bins at the same range. Azimuth therefore captures relationships between nearby viewing directions, while range preserves direc-tional ordering from the sensor origin. The decoder produces 
+
+Hpolar ∈ RNθ ×Nr ×C , (12) which is converted into polar occupancy logits by the pre-diction head. 
+
+3.5. Polar to Cartesian Reconstruction 
+
+Let 
+
+Lpolar ∈ RNθ ×Nr (13) denote the predicted polar logits. A Cartesian BEV location (x,y) corresponds to 
+
+r(x, y ) = px2 + y2, θ(x, y ) = atan2( y, x ). (14) We transform the prediction into Cartesian coordinates us-ing differentiable sampling: 
+
+LBEV (x, y ) = W  Lpolar , θ (x, y ), r (x, y ) . (15) Gradients from the Cartesian objective propagate through (W) into the polar decoder. AquaBEV is therefore optimized for the final BEV task without requiring indepen-dently rasterized polar labels. 
+
+3.6. Training Objective 
+
+The Cartesian logits are supervised only at acoustically ob-served cells. Given a per cell binary occupancy loss (ℓocc ),the objective is 
+
+L ∗ occ = 
+
+P ∗x, yM t(x, y )ℓocc 
+
+ LBEV (x, y ), Y t(x, y )P 
+
+> x,y
+
+Mt(x, y ) .
+
+(16) The complete model is trained through this Cartesian oc-cupancy objective. No polar labels or sonar measurements are provided as network inputs. At inference, AquaBEV maps a single RGB image directly to local Cartesian BEV occupancy. 
+
+## 4. Experiments 
+
+4.1. Dataset and Evaluation Protocol 
+
+We evaluate monocular underwater BEV occupancy using paired RGB and 3D imaging sonar collected across seven underwater sessions. The complete dataset contains 110 scenes and approximately 96,000 paired observations. We use sessions {2, 3, 6, 7, 8} for training, session 5 for vali-dation, and session 4 for testing. The split is fixed for all experiments so that every method is evaluated on the same unseen session. For every RGB frame, the corresponding occupancy tar-get is constructed from accumulated 3D imaging sonar mea-surements using the three state formulation described in Sec. 3.1. Each target uses 16,384 sonar points and contains occupied, observed free, and unknown cells. The same tar-get generation procedure is used for all benchmark models and AquaBEV. At inference, every method receives only a single RGB image. Table 1 reports results under this fixed protocol. We evaluate occupancy using complementary overlap, range, and geometric metrics. Visible IoU measures oc-4Method Vis. ↑ Obs. ↑ Near ↑ Mid ↑ Far ↑ R Macro ↑ bF1@2 ↑ Chamfer ↓                                                                                          
+
+> Cartesian decoder 30.8 37.4 42.4 42.0 20.7 35.0 47.7 0.351 Polar decoder 31.3 37.5 42.3 42.0 21.5 35.2 48.0 0.342 Polar + Survival supervision 31.3 38.5 42.6 42.0 21.7 35.7 45.8 0.344 Polar + Metric angular coupling 31.0 38.4 42.5 42.0 21.5 35.3 46.2 0.349 Polar + Full range context 30.9 38.6 41.1 42.0 22.1 35.0 44.1 0.360
+> AquaBEV 31.4 38.6 43.0 42.1 22.2 35.8 45.9 0.340
+> Table 2. Ablation of AquaBEV on occupancy and geometric quality. All results are averaged over three seeds.
+> Encoder Params. Val. Vis. ↑Near ↑
+> DINOv2 S 23.2M 30.6 28.2 39.0 ResNet 50 25.6M 33.9 32.7 45.3
+> ConvNeXt T 29.5M 33.5 30.9 42.6 ResNet 101 44.6M 33.6 30.1 42.1 ConvNeXt S 51.2M 33.5 29.1 40.1 ResNet 152 60.3M 33.8 31.3 43.9 DINOv2 B 87.3M 29.3 28.0 38.7
+> ConvNeXt B 89.4M 34.9 32.9 45.3
+> Table 3. RGB encoder ablation. All encoders are evaluated using the same calibration free occupancy framework, training protocol, and held out test session. The results are from one seed.
+
+cupied cell overlap across the camera visible portion of the BEV. Because this region can contain cells without acous-tic observation, predictions in unknown cells are counted as false positives. Observed IoU instead restricts evaluation to occupied and observed free cells using the observation mask (Mt). This metric excludes unknown cells and there-fore directly measures performance over supervised space. To evaluate occupancy as a function of forward distance, we divide the visible BEV into three bands along the for-ward x axis. Near covers x ∈ [0 .5, 3.0) m, Mid covers 
+
+x ∈ [3 .0, 6.0) m, and Far covers x ∈ [6 .0, 10 .0) m. Each band is intersected with the camera visible field of view be-fore evaluation. These intervals measure forward distance rather than polar slant range, which avoids conflating the evaluation bands with the radial coordinate used internally by AquaBEV. We report IoU independently within each band and de-fine Range Macro as the equally weighted mean 
+
+RMacro = IoU near + IoU mid + IoU far 
+
+3 . (17) The metric therefore gives equal importance to near, mid, and far occupancy despite their different spatial widths. The small interval x ∈ [0 .4, 0.5) m is excluded from the three distance bands but remains included in Visible and Ob-served IoU. Occupancy overlap alone does not fully describe geo-metric quality. We therefore report boundary F1 with a tolerance of two BEV cells and Chamfer distance between predicted and target occupancy boundaries. Higher IoU and boundary F1 indicate better performance, while lower Chamfer distance indicates better geometric agreement. All models use ConvNeXt B with a latent dimension of (192) and are trained for (30) epochs with batch size (24). We use the AdamW optimizer with initial learning rate of 
+
+(3 × 10 −4), weight decay of (1 × 10 −4), cosine scheduling, BEV flipping, and MixUp. Checkpoints are selected using validation Visible IoU, and predictions are thresholded at (0.5). Transferred methods use seed (0), while AquaBEV and its primary ablations report the mean and sample stan-dard deviation over three seeds. 
+
+4.2. Comparison with Existing Occupancy Methods 
+
+Table 1 compares AquaBEV with seven representative oc-cupancy methods under the unified training and evaluation protocol. AquaBEV achieves 31 .4 Visible IoU and 38 .6
+
+Observed IoU, compared with 30 .2 and 37 .0 for Gaussian-Former, the strongest transferred baseline on these metrics. Across forward distance, AquaBEV obtains 43 .0 Near IoU, 42 .1 Mid IoU, and 22 .2 Far IoU. It achieves the strongest overall Range Macro among the evaluated meth-ods. AquaBEV also achieves the lowest Chamfer distance at 
+
+0.340 m. SurroundOcc obtains the highest boundary F1 at 48 .4, compared with 45 .9 for AquaBEV. These results show that AquaBEV achieves the strongest overall occu-pancy performance while remaining competitive in geomet-ric quality. 
+
+4.3. AquaBEV Ablation 
+
+Encoder selection. Table 3 reports an encoder study. Con-vNeXt B achieves the highest validation and test Visible IoU and matches the highest Near IoU. A subsequent three seed comparison also favors ConvNeXt B over ResNet 50, with (32 .6 ± 0.34) versus (31 .7 ± 0.82) Visible IoU. We therefore use ConvNeXt B for all final experiments. 
+
+Representation and range decoder. Table 2 shows 5Front-view  GaussianFormer TPVFormer MonoScene  SurroundOcc AquaBEV (ours) Ground-truth   
+
+> occupied observed free unknown
+
+Figure 3. Qualitative comparison of monocular underwater BEV occupancy. 
+
+that changing from Cartesian to polar decoding provides a modest improvement, increasing Visible IoU from (30.8) to (31.3). Causal range decoding produces the main re-producible gain, increasing Observed IoU from (37.5) to (38.6), with a paired three seed improvement of (1 .10 ±
+
+0.20) points. Survival supervision, metric angular cou-pling, and full range context provide no consistent improve-ment. AquaBEV also achieves the lowest Chamfer distance at (0.340) m. 
+
+4.4. Qualitative Results 
+
+Figure 3 compares the Cartesian occupancy predictions of AquaBEV and the transferred baselines with the sonar de-rived ground truth. AquaBEV produces more continuous occupied regions and better preserves their spatial extent across near and distant ranges. The improvements are most visible for elongated structures and separated occupancy re-gions, where competing methods often produce fragmented predictions, miss portions of the structure, or introduce iso-lated false positives. These observations are consistent with AquaBEV’s higher Visible, Observed, and Far IoU. Challenges remain when structures are visually indis-tinct, weakly illuminated, or only sparsely observed by sonar. In these regions, AquaBEV may underestimate oc-cupied extent, merge nearby structures, or fail to recover distant occupancy. Such errors reflect the inherent ambi-guity of inferring sonar supervised geometry from a single RGB image, particularly when appearance provides limited evidence of distance or occluded structure. 6Front-view  Cartesian decoder  Polar decoder AquaBEV  + Survival sup.  + Metric angular  + Full range ctx. Ground-truth   
+
+> occupied observed free unknown
+
+Figure 4. Ablation comparison of Casual Range Decoder. 
+
+## 5. Discussion 
+
+5.1. Occupancy Transfer to Underwater Perception 
+
+The benchmark reveals a notable characteristic of underwa-ter monocular occupancy prediction. Although the trans-ferred methods use substantially different representations, their performance remains relatively concentrated. Visible IoU spans only 28 .7 to 30 .2 across the seven transferred methods, while Observed IoU ranges from 34 .2 to 37 .0.The narrow performance range suggests that changing the occupancy representation alone has limited impact in this setting. A possible explanation is that the primary challenge lies in recovering reliable geometry from a single underwater image. A single underwater RGB image must infer geome-try supervised by a sensing modality with substantially dif-ferent visibility and measurement characteristics. Increas-ing the complexity of the occupancy decoder cannot recover geometric information that is weak or ambiguous in the im-age itself. This is particularly apparent at farther distances, where every method experiences a substantial reduction in IoU. The benchmark also suggests that geometric assump-tions should be transferred carefully. Several existing ap-proaches were designed around environments with well characterized camera geometry and stable scene structure. AquaBEV instead learns the mapping from visual features to occupancy without using camera and sonar extrinsic pa-rameters during feature transport. Its improvement does not establish that explicit projection is generally inferior, but it indicates that learned transport is a useful alternative when reliable cross sensor geometry is difficult to obtain. The differences between evaluation metrics are also in-formative. AquaBEV achieves the strongest occupancy overlap and lowest Chamfer distance, while SurroundOcc achieves higher boundary F1. No single metric therefore captures the complete quality of an occupancy prediction. Overlap measures how much occupied structure is recov-ered, while boundary metrics measures emphasize local contour alignment and Chamfer measures the spatial dis-placement between structures. Reporting these jointly is particularly important for sparse underwater scenes. 
+
+5.2. Why Causal Range Reasoning Helps 
+
+The ablation study separates two ideas that can otherwise be easily conflated: using polar coordinates and reasoning along an ordered range dimension. Polar coordinates alone provide only a small improvement over the matched Carte-sian decoder. The larger and reproducible change appears only after causal range decoding is introduced. This indi-cates that the benefit of AquaBEV does not come simply from expressing the scene in polar coordinates, as shown in Fig. 4. The result can be understood from the different roles of the two polar axes. Azimuth describes neighboring viewing directions, while range describes progression away from the sensor origin. Treating both dimensions identically with conventional spatial convolution ignores this distinction. AquaBEV instead allows nearby azimuth regions to inter-act while imposing an ordering along range, so a prediction at a given distance is constructed without information from farther locations. 7The additional ablations further isolate this effect. Met-ric angular coupling explicitly compensates for the increas-ing physical width represented by an angular cell at greater distance, yet it does not improve prediction. Likewise, ex-tending the causal receptive field across the complete range sequence provides essentially the same Observed and Far IoU as the shorter AquaBEV decoder. The improvement therefore cannot be explained by greater context alone. Explicit survival supervision also provides no consistent gain. This is important because it limits how AquaBEV should be interpreted. The model is not learning a strict first return sonar process. After 3D sonar measurements are pro-jected into the horizontal BEV plane, several surfaces at dif-ferent heights can occupy different distances along the same direction. A simple free region followed by one acoustic return is therefore not generally consistent with the supervi-sion target. Taken together, the results support a narrower conclu-sion: the useful sonar informed inductive bias is the order-ing of range , rather than a complete physical model of sonar propagation. This distinction allows AquaBEV to exploit structure associated with radial sensing without requiring the occupancy target to satisfy an overly restrictive acoustic model. 
+
+## 6. Conclusion 
+
+6.1. Summary of Findings 
+
+We studied monocular underwater BEV occupancy using offline 3D imaging sonar supervision and established a con-trolled benchmark for transferring representative occupancy methods to this setting. Under a unified training and evalu-ation protocol, AquaBEV achieves the strongest overall oc-cupancy performance among the evaluated methods while requiring only a single RGB image at inference. AquaBEV combines a learned polar occupancy repre-sentation with causal reasoning along range. Our ablations show that polar coordinates alone provide only a modest im-provement, while causal range decoding produces the main reproducible gain. Additional survival supervision, range conditioned angular coupling, and longer range context do not further improve performance. These results indicate that ordered range reasoning is a more useful inductive bias than detailed modeling of sonar propagation. The current study remains limited to one underwater en-vironment and evaluates AquaBEV only as a perception model. Sonar accumulation and projection also introduce geometric and temporal ambiguities into the supervision. Improved occupancy prediction therefore does not yet es-tablish improved navigation performance. 
+
+6.2. Future Work 
+
+We plan to integrate AquaBEV with existing underwater navigation frameworks such as CORAL [28]. Closed loop experiments will evaluate whether the predicted occupancy improves path planning, collision avoidance, and navigation efficiency in practice. We will also extend AquaBEV from binary occupancy to semantic BEV prediction by incorporating segmentation of underwater structures, terrain, vehicles, and other rele-vant objects. A further direction is physics informed BEV generalization across changes in water clarity, illumination, acoustic observation density, and sensor configuration. This will examine whether underwater imaging and sonar priors can improve transfer to environments and operating condi-tions not represented during training. 
+
+## References                         
+
+> [1] Adnan Abdullah, Titon Barua, Reagan Tibbetts, Zijie Chen, Md Jahidul Islam, and Ioannis M. Rekleitis. Caveseg: Deep semantic segmentation and scene parsing for autonomous underwater cave exploration. In 2024 IEEE International Conference on Robotics and Automation (ICRA) , pages 3781–3788, 2024. 2 [2] Alex Bewley, Pei Sun, Thomas Mensink, Dragomir Anguelov, and Cristian Sminchisescu. Range conditioned dilated convolutions for scale invariant 3d object detection. In Proceedings of the 2020 Conference on Robot Learning ,pages 627–641. PMLR, 2021. 3 [3] Anh-Quan Cao and Raoul de Charette. Monoscene: Monoc-ular 3d semantic scene completion. In IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition , pages 3991–4001, 2022. 1, 2, 4 [4] Stephen M. Chaves, Ayoung Kim, Enric Galceran, and Ryan M. Eustice. Opportunistic sampling-based active vi-sual slam for underwater inspection. Autonomous Robots ,40(7):1245–1265, 2016. 2 [5] Qi Chen, Sourabh Vora, and Oscar Beijbom. Polarstream: Streaming object detection and segmentation with polar pil-lars. In Advances in Neural Information Processing Systems ,2021. 3 [6] Trung Tien Dong, Dev Thakkar, Arman Sargolzaei, and Xi-aomin Lin. Post fusion bird’s eye view feature stabiliza-tion for robust multimodal 3d detection. arXiv preprint arXiv:2603.05623 , 2026. 1 [7] Ryan M. Eustice, Oscar Pizarro, and Hanumant Singh. Visu-ally augmented navigation for autonomous underwater vehi-cles. IEEE Journal of Oceanic Engineering , 33(2):103–122, 2008. 2 [8] Yogesh Girdhar, Philippe Gigu` ere, and Gregory Dudek. Au-tonomous adaptive exploration using realtime online spa-tiotemporal topic modeling. The International Journal of Robotics Research , 33(4):645–657, 2014. 2 [9] Alankrit Gupta, Adnan Abdullah, Xianyao Li, Vaishnav Ramesh, Ioannis Rekleitis, and Md Jahidul Islam. Demon-strating cavepi: Autonomous exploration of underwater
+
+8caves by semantic guidance. In Proceedings of Robotics: Science and Systems , Los Angeles, CA, USA, 2025. 2 [10] Yuanhui Huang, Wenzhao Zheng, Yunpeng Zhang, Jie Zhou, and Jiwen Lu. Tri-perspective view for vision-based 3d semantic occupancy prediction. In IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 9223– 9232, 2023. 2, 4 [11] Yuanhui Huang, Wenzhao Zheng, Borui Zhang, Jie Zhou, and Jiwen Lu. Selfocc: Self-supervised vision-based 3d oc-cupancy prediction. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition , pages 19946–19956, 2024. 2 [12] Yuanhui Huang, Wenzhao Zheng, Yunpeng Zhang, Jie Zhou, and Jiwen Lu. Gaussianformer: Scene as gaussians for vision-based 3d semantic occupancy prediction. In European Conference on Computer Vision , 2024. 1, 2, 4 [13] Yuanhui Huang, Amonnut Thammatadatrakoon, Wenzhao Zheng, Yunpeng Zhang, Dalong Du, and Jiwen Lu. Gaussianformer-2: Probabilistic gaussian superposition for efficient 3d occupancy prediction. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 27477–27486, 2025. 2 [14] Yanqin Jiang, Li Zhang, Zhenwei Miao, Xiatian Zhu, Jin Gao, Weiming Hu, and Yu-Gang Jiang. Polarformer: Multi-camera 3d object detection with polar transformer. In Pro-ceedings of the AAAI Conference on Artificial Intelligence ,pages 1042–1050, 2023. 3 [15] Ayoung Kim and Ryan M. Eustice. Active visual slam for robotic area coverage: Theory and experiment. The Interna-tional Journal of Robotics Research , 34(4-5):457–475, 2015. 2[16] Lingdong Kong, Youquan Liu, Runnan Chen, Yuexin Ma, Xinge Zhu, Yikang Li, Yuenan Hou, Yu Qiao, and Ziwei Liu. Rethinking range view representation for lidar segmentation. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 228–240, 2023. 3 [17] Yiming Li, Zhiding Yu, Christopher Choy, Chaowei Xiao, Jose M. Alvarez, Sanja Fidler, Chen Feng, and Anima Anandkumar. Voxformer: Sparse voxel transformer for camera-based 3d semantic scene completion. In IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2023. 1, 2, 4 [18] Zhiqi Li, Wenhai Wang, Hongyang Li, Enze Xie, Chong-hao Sima, Tong Lu, Yu Qiao, and Jifeng Dai. Bevformer: Learning bird’s-eye-view representation from multi-camera images via spatiotemporal transformers. In European Con-ference on Computer Vision , 2022. 1, 2, 4 [19] Qihang Ma, Xin Tan, Yanyun Qu, Lizhuang Ma, Zhizhong Zhang, and Yuan Xie. Cotr: Compact occupancy transformer for vision-based 3d occupancy prediction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 19936–19945, 2024. 2 [20] Seth McCammon, Levi Cai, Daniel Yang, John Walsh, John D. Cast, T. Aran Mooney, and Yogesh Girdhar. Autonomous seeking and mapping coral reef biodiversity hotspots with a multimodal auv. Science Robotics , 11(114): eadx9939, 2026. 1, 2 [21] Franka Nauert and Peter Kampmann. Inspection and mainte-nance of industrial infrastructure with autonomous underwa-ter robots. Frontiers in Robotics and AI , 10:1240276, 2023. 1[22] Ming Nie, Yujing Xue, Chunwei Wang, Chaoqiang Ye, Hang Xu, Xinge Zhu, Qingqiu Huang, Michael Bi Mi, Xinchao Wang, and Li Zhang. Partner: Level up the polar represen-tation for lidar 3d object detection. In Proceedings of the IEEE/CVF International Conference on Computer Vision ,pages 3801–3813, 2023. 3 [23] Liam Paull, Sajad Saeedi, Mae Seto, and Howard Li. Auv navigation and localization: A review. IEEE Journal of Oceanic Engineering , 39(1):131–149, 2014. 2 [24] Jonah Philion and Sanja Fidler. Lift, splat, shoot: Encoding images from arbitrary camera rigs by implicitly unprojecting to 3d. In European Conference on Computer Vision , 2020. 2 [25] Pin Tang, Zhongdao Wang, Guoqing Wang, Jilai Zheng, Xi-angxuan Ren, Bailan Feng, and Chao Ma. Sparseocc: Re-thinking sparse latent representation for vision-based seman-tic occupancy prediction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pages 15035–15044, 2024. 2 [26] Yi Wei, Linqing Zhao, Wenzhao Zheng, Zheng Zhu, Jie Zhou, and Jiwen Lu. Surroundocc: Multi-camera 3d oc-cupancy prediction for autonomous driving. In IEEE/CVF International Conference on Computer Vision , pages 21729– 21740, 2023. 4 [27] Zhenqi Wu, Abhinav Modi, Angelos Mavrogiannis, Kaus-tubh Joshi, Nikhil Chopra, Yiannis Aloimonos, Nare Kara-petyan, Ioannis Rekleitis, and Xiaomin Lin. Dream: Domain-aware reasoning for efficient autonomous underwa-ter monitoring. arXiv preprint arXiv:2509.13666 , 2025. 1, 2[28] Zhenqi Wu, Yuanjie Lu, Xuesu Xiao, and Xiaomin Lin. Coral: Contextual reasoning and local planning in a hier-archical vlm framework for underwater monitoring. arXiv preprint arXiv:2603.14786 , 2026. 1, 2, 8 [29] Jingzehua Xu, Guanwen Xie, Jiwei Tang, Yimian Ding, Weiyi Liu, Junhao Huang, Shuai Zhang, and Yi Li. Never too cocky to cooperate: An fim and rl-based usv-auv col-laborative system for underwater tasks in extreme sea con-ditions. IEEE Transactions on Mobile Computing , 25(7): 11016–11031, 2026. 1 [30] Yujing Xue, Jiaxiang Liu, Jiawei Du, and Joey Tianyi Zhou. Pvp: Polar representation boost for 3d semantic occupancy prediction. In Proceedings of the Winter Conference on Ap-plications of Computer Vision , pages 2746–2755, 2025. 3 [31] Boxiao Yu, Reagan Tibbetts, Titon Barua, Ailani Morales, Ioannis M. Rekleitis, and Md Jahidul Islam. Weakly super-vised caveline detection for auv navigation inside underwater caves. In 2023 IEEE/RSJ International Conference on Intel-ligent Robots and Systems (IROS) , pages 9933–9940, 2023. 2[32] Shuyun Yuan, Ying Li, Fangwen Bao, Haoxiang Xu, Yuping Yang, Qiushi Yan, Shuqiao Zhong, Haoyang Yin, Jiajun Xu, Ziwei Huang, and Jian Lin. Marine environmental monitor-ing with unmanned vehicle platforms: Present applications 
+
+9and future prospects. Science of The Total Environment , 858: 159741, 2023. 1 [33] Song Zhang, Shili Zhao, Dong An, Jincun Liu, He Wang, Yu Feng, Daoliang Li, and Ran Zhao. Visual slam for un-derwater vehicles: A survey. Computer Science Review , 46: 100510, 2022. 1, 2 [34] Yang Zhang, Zixiang Zhou, Philip David, Xiangyu Yue, Ze-rong Xi, Boqing Gong, and Hassan Foroosh. Polarnet: An improved grid representation for online lidar point clouds semantic segmentation. In IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , 2020. 3 [35] Yunpeng Zhang, Zheng Zhu, and Dalong Du. Occformer: Dual-path transformer for vision-based 3d semantic occu-pancy prediction. In IEEE/CVF International Conference on Computer Vision , 2023. 1, 4 [36] Zixiang Zhou, Yang Zhang, and Hassan Foroosh. Panoptic-polarnet: Proposal-free lidar point cloud panoptic segmenta-tion. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , pages 13194–13203, 2021. 3 [37] Xinge Zhu, Hui Zhou, Tai Wang, Fangzhou Hong, Yuexin Ma, Wei Li, Hongsheng Li, and Dahua Lin. Cylindrical and asymmetrical 3d convolution networks for lidar seg-mentation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 9939– 9948, 2021. 3 
+
+10

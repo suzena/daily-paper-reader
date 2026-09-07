@@ -1,0 +1,456 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-07T22:09:45.191442+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2608.30672v1",
+      "source": "arxiv",
+      "title": "HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving",
+      "abstract": "Recent advances in large language models and multimodal models have pushed remote sensing (RS) processing from simple perception models to agentic systems designed to tackle complex, long-horizon RS tasks. However, existing systems often rely on monolithic decision-making frameworks, which fail to accommodate the multi-stage, interdependent nature of RS tasks. This centralized approach leads to challenges such as unstable task execution, incorrect tool usage, and error propagation across stages. To address these issues, we propose HiRS-Agent, a hierarchical multi-agent system for long-horizon RS task solving. HiRS-Agent adopts a two-level collaborative architecture: the Manager Layer handles dynamic routing, step-level verification, replanning, and termination control, while the Specialist Layer organizes domain-specific tools according to the RS workflow and is responsible for subtask reasoning and tool execution. To further enhance the system's capability, we introduce a two-stage supervised tuning strategy and a verification-guided hierarchical reinforcement learning stage to jointly optimize coordination and tool-use policies. Experiments on Earth-Agent Benchmark and ThinkGeo show that HiRS-Agent substantially improves long-horizon tool-use capability and final-task correctness, demonstrating the effectiveness of structured multi-agent collaboration for reliable RS agents. The code is publicly available at https://github.com/IntelliSensing/HiRS-Agent.",
+      "authors": [
+        "Boyang Mu",
+        "Zhiwei Wei",
+        "Mugen Peng",
+        "Wenjia Xu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA",
+        "cs.MM"
+      ],
+      "published": "2026-08-31T12:13:41+00:00",
+      "link": "https://arxiv.org/pdf/2608.30672v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "hierarchical two-level multi-agent architecture with manager routing and step-level verification for long-horizon remote sensing tasks; strong methodological match to intelligent agent architectures for ocean monitoring",
+      "llm_evidence_cn": "面向长时序遥感任务的管理-执行两层多智能体架构，为海洋智能监测智能体设计提供强方法对应",
+      "llm_evidence": "面向长时序遥感任务的管理-执行两层多智能体架构，为海洋智能监测智能体设计提供强方法对应",
+      "canonical_evidence": "面向长时序遥感任务的管理-执行两层多智能体架构，为海洋智能监测智能体设计提供强方法对应",
+      "llm_tldr_en": "HiRS-Agent is a hierarchical multi-agent system for long-horizon remote sensing tasks: a manager layer does dynamic routing and step verification while sub-agents execute tools, stabilizing long chains and serving as a strong architectural template for autonomous ocean monitoring.",
+      "llm_tldr_cn": "针对大型语言模型驱动的遥感智能体在长时序多阶段任务中因集中决策而出现执行不稳和错误传播的问题，提出双层协作的HiRS-Agent。管理层负责顶层动态路由、逐步验证与任务分解，执行层按步骤调用遥感工具完成具体环节，从而减少错误传导。该体系结构为自主求解复杂遥感任务提供了可靠范式，并可推广到珊瑚礁遥感监测等海洋自主监控智能体设计。",
+      "llm_tldr": "针对大型语言模型驱动的遥感智能体在长时序多阶段任务中因集中决策而出现执行不稳和错误传播的问题，提出双层协作的HiRS-Agent。管理层负责顶层动态路由、逐步验证与任务分解，执行层按步骤调用遥感工具完成具体环节，从而减少错误传导。该体系结构为自主求解复杂遥感任务提供了可靠范式，并可推广到珊瑚礁遥感监测等海洋自主监控智能体设计。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2608.30277v2",
+      "source": "arxiv",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "abstract": "The unprecedented surge in Earth observation data volume and diversity has exposed a critical bottleneck for traditional manual workflows, catalyzing the emergence of Remote Sensing (RS) Agents. However, the practical deployment of these advanced agents is severely hindered by their heavy reliance on large-scale general-purpose LLMs, which lack deep domain expertise and impose prohibitive infrastructure demands. To resolve this, we propose SimCRAFT, a model-agnostic framework that distills sophisticated RS orchestration capabilities into a compact 7B-scale model. Addressing data scarcity, we first pair a multiagent synthesis engine with a Mock Execution Engine that checks schema correctness, inter-tool dependencies, and sensor/tool compatibility, producing SimRS-14k, a large-scale, constraint-validated workflow planning corpus. Second, we propose Contextual Retrieval-Augmented Fine-Tuning (CRAFT) that finetunes the model to reason analogically by adapting retrieved Standard Operating Procedures to novel queries under a noise-robust objective, generalizing RAFT to multi-step RS workflow planning without mechanical copying. Extensive experiments demonstrate that SimCRAFT-7B significantly outperforms openweights LLMs and rivals advanced closedsource models and specialized RS agents, while reproducing across three 7B backbones. This work contributes a competitive open-weights baseline for lightweight RS intelligence, enabling efficient autonomous deployment under resource-constrained or resource-conserving conditions.",
+      "authors": [
+        "Haoran Wang",
+        "Jing Yao",
+        "Xu Yang",
+        "Zeqing Wang",
+        "Yang Zhang",
+        "Pedram Ghamisi",
+        "Zhengchao Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-08-31T05:45:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.30277v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "framework for distilling LLM-based remote sensing agents via synthetic trajectories and retrieval-augmented fine-tuning, central to LLM-agent remote sensing mapping theme",
+      "llm_evidence_cn": "蒸馏遥感智能体的大模型框架，使用合成轨迹与检索增强微调，贴合大模型+智能体+遥感主题",
+      "llm_evidence": "蒸馏遥感智能体的大模型框架，使用合成轨迹与检索增强微调，贴合大模型+智能体+遥感主题",
+      "canonical_evidence": "蒸馏遥感智能体的大模型框架，使用合成轨迹与检索增强微调，贴合大模型+智能体+遥感主题",
+      "llm_tldr_en": "Remote sensing agents often rely on large general-purpose LLMs, lack domain expertise, and require heavy infrastructure. SimCRAFT pairs a multiagent synthesis engine with a schema-checked mock execution engine to create synthetic trajectories, then uses contextual retrieval-augmented fine-tuning to distill sophisticated RS orchestration abilities into a compact 7B model, enabling cheaper specialized RS agents.",
+      "llm_tldr_cn": "遥感智能体往往依赖大规模通用大模型，导致领域知识不足且部署开销巨大。为此，SimCRAFT提出模型无关的蒸馏框架，先用多智能体合成引擎与模拟执行引擎生成经过模式校验的合成轨迹，再通过上下文检索增强微调把遥感编排能力蒸馏到7B级紧凑模型。该方法缓解了遥感智能体的数据稀缺与算力瓶颈，使领域专用遥感智能体能够低成本部署，也可为珊瑚礁等海洋专题制图提供基础能力。",
+      "llm_tldr": "遥感智能体往往依赖大规模通用大模型，导致领域知识不足且部署开销巨大。为此，SimCRAFT提出模型无关的蒸馏框架，先用多智能体合成引擎与模拟执行引擎生成经过模式校验的合成轨迹，再通过上下文检索增强微调把遥感编排能力蒸馏到7B级紧凑模型。该方法缓解了遥感智能体的数据稀缺与算力瓶颈，使领域专用遥感智能体能够低成本部署，也可为珊瑚礁等海洋专题制图提供基础能力。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.00046v2",
+      "source": "arxiv",
+      "title": "RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery",
+      "abstract": "Rapid and reliable disaster mapping of impacted areas, damaged infrastructure, and affected populations is essential for emergency response and recovery. However, existing AI-based approaches often require extensive manual annotation, lack cross-hazard generalization, and rely on single-modal observations. To address these challenges, this paper proposes RAPIDMap, a rapid multi-agent pipeline for zero-shot interpretable disaster mapping from satellite and street-view imagery. The framework integrates four intelligent agents: Disaster Perception Agent (DPA), Image Restoration Agent (IRA), Damage Recognition Agent (DRA), and Disaster Mapping Agent (DMA). By combining remote sensing and street-view data, RAPIDMap eliminates the need for manual fine-tuning, generalizes across multiple disaster categories, and generates structured, map-ready disaster intelligence with recovery recommendations.",
+      "authors": [
+        "Yifan Yang",
+        "Lei Zou"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.AI",
+        "cs.CY"
+      ],
+      "published": "2026-08-30T04:20:59+00:00",
+      "link": "https://arxiv.org/pdf/2609.00046v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "intelligent multi-agent remote sensing pipeline combining satellite and street-view imagery for interpretable mapping; methodological bridge to agent-based marine monitoring",
+      "llm_evidence_cn": "面向遥感制图的智能体流水线，融合卫星与街景影像，与海洋智能监测架构形成方法论呼应",
+      "llm_evidence": "面向遥感制图的智能体流水线，融合卫星与街景影像，与海洋智能监测架构形成方法论呼应",
+      "canonical_evidence": "面向遥感制图的智能体流水线，融合卫星与街景影像，与海洋智能监测架构形成方法论呼应",
+      "llm_tldr_en": "RAPIDMap proposes a zero-shot multi-agent pipeline fusing satellite and street-view imagery for interpretable disaster mapping. Four specialized agents cover perception, image restoration, damage recognition, and mapping, reducing reliance on manual annotation and single-modal data while supporting rapid emergency response.",
+      "llm_tldr_cn": "论文针对灾害制图AI方法依赖大量人工标注、跨灾种泛化差、仅用单一模态等问题，提出了RAPIDMap快速多智能体流水线。该方法由灾情感知、影像恢复、损毁识别和灾害制图四个智能体协同工作，将卫星影像与街景影像相结合，实现零样本可解释的灾害制图。该架构有助于减少人工干预并提升应急响应的时效性，其对多智能体协同与多源遥感融合的设计可直接迁移到海洋环境监测等任务中。",
+      "llm_tldr": "论文针对灾害制图AI方法依赖大量人工标注、跨灾种泛化差、仅用单一模态等问题，提出了RAPIDMap快速多智能体流水线。该方法由灾情感知、影像恢复、损毁识别和灾害制图四个智能体协同工作，将卫星影像与街景影像相结合，实现零样本可解释的灾害制图。该架构有助于减少人工干预并提升应急响应的时效性，其对多智能体协同与多源遥感融合的设计可直接迁移到海洋环境监测等任务中。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.29983v1",
+      "source": "arxiv",
+      "title": "Robust Broad Learning System with Wave Loss for Classification under Data Uncertainty",
+      "abstract": "Broad Learning System (BLS) offers an efficient alternative to deep architectures by enabling fast learning through randomized feature mapping and closed-form solutions. However, its reliance on squared error loss makes it highly sensitive to noise, outliers, and corrupted labels, limiting its reliability in real-world scenarios. To address this limitation, we propose Wave-BLS, a robust broad learning framework that integrates the wave loss function, which is asymmetric, bounded, and smooth, enabling controlled penalization of large errors. The proposed formulation replaces the standard least-squares objective with a wave-loss-based optimization problem, solved efficiently using a Nesterov accelerated gradient (NAG)-based scheme without requiring matrix inversion, thereby improving scalability. Extensive experiments on 30 UCI benchmark datasets demonstrate that Wave-BLS consistently outperforms classical BLS and several robust variants. Statistical validation using Friedman and Nemenyi post-hoc tests confirms the significance of the observed improvements. Furthermore, robustness evaluations under controlled noise and outlier injection reveal that Wave-BLS exhibits substantially slower performance degradation compared to BLS, even in challenging contamination settings. These results establish Wave-BLS as a stable and robust alternative to existing broad learning models for learning under data uncertainty.",
+      "authors": [
+        "Mushir Akhtar",
+        "A. Varshney",
+        "A. Quadir",
+        "A. Rahaman",
+        "M. Tanveer",
+        "Mohd. Arshad"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-08-30T19:16:25+00:00",
+      "link": "https://arxiv.org/pdf/2608.29983v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Robust classification framework using asymmetric bounded wave loss to handle noisy and uncertain labels, transferable to coral benthic cover classification",
+      "llm_evidence_cn": "基于非对称有界波损失的鲁棒分类框架，面向噪声和不确定标签，可迁移用于珊瑚底栖覆盖分类",
+      "llm_evidence": "基于非对称有界波损失的鲁棒分类框架，面向噪声和不确定标签，可迁移用于珊瑚底栖覆盖分类",
+      "canonical_evidence": "基于非对称有界波损失的鲁棒分类框架，面向噪声和不确定标签，可迁移用于珊瑚底栖覆盖分类",
+      "llm_tldr_en": "Presents Wave-BLS, a robust broad learning system that introduces the asymmetric bounded smooth wave loss to replace squared error, enabling controlled penalization of large errors, and solves it with Nesterov accelerated gradient for reliable classification under noise, outliers, and corrupted labels.",
+      "llm_tldr_cn": "针对标准宽度学习系统使用平方误差损失而对噪声、离群点和标签损坏敏感的问题，论文提出Wave-BLS鲁棒分类框架。该方法采用非对称、有界且平滑的波损失函数，通过Nesterov加速梯度方案替代最小二乘目标，从而对错误较大的样本进行受控惩罚。实验在不确定数据上验证了分类鲁棒性的提升，为珊瑚底栖覆盖制图等含噪标签场景提供了高效可用的分类工具。",
+      "llm_tldr": "针对标准宽度学习系统使用平方误差损失而对噪声、离群点和标签损坏敏感的问题，论文提出Wave-BLS鲁棒分类框架。该方法采用非对称、有界且平滑的波损失函数，通过Nesterov加速梯度方案替代最小二乘目标，从而对错误较大的样本进行受控惩罚。实验在不确定数据上验证了分类鲁棒性的提升，为珊瑚底栖覆盖制图等含噪标签场景提供了高效可用的分类工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.30503v1",
+      "source": "arxiv",
+      "title": "DINOspec: Efficient Multimodal Alignment of Vision and Spectral Foundation Models for Astronomy",
+      "abstract": "Astronomical observations provide multimodal views of physical systems, with images and spectra capturing complementary properties of celestial objects. Scientific foundation models can learn powerful representations from these observations, but representations learned by separate models remain difficult to combine. We investigate whether physical representations learned by separate vision and spectral models can be aligned without retraining their encoders. We introduce DINOspec, a multimodal framework that aligns a frozen DINOv3 image encoder with a pre-trained AION-1 spectral tokenizer using lightweight adapters and contrastive learning on 20,472 paired images and spectra of astronomical objects. DINOspec improves galaxy morphology classification (F1: 0.72$\\rightarrow$0.78) and spectral classification (F1: 0.70$\\rightarrow$0.74) while training at most 21M parameters. Improvements depend on the downstream task, revealing asymmetric transfer between independently learned representations, while spectroscopic redshift prediction remains unchanged ($R^2\\approx0.9$). These results demonstrate that scientific foundation models can be composed through lightweight representation alignment.",
+      "authors": [
+        "Erica Lastufka",
+        "Mariia Drozdova",
+        "Daniel Schaerer",
+        "Svyatoslav Voloshynovskiy"
+      ],
+      "primary_category": "astro-ph.IM",
+      "categories": [
+        "astro-ph.IM"
+      ],
+      "published": "2026-08-31T09:36:35+00:00",
+      "link": "https://arxiv.org/pdf/2608.30503v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adapter-based contrastive alignment of separate vision and spectral foundation models; transferable to multimodal fusion in ocean science though not text-based",
+      "llm_evidence_cn": "用适配器与对比学习对齐独立视觉和光谱基础模型，可迁移到海洋科学中的多模态融合，但并非文本模态",
+      "llm_evidence": "用适配器与对比学习对齐独立视觉和光谱基础模型，可迁移到海洋科学中的多模态融合，但并非文本模态",
+      "canonical_evidence": "用适配器与对比学习对齐独立视觉和光谱基础模型，可迁移到海洋科学中的多模态融合，但并非文本模态",
+      "llm_tldr_en": "DINOspec aligns frozen vision and spectral foundation models with lightweight adapters and contrastive learning on 20K paired observations, improving downstream galaxy morphology without retraining. A transferable recipe for multimodal scientific data fusion.",
+      "llm_tldr_cn": "天文观测的图像与光谱由不同基础模型编码后难以统一使用。本文提出DINOspec，通过轻量适配器和对比学习在配对样本上对齐冻结的视觉与光谱编码器，无需重训即可融合图像与谱线表征，并提升下游星系形态等判别能力。该方法为科学多模态数据融合提供高效通用通路，也可启发遥感影像与海洋调查数据结合分析。",
+      "llm_tldr": "天文观测的图像与光谱由不同基础模型编码后难以统一使用。本文提出DINOspec，通过轻量适配器和对比学习在配对样本上对齐冻结的视觉与光谱编码器，无需重训即可融合图像与谱线表征，并提升下游星系形态等判别能力。该方法为科学多模态数据融合提供高效通用通路，也可启发遥感影像与海洋调查数据结合分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.01092v1",
+      "source": "arxiv",
+      "title": "IT-TextFusion: Iterative Text-Image Interaction with Text-Guided Residual Refinement for Degradation-Aware Image Fusion",
+      "abstract": "Text-guided image fusion has recently emerged as an effective paradigm for integrating multi-modal information while enabling flexible and task-oriented fusion control. However, existing text-guided fusion methods often rely on shallow semantic-visual interaction and limited attention mechanisms, which restrict their ability to robustly handle complex degradations and fully exploit textual guidance. In this paper, we propose an iterative text-guided image fusion framework that incorporates text-conditioned feature interaction across multiple fusion and refinement stages. The proposed method integrates deepest-level Cross-Attention, multi-scale Cross-Gate Fusion, and stage-specific text-conditioned modulation, allowing the global text embedding to condition hierarchical feature fusion and residual refinement. By repeatedly injecting the pooled text embedding across hierarchical decoder and refinement stages, the proposed framework provides degradation-aware global semantic conditioning while preserving complementary information from the visible and infrared modalities. Experiments on several benchmark datasets show that the proposed method improves several information-preservation and perceptual-quality metrics, while exhibiting metric-dependent trade-offs on some datasets.",
+      "authors": [
+        "Siyang Liu",
+        "Peiyi Zhou",
+        "Tianle Jin",
+        "Rongrong Bian",
+        "Zheke Jin",
+        "Mengze Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-01T11:33:20+00:00",
+      "link": "https://arxiv.org/pdf/2609.01092v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "iterative text-guided image fusion framework with cross-attention and text-conditioned stages; transferable method for imagery-text fusion in ocean science",
+      "llm_evidence_cn": "基于文本条件调制与跨注意力的迭代式图文融合方法，可服务于海洋科学图文多模态融合",
+      "llm_evidence": "基于文本条件调制与跨注意力的迭代式图文融合方法，可服务于海洋科学图文多模态融合",
+      "canonical_evidence": "基于文本条件调制与跨注意力的迭代式图文融合方法，可服务于海洋科学图文多模态融合",
+      "llm_tldr_en": "IT-TextFusion iteratively refines image fusion under textual guidance through cross-attention, multi-scale cross-gate fusion and stage-specific conditioning, overcoming shallow semantic-visual interaction and improving degradation-aware multimodal fusion.",
+      "llm_tldr_cn": "现有文本引导融合受限于浅层交互和有限的注意力机制，难以处理复杂退化。为此提出迭代式文本引导图像融合框架，将深层交叉注意力、多尺度跨门融合与逐阶段文本条件调制串联，在多个环节反复利用文本语义进行残差细化。该方法增强了文本对融合结果的控制能力，并提升了退化场景下的鲁棒性。其图文交互范式可迁移到海洋遥感影像与文本报告的多模态融合任务。",
+      "llm_tldr": "现有文本引导融合受限于浅层交互和有限的注意力机制，难以处理复杂退化。为此提出迭代式文本引导图像融合框架，将深层交叉注意力、多尺度跨门融合与逐阶段文本条件调制串联，在多个环节反复利用文本语义进行残差细化。该方法增强了文本对融合结果的控制能力，并提升了退化场景下的鲁棒性。其图文交互范式可迁移到海洋遥感影像与文本报告的多模态融合任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.03603v1",
+      "source": "arxiv",
+      "title": "Neural-Network Maxent: a general extension with learned nonlinearity, applied to time-series for Desert Locust distribution modelling",
+      "abstract": "Species Distribution Modelling (SDM) is essential for understanding how environmental conditions shape biodiversity, particularly for destructive pests such as the Desert Locust (Schistocerca gregaria), whose breeding dynamics are tightly coupled to rapidly evolving environmental conditions. Maxent has become the dominant method for presence-only data, but its reliance on a linear combination of hand chosen feature transforms limits its ability to capture the nonlinear, temporal relationships common in ecological monitoring, where covariates such as precipitation, soil moisture, and vegetation indices evolve meaningfully over time. Standard implementations flatten time-series covariates into independent features, discarding sequential structure that carries critical signal. We introduce RNN Maxent, an extension of the Maxent framework that replaces the fixed feature dictionary with a neural network, specifically a Gated Recurrent Unit (GRU), trained end to end via backpropagation. The approach preserves Maxent's presence only statistical foundations, background normalization, and probability calibration, differing only in that the nonlinearity is learned from data rather than fixed in advance. We apply RNN Maxent to map suitable habitat for the Desert Locust using 50 day environmental time series derived from ERA5 Land, MODIS, and Sentinel 3, maintaining a 7 day gap between covariates and presence records to yield forecasting behavior. Compared against standard Maxent, RNN Maxent improves performance across metrics (ROC AUC 0.862 std 0.036 vs. 0.792; F1 0.671 std 0.056 vs. 0.590).",
+      "authors": [
+        "Alessandro Grassi",
+        "Edoardo Kimani Bellotto",
+        "Wassim El Azami",
+        "Sabrina Outmani",
+        "Maximilien Houel"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "eess.IV",
+        "physics.data-an",
+        "q-bio.PE"
+      ],
+      "published": "2026-09-03T09:48:28+00:00",
+      "link": "https://arxiv.org/pdf/2609.03603v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "extends Maxent with learned nonlinearity for remote-sensing species distribution modeling, transferable to coral habitat mapping",
+      "llm_evidence_cn": "将Maxent扩展到非线性遥感物种分布建模，可迁移至珊瑚礁栖息地制图",
+      "llm_evidence": "将Maxent扩展到非线性遥感物种分布建模，可迁移至珊瑚礁栖息地制图",
+      "canonical_evidence": "将Maxent扩展到非线性遥感物种分布建模，可迁移至珊瑚礁栖息地制图",
+      "llm_tldr_en": "Extends Maxent with neural-network-learned nonlinearity for presence-only species distribution from time-series remote sensing covariates. Demonstrated on Desert Locust; the SDM approach is transferable to coral reef habitat mapping despite no marine test case.",
+      "llm_tldr_cn": "物种分布建模常用Maxent，但其线性特征组合难以表达野外观测中环境协变量随时间演化的非线性关系。该文提出神经网络Maxent，用可学习非线性扩展经典模型，并将时间序列遥感协变量输入，应用于沙漠蝗虫分布建模。实验显示该方法能更好刻画快速变化的生态环境与繁殖动态。它虽不直接面向海洋，但作为基于遥感协变量的栖息地建模框架，对珊瑚礁生态系统制图具有方法论迁移价值。",
+      "llm_tldr": "物种分布建模常用Maxent，但其线性特征组合难以表达野外观测中环境协变量随时间演化的非线性关系。该文提出神经网络Maxent，用可学习非线性扩展经典模型，并将时间序列遥感协变量输入，应用于沙漠蝗虫分布建模。实验显示该方法能更好刻画快速变化的生态环境与繁殖动态。它虽不直接面向海洋，但作为基于遥感协变量的栖息地建模框架，对珊瑚礁生态系统制图具有方法论迁移价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.04411v1",
+      "source": "arxiv",
+      "title": "AquaBEV: Monocular Underwater BEV Occupancy with 3D Sonar Supervision",
+      "abstract": "Autonomous underwater robots are widely used for exploration, monitoring, and inspection, where safe navigation depends on understanding the surrounding free and occupied space. Bird's eye view (BEV) occupancy provides such a representation, but predicting it from a single underwater RGB image is difficult due to limited, unreliable geometric cues from appearance alone. 3D imaging sonar offers complementary geometric measurements to supervise this task.   We introduce AquaBEV, a monocular underwater occupancy model that predicts local BEV occupancy from a single RGB image, using paired 3D imaging sonar as geometric supervision during training. AquaBEV maps visual features into a calibration free polar representation and applies causal decoding along the range dimension before reconstructing the prediction in Cartesian BEV coordinates. A controlled underwater occupancy benchmark was established, adapting representative occupancy methods to the same RGB to sonar task under a unified protocol. AquaBEV achieves 31.4 Visible IoU and 38.6 Observed IoU, 4.0% and 4.3% relative improvements over the strongest transferred baseline.",
+      "authors": [
+        "Trung Tien Dong",
+        "Shengji Jin",
+        "Chen Chen",
+        "Yi Sheng",
+        "Xiaomin Lin"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-09-03T19:22:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.04411v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater robot perception for exploration, monitoring and inspection; monocular RGB occupancy with 3D sonar supervision enables autonomous marine navigation",
+      "llm_evidence_cn": "面向自主水下机器人的感知方法，用单目图像和声纳监督生成局部空间占用，支撑海洋监测等应用",
+      "llm_evidence": "面向自主水下机器人的感知方法，用单目图像和声纳监督生成局部空间占用，支撑海洋监测等应用",
+      "canonical_evidence": "面向自主水下机器人的感知方法，用单目图像和声纳监督生成局部空间占用，支撑海洋监测等应用",
+      "llm_tldr_en": "AquaBEV predicts local underwater BEV occupancy from a single RGB image using 3D sonar supervision, enabling safer autonomous robot monitoring and exploration.",
+      "llm_tldr_cn": "水下机器人的安全航行依赖对周围自由与占据空间的准确理解，而仅凭单幅RGB图像难以获得可靠几何线索。AquaBEV提出一种单目水下鸟瞰图占用预测模型，在训练时利用配对的3D成像声纳作为几何监督，将视觉特征映射到无需标定的极坐标表示并进行因果解码。结果表明该方法能在测试时仅用RGB图像估计局部BEV占用，为水下机器人的探索、监测和巡检提供轻量且可靠的感知支持。",
+      "llm_tldr": "水下机器人的安全航行依赖对周围自由与占据空间的准确理解，而仅凭单幅RGB图像难以获得可靠几何线索。AquaBEV提出一种单目水下鸟瞰图占用预测模型，在训练时利用配对的3D成像声纳作为几何监督，将视觉特征映射到无需标定的极坐标表示并进行因果解码。结果表明该方法能在测试时仅用RGB图像估计局部BEV占用，为水下机器人的探索、监测和巡检提供轻量且可靠的感知支持。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.04552v1",
+      "source": "arxiv",
+      "title": "Continual Field-Adaptive Models (CFAMs) for Post-Deployment Physical AI",
+      "abstract": "Unattended interactive autonomy - machines that step into danger in place of humans and complete tasks with human tools - remains a missing capability in mission-critical operations. These domains offer scarce training data and only onboard compute, yet deployed systems must face novelty without erasing prior competence.   We introduce Continual Field-Adaptive Models (CFAMs), which learn efficiently in the lab and continue learning after deployment through autonomous, gradient-free, on-device updates. CFAM uses a complementary learning architecture with a frozen slow-learning component and a fast-learning Capsule Field. The slow component contains three cortices: Sensor, which maps multimodal input into 3D-grounded geometry; Reasoning, which decomposes tasks into skills and evaluates outcomes; and Action, which executes geometric skills. The Capsule Field stores field learning one-shot and gradient-free as Competence Capsules. Skill installation is few-shot in the lab and continual in the field; open-world novelty is outside scope.   We evaluate CFAM across five embodiments: manipulator, quadruped, humanoid, quadrotor, and off-road vehicle. Baselines (pi0, CogACT, SpatialVLA) use the same in-house multi-embodiment dataset for physical-platform comparisons. CFAM reaches the operating point of a standard policy trained on the full prior-training dataset using 40% of the data, or 2.5x fewer trajectories. At test time, autonomous capture of verified near-OOD cases improves action success by 13.9 percentage points. In sequential simulation, backward transfer is -0.5 percentage points versus -11.4 for LoRA. CFAM therefore provides a bounded form of post-deployment physical intelligence: few-shot skill learning, autonomous field growth from verified near-OOD experience, and retention of prior competence.",
+      "authors": [
+        "Amarjot Singh",
+        "Tanmay R. Pancholi",
+        "Jainam Kothari",
+        "Shrirang Mahajan",
+        "Ketan Bansal",
+        "Zackory Erickson",
+        "Giuseppe Loianno",
+        "Alexandre M. Bayen",
+        "Jeff Schneider",
+        "Vince Nakayama"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-03T23:15:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.04552v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "on-device continual field-adaptive architecture for post-deployment autonomous agents; relevant to long-term autonomous ocean monitoring but not ocean-specific",
+      "llm_evidence_cn": "面向部署后自主物理智能体的持续现场自适应架构，可提升长期海洋自主监测适应性，但未针对海洋",
+      "llm_evidence": "面向部署后自主物理智能体的持续现场自适应架构，可提升长期海洋自主监测适应性，但未针对海洋",
+      "canonical_evidence": "面向部署后自主物理智能体的持续现场自适应架构，可提升长期海洋自主监测适应性，但未针对海洋",
+      "llm_tldr_en": "CFAM lets deployed physical-AI systems learn on-device without gradients or forgetting by combining a frozen slow learner with a fast Capsule Field; multimodal sensing feeds 3D reasoning, offering an architecture adaptable to autonomous ocean monitoring.",
+      "llm_tldr_cn": "部署后的自主系统常面临新场景且训练数据稀缺，而持续学习容易遗忘旧技能。本文提出持续现场自适应模型CFAM，采用冻结慢学习组件与快速学习胶囊场互补，并搭配传感器与推理等皮层，在设备上以无梯度方式持续更新，实现部署后不断适应。该架构可提高物理智能体在未知野外的稳健性，对海洋自主监测系统的长期部署有借鉴价值。",
+      "llm_tldr": "部署后的自主系统常面临新场景且训练数据稀缺，而持续学习容易遗忘旧技能。本文提出持续现场自适应模型CFAM，采用冻结慢学习组件与快速学习胶囊场互补，并搭配传感器与推理等皮层，在设备上以无梯度方式持续更新，实现部署后不断适应。该架构可提高物理智能体在未知野外的稳健性，对海洋自主监测系统的长期部署有借鉴价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.04726v1",
+      "source": "arxiv",
+      "title": "Bridging Modalities and Tasks: A Unified Hierarchical ViT for SAR-to-Optical Translation and Semantic Segmentation",
+      "abstract": "Synthetic Aperture Radar (SAR) images have all-weather, day-and-night observation capabilities. However, compared with optical images, their speckle noise and non-intuitive scattering mechanism limit the interpretability of the images. Generative models for SAR-to-optical (S2O) conversion can improve visual interpretability, but existing methods often ignore the constraints on semantic structure, which are necessary for downstream tasks, for the sake of visual effects. We propose a unified collaborative dual-task learning framework, termed BMT (Bridging Modalities and Tasks), that jointly optimizes S2O image translation and semantic segmentation through a shared hierarchical Vision Transformer. The framework integrates: (1) a LocalViTBlock that fuses global self-attention with spatial depthwise convolution through a learnable gating mechanism; (2) an enhanced output module combining multi-scale refinement processing, color correction and anti-aliasing, which calibrates channel-level color statistics through feature fusion; (3) a ControlNet-style conditional injection mechanism that encodes SAR wavelet features and segmentation labels into a multi-scale feature pyramid and injects them at each encoder layer through zero-initialized convolution; (4) a bounded Kendall uncertainty weighting scheme that prevents either task from dominating the shared representation. We evaluate the framework under both paired and unpaired translation settings, on the public WHU-OPT-SAR paired dataset and a self-constructed unpaired ship dataset built from HRSID and DIOR, respectively. The experimental results show that the proposed method achieves competitive S2O translation quality and semantic segmentation performance. The dataset and source code have been publicly released at https://github.com/Lewisyuaner/BMT-S2O-main.",
+      "authors": [
+        "Siyuan Liu",
+        "Xuze Zhang",
+        "Yongshun Wang",
+        "Licong Pan",
+        "Hang Liu",
+        "Huihui Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-04T04:50:19+00:00",
+      "link": "https://arxiv.org/pdf/2609.04726v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified dual-task learning with shared hierarchical ViT for SAR-to-optical translation and semantic segmentation; can support coral ecosystem mapping from remote sensing",
+      "llm_evidence_cn": "单一层次化ViT联合SAR到光学转换与语义分割，可支撑基于遥感的珊瑚生态系统制图",
+      "llm_evidence": "单一层次化ViT联合SAR到光学转换与语义分割，可支撑基于遥感的珊瑚生态系统制图",
+      "canonical_evidence": "单一层次化ViT联合SAR到光学转换与语义分割，可支撑基于遥感的珊瑚生态系统制图",
+      "llm_tldr_en": "BMT jointly optimizes SAR-to-optical image translation and semantic segmentation in a shared hierarchical ViT, keeping semantic consistency while improving visual interpretability; the dual-task design is readily reusable for coral habitat mapping.",
+      "llm_tldr_cn": "针对SAR影像存在斑点噪声、难以解译，且现有生成模型偏重视觉效果而忽略语义结构约束的问题，提出统一协作双任务学习框架BMT。该框架利用共享的层次化Vision Transformer同时执行SAR到光学影像转换和语义分割，使生成过程顾及下游任务所需结构。联合优化预期能同时提升影像可读性和分割精度。该跨任务结构可用于珊瑚礁等生态系统的遥感制图。",
+      "llm_tldr": "针对SAR影像存在斑点噪声、难以解译，且现有生成模型偏重视觉效果而忽略语义结构约束的问题，提出统一协作双任务学习框架BMT。该框架利用共享的层次化Vision Transformer同时执行SAR到光学影像转换和语义分割，使生成过程顾及下游任务所需结构。联合优化预期能同时提升影像可读性和分割精度。该跨任务结构可用于珊瑚礁等生态系统的遥感制图。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.05351v1",
+      "source": "arxiv",
+      "title": "MEOX: Compact Multimodal Mixture-of-Experts for Earth Observation",
+      "abstract": "Recent advances in Earth Observation representation learning accommodate heterogeneous sensors and missing observations, often through larger architectures. We present MEOX (Multimodal Earth Observation with eXperts), a multimodal masked autoencoder with a 2.939 million-parameter encoder and 3.115 million parameters in total. Sensor-specific adapters, explicit validity signals, and a shared sparse-expert block preserve modality-dependent processing before a learned patch-wise fusion. Four metadata tokens then accompany a single spatial sequence through fourteen further encoder blocks. Shared expert projections with private low-rank residuals constrain parameter growth, while rotary attention supports downstream spatial grids different from pretraining. The model is pretrained on 1.228 million MMEarth64 samples using modality-balanced masked reconstruction and structured sensor dropout. Frozen transfer is evaluated on six GEO-Bench tasks at both 64 and 224 pixels. The model reaches 64.42% mean intersection-over-union on cashew segmentation at 64 pixels and 90.56% average accuracy on EuroSAT at 224 pixels, exceeding the corresponding reported CSMoE results. BigEarthNet finetuning reaches 72.95% micro-average precision. Routing diagnostics distinguish expert participation, spatial dependence, modality association, and functional contribution. A held-out WorldCover probe measures a 0.64-percentage-point benefit from metadata, while retrieval separates same-sensor semantics from cross-sensor alignment. These results demonstrate sensor-flexible representation learning and strong task transfer using a compact parameter budget.",
+      "authors": [
+        "Mohanad Albughdadi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-04T16:59:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.05351v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compact multimodal masked autoencoder for Earth observation with sensor adapters and patch-wise fusion; transferable backbone for satellite analysis of ocean habitats",
+      "llm_evidence_cn": "面向多传感器地球观测的紧凑多模态自编码器，可作为海洋栖息地卫星影像分析的通用特征骨架",
+      "llm_evidence": "面向多传感器地球观测的紧凑多模态自编码器，可作为海洋栖息地卫星影像分析的通用特征骨架",
+      "canonical_evidence": "面向多传感器地球观测的紧凑多模态自编码器，可作为海洋栖息地卫星影像分析的通用特征骨架",
+      "llm_tldr_en": "MEOX is a compact Earth observation multimodal masked autoencoder with sensor adapters, validity signals, shared sparse experts and patch-wise fusion, offering a parameter-efficient foundation for satellite-based environmental interpretation.",
+      "llm_tldr_cn": "针对现有遥感多模态表征依赖大模型规模、难以兼顾异构传感器与缺失观测的问题，提出紧凑多模态自编码器MEOX。它在传感器适配器和共享稀疏专家之后加入补丁级融合，并以少量元数据令牌参与后续编码，使总参数控制在约311.5万。这一设计既保留模态特有处理，又支持不同空间分辨率的下游网格，为海洋栖息地等地球观测任务提供了可迁移的高效预训练骨架。",
+      "llm_tldr": "针对现有遥感多模态表征依赖大模型规模、难以兼顾异构传感器与缺失观测的问题，提出紧凑多模态自编码器MEOX。它在传感器适配器和共享稀疏专家之后加入补丁级融合，并以少量元数据令牌参与后续编码，使总参数控制在约311.5万。这一设计既保留模态特有处理，又支持不同空间分辨率的下游网格，为海洋栖息地等地球观测任务提供了可迁移的高效预训练骨架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
