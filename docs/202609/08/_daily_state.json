@@ -1,0 +1,73 @@
+{
+  "date": "20260908",
+  "date_label": "",
+  "generated_at": "2026-09-08 22:50:25 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2608.30277v2",
+      "route": "202609/08/2608.30277v2-simcraft-distilling-remote-sensing-agents-via-synthetic-trajectories-and-contextual-retrieval-augmented-fine-tuning",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感智能体的蒸馏与检索增强微调框架，是大模型+智能体遥感应用的核心，可迁移至珊瑚/海洋制图",
+      "first_seen_at": "2026-09-08 22:50:25 UTC",
+      "updated_at": "2026-09-08 22:50:25 UTC"
+    },
+    {
+      "paper_id": "2608.30789v1",
+      "route": "202609/08/2608.30789v1-camera-trap-classification-with-deep-learning-under-ground-truth-uncertainty",
+      "title": "Camera trap classification with deep learning under ground truth uncertainty",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "研究标注不确定性下的生态图像深度学习分类，对珊瑚礁底质覆盖分类与标注噪声问题有直接借鉴。",
+      "first_seen_at": "2026-09-08 22:50:25 UTC",
+      "updated_at": "2026-09-08 22:50:25 UTC"
+    },
+    {
+      "paper_id": "2608.30895v1",
+      "route": "202609/08/2608.30895v1-a-controlled-evaluation-of-model-rankings-and-input-reliance-in-surface-water-segmentation",
+      "title": "A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于卫星遥感水体的分割模型系统评估，方法可迁移至海洋栖息地制图",
+      "first_seen_at": "2026-09-08 22:50:25 UTC",
+      "updated_at": "2026-09-08 22:50:25 UTC"
+    },
+    {
+      "paper_id": "2609.05303v1",
+      "route": "202609/08/2609.05303v1-learning-spatial-spectral-refinement-and-calibrating-complementary-observations-for-hyperspectral-image-super-resolution",
+      "title": "Learning Spatial-Spectral Refinement and Calibrating Complementary Observations for Hyperspectral Image Super-Resolution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向高光谱与多光谱融合的空间光谱细化与互补观测校准方法，可提升海洋栖息地遥感制图的输入数据质量。",
+      "first_seen_at": "2026-09-08 22:50:25 UTC",
+      "updated_at": "2026-09-08 22:50:25 UTC"
+    }
+  ]
+}

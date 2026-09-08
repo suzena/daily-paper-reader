@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-07</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-08</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-07 22:16:38 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-08 22:50:25 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日11篇遥感与多模态文献，精读聚焦两大自主智能体，速读覆盖灾害制图、数据不确定性分类及天文光谱对齐。</p>
-<p>最值得看SimCRAFT与HiRS-Agent：前者用合成轨迹+上下文检索微调蒸馏遥感智能体，后者以分层多智能体解决长时序任务，均获8.0分。</p>
-<p>若关注AI落地遥感，建议优先精读这两篇，重点对比其轨迹生成与层级规划对任务可靠性的提升。</p>
+<p>今日共读4篇论文，无精读，速读3篇并有1篇未在列表中显示（总数为4），整体以遥感与深度学习相关为主题。最值得关注的是《SimCRAFT》一文（7.0分），它结合合成轨迹与上下文RAG微调来蒸馏遥感智能体，方向新颖；另两篇6分论文分别涉及相机陷阱分类的地面真值不确定性和地表水分割的模型排名评估。建议普通读者优先精读《SimCRAFT》，理解其如何利用合成数据提升遥感任务效率，并关注地面真值噪声对模型评价的影响。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -80,12 +78,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning">SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning</span></li><li><span class="dpr-home-dashboard-paper-title" title="HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving">HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -93,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">9 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery">RAPIDMap: Rapid Multi-Agent Pipeline for Interpretable Disaster Mapping from Satellite and Street-view Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="Robust Broad Learning System with Wave Loss for Classification under Data Uncertainty">Robust Broad Learning System with Wave Loss for Classification under Data Uncertainty</span></li><li><span class="dpr-home-dashboard-paper-title" title="DINOspec: Efficient Multimodal Alignment of Vision and Spectral Foundation Models for Astronomy">DINOspec: Efficient Multimodal Alignment of Vision and Spectral Foundation Models for Astronomy</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning">SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Camera trap classification with deep learning under ground truth uncertainty">Camera trap classification with deep learning under ground truth uncertainty</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation">A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 </div>
 

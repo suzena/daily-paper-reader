@@ -1,0 +1,173 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-08T22:48:27.006197+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.30277v2",
+      "source": "arxiv",
+      "title": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "abstract": "The unprecedented surge in Earth observation data volume and diversity has exposed a critical bottleneck for traditional manual workflows, catalyzing the emergence of Remote Sensing (RS) Agents. However, the practical deployment of these advanced agents is severely hindered by their heavy reliance on large-scale general-purpose LLMs, which lack deep domain expertise and impose prohibitive infrastructure demands. To resolve this, we propose SimCRAFT, a model-agnostic framework that distills sophisticated RS orchestration capabilities into a compact 7B-scale model. Addressing data scarcity, we first pair a multiagent synthesis engine with a Mock Execution Engine that checks schema correctness, inter-tool dependencies, and sensor/tool compatibility, producing SimRS-14k, a large-scale, constraint-validated workflow planning corpus. Second, we propose Contextual Retrieval-Augmented Fine-Tuning (CRAFT) that finetunes the model to reason analogically by adapting retrieved Standard Operating Procedures to novel queries under a noise-robust objective, generalizing RAFT to multi-step RS workflow planning without mechanical copying. Extensive experiments demonstrate that SimCRAFT-7B significantly outperforms openweights LLMs and rivals advanced closedsource models and specialized RS agents, while reproducing across three 7B backbones. This work contributes a competitive open-weights baseline for lightweight RS intelligence, enabling efficient autonomous deployment under resource-constrained or resource-conserving conditions.",
+      "authors": [
+        "Haoran Wang",
+        "Jing Yao",
+        "Xu Yang",
+        "Zeqing Wang",
+        "Yang Zhang",
+        "Pedram Ghamisi",
+        "Zhengchao Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-08-31T05:45:33+00:00",
+      "link": "https://arxiv.org/pdf/2608.30277v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "remote-sensing agent distillation framework; core to LLM and agent applications in remote sensing theme and applicable to marine/coral mapping",
+      "llm_evidence_cn": "面向遥感智能体的蒸馏与检索增强微调框架，是大模型+智能体遥感应用的核心，可迁移至珊瑚/海洋制图",
+      "llm_evidence": "面向遥感智能体的蒸馏与检索增强微调框架，是大模型+智能体遥感应用的核心，可迁移至珊瑚/海洋制图",
+      "canonical_evidence": "面向遥感智能体的蒸馏与检索增强微调框架，是大模型+智能体遥感应用的核心，可迁移至珊瑚/海洋制图",
+      "llm_tldr_en": "SimCRAFT distills sophisticated remote sensing orchestration capabilities from large LLMs into a compact 7B model using synthetic trajectories and contextual RAG, reducing dependence on massive LLMs and enabling practical RS agents.",
+      "llm_tldr_cn": "遥感智能体部署受限于大LLM的领域知识不足与高昂基础设施成本。SimCRAFT提出模型无关的蒸馏框架，通过多智能体合成引擎与Mock执行引擎生成训练数据，再结合上下文检索增强微调，将遥感工具编排能力蒸馏到7B级模型。该方法缓解数据稀缺和格式错误问题，使小型模型也能完成复杂遥感任务，为珊瑚礁等专题遥感智能体的轻量化落地提供路径。",
+      "llm_tldr": "遥感智能体部署受限于大LLM的领域知识不足与高昂基础设施成本。SimCRAFT提出模型无关的蒸馏框架，通过多智能体合成引擎与Mock执行引擎生成训练数据，再结合上下文检索增强微调，将遥感工具编排能力蒸馏到7B级模型。该方法缓解数据稀缺和格式错误问题，使小型模型也能完成复杂遥感任务，为珊瑚礁等专题遥感智能体的轻量化落地提供路径。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2608.30789v1",
+      "source": "arxiv",
+      "title": "Camera trap classification with deep learning under ground truth uncertainty",
+      "abstract": "Supervised deep learning methods enable the rapid processing of ecological image data, but depend on a costly annotation process. Consequently, training labels are commonly derived from volunteer citizen science projects. However, disagreement among volunteers introduces uncertainty in the \"ground truth\" data that are assumed to be correct for model training and validation. Using two datasets containing camera trap images with associated volunteer and expert classifications, we investigated the effects of training under higher ground truth uncertainty. We observed improved overall test accuracy, particularly for images that were more difficult for volunteers. Species-level accuracy also generally improved, but generalisation to a different dataset did not. The benefits of ground truth uncertainty were enhanced by pre-training on ImageNet. Pre-training also reduced the number of training epochs required; further reductions in computational cost, but not gains in accuracy, resulted from additional pre-training on other camera trap images. With unbalanced training data, we still observed a clear benefit of increased ground truth uncertainty for overall accuracy, especially on difficult images. Class imbalance improved accuracy for common species, reduced rare species accuracy, and changed patterns of misclassification to more closely resemble mistakes made by volunteers. Our findings have implications for applying deep learning across ecological image types with multiple labels. Practitioners can improve accuracy, especially on difficult examples, by including moderate levels of label disagreement during training and using models pre-trained on general image data. In addition to improving the use of citizen science-derived labels in model training, our study suggests avenues for more effectively integrating human and deep learning classifications in combined workflows. (abridged)",
+      "authors": [
+        "Leonard Hockerts",
+        "Peter S. Stewart",
+        "Sarthak Arora",
+        "Tiffany J. Vlaar"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T13:45:23+00:00",
+      "link": "https://arxiv.org/pdf/2608.30789v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep learning ecological image classification under label ambiguity, applicable to coral reef benthic cover classifiers relying on noisy labels.",
+      "llm_evidence_cn": "研究标注不确定性下的生态图像深度学习分类，对珊瑚礁底质覆盖分类与标注噪声问题有直接借鉴。",
+      "llm_evidence": "研究标注不确定性下的生态图像深度学习分类，对珊瑚礁底质覆盖分类与标注噪声问题有直接借鉴。",
+      "canonical_evidence": "研究标注不确定性下的生态图像深度学习分类，对珊瑚礁底质覆盖分类与标注噪声问题有直接借鉴。",
+      "llm_tldr_en": "Investigates how training on uncertain citizen-science labels affects camera-trap deep learning classifiers; higher uncertainty yields accuracy gains and informs robust coral reef image classifiers.",
+      "llm_tldr_cn": "生态影像深度学习依赖标注，但志愿者标注不一致使真值含有大量不确定性。本文用两个含志愿者与专家标注的相机陷阱数据集系统检验真值不确定性对分类模型的影响。结果表明在较高不确定性标签上训练可提高总体测试精度，尤其对志愿者公认困难的图像，物种级精度同样普遍提升，不过跨数据集泛化表现需要谨慎。该发现对珊瑚礁底质自动分类等生态影像任务具有方法价值。",
+      "llm_tldr": "生态影像深度学习依赖标注，但志愿者标注不一致使真值含有大量不确定性。本文用两个含志愿者与专家标注的相机陷阱数据集系统检验真值不确定性对分类模型的影响。结果表明在较高不确定性标签上训练可提高总体测试精度，尤其对志愿者公认困难的图像，物种级精度同样普遍提升，不过跨数据集泛化表现需要谨慎。该发现对珊瑚礁底质自动分类等生态影像任务具有方法价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2608.30895v1",
+      "source": "arxiv",
+      "title": "A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation",
+      "abstract": "Performance evaluation for surface-water segmentation commonly uses an aggregate metric such as global intersection-over-union (IoU) to rank model configurations. However, a configuration ranking does not by itself establish why one system performs better, whether a close ordering is stable, or how strongly predictions rely on individual inputs. We examine these distinctions primarily on Sen1Floods11 through repeated configuration comparisons, paired test-chip analysis, fixed-checkpoint input stress tests, and geographic reweighting, with a targeted secondary evaluation of supervised input configurations on GEOID-Flood. The cross-modal student achieves the highest three-seed mean IoU on Sen1Floods11, but close orderings vary across seeds and geographic weighting, while ancillary-input rankings differ between Swin-UNet and U-Net. The GEOID-Flood evaluation shows substantial agreement in supervised ancillary-input effects, although the exact architecture ordering remains configuration dependent. Fixed-checkpoint tests further establish reliance on terrain and WorldCover without establishing a clean-input performance benefit, while target semantics and the later WorldCover prior restrict the evaluation to retrospective all-water segmentation. These results show that aggregate metrics remain useful for ranking complete configurations, but ranking stability, component attribution, input reliance, and deployment scope require distinct evidence. Performance evaluation should therefore match the evidence reported to the claim being made.",
+      "authors": [
+        "Kittipat Phunjanna",
+        "Kristóf Karacs",
+        "Chayut Ngamkhanong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-31T14:48:18+00:00",
+      "link": "https://arxiv.org/pdf/2608.30895v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "controlled deep learning evaluation on satellite water segmentation; methodology transferable to ocean habitat mapping",
+      "llm_evidence_cn": "基于卫星遥感水体的分割模型系统评估，方法可迁移至海洋栖息地制图",
+      "llm_evidence": "基于卫星遥感水体的分割模型系统评估，方法可迁移至海洋栖息地制图",
+      "canonical_evidence": "基于卫星遥感水体的分割模型系统评估，方法可迁移至海洋栖息地制图",
+      "llm_tldr_en": "Controlled repeated comparisons and input stress tests on Sen1Floods11 reveal that model rankings in water segmentation are unstable and vary with reweighting, while cross-modal fusions often improve performance.",
+      "llm_tldr_cn": "针对地表水分割中仅依赖全局IoU排序难以解释系统差异的问题，本文在Sen1Floods11上开展重复配置对比、配对测试块分析、固定检查点输入压力测试和地理加权分析。结果显示跨模态学生模型平均IoU最高，但接近排序在多次试验中不稳定。该受控评估范式为卫星遥感水体或栖息地分割模型的可信赖选择与输入依赖分析提供了重要方法参考，对海洋栖息地卫星制图尤为值得借鉴。",
+      "llm_tldr": "针对地表水分割中仅依赖全局IoU排序难以解释系统差异的问题，本文在Sen1Floods11上开展重复配置对比、配对测试块分析、固定检查点输入压力测试和地理加权分析。结果显示跨模态学生模型平均IoU最高，但接近排序在多次试验中不稳定。该受控评估范式为卫星遥感水体或栖息地分割模型的可信赖选择与输入依赖分析提供了重要方法参考，对海洋栖息地卫星制图尤为值得借鉴。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.05303v1",
+      "source": "arxiv",
+      "title": "Learning Spatial-Spectral Refinement and Calibrating Complementary Observations for Hyperspectral Image Super-Resolution",
+      "abstract": "Hyperspectral and multispectral image fusion (HMIF) aims to reconstruct a high-resolution hyperspectral image (HR-HSI) by combining the fine spatial details of a high-resolution multispectral image (HR-MSI) with the rich spectral information of a low-resolution hyperspectral image (LR-HSI). Recent advances in implicit neural representations (INRs) have enabled flexible coordinate-based modeling for HMIF; however, existing INR-based approaches may not fully capture fine-grained spatial structures and rich spectral dependencies. Moreover, the LR-HSI and HR-MSI are primarily incorporated through degradation-consistency constraints, leaving their complementary information underexploited. To address these limitations, we propose Two-Stage Reconstruction with Implicit Tensor Neural Representation (TSR-ITNR), a unified self-supervised framework integrating representation refinement and observation-guided calibration. In Stage 1, TSR-ITNR learns an implicit Tucker representation and refines its low-rank spatial coefficient tensor and spectral basis to better capture fine spatial structures and interband correlations. A fixed pretrained denoiser further provides a deep prior for the preliminary reconstruction. In Stage 2, parameter-free calibration derives complementary and noninterfering corrections from both observations to recover information insufficiently captured in Stage 1. Theoretical analysis establishes the geometry-preserving property of spectral refinement and the orthogonal complementarity of calibration. Extensive experiments on multiple benchmark datasets demonstrate strong quantitative, visual, and spectral reconstruction performance without ground-truth HR-HSI supervision. Beyond conventional reconstruction metrics, we further assess the effectiveness of TSR-ITNR using downstream semantic segmentation accuracy.",
+      "authors": [
+        "Liqian Yang",
+        "Xingchi Chen",
+        "Xinfeng Gui",
+        "Xiangyong Cao",
+        "Qianxin Yi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-04T15:56:10+00:00",
+      "link": "https://arxiv.org/pdf/2609.05303v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Spatial-spectral refinement and complementary-observation calibration for high-resolution hyperspectral fusion, useful preprocessing for ocean habitat satellite mapping.",
+      "llm_evidence_cn": "面向高光谱与多光谱融合的空间光谱细化与互补观测校准方法，可提升海洋栖息地遥感制图的输入数据质量。",
+      "llm_evidence": "面向高光谱与多光谱融合的空间光谱细化与互补观测校准方法，可提升海洋栖息地遥感制图的输入数据质量。",
+      "canonical_evidence": "面向高光谱与多光谱融合的空间光谱细化与互补观测校准方法，可提升海洋栖息地遥感制图的输入数据质量。",
+      "llm_tldr_en": "Adds spatial-spectral refinement and complementary-observation calibration to INR-based hyperspectral and multispectral fusion for high-quality high-resolution hyperspectral images, with downstream benefit for satellite mapping of ocean habitats.",
+      "llm_tldr_cn": "高光谱与多光谱图像融合旨在用高分辨率多光谱影像的细节和高光谱影像的光谱信息重建高分辨率高光谱图像。已有隐式神经表示方法难以同时保留细粒度空间结构和光谱依赖，且未充分利用两种影像的互补性。本文提出空间光谱细化与互补观测校准的融合框架，针对性弥补上述不足，从而改善重建结果的空间与光谱质量。这类超分辨率技术可为海洋栖息地遥感制图提供更清晰、更可用的高光谱数据。",
+      "llm_tldr": "高光谱与多光谱图像融合旨在用高分辨率多光谱影像的细节和高光谱影像的光谱信息重建高分辨率高光谱图像。已有隐式神经表示方法难以同时保留细粒度空间结构和光谱依赖，且未充分利用两种影像的互补性。本文提出空间光谱细化与互补观测校准的融合框架，针对性弥补上述不足，从而改善重建结果的空间与光谱质量。这类超分辨率技术可为海洋栖息地遥感制图提供更清晰、更可用的高光谱数据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

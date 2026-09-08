@@ -1,0 +1,69 @@
+{
+  "label": "2026-09-08",
+  "date": "2026-09-08",
+  "generated_at": "2026-09-08T22:50:27",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202609/08/2608.30277v2-simcraft-distilling-remote-sensing-agents-via-synthetic-trajectories-and-contextual-retrieval-augmented-fine-tuning",
+      "section": "quick",
+      "title_en": "SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning",
+      "authors": "Haoran Wang, Jing Yao, Xu Yang, Zeqing Wang, Yang Zhang, Pedram Ghamisi, Zhengchao Chen",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.30277v2",
+      "score": "7.0",
+      "evidence": "面向遥感智能体的蒸馏与检索增强微调框架，是大模型+智能体遥感应用的核心，可迁移至珊瑚/海洋制图",
+      "tldr": "遥感智能体落地受制于大模型缺少领域知识、算力成本高等问题。SimCRAFT提出双引擎合成与校验流程，生成约束满足的规划语料SimRS-14k；并设计CRAFT微调目标，让7B模型基于检索标准操作程序进行类比推理而非机械复制。实验超越开源权重模型，媲美闭源模型和专用智能体，在多个7B主干上稳定复现。该工作为资源受限环境下的轻量遥感智能提供开源强基线。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "The unprecedented surge in Earth observation data volume and diversity has exposed a critical bottleneck for traditional manual workflows, catalyzing the emergence of Remote Sensing (RS) Agents. However, the practical deployment of these advanced agents is severely hindered by their heavy reliance on large-scale general-purpose LLMs, which lack deep domain expertise and impose prohibitive infrastructure demands. To resolve this, we propose SimCRAFT, a model-agnostic framework that distills sophisticated RS orchestration capabilities into a compact 7B-scale model. Addressing data scarcity, we first pair a multiagent synthesis engine with a Mock Execution Engine that checks schema correctness, inter-tool dependencies, and sensor/tool compatibility, producing SimRS-14k, a large-scale, constraint-validated workflow planning corpus. Second, we propose Contextual Retrieval-Augmented Fine-Tuning (CRAFT) that finetunes the model to reason analogically by adapting retrieved Standard Operating Procedures to novel queries under a noise-robust objective, generalizing RAFT to multi-step RS workflow planning without mechanical copying. Extensive experiments demonstrate that SimCRAFT-7B significantly outperforms openweights LLMs and rivals advanced closedsource models and specialized RS agents, while reproducing across three 7B backbones. This work contributes a competitive open-weights baseline for lightweight RS intelligence, enabling efficient autonomous deployment under resource-constrained or resource-conserving conditions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2608.30789v1-camera-trap-classification-with-deep-learning-under-ground-truth-uncertainty",
+      "section": "quick",
+      "title_en": "Camera trap classification with deep learning under ground truth uncertainty",
+      "authors": "Leonard Hockerts, Peter S. Stewart, Sarthak Arora, Tiffany J. Vlaar",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.30789v1",
+      "score": "6.0",
+      "evidence": "研究标注不确定性下的生态图像深度学习分类，对珊瑚礁底质覆盖分类与标注噪声问题有直接借鉴。",
+      "tldr": "针对公民科学项目产生的标签不一致导致深度学习训练数据存在ground truth不确定性的问题，本研究利用两个相机陷阱数据集，发现使用较高不确定性的标签训练可提升整体测试准确率，尤其是对志愿者也难辨的图像，并改善多数物种的识别，但跨数据集泛化未提升。预训练能增强该效果并减少训练轮次。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Supervised deep learning methods enable the rapid processing of ecological image data, but depend on a costly annotation process. Consequently, training labels are commonly derived from volunteer citizen science projects. However, disagreement among volunteers introduces uncertainty in the \"ground truth\" data that are assumed to be correct for model training and validation. Using two datasets containing camera trap images with associated volunteer and expert classifications, we investigated the effects of training under higher ground truth uncertainty. We observed improved overall test accuracy, particularly for images that were more difficult for volunteers. Species-level accuracy also generally improved, but generalisation to a different dataset did not. The benefits of ground truth uncertainty were enhanced by pre-training on ImageNet. Pre-training also reduced the number of training epochs required; further reductions in computational cost, but not gains in accuracy, resulted from additional pre-training on other camera trap images. With unbalanced training data, we still observed a clear benefit of increased ground truth uncertainty for overall accuracy, especially on difficult images. Class imbalance improved accuracy for common species, reduced rare species accuracy, and changed patterns of misclassification to more closely resemble mistakes made by volunteers. Our findings have implications for applying deep learning across ecological image types with multiple labels. Practitioners can improve accuracy, especially on difficult examples, by including moderate levels of label disagreement during training and using models pre-trained on general image data. In addition to improving the use of citizen science-derived labels in model training, our study suggests avenues for more effectively integrating human and deep learning classifications in combined workflows. (abridged)",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2608.30895v1-a-controlled-evaluation-of-model-rankings-and-input-reliance-in-surface-water-segmentation",
+      "section": "quick",
+      "title_en": "A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation",
+      "authors": "Kittipat Phunjanna, Kristóf Karacs, Chayut Ngamkhanong",
+      "date": "2026-08-31",
+      "pdf": "https://arxiv.org/pdf/2608.30895v1",
+      "score": "6.0",
+      "evidence": "基于卫星遥感水体的分割模型系统评估，方法可迁移至海洋栖息地制图",
+      "tldr": "地表水分割常用全局IoU等聚合指标对模型配置排序，但排名本身不能说明排序稳定性、输入依赖或部署范围。本工作以Sen1Floods11为主，通过重复配置比较、配对测试芯片、固定检查点输入压力测试和地理重加权，并在GEOID-Flood上辅助验证。结果显示跨模态学生平均IoU最高，但排名随种子和地理加权变化；固定检查点测试揭示对地形和WorldCover的依赖。聚合指标对完整配置排序仍有用，但稳定性、归因和部署范围需分别评估。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Performance evaluation for surface-water segmentation commonly uses an aggregate metric such as global intersection-over-union (IoU) to rank model configurations. However, a configuration ranking does not by itself establish why one system performs better, whether a close ordering is stable, or how strongly predictions rely on individual inputs. We examine these distinctions primarily on Sen1Floods11 through repeated configuration comparisons, paired test-chip analysis, fixed-checkpoint input stress tests, and geographic reweighting, with a targeted secondary evaluation of supervised input configurations on GEOID-Flood. The cross-modal student achieves the highest three-seed mean IoU on Sen1Floods11, but close orderings vary across seeds and geographic weighting, while ancillary-input rankings differ between Swin-UNet and U-Net. The GEOID-Flood evaluation shows substantial agreement in supervised ancillary-input effects, although the exact architecture ordering remains configuration dependent. Fixed-checkpoint tests further establish reliance on terrain and WorldCover without establishing a clean-input performance benefit, while target semantics and the later WorldCover prior restrict the evaluation to retrospective all-water segmentation. These results show that aggregate metrics remain useful for ranking complete configurations, but ranking stability, component attribution, input reliance, and deployment scope require distinct evidence. Performance evaluation should therefore match the evidence reported to the claim being made.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/08/2609.05303v1-learning-spatial-spectral-refinement-and-calibrating-complementary-observations-for-hyperspectral-image-super-resolution",
+      "section": "quick",
+      "title_en": "Learning Spatial-Spectral Refinement and Calibrating Complementary Observations for Hyperspectral Image Super-Resolution",
+      "authors": "Liqian Yang, Xingchi Chen, Xinfeng Gui, Xiangyong Cao, Qianxin Yi",
+      "date": "2026-09-04",
+      "pdf": "https://arxiv.org/pdf/2609.05303v1",
+      "score": "6.0",
+      "evidence": "面向高光谱与多光谱融合的空间光谱细化与互补观测校准方法，可提升海洋栖息地遥感制图的输入数据质量。",
+      "tldr": "高光谱与多光谱图像融合中，现有隐式神经表示方法难以充分建模精细空间结构与光谱依赖，对观测互补信息利用不足。为此提出TSR-ITNR两阶段自监督框架：先通过隐式Tucker张量表示并细化低秩系数与光谱基实现初步重建，再以无参数校准从两种观测提取互补修正。多个基准上取得优越定量与视觉结果，无需真值监督，且提升下游语义分割精度。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Hyperspectral and multispectral image fusion (HMIF) aims to reconstruct a high-resolution hyperspectral image (HR-HSI) by combining the fine spatial details of a high-resolution multispectral image (HR-MSI) with the rich spectral information of a low-resolution hyperspectral image (LR-HSI). Recent advances in implicit neural representations (INRs) have enabled flexible coordinate-based modeling for HMIF; however, existing INR-based approaches may not fully capture fine-grained spatial structures and rich spectral dependencies. Moreover, the LR-HSI and HR-MSI are primarily incorporated through degradation-consistency constraints, leaving their complementary information underexploited. To address these limitations, we propose Two-Stage Reconstruction with Implicit Tensor Neural Representation (TSR-ITNR), a unified self-supervised framework integrating representation refinement and observation-guided calibration. In Stage 1, TSR-ITNR learns an implicit Tucker representation and refines its low-rank spatial coefficient tensor and spectral basis to better capture fine spatial structures and interband correlations. A fixed pretrained denoiser further provides a deep prior for the preliminary reconstruction. In Stage 2, parameter-free calibration derives complementary and noninterfering corrections from both observations to recover information insufficiently captured in Stage 1. Theoretical analysis establishes the geometry-preserving property of spectral refinement and the orthogonal complementarity of calibration. Extensive experiments on multiple benchmark datasets demonstrate strong quantitative, visual, and spectral reconstruction performance without ground-truth HR-HSI supervision. Beyond conventional reconstruction metrics, we further assess the effectiveness of TSR-ITNR using downstream semantic segmentation accuracy.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
