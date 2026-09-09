@@ -1,0 +1,398 @@
+Title: ProtoRAG: Prototype-Based Retrieval Augmentation for Few-Shot Fine-Grained Remote Sensing Object Detection
+
+URL Source: https://arxiv.org/pdf/2609.05953v1
+
+Published Time: Wed, 09 Sep 2026 00:31:45 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# ProtoRAG: Prototype-Based Retrieval Augmentation for Few-Shot Fine-Grained Remote Sensing Object Detection 
+
+## Jian Wang, 1 Yuxiang Hong, 2 Chufeng Zhou, 1 Chao Pang, 1 Xiaokang Zhang 1∗
+
+> 1
+
+Wuhan University, Wuhan, China 
+
+> 2
+
+East China Normal University, Shanghai, China 
+
+Abstract 
+
+Few-shot fine-grained object detection (FGOD) in remote sensing imagery is challenging because limited annotations must support both object localization and discrimination among visually similar subcategories. Although multimodal large language models (MLLMs) provide strong coarse object localization, they lack explicit visual evidence for reliable fine-grained recognition. To address this limitation, we propose ProtoRAG, a prototype-based retrieval-augmented framework that decouples coarse localization from fine-grained recogni-tion by equipping MLLMs with an external object-level vi-sual memory. To construct a reliable visual memory from limited support samples, we introduce Discriminative Pro-totype Space Learning (DPSL), which encourages discrim-inative and prototype-stable representations through super-vised contrastive learning and prototype-consistency regular-ization. We further develop an uncertainty-guided candidate-constrained reasoning strategy that augments MLLMs with re-trieved candidate-specific visual references and invokes mul-timodal reasoning only for ambiguous instances. Extensive experiments show that ProtoRAG consistently surpasses rep-resentative baselines in nine few-shot settings, outperforming the strongest baselines by 14.80, 2.27, and 4.04 mAP 50 on MAR20, HRSC2016, and FAIR1M-2.0, respectively. 
+
+## Introduction 
+
+Fine-grained object detection (FGOD) aims to localize ob-jects while distinguishing their subordinate categories, such as different aircraft variants or ship types. Unlike conven-tional object detection, fine-grained categories often share highly similar global appearances, with discriminative cues residing in subtle local structures, geometric configurations, and component layouts. Capturing these cues is particularly challenging in remote sensing imagery, where objects are typically small and exhibit large variations in orientation, scale, imaging conditions, and background clutter. As a re-sult, remote sensing FGOD relies on extracting highly dis-criminative visual evidence from inherently limited object-level observations (Chu, Ye, and Qian 2024; Sun et al. 2022). Existing remote sensing FGOD methods mainly im-prove category discrimination through part-aware model-ing, global-local interaction, multi-scale reasoning, and back-ground suppression (Ouyang, Fang, and Ji 2022; Guan et al. 
+
+> ∗
+
+Corresponding author. 
+
+2023; Wang et al. 2024a; Cheng et al. 2023; Ouyang et al. 2023). However, these methods are predominantly devel-oped under full supervision and rely on large numbers of precisely annotated instances. Acquiring such annotations is labor-intensive, requires substantial domain expertise, and is particularly difficult for rare fine-grained categories. Un-der sparse supervision, conventional detectors easily overfit, while existing few-shot detectors primarily transfer local-ization knowledge from base to novel classes rather than learning representations that explicitly capture the subtle vi-sual differences between subordinate categories (Wang et al. 2024b; Liu et al. 2024; Zhou et al. 2025). Recent multimodal large language models (MLLMs) have demonstrated remarkable capabilities in open-vocabulary perception, object localization, and visual reasoning (Kuck-reja et al. 2024; Bai et al. 2025a), making them a promis-ing foundation for reducing the annotation burden of remote sensing FGOD. However, coarse semantic understanding does not directly translate into reliable fine-grained recog-nition. As illustrated in Fig. 1, an MLLM can accurately localize an aircraft while still confusing visually similar vari-ants because no explicit visual references are available dur-ing inference. This limitation arises because coarse object recognition mainly relies on semantic knowledge acquired through large-scale vision-language pretraining, whereas fine-grained recognition fundamentally depends on compar-ing subtle object-level structures against representative visual exemplars. In remote sensing imagery, this challenge is fur-ther amplified by small object sizes, cluttered backgrounds, and multiple-object interference, making implicit semantic memories insufficient for reliable subordinate-category dis-crimination. Since fine-grained recognition depends on object-level vi-sual evidence, a small set of annotated support instances nat-urally provides explicit references for distinguishing visually similar categories. Organizing these instances as an external visual memory enables retrieving representative exemplars during inference. However, naively storing support features is insufficient. Fine-grained categories often occupy highly overlapping regions in generic feature spaces, while proto-types estimated from only a few support samples are easily affected by support selection and imaging variations. Con-sequently, effective retrieval requires a visual memory that is both highly discriminative across categories and robust to arXiv:2609.05953v1 [cs.CV] 5 Sep 2026 Q:  Based on this aerial image, detect  all aircraft                      
+
+> and return their locations .
+> A: There are 7 aircraft, and their locations are:
+> Aircraft: [323, 142, 428, 237] Aircraft: [618, 639, 718, 733] ...
+> Q: Based on this aerial image, how many aircraft
+> are visible?
+> A: This aerial image shows an airport apron with
+> seven parked aircraft. There are 7aircraft in this
+> image.
+> Q: Detect all aircraft in this image and identify
+> the fine -grained category of each aircraft.
+> A: There are 7 F-16 aircraft , and t heir locations are:
+> F-16: [323, 142, 428, 237] F-16: [618, 639, 718, 733] ...
+> Correction: They are actually F-15 fighter aircraft, not F-16.
+> Q: Detect all aircraft in this image and indicate its model.
+
+Figure 1: An MLLM can perform coarse object localization but lacks task-aligned comparative evidence for distinguish-ing visually similar subordinate categories. support diversity. These observations suggest that augment-ing MLLMs with explicit visual memory, rather than relying solely on implicit pretrained knowledge, provides a natural solution for few-shot fine-grained recognition. Motivated by these observations, we propose ProtoRAG ,a prototype-based retrieval-augmented approach for few-shot fine-grained object detection in remote sensing imagery. ProtoRAG decouples coarse localization from fine-grained recognition by retrieving candidate-specific visual references from an external prototype memory after object localization. It further learns a discriminative and robust prototype mem-ory from limited support examples to enable reliable retrieval under sparse supervision. During inference, retrieved vi-sual references directly support confident predictions, while ambiguous cases are resolved through MLLM-based visual comparison. Our main contributions are as follows: 
+
+• We present the first retrieval-augmented framework for few-shot remote sensing FGOD , enabling MLLMs to perform visually grounded fine-grained recognition through an external object-level visual memory. 
+
+• We introduce Discriminative Prototype Space Learn-ing (DPSL) , which learns category-discriminative and prototype-stable visual representations from limited sup-port examples. 
+
+• We develop an uncertainty-guided candidate-constrained reasoning strategy that augments MLLMs with retrieved visual references, invoking multimodal reasoning only for ambiguous predictions. 
+
+• Extensive experiments on MAR20, HRSC2016, and FAIR1M-2.0 demonstrate consistent improvements over conventional, few-shot, open-vocabulary, MLLM-based, and retrieval-based methods. 
+
+## Related Work 
+
+Few-Shot Fine-Grained Object Detection 
+
+Fine-grained object detection in remote sensing imagery re-quires object localization while distinguishing similar sub-ordinate categories. Existing methods enhance fine-grained representations through part-aware modeling, global–local interaction, multi-scale feature learning, and prototypical contrastive learning (Jia et al. 2021; Ouyang, Fang, and Ji 2022; Guan et al. 2023; Wang et al. 2024a; Ouyang et al. 2023). Few-shot approaches reduce annotation requirements through prototype learning and task-specific feature adap-tation (Wang et al. 2024b; Liu et al. 2024; Zhou et al. 2025). Nevertheless, these methods follow a detector-centric paradigm in which localization and fine-grained recognition are jointly learned from the same limited annotations. Con-sequently, sparse supervision must support both spatial lo-calization and subtle inter-category discrimination, limiting the learning of reliable fine-grained representations. 
+
+MLLM-Based Object Detection 
+
+MLLMs exhibit visual-semantic understanding and can lo-calize objects from coarse-grained category prompts (Kuck-reja et al. 2024; Bai et al. 2025a). Open-vocabulary and image-prompted detectors extend detection to novel cate-gories through textual or visual prompts (Cheng et al. 2024; Pan et al. 2025; Wu et al. 2025). Despite their prompting mechanisms, these models rely on broadly aligned visual-semantic representations that do not reliably capture the subtle structural differences between fine-grained categories. Retrieval-augmented methods introduce support-derived vi-sual evidence by comparing queries with category prototypes or cached features (Snell, Swersky, and Zemel 2017; Zhang et al. 2022; Liu et al. 2026). However, they primarily ad-dress image-level recognition or perform retrieval in generic feature spaces, limiting their applicability to few-shot fine-grained object detection. 
+
+## Method 
+
+As shown in Fig. 2, ProtoRAG decouples MLLM-based coarse object localization from few-shot fine-grained recog-nition through two stages: (1) Discriminative Prototype Space Learning (DPSL) and visual memory construction, and (2) Uncertainty-guided coarse-to-fine inference. The second stage integrates MLLM-based coarse-grained lo-calization, object-level prototype retrieval, and candidate-constrained reasoning into a unified inference pipeline. Only the lightweight feature mapping in DPSL is optimized during training, while the visual encoder and MLLM remain frozen, retaining their pretrained representations while enabling ef-ficient adaptation under limited supervision. 
+
+Discriminative Prototype Space Learning 
+
+Generic visual representations prioritize broad semantic modeling over the subtle structural differences required for fine-grained discrimination in remote sensing imagery. Con-sequently, visually similar subcategories remain entangled in the feature space, hindering the construction of category pro-totypes that are both discriminative and stable. To address this Support Set 
+
+DINOv3 
+
+> DPSL
+
+Supervised Contrastive Loss 
+
+Prototype Consistency Loss 
+
+Crop  
+
+> Subset1 Subset2 DPSL-Adapted space
+
+Prototype Generation 
+
+> Projected Feature
+> Inter-class Repulsion
+> Intra-class Attraction
+> Prototype Subset Prototype
+
+MLLM 
+
+> DPSL
+
+DINOv3 
+
+> Cosine
+> Retrieval
+> Top-1
+
+Prototype Bank 
+
+(2) Uncertainty-Guided Coarse-to-Fine Inference 
+
+(1) Prototype Bank Construction Offline Online 
+
+> Low
+> Uncertainty
+> High Uncertainty
+
+...     
+
+> Detect aircraft
+> in the image
+> Input Image Query on the left, candidate references on the right. Identify the
+> correct fine-grained class.
+> Query C-5 KC-135 B-52
+> Predictions:
+> Aircraft: [212, 674, 329, 798]
+> Aircraft: [258, 443, 376, 580] Aircraft: [314, 180, 430, 316] Aircraft: [353, 5, 460, 105]
+> Frozen module Trainable module
+> MLLM
+
+Average   
+
+> Retrieval Entropy B-1B
+> Candidate
+> Prompt Predictions:
+> B-52: [212, 674, 329, 798]
+> B-52: [258, 443, 376, 580]
+> B-52: [314, 180, 430, 316]
+> B-1B: [353, 5, 460, 105]
+> B-1B SU-34 B-52
+> Top-3 Candidates
+> C-5 KC-135 B-52 Top-3 Candidates
+> B-52 B-52 B-52 B-1B
+> Reasoning
+
+Figure 2: Overview of ProtoRAG. DPSL constructs an object-level prototype memory from the support set. An MLLM localizes query targets, which retrieve candidate categories and support references. Low-entropy queries use direct prototype prediction, whereas high-entropy queries undergo candidate-constrained visual comparison. issue, we introduce Discriminative Prototype Space Learning (DPSL), which adapts frozen DINOv3 features to construct reliable fine-grained prototypes. Given a support object crop xi, the frozen DINOv3 en-coder (Siméoni et al. 2025) is utilized to extract its feature 
+
+ui = EDINOv3 (xi) ∈ Rd. DPSL produces the task-adapted embedding: 
+
+zi = DPSL θ (ui) = ui + αg θ (ui) ∈ Rd, (1) where gθ : Rd → Rd is a learnable residual mapping and α
+
+controls the magnitude of the task-specific correction. The DINOv3 feature, DPSL embedding, and category prototype share the same dimension d. Then, DPSL learns the adapted embedding space through two complementary objectives: instance-level discrimination separates visually similar cat-egories, while category-level prototype consistency reduces prototype variation caused by support sampling. 
+
+Instance Discrimination Consider a mini-batch B =
+
+{(xi, y i)}Bi=1 , where yi ∈ C is the category label of 
+
+xi. For each anchor i, its positive set is P(i) =
+
+{p ∈ { 1, . . . , B } \ { i} | yp = yi} . The supervised con-trastive loss is then written as 
+
+Lsupcon = − 1
+
+|I| 
+
+X
+
+i∈I 
+
+1
+
+|P (i)|
+
+X
+
+p∈P (i)
+
+log exp( z⊤
+
+i zp/τ )
+
+P
+
+a̸=i exp( z⊤
+
+i za/τ ) ,
+
+(2) where I = {i | |P (i)| > 0} contains anchors with at least one positive sample, and τ is the contrastive temperature. This objective reduces intra-category variation while enlarg-ing the margins between visually similar categories. 
+
+Category-Level Prototype Consistency Although super-vised contrastive learning improves instance-level discrimi-nation, it does not explicitly constrain the variation of cate-gory prototypes constructed from different support subsets. For a specific category c ∈ C , let Sc = {i | ci = c} denote the indices of its support instances, with Nc = |S c|. For each category satisfying Nc ≥ 2m, we sample two disjoint subsets S(1) 
+
+c , S(2) 
+
+c ⊂ S c, each containing m instances. Their subset prototypes are defined as μ(t)
+
+c = 1
+
+m
+
+P
+
+i∈S (t)
+
+> c
+
+zi, where 
+
+t ∈ { 1, 2}. Let Cm = {c ∈ C | Nc ≥ 2m} denote the cate-gories eligible for subset sampling. Prototype consistency is enforced by minimizing the cosine distance between the two subset prototypes: 
+
+Lpc = 1
+
+|C m|
+
+X
+
+> c∈C m
+
+h
+
+1 − sim 
+
+
+
+μ(1)  
+
+> c
+
+, μ(2) 
+
+> c
+
+i 
+
+. (3) The overall DPSL objective is LDPSL = Lsupcon + Lpc .The two objectives jointly enhance category discrimination and prototype stability, producing a task-adapted embedding space for subsequent prototype construction and retrieval. 
+
+Prototype Bank Construction After DPSL training, all adapted support embeddings are used to construct the proto-type bank. For each category c ∈ C , its prototype is computed as pc = 1
+
+> Nc
+
+P 
+
+> i∈S c
+
+zi ∈ Rd. Since DPSL explicitly improves category separation and prototype consistency, the resulting mean embedding provides a compact and stable represen-tation of the corresponding category. Collecting all cate-gory prototypes yields P = [ p1, p2, . . . , p|C| ]⊤ ∈ R|C|× d.During inference, query embeddings are compared with the rows of P using cosine similarity to retrieve the Top-K
+
+candidate categories. We also cache one support reference crop xc 
+
+> ref
+
+for each category to provide visual evidence when candidate-constrained reasoning is triggered. Together, P
+
+and {xc 
+
+> ref
+
+}c∈C constitute the object-level visual memory, which is constructed exclusively from the support set and fixed before inference. 
+
+Uncertainty-Guided Coarse-to-Fine Inference 
+
+With the object-level visual memory fixed, ProtoRAG per-forms inference in a coarse-to-fine manner. The MLLM first localizes target objects according to a coarse-grained cate-gory prompt. Each localized target is then projected into the same DPSL embedding space as the support instances and matched against the prototype bank. Retrieval entropy deter-mines whether the most similar prototype is accepted directly or candidate-constrained MLLM reasoning is required. 
+
+MLLM-Based Object Localization The MLLM is pro-vided with the input image and a textual prompt specifying only the target super-category, such as aircraft or ships. With-out using any fine-grained category names, it localizes all corresponding objects in the image. We denote the resulting localized targets by eX = {˜xi}Ni=1 , where each ˜xi denotes the target crop extracted from an MLLM-localized region, and N is the number of localized targets. Since the subse-quent procedure is independently applied to every target, we describe it below for an arbitrary ˜x ∈ eX and omit the target index for clarity. 
+
+Object-Level Prototype Retrieval The localized target ˜x
+
+is encoded using the frozen DINOv3 encoder and DPSL, producing z = DPSL θ (EDINOv3 (˜ x)) ∈ Rd. This is the same DPSL representation used for support instances and prototype construction. The cosine similarities between z and all category proto-types form the fine-grained class-score vector q = [ qc] ∈
+
+R|C| , where qc = sim( z, pc) is the prototype retrieval score for category c. We rank the entries of q and retain the Top-
+
+K categories, denoted by c1, c 2, . . . , c K . Here, K denotes the number of retained candidate categories and is set to 3
+
+by default. The Top-1 category c1 provides the direct proto-type prediction, while {ck}Kk=1 forms the candidate set for uncertainty estimation and subsequent reasoning. 
+
+Retrieval Uncertainty Retrieval entropy measures the am-biguity among the Top-K candidate categories. Their re-trieval scores are converted into normalized candidate prob-abilities using a temperature-scaled softmax: 
+
+ˆqk = exp( qck /τ e)
+
+PKj=1 exp( qcj /τ e) , H = −
+
+> K
+
+X
+
+> k=1
+
+ˆqk log ˆ qk, (4) where τe is the entropy temperature. Low entropy indi-cates that one category dominates the retrieval distribution, whereas high entropy indicates ambiguity among multiple fine-grained candidates. 
+
+Candidate-Constrained MLLM Reasoning When H < δ, the prototype retrieval is considered sufficiently confident, and ProtoRAG directly assigns the Top-1 category c1. When 
+
+H ≥ δ, the localized target is treated as uncertain and trig-gers candidate-constrained reasoning. The MLLM receives the localized target, its scene context, and one cached support reference for each of the Top-K candidate categories. This mechanism retains efficient prototype prediction for confi-dent targets and invokes visually grounded MLLM reason-ing only when the retrieved fine-grained categories remain ambiguous. 
+
+Fine-Grained Detection Output The prototype score cor-responding to the final category, qˆc = sim( z, pˆc), is used as its detection ranking score. Applying the same procedure to every localized target in eX produces the final fine-grained detections, each consisting of the target location, predicted category, and corresponding prototype score. These scores are used for class-aware AP evaluation. 
+
+## Experiments 
+
+Experimental Setup 
+
+Datasets We evaluate on MAR20 (Yu et al. 2023), HRSC2016 (Liu et al. 2017), and FAIR1M-2.0 (Sun et al. 2022). MAR20 contains 20 aircraft types; its labels (A1– A20) are replaced by corresponding aircraft names in MLLM prompts. We select 14 ship categories from HRSC2016 and retain the aircraft and ship subcategories of FAIR1M-2.0. 
+
+Few-Shot Protocol We evaluate K ∈ {3, 5, 10 } using shared support splits generated with random seed 42, with each split containing at least K annotated images per cat-egory. ProtoRAG builds its visual memory from annotated objects, while detector baselines use the same images and annotations. Zero-shot methods do not use support data. 
+
+Evaluation Metrics All methods are evaluated using hori-zontal bounding boxes. End-to-end detection is evaluated by mAP 50 . Retrieval is evaluated by Top-1 and Top-3 accuracy, and coarse localization by precision, recall, and F1 at IoU 
+
+= 0 .5. ProtoRAG ranks detections using the prototype simi-larity of the final assigned class, while detector baselines use their native confidence scores. Method Venue MAR20 HRSC2016 FAIR1M-2.0 ZS 3 5 10 ZS 3 5 10 ZS 3 5 10                                                                                                                                                                                      
+
+> Standard Detectors
+> LEGNet (Lu et al. 2025) ICCVW –8.88 14.46 20.33 –2.24 7.31 9.12 –1.43 6.41 11.52 LWGANet (Lu, Yang, and Chen 2026) AAAI –3.84 13.23 21.90 –2.97 8.63 11.75 –1.45 7.22 12.46 Strip R-CNN (Yuan et al. 2026) AAAI –10.20 19.24 41.22 –4.59 10.29 16.11 –3.24 8.35 14.56
+> Few-Shot Detectors
+> FPD (Wang et al. 2024b) AAAI –13.89 13.89 30.58 –10.42 13.16 24.10 –7.82 9.95 12.72 SAE-FSDet (Liu et al. 2024) TGRS –12.30 18.46 40.14 –10.12 11.88 27.36 –7.74 8.96 14.42 PiDiViT (Zhou et al. 2025) ICCV –14.71 12.97 23.64 –6.45 13.76 25.14 –6.34 9.13 12.83
+> Open-Vocabulary Detectors
+> YOLO-World (Cheng et al. 2024) CVPR 3.27 15.63 18.54 28.54 1.42 14.16 16.87 23.78 1.05 2.03 10.93 14.74 LAE-DINO (Pan et al. 2025) AAAI 3.76 17.63 21.42 40.78 3.24 20.35 26.25 47.37 1.19 2.31 11.27 17.43 VisTex-OVLM (Wu et al. 2025) ICCV 3.46 3.68 3.68 3.67 3.03 3.27 3.26 3.27 1.01 2.34 2.85 2.87
+> Retrieval-Augmented Methods
+> DINOv3-kNN (Cover and Hart 1967) †––51.18 59.27 67.14 –24.03 29.53 32.46 –12.77 15.84 18.43 ProtoNet (Snell, Swersky, and Zemel 2017) †
+> NeurIPS –55.08 60.24 69.26 –25.32 30.56 36.40 –13.68 16.75 17.31 Tip-Adapter (Zhang et al. 2022) †ECCV –27.07 31.23 35.25 –16.18 21.37 27.83 –10.87 12.66 15.44 RAR-Adapted (Liu et al. 2026) †TIP –39.80 42.24 46.26 –19.21 26.84 29.48 –12.58 14.75 16.86
+> ProtoRAG ––58.82 73.76 84.06 –25.39 40.92 49.64 –16.59 20.14 22.47
+
+Table 1: Comparison on MAR20, HRSC2016, and FAIR1M-2.0 under zero-shot and few-shot settings. Results are mAP 50 (%). The best and second-best results are shown in bold and underlined, respectively. † These baselines are adapted to the same DINOv3–Qwen3-VL detection pipeline. 
+
+Implementation Details We use a frozen DINOv3 ViT-L/16 encoder and Qwen3-VL-8B-Instruct. DPSL employs a two-layer residual MLP with a hidden dimension of 512 and an output dimension of d = 512 . The residual coefficient is set to α = 0 .3. We train DPSL for 40 epochs using Adam with a learning rate of 3 × 10 −4 and a batch size of 128. The contrastive temperature is set to τ = 0 .07 . During inference, we retain K = 3 candidate categories and set the entropy temperature to τe = 0 .07 . Candidate-constrained MLLM reasoning is triggered when H ≥ δ, with δ = 0 .60 fixed across all experiments. 
+
+Overall Comparison 
+
+We compare ProtoRAG with representative baselines from four methodological families. Specifically, LEGNet, LW-GANet, and Strip R-CNN are included as standard detec-tors; FPD, SAE-FSDet, and PiDiViT as few-shot detectors; YOLO-World, LAE-DINO, and VisTex-OVLM as open-vocabulary or image-prompted detectors; and DINOv3-kNN, ProtoNet, Tip-Adapter, and RAR-Adapted as retrieval-augmented methods. All methods use the same support splits when applicable. Table 1 shows distinct performance trends across differ-ent detection paradigms. Standard and few-shot detectors generally benefit from additional support images, but re-main substantially behind retrieval-based approaches, par-ticularly on MAR20 and FAIR1M-2.0. This suggests that sparse annotations provide limited supervision for jointly learning object localization and subtle fine-grained category boundaries. Meanwhile, open-vocabulary detectors provide zero-shot detection capability, but their adaptation to visual support remains uneven. In particular, the nearly unchanged performance of the image-prompted VisTex-OVLM across different shot settings indicates that generic image prompts do not readily capture domain-specific fine-grained distinc-tions. Furthermore, the controlled retrieval baselines achieve stronger performance than most detector-based methods by combining Qwen3-VL localization with DINOv3 visual matching. For example, ProtoNet reaches 69.26 mAP 50 on MAR20 under the 10-shot setting, demonstrating the effec-tiveness of comparing localized objects with visual proto-types. However, the relative performance of DINOv3-kNN, ProtoNet, Tip-Adapter, and RAR-Adapted varies across datasets and shot settings. This variation indicates that re-trieval in a generic representation space does not consistently produce discriminative and stable fine-grained prototypes. Against these baselines, ProtoRAG achieves the best per-formance across all nine few-shot evaluations. At K = 10 ,it surpasses the strongest competing method on MAR20, HRSC2016, and FAIR1M-2.0 by 14.80, 2.27, and 4.04 mAP 50 points, respectively. More importantly, the con-trolled retrieval baselines share the same DINOv3–Qwen3-VL pipeline with ProtoRAG; therefore, the consistent im-provements over this group cannot be attributed solely to MLLM localization. Instead, they demonstrate the effective-ness of learning discriminative and stable prototypes and selectively reasoning over ambiguous candidates. The qual-itative results in Fig. 3 further show that ProtoRAG assigns accurate fine-grained labels to similar localized targets. 
+
+Ablation Studies 
+
+Contribution of Individual Components All ablations are conducted on MAR20 under the 10-shot setting. We in-GT  Ours  GT  Ours  GT  Ours  GT  Ours 
+
+MAR20  HRSC2016 Figure 3: Fine-grained detection results on MAR20 and HRSC2016 under the 10-shot setting. crementally evaluate the main components of ProtoRAG: prototype retrieval (PR), which constructs prototypes from frozen DINOv3 support features, Discriminative Prototype Space Learning (DPSL), and uncertainty-guided reasoning (UGR). ZS denotes zero-shot prediction. As shown in Ta-ble 2, introducing PR increases mAP 50 from 6.34 to 71.08, demonstrating the value of prototype-based visual match-ing for fine-grained recognition. DPSL further improves the result by 12.38 points to 83.46 by learning a more discrim-inative and stable prototype space, as visualized in Fig. 4. Finally, UGR raises mAP 50 to 84.06 by selectively invok-ing candidate-constrained MLLM reasoning for uncertain targets.                
+
+> Proposed Components Metric ZS PR DPSL UGR mAP 50
+> ✓6.34
+> ✓✓71.08
+> ✓✓✓83.46
+> ✓✓✓✓84.06
+
+Table 2: Contribution of the ProtoRAG components. 
+
+DPSL Training Objectives Table 3 evaluates the train-ing objectives of DPSL. Lsupcon achieves 73.05/88.15 Top-1/Top-3 accuracy, while Lpc obtains 84.92/94.29. Joint op-timization further improves these results, demonstrating the complementary effects of instance-level discrimination and category-level prototype stabilization. Frozen DINOv3 Embeddings DPSL-Adapted Embeddings 
+
+Figure 4: t-SNE visualization of feature discriminability 
+
+Training Objective Top-1 Acc. Top-3 Acc. 
+
+Lsupcon 73.05 88.15 
+
+Lpc 84.92 94.29 
+
+Lsupcon + Lpc 87.24 95.29 
+
+Table 3: Effect of the DPSL training objectives on retrieval. Retrieval accuracy is reported as Top-1/Top-3 (%). 
+
+Backbone Generalization and DPSL Efficiency Table 4 evaluates DPSL with six ViT backbones (Oquab et al. 2024; Dosovitskiy et al. 2021) to verify that its effectiveness is E-8 TU-160 B-52 GT Retrieval Top-1 Result ProtoRAG Result Retrieval Uncertainty            
+
+> Image 1 shows the full scene, where green boxes provide high-confidence cont-extual predictions, the red box marks the uncertain target, and orange boxes de-note other uncertain objects. Image 2 shows the target and reference instances for E-8 ,TU-160 , and B-52 . Compare their visual structures and return only the best-matching class: E-8 ,TU-160 , or B-52 .
+> Image 1 Image 2
+> Best-matching class: B-52 .
+> Visual Prompt: Text Prompt: MLLM Reasoning Response:
+
+## (a) (b)    
+
+> Query Top-1 Top-2 Top-3
+
+Figure 5: Qualitative illustration of uncertainty-guided reasoning. (a) Retrieval entropy identifies ambiguous detections. (b) Candidate-constrained MLLM reasoning corrects an erroneous Top-1 prediction using retrieved visual references. not limited to DINOv3 ViT-L/16. Although the large-scale pretrained visual backbones already provide meaningful re-trieval representations, DPSL consistently improves their Top-1 and Top-3 accuracy. Moreover, DPSL introduces only 0.43%–1.23% trainable parameters and requires minimal training time, demonstrating efficient adaptation across dif-ferent backbones. 
+
+Backbone w/o DPSL Top-1/Top-3 w/ DPSL Top-1/Top-3 Param. Ratio Train Time (s) 
+
+DINOv2-B 58.58 / 78.32 75.98 / 91.30 1.21% 34.12 DINOv2-L 64.97 / 84.77 81.27 / 92.79 0.43% 34.64 DINOv3-B 64.60 / 82.00 77.85 / 91.46 1.23% 34.34 DINOv3-L 76.23 / 89.36 87.24 / 95.29 0.43% 34.75 ViT-B † 39.09 / 66.40 62.58 / 85.34 1.22% 34.16 ViT-L † 40.01 / 66.99 65.99 / 87.72 0.43% 37.30 
+
+Table 4: Backbone generalization and DPSL training cost. Param. Ratio is the ratio of trainable DPSL parameters to backbone parameters. † denotes pretrained on ImageNet-1K. 
+
+Impacts of MLLM Choices ProtoRAG leverages the gen-eral coarse-localization capability of MLLMs (Wang et al. 2025; Bai et al. 2025b). As shown in Table 5, increasing coarse-detection F1 from 58.59 to 94.94 improves the final mAP 50 from 46.78 to 84.06, highlighting the importance of reliable localization for downstream fine-grained retrieval. 
+
+MLLM Coarse Fine-Grained Precision Recall F1 mAP 50 
+
+InternVL3.5-8B 58.73 58.46 58.59 46.78 Qwen2.5-VL-7B 86.21 70.43 77.53 57.92 Qwen3-VL-8B 93.10 96.85 94.94 84.06 
+
+Table 5: Effect of different MLLMs on coarse detection and final fine-grained detection. 
+
+Impacts of Uncertainty-Guided Reasoning Table 6shows that the reasoning trigger rate decreases from 14.22% at K = 3 to 6.34% at K = 10 , indicating that larger sup-port sets produce more confident retrieval results. Neverthe-less, uncertainty-guided reasoning improves mAP 50 by 0.99, 0.80, and 0.60 points at K = 3 , 5, and 10, respectively. As illustrated in Fig. 5, high retrieval entropy identifies difficult instances with ambiguous candidate scores. In this example, direct Top-1 retrieval misclassifies a B-52 as E-8, whereas candidate-constrained MLLM reasoning compares the query with the retrieved visual references and recovers the correct B-52 category. This demonstrates that retrieval entropy effec-tively routes uncertain instances to fine-grained reasoning. 
+
+K Trig. (%) Corr. (%) mAP 50 (Top-1 → +UGR) 
+
+3 14.22 60.29 57.83 → 58.82 +0.99 
+
+5 9.62 66.60 72.97 → 73.76 +0.80 
+
+10 6.34 66.77 83.46 → 84.06 +0.60 
+
+Table 6: Uncertainty-guided reasoning at different settings. Trig. is the trigger rate; Corr. is the probability that a pre-diction changed by triggered reasoning is corrected. Super-scripts are absolute mAP 50 gains. 
+
+## Conclusion 
+
+In this paper, we introduce ProtoRAG, a prototype-based retrieval-augmented framework for few-shot fine-grained ob-ject detection in remote sensing imagery. ProtoRAG com-bines MLLM-based coarse-grained localization with task-specific prototype retrieval, where DPSL learns discrim-inative and stable prototypes from limited support anno-tations, and retrieval-entropy-based uncertainty selectively triggers candidate-constrained reasoning for ambiguous tar-gets. Extensive experiments on three challenging bench-marks demonstrate consistent improvements over represen-tative baselines, validating prototype retrieval as an effective approach for adapting MLLMs to remote sensing FGOD. References 
+
+Bai, S.; Cai, Y.; Chen, R.; Chen, K.; Chen, X.; Cheng, Z.; Deng, L.; Ding, W.; Gao, C.; Ge, C.; et al. 2025a. Qwen3-VL Technical Report. arXiv preprint arXiv:2511.21631 .Bai, S.; Chen, K.; Liu, X.; Wang, J.; Ge, W.; Song, S.; Dang, K.; Wang, P.; Wang, S.; Tang, J.; et al. 2025b. Qwen2.5-VL Technical Report. arXiv preprint arXiv:2502.13923 .Cheng, G.; Li, Q.; Wang, G.; Xie, X.; Min, L.; and Han, J. 2023. SFRNet: Fine-Grained Oriented Object Recogni-tion via Separate Feature Refinement. IEEE Transactions on Geoscience and Remote Sensing , 61: 1–10. Cheng, T.; Song, L.; Ge, Y.; Liu, W.; Wang, X.; and Shan, Y. 2024. YOLO-World: Real-Time Open-Vocabulary Object Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 16901–16911. Chu, Y.; Ye, M.; and Qian, Y. 2024. Fine-Grained Im-age Recognition Methods and Their Applications in Remote Sensing Images: A Review. IEEE Journal of Selected Top-ics in Applied Earth Observations and Remote Sensing , 17: 19640–19667. Cover, T.; and Hart, P. 1967. Nearest Neighbor Pattern Clas-sification. IEEE Transactions on Information Theory , 13(1): 21–27. Dosovitskiy, A.; Beyer, L.; Kolesnikov, A.; Weissenborn, D.; Zhai, X.; Unterthiner, T.; Dehghani, M.; Minderer, M.; Heigold, G.; Gelly, S.; Uszkoreit, J.; and Houlsby, N. 2021. An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale. In International Conference on Learn-ing Representations .Guan, Q.; Liu, Y.; Chen, L.; Zhao, S.; and Li, G. 2023. Aircraft Detection and Fine-Grained Recognition Based on High-Resolution Remote Sensing Images. Electronics ,12(14): 3146. Jia, H.; Guo, Q.; Chen, J.; Wang, F.; Wang, H.; and Xu, F. 2021. Adaptive Component Discrimination Network for Airplane Detection in Remote Sensing Images. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 14: 7699–7713. Kuckreja, K.; Danish, M. S.; Naseer, M.; Das, A.; Khan, S.; and Khan, F. S. 2024. GeoChat: Grounded Large Vision-Language Model for Remote Sensing. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 27831–27840. Liu, Y.; Pan, Z.; Yang, J.; Zhang, B.; Zhou, G.; Hu, Y.; and Ye, Q. 2024. Few-Shot Object Detection in Remote-Sensing Images via Label-Consistent Classifier and Gradual Regression. IEEE Transactions on Geoscience and Remote Sensing , 62: 1–14. Liu, Z.; Sun, Z.; Zang, Y.; Li, W.; Zhang, P.; Dong, X.; Xiong, Y.; Lin, D.; and Wang, J. 2026. RAR: Retrieving and Ranking Augmented MLLMs for Visual Recognition. IEEE Transactions on Image Processing , 35: 388–401. Liu, Z.; Yuan, L.; Weng, L.; and Yang, Y. 2017. A High Res-olution Optical Satellite Image Dataset for Ship Recognition and Some New Baselines. In Proceedings of the Interna-tional Conference on Pattern Recognition Applications and Methods , volume 2, 324–331. Lu, W.; Chen, S.-B.; Li, H.-D.; Shu, Q.-L.; Ding, C. H. Q.; Tang, J.; and Luo, B. 2025. LEGNet: A Lightweight Edge-Gaussian Network for Low-Quality Remote Sensing Image Object Detection. In Proceedings of the IEEE/CVF Inter-national Conference on Computer Vision Workshops , 2865– 2874. Lu, W.; Yang, X.; and Chen, S.-B. 2026. LWGANet: Ad-dressing Spatial and Channel Redundancy in Remote Sens-ing Visual Tasks with Light-Weight Grouped Attention. In 
+
+Proceedings of the AAAI Conference on Artificial Intelli-gence , volume 40, 7574–7582. Oquab, M.; Darcet, T.; Moutakanni, T.; Vo, H. V.; Szafraniec, M.; Khalidov, V.; Fernandez, P.; Haziza, D.; Massa, F.; El-Nouby, A.; et al. 2024. DINOv2: Learning Robust Visual Features without Supervision. Transactions on Machine Learning Research .Ouyang, L.; Fang, L.; and Ji, X. 2022. Multigranularity Self-Attention Network for Fine-Grained Ship Detection in Remote Sensing Images. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 15: 9722– 9732. Ouyang, L.; Guo, G.; Fang, L.; Ghamisi, P.; and Yue, J. 2023. PCLDet: Prototypical Contrastive Learning for Fine-Grained Object Detection in Remote Sensing Images. IEEE Transactions on Geoscience and Remote Sensing , 61: 1–11. Pan, J.; Liu, Y.; Fu, Y.; Ma, M.; Li, J.; Paudel, D. P.; Van Gool, L.; and Huang, X. 2025. Locate Anything on Earth: Advanc-ing Open-Vocabulary Object Detection for Remote Sensing Community. In Proceedings of the AAAI Conference on Ar-tificial Intelligence , volume 39, 6281–6289. Siméoni, O.; Vo, H. V.; Seitzer, M.; Baldassarre, F.; Oquab, M.; Jose, C.; Khalidov, V.; Szafraniec, M.; Yi, S.; Ra-mamonjisoa, M.; et al. 2025. DINOv3. arXiv preprint arXiv:2508.10104 .Snell, J.; Swersky, K.; and Zemel, R. S. 2017. Prototypical Networks for Few-Shot Learning. In Advances in Neural Information Processing Systems , volume 30. Sun, X.; Wang, P.; Yan, Z.; Xu, F.; Wang, R.; Diao, W.; Chen, J.; Li, J.; Feng, Y.; Xu, T.; et al. 2022. FAIR1M: A Benchmark Dataset for Fine-Grained Object Recognition in High-Resolution Remote Sensing Imagery. ISPRS Journal of Photogrammetry and Remote Sensing , 184: 116–130. Wang, W.; Gao, Z.; Gu, L.; Pu, H.; Cui, L.; Wei, X.; Liu, Z.; Jing, L.; Ye, S.; Shao, J.; et al. 2025. InternVL3.5: Advancing Open-Source Multimodal Models in Versatility, Reasoning, and Efficiency. arXiv preprint arXiv:2508.18265 .Wang, Y.; Chen, H.; Zhang, Y.; and Li, G. 2024a. Relevance Pooling Guidance and Class-Balanced Feature Enhancement for Fine-Grained Oriented Object Detection in Remote Sens-ing Images. Remote Sensing , 16(18): 3494. Wang, Z.; Yang, B.; Yue, H.; and Ma, Z. 2024b. Fine-Grained Prototypes Distillation for Few-Shot Object Detec-tion. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 38, 5859–5866. Wu, Y.; Zhou, Y.; Saiyin, J.; Wei, B.; and Xu, Y. 2025. Visual Textualization for Image Prompted Object Detection. In Proceedings of the IEEE/CVF International Conference on Computer Vision , 20900–20910. Yu, W.; Cheng, G.; Wang, M.; Yao, Y.; Xie, X.; Yao, X.; and Han, J. 2023. MAR20: A Benchmark for Military Aircraft Recognition in Remote Sensing Images. National Remote Sensing Bulletin , 27(12): 2688–2696. Yuan, X.; Zheng, Z.; Li, Y.; Liu, X.; Liu, L.; Li, X.; Hou, Q.; and Cheng, M.-M. 2026. Strip R-CNN: Large Strip Convo-lution for Remote Sensing Object Detection. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 40, 12259–12267. Zhang, R.; Zhang, W.; Fang, R.; Gao, P.; Li, K.; Dai, J.; Qiao, Y.; and Li, H. 2022. Tip-Adapter: Training-Free Adaption of CLIP for Few-Shot Classification. In Computer Vision – ECCV 2022 , 493–510. Zhou, H.; Liu, Y.; Mo, C.; Li, W.; Peng, B.; and Liu, L. 2025. When Pixel Difference Patterns Meet ViT: PiDiViT for Few-Shot Object Detection. In Proceedings of the IEEE/CVF In-ternational Conference on Computer Vision , 24309–24318.

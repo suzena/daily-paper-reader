@@ -1,0 +1,826 @@
+Title: Dual-Layer Semantic-Spatial Belief Mapping for Aerial Object Goal Navigation
+
+URL Source: https://arxiv.org/pdf/2609.08164v1
+
+Published Time: Wed, 09 Sep 2026 03:42:34 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+> IEEE TRANSACTIONS ON MULTIMEDIA 1
+
+# Dual-Layer Semantic-Spatial Belief Mapping for Aerial Object Goal Navigation 
+
+Jianqiang Xiao, Xiang Deng, Yuexuan Sun, Yanjin Wu, Wenbiao Yan, and Liqiang Nie* 
+
+Abstract —Aerial Object Goal Navigation (ObjectNav) requires an unmanned aerial vehicle (UAV) to locate a described target in an unknown outdoor environment using onboard visual observations. Vision-language models (VLMs) provide a natural means of interpreting open-ended target descriptions and visual observations, but their frame-level outputs are often noisy, sparse, and spatially transient, limiting their effectiveness for sustained autonomous search. We propose AeroBelief, a dual-layer semantic-spatial belief mapping framework that transforms transient VLM observations into persistent spatial guidance. The framework separates broad contextual plausibility from target-specific evidence. An intuition layer accumulates scene-level semantic cues for exploration, while an evidence layer preserves qualified target-specific observations for approach and confirmation. Evidence-gated fusion combines the two layers into spatial belief hotspots for planner-level decision making. To improve observation reliability before spatial accumulation, we further introduce object-conditioned visual reasoning with conservative evidence qualification, which assesses candidate target-specific observations according to contextual consistency and target-level verification requirements. In parallel, egocentric regional guidance converts quadtree coverage into UAV-centered, yaw-aligned directional proposals and stabilizes them through temporal commitment across steps. Its regional scoring operates independently of semantic belief values, thereby maintaining exploration pressure, reducing repeated low-gain search, and limiting the premature dominance of local semantic hotspots. Experiments on the UAV-ON benchmark show that AeroBelief achieves the best reported overall SR, OSR, and SPL among the compared methods, reaching 21.61%, 35.57%, and 10.62, respectively. These results support the effectiveness of persistent semantic-spatial belief, conservative evidence qualification, and temporally stable regional guidance for aerial ObjectNav. Code and implementation details are publicly available at https:// github.com/Shawnjx/AeroBelief. 
+
+Index Terms —Aerial object goal navigation, vision-language models, semantic-spatial belief mapping, spatial memory. 
+
+I. Introduction 
+
+# AUTONOMOUS unmanned aerial vehicles (UAVs) are increasingly expected to operate in large-scale, open, and partially unknown environments for applications such as infrastructure inspection [1], patrol and monitoring [2], search and rescue [3], and aerial target tracking [4]. A fundamental capability in these scenarios is aerial object goal navigation (ObjectNav) [5], where a UAV searches for and approaches a user-specified target based on a high-level semantic descrip-tion rather than following a predefined waypoint sequence. Compared with ground-based ObjectNav [6] and instruction-following vision-language navigation [7], [8], this setting presents several distinctive challenges. The target location is 
+
+> Manuscript received XXXX; revised XXXX.
+
+unknown, the observation viewpoint varies with both horizon-tal motion and altitude, and the UAV needs to reason over large outdoor spaces characterized by occlusion, sparse target visibility, and visually similar background structures. Existing embodied navigation research has advanced along complementary directions in spatial exploration and semantic reasoning. Map-based exploration, modular planning, and hi-erarchical policy learning support systematic exploration and goal-directed navigation [9]–[11]. ObjectNav methods further incorporate scene priors, learned potential functions, and hi-erarchical object–zone relations to estimate promising search regions when the target is not directly observable [12]–[14]. In parallel, vision-language navigation and recent LLM/VLM-based agents employ language-conditioned reasoning to align visual observations with instructions, maintain navigation con-text, and generate navigation decisions [15]–[18]. Collectively, these studies suggest that effective navigation benefits from coupling semantic interpretation with persistent spatial mem-ory. Adapting these mechanisms to aerial ObjectNav, however, remains nontrivial because the agent receives an open-ended target description rather than route-level guidance and needs to infer both promising search regions and informative aerial viewpoints in a large outdoor environment with limited struc-tural constraints. Three challenges are particularly relevant. First, VLM out-puts are typically frame-level semantic judgments with limited spatial persistence. A positive visual cue may disappear from subsequent observations as the UAV moves or changes altitude, and its contribution to later decisions can be lost unless it is preserved within a persistent spatial representation. Second, VLMs may blur the distinction between contextual plausibility and target-specific evidence. A building facade, for example, may provide a plausible context for an air conditioner, yet its presence alone does not constitute evidence that the target is visible. Treating contextual cues and target evidence in the same manner can generate misleading spatial hotspots and repeatedly draw the planner toward irrelevant locations. Third, exploration decisions made independently at each step may exhibit poor temporal consistency in large aerial environments. In the absence of stable coverage-oriented guidance, the UAV may repeatedly revisit explored areas, oscillate among similar directions, or concentrate excessively on local semantic cues while leaving substantial portions of the environment under-explored. To address these challenges, we propose AeroBelief, asemantic-spatial reasoning framework that transforms transient VLM judgments into persistent target-related spatial belief and stable exploration guidance. Object-conditioned visual reasoning derives target-specific cues and applies conservative arXiv:2609.08164v1 [cs.RO] 8 Sep 2026 IEEE TRANSACTIONS ON MULTIMEDIA 2
+
+evidence qualification before spatial accumulation. A dual-layer belief map maintains contextual intuition and quali-fied target evidence in separate layers, which are integrated through evidence-gated fusion to form spatial belief hotspots. In parallel, egocentric regional guidance projects quadtree coverage into UAV-centered directional bins and stabilizes the resulting proposal through temporal commitment. The two streams provide complementary information, with seman-tic belief supporting target-oriented reasoning and regional guidance maintaining systematic exploration when reliable evidence remains sparse. The planner jointly considers fine-grained belief hotspots and coarse coverage-oriented guidance, while a shared UAV execution backbone handles motion feasibility and safety. The main contributions of AeroBelief are summarized as follows.  
+
+> •
+
+We propose a dual-layer semantic-spatial belief mapping mechanism for aerial ObjectNav. The intuition layer ac-cumulates broad contextual cues with temporal forgetting, while the evidence layer preserves qualified target-specific observations. Evidence-gated fusion integrates the two layers to form spatial belief hotspots for planner-level decision making.  
+
+> •
+
+We introduce an object-conditioned visual reasoning module with conservative evidence qualification. Target-conditioned cues capture discriminative attributes, con-textual priors, and target-level verification requirements. Scene-context, core-evidence, and part–whole qualifica-tion restrict insufficiently supported target claims before they enter persistent spatial memory.  
+
+> •
+
+We present exploration-aware egocentric regional guidance with temporal commitment. The module projects quadtree coverage into UAV-centered, yaw-aligned directional bins whose scores are computed independently of semantic be-lief values. Temporal commitment stabilizes the resulting exploration proposal across steps, helping reduce direc-tional oscillation and redundant revisitation without relying on fixed world-space partitions or directly prescribing UAV actions. II. Related Work 
+
+A. Aerial Embodied Navigation 
+
+Aerial vision-language navigation extends conventional VLN to UAV agents operating in large-scale outdoor environments, where altitude variation, long-range observation, and three-dimensional motion introduce additional challenges. Aeri-alVLN introduced an early city-scale benchmark [7]. TravelUAV developed a realistic simulation platform for instruction-guided UAV navigation [19], while OpenFly introduced automated data generation and large-scale aerial VLN evaluation [20]. BEDI broadened the scope to embodied UAV perception, planning, and action generation [22]. CityNav and GeoText-1652 further explored landmark- and geography-aware aerial navigation [23], [24]. Recent LLM/VLM-based agents have investigated seman-tic planning, trajectory memory, geospatial reasoning, history-aware control, and open-vocabulary grounding [25]–[28]. These studies predominantly follow an instruction-guided paradigm in which language provides route, landmark, geographic, or destination cues. UAV-ON [5] instead formulates open-world aerial ObjectNav, where the UAV receives an instance-level semantic target description and autonomously determines where and how to search. The target may remain outside the current field of view for extended portions of an episode, making persis-tent spatial memory and systematic exploration particularly important. APEX combines dynamic spatio-semantic map-ping, reinforcement-learning-based action selection, and open-vocabulary target grounding [29], while OctMem-Agent orga-nizes RGB-D observations within an adaptive octree memory to support task-relevant retrieval and frontier-aware explo-ration [30]. Although these methods demonstrate the value of structured spatial memory, they do not explicitly separate broad contextual plausibility from qualified target-specific evidence before spatial accumulation. We address this distinction through object-conditioned visual reasoning with conservative evidence qualification and dual-layer semantic-spatial belief mapping, while egocentric regional guidance provides stable coverage-oriented exploration independently of semantic belief values. 
+
+B. Object Goal Navigation 
+
+Object goal navigation (ObjectNav) considers an embodied agent that searches for an instance of a specified object category in an unseen environment without route-level instructions. Habi-tat provides a widely used photorealistic simulation platform and evaluation infrastructure for embodied navigation research [6]. Learning-based approaches learn navigation policies from egocentric observations and goal labels through reinforcement learning, meta-learning, or hierarchical visual priors [21], [31], [32]. Modular approaches combine semantic mapping, goal prediction, and local planning [10], while generative mapping predicts semantic content in unobserved regions to support target search [45]. When the target is not directly observable, existing methods infer promising search regions using object– scene priors [12], learned spatial potential functions [13], or hierarchical object–zone relations [14]. Subsequent studies distinguish target search from target-directed navigation [44], establish competitive modular baselines [33], and examine the deployment of ObjectNav systems in real-world environ-ments [34]. Most ObjectNav methods focus on indoor ground agents and assume predefined object categories supported by struc-tured perception models or learned priors. Aerial ObjectNav instead involves three-dimensional motion, pose- and altitude-dependent outdoor observations, and open-ended target de-scriptions whose VLM interpretations may mix contextual plausibility with target-specific evidence. We explicitly separate these signals through distinct intuition and evidence layers rather than representing them within a single target-likelihood map. 
+
+C. Semantic Mapping for Active Search 
+
+Semantic mapping and spatial memory provide persistent representations for navigation in partially observed environ-ments. Occupancy-grid mapping represents free, occupied, and IEEE TRANSACTIONS ON MULTIMEDIA 3
+
+unknown space for geometric planning [35], while frontier-based exploration identifies boundaries between known and unknown regions to support systematic coverage [9]. Dense semantic mapping associates visual predictions with recon-structed geometry to form semantically enriched scene rep-resentations [36]. In aerial settings, active metric–semantic mapping jointly considers geometric and semantic uncertainty to guide multi-robot exploration [46]. Embodied navigation methods further employ learned metric mapping and global planning [38], topological spatial memory [37], and semantic prediction beyond observed regions [39]. For active object search, probabilistic and relational memories encode target likelihoods, semantic dependencies, and landmark associations to guide subsequent exploration [40], [41]. These approaches generally rely on structured semantic inputs such as detector outputs, segmentation probabilities, or fixed-category priors. VLM judgments are sparser and more semantically uncertain, and contextual compatibility does not necessarily indicate target presence. Aggregating such signals within a single representation may therefore produce unreliable spatial hotspots. We address this issue by separating contextual intuition from target-specific evidence through dual-layer belief mapping and evidence-gated fusion. In parallel, egocentric regional guidance uses quadtree coverage and temporal com-mitment to provide stable coverage-oriented guidance without introducing fixed world-space partitions or a separate global planner. III. Proposed Method 
+
+A. Task Formulation 
+
+We consider aerial ObjectNav in an unknown outdoor envi-ronment. At the beginning of each episode, the UAV receives a target specification 
+
+𝑔 = (𝑛 𝑔 , 𝑠 𝑔 , 𝑑 𝑔 ), (1) where 𝑛 𝑔 denotes the target name, 𝑠 𝑔 denotes its size category, and 𝑑 𝑔 denotes a natural-language description. The target position is not provided, and the UAV explores the environment using onboard visual observations. Let 𝑇 denote the terminal timestep. Success is recorded when the UAV explicitly issues a stop action within a predefined success radius, 
+
+𝑆 = ⊮ 𝑎 𝑇 = stop ∧ dist (x𝑇 , x𝑔 ) ≤ 𝛿  , (2) where x𝑇 denotes the UAV position at termination, x𝑔 denotes the target position, and 𝛿 is the success radius. This criterion distinguishes successful stopping from merely entering the target vicinity. For controlled comparisons among the variants of our framework, all variants share the same UAV execution backbone, including the action space, collision avoidance, boundary handling, altitude regulation, fallback recovery, and stop ver-ification. Further implementation details are provided in the supplementary material. 
+
+B. System Overview 
+
+Fig. 1 presents AeroBelief, which augments per-view VLM interpretation with persistent semantic-spatial belief and tem-porally stable exploration guidance. Object-conditioned visual reasoning constructs target-specific cues from the target speci-fication and initial observations, while conservative evidence qualification restricts insufficiently supported target claims before spatial accumulation. Contextual search support and qualified target evidence are then projected into a shared aerial search grid and accumulated in separate intuition and evidence layers. Evidence-gated fusion combines the two layers into spatial belief hotspots for target-oriented planning. In parallel, egocentric regional guidance projects quadtree coverage into UAV-centered, yaw-aligned bins and evaluates them according to exploration opportunity, reachability, and revisit-aware spatial efficiency. Regional scoring operates in-dependently of semantic belief values, while temporal commit-ment stabilizes the selected direction across steps. The planner jointly uses fine-grained belief hotspots and coarse coverage-oriented guidance, while the shared execution backbone filters infeasible actions and mitigates motion risks. 
+
+C. Object-Conditioned Visual Reasoning 
+
+Frame-level VLM interpretations may contain target-specific evidence, weak contextual support, and visually similar distrac-tors. We therefore introduce object-conditioned visual reasoning to interpret multi-view observations with respect to the episode target and conservatively qualify high-level target claims before spatial accumulation. The module first constructs a target-conditioned cue from the target specification and initial ob-servations, and then produces structured semantic observations for the dual-layer belief map. 
+
+1) Target-Conditioned Semantic Interpretation: Given the target specification 𝑔 = (𝑛 𝑔 , 𝑠 𝑔 , 𝑑 𝑔 ) and the episode-initial front, left, and right RGB observations, we construct a target-conditioned cue q once per episode. The cue captures discrim-inative target attributes, compositional part–whole structure, range-dependent appearance, supportive and suppressive scene contexts, and the visual criteria required for target-level verifi-cation. It serves as an interpretation prior rather than an action policy and guides the VLM in distinguishing target-specific observations from weaker contextual compatibility. At each semantic update step, the current multi-view observa-tions are interpreted with respect to q. For each processed view 
+
+𝑣 ∈ V , the VLM produces a structured semantic judgment 
+
+𝑟 𝑣 𝑡 =  𝑚 𝑣 𝑡 , 𝜅 𝑣 𝑡 , 𝑏 𝑣 𝑡 , 𝜌 𝑣 𝑡 , 𝜁 𝑣 𝑡 
+
+ , (3) where 𝑚 𝑣 𝑡 denotes the match type, 𝜅 𝑣 𝑡 denotes the confidence score, 𝑏 𝑣 𝑡 denotes the estimated distance band, 𝜌 𝑣 𝑡 denotes the semantic role of the observation, and 𝜁 𝑣 𝑡 denotes stop readiness. The match type takes one of four levels, namely exact , strong semantic , weak contextual , and none . Exact and strong semantic matches serve as candidate target-specific evidence, whereas weak contextual matches represent scene-level or component-level cues that may guide exploration but are insufficient for target confirmation. The semantic role further distinguishes the IEEE TRANSACTIONS ON MULTIMEDIA 4Task Input 
+
+Target Information 
+
+• Name 
+
+• Size 
+
+• Description 
+
+Multi-view RGB-D   
+
+> RGB Depth
+> Left View Right View
+> RGB Depth
+> Depth
+> Front View
+> RGB
+> RGB Depth
+> Down view
+
+Pose History 
+
+Coverage Statistics     
+
+> Quadtree Coverage Map View Footprint Projection Coverage Statistics
+> •Unknown
+> •Frontier
+> •Explored
+> •Recent Gain
+
+C2: Object-Conditioned Visual Reasoning   
+
+> Target Information
+> Target-Conditioned Cue Generator Horizontal Views
+> Front view Left view Right view
+> Cue Summary Suppressive Contexts
+> • distant buildings • traffic • sky
+> Supportive Contexts
+> • rooftop • building edge • crane area
+> Reasoning Hints
+> • gray jumpsuit • black accents • standing posture
+> Name: Human
+> Size: Medium
+> Description:
+> gray jumpsuit, black accents, standing figure
+> Current RGB Views Target-Conditioned Cue
+> Visual Reasoning Generator
+> Raw Semantic Observation
+> Scene-Context Conflict Insufficient Core Verification Part–Whole Mismatch
+> u
+> u
+> u
+
+C1: Dual-Layer Semantic-Spatial Belief Mapping 
+
+> (x, y, z, roll, pitch, yaw)
+> UAV Pose
+> Evidence Qualification
+> Evidence-Qualified Reasoning Output
+> Contextual Search Support Qualified Target Evidence
+
+𝐀 𝐀 :𝐀 𝐀 𝐀 : Scene Supportiveness Distance Band 
+
+𝐀 𝐀 𝐀 :
+
+> Match Score Match Type
+> Intuition Map Evidence Map
+
+𝐀 𝐀 𝐀 : Semantic Role Stop Readiness 
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+Evidence-Gated Fusion      
+
+> 𝐀 𝐀 = 𝐀 𝐀 + 𝐀 𝐀 (𝐀 𝐀 ) 𝐀 𝐀
+> 0 ≤ 𝐀 𝐀 (𝐀 𝐀 ) ≤ 1𝐀 𝐀
+> missing 0.3
+> sparse 0.5
+> sufficient 1.0
+> 𝐀 𝐀 (𝐀 𝐀 )
+> Fused Belief Map Direction-binned NMS
+> 𝐀𮠀𝐀𝐀𝐀𱀀
+> Top-K Directional Hotspots
+
+𝐀 𝐀 
+
+> Step 0
+
+MLLM Planner 
+
+Semantic Hotspots Regional Guidance 
+
+UAV Actions C3: Egocentric Regional Guidance                           
+
+> UAV Egocentric Partition
+> R00 R01 R02 R03 R04 R10 R11 R12 R13 R14 R20 R21 R23 R24 R30 R31 R32 R33 R34 R40 R41 R42 R43 R44
+> Exploration Opportunity Scoring Temporal Commitment Memory Regional Guidance UAV Pose
+> (x, y, z, roll, pitch, yaw)
+> 𝐀 𝐀 (𝐀) = 𝐀 𝐀 𝐀𴀀𴀀 (𝐀) + 𝐀 𝐀 𱀀𮠀𝐀𝐀𝐀 (𝐀) − 𝐀 𝐀 𴀀𮠀𝐀 (𝐀)
+> Exploration Opportunity
+> Unknown Area / Frontier / Interior Gaps
+> Directional Reachability
+> Heading Alignment / Travel Distance
+> Revisit-Aware Spatial Penalty
+> Boundary / Footprint / Revisit
+> • gray • gray
+> Context Projection Evidence Projection
+> R20
+> Recent Committed History
+> R20 R20 R31 t-3 t-2 t-1 t
+> Rank 1
+> Candidate Bin Ranking
+> 23Region Score R31 R21 R20
+> 0.83 0.75 0.63
+> Active Bin ：
+> Cooldown ：
+> Progress ：
+> R31 0low Commitment Decision
+> Keep R20/
+> Update to R31
+> Active: Decision: R21 UPDATE / KEEP
+> High Low
+> Committed Candidate
+
+Translation Rotation Stop 
+
+Action Selection               
+
+> 𝐀 𝐀 score
+> left 151 °18m 0.82
+> front-left 96 °21m 0.64
+> right 32 °28m 0.52
+> R00 R10 R20 R40 R01 R11 R21 R41 R02 R12 R22 R42 R03 R13 R23 R43 R04 R14 R24 R44 R30 R31 R32 R33 R34
+
+𝐀 𝐀 𝐀 :𝐀 𝐀 𝐀 :
+
+Fig. 1. Overview of the proposed framework. C2 performs target-conditioned visual reasoning with conservative evidence qualification. C1 projects and accumulates contextual support and qualified target evidence in separate intuition and evidence layers, which are fused into spatial belief hotspots. C3 converts quadtree coverage into egocentric directional guidance with temporal commitment. The planner jointly uses semantic belief and coverage-oriented guidance, while the shared UAV execution backbone filters infeasible actions and mitigates motion risks. 
+
+canonical target from target components, adjacent objects, and ambiguous matches. Separately, we derive a scene-supportiveness score 𝜂 𝑣 𝑡 ∈[0, 1] by relating the interpreted scene categories and visible objects to the supportive and suppressive context priors encoded in q. Together, 𝜂 𝑣 𝑡 and the estimated distance band 𝑏 𝑣 𝑡 provide contextual search support for subsequent intuition-layer projec-tion without constituting direct evidence of target presence. 
+
+2) Conservative Evidence Qualification: Despite target con-ditioning, the VLM may still overstate target presence when only contextual, partial, or visually similar cues are observed. Before spatial accumulation, we apply conservative evidence qualification to each structured observation and obtain ˆ𝑟 𝑣 𝑡 =   ˆ𝑚 𝑣 𝑡 , 𝜅 𝑣 𝑡 , 𝑏 𝑣 𝑡 , ˆ𝜌 𝑣 𝑡 , ˆ𝜁 𝑣 𝑡 
+
+ , (4) where the qualified match type ˆ 𝑚 𝑣 𝑡 , semantic role ˆ 𝜌 𝑣 𝑡 , and stop readiness ˆ 𝜁 𝑣 𝑡 may be revised when the available visual support is insufficient. The confidence score 𝜅 𝑣 𝑡 and distance band 𝑏 𝑣 𝑡 are retained. The qualification procedure does not strengthen weak observations into target-specific evidence. Qualification focuses on observations that assert exact or 
+
+strong semantic matches associated with the canonical tar-get. Three complementary conditions are examined. Scene-context conflict identifies claims dominated by suppressive contexts associated with potential false positives. Insufficient core verification identifies observations that do not satisfy the discriminative requirements encoded in the target-conditioned cue. Part–whole mismatch identifies responses triggered by an isolated target-like component or an adjacent object rather than the complete target. When the available support is insufficient, the match is reclassified as weak contextual , and its semantic role and stop-readiness signal are revised conservatively. Such an observation may still contribute to intuition-layer projection but is excluded from evidence-layer projection. This mechanism limits the persistent accumulation of insufficiently supported target claims while preserving useful contextual information for exploration. Fig. 2 illustrates this process in a representative episode. 
+
+D. Dual-Layer Semantic-Spatial Belief Mapping 
+
+The structured outputs produced by Sec. III-C remain frame-level signals and contain both contextual search support and qualified target-specific evidence. Accumulating these signals in a single map may conflate weak contextual cues with reliable evidence, while retaining only target-specific evidence would discard useful guidance before the target becomes visible. We therefore maintain two complementary layers over a shared world-frame aerial search grid. Each cell 𝑐 stores an intuition value 𝐼 𝑡 (𝑐 ) for context-guided exploration and an evidence value 
+
+𝐸 𝑡 (𝑐 ) for target approach and confirmation. The two layers receive different semantic inputs and follow different temporal update rules. 
+
+1) Layer-Specific Belief Update: For each view 𝑣 ∈ V , the qualified observation ˆ 𝑟 𝑣 𝑡 is projected into the search grid using the current UAV pose, viewing direction, estimated distance band, and observable spatial support. For layer 𝐿 ∈ { 𝐼, 𝐸 }, the resulting view-specific contribution is expressed as 
+
+Δ𝑣 𝐿,𝑡 (𝑐 ) = clip  𝛼 𝐿 ( ˆ𝑚 𝑣 𝑡 )𝜅 𝑣 𝑡 Φ𝑣 𝐿 (𝑐 ; 𝑏 𝑣 𝑡 , 𝑝 𝑡 ), 0, ¯Δ𝐿 
+
+ , (5) where 𝛼 𝐿 ( ˆ𝑚 𝑣 𝑡 ) denotes the layer-specific semantic contribution associated with the qualified match type, ¯ Δ𝐿 bounds the contri-IEEE TRANSACTIONS ON MULTIMEDIA 5Supportive Contexts:                 
+
+> •Building facade
+> •Facade
+> •Exterior wall
+> •Window
+> Task Information:
+> Name: PoliceCar
+> Size: Large
+> Description: white vehicle with black accents, roof-mounted red light bar, NYPD markings
+> Suppressive Contexts: Reasoning Hints:
+> •Rectangular vehicle shape
+> •White exterior with black accents
+> •Roof-mounted red light bar
+> •NYPD-style side markings
+> •Tree canopy
+> •Sky
+> Step 16 ：Generic Vehicle Candidate
+> Raw Match:
+> Candidate: Score: Stop Conf.:
+> NOT confirmed
+> •no police-specific cue
+> •no active confirmation
+> Action: Forward
+> Down view
+> Step 36 ：Target-like Car Verification Raw Match:
+> Candidate: Score: Stop Conf.:
+> Further verification required
+> •evidence not stable
+> Action: Forward
+> Front view
+> Qualification Step 38 ：Exact Police Car Confirmation Raw Match:
+> Candidate: Score: Stop Conf.:
+> Police-specific identity confirmed Action: Stop
+> Exact Police car 0.95 1.00 Strong semantic Car 0.90 0.80 Strong semantic Vehicle 0.75 0.75
+> Qualification
+> STOP → FORWARD
+> Qualification
+> Front view
+
+Fig. 2. Target-conditioned semantic interpretation and conservative evi-dence qualification in a representative episode. Target-specific cues distin-guish contextual support from candidate target evidence, while conservative qualification restricts insufficiently supported claims before evidence-layer accumulation. 
+
+bution of a single observation, and Φ𝑣 𝐿 incorporates distance-band modulation and spatial attenuation according to the UAV pose, viewing geometry, and observable support. Horizontal observations are projected using depth-informed visibility and angular support, whereas the downward observation is associ-ated with its ground footprint. The positive contributions from all processed views are trans-formed into the same world coordinate frame and aggregated through a per-cell maximum, 
+
+Δ𝐿,𝑡 (𝑐 ) = max  
+
+> 𝑣 ∈ V
+
+Δ𝑣 𝐿,𝑡 (𝑐 ), 𝐿 ∈ { 𝐼, 𝐸 }. (6) This max-belief aggregation avoids repeatedly adding over-lapping observations to the same cell. Non-positive intuition signals, when present, are incorporated conservatively through smoothing rather than accumulated as persistent target evidence. The intuition layer admits both target-specific and contextual semantic observations. Its admissible match set is 
+
+M𝐼 = {exact , strong semantic , weak contextual }. (7) Weak contextual observations can therefore guide exploration even when they are insufficient for target confirmation. When no explicit target match is available but the scene-supportiveness score 𝜂 𝑣 𝑡 is sufficiently high, a small bounded contextual prior is included in the intuition contribution and merged with other positive signals through the same max-belief update. This prior remains intentionally weak and cannot independently produce strong target belief. The intuition update applies a local max-belief operation followed by global temporal forgetting, 
+
+𝐼 loc  
+
+> 𝑡
+
+(𝑐 ) = min  ¯𝐼, max  𝐼 𝑡 −1 (𝑐 ), Δ𝐼,𝑡 (𝑐 ) , (8) 
+
+𝐼 𝑡 (𝑐 ) =
+
+(
+
+𝛾𝐼 loc  
+
+> 𝑡
+
+(𝑐 ), 𝛾𝐼 loc  
+
+> 𝑡
+
+(𝑐 ) ≥ 𝜏 clear ,
+
+0, otherwise , (9) where ¯𝐼 denotes the upper bound of the intuition value, 𝛾 
+
+is the temporal decay factor, and 𝜏 clear removes stale low-confidence cells. The local max operation retains the stronger of the previous belief and the current contribution, while global forgetting gradually removes outdated contextual support. The upper bound ¯ 𝐼 limits the maximum intuition value stored in each cell. The evidence layer is more selective. It admits only qualified target-specific observations whose match type belongs to 
+
+M𝐸 = {exact , strong semantic }, (10) and whose confidence score exceeds the evidence-admission threshold 𝜏 𝐸 . Observations reclassified as weak contextual , or failing to satisfy the confidence requirement, are excluded from evidence accumulation. The evidence update is defined as 
+
+𝐸 𝑡 (𝑐 ) = min  ¯𝐸, max  𝐸 𝑡 −1 (𝑐 ), Δ𝐸,𝑡 (𝑐 ) , (11) where ¯𝐸 denotes the maximum evidence value assigned to each cell. Unlike the intuition layer, the evidence layer does not decay within an episode. Qualified target evidence is therefore preserved when subsequent views temporarily lose target visibility because of motion, occlusion, or viewpoint change. 
+
+2) Evidence-Gated Fusion and Hotspot Interface: The intu-ition and evidence layers are integrated through evidence-gated fusion, 
+
+𝐹 𝑡 (𝑐 ) = clip 
+
+
+
+clip  𝐼 𝑡 (𝑐 ), 0, ¯𝐼 𝐹 
+
+
+
++ 𝜆 𝑡 (𝑔 𝑡 ) clip  𝐸 𝑡 (𝑐 ), 0, ¯𝐸 𝐹 
+
+ , 0, 1
+
+
+
+,
+
+(12) where ¯𝐼 𝐹 and ¯𝐸 𝐹 bound the respective contributions of the intuition and evidence layers during fusion. The evidence-gating state 𝑔 𝑡 takes one of three values, namely missing ,
+
+sparse , or sufficient . The fusion weight 𝜆 𝑡 (𝑔 𝑡 ) increases with the availability and reliability of qualified target evidence. When evidence is missing or sparse, the fused map remains primarily influenced by contextual intuition. Once sufficient evidence accumulates, its contribution is increased to support target approach and confirmation. This formulation preserves the distinct roles of contextual plausibility and target-specific evidence. Contextual cues guide exploration through the intuition layer but do not directly enter IEEE TRANSACTIONS ON MULTIMEDIA 6far_front _left far_front _left far_front far_front _right far_front _right far_front _left mid_front _left mid_front far_front _right mid_front _right far_left mid_left center far_right mid_right far_back _left mid_back _left mid_back far_back _right mid_back _right far_back _left far_back _left far_back far_back _right far_back _right                                                              
+
+> R00 R02 R01 R03 R04 R10 R12 R11 R13 R14 R20 R22 R21 R23 R24 R30 R32 R31 R33 R34 R40 R42 R41 R43 R44
+> Egocentric 5*5 Partition Temporal Commitment Quadtree Coverage State
+> Explored Unexplored Committed bin Candidate bin High low Committed
+> R21
+> score: 0.189
+> far_front_left
+> R11
+> Candidate score: 0.618
+> mid_left
+> DECISION: UPDATE / KEEP
+> Planner Guidance
+> Selected Direction mid_front_left LLM Action Preference
+> move_left rotate_left move_forward
+> 0.74 0.18 0.08
+> cooldown / release
+> Step 6 ：Region KEEP
+> R00 R01 R02 R03 R04 R10 R11 R12 R13 R14 R20 R21 R23 R24 R30 R31 R32 R33 R34 R40 R41 R42 R43 R44
+> Committed Bin Candidate Bin
+> Step 7 ：Region UPDATE
+> R00 R01 R02 R03 R04 R10 R11 R12 R13 R14 R20 R21 R23 R24 R30 R31 R32 R33 R34 R40 R41 R42 R43 R44
+> Committed Bin Candidate Bin
+> : Start : Target : Step 4-6 : Step 7-9
+> R21 Step7
+> Target ：Bus Stop
+> World Trajectory
+> Guidance memory
+
+Fig. 3. Egocentric regional guidance with temporal commitment in a represen-tative episode. Quadtree coverage is projected into UAV-centered, yaw-aligned directional bins to generate an instantaneous candidate. Temporal commitment retains or updates the selected direction across steps, and the committed direction is provided to the planner as coverage-oriented guidance. The bins represent egocentric directions rather than fixed world-space partitions. 
+
+the evidence term. In the ablation variant without the evidence layer, the evidence term is removed and the fused representation reduces to an intuition-only map. The fused belief map is further converted into a compact spatial interface for the planner. We extract the top-𝐾 directional belief hotspots 
+
+H𝑡 = {ℎ1, . . . , ℎ 𝐾 } (13) from 𝐹 𝑡 using direction-binned non-maximum suppression together with an explored-region penalty. Each hotspot summa-rizes a target-related spatial hypothesis through its directional sector, relative bearing, distance, and fused belief score. The hotspot set complements the rendered belief map by providing concise target-relevant spatial candidates. This fine-grained belief stream is jointly used with the egocentric regional guidance introduced in Sec. III-E. 
+
+E. Egocentric Regional Guidance 
+
+The dual-layer belief map provides fine-grained target-related guidance, but long-horizon aerial navigation also benefits from systematic coverage when reliable semantic evidence remains sparse. We therefore introduce an egocentric regional guidance stream whose regional scoring operates independently of se-mantic belief values. Quadtree coverage is projected into UAV-centered, yaw-aligned directional bins and evaluated accord-ing to exploration opportunity, reachability, and revisit-aware spatial efficiency. Temporal commitment stabilizes the selected direction across steps. The resulting guidance complements the fine-grained semantic belief stream without directly prescribing the executed action. 
+
+1) Egocentric Regional Proposal: Let 𝑝 𝑡 denote the current UAV pose and 𝜓 𝑡 its yaw. Each quadtree coverage node is transformed into the current body frame and assigned to one of the 5 × 5 heading-relative bins 
+
+R𝑡 =
+
+n
+
+𝑅 𝑡 𝑖 𝑗 
+
+o4
+
+𝑖, 𝑗 =0 . (14) The bins are reconstructed at each step according to the current 
+
+( 𝑝 𝑡 , 𝜓 𝑡 ). Rows follow the forward–backward body axis, columns follow the left–right body axis, and the central bin contains the UAV. Each 𝑅 𝑡 𝑖 𝑗 therefore represents an egocentric directional region rather than a persistent world-space partition. As the UAV moves or rotates, the same bin index may correspond to different world locations. Each bin is assigned a coverage-oriented score 
+
+𝑆 𝑡 (𝑅 ) = 𝑆 opp 
+
+𝑡 (𝑅 ) + 𝑆 reach 
+
+𝑡 (𝑅 ) − 𝑆 pen 
+
+𝑡 (𝑅 ), (15) where 𝑆 opp 
+
+𝑡 measures remaining exploration opportunity, 𝑆 reach 
+
+𝑡 
+
+evaluates directional reachability, and 𝑆 pen 
+
+𝑡 accounts for spatial inefficiency. These terms consider unexplored-area support, frontier and interior gaps, heading alignment, travel distance, boundary exposure, valid spatial support, and visitation history. Semantic belief values are not used in the regional score. The current coverage state yields an instantaneous candidate bin 
+
+𝑅 cand 
+
+𝑡 = arg max 
+
+𝑅 ∈ C 𝑡 
+
+𝑆 𝑡 (𝑅 ), (16) where C𝑡 ⊆ R 𝑡 denotes the set of geometrically valid bins under the current search-boundary constraints. The candidate is recomputed at each step and represents the most promising instantaneous exploration direction. 
+
+2) Temporal Commitment and Planner Coupling: Directly using 𝑅 cand 
+
+𝑡 at every step may produce unstable exploration because small variations in the coverage state can repeatedly change the highest-scoring direction. We therefore maintain a cross-step temporal commitment that either retains the previous directional preference or updates it to the current candidate, 
+
+𝑅 com 
+
+𝑡 =
+
+(𝑅 com 
+
+𝑡 −1 , KEEP ,𝑅 cand 
+
+𝑡 , UPDATE . (17) The previous commitment is retained while it remains useful and the search continues to make progress. It is updated when the candidate provides a sufficiently stronger exploration opportunity or when low progress, obstacles, or repeated visitation indicate that the current direction has become stale. A minimum commitment duration and switching hysteresis further reduce short-term directional oscillation. The commitment memory stores the selected egocentric bin identifier rather than a fixed world-space region. At each step, this identifier is interpreted with respect to the newly constructed body-frame grid, thereby preserving a relative directional preference as the UAV moves and rotates. The committed bin is converted into a coarse body-frame directional cue for the planner. This cue represents an explo-ration preference rather than an exact metric waypoint. The planner jointly considers it with the fine-grained semantic belief hotspots and current visual observations, and may depart from the regional preference when stronger target evidence or IEEE TRANSACTIONS ON MULTIMEDIA 7
+
+motion constraints support another action. The shared execution backbone subsequently handles collision avoidance, boundary constraints, and other motion-safety requirements. In the ablation variant without commitment memory, regional scoring and candidate generation remain active, but no regional state is retained across steps. The instantaneous candidate is therefore supplied directly to the planner at each step. Fig. 3 illustrates the regional proposal, temporal commitment, and planner coupling process. 
+
+F. Planner-Level Integration 
+
+At each step, the planner receives qualified semantic obser-vations, belief hotspots, committed regional guidance, recent pose–action history, and feasible-action information to produce a high-level discrete action proposal. A shared UAV execution layer then performs stop verification, collision avoidance, boundary and altitude handling, and fallback recovery for AeroBelief, the vanilla backbone, and all ablation variants. IV. Experiments 
+
+A. Experimental Setup 
+
+We evaluate AeroBelief on the UAV-ON test set following the standard evaluation protocol [5]. Each episode permits up to 150 actions within a 50 m search radius, and success requires an explicit stop within 20 m of the target. Baseline results are taken from the corresponding publications because several recent methods lack public implementations. A locally deployed Qwen3-VL-8B is used for both visual semantic reasoning and MLLM-based high-level planning [43]. Experiments run on four NVIDIA A800 GPUs with six parallel processes, each hosting two model instances. The full test-set evaluation takes approximately 13 days because every navigation step requires synchronous model inference. Given this computational cost, ablation studies use a fixed 200-episode subset with 25 episodes from each of eight representative scenes. It includes four open scenes (Barnyard, WinterTown, CityStreet, and Neighborhood) and four cluttered scenes (NYC, Venice, UrbanJapan, and WesternTown). All vari-ants use identical episodes and initial conditions, with invalid spawn configurations corrected using the same deterministic procedure. 
+
+B. Compared Methods 
+
+We compare AeroBelief with Random, CLIP-H, and AOA-F reported in UAV-ON [5], together with AerialVLN [7], NaVid [42], OpenFly [20], APEX [29], and OctMem-Agent [30]. Random selects actions without semantic guidance, CLIP-H uses image–text similarity as a heuristic search signal, and AOA-F combines vision-language scene interpretation with fixed-step aerial navigation. AerialVLN, NaVid, and OpenFly represent aerial vision-language navigation approaches, whereas APEX and OctMem-Agent are developed specifically for UAV-ON. The Vanilla Backbone retains the shared visual interpretation, MLLM planner, quadtree coverage representation, and UAV execution layer, while disabling target-conditioned reasoning, dual-layer belief mapping, and egocentric regional guidance. It serves as a shared-backbone MLLM baseline under the same execution setting. 
+
+C. Evaluation Metrics 
+
+We report Success Rate (SR), Oracle Success Rate (OSR), and Success weighted by Path Length (SPL). SR measures the percentage of episodes in which the UAV explicitly stops within 20 m of the target. OSR measures the percentage of all episodes in which the UAV enters the success radius before termination. Episodes terminated by collision are counted as failures. The OSR–SR gap reflects failures to convert target-vicinity discovery into successful stopping. SPL jointly measures navigation success and path efficiency. 
+
+D. Main Comparison 
+
+Table I reports the overall and size-stratified results on the UAV-ON test set. AeroBelief achieves the best reported overall SR, OSR, and SPL among the compared methods, reaching 21.61%, 35.57%, and 10.62, respectively. Compared with the strongest previously reported result for each metric, AeroBelief improves SR by 2.11 percentage points, OSR by 6.27 percentage points, and SPL by 0.48. The gains are particularly evident for small and medium targets, where AeroBelief ranks first across all three metrics. For large targets, it achieves the second-highest SR and SPL, although its OSR remains lower than those of several prior methods. The size-stratified results further reveal different navigation behaviors. Small targets exhibit the largest OSR–SR gap of 18.44 percentage points, suggesting that the UAV frequently reaches the target vicinity but does not always convert these opportuni-ties into successful stopping. Medium targets achieve the highest SR among the three size groups, while large targets obtain the highest size-specific SPL despite their lower OSR. This suggests that successful large-target episodes remain relatively path-efficient once a reliable approach direction is established. Overall, the results support the effectiveness of combining persistent semantic-spatial belief with stable coverage-oriented guidance for aerial ObjectNav. Fig. 4 presents three representative successful episodes. During early exploration, the intuition layer maintains broad contextual belief over potentially relevant regions. As qualified target-specific observations accumulate, the evidence layer pre-serves more reliable spatial cues, and the fused belief gradually concentrates around the target. The examples further show that the UAV may continue regional search, adjust its viewpoint or altitude, and reject ambiguous candidates before sufficient evidence is obtained. The resulting trajectories illustrate how AeroBelief transitions from broad exploration to evidence-guided approach and explicit stopping. 
+
+E. Ablation Study 
+
+Table II evaluates the proposed components on a fixed 200-episode subset. For each major module, we remove either the complete pathway or one of its key subcomponents. The belief variants remove both belief layers or only the evidence IEEE TRANSACTIONS ON MULTIMEDIA 8
+
+TABLE I Overall and size-stratified performance on the UAV-ON benchmark. APEX is reported only in the Total column because its published results use seen/unseen splits rather than target-size groups. Method Small Medium Large Total SR ↑ OSR ↑ SPL ↑ SR ↑ OSR ↑ SPL ↑ SR ↑ OSR ↑ SPL ↑ SR ↑ OSR ↑ SPL ↑
+
+Random 4.14 7.80 2.80 3.33 8.10 3.05 2.48 8.07 1.62 3.70 8.00 2.66 CLIP-H 2.86 8.43 1.51 10.95 16.67 7.17 13.04 19.25 10.53 6.20 11.90 4.15 AOA-F 4.45 16.38 1.61 10.48 17.62 6.36 14.29 21.74 10.66 7.30 17.50 4.06 AerialVLN 4.13 19.87 4.01 4.76 17.62 4.90 1.86 19.25 1.86 3.90 19.30 3.72 NaVid 10.02 29.55 4.41 11.43 26.44 5.95 17.39 30.73 15.03 11.50 29.10 6.44 OpenFly 12.40 26.23 6.35 10.00 20.48 4.19 13.04 31.65 7.56 12.00 25.90 6.09 APEX – – – – – – – – – 13.33 20.00 10.14 OctMem-Agent 18.91 29.57 6.03 18.09 26.66 6.27 23.60 31.67 7.80 19.50 29.30 6.37 AeroBelief (Ours) 20.67 39.11 9.11 25.31 32.72 12.03 20.16 26.05 14.40 21.61 35.57 10.62 Step 0: Initialization View: Right view Step 35: Regional Search View: Right view   
+
+> Step 75: Initial Detection View: Down view Step 89: Successful Stop View: Right view
+> Step 0: Initialization View: Right view Step 16: Regional Search View: Front view Step 42: View Reorientation View: Front view Step 45: Successful Stop View: Front view
+> Step 22: Height Adjustment View: Front view
+> Step 21: Height Adjustment View: Front view
+> Step 0: Initialization View: Front view Step 23: Regional Search View: Right view Step 44: Cross-view Candidate Rejection View: Right view Step 77: Successful Stop View: Right view Step 36: Semantic Candidate Detection View: Right view
+> Semantic Distractor Stop Confidence = 0.75 Stop Confidence = 0.1 Stop Confidence = 1.0 Target Target Target Target Stop Confidence = 0.75 Stop Confidence = 1.0 Stop Confidence = 1.0
+> Scene: NYC Episode: 00 Target: Dog Scene: Barnyard Episode: 36 Target: Safe Scene: BrushifyUrban Episode: 03 Target ：Human
+
+Fig. 4. Qualitative results from three successful episodes. Each example shows the UAV trajectory and the evolution of the intuition, evidence, and fused belief maps. 
+
+layer, the visual-reasoning variants remove the complete object-conditioned pathway or only conservative evidence qualifica-tion, and the regional-guidance variants remove the complete guidance module or only temporal commitment. Vanilla disables all proposed modules, while all variants share the same episodes, initial conditions, planner backbone, and UAV execution layer. We additionally report Collision and MaxCov, denoting the collision termination rate and the average maximum explored-area ratio across episodes, respectively. AeroBelief achieves the highest SR, OSR, and SPL and the lowest collision rate, supporting the effectiveness of combining the three proposed modules. In all three module groups, removing the complete pathway causes a larger performance degradation than removing only its paired subcomponent. This pattern supports the contributions of semantic-spatial belief 
+
+TABLE II Ablation results on the fixed 200-episode subset. Variant Navigation Performance Diagnostic Statistics SR ↑ OSR ↑ SPL ↑ Coll. ↓ MaxCov ↑
+
+Vanilla 11.00 22.50 5.95 39.50 23.5 w/o Dual-Layer Belief Mapping 15.50 30.00 6.76 36.00 27.8 w/o Evidence Layer 19.50 35.00 9.10 30.00 30.2 
+
+w/o Object-Conditioned Reasoning 16.00 27.00 8.72 35.00 25.7 w/o Evidence Qualification 20.50 35.00 9.80 30.50 29.1 w/o Regional Guidance 17.00 29.50 7.49 41.00 26.8 w/o Commitment Memory 18.00 32.50 9.42 33.00 27.5 AeroBelief 25.00 42.50 13.36 28.00 29.0 
+
+mapping, object-conditioned reasoning, and regional guidance, while the evidence layer, conservative evidence qualification, IEEE TRANSACTIONS ON MULTIMEDIA 9
+
+and temporal commitment provide additional gains. Compared with Vanilla, AeroBelief increases SR from 11.00% to 25.00% and reduces collision termination from 39.50% to 28.00%. Although removing the evidence layer produces a higher MaxCov, its lower SR and SPL indicate that broader coverage alone does not ensure effective target confirmation. Persistent target-specific evidence is therefore important for converting exploration into successful approach and stopping. V. Conclusion We presented AeroBelief, a dual-layer semantic-spatial belief mapping framework for vision-language aerial ObjectNav. It combines object-conditioned visual reasoning with conserva-tive evidence qualification, evidence-gated belief fusion, and egocentric regional guidance with temporal commitment. These components provide complementary target-related belief and coverage-oriented guidance for planner-level decision making. Experiments on UAV-ON show that AeroBelief achieves the best reported overall SR, OSR, and SPL among the compared methods, while the ablation results support the contribution of each major component. The current evaluation is limited to AirSim simulation, and sim-to-real transfer remains unvalidated. The gap between OSR and SR also indicates that reliable target confirmation and stop-ping remain important challenges. Future work will investigate real-world deployment, additional VLM backbones, improved stopping reliability, and stronger planner-level coordination between semantic belief and coverage-oriented guidance while preserving independent regional scoring. References 
+
+[1] K. W. Tse, R. Pi, W. Yang, et al., “Advancing UAV-based inspection system: The USSA-Net segmentation approach to crack quantification,” 
+
+IEEE Transactions on Instrumentation and Measurement , vol. 73, pp. 1– 14, 2024. [2] O. S. Oubbati, J. Alotaibi, F. Alromithy, et al., “A UAV-UGV cooperative system: Patrolling and energy management for urban monitoring,” IEEE Transactions on Vehicular Technology , 2025. [3] J. Wu, Y. Sun, D. Li, et al., “An adaptive conversion speed Q-learning algorithm for search and rescue UAV path planning in unknown envi-ronments,” IEEE Transactions on Vehicular Technology , vol. 72, no. 12, pp. 15391–15404, 2023. [4] Z. Liu, Y. Shang, T. Li, et al., “Robust multi-drone multi-target tracking to resolve target occlusion: A benchmark,” IEEE Transactions on Multi-media , vol. 25, pp. 1462–1476, 2023. [5] J. Xiao, Y. Sun, Y. Shao, et al., ”UAV-ON: A benchmark for open-world object goal navigation with aerial agents,” in Proc. ACM Int. Conf. Multimedia , 2025, pp. 13023–13029. [6] M. Savva, A. Kadian, O. Maksymets, et al., “Habitat: A platform for embodied AI research,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2019, pp. 9339–9347. [7] S. Liu, H. Zhang, Y. Qi, et al., “AerialVLN: Vision-and-language navigation for UAVs,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 15384–15394. [8] P. Anderson, Q. Wu, D. Teney, et al., “Vision-and-language navigation: Interpreting visually-grounded navigation instructions in real environ-ments,” in Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition , 2018, pp. 3674–3683. [9] B. Yamauchi, “A frontier-based approach for autonomous exploration,” in Proceedings of the IEEE International Symposium on Computational Intelligence in Robotics and Automation , 1997, pp. 146–151. [10] D. S. Chaplot, D. P. Gandhi, A. Gupta, et al., “Object goal navigation using goal-oriented semantic exploration,” in Advances in Neural Information Processing Systems , vol. 33, 2020, pp. 4247–4258. [11] S. Wang, Z. Wu, X. Hu, et al., “Skill-based hierarchical reinforcement learning for target visual navigation,” IEEE Transactions on Multimedia ,vol. 25, pp. 8920–8932, 2023. [12] W. Yang, X. Wang, A. Farhadi, et al., “Visual semantic navigation using scene priors,” in Proceedings of the International Conference on Learning Representations , 2019. [13] S. K. Ramakrishnan, D. S. Chaplot, Z. Al-Halah, et al., “PONI: Potential functions for objectgoal navigation with interaction-free learning,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 18890–18900. [14] S. Zhang, X. Song, X. Yu, et al., “HOZ++: Versatile hierarchical object-to-zone graph for object navigation,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2025. [15] S. Wu, X. Fu, F. Wu, et al., “Vision-and-language navigation via latent semantic alignment learning,” IEEE Transactions on Multimedia , vol. 26, pp. 8406–8418, 2024. [16] G. Zhou, Y. Hong, and Q. Wu, “NavGPT: Explicit reasoning in vision-and-language navigation with large language models,” in Proceedings of the AAAI Conference on Artificial Intelligence ,[17] J. Chen, B. Lin, R. Xu, et al., “MapGPT: Map-guided prompting with adaptive path planning for vision-and-language navigation,” in Proceed-ings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 2024, pp. 9796–9810. [18] B. Lin, Y. Nie, Z. Wei, et al., “NavCoT: Boosting LLM-based vision-and-language navigation via learning disentangled reasoning,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2025. vol. 38, no. 7, 2024, pp. 7641–7649. [19] X. Wang, D. Yang, H. Kwan, et al., “Towards realistic UAV vision-language navigation: Platform, benchmark, and methodology,” in Pro-ceedings of the International Conference on Learning Representations ,2025, pp. 7292–7310. [20] Y. Gao, C. Li, Z. You, et al., “OpenFly: A comprehensive platform for aerial vision-language navigation,” arXiv preprint arXiv:2502.18041 , 2025. [21] T. Wang, L. Lyu, H. Liu, et al., “Progressive visual navigation via hierarchical priors: A target-centric framework based on feature extraction and background alignment,” IEEE Transactions on Multimedia , 2026. [22] M. Guo, M. Wu, J. He, et al., “BEDI: A comprehensive benchmark for evaluating embodied agents on UAVs,” ISPRS Journal of Photogramme-try and Remote Sensing , vol. 232, pp. 910–936, 2026. [23] J. Lee, T. Miyanishi, S. Kurita, et al., “CityNav: A large-scale dataset for real-world aerial navigation,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2025, pp. 5912–5922. [24] M. Chu, Z. Zheng, W. Ji, et al., “Towards natural language-guided drones: GeoText-1652 benchmark with spatial relation matching,” in European Conference on Computer Vision . Cham, Switzerland: Springer Nature Switzerland, 2024, pp. 213–231. [25] H. Cai, J. Dong, J. Tan, et al., “FlightGPT: Towards generalizable and interpretable UAV vision-and-language navigation with vision-language models,” in Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , 2025, pp. 6670–6687. [26] H. Xu, Y. Hu, C. Gao, et al., “GeoNav: Empowering MLLMs with dual-scale geospatial reasoning for language-goal aerial navigation,” Pattern Recognition , 2026, Art. no. 113365. [27] T. Li, T. Huai, Z. Li, et al., “SkyVLN: Vision-and-language navigation and NMPC control for UAVs in urban environments,” in Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems ,2025, pp. 17199–17206. [28] Y. Zhang, H. Yu, J. Xiao, et al., “Grounded vision-language navigation for UAVs with open-vocabulary goal understanding,” arXiv preprint arXiv:2506.10756 , 2025. [29] D. Zhang, P. Chen, X. Xia, et al., ”APEX: A decoupled memory-based explorer for asynchronous aerial object goal navigation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2026. [30] J. Zhou, J. Miao, Y. Lin, et al., ”Memory-augmented scene understanding and exploration for open-world aerial object-goal navigation,” in Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2026, pp. 21616–21626. [31] Y. Zhu, R. Mottaghi, E. Kolve, et al., “Target-driven visual navigation in indoor scenes using deep reinforcement learning,” in Proceedings of the IEEE International Conference on Robotics and Automation , 2017, pp. 3357–3364. [32] M. Wortsman, K. Ehsani, M. Rastegari, et al., “Learning to learn how to learn: Self-adaptive visual navigation using meta-learning,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2019, pp. 6750–6759. IEEE TRANSACTIONS ON MULTIMEDIA 10 
+
+[33] H. Luo, A. Yue, Z. W. Hong, et al., “STUBBORN: A strong baseline for indoor object navigation,” in Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems , 2022, pp. 3287–3293. [34] T. Gervet, S. Chintala, D. Batra, et al., “Navigating to objects in the real world,” Science Robotics , vol. 8, no. 79, Art. no. eadf6991, 2023. [35] A. Elfes, “Using occupancy grids for mobile robot perception and navigation,” Computer , vol. 22, no. 6, pp. 46–57, 1989. [36] J. McCormac, A. Handa, A. Davison, et al., “SemanticFusion: Dense 3D semantic mapping with convolutional neural networks,” in Proceedings of the IEEE International Conference on Robotics and Automation , 2017, pp. 4628–4635. [37] D. S. Chaplot, R. Salakhutdinov, A. Gupta, et al., “Neural topological SLAM for visual navigation,” in Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition , 2020, pp. 12875– 12884. [38] D. S. Chaplot, D. Gandhi, S. Gupta, et al., “Learning to explore using active neural SLAM,” in Proceedings of the International Conference on Learning Representations , 2020. [39] G. Georgakis, B. Bucher, K. Schmeckpeper, et al., “Learning to map for active semantic goal navigation,” arXiv preprint arXiv:2106.15648 , 2021. [40] Y. Wu, Y. Wu, A. Tamar, et al., “Bayesian relational memory for semantic visual navigation,” in Proceedings of the IEEE/CVF International Con-ference on Computer Vision , 2019, pp. 2769–2779. [41] Z. Zeng, A. R¨ ofer, and O. C. Jenkins, “Semantic linking maps for active visual object search,” in Proceedings of the IEEE International Conference on Robotics and Automation , 2020, pp. 1984–1990. [42] J. Zhang, K. Wang, R. Xu, et al., “NaVid: Video-based VLM plans the next step for vision-and-language navigation,” in Proceedings of Robotics: Science and Systems , 2024. [43] S. Bai, Y. Cai, R. Chen, et al., “Qwen3-VL technical report,” arXiv preprint arXiv:2511.21631 , 2025. [44] R. Dang, L. Wang, Z. He, et al., “Search for or navigate to? Dual adaptive thinking for object navigation,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 8250–8259. [45] S. Zhang, X. Yu, X. Song, et al., “Imagine before go: Self-supervised generative map for object goal navigation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 16414–16425. [46] X. Liu, A. Prabhu, F. Cladera, et al., “Active metric-semantic mapping by multiple aerial robots,” in Proceedings of the IEEE International Conference on Robotics and Automation , 2023, pp. 3282–3288. IEEE TRANSACTIONS ON MULTIMEDIA 11 
+
+# Supplementary Material 1                 
+
+> Target Information
+> •Name
+> •Size
+> •Description
+> Front view Left view Right view
+> Task Initialization Object-Conditioned Cue Generation Target-Conditioned Cue Collision Check
+> Front view Left view Right view Down view
+> Front view Left view Right view Down view
+> Visual Reasoning Generator Safe Movement Context Projection Evidence Projection
+> UAV Pose
+> Coverage Representation Egocentric 5 ×5Partition Top-K Belief Hotspots
+> Conservative Evidence Qualification
+> Temporal Commitment Memory
+> Info. 𝐀 𝐀−𝐀 Structured Planner Context
+> Step 0 Initialization AirSim Information
+> MLLM Action Planner
+> •Target Information
+> •UAV State
+> •View Summaries
+> •Fused Belief Map
+> •Belief Hotspots
+> •Exploration Summary
+> •Global Guidance
+> •Stop Signal
+> •Recent Progress
+> UAV Actions
+> C3: Egocentric Regional Guidance C2: Object-Conditioned Visual Reasoning C1: Dual-Layer Semantic-Spatial Belief Mapping
+
+Fig. 5. Overview of the shared UAV backbone and proposed reasoning modules. All variants share the observation interface, generic per-view interpretation, quadtree coverage representation, planner, and execution pipeline, while C1–C3 denote the proposed enhancements. 
+
+Appendix A Shared Autonomous UAV Backbone 
+
+A. Observation and Action Interface 
+
+At each timestep, the UAV acquires forward, left, right, and downward RGB views together with their corresponding depth observations. It also receives the current pose, flight height, recent pose–action history, and a target specification consisting of a name, size category, and natural-language description. Raw camera observations are processed by a shared generic per-view vision-language interpretation stage. The planner therefore operates on structured view summaries, spatial maps, the target specification, the current UAV state, and a compact history summary rather than directly processing raw RGB-D observations. A quadtree coverage representation is incrementally main-tained from the UAV observations. It summarizes explored and unexplored spatial structure and provides the common coverage information used by all evaluated variants. The egocentric regional scoring and temporal commitment mechanisms con-structed on top of this representation are described separately in Appendix B. All variants use the same discrete action space, 
+
+A = {forward , left , right , ascend ,
+
+descend , rotL , rotR , stop }. (18) Horizontal translations use a fixed step of 5 m, vertical motions use a step of 2 m, and rotations change the heading by 15 ◦.The stop action terminates the episode only when the shared verification conditions are satisfied. The action space, motion increments, action budget, search radius, and success criterion remain identical across AeroBelief, the vanilla backbone, and all ablation variants. 
+
+B. Shared Execution Pipeline 
+
+The action proposed by the planner is processed by a shared execution layer before being applied to the simulator. This layer evaluates motion feasibility using the current depth observations and UAV state. Motions with potential collision risks or search-boundary violations are rejected, while minimum-altitude pro-tection prevents unsafe downward movement. The execution layer also applies target-size-aware altitude regulation. When the UAV is above the preferred height range associated with the target size, a descent may be preferred if the downward observation indicates sufficient clearance. When the proposed action cannot be executed safely, a feasible alternative is selected from the remaining action set. The execution layer further provides recovery behavior for repeated boundary interactions, low-progress motion, and short-term oscillation. These mechanisms may redirect the UAV toward the interior of the search area or maintain corrective motion for several steps until it leaves an unsafe or unproductive state. This execution-level recovery is independent of the temporal commitment used by the egocentric regional guidance module. Stopping follows the same verification procedure for all evaluated variants. A proposed stop is rejected when the current IEEE TRANSACTIONS ON MULTIMEDIA 12 
+
+observations do not satisfy the shared target-verification criteria, and the search continues until sufficient target-specific support is available. Collision avoidance, boundary handling, target-size-aware altitude regulation, minimum-altitude protection, fallback recovery, and stop verification are shared by all evaluated variants and are not treated as contributions of the proposed semantic-spatial reasoning framework. 
+
+C. Vanilla Search Behavior 
+
+The vanilla backbone retains generic per-view visual interpre-tation, the MLLM planner, quadtree coverage representation, pose–action history, and the shared execution pipeline. It disables target-conditioned cue construction and conservative evidence qualification, dual-layer belief mapping, and egocen-tric regional guidance with temporal commitment. It therefore serves as a coverage-aware VLM–LLM baseline rather than a random-search baseline. AeroBelief, the vanilla backbone, and all ablation variants use identical episodes, action parameters, planning frequency, safety constraints, and stopping conditions, enabling controlled comparison of the proposed high-level reasoning components. Appendix B Quadtree-Based Coverage Modeling 
+
+A. Incremental Quadtree Coverage 
+
+To compactly represent explored and unexplored space, we maintain an incremental quadtree over the search domain. The quadtree belongs to the shared navigation backbone and is updated for every evaluated variant independently of the semantic belief map. It records geometric observation coverage rather than target likelihood. Let Q𝑡 denote the quadtree at timestep 𝑡 , and let L(Q 𝑡 ) denote its current set of leaf nodes. Each leaf ℓ ∈ L(Q 𝑡 ) represents a world-frame spatial support Ω(ℓ) and maintains a coverage state 𝑐 𝑡 (ℓ). At each timestep, the multi-view observations are projected onto the ground plane to obtain a downward observation footprint F 𝑑 𝑡 and a combined horizontal visibility footprint F ℎ𝑡 . Their overlap with a leaf is measured by 
+
+𝜌 𝑘 𝑡 (ℓ) = area  Ω(ℓ) ∩ F 𝑘 𝑡 
+
+
+
+area (Ω(ℓ)) , 𝑘 ∈ { 𝑑, ℎ }, (19) where 𝜌 𝑑 𝑡 (ℓ) and 𝜌 ℎ𝑡 (ℓ) denote the fractions observed by the downward and horizontal views, respectively. The two observation sources provide different forms of geometric coverage. The downward view directly observes the underlying ground area, whereas horizontal views cover larger projected regions with greater geometric uncertainty. Their contributions are therefore incorporated through a coverage-update operator 
+
+𝑐 𝑡 (ℓ) = U
+
+
+
+𝑐 𝑡 −1 (ℓ), 𝜌 𝑑 𝑡 (ℓ), 𝜌 ℎ𝑡 (ℓ)
+
+
+
+, (20) which treats horizontal visibility conservatively relative to direct downward observation. Spatial refinement is performed adaptively. When an obser-vation intersects only part of a leaf and finer spatial resolution is required, the leaf is subdivided into four children and the 
+
+Algorithm 1 Incremental Quadtree Coverage Update 
+
+Require: Previous quadtree Q𝑡 −1, UAV pose 𝑝 𝑡 , downward footprint F 𝑑 𝑡 , horizontal footprint F ℎ𝑡 
+
+Ensure: Updated quadtree Q𝑡  
+
+> 1:
+
+Q𝑡 ← Q 𝑡 −1 
+
+> 2:
+
+Transform F 𝑑 𝑡 and F ℎ𝑡 into the world frame using 𝑝 𝑡  
+
+> 3:
+
+V𝑡 ← ℓ ∈ L(Q 𝑡 ) | Ω(ℓ) ∩  F 𝑑 𝑡 ∪ F ℎ𝑡 
+
+ ≠ ∅ 
+
+> 4:
+
+for all ℓ ∈ V 𝑡 do  
+
+> 5:
+
+Compute 𝜌 𝑑 𝑡 (ℓ) and 𝜌 ℎ𝑡 (ℓ) using Eq. (19)  
+
+> 6:
+
+if Refine  ℓ, 𝜌 𝑑 𝑡 (ℓ), 𝜌 ℎ𝑡 (ℓ) then  
+
+> 7:
+
+Split (ℓ) 
+
+> 8:
+
+Recursively update the resulting child nodes  
+
+> 9:
+
+else  
+
+> 10:
+
+𝑐 𝑡 (ℓ) ← U  𝑐 𝑡 −1 (ℓ), 𝜌 𝑑 𝑡 (ℓ), 𝜌 ℎ𝑡 (ℓ) 
+
+> 11:
+
+end if  
+
+> 12:
+
+end for  
+
+> 13:
+
+Update internal-node coverage statistics from their children  
+
+> 14:
+
+return Q𝑡 
+
+observation update is recursively evaluated on the resulting cells. Large homogeneous regions therefore remain compact, while observation boundaries and partially covered areas are represented at finer resolution. Internal-node statistics are then updated from their children to obtain the new quadtree Q𝑡 .Algorithm 1 summarizes this incremental process. 
+
+B. Coverage-Guided Regional Reasoning 
+
+At each step, the leaves of Q𝑡 are transformed into the body frame defined by the current UAV pose 𝑝 𝑡 and yaw 𝜓 𝑡 , and aggregated into a 5 × 5 set of UAV-centered, yaw-aligned bins, 
+
+R𝑡 =
+
+n
+
+𝑅 𝑡 𝑖 𝑗 
+
+o4 
+
+> 𝑖, 𝑗 =0
+
+. (21) Rows follow the forward–backward body axis, columns follow the left–right axis, and the central bin contains the UAV. Because the bins are reconstructed from the current pose at every step, they represent relative directions rather than persistent world-space regions. Each bin receives a coverage-oriented score 
+
+𝑆 𝑡 (𝑅 ) = 𝑆 opp  
+
+> 𝑡
+
+(𝑅 ) + 𝑆 reach  
+
+> 𝑡
+
+(𝑅 ) − 𝑆 pen  
+
+> 𝑡
+
+(𝑅 ), (22) where the three terms summarize remaining exploration oppor-tunity, directional reachability, and revisit-aware spatial penal-ties. They consider unknown-area ratio, frontier and interior gaps, heading alignment, travel distance, boundary exposure, valid spatial support, and visitation history. Semantic belief values are not used in this score. The instantaneous candidate is selected as 
+
+𝑅 cand  
+
+> 𝑡
+
+= arg max 
+
+> 𝑅 ∈ C 𝑡
+
+𝑆 𝑡 (𝑅 ), (23) where C𝑡 contains the geometrically valid bins under the current search boundary. To reduce frequent switching between similarly scored directions, the module maintains a committed egocentric bin, 
+
+𝑅 com  
+
+> 𝑡
+
+=
+
+(𝑅 com   
+
+> 𝑡 −1
+
+, KEEP ,𝑅 cand  
+
+> 𝑡
+
+, UPDATE . (24) IEEE TRANSACTIONS ON MULTIMEDIA 13 
+
+Episode-Level Cue Generation Input 
+
+Target name, size category, natural-language description, and initial front, left, and right RGB views. 
+
+Instruction  
+
+> •
+
+Identify discriminative target attributes.  
+
+> •
+
+Describe part–whole structure and verification cues.  
+
+> •
+
+Summarize appearance across viewing ranges.  
+
+> •
+
+Identify supportive and suppressive scene contexts.  
+
+> •
+
+List likely confusers and rejection cues. 
+
+Output 
+
+Structured target-conditioned cue q.
+
+Step-Level Per-View Visual Reasoning Input 
+
+Current RGB view 𝐼 𝑣 𝑡 , target specification 𝑔 , and episode-level cue q.
+
+Instruction  
+
+> •
+
+Classify the target-match type and estimate confidence.  
+
+> •
+
+Estimate the coarse distance band.  
+
+> •
+
+Distinguish contextual support from target-specific evi-dence.  
+
+> •
+
+Summarize visible scene and object content.  
+
+> •
+
+Assess stop readiness. 
+
+Output 
+
+Structured semantic observation 𝑟 𝑣 𝑡 .
+
+> Fig. 6. Simplified prompt structure for target-conditioned visual reasoning.
+
+The commitment is retained while the selected direction remains useful and is updated when a stronger candidate emerges or the current direction becomes stale. A minimum commitment duration and switching hysteresis further reduce short-term oscillation. The commitment stores a relative bin identifier rather than a fixed world-space region, and is interpreted in the current body-frame grid after the UAV moves or rotates. The resulting direction is supplied to the planner as coarse coverage-oriented guidance rather than an exact waypoint. Without temporal commitment, the instantaneous candidate is passed directly to the planner at each step. Appendix C Prompt Design and Structured Reasoning Interface 
+
+A. Target-Conditioned Visual Reasoning 
+
+The visual reasoning interface contains two complementary prompting stages. At the beginning of each episode, a target-conditioned cue is generated once from the target specification and the initial forward, left, and right RGB observations. The cue-generation prompt is not action-oriented. It summarizes the visual knowledge required for subsequent interpretation, including discriminative attributes, part–whole structure, range-dependent appearance, supportive and suppressive scene con-texts, likely confusers, and target-level verification cues. The resulting cue q is reused throughout the episode as episode-level interpretation context. At each semantic update step, the current camera views are processed independently using the per-view reasoning prompt together with the target specification and q. The prompt estimates the target-match type and confidence, coarse distance band, contextual and target-specific support, visible scene content, and stop readiness. It 
+
+Structured Planner Input Map Inputs 
+
+Rendered fused belief map; rendered quadtree coverage map. 
+
+Task Context 
+
+Target specification; episode progress. 
+
+UAV Context 
+
+Pose; heading; height; feasible actions; recent motion history. 
+
+Visual Context 
+
+Qualified per-view summaries; target-match signals; stop-readiness signals. 
+
+Semantic Belief Context 
+
+Belief summary; top-𝐾 belief hotspots. 
+
+Coverage Context 
+
+Exploration statistics; coverage progress; recent search gain. 
+
+Regional Guidance 
+
+Committed egocentric direction and associated action preference. 
+
+Output 
+
+High-level discrete action proposal → shared execution backbone 
+
+→ executed UAV action.  
+
+> Fig. 7. Simplified structured interface of the navigation planner. The planner receives rendered spatial maps and organized textual context rather than raw RGB-D observations.
+
+produces the structured observation 𝑟 𝑣 𝑡 defined in Sec. III-C without regenerating the episode-level cue. The resulting structured observations are subsequently pro-cessed by conservative evidence qualification before entering the semantic-spatial belief map. The cue supports visual inter-pretation only. It neither prescribes navigation actions nor enters the planner as a standalone instruction. 
+
+B. Structured Planner Interface 
+
+The navigation planner operates on a structured multimodal interface that combines rendered spatial maps with organized textual context rather than raw RGB-D observations. The map inputs include the fused semantic belief map and quadtree coverage map. The textual context is organized into several functional groups. Task context specifies the target and current episode progress. UAV context describes the current pose, heading, height, feasible actions, and recent motion history. Visual context summarizes qualified per-view interpretations, target-match information, and stop-readiness signals. Semantic belief context exposes the current belief summary and top-𝐾 hotspots, while coverage context reports exploration statistics and recent search progress. Regional guidance provides the committed egocentric direction and associated action preference produced by Sec. III-E. The target-conditioned cue is not inserted verbatim into the planner prompt, but influences planning through the structured visual observations and semantic-spatial reasoning outputs. Given this structured context, the planner produces a high-level discrete action proposal from the shared action space. The proposal is subsequently processed by the common execution backbone for stop verification, collision avoidance, boundary and altitude handling, and fallback recovery. Because this execution backbone is shared across AeroBelief and all ablation IEEE TRANSACTIONS ON MULTIMEDIA 14      
+
+> TABLE III Episode termination modes and stop precision on the test set. Termination / Metric Percentage Collision 21 .48% Step limit 27 .50% Explicit stop 51 .03% Stop precision 42 .36%
+
+variants, it provides a common execution setting for evaluating the proposed high-level reasoning components. Appendix D Supplementary Analysis 
+
+A. Failure Mode Analysis 
+
+We further analyze episode termination behavior to identify the main remaining failure modes. Explicit stop accounts for 51 .03% of episode terminations, while 27 .50% reach the maximum action budget and 21 .48% terminate because of collision. These results show that the remaining failures arise from both incomplete exploration and inaccurate termination decisions. Stop precision denotes the fraction of explicit-stop episodes that satisfy the success criterion. Episodes reaching the step limit generally correspond to cases in which the target is not sufficiently discovered or verified within the available search budget. Collision termination instead reflects the difficulty of sustaining reliable exploration in geo-metrically complex environments despite the shared execution safeguards. Explicit stopping represents the largest termination category, but its precision is only 42 .36%. This indicates that semantic confidence is not always well aligned with the geometric success criterion. The UAV may recognize the target with high visual confidence and issue stop while remaining outside the required success radius. A substantial fraction of the remaining failures therefore arises not from complete target-discovery failure, but from insufficient calibration between semantic evidence, estimated proximity, and successful termination. This issue is particularly relevant to physically large targets, whose apparent visual scale may provide a misleading indication of distance. The following subsection examines this size-dependent stopping behavior. 
+
+B. Target-Size Sensitivity 
+
+The size-specific results show that large targets do not consistently outperform medium-sized targets despite their greater visual saliency. Inspection of failed episodes suggests that this behavior is associated more strongly with distance-sensitive stopping than with initial target discovery. Large objects can often be recognized from relatively long distances, while their physical scale makes visual proximity estimation more ambiguous. Stopping in the current framework depends on structured visual reasoning signals, including target-match strength, coarse distance estimation, and stop readiness. These signals are inferred primarily from visual appearance rather than direct Target      
+
+> Target ：
+> Stop Distance ：
+> Excavator 21.55 m Scene : Episode : Brushify Urban 00
+> Scene : Episode : NYC 133 Target ：
+> Stop Distance ：
+> Fountain 25.68 m
+> Target
+> Down View Right View
+> Left View
+> Target
+> Scene : Episode : Neighborhood 08 Target ：
+> Stop Distance ：
+> Truck 24.55 m
+> Right View
+> Scene : Episode : CityStreet 00 Target ：
+> Stop Distance ：
+> Elephant 41.89 m
+> Target
+> Fig. 8. Representative premature stops involving large targets. Strong visual saliency may trigger termination outside the 20 m success radius.
+
+target-distance measurements. For a physically large object, a substantial image footprint does not necessarily indicate that the UAV is already within the success radius. However, strong semantic visibility and large apparent scale may lead the VLM to produce an optimistic distance estimate or high stop readiness before the UAV has approached sufficiently closely. The system may therefore recognize the target but terminate outside the required success radius. Fig. 8 presents representative premature-stop cases involving large targets. In each example, the target is visually salient in the current observation, but the UAV stops beyond the 20 m success threshold. The cases span different object categories and viewpoints, suggesting that the behavior is not confined to a single scene or target appearance. They illustrate a recurring ambiguity between visual saliency and metric proximity , since large targets may become visually dominant before the UAV is geometrically close enough for successful termination. These observations suggest that many large-target failures are stopping-calibration failures rather than pure search failures. The target may be discovered early and recognized with high semantic confidence while the remaining distance is still underestimated. Future work could incorporate more reliable geometric distance estimation or target-size-aware stopping criteria to better separate recognition confidence from metric proximity.

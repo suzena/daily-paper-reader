@@ -1,0 +1,444 @@
+Title: JEDI: JEPA-to-Edge Distillation for Efficient Cropland Segmentation from Satellite Imagery
+
+URL Source: https://arxiv.org/pdf/2609.07915v1
+
+Published Time: Wed, 09 Sep 2026 02:44:20 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# JEDI: JEPA-to-Edge Distillation for Efficient Cropland Segmentation from Satellite Imagery 
+
+Kishor Kumar Bhaumik Nicolas Roque dos Santos Jia Chen Evangelos E. Papalexakis University of California, Riverside 
+
+{kbhau001,nicolasr,jiac,epapalex }@ucr.edu 
+
+Abstract —Large vision models provide meaningful represen-tations for remote-sensing segmentation but are often too ex-pensive for deployment at the satellite or field edge. Knowledge distillation can reduce this cost. However, existing feature-level methods have two key limitations. First, they typically assume the teacher and student share a similar architecture. Second, they usually stop aligning features once task training begins, even though that alignment is what made the student’s features useful in the first place. We therefore introduce JEDI (JEPA-to-Edge Distillation), a two-stage framework that transfers an I-JEPA (Image-based Joint-Embedding Predictive Architecture) repre-sentation from a large isotropic Vision Transformer (ViT) teacher to a student model with substantially fewer parameters while preserving the teacher’s prediction capacity. JEDI first aligns the student’s terminal representation with the teacher’s token space through a simple cross-architecture projection and spatial alignment. The aligned student is then jointly optimized using supervised segmentation, temperature-scaled response distillation and a persistent feature alignment objective that remains active throughout task adaptation. On the CalCROP21 dataset, JEDI-B0 reaches 68.0 mean Intersection-over-Union (mIoU) with only 4.04M parameters. This is a 16.0 point gain over the standalone student and comes within 2.0 points of the 70.0 mIoU achieved by the 639M-parameter teacher. We adopt SegFormer as the student family for its promising accuracy-to-parameter ratio on segmentation. We evaluate three variants of SegFormer — B0, B1, and B2 with 4.04M, 14.33 M, and 28M parameters respec-tively. Across all three, JEDI consistently outperforms response-, structure-, channel- and relational-distillation baselines under the same teacher–student setting. Overall, these results show that persistent representation alignment matters most under aggressive compression, substantially cutting model size and compute while preserving performance. Our code is available at https://github.com/Kishor-Bhaumik/JEDI. 
+
+Index Terms —knowledge distillation, semantic segmentation, remote sensing, cropland mapping, edge computing, self-supervised learning, vision transformers 
+
+I. I NTRODUCTION 
+
+Accurate and timely delineation of cultivated land is im-portant for agricultural monitoring and public-sector decision making. The USDA Cropland Data Layer (CDL), for example, provided annual crop maps at 30 m resolution through year 2023. From year 2024 onward, it has provided 10 m reso-lution maps. However, these products remain retrospective. Consequently, they are not designed for applications that require information during the growing season [1]. Recent work has shown that freely available satellite imagery, par-ticularly Sentinel-2, can support more timely crop mapping at substantially finer spatial resolution [2]. A systematic review of remote-sensing crop mapping further shows that deep 4 10 30 100 300 639 
+
+Model parameters (millions, log scale)     
+
+> 50 55 60 65 70
+> mIoU (%)
+> I-JEPA (teacher)
+> B0
+> 158 × fewer params
+> B1
+> 45 × fewer
+> B2
+> 23 × fewer
+> +16 mIoU teacher ceiling
+> Student (standalone) Student (JEDI distilled) Teacher (I-JEPA)
+
+Fig. 1. JEDI distills a 639 M-parameter I-JEPA teacher into compact Seg-Former students. The smallest student (B0, 158 × fewer parameters than teacher) gains +16 mIoU over its non-distilled baseline, reaching within 2.0
+
+mIoU points of the teacher. 
+
+learning has become an important component of large-scale crop mapping [3]. However, early-season mapping, multi-temporal reasoning and reliable use of multi-source imagery remain open challenges.These trends motivate models that can exploit modern visual representations while remaining practical for repeated inference over large geographic areas. The deployment setting makes this problem substantially different from conventional semantic segmentation. Satellite and field-edge platforms operate under tighter constraints on memory, power and computation than datacenter GPUs, while the volume of imagery can make transmitting raw observations itself expensive. The Φ-Sat-1 mission [4] demonstrated the feasibility of running deep neural networks directly on an earth observation satellite, illustrating the potential of moving part of the analysis closer to the sensor. At the same time, remote-sensing segmentation has its own challenges, including large spatial variation, substantial intra-class variability and foreground–background imbalance that are not fully captured by methods developed for natural images [5]. Consequently, a model that is highly accurate on a conventional GPU is not necessarily an appropriate model for resource-constrained earth observation. arXiv:2609.07915v1 [cs.CV] 7 Sep 2026 One approach is to use increasingly capable vision foun-dation models. Self-supervised learning has substantially im-proved the quality of visual representations available for downstream dense prediction. DINO [6], DINOv2 [7] and MAE [8] learn transferable representations from unlabeled images, while satellite-specific methods adapt these objec-tives to the spectral and temporal structure of Earth ob-servation data. SatMAE, for example, introduces temporal embeddings and spectral positional encodings specifically for multi-spectral and temporal satellite imagery and reports improvements on downstream land-cover and segmentation tasks [9]. More recently, geospatial foundation models such as Prithvi have demonstrated that large-scale self-supervised pretraining on Harmonized Landsat–Sentinel-2 imagery can transfer to diverse Earth observation tasks, including crop-related applications [10]. These developments suggest that large pretrained representations can provide useful semantic structure for remote-sensing applications; however, their size can make direct deployment impractical. A natural response is to compress a large model into a smaller one using knowledge distillation. Response-based distillation transfers softened predictions [11], while feature-based methods transfer information from intermediate repre-sentations [12], [13]. For semantic segmentation, the struc-tured nature of dense predictions has motivated methods that transfer spatial relations, channel distributions and cross-image relationships [14]–[16]. Other work has focused on preserving intra-class feature variation [17] and recent studies show that even direct raw-feature distillation can be highly competitive when the feature magnitudes and distillation weights are carefully controlled [18]. These results establish knowledge distillation as an effective mechanism for recovering part of a large model’s accuracy with a substantially smaller student. However, most feature-based distillation methods assume that the teacher and student expose representations that can be matched directly or stage-by-stage. This assumption be-comes problematic when the two networks differ not only in capacity but also in architecture. Notably, recent work has explicitly considered heterogeneous CNN–Transformer distil-lation, demonstrating that useful information can be transferred between models with different representation characteristics [19]. Nevertheless, the problem becomes more severe when the teacher is a large isotropic ViT (e.g., ViT-H/16, as used by I-JEPA) producing a single token sequence and the student is a compact hierarchical Transformer (e.g., SegFormer) producing a multi-scale feature pyramid. In this setting, the teacher and student representations differ in embedding dimension, spatial resolution and topology. Simply applying a conven-tional feature loss therefore requires either discarding spatial information or introducing a substantial transformation whose effect on the student representation is difficult to control. We address this problem with JEDI (JEPA-to-Edge Distil-lation), a two-stage cross-architecture distillation framework that transfers representation knowledge from a large I-JEPA teacher to a compact SegFormer student. In the first stage, we explicitly align the student’s terminal representation with the teacher’s token space using a lightweight learned projection and spatial resampling, allowing the student to acquire the teacher’s representation without segmentation supervision. In the second stage, the aligned student is jointly optimized using supervised segmentation, temperature-scaled response distillation and a persistent feature-alignment objective. Un-like a conventional pretrain-then-fine-tune strategy, the feature objective is not removed after initialization; it remains active while the student adapts to the segmentation task. This design is motivated by the observation that aggressive compression can cause task supervision to drive the student away from useful teacher representations. We further reduce inference cost by selecting, for each tile, a single observation from its multi-temporal Sentinel-2 stack. Specifically, this selection is guided by a criterion based on the Normalized Difference Vegetation Index (NDVI), a standard remote-sensing measure of vegetation greenness computed from the near-infrared and red spectral bands. This selection is applied identically during training and at inference: the segmentation network always operates on one NDVI-selected composite per tile rather than the full temporal sequence, so the same lightweight acquisition-selection mechanism that reduces training cost also reduces the cost of deployed in-ference. This does not attempt to replace temporal modeling; instead, it avoids evaluating the segmentation network repeat-edly over the complete temporal stack. The resulting system therefore targets a practical accuracy–compute trade-off rather than maximum segmentation accuracy under unconstrained computation. Our main contributions are:  
+
+> •
+
+We propose JEDI , a cross-architecture distillation frame-work for transferring representations between a large isotropic I-JEPA ViT and a compact hierarchical Seg-Former whose feature spaces differ in both dimensionality and spatial topology.  
+
+> •
+
+We introduce a two-stage training strategy that first performs representation alignment and then jointly op-timizes segmentation, response distillation and persistent feature alignment, retaining representational supervision throughout task adaptation.  
+
+> •
+
+We demonstrate on the CalCROP21 dataset that the resulting compact students substantially outperform iden-tically configured non-distilled students, with the 4.04 M-parameter JEDI-B0 reaching 68 .0 mIoU, within 2.0
+
+points of the approximately 639 M-parameter teacher.  
+
+> •
+
+We characterize the resulting accuracy–compute trade-off across multiple student capacities using parameter count, multiply–accumulate operations (GMACs) and GPU in-ference latency. Fig. 1 summarizes this accuracy–compute trade-off across the teacher and the JEDI student variants. II. R ELATED WORK 
+
+A. Cropland Mapping and Remote-Sensing Segmentation 
+
+Remote-sensing crop mapping has evolved from traditional hand-engineered spectral and temporal features toward su-pervised machine learning and deep neural networks. A re-cent systematic review covering hundreds of crop-mapping studies identifies deep learning as a major direction while highlighting persistent challenges in early crop mapping, crop rotation, multi-source imagery and reliable ground-truth con-struction [3]. These challenges are particularly relevant for satellite-based segmentation because crop appearance changes with phenology, acquisition conditions and geographic context. At the architectural level, semantic segmentation has pro-gressed from fully convolutional networks [20] and encoder– decoder architectures such as U-Net [21] to architectures that explicitly model multi-scale context, including DeepLab [22]. Transformer-based models subsequently introduced global attention into visual representation learning [23], while Mask2Former [24] provided a unified formulation for sev-eral dense-prediction tasks. Remote-sensing imagery, how-ever, introduces additional difficulties beyond those encoun-tered in natural-image segmentation. FarSeg, for example, explicitly models foreground–scene relations and addresses foreground–background imbalance and large intra-class varia-tion in geospatial object segmentation [5]. These observations underscore the importance of representations that preserve semantic structure while remaining robust to spatial and ap-pearance variation. For crop mapping specifically, the availability of Sentinel-2 has enabled multi-temporal and multi-spectral approaches that exploit spectral signatures and phenological changes. Cal-CROP21 provides a representative benchmark by combining Sentinel-2 observations over California’s Central Valley with crop labels derived from and refined relative to the USDA Cropland Data Layer [1]. Our work uses this benchmark but focuses on a different question: rather than maximizing segmentation accuracy with an unconstrained model, we in-vestigate how much of a large teacher’s representation can be transferred to a substantially smaller student without signifi-cantly sacrificing the peformance of segmentation. 
+
+B. Satellite Representation Learning and Foundation Models 
+
+The success of self-supervised learning in natural images has motivated the development of representation learning specifically adapted to earth observation. DINO [6] and DI-NOv2 [7] learn transferable visual features through self-supervised objectives, while MAE [8] learns representations by reconstructing masked image content. While such ap-proaches achieve promising representation learning perfor-mance on RGB imagery, they are not suitable for satellite imagery due to its spectral and temporal dimensions. SatMAE [9] adapts masked autoencoding to this setting by incorporating temporal embeddings and spectral positional encodings for satellite imagery. Its results show that explicitly modeling the structure of multi-spectral and temporal obser-vations can improve transfer to downstream remote-sensing tasks, including semantic segmentation. Geospatial foundation models extend this direction further. Prithvi, for example, is pretrained on more than one terabyte of Harmonized Landsat– Sentinel-2 imagery and is designed for transfer across multiple Earth observation tasks, including flood mapping, wildfire-scar segmentation and crop-related applications [10]. These models demonstrate the value of large self-supervised repre-sentations for Earth observation, but their increasing capacity also strengthens the need for efficient transfer mechanisms when the final model must operate under constrained compute or memory budgets. I-JEPA [25] provides a self-supervised formulation by pre-dicting representations of target image regions from con-text, rather than reconstructing pixels as in existing masked-image or contrastive methods. This latent predictive objec-tive avoids requiring the representation to reproduce low-level pixel details and instead encourages prediction in an abstract embedding space. JEDI uses I-JEPA as the teacher and investigates how such a large latent representation can be transferred into a compact hierarchical segmentation model. This distinguishes our work from methods that directly fine-tune a large foundation model: the objective is not to deploy the foundation model itself but to use its learned representation to train a substantially smaller model such as smaller variants of SegFormer [26]. 
+
+C. Efficient Segmentation and Edge Deployment 
+
+The computational cost of modern segmentation models has motivated architectures that explicitly balance accuracy and efficiency. SegFormer [26] combines a hierarchical Mix Transformer encoder with a lightweight all-MLP decoder and provides multiple model sizes, including the compact MiT-B0 configuration used in our study. Such architectures reduce the cost of the deployed model by design, rather than relying solely on post-training compression. Efficiency is especially important for Earth observation because inference can be performed close to the sensor or on field-edge platforms with limited power and memory. ESA’s 
+
+Φ-Sat-1 demonstrated in-orbit deep-learning inference using an Intel Myriad 2 vision processing unit, illustrating the feasibility of onboard processing for Earth observation [4]. Subsequent work has investigated aggressive compression and hardware-aware neural architecture search for in-orbit infer-ence [27], [28]. These efforts primarily optimize or compress a given architecture for a target hardware platform. In contrast, JEDI focuses on a different source of efficiency: transferring the representation of a large teacher into a compact student whose architecture and representation topology are substan-tially different. This distinction is important for our setting. A large pre-trained teacher can provide useful semantic structure but may be too expensive to execute repeatedly over large satellite image collections. Rather than requiring the deployed model to retain the teacher architecture, we treat the teacher as a training-time source of representation knowledge and discard it after distillation. 
+
+D. Knowledge Distillation for Semantic Segmentation 
+
+Knowledge distillation [11] provides a general mechanism for transferring information from a complex teacher model to a compact student model. Response-based distillation uses the teacher’s softened output distribution as additional supervision, while feature-based approaches transfer information from in-termediate representations [12], [13]. The latter is particularly attractive for semantic segmentation because dense prediction contains spatial and semantic structure that may not be fully represented by the final logits. Several methods therefore design segmentation-specific forms of distillation. Structured Knowledge Distillation (SKD) models dense prediction as a structured labeling problem and transfers pairwise relationships between pixels [14]. Channel-wise Knowledge Distillation (CWD) treats channel activations as distributions and matches their statistics between teacher and student [15]. IFVD instead focuses on intra-class feature variation, using class-wise feature centers to transfer the distri-butional structure learned by the teacher [17]. CIRKD extends relational distillation across images by transferring global pixel-to-pixel and pixel-to-region relationships [16]. These approaches illustrate a progression from matching predictions to transferring increasingly structured properties of the teacher representation. More recent work has revisited the assumptions behind feature distillation. Liu et al. [18] show that direct distillation of raw features can remain highly effective and analyze the role of feature magnitude and angular information in determining distillation behavior. Other work has explicitly considered heterogeneous architectures. Zhu et al. [19] inves-tigate knowledge exchange between CNN and Transformer models through heterogeneous feature distillation and selective prediction distillation. Such work is particularly relevant to JEDI because it demonstrates that teacher–student pairs need not share the same architectural family. Nevertheless, existing feature-distillation methods generally assume that the teacher and student representations can be compared after relatively simple correspondence or transfor-mation. In our setting, the I-JEPA teacher is an isotropic ViT producing a single token sequence, whereas the SegFormer student is hierarchical and produces a multi-resolution feature pyramid. The two representations therefore differ simultane-ously in dimensionality, spatial resolution and topology. We propose JEDI to address this mismatch explicitly through a learned cross-architecture alignment module. In addition, conventional distillation pipelines often use feature transfer as an initialization or auxiliary training signal whose importance decreases once task supervision is introduced. JEDI instead keeps the feature-alignment objective active throughout task adaptation. Our experiments isolate these two choices and evaluate their contribution under substantial model compres-sion. III. M ETHODOLOGY 
+
+A. Problem Formulation and Notation 
+
+Let X ∈ RT ×C×H×W denote a multi-temporal Sentinel-2 observation stack over a fixed geographic tile, comprising 
+
+T acquisitions across C spectral bands at spatial resolution 
+
+H × W . Let y denote the corresponding pixel-wise cropland                                  
+
+> TABLE I REPRESENTATION SHAPES USED THROUGHOUT THE FRAMEWORK .STUDENT STAGE WIDTHS ARE GIVEN FOR THE MIT-B0 / B1 / B2
+> VARIANTS .Quantity Value Input x3×448 ×448
+> Classes K2
+> Teacher tokens zT784 ×1280
+> Teacher grid 28 ×28
+> Student pyramid resolutions 112 2,56 2,28 2,14 2
+> Terminal-stage width C4256 /512 /512
+> Student logits ˆySK×112 ×112
+
+annotation. Fig. 2 illustrates the overall JEDI pipeline which spans both training stages. Our goal is to train a compact student network S on a single selected observation by transferring knowledge from a high-capacity teacher T . The temporal stack is used only during acquisition selection; the deployed segmentation model receives the resulting three-channel observation. We write fT and gT for the teacher encoder and decoder, 
+
+fS and gS for their student counterparts and hϕ for the cross-architecture alignment module introduced in Section III-D. Latent token representations are denoted z, intermediate fea-ture maps F and class logits ˆy. Trainable parameters are θS
+
+(student encoder), ψ (student decode head) and ϕ (alignment module); teacher parameters remain frozen throughout. Table I collects the tensor shapes referenced below. 
+
+B. NDVI-Guided Composite Selection 
+
+Processing the full temporal stack through the segmentation network would multiply the neural-network inference cost by the number of acquisitions. We therefore select a single acquisition exhibiting strong vegetative expression. For each timestep t we compute the Normalized Difference Vegetation Index from the near-infrared and red spectral bands, 
+
+NDVI t(i, j ) = Xt, NIR (i, j ) − X t, RED (i, j )
+
+Xt, NIR (i, j ) + Xt, RED (i, j ) , (1) guarding against division by zero and select 
+
+t⋆ = arg max  
+
+> t∈{ 1,...,T }
+
+1
+
+HW 
+
+X
+
+> i,j
+
+NDVI t(i, j ). (2) The visible bands of acquisition t⋆ are cropped and stan-dardized to form the network input x. This reduces the number of neural-network evaluations from T to one while retaining a lightweight preprocessing step for acquisition selection. The criterion also tends to favor low-cloud acquisitions, since cloud cover generally depresses scene-level NDVI, while the resulting three-channel input remains compatible with the RGB-pretrained teacher. IMAGE  
+
+> Stage 1: Representation Alignment
+> I-JEPA Encoder
+> Teacher
+> frozen
+> (MSE)
+> MiT Encoder
+> Student
+> trainable
+> Align
+
+IMAGE                
+
+> Warm Start
+> Stage 2: Tri-Objective Joint Refinement
+> I-JEPA Encoder
+> Teacher
+> frozen
+> (MSE)
+> Student Enc + trainable
+> Align
+> Teacher Dec
+> MLP Dec
+> (KLD)
+> (CE) Fig. 2. The JEDI framework. Stage 1 (left): the trainable MiT student encoder is aligned to the frozen I-JEPA teacher, with the alignment module hϕlifting the student’s terminal-stage features into the teacher’s representation space so that a single feature-reconstruction objective Lalign can be applied. No task labels are used. Stage 2 (right): the student is warm-started from Stage 1 and adapted to segmentation under three concurrent objectives—supervised segmentation (Lseg ), response distillation from the teacher’s predictions ( Lresp ) and a persistent feature-alignment term ( Lfeat ) that keeps the student’s representation from drifting away from the teacher’s as it specializes. The teacher, decoder and hϕare all discarded at inference; only fSand gSare deployed.
+
+C. Teacher and Student Models 
+
+The teacher encoder fT is an I-JEPA ViT-H/16 backbone (≈ 639 M parameters) pretrained by latent-space block pre-diction [25] and subsequently fine-tuned for cropland seg-mentation on the target domain. Fine-tuning is performed on the same CalCROP21 training split used for the student, by attaching the convolutional decoder gT and optimizing both 
+
+fT and gT with a binary cross-entropy loss for 50 epochs. Being isotropic, it emits a flat, single-scale token sequence 
+
+zT = fT (x), which the fine-tuned lightweight convolutional decoder gT upsamples to a full-resolution prediction ˆyT . Both 
+
+fT and gT are frozen in all subsequent stages and contribute no gradients. The student adopts the SegFormer design [26]: a hierarchi-cal Mix Transformer (MiT) encoder fS producing a four-stage feature pyramid {F (1) , . . . , F (4) } of progressively coarser, deeper maps, paired with a lightweight all-MLP decode head 
+
+gS that fuses the four stages into logits ˆyS at quarter resolution. We evaluate three capacity points: MiT-B0, B1 and B2, span-ning 4.04 M to 28 M parameters against the 639 M-parameter teacher. We tap the terminal stage F (4) for distillation. This choice is deliberate: the teacher emits a single representation at one semantic abstraction level and F (4) is the deepest, most abstract student stage, whose receptive field and degree of abstraction most closely correspond. Matching a shallower, higher-resolution stage would instead force the student to reproduce semantically abstract targets from features that have not yet accumulated sufficient context, a mismatch the alignment module cannot fully resolve. 
+
+D. Cross-Architecture Alignment Module 
+
+Direct feature distillation between F (4) and zT is ill-posed, since the two representations disagree in width, in spatial resolution and in layout, contrasting a channel-first feature map with a flat token sequence. The alignment module hϕ
+
+resolves all three mismatches through a composition of three operations, producing a target-matched student representation 
+
+ˆzS = hϕ(F (4) ). (3) It first tokenizes the terminal feature map by flattening its spatial dimensions and transposing it into the teacher’s se-quence convention. It then projects each token through a single linear map into the teacher’s embedding width. Finally, it bilinearly resamples the resulting feature map to the teacher’s spatial resolution before flattening it into a sequence, yielding exact position-by-position correspondence with the teacher tokens. Two design choices are important for this alignment. First, the projection is kept linear and shallow. A more expressive projector could absorb part of the alignment problem itself, allowing the encoder to satisfy the loss without substantially improving its representations. Restricting hϕ to an affine map places the representational burden on fS , which is the compo-nent ultimately retained at inference. Because hϕ is discarded after training, it contributes no inference cost. Second, we resample the student upward rather than pooling the teacher 
+
+downward. Downsampling the teacher would discard spatial information from the supervisory target, whereas upsampling preserves the teacher’s full spatial grid. 
+
+E. Stage 1: Representation Alignment 
+
+The first stage trains the student encoder to reproduce the teacher’s latent geometry with no task supervision whatsoever. Given the frozen teacher targets zT = fT (x), we minimize 
+
+Lalign (θS , ϕ ) = 1
+
+NT DT
+
+hϕ
+
+ fS (x) − zT 
+
+> 2
+> F
+
+(4) over θS and ϕ jointly, where NT DT normalizes by the teacher representation size. The decode head is excluded from this stage and receives no gradient, since the objective concerns representation rather than prediction. Admitting task-specific parameters here would let the student begin specializ-ing before it has acquired the representation that specialization is meant to build upon. We use squared error rather than cosine similarity so that both the direction and magnitude of the teacher representation contribute to the alignment objective. This provides a direct reconstruction target in the teacher’s embedding space without introducing an additional normalization operation. Upon con-vergence, θS and ϕ are checkpointed to initialize the second stage. 
+
+F. Stage 2: Tri-Objective Joint Refinement 
+
+The second stage adapts the aligned student to the segmen-tation task while continuing to constrain its representation. The student encoder and alignment module are warm-started from Stage 1; the decode head retains its ImageNet initialization. All three components are trained. A single encoder pass per network supplies every quantity required. The student pyramid {F (s)} yields both the projected tokens ˆzS = hϕ(F (4) ) and the logits ˆyS = gS ({F (s)});likewise the teacher tokens zT are reused by gT to pro-duce ˆyT without a second traversal of the teacher backbone. This shared-computation formulation avoids redundant en-coder evaluations when constructing the three loss terms. We optimize a weighted composition of three terms. 
+
+Task supervision. Since ˆyS is predicted at quarter resolution, we downsample the ground-truth mask to ˜y using nearest-neighbor interpolation to preserve discrete class labels. The segmentation loss is the standard cross-entropy over the pre-diction grid Ω:
+
+Lseg = − 1
+
+|Ω|
+
+X
+
+> p∈Ω
+
+log exp  ˆy(˜ yp) 
+
+> S
+
+(p)PKk=1 exp  ˆy(k) 
+
+> S
+
+(p) . (5) 
+
+Response distillation. Teacher logits are bilinearly resam-pled to the student lattice, ˆy↓ 
+
+> T
+
+and matched in softened probability space with temperature τ :
+
+Lresp = τ 2 · KL 
+
+
+
+σ ˆy↓ 
+
+> T
+
+/τ  σ ˆyS /τ 
+
+, (6) with σ the channel-wise softmax and the τ 2 factor restoring gradient scale [11]. This term transfers the teacher’s inter-class uncertainty, which can be informative at field boundaries and over spectrally ambiguous regions where hard labels may be less reliable. 
+
+Persistent feature alignment. The Stage 1 objective is re-tained unchanged: 
+
+Lfeat = 1
+
+NT DT
+
+∥ˆzS − zT ∥2 
+
+> F
+
+. (7) Finally, the composite objective is 
+
+L = α Lseg + β Lresp + γ Lfeat . (8) 
+
+Algorithm 1 JEDI Training Procedure 
+
+Require: Stacks {X i}, labels {yi}; frozen teacher (fT , g T )
+
+Ensure: Deployable student (fS , g S ) 
+
+> 1:
+
+xi ← NDVI COMPOSITE (Xi) for all i 
+
+> 2:
+
+// Stage 1: representation alignment  
+
+> 3:
+
+for epoch = 1 to E1 do  
+
+> 4:
+
+for minibatch x do  
+
+> 5:
+
+zT ← fT (x) ▷ no grad  
+
+> 6:
+
+ˆzS ← hϕ(fS (x))  
+
+> 7:
+
+update θS , ϕ by ∇L align ▷ Eq. (4)  
+
+> 8:
+
+end for  
+
+> 9:
+
+end for  
+
+> 10:
+
+// Stage 2: tri-objective joint refinement  
+
+> 11:
+
+for epoch = 1 to E2 do  
+
+> 12:
+
+for minibatch (x, y ) do  
+
+> 13:
+
+zT ← fT (x); ˆyT ← gT (zT ) ▷ single pass  
+
+> 14:
+
+{F (s)} ← fS (x) ▷ single pass  
+
+> 15:
+
+ˆzS ← hϕ(F (4) ); ˆyS ← gS ({F (s)}) 
+
+> 16:
+
+update θS , ψ, ϕ by ∇L ▷ Eq. (8)  
+
+> 17:
+
+end for  
+
+> 18:
+
+end for  
+
+> 19:
+
+return (fS , g S ) ▷ discard fT , g T , h ϕ
+
+Retaining Lfeat during task adaptation is the central de-sign choice of JEDI. Stage 1 establishes an initialization in the teacher’s representation space, but task supervision can subsequently shift the student toward features that are sufficient for the segmentation labels without preserving the teacher representation. Keeping γ > 0 makes representational similarity an explicit constraint throughout adaptation rather than only at initialization. The γ = 0 ablation in Section IV isolates the effect of removing this persistent constraint. At inference, the teacher, the alignment module and the projection are all discarded. The deployed model comprises only fS and gS . Algorithm 1 summarizes the complete two-stage JEDI training procedure. IV. E XPERIMENTS 
+
+A. Experimental Setup 
+
+Dataset. We evaluate on CalCROP21 [1], which pairs multi-temporal Sentinel-2 acquisitions over California’s Central Val-ley with CDL-derived labels refined by a spatio-temporal attention model. We cast the task as binary cropland segmenta-tion (cultivated versus non-cultivated) and adopt the train/test partition of [29]; all model-selection decisions are fixed a priori from the configuration described below. Each multi-temporal tile is reduced to a single three-channel composite by the NDVI-guided selection of Section III-B and center-cropped to 448 × 448 , matching the fixed input resolution expected by both the teacher and student networks (Table I). 
+
+Implementation. All models are implemented in PyTorch and trained on a single NVIDIA RTX A6000 (48 GB). We use the AdamW optimizer with a cosine-annealed learning rate (initial 10 −4, weight decay 0.05 ) and gradient clipping at unit norm. Stage 1 runs for E1 = 30 epochs and Stage 2 for E2 = 20 epochs at batch size 8. We set The distillation temperature τ = 2 and the ViT-H/16 backbone fine-tuned for cropland segmentation and frozen Stage 2 loss weights 
+
+(α, β, γ ) = (1 .0, 0.5, 0.5) . The teacher is an I-JEPA thereafter. 
+
+Metrics. Segmentation quality is reported as mean Intersection-over-Union (mIoU) and macro F1. Efficiency is characterized by parameter count, multiply–accumulate oper-ations (GMACs) at 448 ×448 input and inference latency mea-sured on a single A6000 GPU. GMACs count the multiply-accumulate operations (each counted once, regardless of the two floating-point operations it comprises) performed during a single forward pass, and thus serve as a hardware-independent proxy for a model’s computational cost at inference time. All segmentation results are reported as mean ± standard deviation over five independent seeds. 
+
+B. Baselines 
+
+We compare JEDI against four prior distillation methods spanning the main families of the field, with the non-distilled student as a lower reference and the fine-tuned teacher as an upper reference. All methods use the same frozen teacher and student architectures under an otherwise identical training protocol, differing in their distillation objectives. Because several feature-level baselines were originally developed for architectures with spatially compatible feature maps, we route their feature-level objectives through the same alignment module described in Section III-D. This provides a common representation space for the teacher–student comparison. 
+
+KD [11] acts as a baseline by aligning temperature-scaled output distributions between the teacher and student networks. 
+
+SKD [14] transfers pairwise pixel similarities and a holistic term, exploiting the structured nature of dense prediction. 
+
+CWD [15] normalizes each channel into a distribution and matches teacher and student channels by KL divergence. 
+
+CIRKD [16] provides a relational distillation baseline that extends distillation beyond single images by matching cross-image pixel relationships between teacher and student. The baseline comparison therefore evaluates whether the proposed cross-architecture alignment and persistent feature objective provide additional benefit beyond established response-, structure-, channel-, and relational-distillation objectives. 
+
+C. Main Results 
+
+Table II presents the main results on CalCROP21 across three student capacities. The results show a consistent im-provement from standalone training to knowledge distillation and, further, to JEDI. For MiT-B0, the standalone model obtains 52 .0 ± 0.6 mIoU and 66 .0 ± 0.5 F1. Conventional response-based KD improves these results to 60 .5 ± 0.5 mIoU and 73 .0 ± 0.4 F1, while the segmentation-specific distillation methods SKD, CWD and CIRKD progressively increase mIoU to 62 .8 ± 0.5, 64 .7 ± 0.5 and 65 .9 ± 0.5, respectively. JEDI achieves 68 .0±0.4 mIoU and 80 .0±0.3 F1, improving over the                                                                                                                                
+
+> TABLE II MAIN RESULTS ON CAL CROP21. MIOUAND F1 ARE MEAN ±STD OVER FIVE SEEDS . F OR EACH STUDENT CAPACITY WE COMPARE THE NON -DISTILLED BASELINE ,FOUR PRIOR DISTILLATION METHODS ADAPTED TO OUR TEACHER –STUDENT PAIR AND JEDI. B EST RESULT PER CAPACITY IN BOLD .Model Method Params (M) mIoU (%) F1 (%) Teacher (I-JEPA) fine-tuned 639.12 70.0 ±0.3 84.3 ±0.5 MiT-B0 Standalone 4.04 52.0 ±0.6 66.0 ±0.5 KD [11] 60.5 ±0.5 73.0 ±0.4 SKD [14] 62.8 ±0.5 75.2 ±0.4 CWD [15] 64.7 ±0.5 76.8 ±0.4 CIRKD [16] 65.9 ±0.5 77.9 ±0.4
+> JEDI (ours) 68.0 ±0.4 80.0 ±0.3
+> MiT-B1 Standalone 14.33 54.0 ±0.6 67.5 ±0.5 KD [11] 62.0 ±0.5 74.3 ±0.4 SKD [14] 64.1 ±0.5 76.1 ±0.4 CWD [15] 66.0 ±0.5 77.9 ±0.4 CIRKD [16] 67.2 ±0.4 78.8 ±0.4
+> JEDI (ours) 69.0 ±0.4 81.0 ±0.3
+> MiT-B2 Standalone 28.0 56.0 ±0.5 68.5 ±0.4 KD [11] 63.5 ±0.5 75.4 ±0.4 SKD [14] 65.3 ±0.4 77.0 ±0.4 CWD [15] 67.1 ±0.4 78.6 ±0.3 CIRKD [16] 68.0 ±0.4 79.4 ±0.3
+> JEDI (ours) 69.5 ±0.4 81.5 ±0.3
+
+standalone baseline by 16 .0 mIoU points and 14 .0 F1 points. Furthermore, it outperforms the strongest prior distillation baseline, CIRKD, by 2.1 mIoU points and 2.3 F1 points. The same ordering is observed for the larger students. For MiT-B1, standalone training obtains 54 .0 ± 0.6 mIoU and 
+
+67 .5 ± 0.5 F1, whereas CIRKD reaches 67 .2 ± 0.4 mIoU and 
+
+78 .8±0.4 F1. JEDI further improves these results to 69 .0±0.4
+
+mIoU and 81 .0 ± 0.3 F1, corresponding to gains of 15 .0 and 
+
+13 .5 points over standalone training in mIoU and F1, respec-tively. Relative to CIRKD, JEDI provides additional gains of 
+
+1.8 mIoU and 2.2 F1 points. For MiT-B2, the standalone model achieves 56 .0 ± 0.5 mIoU and 68 .5 ± 0.4 F1, while CIRKD reaches 68 .0 ± 0.4 mIoU and 79 .4 ± 0.3 F1. JEDI obtains 
+
+69 .5 ± 0.4 mIoU and 81 .5 ± 0.3 F1, yielding improvements of 13 .5 mIoU and 13 .0 F1 points over standalone training and 
+
+1.5 mIoU and 2.1 F1 points over CIRKD. The results therefore show two consistent trends. First, JEDI provides the best performance for every student capacity and for both evaluation metrics. Second, the absolute benefit of distillation decreases as student capacity increases: the mIoU gain of JEDI over standalone training decreases from 16 .0
+
+points for MiT-B0 to 15 .0 for MiT-B1 and 13 .5 for MiT-B2. This trend is expected as larger students have greater capacity to learn useful representations directly, but the persistent im-provement over both standalone training and prior distillation methods indicates that the transferred teacher representation remains beneficial even when student capacity increases. JEDI also substantially narrows the gap to the teacher while using orders of magnitude fewer parameters. The fine-tuned TABLE III ABLATION M IOU (%) ON MIT-B0, MEAN ± STD OVER FIVE SEEDS . E ACH ROW REMOVES ONE COMPONENT FROM THE FULL FRAMEWORK .Configuration mIoU (%) Standalone (no distillation) 52.0 ± 0.6                  
+
+> −Stage 1 (no representation align) 63.0 ±0.7
+> γ= 0 (no persistent feature align) 65.0 ±0.6
+> β= 0 (no response distillation) 67.0 ±0.5
+> Full JEDI 68.0 ±0.4
+
+I-JEPA teacher contains 639 .12 M parameters and achieves 
+
+70 .0 ± 0.3 mIoU and 84 .3 ± 0.5 F1. In comparison, JEDI reaches 68 .0±0.4 mIoU with only 4.04 M parameters for MiT-B0, leaving a 2.0-point mIoU gap to the teacher while using approximately 158 × fewer parameters. The MiT-B1 and MiT-B2 students use 14 .33 M and 28 .0M parameters, respectively, yet reach 69 .0 and 69 .5 mIoU, reducing the teacher gap to 1.0
+
+and 0.5 points. Their corresponding F1 gaps are also reduced from 4.3 points for MiT-B0 to 3.3 and 2.8 points for MiT-B1 and MiT-B2. Thus, increasing student capacity improves the absolute agreement with the teacher, while JEDI preserves a substantial accuracy advantage over training the same students without distillation. 
+
+D. Ablation Studies 
+
+We isolate the contribution of each framework component through controlled ablations, summarized in Fig. 3 and Ta-ble III. All ablations are run across the same five seeds as the main results. 
+
+Stage 1 (representation alignment). Removing Stage 1 (No Stage 1) and training the student directly with the Stage 2 objective reduces mIoU at every evaluated capacity. This indicates that representation alignment provides a useful initialization rather than functioning only as an optimization warm-up. 
+
+Persistent feature alignment (γ = 0). The No Fea-ture Align. configuration removes the feature-alignment term during Stage 2 while retaining the Stage 1 initialization. Its performance is consistently below the full JEDI model, showing that the representation learned during Stage 1 is not sufficient by itself: continuing to constrain the student during task adaptation provides an additional benefit. 
+
+Response distillation ( β = 0). The No Response Dis-till. configuration removes the temperature-scaled response-distillation term while retaining both representation alignment and persistent feature alignment. The resulting degradation is smaller than that of the other ablations, but the consistent improvement of the full JEDI model indicates that teacher predictions provide complementary information beyond repre-sentation alignment. 
+
+E. Choice of Teacher 
+
+To evaluate the effect of teacher choice, we replace I-JEPA with two alternative ViT teachers: a self-distilled DINO model and a supervised ViT. Both alternative teachers are fine-tuned MiT-B0 MiT-B1 MiT-B2                               
+
+> Student variant
+> 50 55 60 65 70
+> mIoU (%)
+> Teacher
+> Baseline No Stage 1 No Feature Align. No Response Distill. Full JEDI
+> Fig. 3. We isolate the contribution of each framework component through controlled ablations, summarized in Fig. 3 and Table III. The No Stage 1configuration removes the representation-alignment pretraining stage, No Feature Align. sets γ= 0 and therefore removes persistent feature alignment during Stage 2 and No Response Distill. sets β= 0 and removes the response-distillation term. All ablations are evaluated using the same five-seed protocol as the main experiments. TABLE IV EFFECT OF TEACHER CHOICE ON THE DISTILLED MIT-B0 STUDENT
+> (MIOU %, MEAN ±STD OVER FIVE SEEDS ). T HE FULL JEDI PIPELINE IS RUN IDENTICALLY FOR EACH TEACHER .Teacher Student mIoU (%) Supervised ViT 54.5 ±0.6 DINO 36.0 ±0.5
+> I-JEPA 68.0 ±0.4
+
+for cropland segmentation using the same protocol as the I-JEPA teacher (Section III-C), before being frozen and distilled into the student. We then run the same JEDI distillation pipeline for the MiT-B0 student. Table IV reports the resulting student performance. I-JEPA produces the strongest student among the evaluated teachers, indicating that the teacher representation has a substantial effect on the effectiveness of the subsequent distillation process. This experiment isolates teacher choice within the evaluated setting, since the student architecture, alignment procedure and training protocol are held fixed. 
+
+F. Efficiency Analysis 
+
+Table V characterizes accuracy relative to computational cost. We report parameter count, GMACs and NVIDIA A6000 latency, using parameter count and GMACs as hardware-agnostic indicators of computational footprint. The latency measurement provides a reference on a high-end GPU rather than a direct measurement of embedded-device performance. Relative to the teacher, JEDI-B0 reduces the parameter count by more than two orders of magnitude and reduces GMACs from 557 .5 to 5.8 while retaining 68 .0 mIoU. These reductions TABLE V EFFICIENCY AND ACCURACY . L ATENCY IS MEAN OVER 100 RUNS PER                              
+
+> 448 ×448 TILE AT BATCH 1, FP32, ON ONE RTX A6000. GMAC S ARE MEASURED WITH FVCORE AND ARE APPROXIMATE —ATTENTION , GELU
+> AND SOFTMAX OPS ARE NOT COUNTED ,SO ALL FIGURES ARE LOWER BOUNDS .MIOUIS MEAN OVER FIVE SEEDS .Model Params (M) GMACs †Lat. (ms) mIoU (%) Teacher (I-JEPA) 639.12 557.5 83.5 70.0
+> JEDI-B2 28.00 45.9 17.0 69.5
+> JEDI-B1 14.33 11.4 7.1 69.0
+> JEDI-B0 4.04 5.8 7.1 68.0
+
+substantially improve the computational feasibility of the model under resource constraints, although actual deployment performance will depend on the target hardware and runtime. 
+
+G. Qualitative Results 
+
+Fig. 4 shows representative predictions on three test tiles, selected at random from the test set to avoid cherry-picking, comparing ground truth against KD, SKD, CWD, CIRKD, JEDI-B0 and the teacher. The prior distillation methods re-cover the coarse field layout but leave larger contiguous regions misclassified, particularly along field boundaries and within spectrally ambiguous interior patches. JEDI-B0 pro-duces predictions that more closely track the teacher and re-cover coherent field geometry despite its substantially smaller parameter count. This qualitative behavior is consistent with the quantitative ordering in Table II. V. D ISCUSSION AND LIMITATIONS 
+
+JEDI helps most when student capacity is limited. MiT-B0 gains 16 .0 points over standalone training, while B1 and B2 gain less. This makes sense: with limited capacity, task supervision alone often cannot recover the semantic structure already present in the teacher. The ablations show the two stages play different roles. Stage 1 gives a representation-level initialization. Without continued alignment in Stage 2, however, this initialization erodes as the student specializes to segmentation. Response distillation adds a smaller extra gain, showing the teacher’s output distribution carries information beyond the aligned representation. Together, these results support combining both supervision types under aggressive compression. Three limitations bound our findings. First, we address only binary cropland segmentation; whether persistent alignment transfers to multi-class crop mapping remains open. Second, all experiments use one dataset and region, CalCROP21 over California’s Central Valley, so broader geographic or sensor generalization is untested. Finally, NDVI-guided selection reduces the temporal stack to a single acquisition, discarding trajectory information that could help distinguish spectrally similar crops. VI. C ONCLUSION 
+
+We propose JEDI, a cross-architecture distillation frame-work for transferring a large I-JEPA representation to acompact segmentation model. The key design is to align the student’s terminal-stage representation with the teacher’s token space before task adaptation and to retain this alignment objective during subsequent segmentation training. This per-sistent constraint complements supervised segmentation and response distillation by reducing the drift of the student’s representation as it specializes to the task. Experiments on CalCROP21 dataset show that the benefit is particularly pro-nounced under aggressive compression. The 4.04 M-parameter JEDI-B0 reaches 68 .0 mIoU, compared with 52 .0 mIoU for the standalone student and 70 .0 mIoU for the approximately 
+
+639 M-parameter teacher. The ablations show that both repre-sentation alignment before task adaptation and its persistence during adaptation contribute to the final performance, with persistent feature alignment producing the largest degradation when removed. Across student capacities, JEDI also provides a favorable accuracy–compute trade-off, substantially reducing parameter count and GMACs while retaining most of the teacher’s segmentation performance. 
+
+Acknowledgements. The work was partially supported by the Agri-culture and Food Research Initiative Competitive Grant no. 2020-69012-31914 from the USDA National Institute of Food and Agri-culture, and by the National Science Foundation under grant no. 2431569, grant 2524228, and the CREST Center for Multidisci-plinary Research Excellence in CyberPhysical Infrastructure Systems (MECIS) grant no. 2112650. The views and conclusions in this paper are those of the authors and should not be interpreted as representing any funding agencies. 
+
+REFERENCES [1] R. Ghosh, P. Ravirathinam, X. Jia, A. Khandelwal, D. Mulla, and V. Kumar, “Calcrop21: A georeferenced multi-spectral dataset of satellite imagery and crop labels,” in 2021 IEEE international conference on big data (big data) . IEEE, 2021, pp. 1625–1632. [2] P. Defourny, S. Bontemps, N. Bellemans, C. Cara, G. Dedieu, E. Guz-zonato, O. Hagolle, J. Inglada, L. Nicola, T. Rabaute et al. , “Near real-time agriculture monitoring at national scale at parcel resolution: Performance assessment of the sen2-agri automated system in various cropping systems around the world,” Remote sensing of environment ,vol. 221, pp. 551–568, 2019. [3] M. Alami Machichi, L. E. Mansouri, Y. Imani, O. Bourja, O. Lahlou, Y. Zennayi, F. Bourzeix, I. Hanade Houmma, and R. Hadria, “Crop mapping using supervised machine learning and deep learning: Asystematic literature review,” International Journal of Remote Sensing ,vol. 44, no. 8, pp. 2717–2753, 2023. [4] G. Giuffrida, L. Fanucci, G. Meoni, M. Batiˇ c, L. Buckley, A. Dunne, C. Van Dijk, M. Esposito, J. Hefele, N. Vercruyssen et al. , “The ϕ-sat-1 mission: The first on-board deep neural network demonstrator for satellite earth observation,” IEEE Transactions on Geoscience and Remote Sensing , vol. 60, pp. 1–14, 2021. [5] Z. Zheng, Y. Zhong, J. Wang, and A. Ma, “Foreground-aware relation network for geospatial object segmentation in high spatial resolution remote sensing imagery,” in 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, 2020, pp. 4095–4104. [6] M. Caron, H. Touvron, I. Misra, H. J´ egou, J. Mairal, P. Bojanowski, and A. Joulin, “Emerging properties in self-supervised vision transformers,” in 2021 IEEE/CVF international conference on computer vision (ICCV) .IEEE, 2021, pp. 9630–9640. [7] M. Oquab, T. Darcet, T. Moutakanni, H. Vo, M. Szafraniec, V. Khalidov, P. Fernandez, D. Haziza, F. Massa, A. El-Nouby et al. , “Dinov2: Learning robust visual features without supervision,” arXiv preprint arXiv:2304.07193 , 2023. Sample 1 RGB Ground Truth KD SKD CWD CIRKD JEDI-B0 (ours) Teacher 
+
+> Sample 2 Sample 3
+
+Fig. 4. Qualitative comparison on CalCROP21. Columns: RGB input, ground truth, four prior distillation baselines (KD, SKD, CWD, CIRKD), JEDI-B0 and the fine-tuned teacher. Rows show three representative test samples. JEDI-B0 recovers field-level structure closely matching the teacher, while prior methods leave larger contiguous regions misclassified, consistent with their lower mIoU in Table II. [8] K. He, X. Chen, S. Xie, Y. Li, P. Doll´ ar, and R. Girshick, “Masked au-toencoders are scalable vision learners,” in 2022 IEEE/CVF conference on computer vision and pattern recognition (CVPR) . IEEE, 2022, pp. 15 979–15 988. [9] Y. Cong, S. Khanna, C. Meng, P. Liu, E. Rozi, Y. He, M. Burke, D. Lo-bell, and S. Ermon, “Satmae: Pre-training transformers for temporal and multi-spectral satellite imagery,” Advances in Neural Information Processing Systems , vol. 35, pp. 197–211, 2022. [10] J. Jakubik, S. Roy, C. Phillips, P. Fraccaro, D. Godwin, B. Zadrozny, D. Szwarcman, C. Gomes, G. Nyirjesy, B. Edwards et al. , “Foundation models for generalist geospatial artificial intelligence,” arXiv preprint arXiv:2310.18660 , 2023. [11] G. Hinton, O. Vinyals, and J. Dean, “Distilling the knowledge in a neural network,” arXiv preprint arXiv:1503.02531 , 2015. [12] R. K. Srivastava, K. Greff, and J. Schmidhuber, “Training very deep networks,” Advances in neural information processing systems , vol. 28, 2015. [13] Y. Tian, D. Krishnan, and P. Isola, “Contrastive representation distilla-tion,” arXiv preprint arXiv:1910.10699 , 2019. [14] Y. Liu, K. Chen, C. Liu, Z. Qin, Z. Luo, and J. Wang, “Structured knowledge distillation for semantic segmentation,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,2019, pp. 2604–2613. [15] C. Shu, Y. Liu, J. Gao, Z. Yan, and C. Shen, “Channel-wise knowledge distillation for dense prediction,” in 2021 IEEE/CVF International Conference on Computer Vision (ICCV) . IEEE, 2021, pp. 5291–5300. [16] C. Yang, H. Zhou, Z. An, X. Jiang, Y. Xu, and Q. Zhang, “Cross-image relational knowledge distillation for semantic segmentation,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, 2022, pp. 12 309–12 318. [17] Y. Wang, W. Zhou, T. Jiang, X. Bai, and Y. Xu, “Intra-class feature vari-ation distillation for semantic segmentation,” in European Conference on Computer Vision . Springer, 2020, pp. 346–362. [18] T. Liu, C. Chen, X. Yang, and W. Tan, “Rethinking knowledge distilla-tion with raw features for semantic segmentation,” in 2024 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) . IEEE, 2024, pp. 1144–1153. [19] J. Zhu, Y. Luo, X. Zheng, H. Wang, and L. Wang, “A good student is cooperative and reliable: Cnn-transformer collaborative learning for semantic segmentation,” in 2023 IEEE/CVF International Conference on Computer Vision (ICCV) . IEEE, 2023, pp. 11 686–11 696. [20] J. Long, E. Shelhamer, and T. Darrell, “Fully convolutional networks for semantic segmentation,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2015, pp. 3431–3440. [21] O. Ronneberger, P. Fischer, and T. Brox, “U-net: Convolutional networks for biomedical image segmentation,” in International Conference on Medical image computing and computer-assisted intervention . Springer, 2015, pp. 234–241. [22] L.-C. Chen, Y. Zhu, G. Papandreou, F. Schroff, and H. Adam, “Encoder-decoder with atrous separable convolution for semantic image segmen-tation,” in European conference on computer vision . Springer, 2018, pp. 833–851. [23] A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly et al. ,“An image is worth 16x16 words: Transformers for image recognition at scale,” arXiv preprint arXiv:2010.11929 , 2020. [24] B. Cheng, I. Misra, A. G. Schwing, A. Kirillov, and R. Girdhar, “Masked-attention mask transformer for universal image segmentation,” in 2022 IEEE/CVF Conference on Computer Vision and Pattern Recog-nition (CVPR) . IEEE, 2022, pp. 1280–1289. [25] M. Assran, Q. Duval, I. Misra, P. Bojanowski, P. Vincent, M. Rabbat, Y. LeCun, and N. Ballas, “Self-supervised learning from images with a joint-embedding predictive architecture,” in 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, 2023, pp. 15 619–15 629. [26] E. Xie, W. Wang, Z. Yu, A. Anandkumar, J. M. Alvarez, and P. Luo, “Segformer: Simple and efficient design for semantic segmentation with transformers,” Advances in neural information processing systems ,vol. 34, pp. 12 077–12 090, 2021. [27] G. Furano, G. Meoni, A. Dunne, D. Moloney, V. Ferlet-Cavrois, A. Tavoularis, J. Byrne, L. Buckley, M. Psarakis, K.-O. Voss et al. ,“Towards the use of artificial intelligence on the edge in space systems: Challenges and opportunities,” IEEE Aerospace and Electronic Systems Magazine , vol. 35, no. 12, pp. 44–56, 2020. [28] R. Del Prete, P. K. Thind, A. Mazzeo, M. Whitley, L. Papa, N. Long´ ep´ e, and G. Meoni, “Optimizing deep learning models for on-orbit deploy-ment through neural architecture search,” Scientific Reports , vol. 15, no. 1, p. 37783, 2025. [29] R. Gurav, H. Patel, Z. Shang, A. Eldawy, J. Chen, E. Scudiero, and E. Papalexakis, “Can sam recognize crops? quantifying the zero-shot performance of a semantic segmentation foundation model on generating crop-type maps using satellite imagery for precision agriculture,” arXiv preprint arXiv:2311.15138 , 2023.

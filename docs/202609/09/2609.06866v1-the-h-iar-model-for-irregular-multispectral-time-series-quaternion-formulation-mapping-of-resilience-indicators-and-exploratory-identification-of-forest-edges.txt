@@ -1,0 +1,549 @@
+Title: The H-IAR Model for Irregular Multispectral Time Series. Quaternion Formulation, Mapping of Resilience Indicators, and Exploratory Identification of Forest Edges
+
+URL Source: https://arxiv.org/pdf/2609.06866v1
+
+Published Time: Wed, 09 Sep 2026 02:09:32 GMT
+
+Number of Pages: 31
+
+Markdown Content:
+# The H-IAR Model for Irregular Multispectral Time Series 
+
+# Quaternion Formulation, Mapping of Resilience Indicators, and Exploratory Identification of Forest Edges 
+
+## Bruno Gonçalves C. Filho 1
+
+## Angelo Calil Bianchi 2
+
+## Aluísio de Souza Pinheiro 3
+
+> 1
+
+School of Mechanical Engineering (FEM), University of Campinas (UNICAMP), Campinas, São Paulo, Brazil 
+
+> 2
+
+Institute of Science and Technology (ICT), Federal University of São Paulo (UNIFESP), São José dos Campos, São Paulo, Brazil 
+
+> 3
+
+Department of Statistics, Institute of Mathematics, Statistics and Scientific Computing (IMECC), University of Campinas (UNICAMP), Campinas, São Paulo, Brazil 
+
+Corresponding author: Aluísio de Souza Pinheiro 
+
+Email for proofs: pinheiro@unicamp.br arXiv:2609.06866v1 [stat.ME] 6 Sep 2026 Abstract 
+
+Satellite-based time series are often irregular because of clouds, shadows, at-mospheric gaps, and orbital overlaps, while vegetation spectral responses involve correlated visible and near-infrared bands. We propose the Hypercomplex Irregular Autoregressive (H-IAR) model, a quaternion extension of the IAR/CIAR/BIAR family for four-component observations at irregular times. Temporal dependence is represented by a real power of a quaternion parameter and estimated in state-space form through the Gaussian innovation likelihood of the Kalman filter, conditional on the adopted covariance specifications. Across 12,000 Monte Carlo fits, mean absolute bias decreased with sample size and ranged from 0.0009 to 0.0023 at N = 300. We applied the model to 30,824 Sentinel-2 pixel series covering the Mata de Santa Genebra ARIE from 2020 to 2023. The optimizer reported successful numerical termination in 98.73% of the fits; the median 
+
+> ∥∥∥̂
+
+Φ 
+
+> ∥∥∥
+
+was 0.6248, 3,872 pixels met the operational high-persistence threshold ( 
+
+> ∥∥∥̂
+
+Φ 
+
+> ∥∥∥
+
+≥ 0.95), and the median residual RMSE for band B8 was 5.1551 percentage points. The results demonstrate the computa-tional feasibility of H-IAR and its ability to generate descriptors of multispectral persistence, vector dynamics, predictive error, and spatial discontinuities potentially associated with forest edges. 
+
+Keywords: irregularly spaced time series; quaternion autoregression; state-space models; Kalman filtering; remote sensing; temporal persistence. 
+
+MSC 2020: Primary 62M10; secondary 62M20. 
+
+# 1 Introduction 
+
+Assessing the resilience of forest ecosystems requires quantifying how environmental disturbances are absorbed and dissipated over time. In dynamical systems, proximity to a critical regime tends to reduce the recovery rate after perturbations, thereby increasing the temporal persistence of deviations from the mean state. This phenomenon, known as 
+
+critical slowing down , has been used as an indirect indicator of resilience loss and possible proximity to critical transitions in ecological systems (Scheffer et al., 2009; Dakos et al., 2012). In remote sensing, this relationship has been investigated through autoregressive coeffi-cients and temporal autocorrelations estimated from satellite vegetation series. Increasing temporal memory has been used as an indirect indicator of slower recovery and possible loss of forest resilience (Verbesselt et al., 2016; Boulton et al., 2022; Forzieri et al., 2022). Such measures are nevertheless statistical descriptors that depend on the sensor, preprocessing choices, and observed variable; taken alone, they do not constitute direct measurements of ecological resilience (Smith and Boers, 2023). 1Vegetation reflectance in the visible and near-infrared regions can characterize leaf opti-cal properties and canopy structure through remote sensing (Knipling, 1970; Jacquemoud et al., 2009). In particular, the Sentinel-2 constellation provides optical bands at a spatial resolution suitable for studying heterogeneous forest fragments (European Space Agency, 2015). Optical satellite time series, however, are rarely regularly spaced. Clouds, shadows, atmospheric variability, quality masks, and orbital overlaps create gaps and redundancies that preclude the direct use of classical discrete-time autoregressive models (Kandasamy et al., 2013; Zhu and Woodcock, 2014; Rehfeld et al., 2011). A common solution is to interpolate or otherwise regularize the temporal grid before modeling. Although convenient, this approach may alter the autocorrelation structure and smooth the very residual component that carries information about temporal persistence (Rehfeld et al., 2011; Kandasamy et al., 2013). Irregular autoregressive models offer a more suitable alternative because they incorporate the observed time interval directly into the process dynamics (Eyheramendy et al., 2018; Elorrieta et al., 2019). The IAR model was proposed for univariate observations collected at unequal time intervals (Eyheramendy et al., 2018); the CIAR model introduced a complex-valued representation that can be estimated with a Kalman filter (Elorrieta et al., 2019); and the BIAR model subsequently extended the approach to bivariate irregular time series, allowing two observed components to be modeled jointly (Elorrieta et al., 2021). Although the IAR, CIAR, and BIAR models were developed and evaluated in studies strongly motivated by astronomical time series—particularly irregularly observed light curves and, in the bivariate case, different photometric bands (Eyheramendy et al., 2018; Elorrieta et al., 2019, 2021)—their statistical structure is defined in terms of irregular temporal dependence rather than domain-specific physical properties. This feature sug-gests that the irregular-time core of the IAR/CIAR/BIAR family can be transferred to environmental multispectral series, provided that the parameter interpretation is adapted to the new physical context. Multispectral applications often involve more than two relevant bands and require a structure capable of representing marginal persistence and cross-component coupling within a single irregular dynamic system. Visible and near-infrared bands respond to distinct but potentially coupled optical and structural properties of vegetation (Knipling, 1970; Jacquemoud et al., 2009). Modeling each band separately ignores this coupling. An unrestricted vector transition would be more flexible, but it would not impose the parsi-monious algebraic structure through which H-IAR combines radial contraction, associated with overall temporal persistence, with structured rotational mixing across components. This paper introduces the Hypercomplex Irregular Autoregressive (H-IAR) model, a quaternion extension of the IAR/CIAR/BIAR family. Four observed components are 2represented as a single element of the Hamilton quaternion algebra (Ward, 1997; Kuipers, 1999), and irregular temporal evolution is described through a real power of a quaternion parameter. This construction produces a real 4 ×4 transition matrix that is compatible with a state-space representation and estimation through the Gaussian innovation likelihood of the Kalman filter. The main contributions are as follows: 1. to formulate H-IAR as a quaternion autoregressive model for four-component irregu-larly spaced time series; 2. to derive the real matrix representation of the transition Φ ∆t and embed it in a state-space model; 3. to implement parameter estimation through the Gaussian innovation likelihood of the Kalman filter; 4. to evaluate the finite-sample behavior of the estimator through Monte Carlo simula-tion; and 5. to apply the model to Sentinel-2 series from the Mata de Santa Genebra ARIE, producing maps of temporal persistence, vector participation in the quaternion dynamics, predictive error, and spatial discontinuities potentially associated with forest edges. Table 1 summarizes the conceptual progression of the irregular autoregressive family. Although H-IAR uses a 4 × 4 transition matrix, its structure is determined by a single quaternion parameter and is not an unrestricted vector transition. Table 1: Structural comparison of the precursor irregular autoregressive models and H-IAR. Model Algebra Observed components Dynamic parameter Main feature IAR R 1 1 real coefficient Univariate irregular persistence CIAR C 1 plus one latent component 1 complex coefficient Oscillations and negative autocorrelations BIAR C 2 1 complex coefficient Bivariate irregular dynamics H-IAR H 4 1 quaternion Structured contraction and rotation in R4
+
+The remainder of the paper is organized as follows. Section 2 presents the mathematical formulation of H-IAR. Section 3 describes the Monte Carlo validation. Section 4 details the satellite data and empirical pipeline. Section 5 presents the mapping results. Section 6 discusses the contributions, limitations, and methodological implications. Section 7 concludes. 32 The H-IAR model 
+
+## 2.1 Quaternion representation 
+
+The H-IAR model is defined on the noncommutative real algebra of Hamilton quaternions, denoted by H (Ward, 1997; Kuipers, 1999). A quaternion q ∈ H can be written as 
+
+q = a + bi + cj + dk,
+
+where a, b, c, d ∈ R and the imaginary units satisfy 
+
+i2 = j2 = k2 = ijk = −1.
+
+Multiplication is noncommutative and obeys the cyclic identities ij = k, jk = i, and ki = j,with a sign reversal when the order of the factors is exchanged. For a four-component multispectral time series, each vector Xtj ∈ R4 is associated with the quaternion 
+
+qtj = x1,t j + x2,t j i + x3,t j j + x4,t j k.
+
+Equivalently, define the vectorization map 
+
+V : H −→ R4, V (x1 + x2i + x3j + x4k) = [
+
+x1 x2 x3 x4
+
+> ]⊤
+
+.
+
+Thus, Xtj = V(qtj ) and ϵtj = V(εtj ). In the empirical application, the four components correspond, in order, to Sentinel-2 bands B2, B3, B4, and B8 after the preprocessing described in Section 4. Band B2 occupies the scalar component, whereas B3, B4, and B8 occupy the three imaginary components. This assignment is part of the adopted parameterization and is not invariant to arbitrary permutations that exchange scalar and vector roles. 
+
+## 2.2 Irregular autoregressive equation 
+
+Let t1 < t 2 < · · · < t N denote the observation times, and let ∆ tj = tj − tj−1 be the interval between consecutive observations. The first-order H-IAR process is defined by 
+
+qtj = Φ ∆tj qtj−1 + εtj , (1) where Φ ∈ H is the quaternion autoregressive parameter and εtj is a zero-mean quaternion disturbance. Dependence on ∆ tj allows the strength of temporal dependence to vary continuously with the observed interval, without interpolating the series onto a regular 4grid. 
+
+## 2.3 Real powers of quaternions and the transition matrix 
+
+To compute Φ ∆tj , we use the polar form of a nonzero quaternion (Kuipers, 1999; Ward, 1997). Let Φ = a + bi + cj + dk,
+
+with norm 
+
+∥Φ∥ = √a2 + b2 + c2 + d2.
+
+If the vector part v = ( b, c, d ) is nonzero, define the unit axis 
+
+u = bi + cj + dk
+
+√b2 + c2 + d2
+
+and the angle 
+
+θ = arccos  
+
+> (
+
+a
+
+∥Φ∥
+
+> )
+
+.
+
+Under the principal polar branch, Φ∆tj = ∥Φ∥∆tj [cos( θ∆tj ) + u sin( θ∆tj )] . (2) When √b2 + c2 + d2 < 10 −12 and the scalar component is positive, the implementation uses the real limit Φ ∆tj = a∆tj . If a < 0 and the vector part is zero, a real quaternion power has no unique limit independent of the approach axis when ∆ tj is noninteger. The implementation handles this numerically degenerate case through a zero-transition convention; this issue is revisited among the limitations. Writing Φ∆tj = Aj + Bj i + Cj j + Dj k,
+
+left multiplication by Φ ∆tj , that is, the operator q 7 → Φ∆tj q, has the following real 4 × 4matrix representation (Mebius, 2005; Kuipers, 1999): 
+
+F∆tj =
+
+> 
+
+Aj −Bj −Cj −Dj
+
+Bj Aj −Dj Cj
+
+Cj Dj Aj −Bj
+
+Dj −Cj Bj Aj
+
+> 
+
+. (3) This matrix belongs to a structured subclass of linear transitions on R4 and satisfies 
+
+F ⊤ 
+
+> ∆tj
+
+F∆tj = ∥Φ∥2∆ tj I4. (4) 5Consequently, F∆tj combines radial contraction by ∥Φ∥∆tj with a left-isoclinic rotation induced by the unit quaternion. Although it is a 4 × 4 matrix, it depends on only four components and is not a general vector transition. The resulting parsimony comes at the cost of restricting the admissible cross-component dependence patterns. Equation (1) can therefore be written as a linear dynamic system on R4:
+
+Xtj = F∆tj Xtj−1 + ϵtj .
+
+## 2.4 State-space representation 
+
+The state-space formulation separates the latent process dynamics from the observation equation (Kalman, 1960; Durbin and Koopman, 2012): 
+
+Xtj = F∆tj Xtj−1 + ϵtj , ϵtj ∼ N (0 , Q tj ),Ytj = GX tj + etj , etj ∼ N (0 , R ). (5) All four components are observed directly in the multispectral application, so G = I4. The matrix R denotes the covariance of observational or instrumental error. After centering the four components, the recursion is initialized with zero mean, ̂
+
+Xt1|t0 = 0, and initial covariance P0 equal to the diagonal matrix of empirical marginal variances. The first observation is neither assimilated through an update step nor included directly in the objective function, whose summation starts at j = 2; it contributes only to the empirical construction of P0.
+
+## 2.5 Dynamic-noise covariance 
+
+Under an exact stationary formulation, let P0 denote the target unconditional covariance. The dynamic-noise covariance should then satisfy the discrete Lyapunov equation (Durbin and Koopman, 2012) 
+
+Qtj = P0 − F∆tj P0F ⊤ 
+
+> ∆tj
+
+. (6) This expression is straightforward when P0 is proportional to the identity, because the rotation induced by F∆tj preserves isotropy. A diagonal matrix is isotropic only when all marginal variances are equal, that is, P0 = σ2I4. Real multispectral bands may have substantially different variances. Imposing isotropy would remove this empirical anisotropy, whereas direct use of (6) with anisotropic P0 can produce Qtj matrices that are not positive semidefinite while the numerical optimizer explores the parameter space. In the implementation, P0 is the diagonal matrix of empirical variances of the four centered components. This preserves the marginal scale of each band without estimating 6additional cross-covariances. We adopt the following approximate diagonal specification: 
+
+Qtj = P0
+
+> (
+
+1 − ∥ Φ∥2∆ tj
+
+> )
+
+. (7) This choice preserves the empirical marginal variances on the diagonal of P0, keeps Qtj
+
+positive semidefinite for ∥Φ∥ < 1, and stabilizes large-scale estimation. In the isotropic case P0 = σ2I4, it coincides with the condition that preserves the unconditional covariance because the rotational part of F∆tj preserves scalar matrices. In the anisotropic case, it is a first-order operational approximation: P0 acts as the initial covariance and as a reference matrix of marginal variances, but is not exactly preserved as the unconditional covariance under the approximate dynamics. The diagonal approximation for Qtj does not force predicted or filtered covariances to remain diagonal; the full Kalman recursion can produce cross-covariances through F∆tj .
+
+## 2.6 Kalman filter and innovation likelihood 
+
+Given the state-space formulation in (5), the Kalman innovations are computed recursively (Kalman, 1960; Durbin and Koopman, 2012; Elorrieta et al., 2019). The prediction step is ̂
+
+Xtj |tj−1 = F∆tĵ Xtj−1|tj−1 ,Ptj |tj−1 = F∆tj Ptj−1|tj−1 F ⊤ 
+
+> ∆tj
+
++ Qtj .
+
+The innovation and its covariance are 
+
+vtj = Ytj − Ĝ Xtj |tj−1 ,
+
+Λtj = GP tj |tj−1 G⊤ + R. 
+
+The Kalman gain is 
+
+Ktj = Ptj |tj−1 G⊤Λ−1 
+
+> tj
+
+,
+
+and the update is ̂
+
+Xtj |tj =̂ Xtj |tj−1 + Ktj vtj ,Ptj |tj = ( I4 − Ktj G)Ptj |tj−1 .
+
+When the innovation covariance is critically ill-conditioned, a small diagonal term γI 4
+
+is added before computing its determinant and inverse. The implementation uses γ = 10 −6.This term acts as diagonal numerical jitter only in such cases and is not estimated as an additional component of the observation model. 7Conditional on P0, obtained by substituting the empirical variances, and on R, fixed for each application, the objective function is the negative Gaussian innovation log-likelihood (Durbin and Koopman, 2012; Elorrieta et al., 2019): 
+
+L(Φ) = 12
+
+> N∑
+> j=2
+> [
+
+k log(2 π) + log |Λtj | + v⊤ 
+
+> tj
+
+Λ−1 
+
+> tj
+
+vtj
+
+> ]
+
+, (8) with k = 4 in the full application. This is therefore a Gaussian innovation likelihood with covariance parameters specified by a plug-in procedure, rather than a joint estimation of all components of P0, Qtj , and R. Equation (8) is minimized with L-BFGS-B (Byrd et al., 1995; Zhu et al., 1997). Componentwise bounds restrict the search to a compact region, while a radial penalty imposes 
+
+∥Φ∥2 ≤ 0.99 .
+
+Whenever a proposed point exceeds this radial limit, the objective is evaluated at its radial projection onto the admissible boundary plus a quadratic penalty proportional to the excess. L-BFGS-B was run with a maximum of 2,000 iterations and relative objective tolerance 
+
+ftol = 10 −9. A fit is classified as numerically successful when the returned optimization object has success=True . This flag certifies only that a numerical stopping criterion was met; it does not guarantee a global optimum or statistical adequacy. 
+
+# 3 Monte Carlo validation 
+
+Monte Carlo experiments were used to assess the finite-sample behavior, numerical stability, and computational scaling of the H-IAR estimator (Eyheramendy et al., 2018; Elorrieta et al., 2019, 2021). The purpose is not to provide an analytical proof of consistency, but to determine empirically whether the algorithm recovers the true parameters in synthetic series generated from the model. 
+
+## 3.1 Generation of irregular observation times 
+
+To reproduce unequally spaced observation patterns, the intervals ∆ tj were generated from a mixture of two exponential distributions. Because the implementation uses the scale parameter of the exponential distribution, the density is 
+
+f (∆ t) = w1
+
+1
+
+β1
+
+exp 
+
+> (
+
+−∆tβ1
+
+> )
+
++ w2
+
+1
+
+β2
+
+exp 
+
+> (
+
+−∆tβ2
+
+> )
+
+,
+
+8where β1 = 15, β2 = 2, w1 = 0 .15, and w2 = 0 .85. Observation times are obtained by cumulative summation of these intervals, with t1 = 0. 
+
+## 3.2 Parameter scenarios 
+
+Four values of Φ were considered, combining positive and negative signs in the scalar and vector components: Φ1 = 0 .70 + 0 .30 i + 0 .30 j + 0 .30 k,
+
+Φ2 = −0.70 − 0.30 i − 0.30 j − 0.30 k,
+
+Φ3 = −0.90 + 0 .15 i + 0 .15 j + 0 .15 k,
+
+Φ4 = 0 .90 − 0.15 i − 0.15 j − 0.15 k.
+
+For each scenario, M = 1 ,000 independent replications were generated at sample sizes 
+
+N ∈ { 30 , 100 , 300 }.
+
+Synthetic series were simulated with P0 = I4, initial state Xt1 ∼ N (0 , I 4), and dynamic noise 
+
+Qtj = I4
+
+> (
+
+1 − ∥ Φ∥2∆ tj
+
+> )
+
+.
+
+Under this isotropic data-generating mechanism, the expression for Qtj coincides exactly with the stationary covariance condition. For each fitted sample, however, the estimator recomputed P0 as the diagonal matrix of empirical variances and used R = 10 −6I4 when no observation covariance was supplied. The validation therefore also incorporates the plug-in procedure used in estimation. Moreover, the scenarios with a negative scalar component have nonzero vector parts and do not fall on the degenerate negative real semiaxis described in Section 2. 93.3 Evaluation criteria 
+
+For each component ℓ ∈ { a, b, c, d }, we computed the mean estimate, empirical absolute bias, and Monte Carlo standard deviation: ̂
+
+Φℓ = 1
+
+M
+
+> M
+
+∑
+
+> m=1
+
+̂
+
+Φ(m) 
+
+> ℓ
+
+,
+
+|Bias ℓ| =
+
+∣∣∣∣̂ Φℓ − Φℓ
+
+∣∣∣∣ ,SD ℓ =
+
+√√√√ 1
+
+M − 1
+
+> M
+
+∑
+
+> m=1
+
+(̂ 
+
+Φ(m) 
+
+> ℓ
+
+−̂ Φℓ
+
+)2
+
+.
+
+Mean estimation time and mean optimizer iteration count were also recorded. Table 2: Aggregate Monte Carlo results for the H-IAR estimator. Bias and dispersion metrics are aggregated across the four components a, b, c, d within each scenario and sample size. Case N Mean abs. bias Max. abs. bias Mean SD Iterations Mean time (s) Time/iter. (ms) 1 (+/+) 30 0.0150 0.0212 0.0572 10.663 0.0153 1.4321 1 (+/+) 100 0.0048 0.0064 0.0279 9.955 0.0291 2.9243 1 (+/+) 300 0.0014 0.0024 0.0153 9.384 0.0814 8.6776 2 (-/-) 30 0.0219 0.0360 0.0557 13.177 0.0137 1.0407 2 (-/-) 100 0.0058 0.0102 0.0213 12.146 0.0376 3.0955 2 (-/-) 300 0.0023 0.0036 0.0120 11.413 0.1048 9.1810 3 (-/+) 30 0.0220 0.0579 0.0645 16.736 0.0197 1.1785 3 (-/+) 100 0.0044 0.0123 0.0108 16.827 0.0617 3.6640 3 (-/+) 300 0.0015 0.0041 0.0059 17.580 0.1929 10.9751 4 (+/-) 30 0.0080 0.0215 0.0325 13.972 0.0144 1.0322 4 (+/-) 100 0.0024 0.0049 0.0150 14.188 0.0427 3.0108 4 (+/-) 300 0.0009 0.0019 0.0085 13.594 0.1239 9.1163 Figures 1 and 2 show that both the maximum componentwise absolute bias and the empirical dispersion of the scalar estimate decrease with N in all four scenarios. Together with the full componentwise results in Appendix A, these patterns provide numerical evidence of estimator stability and parameter recovery. Figure 3 reports the mean estimation cost as a function of sample size, with growth compatible with the sequential Kalman-filter recursion. These numerical patterns do not constitute a formal asymptotic proof. 10 Figure 1: Maximum componentwise absolute bias of the H-IAR estimator in the Monte Carlo experiments, by sample size and parameter scenario. 
+
+Figure 2: Monte Carlo standard deviation of the estimated scalar component ̂ Φa, by sample size and parameter scenario. 11 Figure 3: Mean H-IAR estimation time in the Monte Carlo experiments, by sample size and parameter scenario. 
+
+# 4 Satellite data and empirical pipeline 
+
+## 4.1 Study area 
+
+The empirical application was conducted in the Mata de Santa Genebra Area of Relevant Ecological Interest (ARIE), located in Campinas, São Paulo, Brazil (Instituto Chico Mendes de Conservação da Biodiversidade, 2026; Guirão and Teixeira Filho, 2011). The site is an ecologically relevant forest fragment embedded in an urban matrix (Guirão and Teixeira Filho, 2011; Instituto Chico Mendes de Conservação da Biodiversidade, 2026), which permits the joint examination of forest interior, edges, and internal heterogeneity. 
+
+## 4.2 Sentinel-2 acquisition and Google Earth Engine extraction 
+
+Time series were extracted through the Google Earth Engine API (Gorelick et al., 2017) from the COPERNICUS/S2_SR_HARMONIZED collection, which provides harmonized Sentinel-2 Level-2A surface reflectance (Google Earth Engine, 2026). This collection was selected to reduce radiometric discontinuities associated with Processing Baseline 04.00 and to improve comparability between scenes acquired before and after 2022 (Google Earth Engine, 2026). 12 The Phase B extraction region was defined by a closed polygon covering the forest core and its peripheral fringe. In each scene, the Scene Classification Layer (SCL) was used to retain only pixels classified as vegetation, that is, SCL == 4 (Google Earth Engine, 2026). Bands B2, B3, B4, and B8 were then selected as the four multispectral components of the quaternion vector (European Space Agency, 2015; Google Earth Engine, 2026). Digital values were divided by 100, converting the scaled digital numbers into percentage reflectance (Google Earth Engine, 2026). The system:time_start timestamp was inserted as a constant band named time ,ensuring that each exported sample contained the scene time in addition to coordinates and spectral bands. Spatial sampling used a 10-m resolution (European Space Agency, 2015; Google Earth Engine, 2026), and the resulting spatiotemporal table was asynchronously exported to Google Drive in CSV format. 
+
+## 4.3 Phase A: pilot validation 
+
+Before regional processing, Phase A tested the pipeline on a controlled pilot sample of at most 30 pixels from Mata de Santa Genebra. This stage validated Sentinel-2 extraction, vegetation filtering, time conversion, within-day aggregation, removal of deterministic components, and the call to the H-IAR estimator. For each pixel, absolute time in milliseconds was converted to days since January 1, 2020. Observations from the same day were averaged to avoid zero or near-zero ∆ t values. Pixels with fewer than 30 valid observations were discarded. The remaining series were fitted with a deterministic model containing an annual harmonic component and a linear trend (Wilson et al., 2018; Verbesselt et al., 2010): 
+
+y(t) = β0 + β1 cos( ωt ) + β2 sin( ωt ) + β3t, ω = 2π
+
+365 .25 . (9) Residuals were centered componentwise and passed to the H-IAR estimator so that autoregressive dynamics were estimated around the residual mean of each band. Phase A produced a pixel-level table containing geographic coordinates, the number of valid observations, the estimated quaternion, the global norm ∥∥∥̂ Φ∥∥∥, the numerical-success flag, and the optimizer iteration count. 
+
+## 4.4 Phase B: regional processing 
+
+In Phase B, the full spatiotemporal table was processed by unique coordinate pairs. After within-day consolidation and chronological splitting, pixels with fewer than 30 training observations were discarded, leaving 30,824 valid pixels. Each pixel was treated 13 as an independent time series. Multicore CPU parallelization transformed the pointwise estimator into a spatial mapping pipeline. Processing was performed on the shared Zurich server at IMECC/UNICAMP, which has 24 CPU cores and 128 GB of RAM. Under these conditions, the full grid was processed in approximately 10 minutes. This value is an operational record for the reported execution, not a hardware-independent benchmark. The observation-error covariance was fixed at 
+
+R = 4 I4,
+
+as an operational specification chosen a priori . Because the bands were represented in percentage-reflectance points, the diagonal value 4 = 2 2 corresponds to an observational standard deviation of 2 percentage points per band. The structure 4 I4 assumes a common observation-error variance across the four components, no contemporaneous correlation among measurement errors, and constant uncertainty across times and pixels. The value was neither estimated from the data nor subjected to a sensitivity analysis; the empirical results are therefore conditional on this specification. To prevent data leakage, each pixel series was split chronologically into 90% for training and 10% for validation. The deterministic model in (9) was fitted exclusively to the training segment. Its estimated parameters were then used to remove seasonality and trend from both training and test observations. If the harmonic fit did not converge, a reduced deterministic adjustment based only on the training-set mean was used. Thus, no future information entered the deterministic fit. During estimation, the H-IAR routine internally centered the training residuals componentwise, preserving the zero-mean latent-process formulation. After estimating ̂ Φ on the training set, predictive validation was performed on the multispectral residuals in the test set. The first test prediction started from the last observed training residual. Each subsequent prediction used the residual actually observed at the immediately preceding test time. This is conditional one-step-ahead validation rather than free-running multi-step forecasting. The rule propagates the previous observed residual directly through F∆tj , not the filtered latent state; when R̸ = 0, it differs from the predictive mean of the full Kalman recursion. Squared errors were computed between predicted and observed residuals on the percentage-reflectance scale. Band-specific root mean squared error (RMSE) was used as the local predictive-performance measure: 
+
+RM SE b = 
+
+> √√√√
+
+1
+
+ntest 
+
+> ntest ∑
+> i=1
+> (
+
+xres  
+
+> b,i
+
+−̂ xres 
+
+> b,i
+> )2
+
+.
+
+14 4.5 Rasterization and derived maps 
+
+Pixel-level estimates were converted into georeferenced GeoTIFF surfaces. Coordinates were mapped directly to raster indices without continuous spatial interpolation, thereby avoiding synthetic values in clearings, indentations, and regions lacking validated vegetation observations. The first derived surface was multispectral temporal persistence, operationally defined as the Euclidean norm of the quaternion parameter: 
+
+P = ∥∥∥̂ Φ∥∥∥ =
+
+> √̂
+
+Φ2 
+
+> a
+
++̂ Φ2 
+
+> b
+
++̂ Φ2 
+
+> c
+
++̂ Φ2
+
+> d
+
+. (10) Because time was measured in days, P is the reference persistence factor for a one-day interval, while contraction over an interval of h days is Ph. By (4), larger P values imply stronger retention of multispectral deviations and slower dissipation, whereas smaller values imply faster dissipation. Within the critical slowing down paradigm, high persistence is compatible with slower recovery and possible resilience loss, not with greater resilience in a direct sense. The second surface was vector dominance, defined as 
+
+D = |̂Φb| + |̂ Φc| + |̂ Φd||̂Φa| + 10 −8 . (11) This quantity summarizes the relative contribution of the vector components compared with the scalar component. The metric D was proposed in this study as an exploratory descriptor and is not a standardized index from the literature. The term 10 −8 serves only to prevent division by zero. Because D is unbounded, it can become large when |̂Φa| approaches zero even if the absolute magnitude of the vector part is modest. Furthermore, the L1 sum depends on the representation chosen for the imaginary components. The index should therefore be interpreted comparatively within the analyzed domain. The third surface was predictive RMSE, with particular attention to near-infrared band B8. The fourth was the morphological gradient of persistence. To compute it, missing cells in the persistence raster were temporarily filled by nearest-neighbor values solely to stabilize convolution and prevent propagation of invalid values. The Sobel operator was then applied in the horizontal and vertical directions (Sobel and Feldman, 1968; Gonzalez and Woods, 2018): 
+
+Gx = Sobel( Pfill , x ),Gy = Sobel( Pfill , y ).
+
+15 The gradient magnitude was 
+
+∥∇P∥ = √
+
+G2 
+
+> x
+
++ G2
+
+> y
+
+. (12) Finally, the original valid-data mask was restored, confining the gradient to the observed forest domain. 
+
+# 5 Results 
+
+Applying the H-IAR estimator to the Sentinel-2 series from Mata de Santa Genebra produced a consolidated table of pixel-level parameters and a set of derived raster surfaces. Table 3 summarizes the principal empirical results. Table 3: Summary of the H-IAR application to the Mata de Santa Genebra ARIE. Metric Value Valid pixels processed 30,824 Observation period 2020–2023 Observed processing time approximately 10 min Successful numerical terminations 98.73% Median ∥∥∥̂ Φ∥∥∥ 0.6248 Mean ∥∥∥̂ Φ∥∥∥ 0.6400 Pixels with ∥∥∥̂ Φ∥∥∥ ≥ 0.95 3,872 (12.56%) Median B8 RMSE 5.1551 percentage points The 98.73% rate of successful numerical terminations reported by L-BFGS-B indicates predominantly stable operational behavior in the large-scale fitting exercise, although it does not guarantee a global optimum for every pixel. Summary statistics and raster surfaces were computed from all 30,824 finite estimates returned by the pipeline. For the remaining 1.27%, the last admissible vector returned by the optimizer was retained after the radial projection implemented in the estimation routine, but without a formal convergence certificate. The mean and median of 
+
+> ∥∥∥̂
+
+Φ 
+
+> ∥∥∥
+
+were 0.6400 and 0.6248, respectively, and 3,872 pixels (12.56%) met the operational high-persistence threshold. 
+
+## 5.1 Temporal persistence and resilience indicator 
+
+The H-IAR application produced a spatial surface of 
+
+> ∥∥∥̂
+
+Φ
+
+> ∥∥∥
+
+, which represents the overall temporal persistence of the multispectral process. Large values indicate that deviations tend to be retained for longer periods, whereas small values indicate faster temporal dissipation. In satellite vegetation applications, autoregressive persistence measures have 16 been used as indirect indicators of slow recovery and possible resilience loss (Verbesselt et al., 2016; Boulton et al., 2022; Forzieri et al., 2022). 
+
+Figure 4: Pixel-level multispectral temporal persistence ∥∥∥̂ Φ∥∥∥. Larger values indicate slower dissipation of multispectral deviations. The ecological interpretation of ∥∥∥̂ Φ∥∥∥ should be restricted to an indirect temporal-persistence indicator rather than a direct physiological measurement. Where ∥∥∥̂ Φ∥∥∥ is high, the pattern is compatible with slower post-disturbance recovery and potentially lower resilience; where it is low, the pattern is compatible with faster dissipation of spectral variation. This association alone cannot diagnose stress, degradation, or proximity to a critical transition. For mapping purposes, an operational high-persistence mask was also defined by 
+
+> ∥∥∥̂
+
+Φ∥∥∥ ≥ 0.95 .
+
+This threshold is an exploratory spatial-classification criterion, not a universal ecological boundary. In the Mata de Santa Genebra application, 3,872 pixels, corresponding to 12.56% of valid pixels, met this operational criterion. 
+
+## 5.2 Vector dominance 
+
+Figure 5 shows the vector-dominance measure in (11). This measure summarizes the relative participation of the imaginary quaternion components, which enter the rotational 17 part of the transition and produce structured mixing among the four observed components. 
+
+Figure 5: Vector dominance D. Larger values indicate greater relative participation of the vector components of the quaternion parameter. Large D values indicate greater vector participation relative to the scalar component. This is compatible with more pronounced rotational dynamics among components, but it is not a general measure of correlation, causality, lagged dependence, or a physical interband mechanism. 
+
+## 5.3 Predictive error 
+
+One-step-ahead validation produced band-specific RMSE maps. Band B8 was emphasized because of its relationship with leaf and canopy structure and its comparatively large radiometric amplitude over vegetation (Knipling, 1970; Jacquemoud et al., 2009; European Space Agency, 2015). 18 Figure 6: Predictive RMSE for band B8, computed on the chronologically held-out test segment. The median B8 RMSE was 5.1551 percentage points for the residual dynamics, using the percentage scale of the bands and a chronological training–test split. Because the same deterministic component can be added back to both prediction and observation, this numerical error is equivalent to that of the reconstructed series conditional on the fitted deterministic component. Low-RMSE regions indicate greater local ability to predict the residual B8 dynamics. High-RMSE regions suggest more irregular residual behavior, unmodeled perturbations, or greater local sensitivity to exogenous noise. 
+
+## 5.4 Morphological gradient and exploratory edge identification 
+
+Figure 7 shows the magnitude of the spatial gradient of temporal persistence. Unlike maps of absolute levels, the Sobel operator highlights abrupt transitions between neigh-boring pixels and yields an unsupervised descriptor of spatial discontinuities in estimated persistence (Sobel and Feldman, 1968; Gonzalez and Woods, 2018). 19 Figure 7: Morphological gradient of temporal persistence, computed with a Sobel operator after temporary nearest-neighbor filling and subsequent restoration of the original mask. Large ∥∇P∥ values indicate abrupt local changes in temporal persistence. Such patterns may coincide with external edges, internal clearings, or structural transition zones, but may also reflect mixed pixels, differences in temporal data availability, or residual preprocessing effects. The gradient therefore identifies candidate edges rather than confirmed ecological classes. Interpretation is limited by the 10-m Sentinel-2 grid and the quality of the vegetation mask. 
+
+# 6 Discussion 
+
+## 6.1 Methodological contribution 
+
+The H-IAR model extends the irregular autoregressive family (Eyheramendy et al., 2018; Elorrieta et al., 2019, 2021) by representing four observed components through a single quaternion parameter. The resulting transition combines radial contraction and cross-component rotation (Ward, 1997; Kuipers, 1999). In multispectral applications, this structure avoids treating bands as independent processes or reducing them to isolated pairs. The state-space representation permits estimation through the Gaussian innovation likelihood of the Kalman filter (Kalman, 1960; Durbin and Koopman, 2012; Elorrieta et al., 20 2019), conditional on the adopted plug-in covariance specifications. It accommodates irreg-ular observations without temporal interpolation. The approximate diagonal specification for Qtj was operationally stable in anisotropic multispectral data, preserved empirical marginal variances, and avoided positive-semidefiniteness failures during optimization. 
+
+## 6.2 Ecological interpretation 
+
+The norm ∥∥∥̂ Φ∥∥∥ can be interpreted as a measure of multispectral temporal persistence. This persistence is compatible with slow-recovery indicators used for systems near critical regimes (Scheffer et al., 2009; Dakos et al., 2012; Verbesselt et al., 2016; Boulton et al., 2022), but it should not be interpreted as direct evidence of an ecological transition. Satellite time series record aggregate radiometric responses influenced by canopy structure, moisture, illumination, viewing geometry, and residual atmospheric noise (Knipling, 1970; Jacquemoud et al., 2009; Kandasamy et al., 2013). In Mata de Santa Genebra, the mean and median ∥∥∥̂ Φ∥∥∥ were 0.6400 and 0.6248, while 12.56% of valid pixels met the operational high-persistence threshold. High persistence was therefore spatially concentrated rather than uniform across the fragment. Ecological interpretation of these concentrations requires spatial covariates, management history, and field validation. Because each pixel received one time-constant ̂ Φ estimated over the training segment, the application maps persistence over the study period but does not estimate its temporal evolution. Establishing an early-warning signal would require rolling windows, time-varying parameters, or longitudinal comparison of recovery indicators. Vector dominance is an exploratory measure of the relative participation of the imag-inary quaternion components. It identifies locations where the structured rotational component of the estimated dynamics is more pronounced. The persistence gradient, in turn, highlights abrupt spatial transitions between neighboring pixels (Sobel and Feldman, 1968; Gonzalez and Woods, 2018). Candidate-edge identification is thus not a supervised image-classification step; it follows from spatial variation in a parameter estimated from temporal dynamics. This distinguishes the proposed approach from purely radiometric edge detectors (Gonzalez and Woods, 2018): the discontinuity emerges from estimated stochastic persistence rather than only from instantaneous reflectance contrast. Independent spatial validation remains necessary before these transitions can be assigned an ecological interpretation. 
+
+## 6.3 Limitations 
+
+The study has several limitations. First, ecological validation is indirect: the maps are derived from Sentinel-2 series rather than contemporaneous field measurements. The 21 association between high persistence, slow recovery, and resilience loss is therefore an interpretive hypothesis rather than direct physiological confirmation. Autoregressive indicators derived from satellite observations may also have limited sensitivity in high-biomass vegetation (Smith and Boers, 2023). Moreover, estimating a single Φ per pixel does not support inference about temporal trends in resilience or establish an early-warning signal. Second, the threshold ∥∥∥̂ Φ∥∥∥ ≥ 0.95 is operational and exploratory. It highlights high-persistence areas but is not a universal threshold for collapse or degradation. Vector dominance is likewise a study-specific descriptor: it is unbounded and sensitive to scalar components near zero. Assigning B2 to the scalar component and B3, B4, and B8 to the imaginary components is part of the model parameterization, and sensitivity to alternative band orderings was not assessed. Similarly, the morphological gradient identifies discontinuities and candidate edges but was not quantitatively compared with reference forest boundaries. Third, results depend on the SCL mask and the temporal availability of valid observa-tions (Google Earth Engine, 2026; Kandasamy et al., 2013). Because retention depends on the SCL == 4 classification, missingness may be related to observed surface conditions. Classification errors, persistent shadows, mixed boundary pixels, and heterogeneous pixels can also affect the estimates. Fourth, the approximate diagonal specification of Qtj was adopted for computational stability and large-scale processing. Monte Carlo generation used P0 = I4, for which the expression is exact; during estimation, however, P0 was again computed from empirical marginal variances. The application involved unequal marginal variances and therefore used an approximate anisotropic extension. Future formulations may consider alternative dynamic-noise structures, including cross-covariances and hierarchical models. Fifth, the observation covariance R = 4 I4 was fixed a priori , without joint estimation or sensitivity analysis. This specification assumes homoscedastic and uncorrelated mea-surement errors across bands, times, and pixels. The empirical results are conditional on the adopted uncertainty level. Sixth, the polar representation has a branch singularity on the negative real semiaxis. When the scalar component is negative and the vector norm is below 10 −12 , the unit axis of the quaternion power is not uniquely defined. The implementation handles this extremely narrow region through a zero-transition convention. The true parameters used in the Monte Carlo scenarios do not belong to this case because scenarios with negative scalar components have nonzero vector parts. The influence of intermediate optimizer evaluations in this region was not assessed separately. Seventh, the 1.27% of fits without a formal numerical-success flag were retained in 22 the raster surfaces whenever they produced finite estimates. These values are the last admissible vectors returned by the optimizer and are not necessarily invalid fits; nevertheless, their potential local effect on derived surfaces, particularly the spatial gradient, was not quantified. Finally, observed processing time depends on the hardware, concurrent load on the shared server, and parallelization choices. The reported value of approximately 10 minutes should therefore be interpreted as an operational record rather than a universal measure of computational performance. 
+
+# 7 Conclusion 
+
+This paper introduced the Hypercomplex Irregular Autoregressive (H-IAR) model, a quaternion formulation for multivariate time series observed at irregular times. Four components are represented by a single quaternion, temporal transitions are computed through real powers of the quaternion parameter, and a real 4 × 4 matrix embeds the dynamics in state-space form. Estimation through the Gaussian innovation likelihood of the Kalman filter accommo-dates irregular observations without temporal interpolation, conditional on the adopted plug-in covariance specifications. Monte Carlo experiments provided numerical evidence of parameter recovery in synthetic scenarios. The empirical application demonstrated computational feasibility at spatial scale, processing 30,824 valid Sentinel-2 pixel series from Mata de Santa Genebra, with 98.73% of optimizer runs reporting successful numerical termination. The derived maps show that H-IAR can produce descriptors of multispectral temporal persistence, vector participation in quaternion dynamics, predictive error, and abrupt spatial transitions. The parameter norm provides a stochastic-memory indicator compatible with the slow-recovery paradigm associated with critical slowing down , but it is neither a direct measure of ecological resilience nor a temporal early-warning signal on its own. The morphological gradient of persistence showed potential for exploratory identification of candidate forest edges and internal heterogeneity, which require independent spatial validation. Future work should validate the maps against field data, incorporate spatial covariance among neighboring pixels, evaluate the model in other biomes, and compare H-IAR with alternative vector and multivariate models. The proposed formulation provides a mathematical and computational basis for treating temporal irregularity as an explicit component of multispectral dynamics rather than as a preprocessing obstacle. 23 Data Availability Statement 
+
+The Python implementation used in this study is available at https://github.com/ BGCF11/ic-h-iar . The repository contains the core H-IAR estimator, Monte Carlo scripts, Google Earth Engine extraction and preprocessing routines, pixelwise regional processing, and generation of the cartographic products. The source Sentinel-2 observations are publicly available through the Google Earth Engine collection COPERNICUS/S2_SR_HARMONIZED ;extraction requires an authenticated Google Earth Engine account. The processed empirical data and Monte Carlo outputs supporting the reported tables and figures will be supplied as Supporting Information with the submission. 
+
+# Conflict of Interest Statement 
+
+The authors declare no conflict of interest. 
+
+# Funding Information 
+
+This work was supported by the São Paulo Research Foundation (FAPESP), Brazil, under grants 2023/02538-0 and 2025/21329-8. 
+
+# Acknowledgments 
+
+The authors thank the Institute of Mathematics, Statistics and Scientific Computing (IMECC) at the University of Campinas (UNICAMP) for providing computational re-sources. 24 A Full Monte Carlo validation tables 
+
+Table A1: Componentwise Monte Carlo results for Case 1 (+ /+). 
+
+N Parameter True value Mean estimate Abs. bias SD Iterations / mean time (s) Time/iter. (ms) 30 a 0.7000 0.6788 0.0212 0.0454 10.663 / 0.0153 1.4321 30 b 0.3000 0.2864 0.0136 0.0623 10.663 / 0.0153 1.4321 30 c 0.3000 0.2866 0.0134 0.0609 10.663 / 0.0153 1.4321 30 d 0.3000 0.2881 0.0119 0.0603 10.663 / 0.0153 1.4321 100 a 0.7000 0.6936 0.0064 0.0209 9.955 / 0.0291 2.9243 100 b 0.3000 0.2966 0.0034 0.0304 9.955 / 0.0291 2.9243 100 c 0.3000 0.2961 0.0039 0.0296 9.955 / 0.0291 2.9243 100 d 0.3000 0.2945 0.0055 0.0306 9.955 / 0.0291 2.9243 300 a 0.7000 0.6976 0.0024 0.0111 9.384 / 0.0814 8.6776 300 b 0.3000 0.2985 0.0015 0.0167 9.384 / 0.0814 8.6776 300 c 0.3000 0.2987 0.0013 0.0158 9.384 / 0.0814 8.6776 300 d 0.3000 0.2996 0.0004 0.0176 9.384 / 0.0814 8.6776 Table A2: Componentwise Monte Carlo results for Case 2 ( −/−). 
+
+N Parameter True value Mean estimate Abs. bias SD Iterations / mean time (s) Time/iter. (ms) 30 a -0.7000 -0.6640 0.0360 0.0695 13.177 / 0.0137 1.0407 30 b -0.3000 -0.2837 0.0163 0.0472 13.177 / 0.0137 1.0407 30 c -0.3000 -0.2818 0.0182 0.0551 13.177 / 0.0137 1.0407 30 d -0.3000 -0.2831 0.0169 0.0508 13.177 / 0.0137 1.0407 100 a -0.7000 -0.6898 0.0102 0.0208 12.146 / 0.0376 3.0955 100 b -0.3000 -0.2950 0.0050 0.0213 12.146 / 0.0376 3.0955 100 c -0.3000 -0.2960 0.0040 0.0212 12.146 / 0.0376 3.0955 100 d -0.3000 -0.2960 0.0040 0.0218 12.146 / 0.0376 3.0955 300 a -0.7000 -0.6964 0.0036 0.0116 11.413 / 0.1048 9.1810 300 b -0.3000 -0.2985 0.0015 0.0121 11.413 / 0.1048 9.1810 300 c -0.3000 -0.2980 0.0020 0.0122 11.413 / 0.1048 9.1810 300 d -0.3000 -0.2981 0.0019 0.0119 11.413 / 0.1048 9.1810 25 Table A3: Componentwise Monte Carlo results for Case 3 ( −/+). 
+
+N Parameter True value Mean estimate Abs. bias SD Iterations / mean time (s) Time/iter. (ms) 30 a -0.9000 -0.8421 0.0579 0.1409 16.736 / 0.0197 1.1785 30 b 0.1500 0.1393 0.0107 0.0369 16.736 / 0.0197 1.1785 30 c 0.1500 0.1410 0.0090 0.0381 16.736 / 0.0197 1.1785 30 d 0.1500 0.1395 0.0105 0.0419 16.736 / 0.0197 1.1785 100 a -0.9000 -0.8877 0.0123 0.0137 16.827 / 0.0617 3.6640 100 b 0.1500 0.1484 0.0016 0.0098 16.827 / 0.0617 3.6640 100 c 0.1500 0.1482 0.0018 0.0100 16.827 / 0.0617 3.6640 100 d 0.1500 0.1482 0.0018 0.0097 16.827 / 0.0617 3.6640 300 a -0.9000 -0.8959 0.0041 0.0071 17.580 / 0.1929 10.9751 300 b 0.1500 0.1493 0.0007 0.0052 17.580 / 0.1929 10.9751 300 c 0.1500 0.1494 0.0006 0.0055 17.580 / 0.1929 10.9751 300 d 0.1500 0.1493 0.0007 0.0056 17.580 / 0.1929 10.9751 Table A4: Componentwise Monte Carlo results for Case 4 (+ /−). 
+
+N Parameter True value Mean estimate Abs. bias SD Iterations / mean time (s) Time/iter. (ms) 30 a 0.9000 0.8785 0.0215 0.0293 13.972 / 0.0144 1.0322 30 b -0.1500 -0.1461 0.0039 0.0332 13.972 / 0.0144 1.0322 30 c -0.1500 -0.1480 0.0020 0.0337 13.972 / 0.0144 1.0322 30 d -0.1500 -0.1454 0.0046 0.0336 13.972 / 0.0144 1.0322 100 a 0.9000 0.8951 0.0049 0.0121 14.188 / 0.0427 3.0108 100 b -0.1500 -0.1480 0.0020 0.0157 14.188 / 0.0427 3.0108 100 c -0.1500 -0.1490 0.0010 0.0161 14.188 / 0.0427 3.0108 100 d -0.1500 -0.1483 0.0017 0.0163 14.188 / 0.0427 3.0108 300 a 0.9000 0.8981 0.0019 0.0069 13.594 / 0.1239 9.1163 300 b -0.1500 -0.1494 0.0006 0.0088 13.594 / 0.1239 9.1163 300 c -0.1500 -0.1496 0.0004 0.0089 13.594 / 0.1239 9.1163 300 d -0.1500 -0.1494 0.0006 0.0092 13.594 / 0.1239 9.1163 26 References 
+
+Chris A. Boulton, Timothy M. Lenton, and Niklas Boers. Pronounced loss of Amazon rainforest resilience since the early 2000s. Nature Climate Change , 12(3):271–278, 2022. doi: 10.1038/s41558-022-01287-8. Richard H. Byrd, Peihuang Lu, Jorge Nocedal, and Ciyou Zhu. A limited memory algorithm for bound constrained optimization. SIAM Journal on Scientific Computing , 16(5): 1190–1208, 1995. doi: 10.1137/0916069. Vasilis Dakos, Stephen R. Carpenter, William A. Brock, Aaron M. Ellison, Vishwesha Guttal, Anthony R. Ives, Sonia Kéfi, Valerie Livina, David A. Seekell, Egbert H. van Nes, and Marten Scheffer. Methods for detecting early warnings of critical transitions in time series illustrated using simulated ecological data. PLOS ONE , 7(7):e41010, 2012. doi: 10.1371/journal.pone.0041010. James Durbin and Siem Jan Koopman. Time Series Analysis by State Space Methods .Oxford University Press, Oxford, 2 edition, 2012. ISBN 9780199641178. Felipe Elorrieta, Susana Eyheramendy, and Wilfredo Palma. Discrete-time autoregressive model for unequally spaced time-series observations. Astronomy & Astrophysics , 627: A120, 2019. doi: 10.1051/0004-6361/201935560. Felipe Elorrieta, Susana Eyheramendy, Wilfredo Palma, and Cesar Ojeda. A novel bivariate autoregressive model for predicting and forecasting irregularly observed time series. Monthly Notices of the Royal Astronomical Society , 505(1):1105–1116, 2021. doi: 10.1093/mnras/stab1216. European Space Agency. Sentinel-2 User Handbook . European Space Agency, 2015. URL https://sentinels.copernicus.eu/documents/247904/685211/Sentinel-2_ User_Handbook . ESA Standard Document, Issue 1, Revision 2, 24 July 2015. Susana Eyheramendy, Felipe Elorrieta, and Wilfredo Palma. An irregular discrete time series model to identify residuals with autocorrelation in astronomical light curves. 
+
+Monthly Notices of the Royal Astronomical Society , 481(4):4311–4322, 2018. doi: 10. 1093/mnras/sty2487. Giovanni Forzieri, Vasilis Dakos, Nate G. McDowell, Alkama Ramdane, and Alessandro Cescatti. Emerging signals of declining forest resilience under climate change. Nature ,608(7923):534–539, 2022. doi: 10.1038/s41586-022-04959-9. 27 Rafael C. Gonzalez and Richard E. Woods. Digital Image Processing . Pearson Education, Harlow, 4 edition, 2018. ISBN 9781292223070. Google Earth Engine. COPERNICUS/S2_SR_HARMONIZED: Sentinel-2 MSI level-2a surface reflectance harmonized. Google Earth Engine Data Catalog, 2026. URL https://developers.google.com/earth-engine/datasets/catalog/ COPERNICUS_S2_SR_HARMONIZED . Accessed: 2026-06-25. Noel Gorelick, Matt Hancher, Mike Dixon, Simon Ilyushchenko, David Thau, and Rebecca Moore. Google Earth Engine: Planetary-scale geospatial analysis for everyone. Remote Sensing of Environment , 202:18–27, 2017. doi: 10.1016/j.rse.2017.06.031. Ângela Cruz Guirão and José Teixeira Filho. Preservação de um fragmento florestal urbano: estudo de caso: a ARIE mata de santa genebra, campinas-SP. GEOUSP Espaço e Tempo (Online) , 15(1):147–158, 2011. doi: 10.11606/issn.2179-0892.geousp.2011.74193. Instituto Chico Mendes de Conservação da Biodiversidade. ARIE mata de santa genebra. Portal Gov.br, 2026. URL https://www.gov.br/icmbio/pt-br/ assuntos/biodiversidade/unidade-de-conservacao/unidades-de-biomas/ mata-atlantica/lista-de-ucs/arie-mata-de-santa-genebra . Accessed: 2026-06-25. Stéphane Jacquemoud, Wout Verhoef, Frédéric Baret, Cédric Bacour, Pablo J. Zarco-Tejada, Gregory P. Asner, Cécile François, and Susan L. Ustin. PROSPECT + SAIL models: A review of use for vegetation characterization. Remote Sensing of Environment ,113(Suppl. 1):S56–S66, 2009. doi: 10.1016/j.rse.2008.01.026. Rudolf E. Kalman. A new approach to linear filtering and prediction problems. Journal of Basic Engineering , 82(1):35–45, 1960. doi: 10.1115/1.3662552. S. Kandasamy, F. Baret, A. Verger, P. Neveux, and M. Weiss. A comparison of methods for smoothing and gap filling time series of remote sensing observations: application to MODIS LAI products. Biogeosciences , 10(6):4055–4071, 2013. doi: 10.5194/bg-10-4055-2013. Edward B. Knipling. Physical and physiological basis for the reflectance of visible and near-infrared radiation from vegetation. Remote Sensing of Environment , 1(3):155–159, 1970. doi: 10.1016/S0034-4257(70)80021-9. Jack B. Kuipers. Quaternions and Rotation Sequences: A Primer with Applications to Orbits, Aerospace, and Virtual Reality . Princeton University Press, Princeton, NJ, 1999. ISBN 9780691102986. 28 Johan E. Mebius. A matrix-based proof of the quaternion representation theorem for four-dimensional rotations. arXiv preprint math/0501249 , 2005. URL https://arxiv. org/abs/math/0501249 .Kira Rehfeld, Norbert Marwan, Jobst Heitzig, and Jürgen Kurths. Comparison of corre-lation analysis techniques for irregularly sampled time series. Nonlinear Processes in Geophysics , 18(3):389–404, 2011. doi: 10.5194/npg-18-389-2011. Marten Scheffer, Jordi Bascompte, William A. Brock, Victor Brovkin, Stephen R. Car-penter, Vasilis Dakos, Hermann Held, Egbert H. van Nes, Max Rietkerk, and George Sugihara. Early-warning signals for critical transitions. Nature , 461(7260):53–59, 2009. doi: 10.1038/nature08227. Taylor Smith and Niklas Boers. Reliability of vegetation resilience estimates depends on biomass density. Nature Ecology & Evolution , 7(11):1799–1808, 2023. doi: 10.1038/ s41559-023-02194-7. Irwin Sobel and Gary Feldman. A 3x3 isotropic gradient operator for image process-ing. Presented at the Stanford Artificial Intelligence Project, 1968. Historical source commonly cited for the Sobel operator. Jan Verbesselt, Rob Hyndman, Glenn Newnham, and Darius Culvenor. Detecting trend and seasonal changes in satellite image time series. Remote Sensing of Environment ,114(1):106–115, 2010. doi: 10.1016/j.rse.2009.08.014. Jan Verbesselt, Nikolaus Umlauf, Marina Hirota, Milena Holmgren, Egbert H. van Nes, Martin Herold, Achim Zeileis, and Marten Scheffer. Remotely sensed resilience of tropical forests. Nature Climate Change , 6(11):1028–1031, 2016. doi: 10.1038/nclimate3108. J. P. Ward. Quaternions and Cayley Numbers: Algebra and Applications , volume 403 of 
+
+Mathematics and Its Applications . Springer, Dordrecht, 1997. ISBN 9780792345138. doi: 10.1007/978-94-011-5768-1. Barry T. Wilson, Joseph F. Knight, and Ronald E. McRoberts. Harmonic regression of Landsat time series for modeling attributes from national forest inventory data. 
+
+ISPRS Journal of Photogrammetry and Remote Sensing , 137:29–46, 2018. doi: 10.1016/ j.isprsjprs.2018.01.006. Ciyou Zhu, Richard H. Byrd, Peihuang Lu, and Jorge Nocedal. Algorithm 778: L-BFGS-B: Fortran subroutines for large-scale bound-constrained optimization. ACM Transactions on Mathematical Software , 23(4):550–560, 1997. doi: 10.1145/279232.279236. 29 Zhe Zhu and Curtis E. Woodcock. Automated cloud, cloud shadow, and snow detection in multitemporal Landsat data: an algorithm designed specifically for monitoring land cover change. Remote Sensing of Environment , 152:217–234, 2014. doi: 10.1016/j.rse. 2014.06.012. 30

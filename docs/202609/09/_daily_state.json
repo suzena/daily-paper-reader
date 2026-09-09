@@ -1,0 +1,201 @@
+{
+  "date": "20260909",
+  "date_label": "",
+  "generated_at": "2026-09-09 21:36:36 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.09066v1",
+      "route": "202609/09/2609.09066v1-a-distributed-consensus-particle-filter-for-target-tracking-using-autonomous-surface-vessels",
+      "title": "A Distributed Consensus Particle Filter for Target Tracking using Autonomous Surface Vessels",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "利用自主水面艇多智能体进行海上目标跟踪，属直接的海洋智能体应用",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.08391v1",
+      "route": "202609/09/2609.08391v1-from-coordinates-to-candidate-regions-temporal-change-localization-via-region-selection-in-remote-sensing-multimodal-llms",
+      "title": "From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "遥感多模态大模型中结合文本条件做候选区域选择与时间变化定位，契合遥感影像与文本融合的环境变化分析",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.06359v1",
+      "route": "202609/09/2609.06359v1-agsa-net-abundance-guided-self-attention-network-for-spectral-unmixing-aware-hyperspectral-remote-sensing-image-classification",
+      "title": "AGSA-Net: Abundance-Guided Self-Attention Network for Spectral Unmixing-Aware Hyperspectral Remote Sensing Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "高光谱遥感图像分类模型，可用于珊瑚底栖覆盖分类",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.02077v1",
+      "route": "202609/09/2609.02077v1-ksg-net-key-sparse-and-global-context-learning-for-maritime-3d-ship-detection",
+      "title": "KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主航行的海事三维舰船检测，属于海洋智能体感知应用，可支撑自主海洋监测。",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.02683v1",
+      "route": "202609/09/2609.02683v1-genesis-a-generative-engine-for-hierarchical-satellite-image-synthesis",
+      "title": "Genesis: A Generative Engine for Hierarchical Satellite Image Synthesis",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向多尺度卫星图像的深度生成方法，可为海洋栖息地遥感数据增广提供支撑",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.04512v1",
+      "route": "202609/09/2609.04512v1-explainable-multimodal-deep-learning-integrating-imaging-and-clinical-data-for-oral-potentially-malignant-disorder-detection",
+      "title": "Explainable Multimodal Deep Learning Integrating Imaging and Clinical Data for Oral Potentially Malignant Disorder Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合共定位口腔影像与结构化临床信息做可解释多模态检测，思路可借鉴海洋遥感影像与环境/文本数据融合",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.05864v1",
+      "route": "202609/09/2609.05864v1-hierarchical-prompt-injector-for-domain-generalization-segmentation",
+      "title": "Hierarchical Prompt Injector for Domain Generalization Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向跨域图像分割的结构提示方法，可迁移到海洋栖息地遥感图像的深度学习分割任务",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.05953v1",
+      "route": "202609/09/2609.05953v1-protorag-prototype-based-retrieval-augmentation-for-few-shot-fine-grained-remote-sensing-object-detection",
+      "title": "ProtoRAG: Prototype-Based Retrieval Augmentation for Few-Shot Fine-Grained Remote Sensing Object Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态大模型结合遥感影像进行细粒度目标识别与原型检索，可作为珊瑚生境遥感制图的迁移方法",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.06866v1",
+      "route": "202609/09/2609.06866v1-the-h-iar-model-for-irregular-multispectral-time-series-quaternion-formulation-mapping-of-resilience-indicators-and-exploratory-identification-of-forest-edges",
+      "title": "The H-IAR Model for Irregular Multispectral Time Series. Quaternion Formulation, Mapping of Resilience Indicators, and Exploratory Identification of Forest Edges",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向不规则多光谱时间序列的四元数自回归方法，可迁移到海洋遥感时序数据挖掘与生态恢复力映射",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.07915v1",
+      "route": "202609/09/2609.07915v1-jedi-jepa-to-edge-distillation-for-efficient-cropland-segmentation-from-satellite-imagery",
+      "title": "JEDI: JEPA-to-Edge Distillation for Efficient Cropland Segmentation from Satellite Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用I-JEPA教师蒸馏SegFormer学生做卫星图像分割，可迁移到珊瑚生境或底质分类等海洋遥感分割任务",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.08164v1",
+      "route": "202609/09/2609.08164v1-dual-layer-semantic-spatial-belief-mapping-for-aerial-object-goal-navigation",
+      "title": "Dual-Layer Semantic-Spatial Belief Mapping for Aerial Object Goal Navigation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型驱动无人机目标导航的双层置信映射，可用于海洋自主监测架构借鉴",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    },
+    {
+      "paper_id": "2609.08659v1",
+      "route": "202609/09/2609.08659v1-triccot-tri-part-convolutional-conformal-transformer-for-onboard-space-object-detection",
+      "title": "TriCCOT: Tri-part Convolutional Conformal Transformer for Onboard Space Object Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向星载卫星影像的目标检测模型，虽非海洋栖息地，但深度学习检测方法可用于海洋遥感场景",
+      "first_seen_at": "2026-09-09 21:36:36 UTC",
+      "updated_at": "2026-09-09 21:36:36 UTC"
+    }
+  ]
+}

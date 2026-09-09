@@ -1,0 +1,414 @@
+Title: KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection
+
+URL Source: https://arxiv.org/pdf/2609.02077v1
+
+Published Time: Thu, 03 Sep 2026 00:37:05 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection 
+
+Zhouyuan Huai 1, Meiqi Wan 1, Yan Yang 3,4, Minshi Chen 1, Xin Yuan 1,2,∗
+
+Wei Wang 1,2, and Xiao Wang 1,2 
+
+> 1
+
+School of Computer Science and Technology, Wuhan University of Science and Technology, Wuhan 430065, China  
+
+> 2
+
+Hubei Province Key Laboratory of Intelligent Information Processing and Real-Time Industrial System, Wuhan University of Science and Technology, Wuhan 430065, China  
+
+> 3
+
+State Key Laboratory of Robotics and Intelligent Systems, Shenyang Institute of Automation, Chinese Academy of Sciences, Shenyang 110016, China  
+
+> 4
+
+China University of Chinese Academy of Sciences, Beijing 100049, China 
+
+Abstract. Accurate 3D ship detection in maritime environments is crit-ical for autonomous navigation, yet remains challenging due to large-scale vessel variations, sparse point clouds of small vessels, and severe sea-clutter interference. Existing methods, primarily based on 2D features or dense repre sentations, struggle to balance detection accuracy and com-putational efficiency, while sparse 3D detectors designed for road scenes generalize poorly to maritime scenarios. This paper focuses on two key challenges in maritime LiDAR perception: weak feature representation for small and sparse vessels, and insufficient global structural modeling for large vessels due to the limited receptive field of local sparse convo-lutions. To address these issues, we propose KSG-Net, a Key-Sparse and Global-Context learning network for maritime 3D ship detection. The core idea is to jointly enhance local discriminative features and global structural awareness within a unified fully sparse detection framework. Specifically, a Key Sparse Multi-scale Aggregation (KSMA) module is designed to enhance the representation of small and sparse vessels by selecting informative key voxels and aggregating cross-scale neighbor-hood features. Furthermore, a Global Context Aggregation (GCA) mod-ule is introduced to capture long-range geometric dependencies through scene-level context modeling with gated residual interactions, thereby improving the representation of large vessels. Extensive experiments on the Thames River vessel dataset and simulated datasets demonstrate that KSG-Net consistently outperforms existing methods in multi-scale vessel detection and exhibits strong robustness in complex maritime en-vironments. 
+
+Keywords: 3D Ship Detection · Sparse 3D Detection · Key-Sparse Ag-gregation · Global Context Modeling  
+
+> ∗
+
+Corresponding author: Xin Yuan (yuanxincherry@gmail.com) arXiv:2609.02077v1 [cs.CV] 2 Sep 2026 2 Authors Suppressed Due to Excessive Length 
+
+1 Introduction 
+
+Accurate 3D ship detection in maritime environments is essential for autonomous navigation, collision avoidance, and intelligent decision-making. Compared with road scenes, maritime environments exhibit more complex sensing conditions, including large vessel-scale variations, irregular background structures, sparse point observations, and severe sea-clutter interference [10,21]. These character-istics make maritime 3D ship detection substantially different from conventional autonomous-driving detection tasks. Existing maritime perception methods are still largely dominated by image-based detection, dense 3D representations, or multi-sensor fusion pipelines [20,22]. Although these methods have achieved meaningful progress, they often suffer from quantization errors and computational redundancy during the densifica-tion process, limiting their applicability in large-scale maritime environments. Meanwhile, fully sparse 3D detectors developed for road scenes, such as Vox-elNeXt [1], provide an efficient paradigm by operating directly on non-empty sparse voxels. However, directly transferring these frameworks to maritime sce-narios is non-trivial, as maritime targets exhibit more severe scale variation and less regular point distributions. RGB view  
+
+> Sparse and discontinuous responses of small vessels
+> LiDAR point cloud
+> (a) Weak Representation of Small Sparse Vessels (b) Limited Global Modeling of Large Vessels
+> RGB view LiDAR point cloud Broad spatial extent exceeds local receptive fields
+
+Fig. 1. Illustration of two key challenges in maritime 3D ship detection. (a) Weak Representation of Small Sparse Vessels . Small vessels usually produce sparse and discontinuous point responses, leading to weak and unstable local representations. 
+
+(b) Limited Global Modeling of Large Vessels . Large vessels often span broad spatial regions, while local sparse convolutions have limited receptive fields and struggle to capture long-range structural dependencies. Title Suppressed Due to Excessive Length 3
+
+As shown in Fig. 1, two key challenges arise in maritime 3D ship detection: (1) Weak representation of small and sparse vessels. Small vessels often produce only sparse and discontinuous point responses, providing limited geometric cues that are easily confused with background clutter. (2) Insufficient global struc-tural modeling for large vessels. Large vessels usually span broad spatial regions, while local sparse convolutions have limited receptive fields and struggle to cap-ture long-range structural dependencies. These scale-dependent challenges mo-tivate the need for a unified sparse detection framework that can simultaneously enhance local discriminative features for small vessels and strengthen global structural modeling for large vessels. To address the above challenges, we propose KSG-Net, a Key-Sparse and Global-Context Detection Network tailored for maritime 3D ship detection. The core idea is to jointly enhance local discriminative representations and global structural awareness within a unified sparse detection framework. To this end, we design two complementary modules: (1) a Key Sparse Multi-scale Aggrega-tion (KSMA) module, which enhances the representation of small and sparse vessels by selecting informative key voxels and performing cross-scale neigh-borhood aggregation under highly sparse point distributions; and (2) a Global Context Aggregation (GCA) module, which captures long-range geometric de-pendencies by modeling scene-level global context and injecting it into sparse features through gated residual interactions, thereby improving the represen-tation of large vessels and robustness in cluttered maritime environments. In summary, the main contributions of this paper are as follows: 
+
+• We propose KSG-Net, a maritime-oriented fully sparse 3D detection frame-work for vessel detection in LiDAR point clouds, addressing the overlooked challenges of weak small-vessel representation and insufficient large-vessel global modeling. 
+
+• We design the Key Sparse Multi-scale Aggregation (KSMA) module, which enhances the representation of small and sparse vessels through informa-tive key-voxel selection and cross-scale neighborhood interaction, focusing computation on informative sparse locations. 
+
+• We introduce the Global Context Aggregation (GCA) module, which ad-dresses the limited receptive field of local sparse convolutions by capturing long-range geometric structures for large vessels through scene-level global context modeling and gated residual injection. 
+
+• Extensive experiments on the Thames River vessel dataset and simulated datasets demonstrate that KSG-Net outperforms existing methods in multi-scale vessel detection and exhibits strong robustness in complex maritime environments. 
+
+2 Related Work 
+
+2.1 LiDAR-Based Dense Detectors 
+
+Dense detectors convert irregular point clouds into structured representations, such as bird’s-eye view (BEV) feature maps, enabling the use of mature con-4 Authors Suppressed Due to Excessive Length 
+
+volutional neural networks. Early works, including MV3D and PointPillars [8], establish the paradigm of projecting point clouds into dense representations for efficient processing, while CenterPoint [25] further improves localization accuracy via center-based object modeling. Recent dense LiDAR detectors have further improved representation capability through architectural refinement, temporal modeling, and multi-modal fusion. L4DR [5] proposes a LiDAR and 4D radar fusion framework that improves detection robustness under adverse weather con-ditions. BevNext [9] modernizes dense BEV-based detection pipelines by inte-grating CRF-based depth estimation and long-term temporal feature aggrega-tion, achieving strong performance on the nuScenes benchmark. FSD-BEV [7] introduces foreground self-distillation and frame-level point cloud densification strategies, improving single-frame BEV detection performance. Despite their effectiveness, dense detectors inevitably introduce quantization errors and computational redundancy during the densification process, which becomes more pronounced in large-scale maritime environments. Moreover, these methods often struggle to preserve fine-grained geometric structures of small and sparse vessels, limiting their applicability in maritime LiDAR scenarios. 
+
+2.2 LiDAR-Based Sparse Detectors 
+
+Sparse 3D detectors improve the efficiency of LiDAR-based 3D object detection by performing feature extraction and prediction only on non-empty voxels or foreground points, avoiding the redundancy introduced by dense feature con-struction. Representative methods such as SECOND [23], PV-RCNN [15], and PV-RCNN++ [16] have advanced this direction through sparse voxel encoding and point-voxel collaborative representation learning. Recent studies have further developed fully sparse detection frameworks. FSD [3] systematically constructs a fully sparse 3D detector, VoxelNeXt [1] uni-fies proposal generation and detection heads in sparse voxel space, and FSD V2 [4] improves instance-level representation with virtual voxels. In parallel, long-range dependency modeling has also received increasing attention. HED-Net [27], SAFDNet [26], DSVT [19], and LION [12] enhance sparse representa-tions through hierarchical interaction, adaptive feature diffusion, sparse Trans-former modeling, and state-space-style feature interaction, respectively. Although sparse detectors have achieved remarkable progress in efficiency and long-range perception, most of them are designed for autonomous driving scenarios, where object layouts are relatively structured and backgrounds are more controlled. Maritime scenes present more irregular target distributions, stronger background interference, and larger scale variations. Small vessels often produce extremely sparse point responses, while large vessels span broad spatial regions. Therefore, existing sparse detectors remain limited in stable small-target representation and global structural modeling for large vessels. Motivated by these limitations, our work builds upon VoxelNeXt [1] and further enhances key sparse representation and global context modeling for maritime LiDAR 3D detection. Title Suppressed Due to Excessive Length 5
+
+2.3 LiDAR-based Maritime Perception 
+
+Maritime perception has attracted increasing attention in recent years, and Li-DAR has shown strong potential for object detection, tracking, and environ-ment understanding in maritime environments. Lin et al. [10] provided a sys-tematic review of deep-learning-based maritime perception and highlighted the substantial differences between maritime and road scenes in terms of target scale, background structure, and environmental disturbances. Xie et al. [21] fur-ther advanced LiDAR-based ship detection and tracking in busy maritime envi-ronments, while recent datasets have provided important support for maritime LiDAR perception research [14,28]. Despite these advances, many maritime perception methods still rely on image-based detection, multi-sensor fusion, dense 3D representations, or non-fully-sparse point-cloud detection paradigms [8,10,15]. Recent maritime 3D de-tection methods have begun to address vessel scale variation and complex marine conditions through hierarchical vertical-aware modeling, adaptive multi-scale de-sign, and uncertainty-aware point cloud detection [20,22]. However, a unified fully sparse framework tailored to maritime LiDAR detection remains underex-plored, especially for jointly handling stable representation of small sparse vessels and global structural modeling of large vessels. Different from existing maritime detectors, our method starts from a fully sparse framework and designs KSMA and GCA to enhance key sparse representation and global context modeling, respectively. 
+
+3 Methodology 
+
+In this section, we present the proposed KSG-Net. Fig. 2 illustrates the over-all architecture of KSG-Net and its two core modules. As shown in Fig. 2(a), KSG-Net follows a fully sparse 3D detection paradigm, consisting of input encod-ing, sparse backbone feature extraction, KSMA, GCA, and the detection head. Fig. 2(b) and Fig. 2(c) further show the internal structures of the KSMA and GCA modules, respectively. Specifically, the input maritime LiDAR point cloud is first encoded by the pillar encoder and processed by the sparse backbone to obtain a shared sparse BEV representation. Based on this representation, KSMA enhances local dis-criminative features for small sparse vessels through key-voxel identification and multi-scale neighborhood aggregation. GCA then supplements long-range struc-tural information for large vessels through scene-level global context modeling and gated residual injection. The two modules are sequentially applied to the same shared sparse representation, improving multi-scale vessel detection while preserving the efficiency of fully sparse inference. 
+
+3.1 Key Sparse Multi-scale Aggregation 
+
+The objective of KSMA is to selectively enhance local discriminative features for small sparse vessels. As shown in Fig. 2(b), KSMA first identifies informative key 6 Authors Suppressed Due to Excessive Length Raw Point Cloud 
+
+> Input & Preprocessing Final 3D Bounding Boxes
+> Output
+> 𝐀 ∈ 𝐀 𝐀×𝐀
+> 𝐀
+> x_conv6 (stride 32)
+> Pillar VFE
+> KSMA Module GCA  Module
+> Sparse  2D Backbone
+> Fusion&Dection Head
+
+(a) An overview architecture of KSG-Net (b) KSMA Module (c) GCA Module     
+
+> Fused Sparse BEV Feature
+> FBEV_6 (stride 32) FBEV_5 (stride 16) FBEV_4 (stride 8)
+> x_conv6 (stride 32)
+> ....
+> Top-K voxels
+> x_conv6 (stride 32)
+> x_conv6 (stride 32)
+> x_conv6 (stride 32)
+> KNN KNN KNN
+> MLP_S4  MLP_S5  MLP_S6
+> Adaptive Scale fusion
+> Fuse FC
+> x_conv6 (stride 32) Score_head HeatMap
+> Gated Residual
+> x_conv6 (stride 32)
+> Enhanced Key Voxels
+> ...
+> Enhanced Sparse BEV F
+> x_ co nv 6(st rid e32)
+> Global Pooling Scene-level Context
+> Local Sparse Feature
+
+... _c on v6 (st rid e32) 
+
+F Shared Sparse Feature 
+
+> FS
+
+S Selected Key Voxels 
+
+> NNN
+
+N Neighborhood Features G
+
+G Gate Signal Element-wise Modulation  
+
+> FC
+> Projected Context RELU  FC
+> X+
+> Residual Addition
+> X
+> Gate Generation
+
+Fig. 2. Overview of KSG-Net. (a) The overall fully sparse detection pipeline for mar-itime LiDAR point clouds. (b) The Key Sparse Multi-scale Aggregation (KSMA) mod-ule, which enhances informative sparse locations through key-voxel identification and cross-scale neighborhood aggregation. (c) The Global Context Aggregation (GCA) module, which injects scene-level global context into the sparse representation to im-prove large-vessel structural modeling. 
+
+voxels from the shared sparse representation, aggregates their multi-scale sparse neighborhoods, and writes the refined responses back through adaptive scale fu-sion and residual enhancement. This selecting-before-enhancing strategy focuses computation on informative sparse locations and improves local representation under sparse maritime observations. 
+
+Key Sparse Voxel Identification Let the shared sparse BEV representation be denoted as F = {(ui, xi)}Mi=1 , where ui ∈ Z2 denotes the BEV coordinate of the i-th non-empty voxel and xi ∈ RC denotes the corresponding feature vector. To estimate the importance of each sparse location, we introduce a lightweight sparse scoring head on top of the shared representation and produce a saliency score for every voxel: 
+
+ωi = σ(Ψscore (xi)) , (1) where Ψscore (·) denotes the sparse scoring function and σ(·) is the sigmoid acti-vation. Based on these scores, we retain the top-K voxels within each sample and treat them as the key-voxel set. Let Ib denote the voxel index set of the b-th sample. The corresponding key-voxel set is defined as 
+
+Kb = TopK ( {ωi | i ∈ I b}, K ) , K =
+
+B[
+
+b=1 
+
+Kb. (2) Title Suppressed Due to Excessive Length 7
+
+This saliency-aware selection avoids uniformly enhancing all non-empty voxels and instead uses high-response locations as anchors for subsequent aggregation. It therefore concentrates computation on vessel-related sparse structures and reduces interference from background clutter. 
+
+Multi-scale Sparse Aggregation and Feature Refinement After key voxel selection, KSMA aggregates neighborhood context from multi-scale sparse BEV features. Let F(l) = ( u(l) 
+
+> j
+
+, x(l) ∗ j)∗j = 1 Ml denote the sparse feature set at scale 
+
+l. For each key voxel i ∈ K , its coordinate is aligned to scale l by δl, followed by 
+
+k-nearest-neighbor search: ˜u(l) 
+
+> i
+
+= ui
+
+δl
+
+, N (l) 
+
+> i
+
+= KNN 
+
+
+
+˜u(l) 
+
+> i
+
+, {u(l) 
+
+> j
+
+}Ml
+
+> j=1
+
+, k l
+
+
+
+, (3) where δl and kl denote the scale alignment factor and neighborhood size at scale 
+
+l, respectively. For each scale, the neighboring features are first mean-aggregated and then projected through a scale-specific transformation function to obtain a scale-wise aggregated representation: ¯z(l) 
+
+> i
+
+= 1
+
+|N (l) 
+
+> i
+
+|
+
+X 
+
+> j∈N (l)
+> i
+
+x(l) 
+
+> j
+
+, z(l) 
+
+> i
+
+= Φl
+
+
+
+¯z(l)
+
+> i
+
+
+
+, (4) where Φl(·) denotes the projection function associated with scale l.Since the contributions of different scales may vary for different key voxels, we further predict adaptive scale weights from the current key feature and fuse the scale-wise aggregated representations accordingly: 
+
+αi = softmax( Wαxi), ˜zi =
+
+> L
+
+X
+
+> l=1
+
+α(l) 
+
+> i
+
+z(l) 
+
+> i
+
+, (5) where αi = [ α(1)  
+
+> i
+
+, . . . , α (L) 
+
+> i
+
+] denotes the normalized scale-weight vector. Based on the fused multi-scale context, we concatenate the original key fea-ture with the aggregated feature and transform them into an enhanced repre-sentation. Furthermore, since different key voxels may have different confidence levels, we use the saliency score as a gating factor to modulate the residual update magnitude, yielding the final KSMA output: ˆxi = Φfuse ([ xi ∥ ˜zi]) , (6) 
+
+xKSMA  
+
+> i
+
+= xi + γ ω i ˆxi, i ∈ K , (7) where Φfuse (·) denotes the feature fusion mapping and γ is a learnable residual scaling coefficient. In this way, KSMA enhances only informative sparse locations with cross-scale neighborhood context, improving small-vessel representations while pre-serving the efficiency of fully sparse inference. 8 Authors Suppressed Due to Excessive Length 
+
+3.2 Global Context Aggregation 
+
+Although KSMA significantly improves the local representation quality of key sparse locations, large vessels in maritime scenes usually exhibit broader spa-tial extent and more complex geometry. Relying solely on local sparse convo-lutions and local enhancement remains insufficient to capture their long-range structural dependencies. To address this issue, we further design GCA to inject scene-level global context into the sparse representation in a lightweight manner, thereby improving the holistic understanding of large-scale structures. As illus-trated in Fig. 2(c), GCA mainly consists of scene-level global context modeling and context-gated residual enhancement. 
+
+Scene-level Global Context Modeling Let the sparse feature set after KSMA be denoted as FKSMA = {(ui, xKSMA  
+
+> i
+
+)}Mi=1 . For each sample, we first perform global pooling over all non-empty sparse locations to extract a scene-level context descriptor, and then project it into the same representation space as the local sparse features: 
+
+gb = ρ  {xKSMA  
+
+> i
+
+| i ∈ I b} , (8) ¯gb = Φctx (gb), (9) where ρ(·) denotes a global pooling operator and Φctx (·) is the context projection mapping. This process compresses scene statistics originally distributed across different sparse local positions into a unified global descriptor, which serves as a scene-level reference for the subsequent enhancement of large-scale structures. Unlike global self-attention that explicitly models pairwise interactions among all voxels, this pooling-based context modeling is considerably lighter and better suited to the efficiency requirements of fully sparse detection. 
+
+Context-Gated Residual Enhancement After obtaining the scene-level con-text, we broadcast it back to each non-empty voxel in the current sample and use a gating mechanism to adaptively regulate the context injection strength. For the i-th voxel in sample b, the gate vector is jointly predicted from the local feature and the global context: 
+
+mi = σ  Φgate 
+
+ [xKSMA  
+
+> i
+
+∥ ¯gb] , (10) where Φgate (·) denotes the gating function. The global context is then injected into the local feature in a channel-wise gated manner, and its overall influence is controlled by a learnable residual co-efficient, yielding the final GCA-enhanced representation: 
+
+xGCA  
+
+> i
+
+= xKSMA  
+
+> i
+
++ λ (mi ⊙ ¯gb) , (11) where ⊙ denotes element-wise multiplication and λ is a learnable residual scaling factor. Title Suppressed Due to Excessive Length 9
+
+This gated residual injection allows the model to adaptively determine how much global information should be injected according to the local feature content at each sparse position. For large vessels in maritime scenes, this design effec-tively alleviates the fragmented representation caused by limited local receptive fields and enhances the modeling of long-range geometric dependencies. After KSMA and GCA enhancement, the refined sparse features are fed into the detection head for final prediction. Let the prediction set be denoted as 
+
+Y, which includes the classification heatmap, center offsets, vertical offset, box dimensions, orientation, and an IoU-related branch. During training, we follow the objective design of the fully sparse baseline detector, and the overall loss is formulated as 
+
+Y = {H, ∆ c, ∆z, d, r, q } , (12) 
+
+L = Lhm + λreg Lreg + λiou Liou + λiou reg Liou reg , (13) where H denotes the sparse classification heatmap, ∆c denotes the 2D center offset on the BEV plane, ∆z denotes the vertical offset, d and r denote box dimensions and orientation, and q denotes the IoU prediction. With this formu-lation, KSG-Net can be trained end-to-end within a unified fully sparse detection framework. 
+
+4 Experiments 
+
+4.1 Experimental Setup Ship LiDAR Dataset: We use the maritime LiDAR point cloud dataset publicly released by Zhang et al. [28]. The dataset was collected using a multi-beam photon-counting LiDAR sensor and contains real-world port scenes from Wuhan, Shanghai, and Qingdao. The annotated objects are categorized into four vessel classes: Cargo ship , Tour boat , Engineering ship , and Speedboat . The dataset is organized in KITTI format and consists of 10,571 training frames, 1,200 validation frames, and 1,500 testing frames. 
+
+Thames River Real Dataset: We use the first real-world Thames River LiDAR dataset released by Xie et al. [21]. The dataset was collected in the London docklands and busy Thames waterways, covering diverse vessel types and scales, including monohulls, catamarans, and sailboats with lengths ranging from approximately 5 m to 40 m. It contains 9,200 frames in total, with 7,820 frames for training and 1,380 frames for testing, corresponding to an 85%/15% split. 
+
+Thames River Simulated Dataset: This dataset consists of synthetic data generated using the Robot Operating System (ROS), simulating port and fairway environments with maritime targets such as ships and buoys. The raw simulated data were further refined by Xie et al. [21] to correct annotation errors and improve data quality. The version used in this study contains 11,360 frames, covering diverse scenarios with isolated vessel point clouds as well as complex terrain backgrounds. 10 Authors Suppressed Due to Excessive Length 
+
+Experimental Details We evaluate all methods using KITTI-style 3D Average Precision (AP) and mean Average Precision (mAP) under the R40 protocol. A detection is considered correct when the predicted class matches the ground truth and the 3D IoU between the predicted and ground-truth boxes is greater than 0.5. We therefore report 3D AP and 3D mAP at an IoU threshold of 0.5 for all datasets. All experiments are implemented with OpenPCDet and PyTorch on a workstation equipped with an Intel Core i9-14900KF CPU and a single NVIDIA GeForce RTX 4060 GPU. The compared detectors were originally developed for terrestrial autonomous-driving scenes. To ensure a fair comparison, we retrain all methods on the same maritime data splits with the same point-cloud range, input preprocessing, and evaluation protocol. For each baseline, we follow its official training configuration as closely as possible, including the optimizer and learning-rate schedule, and adapt only the class definitions and detection range to the maritime setting. KSG-Net is trained with the Adam optimizer and a OneCycle learning-rate scheduler, using a peak learning rate of 1 × 10 −3, a weight decay of 0.01, a batch size of 4, and 80 epochs. 
+
+Table 1. Quantitative comparison on the Ship LiDAR Dataset. AP@0.5 (%) is reported for representative categories, where Cargo , Tour , Engineer , and Speed denote cargo ships, tour boats, engineering ships, and speedboats, respectively. FLOPs are effective FLOPs averaged over validation samples. FPS is measured with a batch size of 1. GBlobs is evaluated as a local geometric encoder on VoxelNeXt. The best AP results are highlighted in bold . “–” denotes a result that is not yet available.                                                                                                                  
+
+> Method AP@0.5 (%) FLOPs (G) FPS (Hz) mAP (%) Cargo Tour Engineer Speed Point  PointRCNN (CVPR 2019) [17] 64.71 76.16 78.76 30.00 127.41 10.37 62.40 Part-A2 (CVPR 2020) [18] 63.89 78.33 71.74 33.78 508.35 13.19 61.94 PV-RCNN (CVPR 2020) [15] 65.81 79.30 74.21 31.02 89.02 8.89 63.09 Voxel PointPillars (CVPR 2019) [8] 57.08 76.50 85.98 42.86 63.44 62.15 65.59 VoxelR-CNN (AAAI 2021) [2] 60.23 77.12 78.22 41.70 48.53 25.25 64.31 VoxelNeXt (CVPR 2023) [1] 67.65 87.81 82.49 60.07 32.03 23.55 74.50 DSVT (CVPR 2023) [19] 71.45 87.30 82.10 68.90 339.85 14.97 77.44 FSHNet (CVPR 2025) [11] 67.98 80.20 84.32 70.10 54.14 12.37 75.65 GBlobs (CVPR 2025) [13] 65.19 78.22 87.12 63.21 32.36 22.72 74.44 BEV  CenterPoint (CVPR 2021) [25] 72.16 88.52 79.60 70.22 33.23 56.65 77.63 HEDNet (NeurIPS 2023) [27] 66.31 79.22 85.48 68.12 106.21 17.28 74.78 SAFDNet (CVPR 2024) [26] 72.31 86.98 81.24 71.75 60.83 20.25 78.07 Fade3D (TITS 2025) [24] 72.90 89.50 84.15 70.45 78.31 51.53 79.25 AutoReg3D (CVPR 2026) [6] 53.12 62.94 58.39 14.22 110.3 5.29 47.18
+> KSG-Net (Ours) 72.69 95.15 91.97 82.79 31.42 33.11 85.65
+
+4.2 Comparison on Ship LiDAR Dataset 
+
+The quantitative comparison results on the Ship LiDAR Dataset are summa-rized in Table 1. KSG-Net achieves the highest mAP@0.5 of 85 .65%, showing a clear margin over previous methods across point-, voxel-, and BEV-based rep-resentations. It surpasses the strongest BEV baseline Fade3D [24] by 6 .40%, SAFDNet [26] by 7 .58%, and the strongest voxel baseline DSVT [19] by 8 .21%. GBlobs [13], instantiated as a local geometric encoder on VoxelNeXt, reaches Title Suppressed Due to Excessive Length 11 
+
+Table 2. Experimental results on the Thames River Real and Thames River Simulated datasets. AP@0.5 (%) is reported. Venues are omitted here for compactness; they are given in Table 1, except LION (NeurIPS 2024). F denotes effective FLOPs (G) averaged over validation samples; FPS is measured with batch size 1. Best AP results are highlighted in bold . “–” indicates that the category is unavailable.                                                                                                                                                                             
+
+> Method Thames River Real Thames River Simulated Small Med. Large mAP (%) F(G) FPS (Hz) Small Med. Large Buoy mAP (%) F(G) FPS (Hz) PointPillars [8] 47.32 51.47 46.60 48.46 27.12 56.32 62.00 69.00 77.80 51.80 65.20 41.22 69.93 PV-RCNN [15] 38.10 82.70 82.40 67.74 510.09 7.18 76.70 78.10 78.00 75.10 76.90 662.11 12.12 Part-A2 [18] 44.65 86.50 77.30 69.48 422.31 13.14 –––––––Voxel R-CNN [2] 40.14 84.63 81.62 68.80 12.17 24.87 75.70 74.50 77.10 72.10 74.85 8.52 35.54 VoxelNeXt [1] 54.35 86.96 73.29 71.20 32.01 23.54 87.16 82.56 86.50 63.16 79.84 22.40 22.09 DSVT [19] 74.12 91.43 79.52 81.69 337.22 21.85 85.50 76.10 78.70 77.60 79.47 374.12 14.28 LION [12] ––––––90.60 75.4 78.30 85.1 82.4 1087.67 28.12 FSHNet [11] 42.21 75.94 69.93 62.69 46.30 16.27 81.43 75.46 79.38 68.51 76.19 32.41 15.37 Fade3D [24] 51.05 85.20 81.75 72.67 41.22 51.53 84.92 83.14 88.20 64.10 80.09 44.91 52.31 GBlobs [13] 67.09 86.04 96.83 83.32 31.01 22.74 91.14 83.12 86.55 71.08 82.98 22.40 21.34 AutoReg3D [6] 2.50 71.84 86.11 53.48 108.21 5.24 14.83 33.79 53.04 36.50 34.54 120.31 1.88
+> KSG-Net (Ours) 80.53 94.98 88.14 87.89 35.10 20.09 90.72 82.63 89.31 75.11 84.44 24.56 19.85
+
+74 .44% mAP, close to VoxelNeXt (74 .50%) and well below KSG-Net. AutoReg3D [6] obtains 47 .18% mAP and is the weakest entry, with a particularly low Speed-boat AP of 14 .22%. In terms of efficiency, KSG-Net uses 31 .42 G FLOPs and runs at 33 .11 FPS, remaining comparable to VoxelNeXt and GBlobs while being substantially cheaper than DSVT and AutoReg3D. A detailed category-wise analysis further supports this conclusion. Fade3D [24] leads by only 0 .21 % on the large and geometrically regular Cargo category (72 .90% vs. ours 72 .69%), whereas KSG-Net achieves the best AP on the more heterogeneous Tour boat (95 .15%), Engineering ship (91 .97%), and Speedboat 
+
+(82 .79%) categories. The gain on Speedboat is 11 .04 % over SAFDNet [26] (71 .75%). Speedboats typically produce the sparsest point responses and the largest shape variation; this improvement is therefore consistent with the design of KSMA for strengthening weak local responses, complemented by GCA for stabilizing structural context. 
+
+4.3 Comparison on Thames River Real and Simulated Datasets 
+
+As shown in Table 2, KSG-Net achieves the best overall mAP on both the Thames River Real and Thames River Simulated datasets. On the Thames River Real Dataset, KSG-Net obtains an mAP of 87 .89%, outperforming GBlobs [13] by 4 .57 % and DSVT [19] by 6 .20 %. On the Thames River Simulated Dataset, KSG-Net achieves an mAP of 84 .44%, exceeding GBlobs (82 .98%), LION [12] (82 .4%), and Fade3D [24] (80 .09%). AutoReg3D [6] remains clearly behind on both splits. These results indicate that key-sparse aggregation and global con-text injection generalize across real and simulated maritime scenes. As shown in Fig. 3, KSG-Net produces focused responses around sparse small-vessel re-gions and coherent activations along extended hulls. This qualitative pattern is consistent with Table 2, where KSG-Net attains the highest Small and Medium AP on the Thames River Real Dataset together with the best overall mAP. A closer category-wise comparison further highlights the effectiveness of KSG-Net for multi-scale vessel detection. On the Thames River Real Dataset, KSG-Net attains the highest Small and Medium AP (80 .53% and 94 .98%) and the highest 12 Authors Suppressed Due to Excessive Length (a) Baseline (b) KSG-Net  
+
+> Fig. 3. Feature visualization on the Thames River Real. The heatmap shows the spatial activation patterns of KSG-Net in real maritime scenes. Stronger responses concentrate on vessel-related sparse regions and remain coherent along extended hulls, indicating that the full model preserves both local sparse cues and scene-level vessel structure.
+
+overall mAP (87 .89%). Relative to DSVT, Small-vessel AP increases by 6 .41 %. GBlobs records a higher Large-vessel AP (96 .83% vs. 88 .14%), while KSG-Net remains stronger in the sparse small-vessel regime and in overall mAP, which matches the role of KSMA. As shown in Fig. 4, the qualitative results on the Thames River Real Dataset further demonstrate the advantage of KSG-Net in complex maritime scenes. Existing methods tend to suffer from missed detections or inaccurate localiza-tion, especially under sparse point responses or partial observations. In contrast, KSG-Net produces more complete and stable 3D bounding boxes, particularly for small and medium vessels that are easily missed. This visual comparison is consistent with the Real Small and Medium AP and the overall mAP in Table 2. On the Thames River Simulated Dataset, KSG-Net maintains strong and balanced performance across vessel scales, achieving the best Large-vessel AP (89 .31%) and the best overall mAP (84 .44%). GBlobs obtains a slightly higher Small-vessel AP (91 .14% vs. 90 .72%). Although LION obtains a higher AP on the Buoy category, KSG-Net shows stronger overall detection capability on the vessel-related categories. This suggests that the proposed key-sparse aggrega-tion and global context injection are particularly beneficial for maritime vessel detection, where targets often exhibit large-scale variations and irregular point distributions. 
+
+4.4 Ablation Study 
+
+To evaluate the individual contributions and complementarity of KSMA and GCA, we conduct ablation studies on both Thames River datasets (Table 3). Here, Baseline denotes our VoxelNeXt2D implementation with the IoU branch retained and both KSMA and GCA disabled; it is therefore different from the Title Suppressed Due to Excessive Length 13 PointPillars PV-RCNN VoxelNext FSHNet  
+
+> Fade3D
+> Part-A2
+> Voxel-RCNN KSG-Net
+> Error detection Correct detection Missed detection DSVT
+
+Fig. 4. Qualitative comparison on Thames River Real. Blue boxes denote predicted 3D bounding boxes. The dark-blue, red, and green ellipses indicate missed detections, error detections, and correct detections, respectively. Compared with existing methods, KSG-Net produces more accurate and stable predictions for vessels with different scales and reduces missed or erroneous detections in complex real maritime scenes. 
+
+Table 3. Ablation results on Thames Real and Thames Simulated datasets. The best results in each column are highlighted in bold .                                                
+
+> Method Thames Real Dataset Thames Simulated Dataset AP@0.5 (%) mAP AP@0.5 (%) mAP
+> Small Med. Large (%) Small Med. Large Buoy (%) Baseline 57.86 83.98 94.39 78.74 86.94 81.39 87.18 53.03 77.13 Baseline + KSMA 75.23 91.31 84.62 83.72 87.62 82.07 88.32 69.35 81.84 Baseline + GCA 65.32 83.26 94.18 80.92 86.33 82.73 87.42 61.48 79.49
+> Ours 80.53 94.98 88.14 87.89 90.72 82.63 89.31 75.11 84.44
+
+original VoxelNeXt configuration reported in Table 2. The full framework im-proves mAP from 78 .74% to 87 .89% (+9 .15%) on Thames Real and from 77 .13% to 84 .44% (+7 .31%) on Thames Sim. A closer look reveals complementary effects across categories. On Thames Real, KSMA improves Small-vessel AP by 17 .37%; on Thames Sim, it improves Buoy AP by 16 .32%. GCA alone raises overall mAP by 2 .18% and 2 .36% on the Real and Simulated datasets. Combining both modules yields the best mAP on both splits. On Real Large vessels, the baseline remains highest (94 .39%), whereas the full model trades part of this category for substantial Small/Medium and mAP gains. This indicates that KSMA and GCA work best as a joint multi-scale design: key-sparse enhancement recovers weak targets, while global context improves scene-level detection, with the largest benefit appearing in overall mAP. 14 Authors Suppressed Due to Excessive Length [0.1,0.1,0.2] [0.2,0.2,0.4] [0.4,0.4,0.8]             
+
+> 65 70 75 80
+> mAP (%)  73.86
+> 5% 10% 15% 20%
+> 65 70 75 80
+> 73.86
+> 4812 16
+> 65 70 75 80
+> 73.86
+> [0.1,0.1,0.2] [0.2,0.2,0.4] [0.4,0.4,0.8]
+> (a) Voxel size (m)
+> 75 80 85
+> mAP (%)  81.24
+> 5% 10% 15% 20%
+> (b) Top-K ratio
+> 75 80 85
+> 81.24
+> 4812 16
+> (c) KNN neighbor number
+> 75 80 85
+> 81.24
+> Thames Real Thames Simulated
+
+Fig. 5. Hyperparameter analysis of the proposed method on the Thames River Real and Thames River Simulated datasets. We investigate three key hyperparameters: (a) voxel size, (b) Top-K ratio for key-voxel selection, and (c) KNN neighbor number. The best performance on both datasets is achieved with a voxel size of [0 .2, 0.2, 0.4], a Top-K ratio of 15%, and a KNN neighbor number of 8. 
+
+4.5 Hyperparameter Analysis 
+
+To further analyze the influence of key hyperparameters in the proposed method, we conduct hyperparameter experiments on the Thames River Real and Thames River Simulated datasets. As shown in Fig. 5, we investigate three important hy-perparameters, including the voxel size, the Top-K ratio for key-voxel selection, and the KNN neighbor number. Overall, these hyperparameters show consistent trends on both datasets, indicating that the proposed framework has relatively stable parameter sensitivity. 
+
+Voxel size. Fig. 5(a) shows the effect of voxel size. When the voxel size increases from [0 .1, 0.1, 0.2] to [0 .2, 0.2, 0.4], the performance improves noticeably on both datasets, while a further increase to [0 .4, 0.4, 0.8] leads to performance degra-dation. This indicates that overly fine voxels may produce fragmented sparse representations, whereas overly coarse voxels tend to lose local geometric details. Therefore, a moderate voxel size provides a better balance between structural completeness and local detail preservation. 
+
+Top-K ratio. Fig. 5(b) presents the influence of the Top-K ratio. As the ratio increases from 5% to 15%, the detection performance consistently improves, while a slight decrease is observed at 20%. This suggests that selecting too few key voxels may miss informative sparse responses, whereas selecting too many may introduce redundant or noisy locations and weaken the selectivity of KSMA. 
+
+KNN neighbor number. Fig. 5(c) further analyzes the effect of the KNN neighbor number. The best performance on both datasets is achieved when the neighbor number is set to 8. A smaller number of neighbors limits local context modeling, while an excessively large number may introduce irrelevant neighbor-hood information and reduce the precision of feature aggregation. Title Suppressed Due to Excessive Length 15 
+
+5 Conclusion 
+
+In this paper, we explore a practical and challenging problem of maritime 3D ship detection, which requires accurately detecting vessels of varying scales un-der sparse point observations and severe background interference. To tackle the above issue, we propose KSG-Net, a Key-Sparse and Global-Context learning network tailored for maritime 3D ship detection. The core idea is to jointly en-hance local discriminative representations for small vessels and global structural awareness for large vessels within a unified fully sparse detection framework. To this end, two complementary modules are designed: a Key Sparse Multi-scale Aggregation (KSMA) module to enhance the representation of small and sparse vessels through informative key-voxel selection and cross-scale neighbor-hood aggregation; and a Global Context Aggregation (GCA) module to capture long-range geometric dependencies for large vessels through scene-level global context modeling with gated residual interactions. Extensive experiments on the Thames River vessel dataset and simulated datasets demonstrate that KSG-Net consistently outperforms existing methods in multi-scale vessel detection and exhibits strong robustness in complex maritime environments, validating the effectiveness of the proposed KSMA and GCA modules. 
+
+References 
+
+1. Chen, Y., Liu, J., Zhang, X., Qi, X., Jia, J.: Voxelnext: Fully sparse voxelnet for 3d object detection and tracking. In: CVPR. pp. 21674–21683 (2023) 2. Deng, J., Shi, S., Li, P., Zhou, W., Zhang, Y., Li, H.: Voxel r-cnn: Towards high performance voxel-based 3d object detection. In: AAAI. pp. 1201–1209 (2021) 3. Fan, L., Wang, F., Wang, N., Zhang, Z.X.: Fully sparse 3d object detection. In: NeurIPS. pp. 351–363 (2022) 4. Fan, L., Wang, F., Wang, N., Zhang, Z.: Fsd v2: Improving fully sparse 3d object detection with virtual voxels. IEEE TPAMI 47 (2), 1279–1292 (2024) 5. Huang, X., Xu, Z., Wu, H., Wang, J., Xia, Q., Xia, Y., Li, J., Gao, K., Wen, C., Wang, C.: L4dr: Lidar-4dradar fusion for weather-robust 3d object detection. In: AAAI. pp. 3806–3814 (2025) 6. Huang, Z., Yoo, J., Jeon, S., Liu, Z., Campbell, M., Weinberger, K.Q., Hariharan, B., Chao, W.L., Luo, K.Z.: On the feasibility and opportunity of autoregressive 3d object detection. arXiv preprint arXiv:2603.07985 (2026) 7. Jiang, Z., Zhang, J., Zhang, Y., Liu, Q., Hu, Z., Wang, B., Wang, Y.: Fsd-bev: Foreground self-distillation for multi-view 3d object detection. In: ECCV. pp. 110– 126 (2024) 8. Lang, A.H., Vora, S., Caesar, H., Zhou, L., Yang, J., Beijbom, O.: Pointpillars: Fast encoders for object detection from point clouds. In: CVPR. pp. 12697–12705 (2019) 9. Li, Z., Lan, S., Alvarez, J.M., Wu, Z.: Bevnext: Reviving dense bev frameworks for 3d object detection. In: CVPR. pp. 20113–20123 (2024) 10. Lin, J., Diekmann, P., Framing, C.E., Zweigel, R., Abel, D.: Maritime environment perception based on deep learning. IEEE TITS 23 (9), 15487–15497 (2022) 11. Liu, S., Cui, M., Li, B., Liang, Q., Hong, T., Huang, K., Shan, Y.: Fshnet: Fully sparse hybrid network for 3d object detection. In: CVPR. pp. 8900–8909 (2025) 16 Authors Suppressed Due to Excessive Length 12. Liu, Z., Hou, J., Wang, X., Ye, X., Wang, J., Zhao, H., Bai, X.: Lion: Linear group rnn for 3d object detection in point clouds. In: NeurIPS. pp. 13601–13626 (2024) 13. Mali´ c, D., Fruhwirth-Reisinger, C., Schulter, S., Possegger, H.: Gblobs: Explicit local structure via gaussian blobs for improved cross-domain lidar-based 3d ob-ject detection. In: 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). pp. 27357–27367. IEEE (2025) 14. Martelli, M., Faggioni, N., Ponzini, F.: Arnold annotated repository of navigational obstacles from lidar data. Autonomous Transportation Research 2(1), 45–60 (2026) 15. Shi, S., Guo, C., Jiang, L., Wang, Z., Shi, J., Wang, X., Li, H.: Pv-rcnn: Point-voxel feature set abstraction for 3d object detection. In: CVPR. pp. 10529–10538 (2020) 16. Shi, S., Jiang, L., Deng, J., Wang, Z., Guo, C., Shi, J., Wang, X., Li, H.: Pv-rcnn++: Point-voxel feature set abstraction with local vector representation for 3d object detection. IJCV 131 (2), 531–551 (2023) 17. Shi, S., Wang, X., Li, H.: Pointrcnn: 3d object proposal generation and detection from point cloud. In: CVPR. pp. 770–779 (2019) 18. Shi, S., Wang, Z., Wang, X., Li, H.: Part-aˆ 2 net: 3d part-aware and ag-gregation neural network for object detection from point cloud. arXiv preprint arXiv:1907.03670 (2019) 19. Wang, H., Shi, C., Shi, S., Lei, M., Wang, S., He, D., Schiele, B., Wang, L.: Dsvt: Dynamic sparse voxel transformer with rotated sets. In: CVPR. pp. 13520–13529 (2023) 20. Wang, Y., Wu, H., Wang, S., Kong, Y., Liu, Y., Luo, Z., Liu, C.: Hierarchical vertical-aware and adaptive multi-scale network for three-dimensional object de-tection in maritime environments. EAAI 162 , 112626 (2025) 21. Xie, Y., Nanlal, C., Liu, Y.: Reliable lidar-based ship detection and tracking for autonomous surface vehicles in busy maritime environments. Ocean Engineering 
+
+312 , 119288 (2024) 22. Xie, Y., Wu, P., Englot, B., Nanlal, C., Liu, Y.: Uncertainty-aware maritime point cloud detector (u-mpcd) for autonomous surface vehicles. IEEE Journal of Oceanic Engineering 51 (1), 220–242 (2026) 23. Yan, Y., Mao, Y., Li, B.: Second: Sparsely embedded convolutional detection. Sensors 18 (10), 3337 (2018) 24. Ye, W., Xia, Q., Wu, H., Dong, Z., Zhong, R., Wang, C., Wen, C.: Fade3d: Fast and deployable 3d object detection for autonomous driving. IEEE TITS 26 (9), 12934–12946 (2025) 25. Yin, T., Zhou, X., Krahenbuhl, P.: Center-based 3d object detection and tracking. In: CVPR. pp. 11784–11793 (2021) 26. Zhang, G., Chen, J., Gao, G., Li, J., Liu, S., Hu, X.: Safdnet: A simple and effective network for fully sparse 3d object detection. In: CVPR. pp. 14477–14486 (2024) 27. Zhang, G., Junnan, C., Gao, G., Li, J., Hu, X.: Hednet: A hierarchical encoder-decoder network for 3d object detection in point clouds. In: NeurIPS. pp. 53076– 53089 (2023) 28. Zhang, Q., Wang, L., Meng, H., Zhang, W., Huang, G.: A lidar point clouds dataset of ships in a maritime environment. IEEE/CAA Journal of Automatica Sinica 
+
+11 (7), 1681–1694 (2024)

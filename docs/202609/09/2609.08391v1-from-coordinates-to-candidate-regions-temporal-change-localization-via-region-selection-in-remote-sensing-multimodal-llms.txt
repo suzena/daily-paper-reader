@@ -1,0 +1,521 @@
+Title: From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs
+
+URL Source: https://arxiv.org/pdf/2609.08391v1
+
+Published Time: Wed, 09 Sep 2026 03:25:22 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs 
+
+Juwan Chung Sungjune Park Yeongyun Kim Yong Man Ro *
+
+Integrated Vision Language Lab, KAIST, South Korea 
+
+{juwan99, sungjune-p, yeongyun.kim, ymro}@kaist.ac.kr 
+
+Abstract 
+
+Remote sensing multimodal large language models (RS-MLLMs) have advanced scene understanding and visual question answering over satellite imagery, yet localizing specific objects or changed regions remains challeng-ing. Existing approaches rely on generating bounding box coordinates as token sequences, which is fragile for the small, densely packed objects common in remote sensing and increas-ingly error-prone when multiple targets must be localized simultaneously. In this work, we present an RS-specific formulation of the re-gion selection paradigm, previously explored in natural-image MLLMs, and extend it to temporal change localization over multi-image sequences. Our framework employs a text-conditioned region proposal module, encodes each candidate as special tokens carrying per-frame visual features enriched with spatial and temporal cues, and lets the LLM local-ize targets by selecting region tokens in its re-sponse. We construct a multi-task training and evaluation suite spanning localization, refer-ring expression, visual grounding, and under-standing tasks across single-image and multi-temporal settings. Experiments show that our approach substantially outperforms coordinate-generation baselines on temporal change lo-calization, while improving single-image vi-sual grounding and maintaining competitive understanding performance. Oracle analysis decomposes the contributions of the region pro-poser and the LLM selector, providing diag-nostic insight unique to this framework. Our code will be available at https://github. com/juwan-kr/RS-RegionSelect .
+
+1 Introduction 
+
+Remote sensing (RS) image analysis, including ob-ject detection, change detection, and scene classifi-cation, plays a critical role in disaster response, ur-ban planning, and environmental monitoring. The  
+
+> *Corresponding author.
+
+recent introduction of multimodal large language models (MLLMs) to this domain has brought sig-nificant progress, enabling conversational inter-action with RS imagery (Kuckreja et al., 2024; Muhtar et al., 2024; Zhang et al., 2024; Zhan et al., 2025; Soni et al., 2025; Park et al., 2025), temporal multi-image reasoning (Irvin et al., 2025), and fine-grained spatial grounding at both box and pixel levels (Zhou et al., 2024; Shabbir et al., 2025; Shu et al., 2026, 2025). Despite these advances, localization of specific objects or changed regions remains a key challenge. Most existing RS-MLLMs perform localization by generating bounding box coordinates as discrete token sequences. This coordinate-generation ap-proach can be fragile in the RS setting, where ob-jects are typically small and densely packed, oc-cupying only a handful of image patches; small coordinate errors that would be negligible for large natural-image objects can significantly degrade lo-calization quality. The problem is compounded when multiple regions must be localized at once, as in change detection, because the model must produce a long sequence of coordinate tokens with growing risk of omission, duplication, or degener-ate repetitive patterns (Figure 3). To address this, we draw on recent work in natural-image MLLMs that frames localization as 
+
+region selection (Ma et al., 2024; Jiang et al., 2024; Zhang et al., 2025; Yuan et al., 2024): given a set of candidate regions, the model selects the rele-vant ones rather than generating coordinates from scratch. We adopt this paradigm and extend it to the RS domain, where temporal image sequences and heterogeneous object vocabularies present ad-ditional challenges. While open-vocabulary detec-tion in RS has been explored by standalone detec-tors (Huang et al., 2025), integrating such detection as a component within an MLLM for region-level reasoning over temporal sequences has not been addressed. Our framework represents each candi-arXiv:2609.08391v1 [cs.CV] 8 Sep 2026 date region as a group of special tokens carrying per-frame visual features along with spatial and temporal cues (Figure 1). The LLM performs lo-calization by generating region tokens within its natural language response, effectively reducing the localization problem to discrete token selection. To support training and evaluation, we assem-ble a multi-task dataset from both multi-temporal sources (TEOChatlas (Irvin et al., 2025) for change localization and temporal QA; additional change detection datasets (Liu et al., 2024a,b; Shen et al., 2021; Holail et al., 2023)) and single-image sources (GeoChat Instruct (Kuckreja et al., 2024), FIT-RS (Luo et al., 2024), DIOR-RSVG (Zhan et al., 2023)). Experiments show that our model sub-stantially outperforms both existing RS-MLLMs and a same-data coordinate-generation baseline on temporal change localization and visual grounding tasks, while maintaining competitive performance on scene classification, QA, and other understand-ing tasks. Our contributions are as follows: • We present an RS-specific formulation of re-gion selection for dense localization and ex-tend it to temporal change detection over multi-image sequences. Each candidate car-ries aligned per-frame visual features, en-abling region-level cross-frame comparison within the LLM. • We design a region proposal module that in-tegrates heterogeneous RS detection datasets into a unified class vocabulary and employs prompt-aware class filtering to bridge the LLM’s natural language query to the detec-tor’s class space. • We construct a multi-task training and evalu-ation suite and provide systematic evaluation with controlled ablations and oracle analysis that separately quantifies the proposer and se-lector contributions. 
+
+2 Related Work 
+
+Remote Sensing MLLMs and Temporal Rea-soning. A growing body of work has adapted MLLMs to remote sensing. GeoChat (Kuckreja et al., 2024) introduced conversational capabil-ities with region-level referring and grounding. TEOChat (Irvin et al., 2025) extended MLLM reasoning to temporal earth observation, support-ing diverse spatio-temporal tasks including change localization, damage assessment, and temporal QA over multi-image sequences. EarthDial (Soni et al., 2025) supports both multi-sensor and multi-temporal inputs. Other systems target pixel-level grounding (Shabbir et al., 2025; Shu et al., 2026), cross-sensor fusion (Shu et al., 2025), and large-scale scene understanding (Muhtar et al., 2024; Zhang et al., 2024; Zhan et al., 2025). For language-conditioned change reasoning, ChangeChat (Deng et al., 2025) and CDChat (Noman et al., 2025) address bi-temporal conversational understanding, while TerraScope (Shu et al., 2026) integrates pixel-level masks with multi-temporal chain-of-thought reasoning. Pixel-level approaches offer fine spa-tial resolution but can struggle to delineate indi-vidual objects in densely packed scenes, where instance-level distinctions matter. Among box-level approaches, localization is universally per-formed through coordinate generation. Our work explores region selection as a complementary al-ternative that aligns with the LLM’s discrete token generation mechanism and provides explicit per-region visual features. 
+
+Region-Level Visual Grounding in MLLMs. 
+
+Visual grounding in MLLMs is typically performed either by generating bounding box coordinates (Chen et al., 2023; Peng et al., 2024; Wang et al., 2024) or by producing segmentation masks (Lai et al., 2024). A complementary line of work injects region-level features directly into the LLM input. GPT4RoI (Zhang et al., 2025) uses ROIAlign fea-tures as spatial tokens; Groma (Ma et al., 2024) introduces a locate-then-understand pipeline with a dedicated region proposer; ChatRex (Jiang et al., 2024) adds retrieval-based region perception; and Osprey (Yuan et al., 2024) supports pixel-level re-gion understanding. These approaches have proven effective for natural images but are limited to single-image settings. On the detection side, open-vocabulary object detection has been explored in RS (Huang et al., 2025), demonstrating that text-conditioned detectors can generalize across hetero-geneous RS class vocabularies. We build on these foundations and extend the region-centric paradigm to RS with two key adaptations: each candidate carries per-frame visual features from a temporal image sequence for cross-time comparison, and the region proposal module employs prompt-aware class filtering to bridge the LLM’s natural language Vision Encoder Token Embedding Large Language Model (LLM) Region Proposal Module    
+
+> Multi-level Features
+> ……
+> Patch-level Image Tokens Input Sequence of RS Images
+> …<roi
+> N>
+> Region-level Feature Tokens
+> “Identify the severely damaged or destroyed buildings in the image. Include region token(s) for each identified region or relevant area in your response.”
+> User Instruction
+> LoRA
+> …
+> User Instruction Tokens
+> : Frozen Parameters : Trainable Parameters
+> “<roi
+> 4>, <roi
+> 6>”
+> Region Proposal Module
+> Region Proposer
+> ROI_Align
+> Identify the severely damaged or destroyed buildings in the image.
+> Input Sequence of RS Images
+> Box Filtering
+> Concatenated Multi-level Features Final Set of Regions
+> Projection
+> …
+> <roi
+> 1><roi
+> N><roi
+> 2><roi
+> 1>
+> “<box>(0.164,0.611),(0.335,0.765)</box>, <box>(0.150,0.748),(0.284,0.951)</box>”
+> User Instruction
+> Class Selection
+> <roi
+> 3>
+> …
+> Temporal Cue Injection : Spatial Cue Injection
+
+Figure 1: Overview of our framework. Given an input sequence of RS images and a user instruction, the vision encoder extracts multi-level features. The region proposal module (right) performs text-conditioned class selection, generates region proposals, applies box filtering and ROIAlign (He et al., 2017), and projects features into region tokens with spatial and temporal cue injection. The LLM receives patch-level image tokens, region-level feature tokens, and user instruction tokens, and generates a response containing selected region tokens (e.g., <roi 4>,
+
+<roi 6>) for localization. 
+
+query to the detector’s class vocabulary. 
+
+3 Method 
+
+3.1 Task Formulation 
+
+Region-level candidate selection has been explored in natural-image MLLMs (Ma et al., 2024; Jiang et al., 2024; Zhang et al., 2025). We adopt this paradigm and extend it to RS, where temporal im-age sequences and dense small objects present dis-tinct challenges. Given RS images I = {I1, . . . , I M } capturing the same location at different times and a text query 
+
+q, the goal is to identify the spatial regions relevant to q. In the conventional approach, the model gener-ates bounding box coordinates as a token sequence. In our formulation, a region proposal module first produces a set of candidates R = {r1, . . . , r N },and the model selects relevant ones by generating their corresponding tokens (e.g., <roi 4>) within a natural language response. Each selection is a single token rather than a multi-token coordinate tu-ple, which not only simplifies the output space but also reduces the number of tokens the LLM must generate for multi-target localization, improving inference efficiency (Appendix G). Beyond simplifying the output, this formulation also enriches the input: the visual features of each candidate are injected into the LLM’s context, giv-ing the model direct access to region-level visual information that is absent in coordinate-generation approaches. 
+
+3.2 Region Proposal Module 
+
+Generating candidate regions for RS requires ad-dressing two practical challenges. First, RS object detection datasets define heterogeneous class tax-onomies, so the proposal mechanism must operate flexibly across diverse vocabularies. Second, us-ing the full class set for every query leads to many irrelevant proposals. To handle both issues, we adopt a text-conditioned open-vocabulary detection architec-ture as the backbone of our region proposal mod-ule. Open-vocabulary detection in RS has been explored by standalone systems (Huang et al., 2025); our module serves a different role as a component within an MLLM framework, bridg-ing the user’s natural language query to the de-tector’s class space. Specifically, we fine-tune MM-Grounding-DINO (Zhao et al., 2024) on five RS object detection datasets (xView(Lam et al., 2018), DIOR(Li et al., 2020), DOTA-v2.0(Ding et al., 2022), FAIR1M(Sun et al., 2022), and SODA-A(Cheng et al., 2023)), constructing a union set of 36 categories that spans diverse RS object types from vehicles and buildings to infrastructure and sports facilities (full class list in Appendix C). Dur-ing detector training, only the classes present in each source dataset are provided as text prompts, allowing the model to learn vocabulary-conditioned proposal generation despite the heterogeneous an-notations across datasets. At inference, we com-pute the semantic similarity between the user query and each class name using a sentence encoder (Wang et al., 2020), and retain only the top-ranked classes when the similarity distribution is suffi-ciently peaked, suppressing irrelevant proposals. The raw outputs are deduplicated, filtered through NMS, and capped at a fixed number of candi-dates. Further filtering details are provided in Ap-pendix A. 
+
+3.3 Region Token Representation 
+
+Each candidate rk is represented by a group of special tokens: 
+
+<roi k>
+
+| {z } 
+
+> proxy token
+
+<obj k,1 > <obj k,2 > · · · <obj k,M >
+
+| {z }
+
+> per-frame visual features
+
+(1) Here, <roi k> is a learnable proxy token that the LLM can generate in its output to select region 
+
+rk, and each <obj k,t > carries the visual features of 
+
+rk extracted from image It. For bi-temporal tasks (M =2 ), each region has two visual slots, enabling the LLM to observe how the same spatial location has changed between time steps. The visual features are obtained by extracting multi-scale intermediate representations from the vision encoder, applying ROIAlign (He et al., 2017) using each candidate’s bounding box, and project-ing through a learned two-layer MLP to match the LLM’s hidden dimension. The proxy token <roi k>
+
+is augmented with a spatial embedding derived from a geometry descriptor of the bounding box: 
+
+gk = [ x1, y 1, x 2, y 2, c x, c y,w, h, a, log( w/h )] (2) 
+
+e′ 
+
+> <roi k>
+
+= LN 
+
+
+
+WTE( <roi k>)+ αg · GeoMLP( gk)
+
+ (3) where (x1, y 1) and (x2, y 2) are the top-left and bottom-right box coordinates in normalized [0 , 1] 
+
+space, (cx, c y) is the box center, w and h are the width and height, a is the area, and log( w/h ) en-codes the aspect ratio. αg is a learnable scalar and LN denotes LayerNorm(Ba et al., 2016). Each visual feature is similarly augmented with a tempo-ral embedding encoding the frame index and total frame count: 
+
+f ′ 
+
+> k,t
+
+= LN 
+
+
+
+fk,t + αt · (eidx  
+
+> t
+
++ ecnt  
+
+> M
+
+)
+
+
+
+(4) where fk,t is the projected visual feature of region 
+
+rk from image It, eidx  
+
+> t
+
+is a learnable embedding for the frame index t (indicating which temporal position this image occupies), ecnt  
+
+> M
+
+is a learnable embedding for the total number of input frames M ,and αt is a learnable scalar analogous to αg. The spatial cue tells the model where each candidate is located, while the temporal cue lets it distinguish which frame a feature originates from. The en-riched embeddings then replace the corresponding token positions in the LLM input. 
+
+3.4 Region-Aware Language Modeling 
+
+The LLM receives an input sequence consisting of image patch tokens from the vision encoder, the region token groups for all candidates, and the tokenized text query. A brief description prefix informs the model of the available region tokens and their temporal ordering. During generation, the model produces a natural language response that may include <roi k> tokens to indicate region selections. Each <roi k> maps back to its candidate bounding box, yielding the localization result. Because the model has access to per-frame visual features of the same spatial region, it can attend to both <obj k,1 > (pre-event) and <obj k,2 > (post-event) to assess whether region rk has changed, enabling visual comparison within the LLM’s con-text. 
+
+3.5 Training 
+
+Our training data spans both multi-temporal and single-image settings. For multi-temporal tasks, TEOChatlas (Irvin et al., 2025) provides change localization (xBD (Gupta et al., 2019), S2Looking (Shen et al., 2021)), spatial referring expression, change QA, region-level QA, temporal QA (QFab-ric (Verma et al., 2021)), and scene classification (fMoW (Christie et al., 2018)). Additional change detection data comes from LEVIR-MCI (Liu et al., 2024a), TUE-CD (Liu et al., 2024b), and other sources (Holail et al., 2023; Shen et al., 2021). For single-image tasks, GeoChat Instruct (Kuck-reja et al., 2024) provides general RS conversation, FIT-RS (Luo et al., 2024) provides fine-grained un-derstanding, and DIOR-RSVG (Zhan et al., 2023) and OPT-RSVG (Li et al., 2024) provide visual Dataset Group 1 2 3             
+
+> TEOChatlas (Irvin et al., 2025) (scene/QA) ✓✓
+> TEOChatlas (region/temporal) ✓✓
+> TEOChatlas (localization) ✓✓
+> GeoChat Instruct (Kuckreja et al., 2024) ✓✓✓
+> RSVG (Zhan et al., 2023; Li et al., 2024) ✓✓
+> FIT-RS (Luo et al., 2024) ✓
+> Additional CD (Liu et al., 2024a,b) (Holail et al., 2023; Shen et al., 2021)
+> ✓✓
+
+Table 1: Dataset usage across training stages (1, 2, 3). 
+
+grounding. Including scene-level QA and classifi-cation tasks ensures the model builds broad RS do-main knowledge, providing the visual understand-ing foundation on which localization capabilities are built. Table 1 summarizes dataset usage across training stages. Training proceeds in three stages (Figure 2). 
+
+Stage 1 (RS domain adaptation) runs for 2 epochs on scene-level RS tasks without any region mod-ule, fine-tuning the LLM via LoRA (learning rate 
+
+2×10 −5) together with the visual tokenizer head and the last vision encoder block, while the re-maining vision encoder layers stay frozen. Stage 2 
+
+(RPM and new token alignment training) also runs for 2 epochs and introduces the region proposal module while keeping the LLM frozen to stabi-lize the newly introduced parameters. In an initial phase, the region projector and ROI token embed-dings are trained (learning rate 1×10 −4) on simple single-image region tasks so the model learns to associate region tokens with visual content. In a subsequent phase, spatial and temporal embedding components are activated, and training expands to multi-temporal and multi-target settings. Stage 3 
+
+(RS multi-task fine-tuning) runs for 2 epochs and jointly trains all components on the full task mix-ture at a learning rate of 2×10 −5. The visual embedding components are selectively unfrozen alongside the LLM (via LoRA(Hu et al., 2021)), while gradient masking restricts text embedding updates to ROI-specific token rows to preserve pre-trained representations. All LoRA stages use rank 64 and α=128 . Additional hyperparameters are in Appendix B. 
+
+4 Experiments 
+
+4.1 Setup 
+
+We evaluate on two groups of tasks. Localiza-tion tasks (Table 2) form the core evaluation: bi-temporal building localization (LOC) on xBD Vision Encoder  
+
+> LLM
+> Token Embedding
+> LoRA
+> Region Proposal Module Vision Encoder
+> LLM
+> Token Embedding
+> LoRA
+> Region Proposal Module Vision Encoder
+> LLM
+> Token Embedding
+> LoRA
+> Stage 1: RS Domain Adaptation Training Stage 2: RPM + New Token Alignment Training Stage 3: RS Multi-task Fine-Tuning
+> : Frozen Parameters : Trainable Parameters
+
+Figure 2: Stage-wise training. In Stages 1 and 3, only the visual tokenizer head and the last vision encoder block are trainable within the vision encoder. 
+
+(Gupta et al., 2019), which asks the model to identify all buildings from temporal image pairs; change detection localization (CDL) on S2Looking (Shen et al., 2021), which asks for changed build-ings; spatial referring expression (SRE) on both datasets, which grounds a spatially described re-gion; single-image visual grounding on DIOR-RSVG (Zhan et al., 2023), evaluated by box-level Accuracy@0.5; change detection on LEVIR-MCI (Liu et al., 2024a); and zero-shot change detection on HRCUS-CD (Zhang et al., 2023) (not in training data). All other localization tasks use pixel-level F1. 
+
+Understanding tasks (Table 3) include damage classification on xBD, QA on xBD and S2Looking, temporal QA and temporal referring expression on QFabric (Verma et al., 2021), and scene clas-sification on fMoW, evaluated by accuracy except xBD damage classification, which uses F1. De-tailed task descriptions and example prompts are in Appendix D. We compare against four baselines. TEOChat 
+
+(Irvin et al., 2025) is a temporal RS-MLLM with coordinate generation. EarthDial (Soni et al., 2025) is a multi-sensor, multi-temporal RS-MLLM. 
+
+Qwen3-VL (Bai et al., 2025) is an off-the-shelf general-purpose MLLM without RS-specific fine-tuning. Ovis2.5-FT is our base model (Ovis2.5 (Lu et al., 2025)) fine-tuned on the same data with the same recipe, but without the region proposal module, using coordinate generation instead. 
+
+4.2 Main Results Localization Tasks. Table 2 presents localization results across seven benchmarks. The most infor-mative comparison is against Ovis2.5-FT, which shares the same base model, training data, and op-timization recipe, differing only in the localization formulation. On xBD building localization, the gap is striking: our model achieves 69.4% F1 compared to 32.3% for Ovis2.5-FT, a 37.1-point improvement from replacing coordinate generation with the com-plete region-selection interface under the same base model, training data, and optimization recipe. On S2Looking change detection localization, the gap is 14.1 points (50.5 vs. 36.4). These results confirm that for multi-target temporal localization, where the model must identify many small regions simul-taneously, region selection provides a substantial advantage over coordinate generation. On DIOR-RSVG(Zhan et al., 2023) single-image visual grounding, our model reaches 77.3% accuracy compared to 69.5% for Ovis2.5-FT, demonstrating that the benefit of region selection extends beyond temporal tasks. Spatial referring expression (SRE) shows consistent improvement: 40.2% vs. 27.6% on xBD and 49.6% vs. 36.1% on S2Looking, though absolute scores remain mod-erate for all models, reflecting the inherent diffi-culty of grounding complex spatial descriptions in RS imagery. HRCUS-CD, evaluated in a zero-shot setting (not in training data), yields 55.0% F1, and LEVIR-MCI reaches 58.8%, both surpassing the coordinate-generation baseline. Comparisons with two recent open-weight generalist MLLMs, Qwen3.5-9B (Qwen Team, 2026) and InternVL3.5-8B (Wang et al., 2025), are reported in Appendix E, where our model leads on all five evaluated local-ization benchmarks. Compared to existing RS-MLLMs, our model outperforms TEOChat (Irvin et al., 2025) on all localization benchmarks despite TEOChat having been specifically designed for temporal RS tasks. EarthDial (Soni et al., 2025) and Qwen3-VL (Bai et al., 2025) show substantially lower scores, partic-ularly on datasets they were not trained on (marked with ∗ in the table). Figure 3 illustrates two representative examples. On a LEVIR-MCI (Liu et al., 2024a) scene with many changed buildings (top), Qwen3-VL (Bai et al., 2025) produces coordinates in a degenerate arithmetic pattern, while TEOChat (Irvin et al., 2025) generates many small boxes with limited coverage. On an HRCUS-CD (Zhang et al., 2023) scene (bottom, zero-shot), Qwen3-VL generates mislocated coordinates and TEOChat fails to detect any change. In both cases, our model correctly identifies the relevant regions through region token selection. 
+
+Understanding Tasks. Table 3 presents under-standing results. Our model performs compara-bly to TEOChat (Irvin et al., 2025) on scene-level QA (xBD QA: 85.9 vs. 89.9; S2Looking QA: 74.0 vs. 73.4), confirming that the region selec-tion interface does not degrade general understand-ing capabilities. On QFabric(Verma et al., 2021) temporal tasks, where region-level visual features directly aid reasoning about specific spatial re-gions across time, our model achieves the best re-sults (TRE: 78.0%, RTQA: 78.6%), outperforming both TEOChat and Ovis2.5-FT. Scene classifica-tion on fMoW (73.5%) is slightly below TEOChat (75.1%) but substantially above Qwen3-VL(Bai et al., 2025) (37.3%) and EarthDial(Soni et al., 2025) (37.2%). Notably, the improvement over Ovis2.5-FT on temporal tasks (QFabric TRE: 78.0 vs. 73.5; RTQA: 78.6 vs. 75.6) suggests that region-level features benefit not only localization but also region-conditioned understanding. 
+
+4.3 Analysis Ablation Study. Table 4 isolates the contribution of each component. 
+
+Full model vs. No ROI (Ovis2.5-FT). Reverting to coordinate generation with the same architecture and data: S2Looking(Shen et al., 2021) CDL drops from 50.5 to 36.4 and DIOR-RSVG(Zhan et al., 2023) from 77.3 to 69.5. 
+
+Full model vs. Text-coord ROI. Replacing vi-sual features with textual coordinates while re-taining selection. Change detection drops moder-ately (S2Looking CDL: 50.5 →47.5), while DIOR-RSVG remains strong (74.7) since text coordi-nates suffice for spatial information in single-image tasks. 
+
+Full model vs. Visual feature only (w/o spatial and temporal cues). DIOR-RSVG drops dramati-cally (77.3 →32.3): queries describe objects by spa-tial attributes (e.g., “the small ship on the right”), User 
+
+Identify the changed building areas in these two satellite domain images. 
+
+> [0, 80, 20, 98], [36, 41, 51, 56], [51, 41, 66, 56], [66, 39, 81, 54], [82, 37, 99, 53], [82, 28, 99, 43], [82, 20, 99, 35], [82, 10, 99, 25], [82, 0, 99, 14]
+
+Answer: <box>(0.388,0.000),(0.557,0.063)</box>, …,<box>(0.067,0.800),(0.220,0.933)</box>   
+
+> Qwen3-VL TEOChat Our Model
+> [328, 480, 500, 640], [480, 320, 640, 480], [640, 160, 800, 320], [800, 0, 960, 160],
+> <roi30>, <roi12>, …,<roi31>
+
+User 
+
+Identify the changed building areas in these two satellite domain images. 
+
+> There are no changed buildings.
+
+Answer: <box>(0.852,0.535),(0.996,0.887)</box>    
+
+> Qwen3-VL TEOChat Our Model
+> [600, 512, 800, 656] <roi38>
+
+(<box>(0.840,0.526),(0.996,0.896)</box> )
+
+> General domain MLLM based on coordinate generation RS domain MLLM based on coordinate generation RS domain MLLM based on region selection
+
+Figure 3: Qualitative comparison of change detection localization. Top (LEVIR-MCI) (Liu et al., 2024a): Qwen3-VL(Bai et al., 2025) (coordinates normalized to 0–1000) outputs a degenerate arithmetic pattern. TEOChat(Irvin et al., 2025) (0–100) produces many small boxes. Our model identifies changed regions through region token selection. Bottom (HRCUS-CD (Zhang et al., 2023) , zero-shot): Qwen3-VL generates mislocated coordinates. TEOChat fails to detect change. Our model selects <roi 38 >. Green boxes (top-right) show ground truth (0–1 normalized). 
+
+and without the geometry embedding the model can recognize visual content but cannot determine a candidate’s location or relative size, making it unable to match the spatial description. Separate ablations show that this drop is driven mainly by the spatial cue, while the temporal cue provides a smaller but consistent gain, with DIOR-RSVG dropping from 77.3 to 33.5 without the spatial cue. The full six-configuration grid is reported in Ap-pendix F. 
+
+Oracle and Proposer Recall Analysis. A dis-tinctive advantage of the region selection frame-work is that it cleanly decomposes end-to-end performance into three interpretable levels: pro-poser recall (AR@100, measuring what fraction of ground-truth regions appear among the candidates), 
+
+oracle F1 (model performance when ground-truth boxes are added to the candidate set, guaranteeing perfect recall), and standard F1 (actual end-to-end performance). Table 5 presents this decomposition. The proposer, trained solely on five RS object detection datasets that contain no change detec-xBD S2Looking xBD S2Looking DIOR-RSVG HRCUS-CD LEVIR-MCI Model Size LOC (F1) CDL (F1) SRE (F1) SRE (F1) Acc@0.5 F1 F1 Qwen3-VL (Bai et al., 2025) 8B 17.3 ∗ 11.8 ∗ 6.7 ∗ 7.9 ∗ 53.8 ∗ 21.7 ∗ 13.3 ∗                                
+
+> TEOChat (Irvin et al., 2025) 7B 38.9 34.5 25.1 32.9 27.6 33.3 ∗26.4 ∗
+> EarthDial (Soni et al., 2025) 4B 24.1 2.6 ∗8.7 12.2 ∗39.6 4.7 ∗12.6 ∗
+> Ovis2.5-FT 9B 32.3 36.4 27.6 36.1 69.5 54.4 †56.4
+> Ours 9B 69.4 50.5 40.2 49.6 77.3 55.0 †58.8
+
+Table 2: Localization results (%). LOC: bi-temporal building localization; CDL: change detection localization; SRE: spatial referring expression. Our model achieves the best performance on all benchmarks. ∗Zero-shot (not trained on this dataset). †HRCUS-CD not in training data.                               
+
+> Model fMoW xBD CDC xBD QA S2L QA QF TRE QF RTQA
+> Qwen3-VL 37.3 34.6 44.7 41.3 22.1 61.6 TEOChat 75.1 50.0 89.9 73.4 74.9 71.7 EarthDial 37.2 0.6 37.4 48.8 0.0 53.7 Ovis2.5-FT 71.2 45.2 85.8 74.0 73.5 75.6
+> Ours 73.5 51.2 85.9 74.0 78.0 78.6
+
+Table 3: Understanding results (%). xBD CDC is F1 and the remaining tasks are accuracy. CDC: change damage classification; S2L: S2Looking; QF: QFabric; TRE: temporal referring expression; RTQA: region temporal QA. Our model shows no region interface degradation and leads temporal region tasks.                           
+
+> S2L S2L RSVG LEVIR HRCUS Config. CDL SRE Acc F1 F1 Full model 50.5 49.6 77.3 58.8 55.0
+> w/o spat.+temp. 39.0 39.3 32.3 56.6 41.6 Text-coord ROI 47.5 47.9 74.7 55.7 50.1 No ROI (coord gen) 36.4 36.1 69.5 56.4 54.4
+
+Table 4: Ablation study (%). S2L: S2Looking; CDL: change detection localization; SRE: spatial referring expression; RSVG: DIOR-RSVG (Acc@0.5). 
+
+tion annotations, generalizes remarkably well in a zero-shot manner to temporal change benchmarks: AR@100 reaches 74.3% on xBD(Gupta et al., 2019), 70.3% on S2Looking(Shen et al., 2021), 78.7% on HRCUS-CD(Zhang et al., 2023), and 87.1% on LEVIR-MCI(Liu et al., 2024a). This in-dicates that the unified 36-class vocabulary learned from heterogeneous RS detection datasets transfers effectively to building-centric localization tasks. The decomposition reveals that the performance bottleneck varies by dataset. On xBD, the pro-poser recall is 74.3% and the standard F1 reaches 69.4%, which is close to the oracle F1 of 76.3% (gap: 6.9 points). This means the LLM selector is effective at utilizing the available candidates, and the primary ceiling comes from proposals that the detector misses. On LEVIR-MCI, in contrast, the proposer achieves the highest recall (87.1%), yet the standard F1 is only 58.8% compared to 70.0% oracle (gap: 11.2 points). Here the selector, not the proposer, is the dominant bottleneck: the detector finds most targets, but the LLM fails to select all of them correctly. On S2Looking, both the pro-poser recall (70.3%) and the standard-to-oracle gap (9.8 points) indicate room for improvement on both sides. For DIOR-RSVG(Zhan et al., 2023), where the proposer was trained on DIOR(Li et al., 2020) data (marked ‡), recall is naturally higher (83.0%) and the oracle gap is small (77.3 vs. 80.7), suggesting that the framework is operating near its ceiling for this task. This analysis provides actionable guidance: for datasets where the oracle gap is large (e.g., LEVIR-MCI), improving the LLM’s selection ability through better training data or objectives is the priority; for datasets where proposer recall is the ceiling (e.g., S2Looking), strengthening the detec-tor or expanding its training data is more impact-ful. This kind of decomposition is not available in coordinate-generation models, where the quality of localization and the model’s spatial reasoning are entangled and cannot be separately diagnosed. 
+
+Temporal Comparison Diagnostics. To verify that localization reflects cross-frame comparison rather than appearance-only selection, we replace each evaluation pair with an identical pair by du-plicating the post-event image into both temporal slots. Since post-event objects remain visible, an appearance-only model would still emit regions. As shown in Table 6, both the region-token emis-sion rate and the number of predicted regions col-lapse to near zero on identical pairs. Reversing the actual image order changes 41.2% of responses on QFabric, whereas reversing only the frame-index embeddings changes TRE by a single point (78.0 to 77.0). This indicates that temporal behavior Task AR@100 Standard Oracle                      
+
+> xBD LOC (F1) 74.3 69.4 76.3 S2Looking CDL (F1) 70.3 50.5 60.3 xBD SRE (F1) 74.3 40.2 50.2 S2Looking SRE (F1) 70.3 49.6 58.3 DIOR-RSVG (Acc) ‡83.0 77.3 80.7 HRCUS-CD (F1) 78.7 55.0 61.1 LEVIR-MCI (F1) 87.1 58.8 70.0
+
+Table 5: Three-level performance decomposition (%). AR@100: proposer recall (fraction of GT regions found among candidates at IoU ≥0.5). Standard: end-to-end model performance. Oracle: performance when GT boxes are added to the candidate set, guaranteeing per-fect proposer recall. ‡Proposer trained on DIOR; all others zero-shot.             
+
+> Emission rate (%) Avg. #regions Normal Identical Normal Identical S2Looking 74.6 2.8 1.35 0.03 LEVIR-MCI 39.1 0.0 3.06 0.00
+
+Table 6: Identical-pair control. Each test pair is replaced with a no-change pair by duplicating the post-event image into both temporal slots. Region-token emission collapses to near zero, with no emission on any of the 1,929 LEVIR-MCI pairs. 
+
+is driven by ordered per-frame features, and the frame-index embedding acts as a lightweight iden-tifier. 
+
+Target-Density Analysis. Coordinate generation degrades sharply as targets multiply. On LEVIR-MCI, TEOChat falls from 47.6 F1 for a single tar-get to 26.2 for more than 20 targets, while our model remains at 58.1 in the densest bin (Table 7). Degenerate arithmetic coordinate patterns appear in 19.0% to 28.8% of Qwen3-VL outputs and in 9.7% of Ovis2.5-FT outputs. Such failure modes cannot arise under region selection, which pro-duces discrete token choices instead of coordinate sequences. 
+
+5 Conclusion 
+
+We have presented an RS-specific formulation of the region selection paradigm for remote sensing localization and multi-temporal change localiza-tion. By encoding each candidate region with per-frame visual features, spatial geometry, and tempo-ral cues, the model performs localization through discrete token selection rather than coordinate gen-eration. In controlled experiments where the only difference is the localization formulation, region se-               
+
+> GT targets 12–5 6–10 11–20 >20 TEOChat 47.6 38.9 30.6 26.9 26.2
+> Ours 51.3 60.6 59.4 59.6 58.1
+
+Table 7: Change localization F1 on LEVIR-MCI, grouped by the number of ground-truth changed re-gions per sample. TEOChat degrades as targets multiply, while our model remains stable. 
+
+lection yields substantial improvements on change detection localization and visual grounding tasks. Understanding tasks remain competitive, confirm-ing that the region interface does not degrade gen-eral capabilities. Oracle analysis provides a clean decomposition of proposer and selector contribu-tions, a diagnostic unique to this framework that offers concrete guidance for future improvement. 
+
+Limitations 
+
+Proposer Recall Ceiling. The model can only select from candidates generated by the region pro-posal module; regions not proposed cannot be re-covered. Our oracle analysis quantifies this ceiling and shows that it is a significant factor, particularly on S2Looking CDL (9.8-point gap) and LEVIR-MCI (11.2-point gap). Improving proposer cover-age through stronger detectors, iterative proposals, or expanded training data is a natural direction for future work. 
+
+Training-Evaluation Metric Gap. The model is trained with token-level cross-entropy loss but evaluated with set-level F1 at a fixed IoU threshold. This mismatch means that predicting the correct set of regions in a different order incurs a training loss despite being equally valid. Exploring set-level objectives or reinforcement learning with task-specific rewards could help bridge this gap. 
+
+Future Directions. The current framework oper-ates at the axis-aligned bounding box level. Ex-tending it to oriented bounding boxes or pixel-level masks would broaden its applicability to a wider range of RS tasks, provided sufficient train-ing data is available. On the temporal side, our di-agnostics support region-level cross-frame compar-ison between aligned candidate features rather than broader temporal reasoning over long sequences, and extending the framework to longer sequences and richer temporal relations is another natural di-rection. Acknowledgments 
+
+This work was supported in part by the Institute of Information and Communications Technology Planning and Evaluation (IITP) grant funded by the Korean Government (Ministry of Science and ICT) under Grant RS-2022-II220124, and in part by the IITP grant funded by the Korean Government (Ministry of Science and ICT) under Grant RS-2022-II220984. 
+
+References 
+
+Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E Hin-ton. 2016. Layer normalization. arXiv preprint arXiv:1607.06450 .Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, Wenbin Ge, Zhi-fang Guo, Qidong Huang, Jie Huang, Fei Huang, Binyuan Hui, Shutong Jiang, Zhaohai Li, Mingsheng Li, and 45 others. 2025. Qwen3-vl technical report. 
+
+arXiv preprint arXiv:2511.21631 .Keqin Chen, Zhao Zhang, Weili Zeng, Richong Zhang, Feng Zhu, and Rui Zhao. 2023. Shikra: Unleashing multimodal llm’s referential dialogue magic. arXiv preprint arXiv:2306.15195 .Gong Cheng, Xiang Yuan, Xiwen Yao, Kebing Yan, Qinghua Zeng, Xingxing Xie, and Junwei Han. 2023. Towards large-scale small object detection: Survey and benchmarks. IEEE transactions on pattern anal-ysis and machine intelligence , 45(11):13467–13488. Gordon Christie, Neil Fendley, James Wilson, and Ryan Mukherjee. 2018. Functional map of the world. In 
+
+Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition , pages 6172–6180. Mostafa Dehghani, Basil Mustafa, Josip Djolonga, Jonathan Heek, Matthias Minderer, Mathilde Caron, Andreas Steiner, Joan Puigcerver, Robert Geirhos, Ibrahim Alabdulmohsin, Avital Oliver, Pi-otr Padlewski, Alexey Gritsenko, Mario Luˇ ci´ c, and Neil Houlsby. 2023. Patch n’ pack: Navit, a vision transformer for any aspect ratio and resolution. In 
+
+Advances in Neural Information Processing Systems (NeurIPS) , volume 36. Pei Deng, Wenqian Zhou, and Hanlin Wu. 2025. Changechat: An interactive model for remote sensing change analysis via multimodal instruction tuning. In ICASSP 2025-2025 IEEE International Confer-ence on Acoustics, Speech and Signal Processing (ICASSP) , pages 1–5. IEEE. Jian Ding, Nan Xue, Gui-Song Xia, Xiang Bai, Wen Yang, Michael Ying Yang, Serge Belongie, Jiebo Luo, Mihai Datcu, Marcello Pelillo, and Liangpei Zhang. 2022. Object detection in aerial images: A large-scale benchmark and challenges. IEEE Trans-actions on Pattern Analysis and Machine Intelligence ,44(11):7778–7796. Ritwik Gupta, Richard Hosfelt, Sandra Sajeev, Nirav Pa-tel, Bryce Goodman, Jigar Doshi, Eric Heim, Howie Choset, and Matthew Gaston. 2019. xbd: A dataset for assessing building damage from satellite imagery. 
+
+arXiv preprint arXiv:1911.09296 .Kaiming He, Georgia Gkioxari, Piotr Dollár, and Ross Girshick. 2017. Mask r-cnn. In Proceedings of the IEEE international conference on computer vision ,pages 2961–2969. Shimaa Holail, Tamer Saleh, Xiongwu Xiao, and Deren Li. 2023. Afde-net: Building change detection us-ing attention-based feature differential enhancement for satellite imagery. IEEE Geoscience and Remote Sensing Letters , 20:1–5. Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2021. Lora: Low-rank adap-tation of large language models. arXiv preprint arXiv:2106.09685 .Ziyue Huang, Yongchao Feng, Ziqi Liu, Shuai Yang, Qingjie Liu, and Yunhong Wang. 2025. Openrsd: Towards open-prompts for object detection in remote sensing images. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 8384–8394. Drew A Hudson and Christopher D Manning. 2019. Gqa: A new dataset for real-world visual reasoning and compositional question answering. In Proceed-ings of the IEEE/CVF conference on computer vision and pattern recognition , pages 6700–6709. Jeremy Andrew Irvin, Emily Ruoyu Liu, Joyce Chuyi Chen, Ines Dormoy, Jinyoung Kim, Samar Khanna, Zhuo Zheng, and Stefano Ermon. 2025. Teochat: A large vision-language assistant for temporal earth observation data. In International Conference on Learning Representations .Qing Jiang, Gen Luo, Yuqin Yang, Yuda Xiong, Yi-hao Chen, Zhaoyang Zeng, Tianhe Ren, and Lei Zhang. 2024. Chatrex: Taming multimodal llm for joint perception and understanding. arXiv preprint arXiv:2411.18363 .Kartik Kuckreja, Muhammad Sohail Danish, Muza-mmal Naseer, Abhijit Das, Salman Khan, and Fa-had Shahbaz Khan. 2024. Geochat: Grounded large vision-language model for remote sensing. In Pro-ceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 27831–27840. Xin Lai, Zhuotao Tian, Yukang Chen, Yanwei Li, Yuhui Yuan, Shu Liu, and Jiaya Jia. 2024. Lisa: Reasoning segmentation via large language model. In Proceed-ings of the IEEE/CVF conference on computer vision and pattern recognition , pages 9579–9589. Darius Lam, Richard Kuzma, Kevin McGee, Samuel Dooley, Michael Laielli, Matthew Klaric, Yaroslav Bulatov, and Brendan McCord. 2018. xview: Ob-jects in context in overhead imagery. arXiv preprint arXiv:1802.07856 .Ke Li, Gang Wan, Gong Cheng, Liqiu Meng, and Jun-wei Han. 2020. Object detection in optical remote sensing images: A survey and a new benchmark. IS-PRS journal of photogrammetry and remote sensing ,159:296–307. Ke Li, Di Wang, Haojie Xu, Haodi Zhong, and Cong Wang. 2024. Language-guided progressive attention for visual grounding in remote sensing images. IEEE Transactions on Geoscience and Remote Sensing ,62:1–13. Chenyang Liu, Keyan Chen, Haotian Zhang, Zipeng Qi, Zhengxia Zou, and Zhenwei Shi. 2024a. Change-agent: Toward interactive comprehensive remote sensing change interpretation and analysis. IEEE Transactions on Geoscience and Remote Sensing ,62:1–16. Yunlong Liu, Kai Zhang, Chunan Guan, Shanxin Zhang, Hong Li, Wenbo Wan, and Jiande Sun. 2024b. Build-ing change detection in earthquake: A multiscale in-teraction network with offset calibration and a dataset. 
+
+IEEE Transactions on Geoscience and Remote Sens-ing , 62:1–17. Shiyin Lu, Yang Li, Yu Xia, Yuwei Hu, Shanshan Zhao, Yanqing Ma, Zhichao Wei, Yinglun Li, Lun-hao Duan, Jianshan Zhao, Yuxuan Han, Haijun Li, Wanying Chen, Junke Tang, Chengkun Hou, Zhixing Du, Tianli Zhou, Wenjie Zhang, Huping Ding, and 23 others. 2025. Ovis2.5 technical report. arXiv preprint arXiv:2508.11737 .Junwei Luo, Zhen Pang, Yongjun Zhang, Tingzhu Wang, Linlin Wang, Bo Dang, Jiangwei Lao, Jian Wang, Jingdong Chen, Yihua Tan, and Yansheng Li. 2024. Skysensegpt: A fine-grained instruction tuning dataset and model for remote sensing vision-language understanding. arXiv preprint arXiv:2406.10100 .Chuofan Ma, Yi Jiang, Jiannan Wu, Zehuan Yuan, and Xiaojuan Qi. 2024. Groma: Localized visual tok-enization for grounding multimodal large language models. In European Conference on Computer Vi-sion , pages 417–435. Springer. Dilxat Muhtar, Zhenshi Li, Feng Gu, Xueliang Zhang, and Pengfeng Xiao. 2024. Lhrs-bot: Empowering remote sensing with vgi-enhanced large multimodal language model. In European Conference on Com-puter Vision , pages 440–457. Springer. Mubashir Noman, Noor Ahsan, Muzammal Naseer, Hisham Cholakkal, Rao Muhammad Anwer, Salman Khan, and Fahad Shahbaz Khan. 2025. Cdchat: A large multimodal model for remote sensing change description. In IGARSS 2025-2025 IEEE Interna-tional Geoscience and Remote Sensing Symposium ,pages 7033–7037. IEEE. Sungjune Park, Yeongyun Kim, Se Yeon Kim, and Yong Man Ro. 2025. Remote sensing large vision-language model: Semantic-augmented multi-level alignment and semantic-aware expert modeling. 
+
+arXiv preprint arXiv:2506.21863 .Zhiliang Peng, Wenhui Wang, Li Dong, Yaru Hao, Shao-han Huang, Shuming Ma, Qixiang Ye, and Furu Wei. 2024. Grounding multimodal large language models to the world. In International Conference on Learn-ing Representations .Bryan A Plummer, Liwei Wang, Chris M Cervantes, Juan C Caicedo, Julia Hockenmaier, and Svetlana Lazebnik. 2015. Flickr30k entities: Collecting region-to-phrase correspondences for richer image-to-sentence models. In Proceedings of the IEEE international conference on computer vision , pages 2641–2649. Qwen Team. 2026. Qwen3.5: Towards native multi-modal agents. Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He. 2020. Zero: Memory optimizations toward training trillion parameter models. In SC20: international conference for high performance com-puting, networking, storage and analysis , pages 1–16. IEEE. Nils Reimers and Iryna Gurevych. 2019. Sentence-bert: Sentence embeddings using siamese bert-networks. In Proceedings of the 2019 conference on empirical methods in natural language processing and the 9th international joint conference on natural language processing (EMNLP-IJCNLP) , pages 3982–3992. Akashah Shabbir, Mohammed Zumri, Mohammed Ben-namoun, Fahad S Khan, and Salman Khan. 2025. Geopixel: Pixel grounding large multimodal model in remote sensing. arXiv preprint arXiv:2501.13925 .Shuai Shao, Zeming Li, Tianyuan Zhang, Chao Peng, Gang Yu, Xiangyu Zhang, Jing Li, and Jian Sun. 2019. Objects365: A large-scale, high-quality dataset for object detection. In Proceedings of the IEEE/CVF international conference on computer vi-sion , pages 8430–8439. Li Shen, Yao Lu, Hao Chen, Hao Wei, Donghai Xie, Jiabao Yue, Rui Chen, Shouye Lv, and Bitao Jiang. 2021. S2looking: A satellite side-looking dataset for building change detection. Remote Sensing ,13(24):5094. Yan Shu, Bin Ren, Zhitong Xiong, Danda Pani Paudel, Luc Van Gool, Begüm Demir, Nicu Sebe, and Paolo Rota. 2025. Earthmind: Leveraging cross-sensor data for advanced earth observation interpretation with a unified multimodal llm. arXiv preprint arXiv:2506.01667 .Yan Shu, Bin Ren, Zhitong Xiong, Xiao Xiang Zhu, Begüm Demir, Nicu Sebe, and Paolo Rota. 2026. Ter-rascope: Pixel-grounded visual reasoning for earth observation. arXiv preprint arXiv:2603.19039 .Sagar Soni, Akshay Dudhane, Hiyam Debary, Mus-tansar Fiaz, Muhammad Akhtar Munir, Muham-mad Sohail Danish, Paolo Fraccaro, Campbell D Watson, Levente J Klein, Fahad Shahbaz Khan, and Salman Khan. 2025. Earthdial: Turning multi-sensory earth observations to interactive dialogues. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) .Xian Sun, Peijin Wang, Zhiyuan Yan, Feng Xu, Ruiping Wang, Wenhui Diao, Jin Chen, Jihao Li, Yingchao Feng, Tao Xu, Martin Weinmann, Stefan Hinz, Cheng Wang, and Kun Fu. 2022. Fair1m: A benchmark dataset for fine-grained object recognition in high-resolution remote sensing imagery. ISPRS Journal of Photogrammetry and Remote Sensing , 184:116–130. Michael Tschannen, Alexey Gritsenko, Xiao Wang, Muhammad Ferjad Naeem, Ibrahim Alabdulmohsin, Nikhil Parthasarathy, Talfan Evans, Lucas Beyer, Ye Xia, Basil Mustafa, Olivier Hénaff, Jeremiah Harmsen, Andreas Steiner, and Xiaohua Zhai. 2025. Siglip 2: Multilingual vision-language encoders with improved semantic understanding, localization, and dense features. arXiv preprint arXiv:2502.14786 .Sagar Verma, Akash Panigrahi, and Siddharth Gupta. 2021. Qfabric: Multi-task change detection dataset. In 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW) , pages 1052–1061. Jiaqi Wang, Pan Zhang, Tao Chu, Yuhang Cao, Yu-jie Zhou, Tong Wu, Bin Wang, Conghui He, and Dahua Lin. 2023. V3det: Vast vocabulary visual detection dataset. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 19844–19854. Peng Wang, Shuai Bai, Sinan Tan, Shijie Wang, Zhi-hao Fan, Jinze Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Yang Fan, Kai Dang, Mengfei Du, Xuancheng Ren, Rui Men, Dayiheng Liu, Chang Zhou, Jingren Zhou, and Junyang Lin. 2024. Qwen2-vl: Enhancing vision-language model’s perception of the world at any resolution. arXiv preprint arXiv:2409.12191 .Weiyun Wang, Zhangwei Gao, Lixin Gu, Hengjun Pu, Long Cui, Xingguang Wei, Zhaoyang Liu, Linglin Jing, Shenglong Ye, Jie Shao, Zhaokai Wang, Zhe Chen, Hongjie Zhang, Ganlin Yang, Haomin Wang, Qi Wei, Jinhui Yin, Wenhao Li, Erfei Cui, and 56 others. 2025. Internvl3.5: Advancing open-source multimodal models in versatility, reasoning, and effi-ciency. arXiv preprint arXiv:2508.18265 .Wenhui Wang, Furu Wei, Li Dong, Hangbo Bao, Nan Yang, and Ming Zhou. 2020. Minilm: Deep self-attention distillation for task-agnostic compression of pre-trained transformers. Advances in neural in-formation processing systems , 33:5776–5788. An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, Chujie Zheng, Dayi-heng Liu, Fan Zhou, Fei Huang, Feng Hu, Hao Ge, Haoran Wei, Huan Lin, Jialong Tang, and 41 oth-ers. 2025. Qwen3 technical report. arXiv preprint arXiv:2505.09388 .Yuqian Yuan, Wentong Li, Jian Liu, Dongqi Tang, Xin-jie Luo, Chi Qin, Lei Zhang, and Jianke Zhu. 2024. Osprey: Pixel understanding with visual instruction tuning. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 28202–28211. Yang Zhan, Zhitong Xiong, and Yuan Yuan. 2023. Rsvg: Exploring data and models for visual grounding on re-mote sensing data. IEEE transactions on geoscience and remote sensing , 61:1–13. Yang Zhan, Zhitong Xiong, and Yuan Yuan. 2025. Skyeyegpt: Unifying remote sensing vision-language tasks via instruction tuning with large language model. ISPRS Journal of Photogrammetry and Re-mote Sensing , 221:64–77. Jindou Zhang, Zhenfeng Shao, Qing Ding, Xiao Huang, Yu Wang, Xuechao Zhou, and Deren Li. 2023. Aer-net: An attention-guided edge refinement network and a dataset for remote sensing building change detection. IEEE Transactions on Geoscience and Remote Sensing , 61:1–16. Shilong Zhang, Peize Sun, Shoufa Chen, Min Xiao, Wenqi Shao, Wenwei Zhang, Yu Liu, Kai Chen, and Ping Luo. 2025. Gpt4roi: Instruction tuning large lan-guage model on region-of-interest. In European Con-ference on Computer Vision , pages 52–70. Springer. Wei Zhang, Miaoxin Cai, Tong Zhang, Yin Zhuang, and Xuerui Mao. 2024. Earthgpt: A universal multimodal large language model for multisensor image compre-hension in remote sensing domain. IEEE Transac-tions on Geoscience and Remote Sensing , 62:1–20. Xiangyu Zhao, Yicheng Chen, Shilin Xu, Xiangtai Li, Xinjiang Wang, Yining Li, and Haian Huang. 2024. An open and comprehensive pipeline for uni-fied object grounding and detection. arXiv preprint arXiv:2401.02361 .Yue Zhou, Mengcheng Lan, Xiang Li, Litong Feng, Yiping Ke, Xue Jiang, Qingyun Li, Xue Yang, and Wayne Zhang. 2024. Geoground: A unified large vision-language model for remote sensing visual grounding. arXiv preprint arXiv:2411.11904 .
+
+A Region Proposal Module Details 
+
+Detection Backbone. We use MM-Grounding-DINO (Zhao et al., 2024) with a Swin-Tiny backbone as the text-conditioned detection back-bone, initialized from pretrained weights on Ob-jects365 (Shao et al., 2019), GoldG (Hudson and Manning, 2019; Plummer et al., 2015), Grit (Peng et al., 2024), and V3Det (Wang et al., 2023). We fine-tune the detection head on five RS datasets (xView (Lam et al., 2018), DIOR (Li et al., 2020), DOTA-v2.0 (Ding et al., 2022), FAIR1M (Sun et al., 2022), SODA-A (Cheng et al., 2023)) for 20 epochs with a learning rate of 5×10 −5 and a step decay at epoch 15. The backbone and lan-guage model are frozen during this fine-tuning; only the detection stack is updated. Training uses 8 NVIDIA GeForce RTX 3090 GPUs with per-GPU batch size 1 and gradient accumulation of 4, yielding an effective batch size of 32. We se-lect the epoch-15 checkpoint based on zero-shot recall evaluation on held-out RS detection bench-marks, conducted over the unified class vocabulary described in Appendix C. 
+
+Prompt-Aware Class Filtering. At inference, we encode the user query and all 36 class names us-ing all-MiniLM-L6-v2 (Wang et al., 2020; Reimers and Gurevych, 2019) and compute cosine similarity between the query embedding and each class name embedding. The goal is to determine whether the query targets specific object categories (e.g., “Iden-tify all damaged buildings” relates to building ) or is too general to narrow down (e.g., “Describe the changes in this area”). When the similarity dis-tribution is sharply peaked toward a few classes, we use only those top-ranked classes as input to the detector; otherwise, all 36 classes are used. Concretely, the filtering activates when three con-ditions are jointly met: (1) the highest cosine sim-ilarity score exceeds 0.35, (2) the z-score of that top score (relative to the mean and standard devia-tion of all 36 scores) exceeds 2.4, and (3) the stan-dard deviation of the scores exceeds 0.06. These thresholds were tuned on a small validation set to balance between reducing irrelevant proposals and avoiding missing relevant categories. Across seven one-at-a-time threshold settings, AR@100 varied by at most 0.9 points on DIOR-RSVG and remained unchanged on S2Looking, and the fil-ter retained the ground-truth category in 100% of activated building-centric queries and 98.9% of ac-tivated DIOR-RSVG queries. 
+
+Box Filtering. Raw proposals with detection con-fidence below 0.1 are discarded. If the user query references a specific region (e.g., via a bounding box annotation), the corresponding reference box is added to the candidate set with an elevated confi-dence score to ensure it survives subsequent filter-ing. Hard NMS with an IoU threshold of 0.5 is then applied to remove duplicate detections. The final candidate set is capped at 100 regions per sample. Sweeping this cap over 10, 25, 50, and 100 candi-dates showed that performance stabilizes beyond 50, with at most a 1.1-point variation. Reference boxes are placed at the front of the candidate list (<roi 1>, <roi 2>, . . . ), and the remaining candi-dates are shuffled per training epoch to prevent the model from learning position-dependent biases. 
+
+ROI Exposure Policy. Not all tasks require the full set of candidate regions. For localization and grounding tasks (e.g., change detection localiza-tion, visual grounding), the complete candidate set is provided to the LLM, allowing it to select among all proposals. For region-level QA or cap-tioning, where the user query refers to a specific region (e.g., “Describe the building at <roi 3>”), only the referenced region is included, reducing input length and focusing the model’s attention. For scene-level tasks such as classification or gen-eral QA, no region tokens are provided at all, and the model operates purely on image patch tokens. This flexible policy allows the same framework to handle diverse task types without architectural changes. 
+
+B Training Details 
+
+Our base model is Ovis2.5 (Lu et al., 2025), an open-source MLLM that integrates a native-resolution vision transformer (NaViT(Dehghani et al., 2023)) initialized from SigLIP2 (Tschannen et al., 2025) weights with a Qwen3 (Yang et al., 2025) language model backbone. Ovis2.5 is pre-trained through a multi-phase curriculum on large-scale multimodal data, providing strong general-purpose vision-language capabilities as our starting point. All stages are trained on 8 × NVIDIA A6000 GPUs using DeepSpeed ZeRO(Rajbhandari et al., 2020), bf16 precision, and gradient checkpointing. LoRA (Hu et al., 2021) is applied with rank 64, 
+
+α=128 , and dropout 0.05 to all attention and feed-forward projections. Region visual features are extracted from NaViT layers {6, 13, 19, 26} with 
+
+2×2 ROIAlign spatial bins. The learnable scalars 
+
+αg and αt are initialized near zero. Maximum image resolution is 1024 ×1024 (fMoW: 512 ×512 
+
+due to memory), and maximum sequence length is 6000 tokens. 
+
+Stage 1 trains the LLM via LoRA alongside the visual tokenizer head and the last vision encoder block (lr 2×10 −5; ViT last block lr 5×10 −6) for 2 epochs with per-GPU batch size 2 and gradient accumulation 4. 
+
+Stage 2 is split into two phases with the LLM frozen throughout. Phase 1 initializes and trains only the region projector (lr 1×10 −4) and ROI to-ken embeddings (lr 2×10 −5). Phase 2 activates the remaining region components including the ge-ometry MLP, temporal embeddings, LayerNorm layers, and αg/αt (lr 5×10 −5), expanding to multi-temporal and multi-target tasks with per-GPU batch size 2 and gradient accumulation 4. 
+
+Stage 3 jointly trains the LLM via LoRA (lr 
+
+2×10 −5) and all region components (lr 5×10 −5)for 2 epochs on the full multi-task mixture, with per-GPU batch size 2 and gradient accumulation 4. Gradient masking restricts embedding and output projection updates to ROI-specific token rows. 
+
+C Union Class Set for Region Proposer 
+
+See Table 8 for the 36-category union class set. 
+
+D Dataset Summary 
+
+Table 9 summarizes training and evaluation data. 
+
+E Comparison with Recent Generalist MLLMs 
+
+We additionally evaluate Qwen3.5-9B (Qwen Team, 2026) and InternVL3.5-8B (Wang et al., 2025), two recent open-weight generalist MLLMs of comparable parameter scale, under the same evaluation protocol and output adapters as in Sec-tion 4.1. Both models are evaluated in a zero-shot manner. Table 11 reports results on the five local-ization benchmarks used for this comparison, to-gether with the models from Table 2. The stronger generalist models improve over Qwen3-VL, partic-ularly on single-image grounding, but the gap to our model remains large on every benchmark, and change detection localization stays below 21 F1 for Qwen3.5-9B and 34 F1 for InternVL3.5-8B. 
+
+F Full Component Ablation 
+
+Table 12 extends the ablation in Table 4 by sep-arately removing the spatial and temporal cues, evaluated on the three benchmarks used in this analysis. Removing the spatial cue causes most of the degradation, with DIOR-RSVG falling from 77.3 to 33.5, while removing only the temporal cue leads to small but consistent drops on all three benchmarks. 
+
+G Inference Efficiency 
+
+Table 13 compares the end-to-end inference cost of region selection and coordinate generation un-der identical hardware and batch settings. Region selection shortens the generated output from 39.1 to 6.4 tokens per sample on S2Looking and from 26.0 to 3.4 on DIOR-RSVG. The region proposal module adds 0.11 to 0.22 seconds per sample, and the injected region tokens add prefill rather than decoding cost. As a result, total wall-clock time drops by a factor of 4.7 to 5.3. 
+
+H Qualitative Examples 
+
+Figure 4 presents qualitative examples of our model across five tasks. For spatial referring expression (xBD SRE, S2Looking SRE), the model correctly selects the regions matching spatial and seman-tic constraints from the query. For single-image visual grounding (DIOR-RSVG), it identifies the described object through region token selection. For temporal referring expression (QFabric TRE), the model identifies the correct temporal frame in which a change occurred across a multi-image se-quence. For change detection localization (LEVIR-MCI CDL), it selects multiple changed building regions from a bi-temporal image pair. # Category DIOR DOTA-v2.0 FAIR1M SODA-A xView 
+
+1 airplane 1.9k 19.8k 32.1k 40.6k 1.9k 2 helicopter – 1.2k – 1.7k 0.1k 3 airport 0.7k 0.4k – – –4 helipad – 0.2k – – 0.2k 5 aircraft hangar – – – – 0.3k 6 ship 27.3k 106.7k 41.9k 85.6k 8.1k 7 harbor 2.4k 16.6k – – –8 container crane – 0.5k – – 0.2k 9 container – – – 175.2k 2.5k 10 container yard – – – – 3.7k 11 road vehicle 13.7k 429.0k 290.4k 668.5k 441.8k 12 rail vehicle – – – – 7.0k 13 train station 0.5k – – – –14 constr. equip. – – 26.9k – 7.8k 15 vehicle yard – – – – 6.5k 16 building – – – – 546.4k 17 constr. site – – – – 1.7k 18 storage tank 3.1k 17.6k – 45.4k 2.9k 19 chimney 0.6k – – – –20 wind turbine 2.4k – – 33.0k –21 utility tower – – – – 0.9k 22 dam 0.5k – – – –23 bridge 1.4k 4.9k 1.2k – –24 overpass 1.3k – – – –25 roundabout – 1.4k 0.6k – –26 road intersect. – – 7.0k – –27 toll station 0.6k – – – –28 service area 1.1k – – – –29 baseball field 2.4k 1.6k 1.1k – –30 basketball court 1.1k 1.3k 1.3k – –31 soccer field – 0.9k 0.9k – –32 tennis court 4.9k 6.6k 2.9k – –33 running track 1.2k 1.0k – – –34 swimming pool – 5.5k – 37.8k –35 golf course 0.5k – – – –36 stadium 0.6k – – – –
+
+Total images 11.7k 31.3k 22.9k 39.2k 14.0k 
+
+Total instances 68.0k 615.2k 406.2k 1087.8k 1032.1k 
+
+Table 8: Union class set for the region proposer. Since each RS detection dataset defines its own class taxonomy, we construct a unified 36-category set by merging all source vocabularies and mapping each dataset’s original classes to this shared space. Instance counts are shown per dataset; “–” indicates the category is absent. 
+
+Source Task # Train # Eval # Imgs Metric Stage 
+
+TEOChatlas (Irvin et al., 2025) 
+
+fMoW (Christie et al., 2018) Scene classification 12,006 12,006 1–8 Acc 1, 3 xBD (Gupta et al., 2019) (LOC) Building localization 7,988 2,720 2 F1 2, 3 xBD (CDC) Damage classification 10,560 3,600 2 F1 2, 3 xBD (SRE) Spatial referring expr. 4,684 1,596 2 F1 2, 3 xBD (QA/RQA) Change QA / Region QA 29,188 9,984 2 Acc 1–3 S2Looking (Shen et al., 2021) (CDL) Change localization 4,556 1,668 2 F1 2, 3 S2Looking (SRE) Spatial referring expr. 2,788 1,020 2 F1 2, 3 S2Looking (QA/RQA) Change QA / Region QA 13,676 5,012 2 Acc 1–3 QFabric (Verma et al., 2021) Region/temporal QA 36,552 7,636 2–5 Acc/F1 2, 3 GeoChat Instruct (Kuckreja et al., 2024) RS conversation 296,097 – 1 – 1–3 FIT-RS (Luo et al., 2024) Fine-grained RS 197,202 – 1 – 3DIOR-RSVG (Zhan et al., 2023) Visual grounding 17,402 7,422 1 Acc@0.5 2, 3 OPT-RSVG (Li et al., 2024) Visual grounding 56,455 – 1 – 2, 3 LEVIR-MCI (Liu et al., 2024a) Change detection 7,544 1,929 2 F1 2, 3 HRCUS-CD (Zhang et al., 2023) † Change detection – 372 2 F1 –Additional CD Change detection ∼20k – 2 – 2, 3 
+
+Table 9: Dataset summary. †Zero-shot evaluation only. Task # Imgs Example Prompt Example Response 
+
+Evaluation tasks 
+
+xBD LOC 2 Identify all the buildings in the first image. Include region token(s) for each identified region. 
+
+<roi 1>, <roi 5>, <roi 8>, <roi 12 >
+
+S2Looking CDL 2 Identify all changed buildings. Include re-gion token(s) for each identified region. If there are no such regions, do not include any region tokens. 
+
+<roi 2>, <roi 7>, <roi 15 >
+
+xBD SRE 2 Identify the destroyed buildings in this area: 
+
+<roi 3>. Include region token(s) for each identified region. 
+
+<roi 5>, <roi 9>
+
+xBD CDC 2 How severe is the damage to this building? 
+
+<roi 5>
+
+Major damage. xBD QA 2 Are there any destroyed buildings in the area? Answer with one word. Yes. xBD RQA 2 How has this building <roi 3> changed be-tween the first and second image? The building has sustained major structural damage. QFabric RTQA 2–5 What change has occurred in <roi 2> be-tween image 1 and image 3? New construction has appeared. QFabric TRE 2–5 In which image was the area <roi 5> first developed? Image 3. fMoW 1–8 What type of functional area is shown in this satellite image? Airport. DIOR-RSVG 1 A small ship docked on the right side of the harbor. 
+
+<roi 15 >
+
+LEVIR-MCI 2 Identify the changed building areas in these two satellite domain images. 
+
+<roi 30 >, <roi 12 >, <roi 31 >
+
+Training-only tasks 
+
+GeoChat Instruct 1 Can you describe what you see in this satel-lite image? The image shows a residential area with sev-eral low-rise buildings and tree cover along the streets. FIT-RS 1 Describe the objects and layout visible in this remote sensing image in detail. A large industrial complex is visible in the center, surrounded by storage tanks and con-nected by roads to a nearby port facility. OPT-RSVG 1 The red-roofed building in the northeast cor-ner of the residential block. 
+
+<roi 8>
+
+Region Captioning 2 Describe the building at <roi 3>. The building at <roi 3> appears to be a two-story residential structure with a light-colored roof. Grounded Desc. 2 Describe how the buildings have changed. Include region token(s) for each identified region. Buildings at <roi 2> and <roi 7> show sig-nificant structural damage, while the area at 
+
+<roi 11 > remains intact. 
+
+Table 10: Example prompts and responses for evaluation and training-only tasks. Region tokens ( <roi k>) refer to candidate regions from the region proposal module. In practice, prompts are preceded by image tokens and a system prefix describing available region tokens. User 
+
+Identify the damaged buildings in the top center of the image. 
+
+> <roi3>
+
+Our Model 
+
+User 
+
+Give me the location of the ship on the top. 
+
+> <roi2>
+
+Our Model 
+
+User 
+
+Identify the buildings in the second image which were built after the first image. 
+
+> <roi32>, <roi23>
+
+Our Model   
+
+> xBD SRE DIOR-RSVG S2Looking SRE
+
+User 
+
+Identify all images in which a construction project was begun in this region referred region from the previous image. 
+
+> Image 4
+
+Our Model 
+
+> QFabric TRE
+
+User 
+
+Identify all changed buildings. 
+
+> <roi4>, <roi1>, <roi3>
+
+Our Model 
+
+> LEVIR-MCI CDL
+
+Figure 4: Qualitative examples across five tasks. Top row: xBD SRE (bi-temporal spatial referring expression), DIOR-RSVG (single-image visual grounding), and S2Looking SRE (bi-temporal spatial referring expression). 
+
+Bottom row: QFabric TRE (temporal referring expression over four images) and LEVIR-MCI CDL (bi-temporal change detection localization). In all cases, the model produces region token selections that correctly correspond to the queried targets, and identifies the correct temporal frame in which a change occurred across a multi-image sequence. xBD S2Looking DIOR-RSVG HRCUS LEVIR Model LOC CDL Acc@0.5 F1 F1 Qwen3-VL 17.3 ∗ 11.8 ∗ 53.8 ∗ 21.7 ∗ 13.3 ∗                              
+
+> Qwen3.5-9B 22.8 ∗12.5 ∗58.3 ∗20.8 ∗21.2 ∗
+> InternVL3.5-8B 27.2 ∗20.3 ∗69.0 ∗33.2 ∗26.4 ∗
+> TEOChat 38.9 34.5 27.6 33.3 ∗26.4 ∗
+> EarthDial 24.1 2.6 ∗39.6 4.7 ∗12.6 ∗
+> Ovis2.5-FT 32.3 36.4 69.5 54.4 †56.4
+> Ours 69.4 50.5 77.3 55.0 †58.8
+
+Table 11: Localization results (%) on the five bench-marks evaluated for the generalist comparison. ∗Zero-shot (not trained on this dataset). †HRCUS-CD not in training data. 
+
+Configuration S2L CDL DIOR-RSVG LEVIR 
+
+Full model 50.5 77.3 58.8 
+
+w/o temp. cue 50.1 76.1 58.0 w/o spat. cue 39.2 33.5 56.5 w/o spat.+temp. cues 39.0 32.3 56.6 Text-coordinate selection 47.5 74.7 55.7 Coordinate generation 36.4 69.5 56.4 
+
+Table 12: Component ablation over all six configura-tions. Text-coordinate selection replaces region feature tokens with textual coordinates of the candidates, and coordinate generation is the No ROI baseline from Ta-ble 4. 
+
+S2Looking DIOR-RSVG 
+
+Coord. Region Coord. Region Output tokens / sample 39.1 6.4 26.0 3.4 Total time (s / sample) 6.75 1.27 4.18 0.89 
+
+Table 13: Inference efficiency of coordinate generation (Coord.) and region selection (Region). Total time includes the region proposal module, which adds 0.11 to 0.22 seconds per sample.

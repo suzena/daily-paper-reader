@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-08</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-09</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 12 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-08 22:50:25 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-09 21:36:36 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共读4篇论文，无精读，速读3篇并有1篇未在列表中显示（总数为4），整体以遥感与深度学习相关为主题。最值得关注的是《SimCRAFT》一文（7.0分），它结合合成轨迹与上下文RAG微调来蒸馏遥感智能体，方向新颖；另两篇6分论文分别涉及相机陷阱分类的地面真值不确定性和地表水分割的模型排名评估。建议普通读者优先精读《SimCRAFT》，理解其如何利用合成数据提升遥感任务效率，并关注地面真值噪声对模型评价的影响。</p>
+<p>今日精读聚焦自主水面舰艇分布式共识滤波与遥感多模态大模型定位两大高分工作；最值得关注的是9分的目标跟踪方法及8分的候选区域时序变化定位思路；若想扩展视野，可顺带浏览速读中高光谱图像分类与3D船舶检测的前沿尝试。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -78,12 +78,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Distributed Consensus Particle Filter for Target Tracking using Autonomous Surface Vessels">A Distributed Consensus Particle Filter for Target Tracking using Autonomous Surface Vessels</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs">From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -91,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">10 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning">SimCRAFT: Distilling Remote Sensing Agents via Synthetic Trajectories and Contextual Retrieval-Augmented Fine-Tuning</span></li><li><span class="dpr-home-dashboard-paper-title" title="Camera trap classification with deep learning under ground truth uncertainty">Camera trap classification with deep learning under ground truth uncertainty</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation">A Controlled Evaluation of Model Rankings and Input Reliance in Surface Water Segmentation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AGSA-Net: Abundance-Guided Self-Attention Network for Spectral Unmixing-Aware Hyperspectral Remote Sensing Image Classification">AGSA-Net: Abundance-Guided Self-Attention Network for Spectral Unmixing-Aware Hyperspectral Remote Sensing Image Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection">KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection</span></li><li><span class="dpr-home-dashboard-paper-title" title="Genesis: A Generative Engine for Hierarchical Satellite Image Synthesis">Genesis: A Generative Engine for Hierarchical Satellite Image Synthesis</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
 </section>
 </div>
 

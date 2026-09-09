@@ -1,0 +1,493 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-09T21:29:11.077265+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [
+    {
+      "id": "2609.09066v1",
+      "source": "arxiv",
+      "title": "A Distributed Consensus Particle Filter for Target Tracking using Autonomous Surface Vessels",
+      "abstract": "Maritime target tracking over large distances often requires multi-agent teams without centralized coordination, and intermittent communication. Each agent must maintain an independent estimate that can take advantage of opportunistic communications availability when possible. This can lead to overly confident local estimates in the absence of external data. In this work, we propose an augmentation to a classical particle filter implementation that accounts for this potential source of error by forcing particles to spread strategically in the absence of informative updates from other sensor nodes. We demonstrate our method using Unmanned Surface Vessels (USVs) on a lake, and show that our augmentations do not deteriorate nominal performance, and provide an advantage in some specific edge cases.",
+      "authors": [
+        "Carter Noh",
+        "Kyle Crandall",
+        "Connor Yates",
+        "Corbin Wilhelmi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-08T17:20:07+00:00",
+      "link": "https://arxiv.org/pdf/2609.09066v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-agent target tracking with autonomous surface vessels, a direct intelligent-agent marine application",
+      "llm_evidence_cn": "利用自主水面艇多智能体进行海上目标跟踪，属直接的海洋智能体应用",
+      "llm_evidence": "利用自主水面艇多智能体进行海上目标跟踪，属直接的海洋智能体应用",
+      "canonical_evidence": "利用自主水面艇多智能体进行海上目标跟踪，属直接的海洋智能体应用",
+      "llm_tldr_en": "Long-range maritime target tracking needs decentralized multi-agent teams under intermittent communication. This paper augments a particle filter by spreading particles strategically when no informative updates arrive, avoiding overconfident local estimates, and validates on USVs without degrading nominal performance.",
+      "llm_tldr_cn": "远距离海上目标跟踪依赖缺乏集中协调且通信间歇的多智能体团队，每个智能体需独立维护估计。针对无外部更新时局部估计过度自信的问题，本文对经典粒子滤波进行增强，在缺少其他传感器节点信息时让粒子按策略扩布以应对不确定性。方法在湖泊上的无人水面艇上验证，证明增强不会损害标称跟踪性能，能支持自主水面艇编队在间歇通信下维持稳健的分布式估计，是典型的海洋智能体应用。",
+      "llm_tldr": "远距离海上目标跟踪依赖缺乏集中协调且通信间歇的多智能体团队，每个智能体需独立维护估计。针对无外部更新时局部估计过度自信的问题，本文对经典粒子滤波进行增强，在缺少其他传感器节点信息时让粒子按策略扩布以应对不确定性。方法在湖泊上的无人水面艇上验证，证明增强不会损害标称跟踪性能，能支持自主水面艇编队在间歇通信下维持稳健的分布式估计，是典型的海洋智能体应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.08391v1",
+      "source": "arxiv",
+      "title": "From Coordinates to Candidate Regions: Temporal Change Localization via Region Selection in Remote Sensing Multimodal LLMs",
+      "abstract": "Remote sensing multimodal large language models (RS-MLLMs) have advanced scene understanding and visual question answering over satellite imagery, yet localizing specific objects or changed regions remains challenging. Existing approaches rely on generating bounding box coordinates as token sequences, which is fragile for the small, densely packed objects common in remote sensing and increasingly error-prone when multiple targets must be localized simultaneously. In this work, we present an RS-specific formulation of the region selection paradigm, previously explored in natural-image MLLMs, and extend it to temporal change localization over multi-image sequences. Our framework employs a text-conditioned region proposal module, encodes each candidate as special tokens carrying per-frame visual features enriched with spatial and temporal cues, and lets the LLM localize targets by selecting region tokens in its response. We construct a multi-task training and evaluation suite spanning localization, referring expression, visual grounding, and understanding tasks across single-image and multi-temporal settings. Experiments show that our approach substantially outperforms coordinate-generation baselines on temporal change localization, while improving single-image visual grounding and maintaining competitive understanding performance. Oracle analysis decomposes the contributions of the region proposer and the LLM selector, providing diagnostic insight unique to this framework. Our code will be available at https://github.com/juwan-kr/RS-RegionSelect.",
+      "authors": [
+        "Juwan Chung",
+        "Sungjune Park",
+        "Yeongyun Kim",
+        "Yong Man Ro"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-09-08T07:59:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.08391v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "RS-MLLM with text-conditioned region selection for temporal change localization; directly matches multimodal remote sensing and text-driven analysis",
+      "llm_evidence_cn": "遥感多模态大模型中结合文本条件做候选区域选择与时间变化定位，契合遥感影像与文本融合的环境变化分析",
+      "llm_evidence": "遥感多模态大模型中结合文本条件做候选区域选择与时间变化定位，契合遥感影像与文本融合的环境变化分析",
+      "canonical_evidence": "遥感多模态大模型中结合文本条件做候选区域选择与时间变化定位，契合遥感影像与文本融合的环境变化分析",
+      "llm_tldr_en": "The paper rethinks how RS multimodal LLMs localize changes: instead of regressing coordinates, it frames localization as text-conditioned region selection over multi-image remote sensing sequences, robustly handling small densely packed objects and multiple targets.",
+      "llm_tldr_cn": "遥感多模态大语言模型在场景理解与视觉问答上已有进展，但小且密集目标与多目标的时间变化定位仍困难；直接回归边界框坐标的旧范式脆弱易错。论文将自然图像中的区域选择范式引入遥感多模态大模型，并用文本条件将其扩展到跨两张及多张影像的时间变化定位。所提框架把定位转化为选择候选区域，更适合遥感图像中目标密集、尺度小的特点。该工作说明多模态大模型可结合遥感图像与文本线索完成定位分析，对基于遥感与报告的环境评估具有直接借鉴价值。",
+      "llm_tldr": "遥感多模态大语言模型在场景理解与视觉问答上已有进展，但小且密集目标与多目标的时间变化定位仍困难；直接回归边界框坐标的旧范式脆弱易错。论文将自然图像中的区域选择范式引入遥感多模态大模型，并用文本条件将其扩展到跨两张及多张影像的时间变化定位。所提框架把定位转化为选择候选区域，更适合遥感图像中目标密集、尺度小的特点。该工作说明多模态大模型可结合遥感图像与文本线索完成定位分析，对基于遥感与报告的环境评估具有直接借鉴价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.06359v1",
+      "source": "arxiv",
+      "title": "AGSA-Net: Abundance-Guided Self-Attention Network for Spectral Unmixing-Aware Hyperspectral Remote Sensing Image Classification",
+      "abstract": "Hyperspectral image (HSI) classification plays a vital role in remote sensing applications, including agriculture, environmental monitoring, and urban analysis. However, its performance remains challenged by high spectral redundancy, noise sensitivity, and the difficulty of jointly modeling local material composition and long-range spectral dependencies. To address this, we propose AGSA-Net, an abundance-guided self-attention network that explicitly integrates spectral unmixing priors into the classification process. AGSA Net first estimates physically meaningful subpixel abundance maps subject to non-negativity and sum-to-one constraints, regularized by hybrid linear-nonlinear reconstruction decoder. The learned abundances are then used to construct an abundance affinity prior that guides a spectral transformer to emphasize class-discriminative interactions, and the resulting transformer features are fused with compact abundance descriptors for final prediction; in contrast to existing approaches that use abundance as auxiliary or concatenated features. Experiments on Indian Pines, Augsburg, and Berlin demonstrate the benefit of incorporating abundance- guided contextual modeling, particularly in heterogeneous urban scenes. The source code and trained models are available at: https://github.com/nnuvi/AGSA-Net",
+      "authors": [
+        "Nafisa Anjum",
+        "Satavisa Dey Borno",
+        "Ananna Saha",
+        "Mir Faiyaz Hossain",
+        "Sifat Momen",
+        "Nabeel Mohammed",
+        "Shafin Rahman"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-09-06T03:27:34+00:00",
+      "link": "https://arxiv.org/pdf/2609.06359v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hyperspectral remote sensing image classification model; transferable to coral benthic cover classification",
+      "llm_evidence_cn": "高光谱遥感图像分类模型，可用于珊瑚底栖覆盖分类",
+      "llm_evidence": "高光谱遥感图像分类模型，可用于珊瑚底栖覆盖分类",
+      "canonical_evidence": "高光谱遥感图像分类模型，可用于珊瑚底栖覆盖分类",
+      "llm_tldr_en": "Hyperspectral RS classification suffers from spectral redundancy and mixed pixels. AGSA-Net estimates physical abundance maps and uses self-attention to inject spectral unmixing priors into classification. This transferable architecture can benefit benthic cover mapping.",
+      "llm_tldr_cn": "高光谱遥感图像分类在农业、环境监测和城市分析等应用中意义重大，但光谱冗余、噪声和混合像元等问题制约了精度。本文提出AGSA-Net，通过估计满足非负和为一约束的亚像元丰度图，并以自注意力网络显式整合光谱解混先验，从而联合建模局部物质组成与长程光谱依赖。实验表明，该丰度引导的自注意力机制能够有效提升高光谱分类的准确性与可靠性，为珊瑚礁等精细生境遥感制图提供了可借鉴的深度学习方法。",
+      "llm_tldr": "高光谱遥感图像分类在农业、环境监测和城市分析等应用中意义重大，但光谱冗余、噪声和混合像元等问题制约了精度。本文提出AGSA-Net，通过估计满足非负和为一约束的亚像元丰度图，并以自注意力网络显式整合光谱解混先验，从而联合建模局部物质组成与长程光谱依赖。实验表明，该丰度引导的自注意力机制能够有效提升高光谱分类的准确性与可靠性，为珊瑚礁等精细生境遥感制图提供了可借鉴的深度学习方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.02077v1",
+      "source": "arxiv",
+      "title": "KSG-Net: Key-Sparse and Global-Context Learning for Maritime 3D Ship Detection",
+      "abstract": "Accurate 3D ship detection in maritime environments is critical for autonomous navigation, yet remains challenging due to large-scale vessel variations, sparse point clouds of small vessels, and severe sea-clutter interference. Existing methods, primarily based on 2D features or dense representations, struggle to balance detection accuracy and computational efficiency, while sparse 3D detectors designed for road scenes generalize poorly to maritime scenarios. This paper focuses on two key challenges in maritime LiDAR perception: weak feature representation for small and sparse vessels, and insufficient global structural modeling for large vessels due to the limited receptive field of local sparse convolutions. To address these issues, we propose KSG-Net, a Key-Sparse and Global-Context learning network for maritime 3D ship detection. The core idea is to jointly enhance local discriminative features and global structural awareness within a unified fully sparse detection framework. Specifically, a Key Sparse Multi-scale Aggregation (KSMA) module is designed to enhance the representation of small and sparse vessels by selecting informative key voxels and aggregating cross-scale neighborhood features. Furthermore, a Global Context Aggregation (GCA) module is introduced to capture long-range geometric dependencies through scene-level context modeling with gated residual interactions, thereby improving the representation of large vessels. Extensive experiments on the Thames River vessel dataset and simulated datasets demonstrate that KSG-Net consistently outperforms existing methods in multi-scale vessel detection and exhibits strong robustness in complex maritime environments.",
+      "authors": [
+        "Zhouyuan Huai",
+        "Meiqi Wan",
+        "Yan Yang",
+        "Minshi Chen",
+        "Xin Yuan",
+        "Wei Wang",
+        "Xiao Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T04:06:40+00:00",
+      "link": "https://arxiv.org/pdf/2609.02077v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Maritime 3D LiDAR ship detection for autonomous navigation, relevant to intelligent agent marine applications and marine monitoring perception",
+      "llm_evidence_cn": "面向自主航行的海事三维舰船检测，属于海洋智能体感知应用，可支撑自主海洋监测。",
+      "llm_evidence": "面向自主航行的海事三维舰船检测，属于海洋智能体感知应用，可支撑自主海洋监测。",
+      "canonical_evidence": "面向自主航行的海事三维舰船检测，属于海洋智能体感知应用，可支撑自主海洋监测。",
+      "llm_tldr_en": "KSG-Net improves maritime 3D ship detection via key-sparse learning and global-context modeling, addressing sparse small vessels and sea clutter while balancing accuracy and efficiency. Supports autonomous navigation and ocean-monitoring agent perception.",
+      "llm_tldr_cn": "海事场景中舰船尺度差异大，小目标点云稀疏且海杂波严重，路测3D检测器难以泛化。本文提出KSG-Net，通过关键稀疏特征学习增强稀疏弱小舰船表示，并加入全局上下文建模覆盖大尺度舰船结构，兼顾检测精度与计算效率。实验表明该方法在海事LiDAR舰船检测中更为稳健。该成果可用于自主航行等海洋智能体的感知模块，也为自主海洋监测提供可借鉴的三维感知路线。",
+      "llm_tldr": "海事场景中舰船尺度差异大，小目标点云稀疏且海杂波严重，路测3D检测器难以泛化。本文提出KSG-Net，通过关键稀疏特征学习增强稀疏弱小舰船表示，并加入全局上下文建模覆盖大尺度舰船结构，兼顾检测精度与计算效率。实验表明该方法在海事LiDAR舰船检测中更为稳健。该成果可用于自主航行等海洋智能体的感知模块，也为自主海洋监测提供可借鉴的三维感知路线。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.02683v1",
+      "source": "arxiv",
+      "title": "Genesis: A Generative Engine for Hierarchical Satellite Image Synthesis",
+      "abstract": "Earth observation is fundamentally multi-scale; geospatial tasks span varied resolutions, and satellite imagery is organized into cascading tile pyramids that nest fine detail within wide coverage. Current generative models of satellite imagery, however, operate along a single axis: they either zoom to enhance a single tile's resolution or pan to extend imagery at a fixed scale. As a result, no existing method produces a complete pyramid that stays consistent across both scale and space, where a high-zoom tile must agree with the coarse context it refines and with the neighbors it meets. Motivated by this gap, we introduce a new task, multi-scale tile completion: given a sparse set of seed tiles at arbitrary zoom levels and positions, synthesize a complete, uniform quadtree that is globally consistent across both scale and space. We approach this task with Genesis, a generative engine that brings both axes together by composing two specialized operators over the quadtree: a vertical super-resolution model and a horizontal mask-based outpainting model, producing pyramids that are consistent across zoom levels and seamless across neighboring tiles. Each operator achieves state-of-the-art results on its subtask, and the engine propagates sparse seeds into seamless, multi-resolution maps from any initial configuration. To evaluate the task and benchmark Genesis, we introduce dense500, a fully observed multi-scale pyramid dataset spanning diverse geographic regions, together with a suite of pyramid-level metrics. Code, models, and our dataset are available at https://github.com/mvrl/genesis.",
+      "authors": [
+        "Subash Khanal",
+        "Yangzhi Cui",
+        "Daniel Cher",
+        "Eric Xing",
+        "Brian Wei",
+        "Srikumar Sastry",
+        "Nathan Jacobs"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-02T14:53:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.02683v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep generative multi-scale satellite image synthesis, transferable to ocean habitat remote sensing data augmentation",
+      "llm_evidence_cn": "面向多尺度卫星图像的深度生成方法，可为海洋栖息地遥感数据增广提供支撑",
+      "llm_evidence": "面向多尺度卫星图像的深度生成方法，可为海洋栖息地遥感数据增广提供支撑",
+      "canonical_evidence": "面向多尺度卫星图像的深度生成方法，可为海洋栖息地遥感数据增广提供支撑",
+      "llm_tldr_en": "Existing generative models for satellite imagery only zoom or pan at one scale. Genesis defines multi-scale tile completion, synthesizing a complete consistent image pyramid from sparse seed tiles at any zoom; it can augment remote sensing datasets for habitat mapping.",
+      "llm_tldr_cn": "现有卫星图像生成方法要么在单一尺度放大、要么固定尺度平移，无法生成横跨尺度且空间一致的完整金字塔。本文提出多尺度瓦片补全任务并构建Genesis生成引擎，在给定任意缩放层级和位置的稀疏种子瓦片后，补全出尺度间与邻域均一致的高分辨率卫星图像金字塔。由此获得的合成数据可用于遥感分类模型的增广训练，为海洋栖息地和珊瑚礁等地理对象的卫星制图任务提供支持。",
+      "llm_tldr": "现有卫星图像生成方法要么在单一尺度放大、要么固定尺度平移，无法生成横跨尺度且空间一致的完整金字塔。本文提出多尺度瓦片补全任务并构建Genesis生成引擎，在给定任意缩放层级和位置的稀疏种子瓦片后，补全出尺度间与邻域均一致的高分辨率卫星图像金字塔。由此获得的合成数据可用于遥感分类模型的增广训练，为海洋栖息地和珊瑚礁等地理对象的卫星制图任务提供支持。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.04512v1",
+      "source": "arxiv",
+      "title": "Explainable Multimodal Deep Learning Integrating Imaging and Clinical Data for Oral Potentially Malignant Disorder Detection",
+      "abstract": "Oral potentially malignant disorders (OPMDs) are critical precursors to oral cancer, yet clinical detection remains challenging because of substantial phenotypic heterogeneity and overlap with benign conditions. Although image-based deep learning shows promise for automated screening, visual information alone may be insufficient in real-world settings, where diagnostic decisions also rely on patient-specific risk factors. We developed M2-OPMDNet, a multimodal deep learning framework that integrates co-registered white-light and autofluorescence intraoral images with structured clinical information for OPMD detection. A customized questionnaire was designed to capture clinically relevant risk factors and symptoms in a standardized, reproducible format for integration with image-derived features. Multiple image encoders, including conventional convolutional neural networks and foundation model-based architectures, were evaluated using a prospectively collected dataset reflecting real-world screening conditions. Model interpretability was assessed using SHapley Additive exPlanations (SHAP) to quantify feature- and modality-level contributions. M2-OPMDNet achieved an AUC of 0.952, outperforming unimodal approaches and showing improved performance for visually subtle lesions. SHAP analysis demonstrated that structured clinical variables contributed substantially to risk estimation and complemented imaging features. These results demonstrate that explainable multimodal learning combining white-light and autofluorescence imaging with structured clinical data can provide accurate, transparent, and clinically grounded OPMD detection. M2-OPMDNet offers a scalable framework for real-world oral cancer screening and decision support.",
+      "authors": [
+        "Ruilin You",
+        "Yihan Wang",
+        "Jiabin Chen",
+        "Cherie Wink",
+        "Petra Wilder-Smith",
+        "Rongguang Liang",
+        "Bofan Song"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV"
+      ],
+      "published": "2026-09-03T22:01:00+00:00",
+      "link": "https://arxiv.org/pdf/2609.04512v1",
+      "tags": [
+        "keyword:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal deep fusion of imaging and structured clinical data; framework transferable to integrated ocean imagery and non-image data",
+      "llm_evidence_cn": "融合共定位口腔影像与结构化临床信息做可解释多模态检测，思路可借鉴海洋遥感影像与环境/文本数据融合",
+      "llm_evidence": "融合共定位口腔影像与结构化临床信息做可解释多模态检测，思路可借鉴海洋遥感影像与环境/文本数据融合",
+      "canonical_evidence": "融合共定位口腔影像与结构化临床信息做可解释多模态检测，思路可借鉴海洋遥感影像与环境/文本数据融合",
+      "llm_tldr_en": "M2-OPMDNet integrates co-registered white-light and autofluorescence intraoral images with structured clinical risk factors for oral potentially malignant disorder detection, showing that adding structured patient data improves multimodal screening. This fusion framework may inform imagery-plus-metadata analysis outside medicine.",
+      "llm_tldr_cn": "口腔潜在恶性疾患形态多样且与良性病变重叠，仅靠影像可能不足以做出可靠筛查；真实诊断还依赖患者个性化风险因素。论文提出M2-OPMDNet，将配准的白光与自体荧光口内图像和结构化临床问卷信息联合建模，并对融合结果进行解释。该框架在医学影像筛查中论证了影像与结构化信息多模态融合的价值。这一思想与海洋科学中遥感影像加上环境或文本报告的融合需求一致，尽管数据域和任务完全不同，但方法可作为跨域借鉴。",
+      "llm_tldr": "口腔潜在恶性疾患形态多样且与良性病变重叠，仅靠影像可能不足以做出可靠筛查；真实诊断还依赖患者个性化风险因素。论文提出M2-OPMDNet，将配准的白光与自体荧光口内图像和结构化临床问卷信息联合建模，并对融合结果进行解释。该框架在医学影像筛查中论证了影像与结构化信息多模态融合的价值。这一思想与海洋科学中遥感影像加上环境或文本报告的融合需求一致，尽管数据域和任务完全不同，但方法可作为跨域借鉴。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.05864v1",
+      "source": "arxiv",
+      "title": "Hierarchical Prompt Injector for Domain Generalization Segmentation",
+      "abstract": "Domain Generalized Semantic Segmentation (DGSS) is a challenging task, as vision models often rely on low-level appearance cues that change across domains. In contrast, structural attributes exhibit cross-domain stability, motivating the use of structural priors for DGSS. Existing methods use prompt learning to transfer such priors into DGSS models, but typically encode each class as a single holistic prompt. Moreover, these methods apply prompts uniformly to all pixels, offering no mechanism to adapt when only a subset of object regions is visible due to viewpoint changes, occlusion, and environmental variation. We address this with \\textbf{Spatial Hierarchical Prompts (SHP)} that enrich each class with region-level geometric anchors capturing structural appearance from distinct viewing angles, ensuring complementary coverage under arbitrary viewpoints. Additionally, we propose the \\textbf{Hierarchical Prompt Injector (HPI)}, which enables spatially adaptive prompt injection in foundation models. HPI spatially grounds prompts by modeling their semantic relevance and spatial influence with visual features. Considering the difficulty of learning spatially and semantically aware prompt injection, we further introduce auxiliary supervision to align hierarchical prompts with their corresponding object regions. We achieve 70.62\\% and 72.74\\% mIoU on synthetic-to-real and real-to-real benchmarks, respectively. Code and checkpoints are released at https://github.com/MosukFate/HPI",
+      "authors": [
+        "Xin Kun Lin",
+        "Ruoyu Guo",
+        "Jiaqi Guo",
+        "Maurice Pagnucco",
+        "Yang Song"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-05T03:56:00+00:00",
+      "link": "https://arxiv.org/pdf/2609.05864v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "domain-generalized semantic segmentation with spatial hierarchical prompts can transfer to satellite and habitat image segmentation",
+      "llm_evidence_cn": "面向跨域图像分割的结构提示方法，可迁移到海洋栖息地遥感图像的深度学习分割任务",
+      "llm_evidence": "面向跨域图像分割的结构提示方法，可迁移到海洋栖息地遥感图像的深度学习分割任务",
+      "canonical_evidence": "面向跨域图像分割的结构提示方法，可迁移到海洋栖息地遥感图像的深度学习分割任务",
+      "llm_tldr_en": "Introduces Spatial Hierarchical Prompts that inject region-level geometric anchors into each class for domain-generalized semantic segmentation, addressing the limitation of holistic per-class prompts.",
+      "llm_tldr_cn": "域泛化语义分割任务中，视觉模型常依赖随域变化的低层表观线索，而结构属性更具跨域稳定性；现有提示学习方法往往把每个类别编码为单一整体提示，并统一施加到所有像素，难以处理遮挡、视角和环境变化。本文提出空间分层提示SHP，用区域级几何锚点丰富每个类别的结构信息，使提示注入能够适应目标区域只部分可见的情况。该方法在域泛化分割任务上验证了结构化提示的优越性，可被用于遥感影像中珊瑚礁等海洋栖息地的跨域分割和地物分类。",
+      "llm_tldr": "域泛化语义分割任务中，视觉模型常依赖随域变化的低层表观线索，而结构属性更具跨域稳定性；现有提示学习方法往往把每个类别编码为单一整体提示，并统一施加到所有像素，难以处理遮挡、视角和环境变化。本文提出空间分层提示SHP，用区域级几何锚点丰富每个类别的结构信息，使提示注入能够适应目标区域只部分可见的情况。该方法在域泛化分割任务上验证了结构化提示的优越性，可被用于遥感影像中珊瑚礁等海洋栖息地的跨域分割和地物分类。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.05953v1",
+      "source": "arxiv",
+      "title": "ProtoRAG: Prototype-Based Retrieval Augmentation for Few-Shot Fine-Grained Remote Sensing Object Detection",
+      "abstract": "Few-shot fine-grained object detection (FGOD) in remote sensing imagery is challenging because limited annotations must support both object localization and discrimination among visually similar subcategories. Although multimodal large language models (MLLMs) provide strong coarse object localization, they lack explicit visual evidence for reliable fine-grained recognition. To address this limitation, we propose ProtoRAG, a prototype-based retrieval-augmented framework that decouples coarse localization from fine-grained recognition by equipping MLLMs with an external object-level visual memory. To construct a reliable visual memory from limited support samples, we introduce Discriminative Prototype Space Learning (DPSL), which encourages discriminative and prototype-stable representations through supervised contrastive learning and prototype-consistency regularization. We further develop an uncertainty-guided candidate-constrained reasoning strategy that augments MLLMs with retrieved candidate-specific visual references and invokes multimodal reasoning only for ambiguous instances. Extensive experiments show that ProtoRAG consistently surpasses representative baselines in nine few-shot settings, outperforming the strongest baselines by 14.80, 2.27, and 4.04 mAP$_{50}$ on MAR20, HRSC2016, and FAIR1M-2.0, respectively.",
+      "authors": [
+        "Jian Wang",
+        "Yuxiang Hong",
+        "Chufeng Zhou",
+        "Chao Pang",
+        "Xiaokang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-05T07:40:19+00:00",
+      "link": "https://arxiv.org/pdf/2609.05953v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "MLLM-based retrieval-augmented fine-grained object detection in remote sensing imagery; transferable to coral habitat mapping",
+      "llm_evidence_cn": "多模态大模型结合遥感影像进行细粒度目标识别与原型检索，可作为珊瑚生境遥感制图的迁移方法",
+      "llm_evidence": "多模态大模型结合遥感影像进行细粒度目标识别与原型检索，可作为珊瑚生境遥感制图的迁移方法",
+      "canonical_evidence": "多模态大模型结合遥感影像进行细粒度目标识别与原型检索，可作为珊瑚生境遥感制图的迁移方法",
+      "llm_tldr_en": "ProtoRAG enhances multimodal large language models for few-shot fine-grained remote sensing object detection by adding external object-level visual memory with discriminative prototype space learning, decoupling coarse localization from fine-grained recognition.",
+      "llm_tldr_cn": "少样本细粒度遥感目标检测中，多模态大模型虽能粗定位却缺少可靠细粒度判别证据。ProtoRAG构建外部目标级视觉记忆与判别性子空间原型学习，将粗定位与细粒度识别解耦，通过原型检索增强弥补视觉证据不足。该方法可提升少样本下视觉相似子类遥感目标的识别能力，并能迁移至珊瑚底栖类型等遥感细粒度制图任务。",
+      "llm_tldr": "少样本细粒度遥感目标检测中，多模态大模型虽能粗定位却缺少可靠细粒度判别证据。ProtoRAG构建外部目标级视觉记忆与判别性子空间原型学习，将粗定位与细粒度识别解耦，通过原型检索增强弥补视觉证据不足。该方法可提升少样本下视觉相似子类遥感目标的识别能力，并能迁移至珊瑚底栖类型等遥感细粒度制图任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.06866v1",
+      "source": "arxiv",
+      "title": "The H-IAR Model for Irregular Multispectral Time Series. Quaternion Formulation, Mapping of Resilience Indicators, and Exploratory Identification of Forest Edges",
+      "abstract": "We propose the Hypercomplex Irregular Autoregressive (\\HIAR) model, a quaternion extension of the \\IAR/\\CIAR/\\BIAR{} family for four-component observations at irregular times. Temporal dependence is represented by a real power of a quaternion parameter and estimated in state-space form through the Gaussian innovation likelihood of the Kalman filter, conditional on the adopted covariance specifications. Across 12,000 Monte Carlo fits, mean absolute bias decreased with sample size and ranged from 0.0009 to 0.0023 at $N=300$. We applied the model to 30,824 Sentinel-2 pixel series covering the Mata de Santa Genebra ARIE from 2020 to 2023. The optimizer reported successful numerical termination in 98.73\\% of the fits; the median $\\|{\\Phihat}\\|$ was 0.6248, 3,872 pixels met the operational high-persistence threshold ($\\|{\\Phihat}\\}\\geq0.95$), and the median residual RMSE for band B8 was 5.1551 percentage points. The results demonstrate the computational feasibility of \\HIAR{} and its ability to generate descriptors of multispectral persistence, vector dynamics, predictive error, and spatial discontinuities potentially associated with forest edges.",
+      "authors": [
+        "Bruno Goncalves C. Filho",
+        "Angelo Calil BianchiBruno Goncalves C. Filho",
+        "Aluisio Pinheiro"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-09-06T22:48:19+00:00",
+      "link": "https://arxiv.org/pdf/2609.06866v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Hypercomplex autoregressive model for irregular multispectral time series; data-mining approach adaptable to oceanographic remote sensing data",
+      "llm_evidence_cn": "面向不规则多光谱时间序列的四元数自回归方法，可迁移到海洋遥感时序数据挖掘与生态恢复力映射",
+      "llm_evidence": "面向不规则多光谱时间序列的四元数自回归方法，可迁移到海洋遥感时序数据挖掘与生态恢复力映射",
+      "canonical_evidence": "面向不规则多光谱时间序列的四元数自回归方法，可迁移到海洋遥感时序数据挖掘与生态恢复力映射",
+      "llm_tldr_en": "H-IAR extends irregular autoregressive models to quaternion-valued multispectral time series, uses Kalman filter likelihood in state-space form, and maps resilience indicators from 30,824 Sentinel-2 pixel series in a Brazilian forest reserve.",
+      "llm_tldr_cn": "卫星多光谱时间序列往往观测不等间隔，已有的IAR等单变量或复值模型难以处理四分量植被时序。论文提出超复数不规则自回归H-IAR模型，在四元数参数上定义基于实幂的时序依赖，借助卡尔曼滤波的高斯创新似然进行状态空间估计。蒙特卡洛与三万余条Sentinel-2像素序列实验表明模型可用于恢复力指标映射和林缘探测。该方法虽以森林为案例，但其不规则多光谱时序建模思路可以迁移到受云干扰的海洋遥感数据挖掘与珊瑚等生态恢复力监测。",
+      "llm_tldr": "卫星多光谱时间序列往往观测不等间隔，已有的IAR等单变量或复值模型难以处理四分量植被时序。论文提出超复数不规则自回归H-IAR模型，在四元数参数上定义基于实幂的时序依赖，借助卡尔曼滤波的高斯创新似然进行状态空间估计。蒙特卡洛与三万余条Sentinel-2像素序列实验表明模型可用于恢复力指标映射和林缘探测。该方法虽以森林为案例，但其不规则多光谱时序建模思路可以迁移到受云干扰的海洋遥感数据挖掘与珊瑚等生态恢复力监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.07915v1",
+      "source": "arxiv",
+      "title": "JEDI: JEPA-to-Edge Distillation for Efficient Cropland Segmentation from Satellite Imagery",
+      "abstract": "Large vision models provide useful representations for remote-sensing segmentation but are often too expensive for deployment at the satellite or field edge. Existing feature-level distillation methods also tend to assume similar teacher and student architectures and often stop feature alignment when task training begins. We introduce JEDI (JEPA-to-Edge Distillation), a two-stage framework that transfers representations from a large I-JEPA Vision Transformer teacher to a compact SegFormer student. First, JEDI aligns the student's terminal representation with the teacher's token space using cross-architecture projection and spatial alignment. It then jointly optimizes supervised segmentation, temperature-scaled response distillation, and persistent feature alignment throughout task adaptation. On CalCROP21, JEDI-B0 achieves 68.0 mean Intersection-over-Union (mIoU) with 4.04M parameters, improving over the standalone student by 16.0 points and coming within 2.0 points of the 70.0 mIoU achieved by the 639M-parameter teacher. We evaluate SegFormer B0, B1, and B2 students with 4.04M, 14.33M, and 28M parameters, respectively. Across all three variants, JEDI consistently outperforms response-, structure-, channel-, and relational-distillation baselines under the same teacher-student setting. These results show that persistent representation alignment is especially valuable under aggressive compression, substantially reducing model size and computation while preserving segmentation performance.",
+      "authors": [
+        "Kishor Kumar Bhaumik",
+        "Nicolas Roque dos Santos",
+        "Jia Chen",
+        "Evangelos E. Papalexakis"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-07T19:29:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.07915v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Satellite image semantic segmentation with edge distillation; transferable to coral reef habitat segmentation",
+      "llm_evidence_cn": "用I-JEPA教师蒸馏SegFormer学生做卫星图像分割，可迁移到珊瑚生境或底质分类等海洋遥感分割任务",
+      "llm_evidence": "用I-JEPA教师蒸馏SegFormer学生做卫星图像分割，可迁移到珊瑚生境或底质分类等海洋遥感分割任务",
+      "canonical_evidence": "用I-JEPA教师蒸馏SegFormer学生做卫星图像分割，可迁移到珊瑚生境或底质分类等海洋遥感分割任务",
+      "llm_tldr_en": "JEDI is a two-stage distillation framework that transfers large I-JEPA transformer representations to a compact SegFormer student for satellite segmentation, preserving accuracy while enabling edge deployment; this technique can support operational habitat mapping.",
+      "llm_tldr_cn": "大型视觉Transformer能为遥感分割提供好特征，但难以在卫星或田间边缘部署；已有蒸馏依赖师生同构并过早停止特征对齐。论文提出JEDI两阶段框架，通过跨架构投影与空间对齐把I-JEPA大模型的表示蒸馏给轻量SegFormer学生，并在训练中联合优化监督分割与响应蒸馏。该方法在保持精度的同时提高部署效率，可迁移到珊瑚礁底栖栖息的星载或边缘分割制图，但原任务为农田分割。",
+      "llm_tldr": "大型视觉Transformer能为遥感分割提供好特征，但难以在卫星或田间边缘部署；已有蒸馏依赖师生同构并过早停止特征对齐。论文提出JEDI两阶段框架，通过跨架构投影与空间对齐把I-JEPA大模型的表示蒸馏给轻量SegFormer学生，并在训练中联合优化监督分割与响应蒸馏。该方法在保持精度的同时提高部署效率，可迁移到珊瑚礁底栖栖息的星载或边缘分割制图，但原任务为农田分割。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.08164v1",
+      "source": "arxiv",
+      "title": "Dual-Layer Semantic-Spatial Belief Mapping for Aerial Object Goal Navigation",
+      "abstract": "Aerial Object Goal Navigation (ObjectNav) requires an unmanned aerial vehicle (UAV) to locate a described target in an unknown outdoor environment using onboard visual observations. Vision-language models (VLMs) can interpret open-ended target descriptions and visual observations, but their frame-level outputs are often noisy, sparse, and spatially transient. We propose AeroBelief, a dual-layer semantic-spatial belief mapping framework that transforms transient VLM observations into persistent spatial guidance. It separates broad contextual plausibility from target-specific evidence: an intuition layer accumulates scene-level semantic cues for exploration, while an evidence layer preserves qualified target-specific observations for approach and confirmation. Evidence-gated fusion combines the two layers into spatial belief hotspots. We further introduce object-conditioned visual reasoning with conservative evidence qualification to improve observation reliability before spatial accumulation. In parallel, egocentric regional guidance converts quadtree coverage into UAV-centered, yaw-aligned directional proposals and stabilizes them through temporal commitment. Its regional scoring is independent of semantic belief values, maintaining exploration pressure and reducing repeated low-gain search. Experiments on the UAV-ON benchmark show that AeroBelief achieves the best reported overall SR, OSR, and SPL among the compared methods, reaching 21.61%, 35.57%, and 10.62, respectively. These results support the effectiveness of persistent semantic-spatial belief, conservative evidence qualification, and temporally stable regional guidance for aerial ObjectNav.",
+      "authors": [
+        "Jianqiang Xiao",
+        "Xiang Deng",
+        "Yuexuan Sun",
+        "Yanjin Wu",
+        "Wenbiao Yan",
+        "Liqiang Nie"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-08T02:47:49+00:00",
+      "link": "https://arxiv.org/pdf/2609.08164v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "VLM-guided aerial agent with dual-layer belief mapping for persistent spatial navigation; adaptable to autonomous coastal or ocean reconnaissance",
+      "llm_evidence_cn": "视觉语言模型驱动无人机目标导航的双层置信映射，可用于海洋自主监测架构借鉴",
+      "llm_evidence": "视觉语言模型驱动无人机目标导航的双层置信映射，可用于海洋自主监测架构借鉴",
+      "canonical_evidence": "视觉语言模型驱动无人机目标导航的双层置信映射，可用于海洋自主监测架构借鉴",
+      "llm_tldr_en": "AeroBelief transforms noisy frame-level vision-language model outputs into persistent semantic-spatial guidance through intuition and evidence layer belief mapping, enabling UAVs to locate described targets in unknown outdoor environments.",
+      "llm_tldr_cn": "无人机目标导航中视觉语言模型逐帧输出噪声大且缺乏时空连续性。提出AeroBelief双层语义-空间置信映射，将直觉层场景线索与证据层目标证据分离并累积成持久空间指引。在一系列空中物体目标导航任务中提升了定位与接近目标能力。该框架可作为面向海岸带或海洋设施自主巡检的视觉语言智能体基础。",
+      "llm_tldr": "无人机目标导航中视觉语言模型逐帧输出噪声大且缺乏时空连续性。提出AeroBelief双层语义-空间置信映射，将直觉层场景线索与证据层目标证据分离并累积成持久空间指引。在一系列空中物体目标导航任务中提升了定位与接近目标能力。该框架可作为面向海岸带或海洋设施自主巡检的视觉语言智能体基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.08659v1",
+      "source": "arxiv",
+      "title": "TriCCOT: Tri-part Convolutional Conformal Transformer for Onboard Space Object Detection",
+      "abstract": "Onboard object detection in Earth observation is constrained by limited computational resources and the absence of fully corrected imagery. While convolutional detectors are hardware-efficient, they often struggle to extract robust representations from raw and noisy data. Conversely, transformer-based models provide stronger global reasoning capabilities but remain difficult to deploy on FPGA accelerators due to quadratic attention complexity and non-compatible operations.   We introduce TriCCOT, a tri-part architecture for robust and deployable onboard object detection. TriCCOT combines a convolutional region proposal network, a conformal prediction stage, and Aper-GATES, our hardware-friendly attention-based classifier. The region proposal network generates candidate bounding boxes, which are subsequently enlarged via conformal prediction, providing a distribution-free probabilistic coverage guarantee. The resulting crops are processed by Aper-GATES, which reformulates self-attention through convolutional projections, global channel statistics, and hardware-friendly gating operations, avoiding standard transformer operations that are poorly suited to CNN-oriented accelerators.   Experiments on the DIOR and VDVRaw datasets demonstrate competitive detection performance and improved robustness to spatial blur and signal-dependent noise when compared to FPGA-compatible architectures. Finally, we report full deployment on a Xilinx Versal VCK190 FPGA without modifying the underlying DPU architecture, enabling unified CNN-Transformer inference for spaceborne embedded applications.",
+      "authors": [
+        "Adrien Dorise",
+        "Marjorie Bellizzi",
+        "Julia Cohen",
+        "Stéphane May"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-08T12:26:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.08659v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Satellite remote sensing transformer object detector deployable onboard; relevant DL methodology for ocean satellite analytics",
+      "llm_evidence_cn": "面向星载卫星影像的目标检测模型，虽非海洋栖息地，但深度学习检测方法可用于海洋遥感场景",
+      "llm_evidence": "面向星载卫星影像的目标检测模型，虽非海洋栖息地，但深度学习检测方法可用于海洋遥感场景",
+      "canonical_evidence": "面向星载卫星影像的目标检测模型，虽非海洋栖息地，但深度学习检测方法可用于海洋遥感场景",
+      "llm_tldr_en": "TriCCOT introduces a tri-part convolutional conformal transformer for hardware-deployable object detection on Earth observation satellites, addressing raw imagery and FPGA constraints; method is transferable to ocean remote sensing analytics.",
+      "llm_tldr_cn": "星上目标检测受算力限制且图像无完整校正，卷积网络对原始噪声数据表征不足，Transformer受复杂度限制难以部署在FPGA上。论文提出TriCCOT三部分架构，将卷积区域建议、共形预测与硬件友好的注意力分类器结合，实现稳健且可星上部署的目标检测。这种对原始遥感影像的硬件高效检测设计可迁移到海洋或海岸带卫星监测任务，但目标并非珊瑚栖息地制图，属于方法学桥接。",
+      "llm_tldr": "星上目标检测受算力限制且图像无完整校正，卷积网络对原始噪声数据表征不足，Transformer受复杂度限制难以部署在FPGA上。论文提出TriCCOT三部分架构，将卷积区域建议、共形预测与硬件友好的注意力分类器结合，实现稳健且可星上部署的目标检测。这种对原始遥感影像的硬件高效检测设计可迁移到海洋或海岸带卫星监测任务，但目标并非珊瑚栖息地制图，属于方法学桥接。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
