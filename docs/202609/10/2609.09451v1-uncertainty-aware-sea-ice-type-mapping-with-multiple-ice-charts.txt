@@ -1,0 +1,361 @@
+Title: Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts
+
+URL Source: https://arxiv.org/pdf/2609.09451v1
+
+Published Time: Thu, 10 Sep 2026 00:26:06 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts 
+
+# Samira Alkaee Taleghan 
+
+University of Colorado Denver Denver, Colorado, USA samira.alkaeetaleghan@ucdenver.edu 
+
+# Younghyun Koo 
+
+National Snow and Ice Data Center (NSIDC), CIRES, University of Colorado Boulder Boulder, Colorado, USA younghyun.koo@colorado.edu 
+
+# Andrew P. Barrett 
+
+National Snow and Ice Data Center (NSIDC), CIRES, University of Colorado Boulder Boulder, Colorado, USA andrew.barrett@colorado.edu 
+
+# Farnoush Banaei-Kashani 
+
+University of Colorado Denver Denver, Colorado, USA farnoush.banaei-kashani@ucdenver.edu 
+
+## Abstract 
+
+Sea-ice stage of development (SoD) describes the age and associated thickness of sea ice and provides important information for naviga-tion, operational ice monitoring, and assessment of ice conditions. SoD labels are obtained from operational ice charts, where trained analysts interpret satellite observations and assign standardized stage codes to regions with similar ice conditions. These codes often represent ranges of compatible ice thicknesses rather than exact physical values. Deep-learning methods can automate SoD mapping from satellite imagery and commonly adopt operational ice charts as reference labels for training and evaluation. These annotations are not exact, however; this is because chart interpretation relies on analyst judgement and on the observations available at the time, so different ice services may assign different SoD labels to the same conditions. We term this variation across independently produced expert annotations multi-annotator label uncertainty; collapsing the annotations into a single deterministic target discards this varia-tion. A second source of uncertainty originates in the learned model itself. In this paper, we quantify both sources: annotation uncer-tainty from disagreement among independent ice-service charts and model uncertainty from the learned predictive models. We then evaluate their relationship by testing whether model uncertainty is higher where ice services disagree. We observe that supervision incorporating information from multiple annotators can improve this correspondence, with soft supervision achieving the highest overall correlation of 0.256. The relationship becomes substantially stronger near the ice edge, where model predictive uncertainty closely tracks multi-annotator disagreement, reaching a correla-tion of 0.704 within 0–10 km. Among the uncertainty-estimation approaches, Monte Carlo dropout provides the best-calibrated con-fidence estimates, with an expected calibration error of 0.050. 
+
+> Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.
+> Conference acronym ’XX, Woodstock, NY
+> © 2026 Copyright held by the owner/author(s). Publication rights licensed to ACM. ACM ISBN 978-1-4503-XXXX-X/2026/06 https://doi.org/XXXXXXX.XXXXXXX
+
+## Keywords 
+
+Sea Ice Stage of Development; Uncertainty Quantification; Learning from Multiple Annotators 
+
+ACM Reference Format: 
+
+Samira Alkaee Taleghan, Younghyun Koo, Andrew P. Barrett, and Farnoush Banaei-Kashani. 2026. Uncertainty-Aware Sea-Ice Type Mapping with Mul-tiple Ice Charts. In Proceedings of Make sure to enter the correct conference title from your rights confirmation email (Conference acronym ’XX). ACM, New York, NY, USA, 9 pages. https://doi.org/XXXXXXX.XXXXXXX 
+
+## 1 Introduction 
+
+Sea ice plays an important role in the Arctic climate system and directly affects marine navigation and operations in polar regions [22]. Safe navigation requires timely information not only about ice presence and concentration but also about its physical charac-teristics. Sea-ice stage of development (SoD), which describes ice according to its age and associated thickness, is therefore an impor-tant parameter for operational monitoring and automated ice-chart production [18, 20]. Operational SoD information is produced by trained ice analysts, who interpret synthetic aperture radar (SAR) imagery together with other satellite, meteorological, and contex-tual information, delineate regions with similar ice conditions, and assign standardized ice information [19]. The World Meteorological Organization (WMO) defines the SoD classes through the WMO Sea-Ice Nomenclature [23], while SIGRID-3 provides a standard-ized representation for operational ice charts [24]. Ice regions are commonly described using the Egg Code, which reports total ice concentration (CT), partial concentrations of the three principal ice types (CA, CB, CC), and their corresponding stages of development (SA, SB, SC). These SoD categories generally represent thickness intervals rather than exact values; for example, thin first-year ice corresponds to approximately 30–70 cm, medium first-year ice to 70–120 cm, and thick first-year ice to thicknesses greater than approximately 120 cm [23, 24]. Most supervised sea-ice mapping pipelines use operational ice charts as reference labels and optimize the model toward the charted class. Deep-learning methods provide an increasingly effective ap-proach for automating this ice charting from satellite observations[9, 19, 21]. This formulation implicitly treats the assigned SoD label arXiv:2609.09451v1 [cs.LG] 8 Sep 2026 Conference acronym ’XX, June 03–05, 2026, Woodstock, NY Alkaee Taleghan et al. 
+
+as ground truth. However, the annotation process contains multi-ple sources of uncertainty. First, multi-annotator label uncertainty arises because SoD annotations record expert interpretation rather than direct physical measurement. Ambiguous SAR signatures and changing surface and environmental conditions lead analysts to resolve observations using contextual information and professional judgement, so ice services charting independently may assign differ-ent SoD labels to the same observation. Second, model uncertainty arises because the imagery may not uniquely determine the SoD class and the learned parameters are themselves uncertain. We characterize both and evaluate one against the other, quantifying multi-annotator disagreement directly from co-charted scenes and testing whether model uncertainty recovers it. Treating uncertain annotations as exact targets can directly affect deep-learning training, particularly when experts assign different labels to comparable observations, because deterministic targets can turn legitimate interpretation differences into apparent label noise. The model is then forced to fit one interpretation, an average, or conflicting supervision, obscuring the distinction between pre-diction error and ambiguity in the reference data and potentially encouraging unjustified confidence. Uncertainty quantification in automated sea-ice mapping has focused mainly on predictive, epis-temic, and aleatoric uncertainty [2, 3, 8, 15, 25], while other studies document disagreement among ice analysts and services in region delineation, sea-ice concentration, and stage-of-development la-bels [4, 10, 13]. These findings show that uncertainty also exists in the expert annotations used for training, yet reference-label uncer-tainty—particularly for SoD—has received less attention, motivating methods that preserve it during model training. This study focuses on uncertainty in operational SoD reference annotations and how it should be handled during model training and uncertainty evaluation. We treat each national ice service as an independent annotator: a chart is one annotator’s interpretation of a scene, and a scene charted by two or more services carries that many independent annotations of the same observation. The variation among those annotations is what we call multi-annotator label uncertainty, and we quantify it per pixel as inter-annotator disagreement 𝐷 (𝑥 ), measured on the ordinal SoD ladder with the first Wasserstein distance so that confusion between adjacent stages counts for less than confusion between distant ones. We then com-pare five supervision strategies that retain or collapse this informa-tion in different ways and evaluate model uncertainty in four forms: predictive entropy, epistemic uncertainty from deep ensembles and Monte Carlo dropout, an evidential Dirichlet head, and set-valued conformal prediction. A control model trained to predict 𝐷 (𝑥 ) di-rectly bounds how much of the disagreement is recoverable from the observations at all. This framework connects the two sources, allowing their correspondence to be tested rather than assumed. The main contributions of this study are: (i) we construct a SoD dataset comprising 404 Sentinel-1 scenes independently charted by at least two of four national ice services (NIC, DMI, CIS, and NOAA); and (ii) we compare five supervision strategies that retain or collapse information from the independent annotations in dif-ferent ways, and evaluate predictive entropy, ensemble-, dropout-, and evidential-based model uncertainty, conformal prediction sets, and a direct disagreement-regression control against variation mea-sured directly from the expert charts rather than a single reference annotation. The remainder of the paper is organized as follows. Section 2 reviews related work, Section 3 presents the methodology, Section 4 describes the experimental evaluation and results, and Section 5 concludes with the main findings and limitations. 
+
+## 2 Related Work 
+
+Deep-learning methods are widely used for automated sea-ice classi-fication and ice-chart generation from SAR and multi-source obser-vations. Previous work investigates supervised learning for sea-ice type and SoD classification [19, 20], and examines the behavior and interpretation of deep-learning models for operational ice charting [9]. However, most approaches still rely on operational ice charts as the primary source of reference labels, making the uncertainty asso-ciated with these annotations an important consideration for model training. Uncertainty quantification receives increasing attention in automated sea-ice mapping. Pires de Lima and Karimzadeh [15] use model ensembles and dropout to estimate predictive uncertainty in sea-ice segmentation from Sentinel-1 SAR imagery. Chen et al. [2] use a heteroscedastic Bayesian neural network to estimate epistemic and aleatoric uncertainty in sea-ice concentration retrieval, and sub-sequent work investigates calibration of these uncertainty estimates [3]. Wulf et al. [25] derive calibrated predictive uncertainty for pan-Arctic sea-ice concentration retrieval, while Heffring and Xu [8] use a Bayesian Transformer to quantify uncertainty associated with model parameters and predictions. These studies demonstrate the importance of uncertainty estimation for reliable sea-ice products, but they primarily characterize uncertainty through the predictive model or its outputs. A separate body of work shows that uncer-tainty also exists in the expert-generated ice charts that commonly serve as reference labels. Moen et al. [13] compare independent ice charts produced from the same SAR observation and report substantial differences between analysts in both the delineation of ice regions and the assignment of stage-of-development labels. Karvonen et al. [10] compare sea-ice concentration estimates from several groups of ice analysts and identify significant variation among expert estimates, particularly for intermediate ice concen-trations. Cheng et al. [4] similarly quantify inter-analyst agreement at the Canadian Ice Service and show that estimates from indi-vidual analysts can differ even when they interpret the same SAR observations. The difficulty of interpretation also changes with ice conditions. During the melt season, changes in surface properties can make first-year ice and open water appear similar in SAR im-agery, increasing ambiguity in the information available to analysts [4]. Thus, uncertainty does not arise only after a model produces a prediction; it already exists in the expert annotations used to train and evaluate the model. However, most uncertainty-aware sea-ice learning approaches do not explicitly preserve this annotation un-certainty when constructing the training target. This motivates our study of uncertainty directly in operational SoD labels and its effect on deep-learning models. Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts Conference acronym ’XX, June 03–05, 2026, Woodstock, NY 
+
+Table 1: SIGRID-3 stage codes and their thickness-based SoD representation.                                   
+
+> Code WMO stage SoD representation Thickness (cm) 81, 82 New ice / nilas / ice rind new 0–10 84 Grey ice grey 10–15 85 Grey-white ice grey-white 15–30 87, 88, 89 Thin first-year ice thin FY 30–70 91 Medium first-year ice medium FY 70–120 93 Thick first-year ice thick FY 120–200 95, 96, 97 Old / second-year / multi-year ice old 200–300 ‡
+> 83 Grey ice, undifferentiated grey ∪grey-white 10–30 86 First-year ice, undifferentiated thin FY ∪medium FY
+> ∪thick FY 30–200
+> ‡The WMO interval is open-ended; 300 cm is used to bound the ordinal thickness ladder.
+
+## 3 Methodology 
+
+Our methodology separates uncertainty in the reference annota-tions from uncertainty in the learned model. An individual oper-ational ice chart can already contain uncertainty because an SoD code can correspond to a range of ice thicknesses or to several fine SoD classes. When several ice services independently chart the same observation, their interpretations introduce an additional source of uncertainty through disagreement among annotations. We preserve these sources during target construction rather than as-suming that every chart provides a single exact ground-truth class. Separately, we estimate predictive and epistemic uncertainty from the trained models and examine whether these quantities corre-spond to uncertainty measured directly from the expert annotations [11]. 
+
+## 3.1 SoD Label Representation 
+
+Operational SoD labels originate from ice charts produced by trained ice analysts. Each chart partitions the scene into polygons with similar ice conditions and assigns each polygon a SIGRID-3 Egg Code. The Egg Code specifies the total ice concentration CT and up to three principal ice types, each described by a partial concen-tration (CA, CB, or CC) and a corresponding stage-of-development code (SA, SB, or SC). We harmonize these stage codes across ice services using their WMO thickness intervals, as shown in Table 1. The SoD task is conditioned on the presence of ice. We therefore remove the open-water proportion and renormalize the remaining values over the ice classes. These intervals are themselves uncertain representations of ice thickness because a stage code specifies a range of compatible thicknesses rather than an exact value. For example, thin first-year ice represents approximately 30–70 cm and medium first-year ice 70–120 cm. When a code spans several finer SoD classes, we retain the full interval rather than assigning it to an arbitrary single class. For example, code 86 represents undiffer-entiated first-year ice over approximately 30–200 cm and therefore includes thin, medium, and thick FY ice. The Egg Code can report several ice types that coexist within the same polygon. Their partial concentrations specify how much of the polygon is associated with each type, but the chart does not specify the spatial location of those types within the polygon. Therefore, every pixel inherits the complete polygon-level SoD composition rather than a single locally identified ice type. For ice service 𝑎 and pixel 𝑥 , we represent this composition using the reported partial concentrations as 
+
+q𝑎 (𝑥 ) ∝ ∑︁    
+
+> 𝑗 ∈ J 𝑎 (𝑥 )
+
+𝑐 𝑎,𝑗 (𝑥 ) e 𝑠 𝑎,𝑗 (𝑥 ) , (1) where 𝑗 indexes the ice types reported in the Egg Code, 𝑐 𝑎,𝑗 (𝑥 ) is the corresponding partial concentration, 𝑠 𝑎,𝑗 (𝑥 ) is its SoD code, and 
+
+e(𝑠 ) converts that code to the thickness-ordered SoD representation. The resulting values are normalized to represent the relative SoD composition of the ice within the polygon. This representation describes the SoD information provided by a single ice service. When different ice services independently chart the same satellite observation, their corresponding compositions 
+
+q𝑎 (𝑥 ) may also differ because polygon delineation, ice composition, and stage assignment depend on analyst interpretation. Thus, in addition to the thickness ranges and polygon-level composition contained within an individual chart, multi-service observations can exhibit disagreement between independently produced SoD descriptions. The resulting q𝑎 (𝑥 ) preserves the thickness ranges and ice composition reported by service 𝑎 at pixel 𝑥 and forms the basis for the supervision strategies described in the following section. 
+
+## 3.2 Uncertainty-Aware Supervision 
+
+Because each SoD label represents a thickness interval rather than an exact ice thickness, uncertainty is already present within an individual label. Additional within-chart uncertainty arises when a broader stage code spans several finer thickness intervals or when multiple ice types with different partial concentrations are reported within the same polygon. When multiple ice services independently chart the same observation, their annotations can further differ because of analyst interpretation, introducing multi-annotator dis-agreement. When multiple ice services chart the same observation, their independently produced q𝑎 (𝑥 ) can also disagree. We evaluate supervision strategies that retain or discard these two sources of information in different ways. 
+
+Hard supervision. The conventional formulation reduces the annotation from one ice service to a single dominant SoD class, 
+
+𝑦 𝑎 (𝑥 ) = arg max 𝑘 𝑞 𝑎,𝑘 (𝑥 ), and minimizes Lhard = − log 𝑝 𝜃 (𝑦 𝑎 (𝑥 ) | 
+
+𝑥 ). This retains only the dominant stage and discards the remaining polygon composition and any broader thickness range represented in q𝑎 (𝑥 ). When several services are available, the hard target is taken from one reference service using the fixed priority NIC, DMI, CIS, and NOAA. 
+
+Consensus supervision. For pixels charted by multiple services, let A ( 𝑥 ) denote the set of available services and 𝐴 𝑥 = |A ( 𝑥 )| . We first average their SoD compositions, ¯q(𝑥 ) = 1
+
+𝐴 𝑥 ∑︁ 𝑎 ∈ A ( 𝑥 )
+
+q𝑎 (𝑥 ),
+
+and define the consensus class as 𝑦 cons (𝑥 ) = arg max 𝑘 ¯𝑞 𝑘 (𝑥 ). The corresponding loss is Lcons = − log 𝑝 𝜃 (𝑦 cons (𝑥 ) | 𝑥 ). Consensus therefore uses information from all available services to determine a common dominant stage, but removes the remaining within-chart composition and cross-service disagreement from the training target. Conference acronym ’XX, June 03–05, 2026, Woodstock, NY Alkaee Taleghan et al. 
+
+Soft supervision. Instead of reducing the cross-service mean to one class, soft supervision retains the complete mean SoD com-position and minimizes 
+
+Lsoft = −
+
+> 𝐾
+
+∑︁ 
+
+> 𝑘 =1
+
+¯𝑞 𝑘 (𝑥 ) log 𝑝 𝜃,𝑘 (𝑥 ).
+
+This preserves the relative proportions assigned to the different stages, including both the composition reported within individual Egg Codes and differences among services. This formulation is related to distribution-valued supervision [7]. 
+
+Multi-annotator We quantify disagreement among the avail-able ice-service annotations using the first Wasserstein distance, which accounts for the ordering of the SoD thickness intervals [14]. For pixels with at least two available services, 
+
+𝐷 (𝑥 ) = 2
+
+𝐴 𝑥 (𝐴 𝑥 − 1)∑︁ 𝑎,𝑏 ∈ A ( 𝑥 )
+
+> 𝑎 <𝑏
+
+𝑊 1 (q𝑎 (𝑥 ), q𝑏 (𝑥 )) . (2) Because the classes are ordered by their associated thickness intervals, disagreement between neighboring stages contributes less than disagreement between stages farther apart. We use 𝐷 (𝑥 )
+
+as the continuous measure of multi-annotator SoD disagreement throughout the experiments. To test whether strongly contested annotations should contribute less to training, we weight the soft loss according to 𝑤 (𝑥 ) = 1/( 1 +
+
+𝐷 (𝑥 )) . The weighted objective is Lweighted = 𝑤 (𝑥 )L soft , with the pixel losses normalized by the sum of the weights. Pixels on which the services agree therefore receive greater weight than pixels with large disagreement. Finally, we consider only the set of SoD stages supported by each service, without requiring the model to reproduce the proportions within that set. Let 
+
+S𝑎 (𝑥 ) = {𝑘 : 𝑞 𝑎,𝑘 (𝑥 ) > 0}
+
+denote the stages supported by service 𝑎 . We define 
+
+LAvgNLL = − 1
+
+𝐴 𝑥 ∑︁ 𝑎 ∈ A ( 𝑥 )
+
+log ©«∑︁ 𝑘 ∈ S 𝑎 (𝑥 )
+
+𝑝 𝜃,𝑘 (𝑥 )ª®¬
+
+. (3) AvgNLL rewards probability assigned anywhere within the thick-ness range supported by each service, without specifying how that probability should be distributed within the range. It is therefore related to candidate-set or partial-label learning [5]. Unlike soft supervision, it retains the supported range but discards the partial-concentration proportions within that range. 
+
+## 3.3 Model Uncertainty 
+
+We evaluate model uncertainty separately from uncertainty en-coded in the reference annotations. Following the distinction be-tween predictive and epistemic uncertainty [11], we first measure the uncertainty of the predictive distribution and then estimate the component associated with variation among model predictions. 
+
+Epistemic uncertainty. For a predictive distribution p𝜃 (𝑥 ), pre-dictive uncertainty is measured using categorical entropy, 𝐻 (𝑥 ) =
+
+− Í𝐾 𝑘 =1 𝑝 𝜃,𝑘 (𝑥 ) log 𝑝 𝜃,𝑘 (𝑥 ) [17]. We compare 𝐻 (𝑥 ) with measured multi-annotator disagreement using Spearman rank correlation 
+
+𝜌 (𝐻, 𝐷 ). A positive correlation indicates that observations assigned larger predictive uncertainty are also those for which the ice ser-vices disagree more strongly. We estimate epistemic uncertainty using deep ensembles [12] and Monte Carlo dropout [6]. Given 𝑀 predictive distributions 
+
+{p(𝑚 ) (𝑥 )} 𝑀 𝑚 =1, their mean is ¯ p(𝑥 ) = 𝑀 −1 Í𝑚 p(𝑚 ) (𝑥 ). We estimate the epistemic component as 
+
+𝑈 epi (𝑥 ) = 𝐻 ( ¯p(𝑥 )) − 1
+
+𝑀 
+
+> 𝑀
+
+∑︁ 
+
+> 𝑚 =1
+
+𝐻 
+
+
+
+p(𝑚 ) (𝑥 )
+
+
+
+. (4) For deep ensembles, the predictions are obtained from indepen-dently trained models. For Monte Carlo dropout, they are obtained from repeated stochastic forward passes through the same network with dropout active at inference [6]. We compare 𝑈 epi (𝑥 ) with 𝐷 (𝑥 )
+
+to test whether epistemic uncertainty identifies observations on which independent ice services disagree. 
+
+Conformal prediction sets. We also evaluate set-valued uncer-tainty through split-conformal prediction [1]. Prediction sets 𝑆 (𝑥 )
+
+are calibrated on validation pixels at miscoverage level 𝛼 = 0.1 us-ing the least-ambiguous (LAC) score 1 − 𝑝 𝜃,𝑦 (𝑥 ), together with the adaptive APS and RAPS scores. Beyond verifying marginal coverage, we ask whether the sets are wide in the right places: we correlate set size with 𝐷 (𝑥 ), measure the coverage gap between agreeing and contested pixels, and compare the prediction set with the ser-vices’ own answer set 𝑈 (𝑥 ) — the union of the distinct modal stages the available services assigned at 𝑥 — using the rank correlation 
+
+𝜌 (| 𝑆 |, |𝑈 |) and the Jaccard overlap between the two sets. SIGRID-3 already contains set-valued statements, so this comparison asks whether a calibrated prediction set reproduces the ambiguity that analysts actually express. 
+
+Disagreement learnability control. To assess whether multi-annotator disagreement is predictable from the available observa-tions, we train the same network backbone with a scalar output to directly regress 𝐷 (𝑥 ) using absolute error. This provides an empiri-cal reference for the amount of disagreement information recover-able from the SAR and AMSR2 inputs. We additionally compare it with a constant predictor and distance to the 15% ice edge. 
+
+## 4 Experimental Evaluation 4.1 Data 
+
+We construct a multimodal sea-ice dataset for 2025 by pairing Sentinel-1 Synthetic Aperture Radar (SAR) observations with opera-tional ice charts produced by four national ice services: the U.S. Na-tional Ice Center (NIC), the Danish Meteorological Institute (DMI), the Canadian Ice Service (CIS), and the U.S. National Oceanic and Atmospheric Administration (NOAA). Sentinel-1 Extra-Wide (EW) Ground-Range-Detected scenes are obtained from the Copernicus archive and Google Earth Engine. We use the dual-polarization HH and HV backscatter channels together with the local incidence an-gle. The scenes are radiometrically calibrated, corrected for thermal noise, and reprojected to the NSIDC Sea-Ice Polar Stereographic North grid (EPSG:3413). In addition to SAR, the dataset contains passive-microwave and meteorological context. AMSR2 brightness temperatures are obtained from the JAXA G-Portal at 18.7 and 36.5 GHz in horizontal and vertical polarization. Because AMSR2 is substantially coarser than the SAR observations, each context Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts Conference acronym ’XX, June 03–05, 2026, Woodstock, NY 
+
+variable is spatially aggregated over the corresponding SAR patch and standardized. The primary SoD experiments use either the three Sentinel-1 channels or the seven-channel Sentinel-1+AMSR2 configuration. The resulting dataset contains complementary ge-ographic coverage from the four ice services. Figure 1 shows the spatial distribution of the charted Sentinel-1 scenes. The temporal coverage is similarly service dependent (Figure 2). In this dataset, NIC and DMI observations are represented through-out the year, whereas CIS observations are concentrated in the colder months and are not included from May through September. NIC has the largest overlap with the other services, including 232 scenes with DMI, 94 with CIS, and 75 with NOAA. CIS and DMI overlap on 26 scenes, CIS and NOAA on 57 scenes, and DMI and NOAA have no direct overlap. These co-charted scenes provide multiple operational annotations of the same Sentinel-1 observation and form the basis for measuring multi-annotator SoD disagree-ment. (One jointly charted DMI–NIC scene shares no ice pixels and contributes no disagreement statistics.) The services also differ in how they express stage information. A census of the egg codes on the 404 co-charted scenes shows that NIC delineates at the finest granularity (177 ice polygons per scene, against 27 for DMI) yet carries the largest share of undifferentiated stage codes (27% of its stage entries, including code 86, which it alone uses), whereas CIS assigns no undifferentiated codes at all and NOAA expresses 31% of its stage entries through the undiffer-entiated young-ice code 83. DMI uses few ambiguous codes but the fullest egg-code compositions, so its labels are wide through compo-sition rather than code ambiguity. On average, between 1.8 and 2.6 fine SoD classes carry nonzero proportion at an ice pixel depending on the service. A pixel’s stage label is therefore already a distribu-tion within a single service, before any cross-service comparison is made. Stage disagreement is also largely invisible to concentration-based comparisons. Partitioning all 80.8 M co-charted pixels by whether the services’ total-concentration codes agree and whether their stage compositions admit a common refinement, we find that 57.7% of the pixels with agreeing concentration codes carry prov-ably incompatible stage compositions, with a mean composition Wasserstein distance five times that of the fully agreeing cell. Con-centration agreement is therefore not evidence of stage agreement, and uncertainty estimates validated against concentration disagree-ment have not been validated for the SoD task considered here. Each operational chart polygon is encoded using the WMO Egg Code and archived in SIGRID-3 format. The Egg Code reports to-tal ice concentration CT and up to three partial ice components 
+
+𝑗 ∈ { 𝐴, 𝐵, 𝐶 }, where each component consists of a partial concen-tration 𝐶 𝑗 and a corresponding stage-of-development code 𝑆 𝑗 . We harmonize the service-specific stage codes onto the common SoD ladder shown in Table 1. Specific codes map to a single fine SoD class, whereas undifferentiated codes retain multiple compatible stages. For example, SIGRID-3 code 86 represents undifferentiated first-year ice and therefore supports thin, medium, and thick first-year ice. To construct the polygon-level label, each reported partial con-centration is assigned to the class associated with its SoD code. For class 𝑘 , the corresponding proportion is ˜ 𝑦 𝑘 = Í𝑗 ∈ { 𝐴,𝐵,𝐶 } (𝐶 𝑗 /100 ) 1[class (𝑆 𝑗 ) =
+
+𝑘 ], while the concentration not covered by sea ice is assigned to NIC (361 scenes)        
+
+> 70 N
+> 80 N
+> DMI (232 scenes) CIS (137 scenes) NOAA (118 scenes)
+
+Figure 1: Geographic coverage of operational ice charts in the multi-service dataset. Marker area indicates the number of Sentinel-1 scenes per spatial cell. NIC has the broadest coverage (361 scenes), followed by DMI (232), CIS (137), and NOAA (118). 
+
+open water as ˜ 𝑦 water = max (0, 1 − CT /100 ). Interval-valued total-concentration codes are resolved from the sum of the reported partial concentrations when available and otherwise from the in-terval midpoint. Codes 91 and 92 are treated as 100% ice, and when only one stage is reported without a partial concentration, that stage receives the resolved total concentration. Water polygons are assigned directly to open water, while bergy-water polygons are represented as 10% glacier ice and 90% open water. For the ice-conditional SoD task considered in this study, open-water proportion is removed and the remaining class proportions are renormalized over the ice classes. Undifferentiated stage codes are retained as distributions over their compatible fine classes, as described in Section 3.1, rather than being collapsed to a single stage. Figure 3 illustrates the resulting multimodal information for one Sentinel-1 acquisition independently charted by CIS, DMI, and NIC. Although the services observe the same SAR scene, their polygon boundaries, partial ice compositions, and reported stages can differ. The corresponding Wasserstein-disagreement map in Figure 3(h) makes this variation explicit and illustrates the label uncertainty that motivates the multi-service experiments. Finally, the data are partitioned at the Sentinel-1 scene level. Scenes are grouped jointly by geographic region and ISO week before splitting so that temporally adjacent observations from the same region do not enter different partitions. The final split contains 282 training scenes, 41 validation scenes, and 81 held-out test scenes. All annotations associated with a Sentinel-1 scene remain in the same split, preventing information from the same observation from appearing in both training and evaluation. 
+
+## 4.2 Experimental Setup 
+
+All experiments use the same single-head U-Net architecture for SoD prediction, with four encoder resolution levels containing 32, 64, 128, and 256 feature channels and an output layer producing logits over the SoD classes. Models are trained using 256 × 256 pixel crops at 80 m spatial resolution, a batch size of 16, AdamW optimization with an initial learning rate of 3 ×10 −4, cosine learning-rate annealing, and 30 epochs of 400 iterations each. Deep ensembles combine three independently initialized seeds for each supervision strategy, while Monte Carlo dropout applies dropout with 𝑝 = 0.1to the decoder features feeding the output head, remaining active during both training and inference, with 16 stochastic forward passes at evaluation. Conformal prediction sets are calibrated on Conference acronym ’XX, June 03–05, 2026, Woodstock, NY Alkaee Taleghan et al. J F M A M J J A S O N D010 20 30 40 scenes charted    
+
+> CIS absent
+> NIC (361) DMI (232) CIS (137) NOAA (118)
+
+Figure 2: Monthly distribution of Sentinel-1 scenes by ice service. NIC and DMI provide year-round coverage, while CIS observations are concentrated in colder months and absent from May through September. 
+
+the validation split at 𝛼 = 0.1 and evaluated on the held-out test set. To ensure consistent model selection, all models are selected using expected-thickness MAE computed against the harmonized cross-service reference distribution. 
+
+## 4.3 Evaluation Metrics 
+
+We group the evaluation metrics into three categories: SoD predic-tion accuracy, probabilistic quality and calibration, and uncertainty alignment with multi-annotator disagreement. 
+
+SoD prediction accuracy. We report expected-thickness MAE, coarse accuracy, and ranked probability score (RPS). For a predicted distribution p, expected thickness is ˆ 𝑇 = Í𝐾 𝑘 =1 𝑝 𝑘 𝑡 𝑘 , where 𝑡 𝑘 is the midpoint thickness of class 𝑘 ; the reference distribution is converted similarly. MAE reports the absolute error between these expected-thickness values in centimeters. Coarse accuracy evaluates the modal prediction after mapping the fine SoD classes to broader stage groups. RPS, RPS = Í𝐾 −1 
+
+> 𝑘 =1
+
+(𝐹 𝑝 (𝑘 ) − 𝐹 𝑞 (𝑘 )) 2, evaluates the full distribution while accounting for the ordinal distance between SoD classes. 
+
+Probabilistic quality and calibration. We report negative log-likelihood (NLL), Brier score, and expected calibration error (ECE). NLL measures the probability assigned to the reference target, while the Brier score measures the difference between the predicted and reference probability distributions. ECE measures the agreement between model confidence and empirical accuracy. Lower values indicate better probabilistic performance or calibration. 
+
+Uncertainty alignment with multi-annotator disagreement. 
+
+We evaluate whether model uncertainty is larger where the ice ser-vices disagree. Predictive uncertainty is assessed using 𝜌 (𝐻, 𝐷 ) =
+
+𝜌 Spearman (𝐻 (𝑥 ), 𝐷 (𝑥 )) , where 𝐻 (𝑥 ) is predictive entropy and 𝐷 (𝑥 )
+
+is measured multi-annotator disagreement. We similarly report 
+
+𝜌 epi = 𝜌 Spearman (𝑈 epi (𝑥 ), 𝐷 (𝑥 )) for epistemic uncertainty. AUC epi 
+
+measures how well epistemic uncertainty distinguishes contested from agreeing pixels, with 0 .5 corresponding to chance-level dis-crimination. 
+
+## 4.4 Results 
+
+Table 2 compares the five supervision strategies using both SAR and SAR+AMSR2 inputs. Preserving more annotation uncertainty 
+
+Table 2: SoD prediction and uncertainty results. MAE is expected-thickness error in cm. 𝜌 (𝐻, 𝐷 ) measures predictive-entropy alignment with multi-annotator disagreement; 𝜌 epi 
+
+and AUC epi evaluate epistemic uncertainty.                                                                                                                                                      
+
+> Method MAE Coarse RPS NLL Brier ECE 𝜌 (𝐻, 𝐷 )𝜌 epi AUC epi
+> SAR — Deep ensemble
+> Hard 37.85 0.598 0.315 1.615 0.240 0.138 0.163 -0.034 0.425 Consensus 36.77 0.714 0.297 1.601 0.234 0.176 0.193 0.073 0.499 Soft 40.27 0.620 0.334 1.614 0.244 0.106 0.141 0.013 0.524
+> Weighted 40.84 0.660 0.338 1.616 0.245 0.124 0.184 0.006 0.496 AvgNLL 41.47 0.618 0.359 1.772 0.273 0.111 0.139 -0.008 0.495
+> SAR — Consensus-target uncertainty models
+> MC dropout 38.02 0.719 0.304 1.616 0.239 0.051 0.191 -0.049 0.479 Evidential 41.43 0.606 0.401 1.799 0.279 0.178 0.090 0.034 0.425 Evidential + KL cap 36.81 0.695 0.347 1.738 0.255 0.161 0.147 0.118 0.420
+> SAR+AMSR2 — Deep ensemble
+> Hard 39.78 0.626 0.332 1.609 0.244 0.132 0.077 0.182 0.589 Consensus 37.68 0.710 0.288 1.575 0.233 0.131 0.253 0.026 0.555 Soft 41.32 0.580 0.316 1.569 0.241 0.128 0.256 0.023 0.549 Weighted 39.30 0.688 0.306 1.546 0.229 0.101 0.220 0.130 0.608
+> AvgNLL 40.50 0.635 0.335 1.771 0.262 0.141 0.207 0.010 0.512
+> SAR+AMSR2 — Consensus-target uncertainty models
+> MC dropout 37.57 0.702 0.288 1.565 0.231 0.050 0.230 -0.121 0.518 Evidential 41.93 0.417 0.434 1.843 0.295 0.101 0.125 -0.028 0.400 Evidential + KL cap 36.18 0.690 0.334 1.728 0.252 0.121 0.142 0.145 0.444
+
+does not consistently improve SoD prediction. The determinis-tic cross-service consensus is best on point and ordinal accuracy (37.68 cm MAE, 0.710 coarse accuracy, RPS 0.288), ahead of hard labels (39.78 cm, 0.626). Retaining the full cross-service distribution degrades both (41.32 cm, 0.580), while disagreement weighting re-covers most of the loss (39.30 cm, 0.688) and gives the best NLL and Brier score. The uncertainty-aware targets provide only modest gains in entropy–disagreement alignment: soft supervision gives the highest 𝜌 (𝐻, 𝐷 ) = 0.256, closely followed by consensus at 0.253 and weighted supervision at 0.220. Monte Carlo dropout on the con-sensus target matches consensus ordinally (RPS 0.288, 37.57 cm) and gives substantially lower ECE (0.050 versus 0.101–0.141 for the su-pervision strategies). Its predictive entropy still correlates modestly with disagreement ( 𝜌 (𝐻, 𝐷 ) = 0.230), but its epistemic component does not ( 𝜌 epi = −0.121, AUROC epi = 0.518). Deep-ensemble epis-temic uncertainty is similarly weak: weighted supervision gives the highest AUROC epi at 0.608, while most other methods remain near chance. The KL-capped evidential model reaches 𝜌 epi = 0.145 but AUROC epi = 0.444, showing that a positive association with contin-uous disagreement does not necessarily yield useful discrimination between contested and agreeing pixels. AvgNLL tests the support-based formulation directly, rewarding mass anywhere within the expert-supported range rather than prescribing its distribution. The added flexibility does not help. An evidential Dirichlet head [16] on the consensus target behaves similarly: the prescribed annealed Kullback–Leibler (KL) divergence regularization leads to model collapse (41.93 cm, 0.417), while capping the KL weight at 0.1 gives the best point accuracy in the field (36.18 cm) but a poor predictive distribution (NLL 1.728, RPS 0.334). Both evidential variants also inflate the rare glacier class by over an order of magnitude. Preserv-ing only the admissible support is therefore a weaker signal than selecting a common stage or matching the full distribution. Adding AMSR2 gives no consistent predictive gain: consensus moves from Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts Conference acronym ’XX, June 03–05, 2026, Woodstock, NY (a)      
+
+> Sentinel-1 HH (dB)
+> (b)
+> CIS DMI NIC
+> Sentinel-1 HV (dB)
+> (c)
+> AMSR2 18.7 GHz H (K)
+> (d)
+> AMSR2 36.5 GHz V (K)
+> (e)
+> 6 polygons, 2.2 stages each
+> CIS stage of development
+> (f)
+> 6 polygons, 3.4 stages each
+> DMI stage of development
+> (g)
+> 4 polygons, 2.7 stages each
+> NIC stage of development
+> (h)
+> mean 0.67 over joint ice
+> Stage disagreement (ice only)
+> 120 140 160 180 200 220
+> 210 220 230 240 250
+> 0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00 stage  W1 (ladder steps)
+> new grey grey-white thin FY med. FY thick FY old 90%
+> 60 90%
+> <60% share of the ice
+> stage of development (thin thick)
+> open water glacier no stage / unassigned each polygon is its own bar: band width and colour row follow the stage's share of the polygon's ice (partial concentration), thin west to thick east
+> Sentinel-1 S1A EW, 2025-12-26 10:49 UTC 69.1°N 70.9°N, 62.7°W 57.4°W stage of development, charted independently by CIS, DMI, NIC
+
+Figure 3: Example of the multimodal observations and independent operational SoD annotations for a Sentinel-1 acquisition on 26 December 2025. (a–b) Sentinel-1 HH and HV backscatter, with the independently delineated chart polygons overlaid in (b); (c–d) AMSR2 brightness temperatures at 18.7 GHz H and 36.5 GHz V polarization; (e–g) Egg-Code stage-of-development compositions reported by CIS, DMI, and NIC; and (h) per-pixel multi-annotator SoD disagreement measured using the first Wasserstein distance on the ordinal stage ladder. Within each chart polygon, the displayed stage bands summarize the reported partial-concentration shares; their placement is a visualization of polygon composition and does not imply spatial locations of individual ice types within the polygon. Table 3: Split-conformal LAC sets, SAR+AMSR2, 𝛼 = 0.1. |𝑈 |
+
+is the services’ own answer set (mean 1.59 classes); covGap is coverage on agreeing minus contested pixels. 
+
+Supervision Coverage |𝑆 | /8 𝜌 ( | 𝑆 |, 𝐷 ) 𝜌 ( | 𝑆 |, |𝑈 | ) covGap Hard 0.875 4.02 0.184 0.306 0.035 
+
+Consensus 0.936 4.36 0.315 0.313 0.061 Soft 0.910 4.06 0.302 0.344 0.095 Weighted 0.883 3.83 0.238 0.311 0.112 
+
+36.77 cm/0.714 with SAR alone to 37.68 cm/0.710, AvgNLL from 41.47 to 40.50 cm, and soft supervision from 40.27 to 41.32 cm. Its clearest effect is on entropy–disagreement alignment, which in-creases for consensus (0.193 to 0.253) and soft supervision (0.141 to 0.256). The brightness-temperature channels therefore add little for distinguishing SoD classes, although they can strengthen the relationship between predictive entropy and expert disagreement. Errors are also structured along the SoD ladder. Thick first-year ice holds 15.5% of the reference ice-conditioned mass but is underpre-dicted by every model: soft and weighted supervision retain the most (11.3% and 10.7%), followed by hard (8.4%), consensus (6.7%), and AvgNLL (5.2%). Allowing several compatible stages therefore does not resolve the first-year ambiguity and, under AvgNLL, sup-presses thick first-year ice further. Table 3 reports split-conformal LAC sets at 𝛼 = 0.1. Conformal set size tracks measured disagreement in the expected direction for every supervision strategy: 𝜌 (| 𝑆 |, 𝐷 ) is positive throughout, reaching 𝜌 = 0.315 for consensus, whereas 𝜌 epi in Table 2 changes sign across methods. Predictive entropy is also positively correlated with 𝐷 throughout, so the contrast is specifically with the epis-temic decomposition rather than predictive uncertainty as a whole. Empirical coverage is near nominal but not uniformly at or above it: hard (0.875) and weighted (0.883) fall below 1 − 𝛼 , potentially reflecting residual spatial dependence between calibration and test pixels. Table 4 shows that the relationship between predictive entropy and multi-annotator disagreement is generally strongest near the ice edge. With SAR, the four supervision strategies other than AvgNLL reach 0.52–0.70 within 10 km and decrease substantially farther into the ice pack; AvgNLL is weaker throughout (0.174 at the edge). SAR+AMSR2 shows a similar near-edge enhancement for consensus, soft, weighted, and AvgNLL, although the decline is not strictly monotonic for every method. Hard supervision is the main exception, with correlation near zero in the first two bands (0.057 and −0.025) and its largest value beyond 50 km (0.193). Overall, predictive uncertainty reflects disagreement most strongly in transitional ice conditions for most supervision strategies rather than uniformly across the scene. Table 5 tests how predictable measured multi-annotator SoD disagreement is from the available inputs, compared with simple Conference acronym ’XX, June 03–05, 2026, Woodstock, NY Alkaee Taleghan et al. 
+
+Table 4: Spearman correlation between predictive entropy 
+
+𝐻 (𝑥 ) and measured multi-annotator disagreement 𝐷 (𝑥 ).                                            
+
+> Supervision 0–10 km 10–25 km 25–50 km >50 km
+> SAR
+> Hard 0.523 0.420 0.281 0.121 Consensus 0.704 0.456 0.276 0.152
+> Soft 0.578 0.469 0.272 0.068 Weighted 0.619 0.491 0.289 0.120 AvgNLL 0.174 0.174 0.124 0.042
+> SAR+AMSR2
+> Hard 0.057 -0.025 0.156 0.193 Consensus 0.540 0.309 0.185 0.248
+> Soft 0.381 0.178 0.130 0.185 Weighted 0.309 0.187 0.153 0.142 AvgNLL 0.445 0.305 0.206 0.198
+
+Table 5: Learnability of stage disagreement. L1 is reported only for predictors on the 𝑊 1 scale; distance to ice edge and predictive entropy are rank-based scores in other units, so only 𝜌 and AUROC apply. The constant predictor has zero variance, so 𝜌 and AUROC are undefined.                     
+
+> Predictor 𝜌 (· , 𝐷 )AUROC L1 Skyline, SAR 0.236 0.574 0.685 Skyline, SAR+AMSR2 0.236 0.490 0.681
+> Distance to ice edge 0.384 0.558 —Constant ——0.712 Predictive entropy 0.077–0.256 0.44–0.52 —
+
+reference predictors. A weak relationship between model uncer-tainty and expert disagreement could arise because the uncertainty estimator fails to capture disagreement or because disagreement itself is difficult to predict from the observations. The results sup-port the latter explanation. Even when the skyline model is trained directly to regress the measured Wasserstein disagreement, the SAR and SAR+AMSR2 ensembles both reach only 𝜌 = 0.236. Their L1 errors of 0.685 and 0.681 are only slightly lower than the constant-predictor error of 0.712. Predictive entropy already reaches correla-tions as high as 0.256 without being trained directly on disagree-ment, indicating that the disagreement signal itself is only weakly recoverable from the available inputs. Table 6 shows that service-specific supervision creates system-atic differences in the learned models. For all service pairs, the between-service spread ( 𝐵 ) exceeds the within-service seed spread (𝑉 ), with the largest excess for DMI–NIC ( 𝐵 − 𝑉 = 0.371) and CIS– NOAA (0 .349), indicating that these differences are not explained by random initialization alone. The model-implied disagreement nevertheless captures only part of the measured inter-service dis-agreement, as reflected by coverage values between 0.49 and 0.70. CIS–NIC provides the clearest localization of disagreement, with the highest AUROC (0 .850) and correlation ( 𝜌 = 0.307), while DMI–NIC shows a similar correlation ( 𝜌 = 0.302). In contrast, NIC–NOAA and CIS–NOAA show weak or negative correlations, indicating that dis-agreement is harder to localize for these pairs. The signed thickness differences also generally preserve the direction of the service-specific label differences, showing that agency-specific annotation patterns leave a measurable signature in model predictions. 
+
+Table 6: Paired per-service models on shared scenes. ¯𝐷 is mea-sured multi-annotator disagreement, 𝐵 is between-service model spread, 𝑉 is within-service seed spread, and 𝐵 − 𝑉 is the excess spread associated with service-specific supervi-sion. Coverage is the ratio of model-implied to measured dis-agreement. Δ𝑇 model and Δ𝑇 label are the signed mean expected-thickness differences between the two services. 
+
+Metric DMI–NIC CIS–NIC NIC–NOAA CIS–NOAA Measured ¯ 𝐷 1.222 0.575 1.182 1.130 Between 𝐵 0.678 0.498 0.686 0.599 Within 𝑉 0.307 0.347 0.470 0.249 
+
+𝐵 − 𝑉 0.371 0.151 0.216 0.349 
+
+𝐵 /𝑉 2.21 1.44 1.46 2.41 Coverage 0.52 0.70 0.49 0.50 
+
+𝜌 ( ˆ𝐷, 𝐷 ) 0.302 0.307 −0.055 0.076 AUROC 0.625 0.850 0.376 0.333 
+
+Δ𝑇 model (cm) +20 .9 −6.9 +28 .1 +16 .4
+
+Δ𝑇 label (cm) +27 .1 +3.5 +35 .8 +15 .2
+
+Table 7: Single-service training evaluated against multi-service disagreement. Models are trained using NIC anno-tations only and never observe another ice service during training. At evaluation, predictive entropy is compared with multi-annotator disagreement 𝐷 (𝑥 ) computed from the un-changed multi-service test annotations.                                                         
+
+> Supervision MAE ↓Coarse ↑RPS ↓NLL ↓Brier ↓ECE ↓𝜌 (𝐻, 𝐷 ) ↑
+> SAR
+> Hard 36.90 0.602 0.340 1.716 0.261 0.124 0.120 Soft 39.72 0.589 0.336 1.658 0.251 0.104 0.189
+> AvgNLL 39.03 0.692 0.351 1.724 0.261 0.113 0.185
+> SAR+AMSR2
+> Hard 38.68 0.642 0.337 1.693 0.252 0.135 0.117 Soft 39.00 0.637 0.324 1.591 0.238 0.097 0.198
+> AvgNLL 38.73 0.676 0.342 1.725 0.254 0.129 0.132
+
+Table 7 shows that uncertainty–disagreement alignment persists even when the models are trained using NIC annotations alone and never observe labels from another ice service. Soft supervision pro-vides the clearest uncertainty signal for both input configurations, giving the highest correlation between predictive entropy and inter-service disagreement for SAR ( 𝜌 (𝐻, 𝐷 ) = 0.189) and SAR+AMSR2 (𝜌 (𝐻, 𝐷 ) = 0.198). It also gives the best probabilistic performance, with the lowest RPS, NLL, Brier score, and ECE in both settings. Hard supervision achieves the lowest MAE, while AvgNLL gives the highest coarse accuracy, demonstrating that the method with the best point or class accuracy is not necessarily the one with the most informative or best-calibrated predictive distribution. Adding AMSR2 slightly strengthens the uncertainty–disagreement correla-tion for soft supervision, from 0.189 to 0.198, but does not produce a consistent improvement across the other supervision strategies. Overall, the results suggest that preserving the full within-service label distribution provides a more informative uncertainty signal Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts Conference acronym ’XX, June 03–05, 2026, Woodstock, NY 
+
+than collapsing the annotation to a hard class or retaining only its supported class set. 
+
+## 5 Conclusion and Limitations 
+
+We characterized two distinct sources of uncertainty for sea-ice stage of development and evaluated one against the other. Multi-annotator uncertainty is measured directly from Sentinel-1 scenes charted independently by two or more national ice services, using the first Wasserstein distance on the ordinal stage ladder; model uncertainty is estimated from the trained networks as predictive entropy, as an epistemic component from deep ensembles, Monte Carlo dropout, and an evidential head, and as set-valued conformal prediction. Holding the measured multi-annotator disagreement fixed as the reference lets us ask whether model uncertainty re-covers the disagreement among the experts, rather than treating model confidence as evidence of annotation uncertainty on its own. Deterministic consensus provided the best predictive performance, outperforming strategies that retained more annotation informa-tion. Model uncertainty aligned most strongly with expert disagree-ment near the ice edge, where the SAR consensus model reached a correlation of 0.704, compared with a maximum of 0.256 across the full dataset. Monte Carlo dropout achieved the best calibration (ECE = 0.050), while conformal set size correlated consistently with disagreement, reaching 0.315. In the per-agency analysis, CIS–NIC achieved the highest disagreement discrimination (AUROC = 0.850; correlation = 0.307), while DMI–NIC showed the largest excess between-service spread ( 𝐵 − 𝑉 = 0.371). Across all agency pairs, between-service variation exceeded random-seed variation. Several limitations qualify these results. They come from a single region and season with one architecture and one calibration split, so the ranking of supervision strategies may not transfer to other basins, ice regimes, or split draws. Disagreement is measured across N services, which makes 𝐷 (𝑥 ) a coarse and possibly biased proxy for the ambiguity an analyst perceives — two services agreeing is weak evidence that a pixel is unambiguous. Evaluation is also pixel-level against polygon-level annotations, so every pixel inherits a stage assigned to a whole region, and expected-thickness MAE depends on a fixed class-to-thickness mapping that is a modelling choice rather than a measurement. 
+
+## Acknowledgments 
+
+This research was funded by the National Science Foundation (NSF) under grant number 2531101. 
+
+## References 
+
+[1] Anastasios N. Angelopoulos and Stephen Bates. 2023. Conformal Prediction: A Gentle Introduction. Foundations and Trends in Machine Learning 16, 4 (2023), 494–591. doi:10.1561/2200000101 [2] Xinwei Chen, Ray Valencia, Armina Soleymani, and K. Andrea Scott. 2023. Pre-dicting Sea Ice Concentration With Uncertainty Quantification Using Passive Microwave and Reanalysis Data: A Case Study in Baffin Bay. IEEE Transactions on Geoscience and Remote Sensing 61 (2023), 1–13. doi:10.1109/TGRS.2023.3250164 [3] Xinwei Chen, Ray Valencia, Armina Soleymani, Linlin Xu, and K. Andrea Scott. 2023. Calibration of Uncertainty in Sea Ice Concentration Retrieval With an Auxiliary Prediction Interval Estimator. IEEE Geoscience and Remote Sensing Letters 20 (2023), 1–5. doi:10.1109/LGRS.2023.3330882 [4] Angela Cheng, Barbara Casati, Adrienne Tivy, Tom Zagon, Jean-François Lemieux, and L. Bruno Tremblay. 2020. Accuracy and Inter-Analyst Agreement of Visually Estimated Sea Ice Concentrations in Canadian Ice Service Ice Charts Using Single-Polarization RADARSAT-2. The Cryosphere 14 (2020), 1289–1310. doi:10.5194/tc-14-1289-2020 [5] Timothee Cour, Benjamin Sapp, and Ben Taskar. 2011. Learning from Partial Labels. Journal of Machine Learning Research 12 (2011), 1501–1536. [6] Yarin Gal and Zoubin Ghahramani. 2016. Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning. In Proceedings of the 33rd International Conference on Machine Learning . 1050–1059. [7] Xin Geng. 2016. Label Distribution Learning. IEEE Transactions on Knowledge and Data Engineering 28, 7 (2016), 1734–1748. doi:10.1109/TKDE.2016.2545658 [8] Mabel Heffring and Lincoln Linlin Xu. 2026. Geographically-Weighted Weakly Supervised Bayesian High-Resolution Transformer for 200 m Resolution Pan-Arctic Sea Ice Concentration Mapping and Uncertainty Estimation Using Sentinel-1, RCM, and AMSR2 Data. ISPRS Journal of Photogrammetry and Remote Sensing 
+
+238 (2026), 624–649. doi:10.1016/j.isprsjprs.2026.05.032 [9] Sepideh Jalayer, Samira Alkaee Taleghan, Rafael Pires de Lima, Behzad Vahedi, Nick Hughes, Farnoush Banaei-Kashani, and Morteza Karimzadeh. 2025. En-hancing and Interpreting Deep Learning for Sea Ice Charting Using the AutoICE Benchmark. Remote Sensing Applications: Society and Environment 38 (2025), 101538. [10] Juha Karvonen, Jouni Vainio, Matti Marnela, Patrik Eriksson, and Timo Niska-nen. 2015. A Comparison Between High-Resolution EO-Based and Ice Analyst-Assigned Sea Ice Concentrations. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing 8 (2015), 1799–1807. doi:10.1109/JSTARS.2015. 2426414 [11] Alex Kendall and Yarin Gal. 2017. What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?. In Advances in Neural Information Process-ing Systems . 5574–5584. [12] Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell. 2017. Sim-ple and Scalable Predictive Uncertainty Estimation Using Deep Ensembles. In 
+
+Advances in Neural Information Processing Systems . 6402–6413. [13] M.-A. N. Moen, A. P. Doulgeris, S. N. Anfinsen, A. H. H. Renner, N. Hughes, S. Gerland, and T. Eltoft. 2013. Comparison of Feature Based Segmentation of Full Polarimetric SAR Satellite Sea Ice Images with Manually Drawn Ice Charts. The Cryosphere 7 (2013), 1693–1705. doi:10.5194/tc-7-1693-2013 [14] Gabriel Peyré and Marco Cuturi. 2019. Computational Optimal Transport. Foun-dations and Trends in Machine Learning 11, 5–6 (2019), 355–607. doi:10.1561/ 2200000073 [15] Rafael Pires de Lima and Morteza Karimzadeh. 2023. Model Ensemble With Dropout for Uncertainty Estimation in Sea Ice Segmentation Using Sentinel-1 SAR. IEEE Transactions on Geoscience and Remote Sensing 61 (2023), 1–15. doi:10.1109/TGRS.2023.3331276 [16] Murat Sensoy, Lance Kaplan, and Melih Kandemir. 2018. Evidential Deep Learn-ing to Quantify Classification Uncertainty. In Advances in Neural Information Processing Systems , Vol. 31. 3179–3189. [17] Claude E. Shannon. 1948. A Mathematical Theory of Communication. Bell System Technical Journal 27 (1948), 379–423, 623–656. [18] Andreas Stokholm, Jørgen Buus-Hinkler, Tore Wulf, Anton Korosov, Roberto Saldo, Leif Toudal Pedersen, et al. 2024. The AutoICE Challenge. The Cryosphere 
+
+18, 8 (2024), 3471–3494. doi:10.5194/tc-18-3471-2024 [19] Samira Alkaee Taleghan, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2025. IceBench: A Benchmark for Deep-Learning-Based Sea-Ice Type Classification. Remote Sensing 17, 9 (2025), 1646. [20] Samira Alkaee Taleghan, Morteza Karimzadeh, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2024. Semi-Supervised Multi-Source Sea Ice Classification in Small-Data Regime. In 2024 IEEE International Conference on Big Data (BigData) . IEEE, 2019–2026. [21] Samira Alkaee Taleghan, Morteza Karimzadeh, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2025. Ice-FMBench: A Foundation Model Benchmark for Sea Ice Type Segmentation. In Proceedings of the 1st ACM SIGSPA-TIAL International Workshop on Polar Data Science . 1–10. [22] Timo Vihma. 2014. Effects of Arctic Sea Ice Decline on Weather and Climate: A Review. Surveys in Geophysics 35 (2014), 1175–1214. doi:10.1007/s10712-014-9284-0 [23] World Meteorological Organization. 2014. Sea-Ice Nomenclature . World Meteoro-logical Organization. [24] World Meteorological Organization and Intergovernmental Oceanographic Com-mission. 2010. SIGRID-3: A Vector Archive Format for Sea Ice Charts . Technical Report WMO/TD-No. 1214, JCOMM Technical Report No. 23. World Meteorolog-ical Organization. Revision 2. [25] Tore Wulf, Jørgen Buus-Hinkler, Suman Singha, Hoyeon Shi, and Matilde Brandt Kreiner. 2024. Pan-Arctic Sea Ice Concentration from SAR and Passive Microwave. 
+
+The Cryosphere 18 (2024), 5277–5300. doi:10.5194/tc-18-5277-2024

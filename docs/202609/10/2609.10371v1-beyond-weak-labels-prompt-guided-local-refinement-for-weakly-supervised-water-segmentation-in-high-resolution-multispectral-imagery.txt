@@ -1,0 +1,155 @@
+Title: Beyond Weak Labels: Prompt-Guided Local Refinement for Weakly Supervised Water Segmentation in High-Resolution Multispectral Imagery
+
+URL Source: https://arxiv.org/pdf/2609.10371v1
+
+Published Time: Thu, 10 Sep 2026 01:21:03 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# BEYOND WEAK LABELS: PROMPT-GUIDED LOCAL REFINEMENT FOR WEAKLY SUPERVISED WATER SEGMENTATION IN HIGH-RESOLUTION MULTISPECTRAL IMAGERY 
+
+# Muhammad Farhan Humayun 1 Mohammad Imangholiloo 2 Afifah Shah 1
+
+# Tomi Westerlund 1 Jukka Heikkonen 11Department of Computing, University of Turku, Finland 
+
+> 2
+
+# Department of Geoinformatics and Cartography, Finnish Geospatial Research Institute, National Land Survey of Finland, Espoo, Finland 
+
+ABSTRACT 
+
+High-resolution water mapping supports environmental monitoring and related applications, but accurate pixel-level labels are difficult and costly to produce. Official hydro-graphic vectors provide scalable weak supervision, but they contain artifacts like boundary noise, temporal mismatch, and omissions of small water structures. We propose a two-stage framework for weakly supervised water segmentation in high-resolution multispectral imagery. Stage 1 learns initial masks from rasterized vector pseudo-labels, and Stage 2 converts these masks into structured component-wise prompts for lo-calized refinement. On a manually corrected validation set, refinement improves SegFormer-B0 from 0.9509 to 0.9535 IoU and U-Net from 0.9408 to 0.9486 IoU, with correspond-ing F1 gains from 0.9749 to 0.9762 and 0.9695 to 0.9736. It leads to sharper shorelines, reduced boundary spillover, and better thin-structure delineation. The results indicate that prompt-guided refinement can improve pseudo-label-based water segmentation by targeting local errors that are poorly captured by global training supervision. 
+
+Index Terms — Weak supervision, water segmentation, multispectral imagery, prompts, SegFormer, SAM 2. 
+
+1. INTRODUCTION 
+
+Accurate water-body delineation from high-resolution mul-tispectral imagery is important for hydrologic monitoring, flood response, environmental assessment, and geospatial in-ventory maintenance [1, 2]. Compared with coarse-resolution products, high-resolution orthophotos derived from aerial and satellite imagery better capture object-level features such as shorelines, narrow channels, and small inland water bod-ies [3, 4]. However, they also introduce substantial challenges such as water boundaries are irregular, target structures are often thin and fragmented, and visually similar non-water regions can cause local ambiguities [5, 6]. A major difficulty in this setting is the lack of reliable pixel-level ground truth. Hydrographic mapping vector layers are attractive because they are widely available and inexpensive compared with exhaustive manual annotation, but they are not perfect for supervision in deep learning models as they often contain boundary noise, temporal mismatch with the imagery, geo-metric simplification, and omission of small water bodies or narrow channels. They are therefore useful as pseudo-labels, but not as exact ground truth, making weak supervision a natural formulation for this problem [7, 8]. Under these constraints, modern segmentation architec-tures such as SegFormer have shown strong segmentation per-formance and robustness across image resolutions [9]. Such models are well suited as strong baselines for weakly super-vised remote sensing segmentation because they can learn from large pseudo-labeled datasets while retaining the capac-ity to model both local detail and broader scene context [10]. Yet high aggregate accuracy alone is not sufficient in this set-ting. In high-resolution water mapping, many tiles are domi-nated by large easy regions of land or open water, and global pixel-wise scores can therefore hide crucial errors that matter most in practice including shoreline placement, thin channels, small omitted water bodies and islands [11]. The central chal-lenge is thus not only coarse water detection, but the refine-ment of fine-scale local structure under imperfect supervision. This research proposes a two-stage framework for weakly supervised water segmentation. The first stage produces an initial water mask using pseudo-label supervision, while the second stage performs prompt-guided local refinement us-ing the Segment Anything Model 2 (SAM 2) [12]. In this formulation, the refinement stage is guided by explicit local instructions that indicate where refinement should occur and how the promptable model should interpret each candidate region. The resulting two-stage formulation is conceptually simple and practically useful. Our contributions are threefold: (1) a weakly supervised multispectral water-segmentation pipeline; (2) a structured component-wise, prompt-generation scheme for localized mask refinement; and (3) evidence that local prompt-guided refinement improves a strong baseline, arXiv:2609.10371v1 [cs.CV] 9 Sep 2026 Fig. 1 . Prompt-guided two-stage pipeline: (A) preprocessing, (B) weakly supervised SegFormer segmentation, (C) structured prompt generation, and (D) localized SAM 2 mask refinement. particularly for boundary adjustment and recovery of small water/land components. 
+
+2. MATERIALS AND METHODS 
+
+The study area is located in Joensuu, Finland, and includes diverse water bodies such as lakes, ponds, river channels, and narrow streams. We use high-resolution orthophotos from National Land Survey of Finland (NLS), combining RGB and NIR bands into four-channel multispectral inputs. Weak supervision is obtained by rasterizing hydrographic vector layers from the Finnish Environment Institute (SYKE) into pseudo-label masks. 
+
+2.1. Pre-processing and Pseudo-labels 
+
+Figure 1 summarizes the two-stage pipeline. SYKE hydro-graphic vector layers were rasterized to the 50 cm orthophoto grid and used as weak pseudo-labels. The four-channel im-ages and masks were tiled into 256 × 256 patches. All water-containing tiles were retained, including sparse-water and boundary cases, while pure-land tiles were heavily subsam-pled as hard negatives to emphasize shorelines, water-land transitions, and narrow structures. Since the pseudo-labels contained boundary noise, temporal mismatch, simplification artifacts, and omissions, evaluation used a manually cor-rected strong-label subset from held-out regions, rasterized to the same grid, extent, resolution, and coordinate reference system. The final dataset contained 8184 training tiles and 
+
+810 strong-label validation tiles, approximately a 90:10 split. 
+
+2.2. Weakly Supervised Baseline Segmentation 
+
+Stage 1 generates the initial water prediction for each multi-spectral tile. Let Xi ∈ RH×W ×4 denote the i-th RGB-NIR input tile and ˜Yi ∈ { 0, 1}H×W denote its rasterized pseudo-label mask. We use SegFormer-B0 as the primary baseline because it provides a favorable balance between efficiency and segmentation performance. The model is initialized with pretrained weights and adapted to binary water segmentation using four-channel inputs. The network predicts pixel-wise logits: 
+
+Zi = fθ (Xi), Zi ∈ RH×W ×2, (1) where fθ denotes the SegFormer network and the two out-put channels correspond to non-water and water, respectively. Pixel-wise class probabilities are then obtained by a softmax operation: 
+
+Pi = softmax( Zi), Pi ∈ [0 , 1] H×W ×2. (2) Training is performed using pseudo-label masks derived from official vector layers, whereas evaluation is conducted only on manually corrected strong labels. The network is optimized using pixel-wise cross-entropy loss for binary semantic seg-mentation: 
+
+Lseg = − X
+
+> u,v
+> 2
+
+X
+
+> c=1
+
+˜Yi,c (u, v ) log Pi,c (u, v ). (3) The final binary prediction is obtained by selecting the most probable class at each pixel: 
+
+ˆYi(u, v ) = arg max  
+
+> c∈{ 0,1}
+
+Pi,c (u, v ). (4) To support Stage 2 refinement, we also derive a confidence map from the water-class probability. Let Pi, 1(u, v ) denote the predicted probability of the water class. The confidence is defined as the distance from the decision boundary: 
+
+Ci(u, v ) = 2 |Pi, 1(u, v ) − 0.5| . (5) Thus, pixels with values close to 0.5 are treated as uncertain, while pixels close to 0 or 1 are treated as confident predic-tions. The Stage-1 output consists of the binary mask ˆYi and confidence map Ci, which together provide the coarse water extent and uncertainty cues for prompt-guided local refine-ment in Stage 2. We use SegFormer-B0 as the primary Stage-1 baseline because it provides a favorable balance between efficiency and segmentation performance. For comparison, we also experimented with a classical U-Net backbone [13] as an alternative Stage-1 baseline under the same weakly su-pervised training and evaluation protocol. 
+
+2.3. Structured Spatial Prompt Generation 
+
+This module provides the bridge between Stage 1 and Stage 2. For each Stage-1 prediction, connected water components are extracted from the binary mask and converted into structured spatial prompts. Let ˆYi ∈ { 0, 1}H×W denote the Stage-1 binary prediction for tile i, and let Ci ∈ [0 , 1] H×W denote the corresponding confidence map. The set of connected water components is defined as 
+
+Ki = CC( ˆYi), (6) where CC( ·) denotes connected-component extraction. For each connected component k ∈ K i, its spatial support is de-fined as 
+
+Ωik = {(u, v ) | (u, v ) belongs to component k}. (7) The corresponding bounding box is then computed as 
+
+bik = [ xmin , y min , x max , y max ], (8) Each component is represented by a structured prompt object 
+
+πik = {bik , P+
+
+> ik
+
+, P−
+
+> ik
+
+, r ik , m ik }, (9) where bik is the component bounding box, P+ 
+
+> ik
+
+and P− 
+
+> ik
+
+de-note sets of positive and negative point prompts, rik denotes the local refinement region, and mik denotes the refinement mode. Positive points are sampled from the component in-terior and high-confidence foreground support, while nega-tive points are sampled from nearby non-water, boundary-adjacent, or hole-like regions depending on the local geom-etry and confidence cues. The refinement mode specifies how Stage 2 should in-terpret the local region, for example whether refinement is focused on boundary correction, hole preservation, or suspicious-component recovery. These structured prompt ob-jects are stored in per-tile JSON files for reproducibility and inspection. During Stage-2 inference, the JSON contents are parsed and converted into SAM 2-compatible spatial inputs. 
+
+2.4. Prompt-Guided Local Mask Refinement 
+
+Stage 2 refines the Stage-1 prediction using SAM 2 in a local, component-wise manner. For each tile, the RGB image IRGB 
+
+> i
+
+and the structured prompt object πik are provided to SAM 2 to generate one or more candidate masks for component k:
+
+Mik = gϕ(IRGB  
+
+> i
+
+, π ik ), (10) where gϕ denotes the promptable segmentation model and 
+
+Mik is the set of candidate masks produced for the local re-gion. The generated candidates are not accepted directly. In-stead, each candidate mask Mjik ∈ M ik is filtered using geo-metric consistency checks with respect to the Stage-1 compo-nent and its allowed refinement region. In particular, we re-quire sufficient agreement with the reference component and constrain the relative area change: 
+
+|Mjik ∩ Ωik ||Ωik | ≥ α, βmin ≤ |Mjik ||Ωik | ≤ βmax , (11) where Ωik is the spatial support of the Stage-1 component, 
+
+α is the minimum overlap threshold, and βmin and βmax de-fine acceptable lower and upper bounds on area change. Ad-ditional mode-dependent screening is applied to prevent im-plausible updates outside the allowed local region. After filtering, the selected candidate M∗ 
+
+> ik
+
+is merged back into the Stage-1 prediction only within a restricted local re-finement region rik :
+
+ˆY ref ,k i (u, v ) = 
+
+(
+
+M∗
+
+> ik
+
+(u, v ), (u, v ) ∈ rik ,
+
+ˆYi(u, v ), (u, v ) /∈ rik , (12) and the final refined mask is obtained by applying this update sequentially over the component set. Thus, regions outside the allowed refinement zone preserve the original Stage-1 pre-diction. This prevents the promptable model from unneces-sarily rewriting already plausible large water bodies. The re-finement branch therefore acts primarily as a boundary-aware local correction module i.e., it targets uncertain boundaries, small structures, and locally ambiguous regions while pre-serving the coarse semantic layout learned by Stage 1. 
+
+2.5. Implementation Details 
+
+Stage 1 used the SegFormer-B0 model initialized from the official pretrained checkpoint. The architecture was kept un-changed except for a four-channel RGB–NIR input layer and Table 1 . Performance comparison of weakly supervised Stage-1 baselines and their corresponding SAM 2-based prompt-guided refinements on the manually corrected strong-label validation set.                                              
+
+> Method TP (%) FP (%) FN (%) TN (%) IoU F1 Precision Recall Accuracy
+> Stage 1 (SegFormer-B0) 41.40 1.42 0.72 56.46 0.9509 0.9748 0.9669 0.9829 0.9786 Stage 2 (SAM 2 Refinement) 41.34 1.24 0.78 56.65 0.9535 0.9762 0.9709 0.9814 0.9798
+> Stage 1 (U-Net) 40.71 1.16 1.41 56.72 0.9408 0.9695 0.9723 0.9666 0.9743 Stage 2 (SAM 2 Refinement) 40.97 1.07 1.15 56.81 0.9485 0.9736 0.9745 0.9726 0.9778
+
+a binary water/non-water output head. The model was fine-tuned for 50 epochs with batch size 32, learning rate 6×10 −5,and weight decay 1 × 10 −4. Stage 2 used the official SAM 2 image predictor with the SAM 2.1 Hiera-small checkpoint. SAM 2 was not modified; refinement was controlled exter-nally using JSON-derived spatial prompts, geometric candi-date filtering, and local mask-merging rules. All experiments were run in Python/PyTorch under Anaconda on an NVIDIA RTX 3500 Ada GPU with 12 GB VRAM and 32 GB RAM. Performance was evaluated on the manually corrected strong-label validation set using pooled IoU, F1-score, precision, recall, overall accuracy, and pixel-level TP, FP, TN, and FN counts. 
+
+3. RESULTS AND DISCUSSION 
+
+Table 1 compares Stage-1 weakly supervised baselines with their SAM 2-based prompt-guided refinements on the manu-ally corrected validation set. For SegFormer-B0, Stage 2 re-duced false positives by 12.8% (685,840 to 598,124), improv-ing precision from 0.9669 to 0.9710, accuracy from 0.9786 to 0.9799, IoU from 0.9509 to 0.9535, and F1-score from 0.9749 to 0.9762. Recall slightly decreased from 0.9829 to 0.9815, indicating that refinement mainly suppressed false water de-tections while introducing a small increase in missed water pixels. For U-Net, SAM 2 refinement reduced both false positives and false negatives respectively. This improved IoU from 0.9408 to 0.9486, F1-score from 0.9695 to 0.9736, recall from 0.9666 to 0.9727, and accuracy from 0.9744 to 0.9778. The consistent gains across both Transformer-based and convo-lutional baselines indicate that the structured prompt-guided branch improves weakly supervised water segmentation be-yond a single backbone. Although the aggregate gains are modest, they are mean-ingful for high-resolution water mapping, where large easy land/open-water regions can hide local errors in global met-rics. Stage 2 is therefore best interpreted as a boundary-aware local refinement module rather than a semantic replacement for Stage 1. Its main effect is improved shoreline alignment and correction of difficult local structures, with occasional re-covery of severely incorrect Stage-1 regions. The visual results confirm that Stage 2 mainly performs 
+
+Fig. 2 . Zoomed-in local error maps before and after refine-ment of SegFormer-B0 visualizing improvement of water-body delineations. local boundary correction rather than global mask rewrit-ing. In Fig. 2, refinement reduces shoreline spillover and produces cleaner water-land transitions while preserving the main Stage-1 water structure. Fig. 3 further shows the im-proved local mask quality for both SegFormer-B0 and U-Net, especially along irregular shorelines, narrow channels, and fragmented water structures. For SegFormer-B0, tile-level IoU improves in representative cases from 0.872 to 0.948 and from 0.902 to 0.941, mainly through reduced boundary spillover. For U-Net, refinement similarly improves boundary placement and suppresses local false positives. In one diffi-cult case, the baseline fails almost completely, while Stage 2 recovers a plausible water mask and improves IoU from 0.000 to 0.964. These examples are consistent with Table 1 and support Stage 2 as a boundary-aware local correction module whose success still depends on Stage-1 mask quality and generated prompts. Fig. 3 . Visual Comparison of stage 1, weak baseline segmentation and stage 2 prompt-based refinement. Top three rows correspond to SegFormer-B0 as the stage 1 model whereas bottom three rows show results from U-Net as stage 1 model. 
+
+4. CONCLUSION 
+
+This study presented a two-stage weakly supervised frame-work for high-resolution multispectral water segmentation. Stage 1 used SegFormer-B0 and U-Net to learn from ras-terized official hydrographic pseudo-labels, while Stage 2 converted their predictions into structured spatial prompts for localized SAM 2 refinement, evaluated on a manually cor-rected strong-label subset. SAM 2 refinement improved both baselines: SegFormer-B0 increased from 0.9509 to 0.9535 IoU and U-Net from 0.9408 to 0.9486 IoU, with correspond-ing F1 gains from 0.9749 to 0.9762 and 0.9695 to 0.9736. In representative tiles, the proposed approach produced larger local gains in tile-level IoU by reducing false spillover in uncertain boundary regions. The gains were mainly due to reduced false positives, sharper shoreline placement, and better handling of narrow or fragmented water structures. The results show that prompt-guided refinement is effective as a boundary-aware local correction module. This pro-vides a practical route for improving pseudo-label-based water segmentation under limited annotations, especially for fragmented or narrow water bodies with shoreline spillover. Future work will explore richer terrain and spectral cues and test transferability across high-resolution Earth observation settings. 
+
+5. ACKNOWLEDGEMENTS 
+
+This research has been conducted with Flagship Programme funding granted by the Research Council of Finland for Dig-ital Waters Flagship (decision no. 359247 and decision no. 359249). This research was also supported by the Postdoc-toral Programme for Research Institutes in Finland funded by the Finnish Government. 6. REFERENCES 
+
+[1] Yansheng Li, Bo Dang, Yongjun Zhang, and Zhenhong Du, “Water body classification from high-resolution op-tical remote sensing imagery: Achievements and per-spectives,” ISPRS Journal of Photogrammetry and Re-mote Sensing , vol. 187, pp. 306–327, 2022. [2] Marc Wieland, Sandro Martinis, Ralph Kiefl, and Veronika Gstaiger, “Semantic segmentation of water bodies in very high-resolution satellite and aerial im-ages,” Remote Sensing of Environment , vol. 287, pp. 113452, 2023. [3] Y. Sui, M. Feng, C. Wang, and X. Li, “A high-resolution inland surface water body dataset for the tundra and bo-real forests of north america,” Earth System Science Data , vol. 14, no. 7, pp. 3349–3363, 2022. [4] M. F. Humayun, A. Salmasi, J. Zhang, T. Westerlund, and J. Heikkonen, “A robust integrated approach for near real-time seamless orthomosaic generation using off-the-shelf uavs for ultra-high resolution mapping ap-plications,” ISPRS Annals of the Photogrammetry, Re-mote Sensing and Spatial Information Sciences , vol. X-2/W2-2025, pp. 65–72, 2025. [5] Huidong Cao, Yanbing Tian, Yanli Liu, and Ruihua Wang, “Water body extraction from high spatial reso-lution remote sensing images based on enhanced u-net and multi-scale information fusion,” Scientific Reports ,vol. 14, no. 1, pp. 16132, Jul 2024. [6] Libei Fan, Yuting Dong, Ji Zhao, Christian Geiß, Lizhe Wang, and Hannes Taubenbock, “Mapping of small wa-ter bodies with integrated spatial information for time series images of optical remote sensing,” in IGARSS 2022 - 2022 IEEE International Geoscience and Remote Sensing Symposium , 2022, pp. 6224–6227. [7] Ming Lu, Leyuan Fang, Muxing Li, Bob Zhang, Yi Zhang, and Pedram Ghamisi, “Nfanet: A novel method for weakly supervised water extraction from high-resolution remote-sensing imagery,” IEEE Trans-actions on Geoscience and Remote Sensing , vol. 60, pp. 1–14, 2022. [8] Hunsoo Song, Lexie Yang, and Jinha Jung, “Self-filtered learning for semantic segmentation of buildings in remote sensing imagery with noisy labels,” IEEE Journal of Selected Topics in Applied Earth Obser-vations and Remote Sensing , vol. 16, pp. 1113–1129, 2023. [9] Enze Xie, Wenhai Wang, Zhiding Yu, Anima Anand-kumar, Jose M. Alvarez, and Ping Luo, “Segformer: Simple and efficient design for semantic segmentation with transformers,” in Advances in Neural Informa-tion Processing Systems , M. Ranzato, A. Beygelzimer, Y. Dauphin, P.S. Liang, and J. Wortman Vaughan, Eds. 2021, vol. 34, pp. 12077–12090, Curran Associates, Inc. [10] Lei Ding, Dong Lin, Shaofu Lin, Jing Zhang, Xiaojie Cui, Yuebin Wang, Hao Tang, and Lorenzo Bruzzone, “Looking outside the window: Wide-context trans-former for the semantic segmentation of high-resolution remote sensing images,” IEEE Transactions on Geo-science and Remote Sensing , vol. 60, pp. 1–13, 2022. [11] Bowen Cheng, Ross Girshick, Piotr Dollar, Alexan-der C. Berg, and Alexander Kirillov, “Boundary iou: Improving object-centric image segmentation evalua-tion,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , June 2021, pp. 15334–15342. [12] Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Rong-hang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman R¨ adle, Chlo´ e Rolland, Laura Gustafson, Eric Mintun, Junting Pan, Kalyan Vasudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Doll´ ar, and Christoph Feichtenhofer, “SAM 2: Segment anything in images and videos,” in Proceedings of the International Conference on Learning Representations , 2025. [13] Olaf Ronneberger, Philipp Fischer, and Thomas Brox, “U-net: Convolutional networks for biomedical im-age segmentation,” in Medical Image Computing and Computer-Assisted Intervention – MICCAI 2015 , Nas-sir Navab, Joachim Hornegger, William M. Wells, and Alejandro F. Frangi, Eds., Cham, 2015, pp. 234–241, Springer International Publishing.

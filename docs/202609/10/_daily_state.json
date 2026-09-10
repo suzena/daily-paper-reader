@@ -1,0 +1,89 @@
+{
+  "date": "20260910",
+  "date_label": "",
+  "generated_at": "2026-09-10 21:18:31 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.09374v1",
+      "route": "202609/10/2609.09374v1-an-autonomous-geoai-agent-for-arctic-eco-navigation",
+      "title": "An Autonomous GeoAI Agent for Arctic Eco-Navigation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向海洋航行的自主多智能体GeoAI",
+      "first_seen_at": "2026-09-10 21:18:31 UTC",
+      "updated_at": "2026-09-10 21:18:31 UTC"
+    },
+    {
+      "paper_id": "2609.09451v1",
+      "route": "202609/10/2609.09451v1-uncertainty-aware-sea-ice-type-mapping-with-multiple-ice-charts",
+      "title": "Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于卫星观测的海冰深度学习制图",
+      "first_seen_at": "2026-09-10 21:18:31 UTC",
+      "updated_at": "2026-09-10 21:18:31 UTC"
+    },
+    {
+      "paper_id": "2609.09876v1",
+      "route": "202609/10/2609.09876v1-from-pixels-to-hierarchical-sequences-quadtree-mask-encoding-for-vision-language-binary-change-detection",
+      "title": "From Pixels to Hierarchical Sequences: Quadtree Mask Encoding for Vision-Language Binary Change Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合影像与文本的视觉语言变化检测",
+      "first_seen_at": "2026-09-10 21:18:31 UTC",
+      "updated_at": "2026-09-10 21:18:31 UTC"
+    },
+    {
+      "paper_id": "2609.10371v1",
+      "route": "202609/10/2609.10371v1-beyond-weak-labels-prompt-guided-local-refinement-for-weakly-supervised-water-segmentation-in-high-resolution-multispectral-imagery",
+      "title": "Beyond Weak Labels: Prompt-Guided Local Refinement for Weakly Supervised Water Segmentation in High-Resolution Multispectral Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多光谱遥感水体分割",
+      "first_seen_at": "2026-09-10 21:18:31 UTC",
+      "updated_at": "2026-09-10 21:18:31 UTC"
+    },
+    {
+      "paper_id": "2609.10484v1",
+      "route": "202609/10/2609.10484v1-coastal-environment-generation-with-holoocean",
+      "title": "Coastal Environment Generation with HoloOcean",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋机器人仿真的沿海环境自动生成",
+      "first_seen_at": "2026-09-10 21:18:31 UTC",
+      "updated_at": "2026-09-10 21:18:31 UTC"
+    }
+  ]
+}

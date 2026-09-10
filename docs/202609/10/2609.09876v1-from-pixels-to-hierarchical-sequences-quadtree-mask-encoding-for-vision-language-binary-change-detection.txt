@@ -1,0 +1,909 @@
+Title: From Pixels to Hierarchical Sequences: Quadtree Mask Encoding for Vision-Language Binary Change Detection
+
+URL Source: https://arxiv.org/pdf/2609.09876v1
+
+Published Time: Thu, 10 Sep 2026 00:44:49 GMT
+
+Number of Pages: 26
+
+Markdown Content:
+# From Pixels to Hierarchical Sequences: Quadtree Mask Encoding for Vision-Language Binary Change Detection 
+
+## Xiao An 1∗, Ruikang Zhang 2∗, Chen Zhong 1,Xuli Shen 3, Jiaxing Sun 3, Jiang Wu 3†, Wei He 1†
+
+> 1
+
+Wuhan University 2Peking University 
+
+> 3
+
+Shanghai Artificial Intelligence Laboratory 
+
+Abstract 
+
+Dense change detection in remote sensing requires vision-language models (VLMs) to compare bi-temporal images and generate accurate pixel-level masks. Existing VLMs are largely confined to change captioning outputs, and the few that produce pixel-level masks still rely on external decoders or flat text-as-mask serialization, which are less effective for small and fragmented changes. We introduce QUAKE-CD, a framework that recasts dense change prediction as syntax-verifiable structured generation. QUAKE-CD represents bi-nary change masks as grammar-constrained quadtree token sequences, making the masks compact, syntactically check-able, and deterministically decodable within an autoregressive generation space. We further construct QUAKE-CoT, which pairs these sequences with chain-of-thought traces grounded in visual evidence, and jointly optimizes textual reasoning and spatial dense prediction through a progressive curriculum fol-lowed by grammar-gated dual-reward RL. On QUAKE-CoT, QUAKE-CD achieves 78 .31% accumulated F1, outperform-ing decoder-based and flat text-as-mask VLMs while produc-ing more faithful bi-temporal reasoning. 
+
+## 1 Introduction 
+
+Large vision-language models (VLMs) demonstrate pro-found capability in multimodal reasoning (Bai et al. 2025; Team et al. 2026), yet real-world applications increasingly demand spatially grounded outputs that delineate precise footprint boundaries (Xiao et al. 2025; Ding et al. 2025). Remote sensing change detection (Asokan and Anitha 2019; Dong et al. 2024) provides a stringent testbed for this im-perative. Given bi-temporal images, models must synthesize cross-temporal visual evidence to render a pixel-level binary change map. Traditional change detection paradigms, includ-ing encoder–decoder networks and open-vocabulary formu-lations, narrowly optimize for discriminative mask predic-tion (Dong et al. 2024; Korkmaz and Patel 2026; Zhu et al. 2025), structurally divorcing the semantic interpretation of changes from spatial footprints. While recent VLMs support interactive change captioning and localization (Deng, Zhou, and Wu 2025; Li et al. 2026b; Elgendy et al. 2024), natively 
+
+generating complete, dense spatial masks remains challeng-ing. This limitation exposes a critical dichotomy between 
+
+> ∗
+
+These authors contributed equally. 
+
+> †
+
+Corresponding author. 64 ×64 Mask (0,0) (0,1) (1,0) (1,1)                
+
+> Input Change Mask (64 ×64)
+> 32 ×32 Tile 32 ×32 Tile 32 ×32 Tile 32 ×32 Tile
+> |\n |
+> BG Mixed 16 ×16 Tile Mixed BG <Q1011>
+> BG BG Mixed 8×8Tile
+> <Q0011>
+> BG BG FG FG <Q0011> …… ……
+> Quadtree depth 0 (32 ×32) Quadtree depth 1 (16 ×16) Quadtree depth 2 (8 ×8) Quadtree depth 3 (4 ×4)
+> TR TL BL BR
+> Splitting node Leaf (BG or FG) Node need splitting
+> ℓ = 𝟒
+> \n Delimiter for tile rows
+> |Delimiter for tiles within the same row
+
+Figure 1: Illustration of the proposed QUAKE grammar. We take 64 × 64 change mask and ℓ = 4 as an example. language-centric reasoning and pixel-level decision-making. Rather than bridging this gap, contemporary VLM archi-tectures often relegate dense prediction to an auxiliary objec-tive, mapping hidden states to spatial masks via task-specific decoders (Lai et al. 2024; Ren et al. 2024; Ma et al. 2025; Li et al. 2026a), which remains fundamentally orthogonal to the core autoregressive mechanism. While effective in isolation, this decoupling necessitates heterogeneous objectives, en-cumbering end-to-end training and stifling direct token-level optimization. Furthermore, sparse-cue methods that delegate mask generation to external segmenters (e.g., SAM (Kirillov et al. 2023)) via bounding boxes or points (Sun et al. 2026; Yao et al. 2026; Liu et al. 2025) not only lack native support for bi-temporal contexts but also falter on multiple frag-mented instances. These coarse prompts inevitably entangle subtle targets with irrelevant background, triggering cascad-ing localization errors that amplify false predictions. Integrating dense prediction natively into VLMs requires formulating output masks as structured, autoregressive lan-guage. The emerging text-as-mask paradigm (Lan et al. 2025, 2026; Liu and Lian 2026) offers a promising trajectory by serializing spatial layouts into textual descriptors. However, existing methods relying on flat patch-grid serialization treat arXiv:2609.09876v1 [cs.CV] 9 Sep 2026 all spatial regions equally, misaligning with sparse change masks where fine-grained boundaries demand high token density. Furthermore, this uniform encoding causes densely distributed targets in remote sensing (RS) imagery to suffer from severe spatial adhesion, erroneously collapsing distinct instances into a single connected component. Consequently, the task necessitates a hierarchical representation capable of efficiently compressing uniform regions while adaptively allocating tokens to areas demanding high spatial acuity. We introduce QUAKE-CD, a framework that unifies language-centric reasoning with pixel-level prediction by encoding binary masks via Qua dtree mas k Encoding (QUAKE )—a hierarchical spatial language shown in Fig-ure 1 that supports dense spatial optimization directly within the native autoregressive token space. By recursively refining heterogeneous regions and collapsing uniform areas, QUAKE 
+
+adaptively allocates tokens to preserve fine-grained bound-aries while compressing redundant background. Crucially, its grammar makes structural errors observable, transforming dense prediction into a syntax-verifiable language generation that aligns naturally with explicit reasoning traces. Trained exclusively on QUAKE , VLMs mechanically memorize the syntax but struggle to grasp the underlying semantics, degenerating into hollow pattern matching. To ex-plicitly guide the model and anchor this grammar in genuine visual understanding, we construct QUAKE-CoT , an instruc-tion dataset that couples QUAKE sequences with chain-of-thought (CoT) rationales detailing the type, location, and ex-tent of changes. To avert optimization conflicts, our progres-sive curriculum decouples these dual objectives: the model first masters valid sequence generation before integrating the bi-temporal rationales. Exploiting the syntactic verifia-bility of QUAKE ’s textual form, we further align the model via grammar-gated dual-reward reinforcement learning (RL). A rule-based Quadtree Reward validates syntax and scores decoded masks against ground truth using a Tversky-style spatial objective, preventing format collapse while optimiz-ing dense prediction quality. In parallel, ThinkAnswer Re-ward evaluates whether the reasoning trace faithfully reflects the observed changes. Optimizing these rewards with GRPO (Guo et al. 2025) jointly enforces grammaticality, pixel-level accuracy, and visually grounded reasoning. Experiments show that QUAKE-CD substantially im-proves pixel-level VLM change detection. It achieves 78 .31% 
+
+accumulated F1 and 73 .18% per-image F1, surpassing decoder-based baselines and uniform text-as-mask serializa-tions. The results expose two failure modes of existing de-signs: decoder-based VLMs produce spatial outputs weakly coupled to cross-temporal evidence, while uniform grid se-rialization over-covers small, densely distributed changes. Reasoning evaluations further confirm that grounded spatial supervision yields more faithful bi-temporal explanations. In summary, our main contributions are: 
+
+• We introduce QUAKE , a hierarchical text-as-mask lan-guage whose context-free grammar admits linear-time syntactic and structural validation, embedding dense spa-tial prediction into the autoregressive token space. 
+
+• We construct QUAKE-CoT, a dataset that explicitly cou-ples hierarchical mask sequences with CoT rationales, and establish a progressive curriculum to anchor spatial grammar in genuine bi-temporal understanding. 
+
+• We develop a grammar-gated dual-reward RL paradigm that jointly optimizes format validity, pixel-level mask accuracy, and semantic reasoning fidelity within a unified token-level optimization process. 
+
+## 2 Related Work 
+
+Pixel-Level Prediction in RS Vision-Language Models. 
+
+While VLMs have been widely adapted for RS applications including change captioning (Deng, Zhou, and Wu 2025), change grounding (Xue et al. 2026), and RL-driven spa-tial reasoning (Yao et al. 2026; Sun et al. 2026), achieving precise pixel-level interaction remains a systemic challenge. Most approaches either employ auxiliary mask decoders (Lai et al. 2024; Ren et al. 2024; Li et al. 2025) or generate sparse coordinate cues that inevitably delegate dense mask predic-tion to external segmenters (Sun et al. 2026; Liu et al. 2025). Although the emerging text-as-mask paradigm bypasses ex-ternal modules by serializing spatial layouts directly into text (Lan et al. 2025; Liu and Lian 2026), its rigid, flat-grid for-mulation fails to capture fine boundaries and consistently induces severe spatial adhesion among dense semantic tar-gets. QUAKE-CD fundamentally diverges by formulating the bi-temporal change mask as a grammar-constrained hier-archical QUAKE sequence, adaptively concentrating tokens along boundaries to ensure native, precise mask generation without external visual dependencies. 
+
+Grammar-Aligned Spatial Reasoning. Standard CoT prompting inherently struggles with complex spatial com-prehension (Shiri et al. 2024), routinely hallucinating ratio-nales without explicit grounding supervision (Chen et al. 2024). While recent advances employ grammar constraints for structural validity (Park et al. 2024) and RL to refine reasoning trajectories (Guo et al. 2025), these mechanisms operate in isolation: reasoning is evaluated as unstructured text, grammar superficially restricts decoding, and RL pre-dominantly targets sparse bounding-box objectives (Sun et al. 2026; Yao et al. 2026). QUAKE-CD departs from this line by inextricably anchoring the semantic rationale to a formal 
+
+QUAKE grammar; the resulting dual-reward RL framework jointly enforces grammatical determinism, semantic faithful-ness, and pixel-level precision. 
+
+## 3 Methodology 
+
+Problem Formulation 
+
+QUAKE-CD reformulates bi-temporal change detection as autoregressive structured generation. Given a bi-temporal image pair (I1, I 2), a VLM πθ generates a tripartite token se-quence y = [ ythink ; yanswer ; yseg ], where ythink constitutes a free-text CoT reasoning trace, yanswer provides a concise change summary, and yseg acts as a quadtree encoding drawn from a formal language LQ ⊂ V ∗. A deterministic decoder 
+
+D : LQ → { 0, 1}H×W then maps any valid encoding back to a binary change mask ˆM = D(yseg ).SYSU-CD LEVIR-CD LEVIR-CD+ 
+
+Source Change Detection Datasets QUAKE-CD-COT & Quality Control 
+
+> Train: 27,509 Test: 9,301
+
+manual verification Two-stream Annotation Protocol   
+
+> <Q0101> <Q0011> <BG>*3 |
+
+... \n <FG>*2 | <Q1011> <Q0100> ... \n Spatial Stream Semantic Stream 
+
+<think> Reasoning trace 
+
+Ø change location 
+
+Ø change type 
+
+Ø possible cause -------------------------------------------
+
+<answer> Concise summary 
+
+Gemini-3.1-pro Prompt 
+
+> Dataset Construction
+
+Decouple spatial syntax acquisition from semantic reasoning integration Curriculum Learning 
+
+Stage 1: QUAKE-only SFT             
+
+> Compare the two temporal images and analyze the differences in land cover and structural features. ...... Focus on structural changes such as new or removed objects, altered built footprint, or land-cover conversion.
+> <seg> </seg> <seg> </seg>
+> −∑𝑝 𝑦 !𝑦 "!
+
+Qwen3-VL 
+
+Stage 2: COT Cold Start      
+
+> …… Describe the reasoning process to identify modifications in the scene.
+
+Image pairs Stage-1 Checkpoint    
+
+> <think> </think> <answer> </answer> <seg> </seg>
+> Dual-Reward Reinforcement Learning
+
+GRPO Reinforcement Learning 
+
+Stage-2 Policy Image pairs Prompt 𝑅 !   
+
+> 𝑅 "
+> 𝑅 #
+> 𝑅 $
+> Group Computation
+> 𝐴 !
+> 𝐴 "
+> 𝐴 #
+> 𝐴 $
+> Policy Ref. Policy
+> —
+> KL
+> ThinkAnswer Reward
+> Reward Model
+> 𝑦 "
+> 𝑦 !
+> 𝑦 %
+> ... rollouts
+> 𝑅 &"
+> 𝑅 &!
+> 𝑅 &%
+> ...
+> Quadtree Reward
+> Structure Pad/crop discount Content (Tversky) 𝑅 '"
+> 𝑅 '!
+> 𝑅 '%
+> ...
+> Grammar gate
+> Objective
+
+Reward Model Training 
+
+> QUAKE-CD-COT (held out from SFT)
+
+Stage-2 Policy 
+
+> Decoder
+
+...        
+
+> 𝑦 !𝑦 "𝑦 %
+> 𝑦 (&
+> 𝑦 )*+
+> 𝐼𝑜𝑈 ,
+> 𝐼𝑜𝑈 %-!
+> 𝐼𝑜𝑈 %
+> 𝐼𝑜𝑈 !
+> 𝐼𝑜𝑈 "
+> ...
+> δ>0.1 Descending order
+> Chosen 𝑦 (&
+> Reject 𝑦 )*+
+> >
+> Chosen 𝑦 (&
+> Reject 𝑦 ,
+> >
+> Chosen 𝑦 ,
+> Reject 𝑦 "
+> >
+> Preference Pair Selection Preference pairs Image pairs Prompt
+> Value Head  − log 𝜎 𝑅 .𝑦 /− 𝑅 .𝑦 )− 𝑚 +𝜆(𝑅 .(𝑦 /) + 𝑅 .(𝑦 ))) "
+> Reward Model
+
+Figure 2: Illustration of the QUAKE-CD Pipeline. (1) Construction of the QUAKE-CoT dataset via a two-stream annotation protocol. (2) Two-stage progressive SFT curriculum. (3) Reward model training and grammar-gated dual-reward RL. 
+
+Quadtree Mask Encoding 
+
+Vocabulary and Encoding Grammar. The language LQ
+
+is defined over an alphabet of special tokens integrated into the VLM vocabulary. This alphabet encompasses wrapper delimiters <seg> and </seg> , uniform tile tokens <BG> 
+
+representing pure background and <FG> denoting pure fore-ground, alongside fifteen quadtree node tokens <Q0001> 
+
+through <Q1111> . The all-zero pattern <Q0000> is ex-plicitly excluded as it inherently signifies an empty quadrant. The syntax of LQ obeys a context-free grammar GQ. A valid encoding conforms to the structure <seg> G </seg> ,where G specifies a grid of non-overlapping 32 ×32 image tiles ordered via raster scan. Tiles within a row are delineated by | symbols, while distinct rows are separated by newline characters. This 32 ×32 tile dimension aligns perfectly with the native visual token granularity of Qwen3-VL (Bai et al. 2025), ensuring the output grid shares an identical spatial architecture with the visual feature map. Within each row, consecutive identical uniform tiles undergo run-length com-pression as <BG>* n or <FG>* n for integer n ≥ 2.As outlined in Figure 1 and Algorithm 1, given a binary change mask M ∈ { 0, 1}H×W , a deterministic encoder 
+
+E : {0, 1}H×W → L Q partitions M into the aforemen-tioned tile grid. Each tile acts either as a uniform token or a quadtree expansion represented by a node <Q abcd >. The four constituent bits specify which respective quadrants contain foreground pixels across the top-left, top-right, bottom-left, and bottom-right sectors. Active quadrants undergo recursive preorder expansion until reaching a minimum leaf size ℓ.The grammar GQ is context-free with bounded recursion depth dmax = ⌈log 2(32 /ℓ )⌉. We further distinguish three levels of correctness: syntactic validity , certified in linear time by a single-pass parser under GQ; structural validity ,verified during decoding by matching the reconstructed grid against the expected H/ 32 × W/ 32 layout, and semantic correctness , optimized against the ground truth through the reward framework in Section 3. Crucially, this encoding is 
+
+recall-preserving by construction: any leaf cell containing a foreground pixel dictates a foreground encoding, strictly guaranteeing ∀(i, j ) where M [i, j ]=1 , D(E(M ))[ i, j ] = 1 .The complementary precision loss is strictly bounded by 
+
+ℓ, restricting over-encoding solely to boundary cells mix-ing foreground and background. The parameter ℓ offers ex-plicit modulation of this precision–compression trade-off, with concrete value selections analyzed in Section 4. 
+
+Mask Decoding. The decoding function D : LQ →{0, 1}H×W effectively reverses E by parsing the QUAKE 
+
+sequence, resolving run-length compression, and recursively rendering quadtree nodes back into 32 ×32 pixel blocks. Con-sequently, D operates as a purely non-parametric mapping, circumventing neural networks and ensuring high efficiency during both RL reward computation and evaluation. 
+
+Supervised Fine-Tuning with Curriculum 
+
+Dataset Construction. Existing change detection bench-marks, SYSU-CD (Shi et al. 2021), LEVIR-CD and LEVIR-CD+ (Chen and Shi 2020), provide pixel-level masks but no language annotations. We assemble QUAKE-CoT from these sources via a two-stream annotation protocol. As illustrated in Figure 2, the spatial stream deterministically encodes each ground-truth mask as E(M ) ∈ L Q. The semantic stream prompts Gemini-3.1-Pro-Thinking-Preview (Team et al. 2023), conditioned on the bi-temporal pair and ground-truth mask, to produce a reasoning trace covering change type, location, extent, and plausible cause, followed by a concise summary. Dataset details and system prompts are shown in Appendix B and G. These independently generated streams are subsequently paired into samples of the form <think> reasoning 
+
+</think> <answer> summary </answer> <seg> 
+
+QUAKE </seg> . Mask-conditioned generation makes these traces a grounding supervision signal that anchors QUAKE 
+
+syntax in visually verifiable semantics, not a record of nat-uralistic inference. The original training splits yield 27,509 training samples; the union of validation and test splits forms a 9,301-sample test set, precluding leakage. Quantitative as-sessments regarding the round-trip fidelity of E and D on the QUAKE-CoT dataset are established in Table 3. To our knowledge, QUAKE-CoT constitutes the first instruction-tuning dataset for bi-temporal change detection that pairs structured reasoning traces with formalized, deterministi-cally decodable dense mask encodings. 
+
+Curriculum Stage-1: QUAKE-Only SFT. Attempting si-multaneous acquisition of QUAKE grammar alongside free-text reasoning precipitates destructive interference, forcing the model to fracture capacity between syntax mastery and semantic analysis. Stage-1 intentionally isolates spatial syn-tax acquisition. We fine-tune the model to exclusively gen-erate the <seg> block conditioned on a bi-temporal image pair, dedicating its entire generation budget to mastering grid dimensions, uniform tile semantics, recursive node expan-sion, run-length encoding, and row delimiters. 
+
+Curriculum Stage-2: CoT Cold-Start. Stage-2 integrates reasoning by fine-tuning the Stage-1 checkpoint to synthesize the complete tripartite output. This cold-start strategy suc-cessfully preserves the entrenched QUAKE syntax while cat-alyzing the acquisition of cross-temporal reasoning capabil-ities. Subsequent ablations in Section 4 validate the efficacy of this curriculum. The sequential dependency linking these stages operationalizes the curriculum’s central principle: de-manding mastery of the spatial alphabet before permitting the composition of spatially grounded visual explanations. 
+
+Grammar-Gated Dual-Reward RL 
+
+While SFT yields syntactically valid QUAKE sequences paired with grounded reasoning, it fundamentally lacks the mechanism to directly optimize the composite objective en-compassing format validity, pixel-level accuracy, and rea-soning faithfulness. We resolve this limitation with a dual-reward RL framework to jointly optimize dense spatial out-puts and strengthen the reasoning trace as a semantic guide for QUAKE generation within the autoregressive space. 
+
+Reward Model Construction. To train a dedicated reward model for evaluating semantic reasoning faithfulness, we construct preference pairs from the QUAKE-CoT split held out from SFT. The cold-start model generates multiple com-pletions per sample under high-temperature decoding. Each completion’s corresponding QUAKE sequence is decoded via D and scored against the ground-truth mask M using Intersection over Union (IoU). In parallel, we synthesize one hard-negative response yneg per sample by prompting 
+
+Gemini-3.1-Pro-Thinking-Preview to perturb core semantic facts while preserving fluency and the grammatical structure. Let s(y) = IoU( D(yseg ), M ) denote the decoded IoU of a rollout. Given a candidate pool C = {ygt } ∪ { yk}Kk=1 ∪{yneg }, where ygt is the ground-truth reasoning trace, and 
+
+{yk}Kk=1 denotes K empirical rollouts, we form preference pairs following the five-tier hierarchy in Appendix C, with 
+
+ygt and yneg serving as fixed top and bottom anchors, and retain rollout pairs whose IoU gap exceeds the threshold δ:
+
+Dpref = {(yc, y r ) ∈ C × C | yc ≻ yr }, (1) The reward model Rϕ is trained on Dpref with Qwen3-VL-8B-Instruct under the objective: 
+
+LRM = −EDpref 
+
+ log σ(Rϕ(yc) − Rϕ(yr )) 
+
+− λ(Rϕ(yc) + Rϕ(yr )) 2, (2) where yc and yr indicate chosen and rejected responses, respectively, and Rϕ evaluates the semantic caliber of the 
+
+<think><answer> segments. Details on negative gener-ation and RM training dynamics are provided in Appendix C .
+
+ThinkAnswer Reward. To systematically enforce the se-mantic validity of the underlying logic during RL, the 
+
+ThinkAnswer Reward Rt acts as a direct application of the previously trained reward model Rϕ. It specifically scores the <think> reasoning trace and <answer> summary segments. This incorporates query-wise normalization to guarantee stable optimization signals across highly diverse prompts. Operating as a crucial semantic regularizer, this reward signal discourages structurally valid but factually un-faithful explanations from receiving inflated high scores. 
+
+Quadtree Reward. The Quadtree Reward Rq operates as a rigorous rule-based function evaluating spatial mask qual-ity natively from the generated sequence. A grammar gate 
+
+validates the <seg> sequence against GQ via a single-pass linear-time parser. Concurrently, a structure score mandates grid dimension alignment with the ground truth. The sub-sequent content score calculates the Tversky index (Tversky 1977) between the decoded prediction ˆM and ground truth 
+
+M . Additionally, a pad/crop discount penalizes topologi-cal dimension mismatches necessitating fallback alignment, while an empty-GT guard outright neutralizes the trivial ex-ploitation strategy of perpetually predicting pure background (see details in Appendix C ). 
+
+GRPO Optimization. We optimize the VLM policy start-ing from the cold-start checkpoint utilizing the GRPO objec-tive (Guo et al. 2025), using the reward: 
+
+R(y, M ) = (1 − μ)Rq(y, M ) + μR t(I1, I 2, y) (3) under KL regularization against the reference policy πref ,where μ dictates the weight of the semantic reward. This dual-reward architecture instantiates the central hypothesis of this work: formulating dense spatial outputs as structured language enables joint, token-level optimization of format validity, pixel-level accuracy, and reasoning faithfulness. Method Accumulated Mean Per-Image Mean Throughput Precision Recall F1 Precision Recall F1 (pairs/s) BIT 77.08 76.80 76.94 66.34 66.64 63.19 50.25 ChangeFormer 84.23 78.84 81.44 76.61 71.06 70.88 65.78 ChangeCLIP 84.32 78.50 81.30 57.31 50.58 51.04 74.93 LISA-7B 16.65 73.42 27.14 18.04 46.83 21.91 40.21 LISA-llama2-13B 15.04 76.45 25.13 17.10 49.20 21.45 27.15 GLaMM 14.85 52.07 23.11 16.22 29.59 17.44 18.77 PixelLM 16.79 72.51 27.27 17.39 46.38 21.38 14.01 Text4Seg 14.52 84.07 24.76 15.27 54.88 19.65 86.54 
+
+RSUniVLM 50.12 82.45 62.34 48.76 81.23 60.94 82.30 
+
+QUAKE-CD 70.99 87.31 78.31 68.77 84.09 73.18 74.27 Table 1: Dense change detection performance on the QUAKE-CoT test set. We compare against specialist change detectors (BIT, ChangeFormer, and ChangeCLIP), decoder-based pixel-level VLMs (LISA, GLaMM, PixelLM), a flat text-as-mask method (Text4Seg), and a remote sensing VLM (RSUniVLM) with native bi-temporal input and text-as-mask serialization. 
+
+## 4 Experiments 
+
+Experimental Setup 
+
+Setup. All experiments utilize the QUAKE-CoT established in Section 3. We allocate 80% of the training set to the two-stage curriculum and reserve the remaining 20% exclusively for reward model training and RL. The framework is initial-ized from Qwen3-VL-8B-Instruct (Bai et al. 2025). Training is executed via ms-swift (Zhao et al. 2024) on eight NVIDIA H200 GPUs, while inference is served through vLLM (Kwon et al. 2023). Both SFT stages and the reward model employ LoRA (Hu et al. 2022) with rank 64 , with the reward model initialized from a fresh backbone copy. The RL phase op-timizes the policy via GRPO (Guo et al. 2025) using eight rollouts per prompt, and a KL coefficient of 0.04 . Appendix D catalogs the comprehensive hyperparameter specifications. 
+
+Baselines. We compare against three complementary base-line groups. First, we include representative specialist remote sensing change detectors: BIT (Chen, Qi, and Shi 2021), ChangeFormer (Bandara and Patel 2022), and Change-CLIP (Dong et al. 2024). Second, we evaluate pixel-level VLMs across two prevailing paradigms. LISA (Lai et al. 2024), GLaMM (Rasheed et al. 2024), and PixelLM (Ren et al. 2024) perform decoder-based mask prediction, while Text4Seg (Lan et al. 2025) and RSUniVLM (Liu and Lian 2026) serialize masks autoregressively. Specialist change detectors and RSUniVLM are retrained on the QUAKE-CoT training split. RSUniVLM natively accepts RS bi-temporal pairs, while the remaining pixel-level VLMs as-sume single-image inputs. Following (Nguyen et al. 2025; Xu, Zhu, and Yang 2025), we concatenate the bi-temporal pair (I1, I 2) along the width dimension and fine-tune them on the QUAKE-CoT training split under their original training recipes. Third, for reasoning-quality evaluation, we include Teochat (Irvin et al. 2025) and EarthDial (Soni et al. 2025). These temporal RS VLMs generate textual change descrip-tions but do not predict dense masks. Additional exper-imental results on large images, out-of-domain dataset, qualitative interpretability, and parameter sensitivity are reported in Appendix E .
+
+Dense Change Mask Generation 
+
+For each prediction, we decode the extracted QUAKE span into a binary mask with D and report Precision, Recall, and F1 under accumulated pixel statistics and per-image means. As shown in Table 1, QUAKE-CD attains specialist-level mask quality while retaining a unified autoregressive inter-face for dense prediction and grounded reasoning. Its accu-mulated F1 of 78 .31% surpasses BIT by 1.37% and remains within 3.13% of the strongest specialist model, Change-Former. Under per-image evaluation, QUAKE-CD reaches 
+
+73 .18% F1 and outperforms all three specialist models. It further achieves the highest recall among all methods un-der both evaluation protocols. Against pixel-level VLMs, QUAKE-CD surpasses PixelLM by 51 .04% in accumulated F1 and LISA-7B by 51 .27% in per-image F1. Existing VLM baselines exhibit a pronounced recall–precision imbalance: they recover broad change regions but introduce extensive false positives. Even the strongest VLM baseline reaches only 
+
+50 .12% accumulated precision and 48 .76% per-image preci-sion. Text4Seg exemplifies this regime, attaining 84 .07% ac-cumulated recall but only 14 .52% precision and thus 24 .76% 
+
+F1: its flat patch-grid serialization assigns uniform resolu-tion across the scene and cannot resolve the small, frag-mented objects characteristic of change detection. In con-trast, QUAKE-CD raises precision to 70 .99% and 68 .77% 
+
+while preserving strong recall at 87 .31% and 84 .09% . This advantage stems from the selective allocation of quadtree to-kens around change boundaries, which suppresses spurious regions without erasing fine-grained structures. RSUniVLM adopts flat text-as-mask formulation while accepting the bi-temporal pair natively. Its persistent recall–precision imbal-ance isolates the QUAKE-CD gain to hierarchical quadtree encoding rather than to native bi-temporal input. QUAKE-CD also achieves a favorable balance between ac-curacy and efficiency. Its throughput reaches 74 .27 pairs/s, at least 1.85 × that of decoder-based VLMs, as native text generation avoids the overhead of a segmentation decoder. Its throughput remains close to flat serialization methods, in-cluding Text4Seg at 86 .54 pairs/s and RSUniVLM at 82 .30 
+
+pairs/s, despite the additional sequential structure introduced Model BLEU-1 ROUGE-1 METEOR Reranker GPT-Judge Human Qwen3-VL-8B-Instruct 3.82 23.06 11.08 27.76 47.78 42.25 Qwen3-VL-32B-Instruct 11.90 29.78 15.42 32.41 52.91 51.10 Qwen3-VL-235B-Instruct 5.25 23.76 11.77 56.20 64.53 60.30 RSUniVLM 10.85 28.95 18.96 53.27 61.42 54.65 Teochat 8.72 20.14 13.27 32.11 45.39 36.40 EarthDial 7.13 24.43 17.84 51.10 59.83 51.80 
+
+QUAKE-CD 49.30 52.21 40.24 71.26 78.61 73.50 
+
+Table 2: Semantic evaluation on the reasoning trace of model outputs. Human annotators are given only the bi-temporal image pair and the model output. by the hierarchical QUAKE syntax. In return, QUAKE-CD improves accumulated F1 over Text4Seg and RSUniVLM by 53 .55% and 15 .97% , respectively, establishing a stronger trade-off between throughput and spatial fidelity. The de-tailed throughput setup is provided in Appendix D. 
+
+Reasoning Quality Evaluation 
+
+Since mask metrics cannot verify whether textual claims stem from bi-temporal evidence, we evaluate the generated 
+
+<think> and <answer> trajectories. Although we report BLEU-1, ROUGE-1, and METEOR for lexical overlap, Ta-ble 2 shows that generic VLMs score abnormally low un-der n-gram metrics, which penalize paraphrasing and ver-bose reasoning rather than semantic correctness. We there-fore complement them with two semantics-aware automatic evaluators and a human-rating protocol. Reranker Score 
+
+(Qwen3-Reranker-4B) assesses semantic fidelity, complete-ness, and structural coherence. GPT-Judge Accuracy (GPT-5.5-2026-04-23) quantifies semantic consistency against human-verified references (prompt templates in Figure 15 and 16). Human Score averages acceptance rates from two independent annotators over 1,000 randomly sampled out-puts assessed for factual consistency and localization cor-rectness, reaching 87 .5% inter-annotator agreement. Table 2 disentangles scaling from grounded bi-temporal supervision. Under traditional metrics, QUAKE-CD outper-forms all baselines, achieving 49 .30 BLEU-1 and 40 .24 
+
+METEOR. On semantics-aware metrics, scaling Qwen3-VL from 8B to 235B raises the reranker score from 27 .76 to 56 .20 
+
+and GPT-judge accuracy from 47 .78% to 64 .53% , as greater capacity improves fluency and coarse semantic plausibility. Yet scale alone does not close the grounding gap: QUAKE-CD exceeds the same-8B baseline by 31 .25% in human score and still leads the 235B model by 13 .20% . RSUniVLM also trails QUAKE-CD by 18 .85% in human score, indicating that its change-captioning supervision is insufficient for cap-turing the key bi-temporal evidence underlying each change. The agreement across lexical, semantic, and human evalua-tors indicates that the gain is robust rather than an artifact of any single judge. 
+
+Ablation Studies 
+
+Minimum Leaf Size. Figure 3 varies the minimum leaf size 
+
+ℓ, which controls the trade-off between spatial resolution and sequence complexity, under fixed SFT settings. Reducing ℓ!"# A%# %& !' " & % A( &* !* (* '* %* I-./FIM12P4IRP4/MS ITPU9:;</PI=P<4I>AIII I-??@;@R<MPAI=P<4I>A =B4B;@;IRP<CIaBEP ;:1cIdI>A *A** "** #** &** !** (** I-./FIM12P4IRP4/MS eA (! '* '! %* IgPU<42PUI=PMU ITPU9:;</PI=P ;:1cIdI>A 
+
+Figure 3: Ablation studies on the influence of the minimum leaf size ℓ.!"# A%# %& !' ('F!& (%F*! (+F'" 'AF"( " & % A( &* !* (* '* %* I-./FIM12P4IRP4/MS ITPU9:;</PI=P<4I>AIII I-??@;@R<MPAI=P<4I>A =B4B;@;IRP<CIaBEP ;:1cIdI>A *A** "** #** &** !** (** I-./FIM12P4IRP4/MS eA e" eAfe" eAfe"fg eAfe"fgfg (! '* '! %* IgPU<42PUI=PMUB? ITPU9:;</PI=P<4I>AIII I-??@;@R<MPAI=P<4I>A hU<B4B4/I?14CB/@U<MB14 ;:1cIdI>A (' (% (+ '* 'A IgPU<42PUI=PMUB?  
+
+> S1+S2+ 𝑅 !S1+S2+ 𝑅 !+𝑅 "
+
+Figure 4: Ablation studies on the influence of curriculum stages and reward components. from 16 to 2 increases the average sequence length from 57 
+
+to 523 tokens, yet mask quality does not improve monoton-ically. F1 reaches its maximum at ℓ=8 and drops sharply at 
+
+ℓ=2 . This degradation reflects a learnability bottleneck rather than a representational limit: although finer leaves can en-code sharper boundaries, long recursive sequences increase grammar violations and dimension mismatches, weakening both SFT supervision and RL rollouts. At the opposite ex-treme, ℓ=16 reduces the token budget but quantizes each 
+
+16 ×16 patch into a single bit, which erodes boundary preci-sion. Thus, ℓ=8 provides the strongest operating point, pre-(a) (b) (c) (d) (e) (f) (g) (h) (i)                     
+
+> <answer> Significant structural change is observed in the form of newly constructed residential houses. These changes are located throughout the developed lots surrounding the curved roadways and cul-de-sacs, particularly in the central and lower regions of the scene. </answer> <answer> The primary change is the construction of a residential subdivision, characterized by numerous houses and paved streets. This development is located across the majority of the scene, replacing the previously undeveloped vegetated land </answer> <think> ...… Inotice asignificant alteration in the upper right quadrant where open land previously existed. A large, bright rectangular structure now dominates this area. </think> <answer> A large building and parking lot were constructed in the upper right portion of the scene, replacing the previously open field area. </answer>
+> (j) (k) (l)
+
+Figure 5: Qualitative results of representative decoder-based pixel-level VLMs and QUAKE-CD. (a): pre-change image. (b): post-change image. (c): ground truth. (d)-(i): results of LISA-7B, LISA-llama2-13B, GLaMM, PixelLM, Text4Seg, and QUAKE-CD. (j)–(l): textual change descriptions generated by QUAKE-CD. serving fine-grained structure while keeping autoregressive decoding and policy optimization tractable. 
+
+Curriculum and Reward Components. Figure 4 eval-uates five training regimes: S1, S2, S1+S2, S1+S2+ Rq ,and S1+S2+ Rq +Rt. The S1 regime—supervising only the 
+
+<seg> block—serves as the QUAKE-only variant that iso-lates the hierarchical representation from CoT supervision, while S1+S2 layers CoT atop the same syntax. First, the two-stage curriculum separates syntax acquisition from temporal reasoning: applying Stage 2 directly to the base VLM yields weaker per-image F1 due to interference between grammar learning and rationale generation, while initializing Stage-2 from the Stage-1 checkpoint improves both accumulated and per-image F1 by roughly 4% over either single-stage vari-ant. Notably, the S1-only mask quality already exceeds every flat-serialization baseline in Table 1, attributing a substantial share of the dense-prediction gain to the QUAKE representa-tion itself. Second, adding Quadtree Reward raises accumu-lated F1 by about 1% and the reranker score from 68 .05 to 
+
+69 .72 , showing that grammar-gated spatial RL supplies a use-ful optimization signal beyond imitation learning. Third, the full dual-reward model reaches 71 .26 reranker score with fur-ther gains in accumulated F1, confirming that ThinkAnswer Reward strengthens textual faithfulness without compromis-ing the spatial accuracy preserved by Quadtree Reward , and, in turn, provides a stronger semantic guidance for QUAKE 
+
+generation. Overall, the monotonic gains confirm that hier-archical encoding, staged supervision, and grammar-gated dual RL act synergistically across distinct failure modes. 
+
+Qualitative Analysis 
+
+Figure 5 presents representative cases where QUAKE-CD accurately resolves dense small-building construction requir-ing fine-grained bi-temporal comparison. External-decoder baselines and Text4Seg instead follow the high-recall pattern of Section 4, over-predicting broad regions in dense scenes and hallucinating large changed areas in single-building cases where they miss the pre- and post-change structural correspondence. In contrast, QUAKE-CD’s textual descrip-tions remain grounded, correctly specifying change type, location, and extent. 
+
+## 5 Conclusion 
+
+We introduced QUAKE-CD, a framework that formulates dense remote-sensing change detection as structured autore-gressive generation under a syntax-verifiable mask grammar. Its quadtree mask language converts binary change maps into compact, grammar-constrained token sequences that can be decoded, checked, and optimized within autoregressive VLMs. With paired spatial supervision, grounded reason-ing traces, staged curriculum learning, and grammar-gated dual-reward RL, QUAKE-CD aligns dense mask generation with faithful bi-temporal reasoning. Experiments show clear gains over decoder-based and flat text-as-mask VLM base-lines, while demonstrating that grounded spatial supervision improves reasoning more effectively than generic model scal-ing. These results position structured spatial languages as a practical foundation for accurate, interpretable, and struc-turally checkable dense prediction in VLMs. References 
+
+Asokan, A.; and Anitha, J. 2019. Change detection tech-niques for remote sensing applications: A survey. Earth Science Informatics , 12(2): 143–160. Bai, S.; Cai, Y.; Chen, R.; Chen, K.; Chen, X.; Cheng, Z.; Deng, L.; Ding, W.; Gao, C.; Ge, C.; et al. 2025. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 .Bandara, W. G. C.; and Patel, V. M. 2022. A transformer-based siamese network for change detection. In IGARSS 2022-2022 IEEE International Geoscience and Remote Sens-ing Symposium , 207–210. IEEE. Chen, H.; Qi, Z.; and Shi, Z. 2021. Remote sensing image change detection with transformers. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–14. Chen, H.; and Shi, Z. 2020. A spatial-temporal attention-based method and a new dataset for remote sensing image change detection. Remote sensing , 12(10): 1662. Chen, Y.; Sikka, K.; Cogswell, M.; Ji, H.; and Divakaran, A. 2024. Measuring and improving chain-of-thought reasoning in vision-language models. In Proceedings of the 2024 Con-ference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers) , 192–210. Deng, P.; Zhou, W.; and Wu, H. 2025. Changechat: An interactive model for remote sensing change analysis via multimodal instruction tuning. In ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , 1–5. IEEE. Ding, H.; Tang, S.; He, S.; Liu, C.; Wu, Z.; and Jiang, Y.-G. 2025. Multimodal referring segmentation: A survey. arXiv preprint arXiv:2508.00265 .Dong, S.; Wang, L.; Du, B.; and Meng, X. 2024. Change-CLIP: Remote sensing change detection with multimodal vision-language representation learning. ISPRS Journal of Photogrammetry and Remote Sensing , 208: 53–69. Elgendy, H.; Sharshar, A.; Aboeitta, A.; Ashraf, Y.; and Guizani, M. 2024. Geollava: Efficient fine-tuned vision-language models for temporal change detection in remote sensing. arXiv preprint arXiv:2410.19552 .Guo, D.; Yang, D.; Zhang, H.; Song, J.; Wang, P.; Zhu, Q.; Xu, R.; Zhang, R.; Ma, S.; Bi, X.; et al. 2025. Deepseek-r1: Incentivizing reasoning capability in llms via reinforcement learning. arXiv preprint arXiv:2501.12948 .Hoxha, G.; Chouaf, S.; Melgani, F.; and Smara, Y. 2022. Change captioning: A new paradigm for multitemporal re-mote sensing image analysis. IEEE Transactions on Geo-science and Remote Sensing , 60: 1–14. Hu, E. J.; Shen, Y.; Wallis, P.; Allen-Zhu, Z.; Li, Y.; Wang, S.; Wang, L.; Chen, W.; et al. 2022. Lora: Low-rank adaptation of large language models. Iclr , 1(2): 3. Irvin, J.; Liu, E.; Chen, J.; Dormoy, I.; Kim, J.; Khanna, S.; Zheng, Z.; and Ermon, S. 2025. Teochat: A large vision-language assistant for temporal earth observation data. In 
+
+International Conference on Learning Representations , vol-ume 2025, 68883–68911. Ji, S.; Wei, S.; and Lu, M. 2019. Fully Convolutional Net-works for Multisource Building Extraction From an Open Aerial and Satellite Imagery Data Set. IEEE Transactions on Geoscience and Remote Sensing , 57(1): 574–586. Kirillov, A.; Mintun, E.; Ravi, N.; Mao, H.; Rolland, C.; Gustafson, L.; Xiao, T.; Whitehead, S.; Berg, A. C.; Lo, W.-Y.; et al. 2023. Segment anything. In Proceedings of the IEEE/CVF international conference on computer vision ,4015–4026. Korkmaz, Y.; and Patel, V. M. 2026. RemoteVAR: Autore-gressive Visual Modeling for Remote Sensing Change De-tection. arXiv preprint arXiv:2601.11898 .Kwon, W.; Li, Z.; Zhuang, S.; Sheng, Y.; Zheng, L.; Yu, C. H.; Gonzalez, J. E.; Zhang, H.; and Stoica, I. 2023. Efficient Memory Management for Large Language Model Serving with PagedAttention. In Proceedings of the ACM SIGOPS 29th Symposium on Operating Systems Principles .Lai, X.; Tian, Z.; Chen, Y.; Li, Y.; Yuan, Y.; Liu, S.; and Jia, J. 2024. Lisa: Reasoning segmentation via large lan-guage model. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 9579–9589. Lan, M.; Chen, C.; Xu, J.; Li, Z.; Ke, Y.; Jiang, X.; Yu, Y.; Zhao, Y.; and Bai, S. 2026. Text4seg++: Advancing image segmentation via generative language modeling. IEEE Transactions on Pattern Analysis and Machine Intelligence .Lan, M.; Chen, C.; Zhou, Y.; Xu, J.; Ke, Y.; Wang, X.; Feng, L.; and Zhang, W. 2025. Text4seg: Reimagining image segmentation as text generation. In International Conference on Learning Representations , volume 2025, 1634–1661. Li, K.; Xin, Z.; Pang, L.; Pang, C.; Deng, Y.; Yao, J.; Xia, G.; Meng, D.; Wang, Z.; and Cao, X. 2025. Segearth-r1: Geospatial pixel reasoning via large language model. arXiv preprint arXiv:2504.09644 .Li, X.; Li, J.; Zhang, K.; Fang, Y.; Lin, L.; Wang, H.; Wu, H.; and Fan, Z. 2026a. Decoding the Delta: Unify-ing Remote Sensing Change Detection and Understanding with Multimodal Large Language Models. arXiv preprint arXiv:2604.14044 .Li, Y.; Xu, W.; Zhang, Y.; Wei, Z.; and Peng, M. 2026b. BTC-Chat: Advancing remote sensing bi-temporal change caption-ing with multimodal large language model. In ICASSP 2026-2026 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , 4596–4600. IEEE. Liu, C.; Zhao, R.; Chen, H.; Zou, Z.; and Shi, Z. 2022. Remote sensing image change captioning with dual-branch transformers: A new method and a large scale dataset. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–20. Liu, J.; Sun, L.; Fu, R.; and Yang, B. 2025. Towards Faith-ful Reasoning in Remote Sensing: A Perceptually-Grounded GeoSpatial Chain-of-Thought for Vision-Language Models. 
+
+arXiv preprint arXiv:2509.22221 .Liu, X.; and Lian, Z. 2026. RSUniVLM: A unified vision-language model for remote sensing via Granularity-oriented MoE. Pattern Recognition , 113717. Ma, X.; Feng, S.; Zhang, B.; and Wang, B. 2025. ViLaCD-R1: A Vision-Language Framework for Seman-tic Change Detection in Remote Sensing. arXiv preprint arXiv:2512.23244 .Nguyen, K. A.; Juvekar, A.; Yu, T.; Wahed, M.; and Lourent-zou, I. 2025. Calico: Part-focused semantic co-segmentation with large vision-language models. In Proceedings of the Computer Vision and Pattern Recognition Conference ,4550–4561. Park, K.; Wang, J.; Berg-Kirkpatrick, T.; Polikarpova, N.; and D’Antoni, L. 2024. Grammar-aligned decoding. Advances in Neural Information Processing Systems , 37: 24547–24568. Rasheed, H.; Maaz, M.; Shaji, S.; Shaker, A.; Khan, S.; Cholakkal, H.; Anwer, R. M.; Xing, E.; Yang, M.-H.; and Khan, F. S. 2024. Glamm: Pixel grounding large multimodal model. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 13009–13018. Ren, Z.; Huang, Z.; Wei, Y.; Zhao, Y.; Fu, D.; Feng, J.; and Jin, X. 2024. Pixellm: Pixel reasoning with large multimodal model. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 26374–26383. Shi, Q.; Liu, M.; Li, S.; Liu, X.; Wang, F.; and Zhang, L. 2021. A deeply supervised attention metric-based network and an open aerial image dataset for remote sensing change detection. IEEE transactions on geoscience and remote sens-ing , 60: 1–16. Shiri, F.; Guo, X.-Y.; Far, M. G.; Yu, X.; Haf, R.; and Li, Y.-F. 2024. An empirical analysis on spatial reasoning ca-pabilities of large multimodal models. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing , 21440–21455. Soni, S.; Dudhane, A.; Debary, H.; Fiaz, M.; Munir, M. A.; Danish, M. S.; Fraccaro, P.; Watson, C. D.; Klein, L. J.; Khan, F. S.; et al. 2025. Earthdial: Turning multi-sensory earth observations to interactive dialogues. In Proceedings of the Computer Vision and Pattern Recognition Conference ,14303–14313. Sun, Q.; Zhang, C.; Zhang, J.; Wang, X.; Xie, J.; Zheng, P.; Wang, H.; Lee, S.; Tai, C.-l. A.; Yang, Y.; et al. 2026. GRASP: Guided Region-Aware Sparse Prompting for Adapting MLLMs to Remote Sensing. arXiv preprint arXiv:2601.17089 .Team, G.; Anil, R.; Borgeaud, S.; Alayrac, J.-B.; Yu, J.; Sori-cut, R.; Schalkwyk, J.; Dai, A. M.; Hauth, A.; Millican, K.; et al. 2023. Gemini: a family of highly capable multimodal models. arXiv preprint arXiv:2312.11805 .Team, K.; Bai, T.; Bai, Y.; Bao, Y.; Cai, S.; Cao, Y.; Charles, Y.; Che, H.; Chen, C.; Chen, G.; et al. 2026. Kimi K2.5: Vi-sual Agentic Intelligence. arXiv preprint arXiv:2602.02276 .Tversky, A. 1977. Features of similarity. Psychological review , 84(4): 327. Xiao, L.; Yang, X.; Lan, X.; Wang, Y.; and Xu, C. 2025. Towards visual grounding: A survey. IEEE Transactions on Pattern Analysis and Machine Intelligence .Xu, Y.; Zhu, L.; and Yang, Y. 2025. Mc-bench: A benchmark for multi-context visual grounding in the era of mllms. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 17675–17687. Xue, J.; Deng, Q.; Wu, X.; Yao, K.; Yin, X.; Yu, F.; Zhou, W.; Zhong, Y.; Liu, Y.; and Yang, D. 2026. Towards compre-hensive interactive change understanding in remote sensing: A large-scale dataset and dual-granularity enhanced VLM. 
+
+IEEE Transactions on Geoscience and Remote Sensing .Yao, L.; Liu, F.; Lu, H.; Zhang, C.; Min, R.; Xu, S.; Di, S.; and Peng, P. 2026. Remotereasoner: Towards unifying geospatial reasoning workflow. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 40, 11883–11891. Zhao, Y.; Huang, J.; Hu, J.; Wang, X.; Mao, Y.; Zhang, D.; Jiang, Z.; Wu, Z.; Ai, B.; Wang, A.; Zhou, W.; and Chen, Y. 2024. SWIFT:A Scalable lightWeight Infrastructure for Fine-Tuning. arXiv:2408.05517. Zhu, Y.; Li, L.; Chen, K.; Liu, C.; Zhou, F.; and Shi, Z. 2025. Semantic-CD: Remote sensing image semantic change detection towards open-vocabulary setting. In IGARSS 2025-2025 IEEE International Geoscience and Remote Sensing Symposium , 6388–6392. IEEE. A Quadtree Mask Encoding Details 
+
+This appendix extends the informal description in Section 3 with a complete formal specification of LQ, its determin-istic encoder E, and decoder D. The specification renders 
+
+LQ a syntactically and structurally checkable mask language whose well-formedness is decidable in linear time, indepen-dent of the model’s semantic predictions. 
+
+Formal Grammar of LQ
+
+The alphabet of LQ extends the base VLM vocabulary with 19 special tokens, supplemented by standard separators and numerals: 
+
+• Structural delimiters : <seg> , </seg> 
+
+• Uniform tile tokens : <BG> , <FG> 
+
+• Quadtree node tokens : 15 nodes 
+
+{<Q0001> , . . . , <Q1111> }; the all-zero pattern 
+
+<Q0000> is strictly excluded, since an inactive quadrant is already absorbed by its parent node’s occupancy bit. 
+
+• Separators and Modifiers : | (column delimiter), \n 
+
+(row delimiter), and * (run-length encoding prefix). The syntax of LQ is governed by a context-free grammar defined by the following production rules: Sequence → <seg> Grid </seg> (4) Grid → Row (\n Row )∗ (5) Row → Tile (| Tile )∗
+
+Tile → <BG> | <FG> | <BG> ∗ n | <FG> ∗ n
+
+| <Q b1b2b3b4> Children (b1b2b3b4, d ) (6) Here, Children (b1b2b3b4, d ) recursively expands every active quadrant with bi = 1 in Z-order (preorder) traversal: top-left, top-right, bottom-left, bottom-right. Let d denote the current recursion depth, bounded by dmax = ⌈log 2(32 /ℓ )⌉. Upon reaching dmax , the quadrant collapses to a base Tile of side length ℓ.Grammar validity ensures format compliance before de-coding. A sequence is valid if and only if: (1) exactly one 
+
+<seg> wrapper encloses the grid; (2) the expanded row and column counts match the expected grid dimensions 
+
+H/ 32 ×W/ 32 ; (3) every run-length count satisfies n ≥ 2 and does not exceed the remaining tiles in its row; (4) quadtree recursion depth never exceeds dmax ; and (5) the number of recursively expanded children matches the sum of active bits P bi in the corresponding <Q abcd > node. 
+
+Encoding Algorithm E
+
+Algorithm 1 specifies the deterministic encoding procedure. Given a binary mask M ∈ { 0, 1}H×W , a fixed tile size 
+
+T = 32 , and a minimum leaf size ℓ, the encoder partitions 
+
+M into an H/T ×W/T grid and recursively subdivides each heterogeneous tile until the minimum leaf size ℓ is reached. The encoding is recall-preserving by construction: if 
+
+M [i, j ] = 1 , then D(E(M ))[ i, j ] = 1 . A single foreground pixel within any leaf forces that leaf’s occupancy bit to 1, and the decoder renders every active leaf as fully foreground. Precision loss therefore originates exclusively from bound-ary leaves of size ℓ, where mixed background pixels are Algorithm 1: Quadtree Mask Encoding                                                                                                                                 
+
+> Require: Binary mask M∈ { 0,1}H×W, tile size T= 32 , min leaf size ℓ= 8
+> Ensure: Quadtree sequence yseg ∈ L Q
+> 1: Partition Minto grid Gof H/T ×W/T tiles of size T×T
+> 2: Initialize sequence buffer S←<seg>
+> 3: for each row r∈ G do
+> 4: for each tile t∈rdo
+> 5: if tis uniform background ( ∀i,j t[i, j ] = 0 )then
+> 6: Emit <BG>
+> 7: else if tis uniform foreground ( ∀i,j t[i, j ] = 1 )then
+> 8: Emit <FG>
+> 9: else
+> 10: Emit EncodeNode( t,T,ℓ, depth = 0 )11: end if
+> 12: Emit column delimiter |if tis not the last tile in r
+> 13: end for
+> 14: Apply RLE: collapse consecutive identical uniform tokens to <BG> *nor <FG> *n
+> 15: Append row separator \n
+> 16: end for
+> 17: Append </seg>
+> 18: return S
+> 19: function EncodeNode( B, size, ℓ, depth) 20: dmax ← ⌈ log 2(size /ℓ )⌉
+> 21: if depth =dmax then
+> 22: return <FG> if quadrant contains any foreground pixel else <BG> ▷recall-preserving leaf rule 23: end if
+> 24: h←size /2
+> 25: b1b2b3b4←occupancy bits of quadrants TL, TR, BL, BR 26: if b1=b2=b3=b4= 0 then ▷unreachable; defensive guard 27: return empty string 28: end if
+> 29: Emit <Q b1b2b3b4>
+> 30: for each quadrant qiwith bi= 1 in TL, TR, BL, BR order
+> do
+> 31: EncodeNode( B[qi],h,ℓ, depth +1 )32: end for
+> 33: end function
+
+unavoidably promoted to foreground. For ℓ = 8 , the maxi-mum false-positive expansion per boundary leaf is 64 pix-els. This controlled precision–compression trade-off strictly eliminates false-negative boundary omissions, accounting for the bounded precision drop. Total complexity is O(HW ): each pixel is visited once during partitioning, and recursive subdivisions operate on disjoint subregions. 
+
+Decoding Algorithm D
+
+Decoding reconstructs a binary mask ˆM from a quadtree sequence yseg ∈ L Q as a purely symbolic, non-parametric mapping, eliminating neural overhead during both inference and RL reward computation. Upon extracting the <seg>...</seg> body, the de-coder splits the grid by row separators, expands RLE pre-fixes, and validates the reconstructed sequence dimensions. Invalid sequences trigger categorical safety fallbacks: Metric Accumulated (%) Per-Image Mean (%) IoU 83.9 80.2 F1 91.2 88.0 Precision 83.9 80.2 Recall 100.0 100.0 Table 3: Round-trip encoding fidelity of E and D on the QUAKE-CoT training set. 
+
+ℓ IoU Accum. F1 Per-Image F1 Avg. Tokens 2 97.2 98.6 97.9 520.7 4 91.2 95.3 93.8 124.7 8 83.9 91.2 88.0 78.3 16 71.4 83.2 79.7 52.1 Table 4: Encoding fidelity by minimum leaf size ℓ on the QUAKE-CoT training set. Smaller leaves improve precision; larger leaves reduce sequence length. 
+
+• Grammar Failure: Missing wrappers, unrecognized node tokens, or malformed RLE prefixes yield an all-zero fallback mask. 
+
+• Dimension Mismatch: If expanded dimensions diverge from H/ 32 × W/ 32 , the decoder applies pad/crop align-ment to recover a usable mask; the corresponding reward-side discount is specified in Appendix C. 
+
+• Unexpected EOF: Severely truncated sequences that break during token parsing default to the all-zero mask. 
+
+• Depth Overflow: Recursion exceeding dmax triggers an immediate fallback to a uniform ℓ × ℓ leaf-level approxi-mation. For valid sequences, tile tokens are rendered deterministi-cally. <BG> and <FG> generate 32 × 32 zero or one blocks, respectively. A <Q abcd > node recursively renders only the quadrants whose occupancy bits bi = 1 , while inactive quad-rants default to background. The rendered spatial blocks are concatenated in raster-scan order into the final dense mask 
+
+ˆM ∈ { 0, 1}H×W .
+
+Encoding Fidelity and Compression Statistics 
+
+Table 3 quantifies the round-trip algorithmic fidelity of encoding followed by decoding across the QUAKE-CoT dataset. Foreground recall strictly achieves 100 .0% at both accumulated and per-image levels, directly validating the claim of preserving all target foreground regions. Accu-mulated F1 of 91 .2% and per-image F1 of 88 .0% confirm that boundary-quantization precision loss remains strictly bounded under ℓ=8 . The decoded masks therefore serve as faithful supervision targets for SFT and as reliable reward signals for RL. Table 4 ablates the minimum leaf size ℓ. Setting ℓ=2 in-flates sequence length, while ℓ=16 shortens sequences at the cost of spatial resolution and a higher per-leaf false-positive rate. We adopt ℓ=8 as the operating point that balances com-pression against precision. 
+
+## B QUAKE-CoT Dataset Details 
+
+QUAKE-CoT pairs pixel-level change masks with chain-of-thought reasoning traces, supplying the linguistic supervision absent from purely discriminative change-detection bench-marks. We build upon established bi-temporal remote sens-ing benchmarks, augmenting them with hierarchical mask sequences and teacher-distilled reasoning traces. 
+
+Data Sources and Curation 
+
+We source raw image pairs and binary change masks from three large-scale change detection benchmarks: SYSU-CD (Shi et al. 2021), LEVIR-CD and LEVIR-CD+ (Chen and Shi 2020). Table 5 summarizes the characteristics of these source datasets. SYSU-CD covers diverse urban change types in-cluding buildings, roads, and vegetation, whereas the LEVIR series targets building additions and removals. The curation process involves three stages: 
+
+Spatial Quantization. SYSU-CD natively provides 
+
+256 ×256 pairs and is consumed as-is. LEVIR-CD and LEVIR-CD+ ( 1024 ×1024 ) are partitioned into 16 non-overlapping 256 ×256 tiles per pair via raster scan. Each mask M is then encoded into yseg via Algorithm 1 with 
+
+T =32 and ℓ=8 . No positive–negative balancing is applied at this stage; sample-level filtering is deferred to the validation step described below. 
+
+Reasoning Distillation. We employ Gemini-3.1-Pro-Thinking-Preview (Team et al. 2023) as the teacher, con-ditioning generation on the bi-temporal pair (I1, I 2) and the ground-truth mask M . The prompt in Figure 13 en-forces two core constraints. First, the trace must reference only the two temporal images and pursue reasoning-oriented comparison—articulating how differences should be ana-lyzed and which categories of change are relevant—rather than producing yes/no judgements. Second, the teacher must explicitly discount appearance shifts caused by season, phe-nology, sun angle, shadows, haze, or global brightness/con-trast, focusing instead on structural change such as new or removed objects, altered built footprints, land-cover conver-sion, and layout reconfiguration. We issue 55 ,740 teacher calls in total; 9,788 (17 .6% ) require re-invocation due to API timeouts or format violations, and the affected samples are retained only after a successful re-call. Reasoning traces tokenized with the Qwen3-VL tokenizer average 84 tokens, with median 70 and range 31 –303 .
+
+Validation. Four graduate students with backgrounds in remote sensing, computer vision, or computer science cross-verify all Ntrace distilled traces against the corresponding bi-temporal pair and ground-truth mask, revising obvious factual inconsistencies. Traces judged factually consistent account for 98 .7% of the corpus, while the remaining 1.3% 
+
+are revised by the annotators. We therefore define the trace-validation rate as 
+
+Atrace = Nconsistent 
+
+Ntrace 
+
+= 98 .7% . (7) We then apply three sample-level filters: (i) traces that re-main factually inconsistent with the mask after revision are Source Resolution Main change type # Samples SYSU-CD 256 × 256 Urban changes 20 ,000 
+
+LEVIR-CD 1, 024 × 1, 024 Building changes 637 
+
+LEVIR-CD+ 1, 024 × 1, 024 Building and subtle changes 985 
+
+Table 5: Source datasets used to construct QUAKE-CoT. All original images were cropped or resized to 256 × 256 spatial resolution. discarded; (ii) tiles whose change consists solely of sub-tile-scale boundary noise—small fragmented edge variations deemed too ambiguous for chain-of-thought training—are removed; (iii) to mitigate the heavy class imbalance toward unchanged tiles, we retain a uniformly random 20% of fully-empty-mask tiles. Filtering yields the final samples docu-mented in Table 6. 
+
+Human Annotation and Agreement. All human assess-ments were conducted by the same four graduate annotators using a common rubric for factual consistency and spatial grounding. For the reported Human Score, we evaluated 
+
+N = 1 ,000 randomly sampled outputs for each of the M = 7 
+
+evaluated models. Let h(a) 
+
+> m,i
+
+∈ { 0, 1} denote the acceptance judgment assigned by annotator a ∈ { 1, 2} to the i-th output of model m. The acceptance rate of annotator a for model m
+
+is 
+
+A(a) 
+
+> m
+
+= 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+h(a)
+
+> m,i
+
+, (8) and the reported Human Score for model m averages the two annotators’ acceptance rates: 
+
+Hm = 12
+
+
+
+A(1)  
+
+> m
+
++ A(2) 
+
+> m
+
+
+
+= 12N
+
+> N
+
+X
+
+> i=1 2
+
+X
+
+> a=1
+
+h(a)
+
+> m,i
+
+. (9) Inter-annotator agreement is computed as exact label agree-ment over all M N evaluated outputs: 
+
+Ainter = 1
+
+M N 
+
+> M
+
+X
+
+> m=1
+> N
+
+X
+
+> i=1
+
+⊮
+
+h
+
+h(1)  
+
+> m,i
+
+= h(2) 
+
+> m,i
+
+i
+
+= 87 .5% . (10) To rule out the concern that the trained model merely re-plays teacher templates rather than grounding its reasoning in visual evidence, two of the same annotators additionally audit a stratified 500 -sample subset of QUAKE-CD infer-ence outputs, manually verifying that each rationale’s spa-tial claims—location, change type, and approximate extent— agree with the model’s own predicted mask. The rationale– mask agreement rate is defined as 
+
+Arm = Nmask -consistent 
+
+500 = 97 .2% , (11) indicating that the textual reasoning is internally consistent with the spatial prediction rather than decoupled boilerplate. 
+
+Data Partitioning 
+
+The dataset is partitioned into training and testing sets fol-lowing the splits defined in the source benchmarks, enabling direct comparison with prior change-detection methods. Ta-ble 6 details the final data splits. The test split is held out for the final evaluation of both the SFT baselines and the GRPO-trained QUAKE-CD model. Split Size Purpose Train 22 ,007 Stage 1 & Stage 2 Train 5,502 RM training & GRPO Test 9,301 Final evaluation Table 6: QUAKE-CoT data partition. The dataset is divided into a training split and a held-out test split, maintaining the original dataset distributions. 
+
+Dataset Statistics 
+
+The final QUAKE-CoT corpus comprises 36 ,810 aligned 
+
+⟨image pair, mask, reasoning trace ⟩ triples drawn from the three source benchmarks. Reasoning traces total approxi-mately 3.09 M Qwen3-VL tokens, averaging 60 .4 words ( 84 
+
+tokens) per trace—roughly an order of magnitude longer than the single-sentence captions in LEVIR-CC (Liu et al. 2022) ( 7.99 words) and DUBAI-CC (Hoxha et al. 2022) (7.35 words). QUAKE-CoT is also the only corpus among the compared datasets to pair these reasoning traces with deterministically decodable dense mask sequences. 
+
+Comparison with Existing Benchmarks 
+
+Table 7 compares QUAKE-CoT with representative datasets across change detection and change captioning paradigms. Standard discriminative benchmarks such as LEVIR-CD and SYSU-CD provide only binary masks, leaving language su-pervision to downstream users. Existing change-captioning datasets like LEVIR-CC (Liu et al. 2022) and DUBAI-CC (Hoxha et al. 2022) attach a single short caption per pair, which seldom encodes the spatial localization or step-wise comparison needed for chain-of-thought training. QUAKE-CoT couples each pair with a multi-step reasoning trace and a deterministically decodable dense mask, supporting joint op-timization of language and spatial grounding within a single autoregressive objective. Figure 6 visualizes the lexical distribution of QUAKE-CoT’s reasoning traces. The vocabulary is dominated by structural objects ( building , landcover ) and change descrip-tors ( new , modification , conversion ), reflecting the spatial– temporal vocabulary required for bi-temporal reasoning rather than the surface-level descriptors typical of single-sentence captioning. 
+
+Licenses and Limitations 
+
+QUAKE-CoT is released under the licenses of its underlying source datasets (SYSU-CD, LEVIR-CD, and LEVIR-CD+); we redistribute the bi-temporal imagery together with the Dataset Primary task Caption / QA Mask Reasoning Trace Avg. Word Count LEVIR-CC Change captioning ✓ – – 7.99 DUBAI-CC Change captioning ✓ – – 7.35 ChangeChat Interactive change understanding ✓ – Partial –SYSU-CD Binary change detection – ✓ – –LEVIR-CD Binary change detection – ✓ – –LEVIR-CD+ Binary change detection – ✓ – –
+
+QUAKE-CoT Structured dense change generation ✓ ✓ ✓ 60.38 Table 7: Comparison between QUAKE-CoT and representative remote-sensing change-language and change-detection datasets. Captioning datasets provide language supervision but do not provide dense binary masks for autoregressive mask generation. Conventional change-detection datasets provide dense masks but no reasoning traces. QUAKE-CoT pairs bi-temporal images with teacher-distilled reasoning traces and deterministic quadtree mask sequences. 
+
+Figure 6: Word cloud visualization of the QUAKE-CoT dataset’s textual content. derived quadtree mask sequences and reasoning traces under those terms. We highlight three limitations relevant to downstream use. First, reasoning traces are distilled from Gemini-3.1-Pro-Thinking-Preview ; biases or systematic blind spots of the teacher—for example, preferred phrasings, residual re-liance on global appearance cues, or culturally specific descriptors—may propagate into the trained policy despite the human cross-verification pass. Second, the source bench-marks emphasize built-environment changes, so building-level additions and removals are over-represented relative to natural changes such as vegetation succession, water-body fluctuation, or land-cover conversion at fine granular-ity. Third, the validation filter removes tiles whose anno-tated change is dominated by sub-tile-scale boundary noise, which trims a tail of legitimate but very small changes; QUAKE-CoT therefore underweights the high-frequency micro-change regime and should not be the sole benchmark for evaluating sub-pixel or thin-linear change detection. 
+
+## C Reward Construction Details 
+
+This section describes the training data and objective for the ThinkAnswer Reward Rϕ, which is trained in a dedicated RM stage and subsequently consumed by the GRPO RL stage. The training set combines policy rollouts scored by IoU, one Gemini-synthesized hard negative per query, and the ground-truth trace, assembled into strict pairwise preferences over a five-tier hierarchy. 
+
+Rollout Generation and IoU Scoring 
+
+For each prompt x in the 20% RL subset of the QUAKE-CoT dataset, we independently sample K = 10 responses 
+
+{y1, . . . , y K } ∼ πθSFT (· | x) from the curriculum-SFT pol-icy. Each response yi is parsed to extract its quadtree mask sequence y(i)
+
+> seg
+
+. The sequence is subsequently processed by the deterministic decoder D to yield the binary mask prediction 
+
+ˆM (i) = D(y(i)
+
+> seg
+
+).We evaluate the structural quality of every rollout by com-puting its Intersection over Union (IoU) with the ground-truth mask M :IoU (yi) = | ˆM (i) ∩ M || ˆM (i) ∪ M | (12) Generations that fail LQ grammar matching—missing 
+
+<seg> wrapper, unrecognized tokens, or malformed RLE prefixes—are assigned IoU( yi) = 0 ; pad/crop fallbacks trig-gered by dimension mismatch still receive a normally com-puted IoU. 
+
+Hard-Negative Generation 
+
+For each query we synthesize one fluent-but-contradictory hard negative yneg , forcing Rϕ to discriminate factual fi-delity from surface fluency rather than rewarding stylistic eloquence. 
+
+Generator and Prompt. The generator is Gemini-3.1-Pro-Thinking-Preview (Team et al. 2023), queried via API and conditioned on the bi-temporal pair (I1, I 2) together with the ground-truth trace ygt . Following the system prompt in Figure 14, the generator is instructed to inject exactly one factual conflict into the rewritten trace, drawn from three categories: fabricating a change that did not occur, displacing the change to an incorrect location, or asserting no-change when change is present. 
+
+Format Constraints. To ensure yneg is difficult to distinguish from genuine outputs, the prompt enforces three constraints: (i) the linguistic length is bounded between 0.8× and 1.2× of |ygt | in tokens; (ii) the original 
+
+<think>...</think><answer>...</answer> structure is preserved verbatim; (iii) giveaway tokens such as “mask” or “ground truth” are forbidden. 
+
+yneg is therefore placed at the bottom of the preference hierarchy defined below. 
+
+Preference Pair Construction 
+
+From the K = 10 rollouts we select three samples spanning the IoU spectrum: 
+
+ya = arg max 
+
+> yi
+
+IoU( yi), (13) 
+
+yb = arg min 
+
+> yi
+
+IoU( yi), (14) 
+
+yc = arg max   
+
+> yi/∈{ ya,y b}
+
+IoU( ya) − IoU( yi)
+
+· IoU( yi) − IoU( yb) . (15) Here ya and yb are the highest- and lowest-IoU rollouts, while yc is the intermediate rollout whose IoU sits farthest from both endpoints, measured by the product of absolute IoU gaps. A preference comparison between any two candidates 
+
+(yi, y j ) is considered valid only if their performance discrep-ancy is significant enough to warrant a discernible semantic difference. We enforce this through a margin check threshold 
+
+τ = 0 .1:
+
+yi ≻ yj ⇐⇒ IoU (yi) − IoU (yj ) ≥ τ (16) By incorporating the ground-truth sequence ygt (consid-ered the absolute upper bound) and the fabricated hard nega-tive yneg (the absolute lower bound), we establish a stringent, multi-tiered preference hierarchy: 
+
+ygt ≻ ya ≻ yc ≻ yb ≻ yneg (17) From this hierarchy, we extract the preference set 
+
+Dpref = (yc, y r ) yc ≻ yr , (18) instantiated by pairs such as (ygt , y neg ), (yb, y neg ), (ya, y c),and (yc, y b), provided the τ gap condition is satisfied for rollout comparisons. These pairs are aggregated to train the Qwen3-VL-8B-Instruct reward model. The neural reward model is optimized using the following objective: 
+
+LRM = −EDpref 
+
+ log σ(Rϕ(yc) − Rϕ(yr )) 
+
+− λ(Rϕ(yc) + Rϕ(yr )) 2, (19) The resulting preference set anchors Rϕ to spatial fidelity rather than surface phrasing. 
+
+Dual-Reward Specification 
+
+During the GRPO RL stage, the total reward combines a rule-based Rq with the learned Rt:
+
+R(x, y ) = (1 − μ) Rq (y; M ) + μ R t(y; x), (20) with μ = 0 .1. The rule-based component validates grammar and spatial accuracy; the learned component scores the bi-temporal reasoning trace. 
+
+Quadtree Reward Formulation ( Rq ). The Quadtree Re-ward deterministically validates format compliance and spa-tial accuracy: 
+
+Rq = clip (Rstruct + Rcontent , 0.0, 1.0) (21) If the generation fails LQ parsing—missing <seg> wrap-per, unrecognized tokens, a forbidden <Q0000> node, an RLE count below 2, or a child count not matching P 
+
+> i
+
+bi
+
+for any <Q abcd > node—grammar gating forces Rq = 0 .0.Otherwise: 
+
+• Structure Score ( Rstruct ): The decoded grid is compared against the expected dimensions (He, W e) via row-wise error rates and an exact-alignment bonus: 
+
+ϵh = min  1, |Hp − He|/H e
+
+, (22) 
+
+ϵw = 1
+
+HeHeX
+
+> i=1
+
+min  1, |Wi − We|/W e
+
+, (23) 
+
+Rstruct = 0 .25 max  0, 1 − 12 (ϵh + ϵw)
+
++ 0 .05 · ⊮Hp = He ∧ ∀ i W i = We
+
+, (24) where Hp is the decoded row count and Wi the logical width of row i after RLE expansion. 
+
+• Content Score ( Rcontent ): The decoded binary mask ˆM
+
+is scored against the ground truth M via the Tversky in-dex Tα,β with (α, β ) = (0 .3, 0.7) , which weights false negatives more strongly than false positives. Writing 
+
+TP = |M ∩ ˆM |, FP = | ˆM \ M |, and FN = |M \ ˆM |,
+
+Tα,β (M, ˆM ) = TP TP + α FP + β FN . (25) The content score is non-trivial only when the ground-truth mask contains foreground: when |M | = 0 , an exact-empty prediction earns a residual reward of 0.2 to pre-vent collapse to all-background outputs, while any false-positive prediction yields 0. For active masks ( |M | > 0): 
+
+Rcontent = 0 .70 Tα,β (M, ˆM ) salign 
+
++ 0 .03 ⊮[T ≥ 0.45 ∧ strict ], (26) where salign = 1 .0 under strict decode and salign = 0 .80 
+
+when the pad/crop fallback was triggered. The additive 
+
++0 .03 rewards strict-decoded predictions whose Tversky score clears the boundary-preservation threshold. 
+
+ThinkAnswer Reward Formulation (Rt). 
+
+The reward model Rϕ trained in the pre-ceding RM stage scores the extracted 
+
+<think>...</think><answer>...</answer> 
+
+segment of each rollout. To stabilise the reward scale across queries, we apply query-wise centred sigmoid normalisation over the group Sx of K = 8 rollouts sharing prompt x:
+
+Rt(yi) = σ Rϕ(yi | x) − ¯Rϕ(x), (27) 
+
+¯Rϕ(x) = 1
+
+|S x|
+
+X 
+
+> yj∈S x
+
+Rϕ(yj | x). (28) The mean is computed across all K rollouts of x aggregated over all data-parallel ranks, so every rank applies identical centring; this bounds Rt ∈ (0 , 1) and yields zero-mean ad-vantages within each query group. Hyperparameter Stage 1 (SFT) Stage 2 (SFT) RM Training RL (GRPO) 
+
+Foundation Model Qwen3-VL-8B Stage 1 Checkpoint Qwen3-VL-8B Stage 2 Checkpoint Training Epochs 10 5 3 3
+
+Optimizer AdamW AdamW AdamW AdamW Precision BF16 BF16 BF16 BF16 Learning Rate 2 × 10 −4 2 × 10 −4 1 × 10 −4 5 × 10 −6
+
+LR Scheduler Cosine Cosine Cosine Cosine Warmup Ratio 0.03 0.03 0.05 0.03 
+
+Weight Decay 0.01 0.01 0.01 0.01 
+
+Hardware Setup 8× H200 8× H200 4× H200 8× H200 Batch Size (BS) per GPU 8 8 4 2
+
+Gradient Accumulation Steps 1 1 1 1
+
+Max Sequence Length 4096 4096 2048 1024 (Completion) 
+
+LoRA Configuration 
+
+LoRA Target Modules Attention & MLP Attention & MLP Attention & MLP All Linear LoRA Rank ( r) 64 64 64 32 
+
+LoRA Alpha ( α) 128 128 128 64 
+
+LoRA Dropout 0.05 0.05 0.05 0.05 
+
+RL-Specific Configuration 
+
+Rollouts per Prompt ( K) – – – 8
+
+Temperature – – – 0.7
+
+KL Coefficient ( β) – – – 0.04 
+
+Reward Weights – – – 1.0 ( Rq ), 0.1 ( Rt)
+
+Table 8: Comprehensive hyperparameters for all training stages of QUAKE-CD. BS = batch size per device. 
+
+## D Comprehensive Hyperparameters 
+
+Table 8 lists the full hyperparameter configuration for the two SFT stages, the reward model, and the GRPO rollout. 
+
+Throughput Measurement Protocol. Because Table 1 mixes specialist change detectors and VLMs, we define throughput at the application level rather than the token level. All methods are measured on a single NVIDIA H200 GPU with batch size 64 under BF16 inference, and the reported numbers are wall-clock end-to-end throughput in pairs/s. For specialist detectors, this includes direct mask prediction and deterministic post-processing. For VLM baselines, it in-cludes prompt encoding, autoregressive generation until the model’s stopping criterion, and final mask extraction when applicable. For QUAKE-CD, this additionally includes gen-eration of the <seg> span, followed by deterministic decod-ing of <seg> into the binary mask. No test-time adaptation, model parallelism, or extra refinement is used. 
+
+## E More Experimental Results 
+
+Oracle Performance Upper Bound 
+
+The mask representation imposes an upper bound indepen-dently of model generation. Table 9 reports the representa-tion oracles of the hierarchical QUAKE encoding and the flat text-as-mask encoding on the QUAKE-CoT test set. The flat oracle applies to Text4Seg and RSUniVLM, while the 
+
+QUAKE oracle applies to QUAKE-CD. Table 9 isolates the effect of mask representation. Both encodings preserve 100 .00% foreground recall, confirming that neither representation discards annotated change re-gions. Compared with flat text-as-mask encoding, QUAKE 
+
+increases accumulated precision from 68 .04% to 84 .03% 
+
+and per-image precision from 65 .23% to 81 .43% . These im-provements raise accumulated and per-image F1 by 10 .35% 
+
+and 9.70% , respectively. The results show that hierarchi-cal refinement suppresses boundary over-coverage induced by uniform spatial quantization while preserving complete foreground coverage. For metric m ∈ { Precision , Recall , F1 } and evaluation regime s ∈ { acc , img }, the fraction of oracle performance reached is 
+
+ρ(s) 
+
+> m
+
+= m(s)model 
+
+m(s)oracle 
+
+× 100% , (29) where m(s)oracle is the upper bound obtained from represen-tation round-trip fidelity and m(s)model is the end-to-end re-sult in Table 1. These ratios quantify the remaining model-generation gap after accounting for representation-specific quantization. Table 10 shows that QUAKE-CD realizes the largest frac-tion of its representation oracle across all metrics. It reaches 
+
+85 .75% accumulated F1 and 82 .52% per-image F1, exceed-ing the strongest alternative by 8.76% and 5.35% , respec-tively. Its normalized precision also remains above 84% 
+
+under both evaluation regimes, indicating substantially less degradation from autoregressive generation. Together, the two tables show that the gains of QUAKE-CD arise from both a more faithful spatial representation and a more effec-Representation Accumulated Mean Per-Image Mean Precision Recall F1 Precision Recall F1 Flat text-as-mask 68.04 100.00 80.97 65.23 100.00 78.98 
+
+QUAKE 84.03 100.00 91.32 81.43 100.00 88.68 
+
+Table 9: Representation-oracle mask quality on the QUAKE-CoT test set. Each ground-truth mask is encoded with the corre-sponding mask representation and deterministically decoded without model generation. All metrics are reported as percentages. Method Accumulated Mean Per-Image Mean Precision Recall F1 Precision Recall F1 Text4Seg 21.34 84.07 30.58 23.41 54.88 24.88 RSUniVLM 73.67 82.45 76.99 74.74 81.23 77.17 
+
+QUAKE-CD 84.48 87.31 85.75 84.45 84.09 82.52 
+
+Table 10: End-to-end mask quality normalized by the corresponding representation oracle on the QUAKE-CoT test set. Each entry reports model performance divided by oracle performance. Dataset Accumulated Mean Per-Image Mean Precision Recall F1 Precision Recall F1 LEVIR-CD 64.65 98.61 78.10 58.53 90.23 71.00 LEVIR-CD+ 55.79 85.82 67.62 57.23 78.68 66.26 Table 11: Change-mask performance under tiled inference on the original 1024 × 1024 test images. All values are percentages. tive realization of its attainable mask quality. 
+
+Scalability to High-Resolution Imagery 
+
+Although our model is trained with 256 × 256 image pairs, practical remote sensing imagery often covers substantially larger spatial extents. We therefore evaluate its scalability on the original 1024 × 1024 images from LEVIR-CD and LEVIR-CD+, without high-resolution fine-tuning or archi-tectural modification. Each co-registered bi-temporal pair is partitioned into a 4 × 4 grid of non-overlapping and spatially aligned 256 × 256 tile pairs. The model processes each pair independently at its native training resolution. The result-ing QUAKE predictions are decoded into binary tile masks, restored to their original coordinates, and stitched into a full-resolution 1024 × 1024 prediction for evaluation against the original ground truth. This protocol preserves local image detail and avoids the information loss caused by resizing the entire image to the training resolution. No overlapping infer-ence, test-time adaptation, cross-tile refinement, or learned fusion is employed. Table 11 reports the resulting full-resolution performance. On the test pairs of LEVIR-CD, the model achieves a dataset-level precision of 64 .65% and an F1 score of 78 .10% , with a recall of 98 .61% . On the test pairs of LEVIR-CD+, it ob-tains a precision of 55 .79% and an F1 score of 67 .62% , with a recall of 85 .82% . The consistently high recall indicates that the model retains strong sensitivity to changed struc-tures when applied to images with 16 × the training image area. The lower precision on LEVIR-CD+ suggests that the remaining errors are primarily attributable to conservative over-detection rather than missed changes. Overall, these re-sults demonstrate that the proposed QUAKE predictor can be effectively extended to megapixel-scale imagery through a simple tiled inference strategy while preserving the original training resolution. Figure 7 provides qualitative evidence consistent with these results. In the first example, the stitched prediction recovers the full extent of the newly developed curvilinear residential area, while merging nearby building footprints and expanding into some surrounding regions. In the sec-ond example, it captures the long rows of newly constructed buildings but represents several adjacent instances as con-tiguous bands. These errors explain the high recall and lower precision reported in Table 11. Despite independent tile pro-cessing, both predictions retain the global spatial arrange-ment of changes after stitching, confirming effective transfer from 256 × 256 training crops to 1024 × 1024 scenes. 
+
+Generalization on Out-of-Domain Dataset 
+
+All preceding evaluations use data drawn from QUAKE-CoT and therefore retain substantial overlap with its training dis-tribution. We assess external validity on WHU Building CD (Ji, Wei, and Lu 2019), which is excluded from data con-struction, supervised fine-tuning, and reinforcement learn-ing. WHU has a ground sampling distance of 0.2 m/pixel, compared with 0.3 m/pixel for LEVIR-CD and 0.5 m/pixel for SYSU-CD, and was acquired with a different sensor. This benchmark consequently introduces coupled shifts in spa-tial resolution, sensor characteristics, scene appearance, and object scale. We evaluate the frozen QUAKE-CD model without spe-cific fine-tuning or test-time adaptation. The native ground sampling distance is preserved, and each pair is processed using the same tiled inference and deterministic decoding (a) (b) (c) (d) Figure 7: Qualitative results on original 1024 × 1024 image pairs under tiled inference. Each row presents one example: (a) pre-change image; (b) post-change image; (c) ground-truth change mask; (d) stitched prediction. Method Accumulated Mean Per-Image Mean Precision Recall F1 Precision Recall F1 BIT 72.93 68.25 68.54 62.24 60.44 60.21 ChangeFormer 75.83 71.04 75.36 71.30 60.63 65.29 ChangeCLIP 76.41 68.70 73.09 54.43 45.76 47.13 LISA-7B 15.73 64.03 25.96 16.46 42.15 19.97 LISA-llama2-13B 14.88 68.52 22.99 17.62 41.71 21.15 GLaMM 12.34 45.36 23.00 14.23 27.53 15.93 PixelLM 16.02 65.63 26.75 17.72 42.73 20.87 Text4Seg 14.65 74.41 22.26 12.94 47.80 19.18 RSUniVLM 45.23 74.57 58.25 46.80 72.62 56.65 QUAKE-CD 65.36 78.40 71.29 64.90 73.88 69.10 
+
+QUAKE-CD / Oracle 77.84 78.40 78.10 87.69 73.88 82.44 Table 12: Out-of-domain performance on WHU Building CD. QUAKE-CD is evaluated without specific fine-tuning. The second row reports end-to-end performance normalized by the corresponding representation oracle. protocol described in Section 4. Table 12 reports the end-to-end mask quality of QUAKE-CD and the fraction of the corresponding representation ora-cle attained by the model. The oracle is obtained by encoding and deterministically decoding the WHU ground-truth masks with the QUAKE representation. The normalized row follows Equation 29 and divides each end-to-end metric by its ora-cle counterpart. Under accumulated evaluation, QUAKE-CD remains competitive with the specialist change detectors: its accumulated F1 of 71 .29% is within 4.07% of the strongest specialist, ChangeFormer, while its accumulated recall of 
+
+78 .40% is the best in the table. More importantly, QUAKE-CD surpasses all specialist baselines in the per-image setting, reaching 69 .10% F1 versus 65 .29% for the strongest special-ist, ChangeFormer. Among the VLM baselines, QUAKE-CD is the best by a clear margin; the strongest VLM base-line, RSUniVLM, reaches only 58 .25% accumulated F1 and 
+
+56 .65% per-image F1, leaving QUAKE-CD ahead by 13 .04 
+
+and 12 .45 points, respectively. Without adaptation, QUAKE-CD achieves accumulated and per-image F1 scores of 71 .29% 
+
+and 69 .10% . These results correspond to 78 .10% and 82 .44% 
+
+of the respective oracle F1 scores. Recall remains higher (α, β ) Accumulated Mean Per-Image Mean Precision Recall F1 Precision Recall F1 (0.1, 0.9) 70.82 86.68 77.95 68.41 83.04 72.63 (0.2, 0.8) 70.24 86.89 77.68 68.19 83.24 72.51 
+
+(0.3, 0.7) 70.99 87.31 78.31 68.77 84.09 73.18 
+
+(0.4, 0.6) 73.13 81.19 76.95 69.63 79.44 71.61 (0.5, 0.5) 73.09 81.31 76.98 69.40 79.35 71.46 Table 13: Sensitivity of the Tversky parameters in the Quadtree Reward. 
+
+μ Accumulated Mean Per-Image Mean Reranker Precision Recall F1 Precision Recall F1 (score) 0.05 68.91 76.38 72.45 58.70 74.50 67.50 69.72 
+
+0.10 70.99 87.31 78.31 68.77 84.09 73.18 71.26 
+
+0.15 70.55 86.75 77.82 68.31 83.17 72.60 70.30 0.20 73.09 81.31 76.98 69.40 79.35 71.46 68.05 Table 14: Sensitivity of the reward trade-off coefficient in Eq. (3). KL Coefficient Accumulated Mean Per-Image Mean Reranker Precision Recall F1 Precision Recall F1 (score) 
+
+0.00 72.78 81.53 76.90 69.44 79.67 71.58 64.85 0.02 71.60 82.91 76.84 68.77 80.66 71.64 70.82 
+
+0.04 70.99 87.31 78.31 68.77 84.09 73.18 71.26 
+
+0.06 68.91 76.38 72.45 66.03 74.50 67.50 70.79 0.08 69.25 76.31 72.61 66.12 74.46 67.48 64.09 Table 15: Sensitivity of the GRPO KL coefficient. The Reranker column reports the average reranker score. than precision under both evaluation regimes, showing that the transferred model favors coverage of changed buildings over conservative boundary estimation. The results establish effective generalization across shifts in spatial resolution, sensor characteristics, and scene appearance. 
+
+Qualitative Attention Visualization 
+
+To assess the spatial grounding of the structured prediction process, we construct two complementary attention views. The token-conditioned visualization projects the attention associated with each generated QUAKE token onto its des-ignated visual tile. The aggregated overlay pools the visual responses over the complete segmentation sequence, provid-ing a holistic view of the evidence supporting the predicted change region. We present three representative examples in Figure 8, Figure 9, and Figure 10. Across all cases, both attention views concentrate on regions undergoing meaningful tem-poral changes, while largely unchanged background areas receive weak responses. In the token-conditioned visualiza-tion, the red box marks the visual tile corresponding to the generated QUAKE token. The peak attention mostly falls within this tile, with substantially lower responses on neigh-boring and non-corresponding tiles. This self-tile concentra-tion provides direct evidence of the spatial alignment between the QUAKE output and the visual representation. The aggre-gated attention overlay further recovers the overall extent of the changed regions and follows their salient structures and boundaries. Its spatial distribution is consistent with both the predicted masks and the ground-truth annotations, indicating that the model focuses on relevant changes while suppressing irrelevant contextual content. This agreement is maintained across examples with different object scales, shapes, and background configurations, supporting the effectiveness of the QUAKE -based representation for grounding structured segmentation predictions in visual change evidence. 
+
+Parameter Sensitivity Analysis 
+
+We sweep three reward-related hyperparameters around the default configuration used in the main experiments: the Tver-sky asymmetry (α, β ) = (0 .3, 0.7) , the reward trade-off 
+
+μ = 0 .1 in Eq. (3), and the KL coefficient 0.04 . As sum-marized in Tables 13–15, the default setting is consistently the most balanced choice: it yields the strongest recall/F1 trade-off for the Tversky reward, achieves the highest reranker score at μ = 0 .1, and provides the best overall balance under KL regularization. Although some nearby settings improve precision in isolation, they generally do so at the expense of recall, F1, or reranker performance. 
+
+## F Failure Mode Analysis 
+
+We quantify three categories of generation failure that can compromise mask reconstruction. Grammar invalidity oc-(a) (b) (c) (d) (e) 
+
+> post-change image visual tile (raster index) generated <Q> tile-token (sequence order)
+
+Figure 8: Qualitative attention visualization example. (a) Pre-change image; (b) post-change image with aggregated attention overlay for the complete segmentation sequence; (c) ground-truth change mask; (d) predicted change mask; (e) token-conditioned attention visualization, where the red box indicates the visual tile corresponding to the generated QUAKE token. The token-conditioned attention peaks within the corresponding red-boxed tile, while the aggregated attention concentrates on regions of temporal change and is consistent with both the predicted and ground-truth masks. Stage Grammar Invalid Structure Mismatch / Fallback After Curriculum SFT 1.26% 12 .64% 
+
+After RL 0.13% 2.17% 
+
+Table 16: Failure-mode rates on the QUAKE-CoT test split. The pad/crop fallback is invoked exactly when a structure mismatch is detected, so the two columns share a trigger. curs when the <seg> span cannot be parsed under GQ (e.g., malformed quadtree node, run-length count below 2, or un-matched delimiters). Structure mismatch occurs when the parsed grid does not match the expected H/ 32 × W/ 32 di-mensions. Whenever a structure mismatch is detected, the decoder falls back to a pad/crop alignment that pads or truncates the recovered grid to the target shape; the trigger rate of this fallback therefore coincides with the structure-mismatch rate. Table 16 reports these rates measured on the held-out test split after the two-stage curriculum (S1+S2) and after grammar-gated dual-reward RL (S1+S2+ Rq +Rt). Curricu-lum supervision already keeps grammar invalidity at 1.26% ,indicating that the syntax is largely internalized during SFT. Reinforcement learning further reduces grammar invalidity to 0.13% , an order-of-magnitude drop attributable to the grammar gate in Rq that assigns zero reward to ungram-matical rollouts. Structure mismatch decreases from 12 .64% 
+
+to 2.17% over the same transition, showing that the structure score in Rq effectively penalizes grid-dimension drift even though the grammar gate alone does not enforce it. 
+
+## G Prompt Templates 
+
+Figures 11–16 reproduce every prompt used in this work. Data construction prompts (Figs. 11, 12, 13, 14) cover the system instruction, QA distillation, and hard-negative syn-thesis described in §B and §C. Evaluation prompts (Figs. 15, 16) cover the reranker used during preference-pair selection and the GPT judge used in §4. (a) (b) (c) (d) (e) 
+
+> post-change image visual tile (raster index) generated <Q> tile-token (sequence order)
+
+Figure 9: Qualitative attention visualization example. (a) Pre-change image; (b) post-change image with aggregated attention overlay for the complete segmentation sequence; (c) ground-truth change mask; (d) predicted change mask; (e) token-conditioned attention visualization, where the red box indicates the visual tile corresponding to the generated QUAKE token. The token-conditioned attention peaks within the corresponding red-boxed tile, while the aggregated attention concentrates on regions of temporal change and is consistent with both the predicted and ground-truth masks. (a) (b) (c) (d) (e) 
+
+> post-change image visual tile (raster index) generated <Q> tile-token (sequence order)
+
+Figure 10: Qualitative attention visualization example. (a) Pre-change image; (b) post-change image with aggregated attention overlay for the complete segmentation sequence; (c) ground-truth change mask; (d) predicted change mask; (e) token-conditioned attention visualization, where the red box indicates the visual tile corresponding to the generated QUAKE token. The token-conditioned attention peaks within the corresponding red-boxed tile, while the aggregated attention concentrates on regions of temporal change and is consistent with both the predicted and ground-truth masks. You are an expert in remote sensing change detection. You are given: - two co-registered temporal images - a user question about changes between them Your job is to analyze the changes and produce exactly three tagged blocks in this exact order: <think>...</think> <answer>...</answer> <seg>...</seg> Output contract: - Output exactly these three tagged blocks, in the exact order above. - Do not output any extra text before, after, or between the blocks. - Do not use markdown fences. - Do not add titles, explanations, or notes outside the three tags. Tag requirements: - <think>: brief visual reasoning about the changes between the two images. - <answer>: direct and concise final answer to the user question. - <seg>: only the encoded change mask, with no explanations and no extra characters. Important: - If there is no detected change, <seg> should still contain a valid encoding using the same format. - If natural-language preferences conflict with the mask encoding rules, follow the mask encoding rules. <QUAKE Rules> 
+
+# System Prompt Figure 11: System prompt prepended to all training and inference inputs of QUAKE-CD. Encoding specification for <seg>: Overall layout: - Partition the image into a regular grid of non-overlapping 32 ×32 pixel tiles. - Tiles are ordered in raster order: top-to-bottom by 32-pixel-high bands, and within each band left-to-right. - One text line corresponds to one 32-pixel-high band. - Within a line, adjacent tile encodings are separated by a single "|" with no required spaces. - The k-th text line (0-based) covers image rows [k*32, (k+1)*32). - Within that line, the t-th tile position after expanding any run-length tokens (0-based) covers image columns [t*32, (t+1)*32). - Therefore, the number of text lines is image_height / 32, and each line represents image_width / 32 tiles after run-length expansion. Valid tile encodings: Each tile must be encoded as exactly one of the following: - "<BG>" meaning the entire 32 ×32 tile is background. - "<FG>" meaning the entire 32 ×32 tile is foreground at the target output granularity. - "<BG>*n" or "<FG>*n" meaning a run-length encoding for consecutive identical "<BG>" or "<FG>" tiles on the same line only. Here n is an integer >= 2. Run-length compression applies only within a single line, never across lines. - A quadtree string meaning a concatenation of one or more blocks of the form "<Qabcd>" with no spaces. Quadtree bit semantics: - In each "<Qabcd>" block, the bits a, b, c, d correspond to quadrants in this exact order: top-left, top-right, bottom-left, bottom-right. - Bit meaning: - 1 = this quadrant contains foreground / is active - 0 = this quadrant is empty / inactive Quadtree serialization rules: - A quadtree string is serialized in preorder. - Write the current "<Qabcd>" first. - Then, for each quadrant whose bit is 1, recursively append that child quadrant's own "<Q....>" block(s). - The recursive child order must be exactly: top-left, top-right, bottom-left, bottom-right. - Do not append child blocks for quadrants whose bit is 0. - Recursion continues until the minimum leaf size reaches 8 ×8. - At the final level, one "<Qabcd>" describes the four 8 ×8 sub-quadrants of its parent region. Final rules for <seg>: - <seg> must contain only the encoded mask. - Do not include prose, comments, labels, explanations, markdown, or any characters outside this encoding. 
+
+## QUAKE Rules (Embedded in System Prompt) Figure 12: QUAKE grammar rules embedded into the system prompt to constrain the model’s output schema. You are an expert in remote sensing change detection. The user sends three co-registered remote sensing images, in order: (1) Time-1 (earlier), (2) Time-2 (later), (3) a binary change reference (white = changed, black = unchanged). Use (3) only to keep outputs **internally consistent** with real change locations; **never mention, cite, or allude to (3)** in the JSON text. Return **one valid JSON object** with "question" and "answer" (double-quoted keys; valid JSON only; no markdown fences or extra text). "question": - Wording refers **only** to the **two temporal** images. Ask for **reasoning-oriented** comparison (how to analyze, what kinds of differences to consider), not yes/no. - Tell the respondent to **discount** differences from **season, phenology, sun angle, shadows, haze, or global brightness/contrast**, and to focus on **structural change** (new/removed objects, altered built footprint, land-cover conversion, layout), not radiometric or atmospheric appearance alone. - **No** spatial hints (no compass, edges, “near X”, named patches, or “what changed in region X”). - **No** third image, mask, white/black pixels, bands, or file paths. - High-level process/category terms are OK **without** tying them to a place in the scene. "answer": - One string with exactly, in order: <think>...</think> then <answer>...</answer>. - <think>: Step-by-step reasoning **as if** only Time-1 and Time-2 were seen (appearance, texture, geometry, land cover). **No** mention of (3), mask, ground truth, labels, reference/binary/auxiliary maps, or any hint that a separate change map exists. - <answer>: Short **what** + **where** in visual/geographic terms; must **agree spatially** with (3) but **still** no (3)-related wording. Put “where” here, not in the question. In the **entire** "answer" value, the substring "mask" (any case) must not appear. 
+
+## Prompt for QUAKE-CD-COT Generation Figure 13: Prompt issued to the teacher model to distill <think> /<answer> traces from a bi-temporal image pair during QUAKE-CoT construction. You are an expert in remote sensing change detection answer writing. **Inputs (in the user message, in order):** 1) Time-1 image (earlier), 2) Time-2 image (later), 3) binary change reference (white=changed, black=unchanged), 4) a reference answer text (Query). Your task is to generate a new answer whose core factual claim intentionally conflicts with the Query (e.g., what changed, where it changed, or whether meaningful change happened), while preserving the same writing quality profile. Use the following criteria jointly when imitating writing quality: 1) Semantic completeness: keep a comparable coverage of important change details. 2) Conciseness and length quality: keep a similar length/granularity; avoid verbosity, repetition, and over-short underspecified text. 3) Structural coherence: keep a compatible logical structure (main conclusion, key change factors, and causal/contrast relations). Important: - Only change 1-2 core facts (what/where/whether change happened). Keep non-core scene entities and descriptive scaffolding aligned with the Query. - Keep length close to Query. Target about 0.8x-1.2x of the Query text length. - Preserve a compatible discourse order with Query. - Do not mention mask/binary map/ground truth/reference answer/input index. **Output format (strict, non-negotiable):** - Output **nothing** except one JSON object. - The object has **exactly one** top-level key: **"response"**. - The value of **"response"** is one JSON string containing exactly: 1) `<think>...</think>`: concise RS-style reasoning. 2) `<answer>...</answer>`: concise what+where statement. - No markdown fences, no backticks, no extra keys, no extra prose. - The substring "mask" (any case) must not appear anywhere in the JSON. 
+
+## Prompt for Hard Negative Generation Figure 14: Prompt issued to Gemini-3.1-Pro-Thinking-Preview to synthesize hard negatives for the preference hierarchy in §C. You are an expert evaluator for remote sensing change detection answers. Given a reference answer (Query) and a candidate answer (Document), judge whether the Document is truly relevant and faithful to the Query. Use all of the following criteria jointly: 1) Semantic fidelity: preserve the same change semantics and key entities. 2) Semantic completeness: do not omit important change details. 3) Conciseness and length quality: avoid verbose, repetitive, or overly short responses that lose meaning. 4) Structural coherence: keep a compatible logical structure (main conclusion, key change factors, and causal/contrast relations). Note: all four criteria are equally important. No criterion is optional or secondary. Semantically correct answers with different wording/order should still be considered relevant. Superficially similar wording/structure with wrong conclusions or missing key facts should be considered not relevant. 
+
+## Prompt for Reranker Figure 15: Prompt issued to Qwen3-VL-Reranker to score candidate responses during preference-pair selection. You are an expert evaluator for remote sensing change detection captions. Inputs: 1. Ground-truth reference: <think> + <answer>. 2. Model prediction: <think> + <answer>. Task: decide whether the prediction is semantically consistent with the reference. Prioritize the <answer> fields; use reasoning as supporting context. Output 1 when the prediction substantially agrees with the reference on: - Core change type (e.g., new construction, demolition, road/infrastructure, land clearing, renovation, expansion). Synonyms and paraphrases are acceptable. - Spatial focus: the same general area/region (e.g., upper right, lower left, central). Exact wording need not match; compatible or overlapping locations count. - Main conclusion: the prediction captures the reference's primary change and does not contradict whether meaningful permanent built-environment / land-use modification occurred. Minor differences in detail, phrasing, reasoning path, or secondary mentions (e.g., brief extra context in thinking) are acceptable if the <answer> meaning aligns. Output 0 only for clear mismatches, such as: - Wrong or incompatible primary change type vs. reference. - Clearly different scene region when the reference specifies location. - Missing the reference's main change, or claiming no significant change when the reference describes one. - Inventing a major change that contradicts the reference. - Superficial overlap only (shared words but different semantics). When borderline, lean toward 1 if the answers describe the same event in the same general area; lean toward 0 only when the mismatch is clear. Output format: Return ONLY a single integer: 1 (consistent) or 0 (inconsistent). No explanation. 
+
+## Prompt for GPT-as-Judge Figure 16: Prompt issued to GPT-5.5 for pairwise quality scoring reported in §4.

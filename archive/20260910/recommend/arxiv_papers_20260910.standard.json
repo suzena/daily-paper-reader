@@ -1,0 +1,209 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-10T21:14:32.671056+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.09374v1",
+      "source": "arxiv",
+      "title": "An Autonomous GeoAI Agent for Arctic Eco-Navigation",
+      "abstract": "Arctic maritime navigation is becoming increasingly important as changing sea-ice conditions expand seasonal accessibility while simultaneously introducing substantial operational, environmental, and community risks. Arctic route planning is inherently a multi-criteria problem: routes that improve vessel safety or efficiency may increase exposure to sea ice, sensitive ecosystems, or nearby communities. Existing routing methods prioritize travel time, fuel use, and navigational risk, often overlooking ecological and community impacts. We introduce a human-in-the-loop, multi-agent GeoAI system for Arctic eco-navigation that integrates operational, physical, ecological, and community-related criteria within a unified routing framework. Multiple specialized agents coordinate geospatial data acquisition and preparation, multi-objective route generation, and skyline-based decision support. The ecological criteria explicitly account for exposure to sensitive areas, including Essential Fish Habitat and seal critical habitat. By considering these ecosystem impacts and potential community burdens while keeping consequential value judgments under human control, the framework supports safer, more transparent, and socially responsible Arctic navigation. Project page and code are publicly available. https://samiraat.github.io/Arctic-Eco-Navigation-Agent/, https://github.com/samiraat/Arctic-Eco-Navigation-Agent",
+      "authors": [
+        "Samira Alkaee Taleghan",
+        "Younghyun Koo",
+        "Farnoush Banaei-Kashani"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-08T19:15:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.09374v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autonomous multi-agent GeoAI for marine navigation",
+      "llm_evidence_cn": "面向海洋航行的自主多智能体GeoAI",
+      "llm_evidence": "面向海洋航行的自主多智能体GeoAI",
+      "canonical_evidence": "面向海洋航行的自主多智能体GeoAI",
+      "llm_tldr_en": "A human-in-the-loop multi-agent GeoAI system coordinates specialized agents to plan Arctic eco-navigation routes balancing safety, ecology, and community criteria.",
+      "llm_tldr_cn": "随着海冰变化，北极航行日益重要，但航线规划是典型多准则问题，现有方法偏重时间、油耗与航行风险，常忽视生态与社区影响。本文提出人机协同的多智能体GeoAI系统用于北极生态航行，由多个专用智能体协同，在统一框架内整合作业、物理、生态与社区准则。系统据此生成兼顾安全、效率与生态社区影响的航线。该工作为海洋自主智能体与多准则环境决策提供了可复用架构。",
+      "llm_tldr": "随着海冰变化，北极航行日益重要，但航线规划是典型多准则问题，现有方法偏重时间、油耗与航行风险，常忽视生态与社区影响。本文提出人机协同的多智能体GeoAI系统用于北极生态航行，由多个专用智能体协同，在统一框架内整合作业、物理、生态与社区准则。系统据此生成兼顾安全、效率与生态社区影响的航线。该工作为海洋自主智能体与多准则环境决策提供了可复用架构。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.09451v1",
+      "source": "arxiv",
+      "title": "Uncertainty-Aware Sea-Ice Type Mapping with Multiple Ice Charts",
+      "abstract": "Sea-ice stage of development (SoD) describes the age and associated thickness of sea ice and provides important information for navigation, and operational ice monitoring. SoD labels are obtained from operational ice charts, where trained analysts interpret satellite observations and assign standardized stage codes to regions with similar ice conditions. These codes often represent ranges of compatible ice thicknesses rather than exact physical values. Deep-learning methods can automate SoD mapping and commonly adopt operational ice charts as reference labels for training. These annotations are not exact, however; this is because chart interpretation relies on analyst judgement and on the observations available at the time, so different ice services may assign different SoD labels to the same conditions. We term this variation across independently produced expert annotations multi-annotator label uncertainty; collapsing the annotations into a single deterministic target discards this variation. A second source of uncertainty originates in the learned model itself. In this paper, we quantify both sources: annotation uncertainty from disagreement among independent ice-service charts and model uncertainty from the learned predictive models. We then evaluate their relationship by testing whether model uncertainty is higher where ice services disagree. We observe that supervision incorporating information from multiple annotators can improve this correspondence, with soft supervision achieving the highest overall correlation of 0.256. The relationship becomes substantially stronger near the ice edge, where model predictive uncertainty closely tracks multi-annotator disagreement, reaching a correlation of 0.704 within 0--10 km. Among the uncertainty-estimation approaches, Monte Carlo dropout provides the best-calibrated confidence estimates, with an expected calibration error of 0.050.",
+      "authors": [
+        "Samira Alkaee Taleghan",
+        "Younghyun Koo",
+        "Andrew P. Barrett",
+        "Farnoush Banaei-Kashani"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-08T21:02:44+00:00",
+      "link": "https://arxiv.org/pdf/2609.09451v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning mapping of sea-ice from satellite observations",
+      "llm_evidence_cn": "基于卫星观测的海冰深度学习制图",
+      "llm_evidence": "基于卫星观测的海冰深度学习制图",
+      "canonical_evidence": "基于卫星观测的海冰深度学习制图",
+      "llm_tldr_en": "This work proposes an uncertainty-aware deep-learning approach for sea-ice stage-of-development mapping using multiple ice charts, handling inexact analyst-derived labels.",
+      "llm_tldr_cn": "海冰发展阶段信息对航行与冰情监测至关重要，但深度学习制图所依赖的业务冰图标签来自分析员判读，代表厚度区间而非精确值，存在标注不确定性。本文提出不确定性感知方法，利用多幅冰图进行海冰类型制图并建模标签噪声。实验表明该方法能缓解不同冰服务机构标注差异带来的影响，提升海冰制图的可靠性，为海洋遥感监测提供了不确定性感知框架。",
+      "llm_tldr": "海冰发展阶段信息对航行与冰情监测至关重要，但深度学习制图所依赖的业务冰图标签来自分析员判读，代表厚度区间而非精确值，存在标注不确定性。本文提出不确定性感知方法，利用多幅冰图进行海冰类型制图并建模标签噪声。实验表明该方法能缓解不同冰服务机构标注差异带来的影响，提升海冰制图的可靠性，为海洋遥感监测提供了不确定性感知框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.09876v1",
+      "source": "arxiv",
+      "title": "From Pixels to Hierarchical Sequences: Quadtree Mask Encoding for Vision-Language Binary Change Detection",
+      "abstract": "Dense change detection in remote sensing requires vision-language models (VLMs) to compare bi-temporal images and generate accurate pixel-level masks. Existing VLMs are largely confined to change captioning outputs, and the few that produce pixel-level masks still rely on external decoders or flat text-as-mask serialization, which are less effective for small and fragmented changes. We introduce QUAKE-CD, a framework that recasts dense change prediction as syntax-verifiable structured generation. QUAKE-CD represents binary change masks as grammar-constrained quadtree token sequences, making the masks compact, syntactically checkable, and deterministically decodable within an autoregressive generation space. We further construct QUAKE-CoT, which pairs these sequences with chain-of-thought traces grounded in visual evidence, and jointly optimizes textual reasoning and spatial dense prediction through a progressive curriculum followed by grammar-gated dual-reward RL. On QUAKE-CoT, QUAKE-CD achieves 78.31% accumulated F1, outperforming decoder-based and flat text-as-mask VLMs while producing more faithful bi-temporal reasoning.",
+      "authors": [
+        "Xiao An",
+        "Ruikang Zhang",
+        "Chen Zhong",
+        "Xuli Shen",
+        "Jiaxing Sun",
+        "Jiang Wu",
+        "Wei He"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-09T08:29:37+00:00",
+      "link": "https://arxiv.org/pdf/2609.09876v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "vision-language model fusing imagery and text for change detection",
+      "llm_evidence_cn": "融合影像与文本的视觉语言变化检测",
+      "llm_evidence": "融合影像与文本的视觉语言变化检测",
+      "canonical_evidence": "融合影像与文本的视觉语言变化检测",
+      "llm_tldr_en": "QUAKE-CD recasts dense change detection as syntax-verifiable structured generation, encoding binary change masks as grammar-constrained quadtree token sequences within VLMs.",
+      "llm_tldr_cn": "遥感密集变化检测需要视觉语言模型比较双时相影像并生成像素级掩码，但现有模型多局限于变化描述，少数能出掩码的方法依赖外部解码器或扁平文本序列化，对小而破碎的变化效果不佳。本文提出QUAKE-CD，将二值变化掩码表示为语法约束的四叉树token序列，使其紧凑、可校验并能在自回归空间中确定性解码。该方法提升了密集变化预测效果，为视觉语言遥感变化检测提供了结构化生成范式。",
+      "llm_tldr": "遥感密集变化检测需要视觉语言模型比较双时相影像并生成像素级掩码，但现有模型多局限于变化描述，少数能出掩码的方法依赖外部解码器或扁平文本序列化，对小而破碎的变化效果不佳。本文提出QUAKE-CD，将二值变化掩码表示为语法约束的四叉树token序列，使其紧凑、可校验并能在自回归空间中确定性解码。该方法提升了密集变化预测效果，为视觉语言遥感变化检测提供了结构化生成范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.10371v1",
+      "source": "arxiv",
+      "title": "Beyond Weak Labels: Prompt-Guided Local Refinement for Weakly Supervised Water Segmentation in High-Resolution Multispectral Imagery",
+      "abstract": "High-resolution water mapping supports environmental monitoring and related applications, but accurate pixel-level labels are difficult and costly to produce. Official hydrographic vectors provide scalable weak supervision, but they contain artifacts like boundary noise, temporal mismatch, and omissions of small water structures. We propose a two-stage framework for weakly supervised water segmentation in high resolution multispectral imagery. Stage 1 learns initial masks from rasterized vector pseudo-labels, and Stage 2 converts these masks into structured component-wise prompts for localized refinement. On a manually corrected validation set, refinement improves SegFormer-B0 from 0.9509 to 0.9535 IoU and U-Net from 0.9408 to 0.9486 IoU, with corresponding F1 gains from 0.9749 to 0.9762 and 0.9695 to 0.9736. It leads to sharper shorelines, reduced boundary spillover, and better thin-structure delineation. The results indicate that prompt-guided refinement can improve pseudo-label-based water segmentation by targeting local errors that are poorly captured by global training supervision.",
+      "authors": [
+        "Muhammad Farhan Humayun",
+        "Mohammad Imangholiloo",
+        "Afifah Shah",
+        "Tomi Westerlund",
+        "Jukka Heikkonen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-09T16:01:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.10371v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "water segmentation in multispectral remote sensing",
+      "llm_evidence_cn": "多光谱遥感水体分割",
+      "llm_evidence": "多光谱遥感水体分割",
+      "canonical_evidence": "多光谱遥感水体分割",
+      "llm_tldr_en": "A two-stage weakly supervised framework refines water segmentation masks from hydrographic vectors via prompt-guided local refinement in multispectral imagery.",
+      "llm_tldr_cn": "高分辨率水体制图对海洋环境监测很重要，但像素级标注昂贵，官方水文矢量虽可提供可扩展弱监督，却存在边界噪声、时相不匹配与遗漏小水体等问题。本文提出两阶段弱监督水体分割框架：第一阶段从栅格化矢量伪标签学习初始掩膜，第二阶段将掩膜转化为结构化组件提示进行局部精化。在人工校正验证集上，精化使SegFormer-B0精度由0.9509进一步提升，为低成本水体与海洋遥感制图提供了可复用方案。",
+      "llm_tldr": "高分辨率水体制图对海洋环境监测很重要，但像素级标注昂贵，官方水文矢量虽可提供可扩展弱监督，却存在边界噪声、时相不匹配与遗漏小水体等问题。本文提出两阶段弱监督水体分割框架：第一阶段从栅格化矢量伪标签学习初始掩膜，第二阶段将掩膜转化为结构化组件提示进行局部精化。在人工校正验证集上，精化使SegFormer-B0精度由0.9509进一步提升，为低成本水体与海洋遥感制图提供了可复用方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.10484v1",
+      "source": "arxiv",
+      "title": "Coastal Environment Generation with HoloOcean",
+      "abstract": "Marine robotic simulation provides a safe and inexpensive method of developing and testing algorithms for unmanned underwater vehicle (UUV) and unmanned surface vessel (USV) autonomy and perception before full field deployment. However, these simulations are often limited by the availability of simulated environments. Current marine robotics simulation suites offer manual ways to edit or create environments, but they require existing data or specialized knowledge of the environment system. To address these issues, we introduce a novel Unreal Engine 5 level generation pipeline that enables automatic creation of coastal environments for HoloOcean. Our pipeline relies on a user-provided overhead image of a coastal scene. The pipeline then uses the image to generate height map data, as well as automatically select assets and place them in the environment.",
+      "authors": [
+        "Abigail Austin",
+        "Brady Moon",
+        "Joshua G. Mangelson"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-09T17:25:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.10484v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Automatic coastal environment generation for marine robotic simulation",
+      "llm_evidence_cn": "面向海洋机器人仿真的沿海环境自动生成",
+      "llm_evidence": "面向海洋机器人仿真的沿海环境自动生成",
+      "canonical_evidence": "面向海洋机器人仿真的沿海环境自动生成",
+      "llm_tldr_en": "A Unreal Engine 5 level generation pipeline turns a user-provided overhead coastal image into HoloOcean environments, easing simulation of UUV and USV autonomy and perception.",
+      "llm_tldr_cn": "海洋机器人仿真能安全、低成本地测试无人水下与水面航行器的自主与感知算法，但可用仿真环境有限，手工创建又依赖已有数据或专业知识。作者提出基于虚幻引擎5的关卡生成流程，以用户提供的沿海俯视图像为输入自动生成高度图等环境数据，为HoloOcean构建沿海场景。该流程降低了仿真环境构建门槛，为海洋自主智能体的算法开发与部署前验证提供便利。",
+      "llm_tldr": "海洋机器人仿真能安全、低成本地测试无人水下与水面航行器的自主与感知算法，但可用仿真环境有限，手工创建又依赖已有数据或专业知识。作者提出基于虚幻引擎5的关卡生成流程，以用户提供的沿海俯视图像为输入自动生成高度图等环境数据，为HoloOcean构建沿海场景。该流程降低了仿真环境构建门槛，为海洋自主智能体的算法开发与部署前验证提供便利。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
