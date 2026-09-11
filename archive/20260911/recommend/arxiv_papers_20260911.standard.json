@@ -1,0 +1,216 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-11T21:27:34.794808+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.10855v1",
+      "source": "arxiv",
+      "title": "Evaluation of Vision-Language Models Across Diverse Coastal Environments",
+      "abstract": "Vision-language models (VLMs) enable robotic per- ception by associating visual observations with natural-language concepts. Yet their performance in coastal environments remains largely unexplored. We introduce a densely labeled coastal dataset containing more than 1,000 images collected across seven missions in three regions of Oahu, Hawaii, with 18 semantic classes and over 7,400 annotated instances. We evaluate seven modern VLMs through three complementary experiments mea- suring text-to-mask, mask-to-mask, and mask-to-text alignment. Broad landscape classes are generally recognized more accurately than conventional object and coastal classes, with coastal con- cepts presenting the greatest challenge. However, comparisons of shared conventional classes across coastal and terrestrial datasets reveal no consistent performance difference attributable solely to environmental context. Mask-to-mask matching also remains similar across conventional and coastal classes, while alternative textual labels substantially improve recognition of several coastal concepts. These results suggest that lower performance on coastal classes (at least on the objects/query categories evaluated) is heavily influenced by segmentation and linguistic representation.",
+      "authors": [
+        "Seth Knoop",
+        "Chad R. Samuelson",
+        "Gabriel R. Slade",
+        "Brady Moon",
+        "Joshua G. Mangelson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-09T21:47:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.10855v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vision-language models evaluated on coastal coral reef imagery",
+      "llm_evidence_cn": "在海岸环境影像上评估视觉语言模型",
+      "llm_evidence": "在海岸环境影像上评估视觉语言模型",
+      "canonical_evidence": "在海岸环境影像上评估视觉语言模型",
+      "llm_tldr_en": "Vision-language models promise robotic perception but their coastal performance is unexplored. This work introduces a densely labeled Oahu coastal dataset and benchmarks seven VLMs via text-to-mask, mask-to-mask and mask-to-text tasks, finding coastal concepts hardest.",
+      "llm_tldr_cn": "视觉语言模型被寄予机器人感知的厚望，但其在海岸环境中的表现尚不清楚。本文构建了覆盖夏威夷欧胡岛三个区域、含18类语义与7400余个标注实例的海岸密集标注数据集，并以文本到掩膜、掩膜到掩膜、掩膜到文本三类实验评测七个主流模型。结果显示大尺度景观类别识别较好，而海岸细分类别最具挑战，为海洋多模态感知研究提供了基准。",
+      "llm_tldr": "视觉语言模型被寄予机器人感知的厚望，但其在海岸环境中的表现尚不清楚。本文构建了覆盖夏威夷欧胡岛三个区域、含18类语义与7400余个标注实例的海岸密集标注数据集，并以文本到掩膜、掩膜到掩膜、掩膜到文本三类实验评测七个主流模型。结果显示大尺度景观类别识别较好，而海岸细分类别最具挑战，为海洋多模态感知研究提供了基准。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.06253v1",
+      "source": "arxiv",
+      "title": "One Model, Two Worlds: Bidirectional Sonar-Optical Translation",
+      "abstract": "Translating between imaging sonar and optical cameras is valuable for underwater perception, but supporting both directions with separate models duplicates storage and computation. A unified bidirectional model is therefore attractive, yet existing approaches largely treat the two directions symmetrically despite their fundamentally different image-formation physics. We argue that sharing a generative model does not require sharing the physics. We introduce the Direction-Asymmetric Realism Bridge (DARB), which retains a shared diffusion-bridge trunk while routing direction-specific physical priors through asymmetric pathways: range-aware modulation for sonar-to-optical translation and polar ray-dependent processing for optical-to-sonar translation. We further show that symmetry in training is also costly: applying a common realism schedule reduces sonar-to-optical PSNR by 2.60 dB. Our Adaptive Realism Supervision (ARS) instead determines when, where, and how strongly perceptual supervision is applied from reconstruction quality and gradient balance. Together, DARB and ARS enable one bidirectional model to match the sonar-to-optical specialist within 0.11 dB PSNR, outperform the optical-to-sonar specialist by 0.70 FID, and surpass two independently trained BBDMs on seven of eight metrics.",
+      "authors": [
+        "Shengji Jin",
+        "Trung Tien Dong",
+        "Ahmed Lamidi",
+        "Chen Chen",
+        "Xiaomin Lin",
+        "Yi Sheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-05T20:37:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.06253v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unified sonar-optical translation model for underwater perception",
+      "llm_evidence_cn": "面向水下感知的统一声呐-光学图像翻译模型",
+      "llm_evidence": "面向水下感知的统一声呐-光学图像翻译模型",
+      "canonical_evidence": "面向水下感知的统一声呐-光学图像翻译模型",
+      "llm_tldr_en": "Underwater perception needs both sonar and optical views, but separate translation models duplicate cost; DARB shares a diffusion-bridge trunk while routing direction-specific physical priors asymmetrically.",
+      "llm_tldr_cn": "成像声呐与光学相机之间的双向翻译对水下感知很有价值，但为两个方向分别建模会重复存储与计算。本文提出方向非对称真实感桥接DARB，在共享扩散桥主干的同时，以距离感知调制处理声呐到光学方向，以极射线相关处理处理光学到声呐方向，注入方向专属物理先验。该工作为水下机器人与海洋智能体感知提供了高效统一的多模态成像转换方案。",
+      "llm_tldr": "成像声呐与光学相机之间的双向翻译对水下感知很有价值，但为两个方向分别建模会重复存储与计算。本文提出方向非对称真实感桥接DARB，在共享扩散桥主干的同时，以距离感知调制处理声呐到光学方向，以极射线相关处理处理光学到声呐方向，注入方向专属物理先验。该工作为水下机器人与海洋智能体感知提供了高效统一的多模态成像转换方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11040v1",
+      "source": "arxiv",
+      "title": "Toward Interpretable Multimodal Fusion: Heat Conduction Modeling for Hyperspectral and LiDAR Joint Classification",
+      "abstract": "The fusion of hyperspectral (HS) and Light Detection and Ranging (LiDAR) data plays a crucial role in enhancing land-cover classification by jointly exploiting spectral, spatial, and structural cues. However, existing multimodal fusion methods still struggle to model long-range dependencies and complex anisotropic interactions while maintaining computational efficiency. This paper introduces M2Heat, a physics-inspired framework that investigates multimodal fusion through the lens of heat conduction. At its core, a physics-driven visual heat conduction module (vHeat) and enhanced Frequency Value Embeddings (FVEs) simulate anisotropic information flow, enabling the capture of global dependencies with sub-quadratic complexity and physical interpretability. This mechanism, combined with a hybrid spatial-frequency fusion strategy named Cross-Frequency Fusion (CFF) module, produces highly discriminative and robust feature representations. M2Heat achieves competitive overall performance on three benchmarks, i.e., Trento, Houston2013, and Augsburg, while providing an interpretable heat-conduction-guided perspective for multimodal feature fusion. These results indicate the potential of heat-conduction-guided neural operators for efficient and interpretable RS multimodal fusion. The source code is publicly available at https: /github.com/Weikan0425/M2Heat_HSI_LiDAR.",
+      "authors": [
+        "Kan Wei",
+        "Jiahui Cui",
+        "Jing Yao",
+        "Xinyu Zhao",
+        "Lei Wang",
+        "Pedram Ghamisi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-10T03:38:49+00:00",
+      "link": "https://arxiv.org/pdf/2609.11040v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "interpretable multimodal fusion for remote sensing joint classification",
+      "llm_evidence_cn": "可解释多模态融合，遥感联合分类",
+      "llm_evidence": "可解释多模态融合，遥感联合分类",
+      "canonical_evidence": "可解释多模态融合，遥感联合分类",
+      "llm_tldr_en": "Introduces M2Heat, a physics-inspired heat-conduction framework with a visual heat module and frequency value embeddings for fusing hyperspectral and LiDAR data, capturing global anisotropic dependencies efficiently for land-cover classification.",
+      "llm_tldr_cn": "该研究针对现有多模态融合方法难以建模长程依赖与复杂各向异性交互、同时保持计算效率的问题，提出受物理启发的M2Heat框架。方法以热传导为视角，设计物理驱动的视觉热传导模块与增强的频率值嵌入，模拟各向异性信息流动以捕获全局依赖。该框架在高光谱与LiDAR联合地物分类中实现了高效的多模态融合。其可解释融合思路对遥感多源数据联合分析具有方法借鉴意义。",
+      "llm_tldr": "该研究针对现有多模态融合方法难以建模长程依赖与复杂各向异性交互、同时保持计算效率的问题，提出受物理启发的M2Heat框架。方法以热传导为视角，设计物理驱动的视觉热传导模块与增强的频率值嵌入，模拟各向异性信息流动以捕获全局依赖。该框架在高光谱与LiDAR联合地物分类中实现了高效的多模态融合。其可解释融合思路对遥感多源数据联合分析具有方法借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11225v1",
+      "source": "arxiv",
+      "title": "Harness Robotic OS: A Unified Embodied-Agent Runtime for Closed-Loop Quadruped Inspection",
+      "abstract": "Autonomous property inspection requires more than robust robot navigation: a deployable system must connect heterogeneous sensing, reusable autonomy capabilities, multimodal scene understanding, human interaction, and enterprise response within a traceable operational loop. Existing quadruped inspection systems commonly integrate these functions through task-specific interfaces, making contextual coordination, knowledge reuse, and controlled adaptation difficult. This paper presents \\textit{Harness Robotic OS} (HROS), a unified embodied-agent runtime, and Argos, its realization for residential-community inspection. HROS organizes the system into robot runtime, embodied autonomy skills, cognitive agent runtime, and interaction and operations planes. A shared context connects physical state with agent reasoning; streaming ASR/TTS supports voice-based mission interaction; hierarchical working, episodic, and semantic memory preserves operational knowledge; and a safety-gated self-evolution loop converts execution traces into versioned candidate updates without permitting unconstrained online modification. The Argos prototype integrates a Vbot quadruped, Fast-LIO2 localization and mapping, Hobot-Stereo depth perception, PCT-Planner global planning, EGO-Planner local motion generation, and OpenClaw-orchestrated Qwen3-VL inspection analysis. Experiments in a residential property environment achieved 100\\% waypoint reachability, outdoor localization error below 10~cm, local obstacle-response latency below 200~ms, representative hazard-detection rates of 85--95\\%, and 99\\% success in alarm delivery and structured-report generation. These results validate the deployed navigation and inspection closed loop, while HROS provides an extensible software foundation for memory-augmented, voice-aware, and continuously improvable embodied inspection agents.",
+      "authors": [
+        "Yaoyuan Yan",
+        "Zhiyou Heng",
+        "Haoxiang Jie",
+        "Gang Liu",
+        "Hongjie Yan",
+        "Wei Zhou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-10T08:25:46+00:00",
+      "link": "https://arxiv.org/pdf/2609.11225v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified embodied-agent runtime, autonomous inspection agent architecture",
+      "llm_evidence_cn": "统一具身智能体运行时，自主巡检智能体架构",
+      "llm_evidence": "统一具身智能体运行时，自主巡检智能体架构",
+      "canonical_evidence": "统一具身智能体运行时，自主巡检智能体架构",
+      "llm_tldr_en": "Proposes HROS, a unified embodied-agent runtime organizing robot runtime, autonomy skills, cognitive agent runtime and interaction for closed-loop quadruped inspection; an agent architecture methodologically transferable to autonomous ocean monitoring.",
+      "llm_tldr_cn": "该研究针对自主巡检系统难以在统一闭环中协调异构传感、可复用自主能力、多模态场景理解与人机交互的问题，提出统一具身智能体运行时Harness Robotic OS及其住宅社区巡检实现Argos。方法将系统划分为机器人运行时、具身自主技能、认知智能体运行时与交互运维四层，支持上下文协调与知识复用。该系统在四足巡检场景中实现了可追溯的闭环作业。其智能体架构设计对自主海洋监测等无人系统具有方法迁移价值。",
+      "llm_tldr": "该研究针对自主巡检系统难以在统一闭环中协调异构传感、可复用自主能力、多模态场景理解与人机交互的问题，提出统一具身智能体运行时Harness Robotic OS及其住宅社区巡检实现Argos。方法将系统划分为机器人运行时、具身自主技能、认知智能体运行时与交互运维四层，支持上下文协调与知识复用。该系统在四足巡检场景中实现了可追溯的闭环作业。其智能体架构设计对自主海洋监测等无人系统具有方法迁移价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.11673v1",
+      "source": "arxiv",
+      "title": "Multimodal Taxonomic Conditioning for Generative Plankton Imagery",
+      "abstract": "Automated plankton imaging produces severely long-tailed datasets, where the rare taxa of greatest ecological interest have too few images to train or evaluate classifiers reliably. We generate synthetic plankton imagery conditioned on taxonomy: a CLIP encoder is adapted on a large plankton corpus with a ranked contrastive objective extended to deep, ragged taxonomies, then frozen to condition a parameter-efficient diffusion transformer. We evaluate synthetic sample quality on distributional fidelity and downstream classifier utility.",
+      "authors": [
+        "Daniela Ivanova",
+        "Ozgu Goksu",
+        "Nicolas Pugeault"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-10T15:08:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.11673v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal taxonomy conditioning for marine plankton imagery",
+      "llm_evidence_cn": "面向海洋浮游生物影像的多模态分类学条件",
+      "llm_evidence": "面向海洋浮游生物影像的多模态分类学条件",
+      "canonical_evidence": "面向海洋浮游生物影像的多模态分类学条件",
+      "llm_tldr_en": "Conditions a diffusion transformer on taxonomy via a CLIP encoder adapted with ranked contrastive learning to generate synthetic plankton imagery for long-tailed marine datasets.",
+      "llm_tldr_cn": "论文针对自动浮游生物成像数据严重长尾、稀有类群样本过少而难以训练与评估分类器的问题，提出按分类学条件生成合成影像的方法。作者先在大型浮游生物语料上用排序对比目标适配CLIP编码器，冻结后条件化参数高效的扩散Transformer生成样本。实验从分布保真度与下游分类器效用两方面评估合成影像质量。该工作为长尾海洋生物影像的分类与评估提供了生成式数据增强思路。",
+      "llm_tldr": "论文针对自动浮游生物成像数据严重长尾、稀有类群样本过少而难以训练与评估分类器的问题，提出按分类学条件生成合成影像的方法。作者先在大型浮游生物语料上用排序对比目标适配CLIP编码器，冻结后条件化参数高效的扩散Transformer生成样本。实验从分布保真度与下游分类器效用两方面评估合成影像质量。该工作为长尾海洋生物影像的分类与评估提供了生成式数据增强思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

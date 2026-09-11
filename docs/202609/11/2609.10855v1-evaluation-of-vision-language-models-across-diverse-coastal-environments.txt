@@ -1,0 +1,208 @@
+Title: Evaluation of Vision-Language Models Across Diverse Coastal Environments
+
+URL Source: https://arxiv.org/pdf/2609.10855v1
+
+Published Time: Fri, 11 Sep 2026 00:17:57 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# Evaluation of Vision-Language Models Across Diverse Coastal Environments 
+
+Seth Knoop, Chad R. Samuelson, Gabriel R. Slade, Brady Moon, and Joshua G. Mangelson 
+
+Abstract —Vision-language models (VLMs) enable robotic per-ception by associating visual observations with natural-language concepts. Yet their performance in coastal environments remains largely unexplored. We introduce a densely labeled coastal dataset containing more than 1,000 images collected across seven missions in three regions of Oahu, Hawaii, with 18 semantic classes and over 7,400 annotated instances. We evaluate seven modern VLMs through three complementary experiments mea-suring text-to-mask, mask-to-mask, and mask-to-text alignment. Broad landscape classes are generally recognized more accurately than conventional object and coastal classes, with coastal con-cepts presenting the greatest challenge. However, comparisons of shared conventional classes across coastal and terrestrial datasets reveal no consistent performance difference attributable solely to environmental context. Mask-to-mask matching also remains similar across conventional and coastal classes, while alternative textual labels substantially improve recognition of several coastal concepts. These results suggest that lower performance on coastal classes (at least on the objects/query categories evaluated) is heavily influenced by segmentation and linguistic representation. 
+
+I. I NTRODUCTION 
+
+Vision-Language Models (VLMs) have emerged as useful tools for robotic systems to better understand and reason about the world around them through visual and textual modalities. Existing computer vision benchmark datasets are built pre-dominantly for terrestrial and indoor spaces, limiting VLM evaluation to a particular range of environmental domains and features. As a result, VLM performance in littoral domains remains largely unexplored, limiting standardized evaluation and comparability across studies. Coastal environments exhibit features absent or rare in land-based environments. Ambiguous shoreline boundaries weaken training signal reliability and under-represented marine object classes limit robust mapping between visual inputs and seman-tic labels. These limitations directly impact autonomous ma-rine robotic systems that rely on VLMs to perform perception-based tasks using natural language, degrading risk assessment and navigation decisions, potentially leading to unsafe real-world deployments. In this work, we evaluate several state-of-the-art (SOTA) VLMs in coastal environments to assess their ability to generalize beyond conventional benchmark datasets. These evaluations are designed to expose the intra- and inter-modality capabilities and gaps of VLMs in coastal environments. II. R ELATED WORK 
+
+A. Vision-Language Representation Learning 
+
+VLMs learn the relationships between visual features and natural-language descriptions, enabling visual concepts to be 
+
+Fig. 1. There is a gap in open-set VLM semantic embedding of unique marine or coastal classes. 
+
+represented in a language-aligned space. CLIP [1] demon-strated that large-scale pretraining on image-text pairs can produce representations that enable zero-shot recognition us-ing natural-language labels. Subsequent approaches have ex-plored alternative training methods and architectures, including SigLIP [2], to increase quality and scalability. These ap-proaches provide a scalable alternative to conventional closed-set recognition, in which the set of semantic categories must be formally defined during training, given that the training distribution accurately reflects the deployment distribution. However, image-level vision-language alignment does not necessarily imply that semantic information extends to the level of individual objects or regions. This has motivated methods that expand vision-language representations to dense visual features and spatially localized predictions. 
+
+B. Applications of Vision-Language Alignment 
+
+Dense self-supervised visual representations, such as DINO [3], have demonstrated that pretrained vision transform-ers can encode semantically meaningful local visual features. Grounding-DINO [4] extends these visual representations through language-grounded pretraining for open-set object detection, enabling recognition beyond the limitations of con-ventional closed-set approaches. Similarly, CLIP-DINOiser [5] leverages the rich visual features of DINO to guide the learning of dense CLIP features from MaskCLIP [6], enabling object segmentation given natural-language prompts. The Segment arXiv:2609.10855v1 [cs.CV] 9 Sep 2026 Anything Model (SAM [7]), by contrast, provides class-agnostic segmentation capabilities, producing object masks without predefined semantic categories. Grounded-SAM [8] combines the language-grounded localization of Grounding-DINO with the segmentation capabilities of SAM, associ-ating object masks with natural-language concepts. Rather than combining separately trained models at inference time, RADIO [9] distills multiple vision foundation models (VFMs), including CLIP, DINO, and SAM, into a single backbone that produces dense features aligned with visual, language, and segmentation representations. Together, these approaches support complementary forms of vision-language understanding, including visual grounding, open-vocabulary segmentation, and cross-modal alignment. In this work, we evaluate these complementary capabilities through a series of experiments. 
+
+C. Coastal Domain Gap 
+
+Many influential computer vision benchmarks are domi-nated by terrestrial imagery and conventional object categories. For example, COCO [10] provides a large-scale benchmark containing more than 100,000 images and a broad set of object and semantic categories. Recently, datasets such as GOOSE [11] provide additional coverage of complex terres-trial environments. These datasets have been integral in devel-oping and validating modern VLMs. However, they provide comparatively limited coverage of coastal environments and maritime categories. Existing maritime datasets are often designed around spe-cific predefined categories. For example, the LaRS [12] dataset provides annotated imagery for surface vehicle perception, focusing on boats and waterborne people. However, categories representing key maritime infrastructure–such as piers and wharves–are not included. Consequently, existing benchmarks provide limited opportunities to evaluate whether vision-language representations can accurately recognize coastal con-cepts. This underrepresentation creates a meaningful domain gap for evaluating the generalization of VLMs to coastal environments. III. C OASTAL DATASET 
+
+To evaluate VLMs in coastal environments, we leverage a highly diverse labeled image dataset collected across seven missions in Oahu, Hawaii (see Fig. 2). The dataset spans three geographically distinct regions, including harbors, rivers, and open coastal waters. Data were collected from a Wave Adaptive Modular Vessel (WAM-V) equipped with a custom sensor platform featuring three OAK-D Long Range stereo cameras oriented forward, port, and starboard (see Fig. 3). Missions were ran with the WAM-V at a variety of different angles and distances from the shoreline. The raw sensor data was originally recorded as ROS bag files, from which RGB images were extracted and downsampled into a curated set of 1,000+ images to promote labeling efficiency while maintaining feature variance. 
+
+> Fig. 2. Map of locations where data was collected.
+> Fig. 3. WAM-V custom sensor platform featuring three OAK-D Long Range stereo cameras surrounding its base and an OS1 LiDAR on top.
+
+Each image was manually labeled using Roboflow [13] to produce per-pixel masks that support both semantic and instance-level segmentation. We selected classes according to three criteria: (1) prevalence , the extent to which the class was represented across the dataset ensuring sufficient instances for meaningful analysis, (2) visual distinctiveness ,the degree to which the class could be consistently identified by human annotators, and (3) scientific relevance , the extent to which the class either represented a unique feature in coastal environments or corresponded to an existing category in another established dataset. The dataset comprises 18 classes and more than 7,400 anno-tated instances (see Fig. 4). While several classes are visually straightforward, others require more specific definitions. There are two shore classes: shore-natural defined as naturally formed terrain occurring between water and mainland, includ-ing beaches and banks, and shore-artificial , defined as engineered shoreline structures that form a transition between land and water, such as revetments and breakwaters. Scene-level classes were annotated as a single instance per class within each image. These classes include mountain , sky ,0 200 400 600 800 1000 1200 
+
+> Number of instances
+> fl oat bridge wharf gangway ego_person buoy pier piling person ego_vehicle shore-arti fi cial shore-natural mountain building vegetation sky water car 22 29 35 60 85 91 164 210 276 327 363 407 507 834 915 1,002 1,039 1,057
+> Dataset composition by class Fig. 4. Dataset composition by class.
+
+vegetation , shore-natural , shore-artificial ,and water , whereas discrete objects were annotated by instance. The dataset also contains several maritime structures. A 
+
+pier is defined as a structure extending approximately per-pendicular from the mainland into the water, whereas a wharf 
+
+is a structure that is built parallel to the mainland that provides access for people and waterborne vessels. Finally, a float is defined as a floating structure that is completely surrounded by water. Two classes, referred to as “void classes”, are excluded from evaluation to prevent over-representation biases in model evaluation and are subtracted from other overlapping an-notations: ego_vehicle corresponds to a portion of the WAM-V that occasionally appears within the camera frame, while ego_person represents members of the research team captured in the images. IV. E VALUATION METHODOLOGY 
+
+Our evaluation compares different aspects of modern VLM capabilities across coastal and terrestrial datasets to iden-tify where performance differs between these domains. To characterize these differences, we conduct three experiments designed to probe intra- and inter-modal capabilities across seven modern VLMs. The first and third experiments evaluate text-to-mask and mask-to-text performance, respectively, testing each model’s ability to ground semantic concepts in visual observations and, conversely, associate visual observations with semantic concepts. These experiments evaluate inter-modal capabili-ties. The second experiment evaluates intra-modal semantic alignment by measuring how effectively models associate semantically similar visual regions across observations through mask-to-mask matching. 
+
+A. Models 
+
+To evaluate the generalization capability of current SOTA VLMs, we consider a diverse set of architectures includ-ing CLIP [1], CLIP-DINOiser [5], Grounded-SAM [8], C-RADIOv3 [9], SAM3 [14], SigLIP [2], and YOLOE-seg [15]. For models that do not produce segmentation masks directly, CLIP and SigLIP, we use FastSAM [16] as a shared mask-generation module. To facilitate fair comparisons, we selected VLM variants with comparable parameter counts where possible. Specif-ically, we evaluated ViT-B/32 (CLIP), ViT-B/16 (CLIP-DINOiser), SwinT+ViT-B (Grounded-SAM), Base+SigLIP2 (C-RADIOv3), and ViT-B/16 (SigLIP), which have approx-imately 150–300M parameters. Since YOLOE-seg’s largest model is around 70M parameters, we selected the middle model, YOLOE-m-seg, to maintain consistency with the base-sized variants used for the other models. SAM3 is an outlier, as only one model variant is available, with approximately 850M parameters. All models are evaluated without domain-specific tuning to isolate out-of-the-box generalization performance. However, as some CLIP-style models are sensitive to prompt formation, we adopt the prompt templates specified in the respective original works to ensure that each model is evaluated with its intended prompting strategy and maintain fair compari-son. CLIP uses “ a photo of a <class> ” as proposed by the original paper [1], and so does SigLIP [2]. CLIP-DINOiser [5] includes a background prompt to handle all image portions that don’t match the natural language prompts. Grounded-SAM represents multiple classes by separating them with periods, using the format “ <class1> . <class2> . <class3> ” as in [4]. 
+
+B. Experiment 1: Input Text; Output Semantic Mask 
+
+The first experiment attempts to answer the question: How well do VLMs understand semantic concepts and localize them correctly in coastal visual observations? In this experiment, we provide VLMs with a set of natural language class names of the format “ <class> ” and a set of RGB images. The VLMs then predict regions within each image that align with the provided natural language prompts. Performance metrics are then calculated pixel-wise on how well these predicted regions coincide with the ground truth annotations. Grounded-SAM, SAM3, and YOLOE-seg models automat-ically output instance segmentations provided a list of natural language prompts. Since CLIP and SigLIP do not directly generate segmen-tation masks, we follow a common approach that first gen-erates class-agnostic masks and then assigns them to natural language prompts [17], [18]. We use FastSAM to generate approximately 100 masks per image. Each mask is passed through CLIP or SigLIP to produce a visual embedding, while the prompted class names are used to generate corresponding text embeddings. We then compare mask and text embeddings using cosine-similarity. Masks with similarities above 0.25 for CLIP and 0.07 for SigLIP are assigned to the corresponding text prompt. These thresholds were selected based on previous work [18] and preliminary experiments that achieved the highest mean F1-scores across classes in the Hawaii dataset. C-RADIOv3 outputs a set of image patch embeddings. Us-ing a SigLIP-2 adaptor, we generate a set of natural language embeddings that are aligned in the RADIO embedding space. We then compute cosine-similarity between the image patch embeddings and each text prompt embedding. Patches with similarities above 0.07 are assigned to the corresponding text prompt. The same threshold-selection procedure used for CLIP and SigLIP was applied to C-RADIOv3, emphasizing the highest mean F1-score across classes. The metrics used are mean intersection over union (mIoU), mean F1-score (mF1), and mean average precision (mAP). For pixelwise segmentation metrics, we use the standard definitions of true positives (TP), false positives (FP), false negatives (FN), and true negatives (TN) with regards to pixel level accuracy. Let C denote the total number of text prompts, the performance metrics are then defined as: mIoU = 1
+
+C
+
+> C
+
+X
+
+> c=1
+
+T P c
+
+T P c + F N c + F P c
+
+, (1) mF1 = 1
+
+C
+
+> C
+
+X
+
+> c=1
+
+2 · T P c
+
+2 · T P c + F N c + F P c
+
+, (2) mAP 50 = 1
+
+C
+
+> C
+
+X
+
+> c=1
+
+AP c(0 .50) , (3) where predictions with IoU ≥ 0.50 are considered true positive. mAP 75 is similarly defined as mAP 50 but with 0.75 
+
+as the threshold. Lastly, the general mAP metric is defined as: mAP 50:95 = 110 · C
+
+> C
+
+X
+
+> c=1
+
+X  
+
+> τ∈{ 0.50 ,0.55 ,··· ,0.95 }
+
+AP c(τ ). (4) Since CLIP-DINOiser and C-RADIOv3 produce dense patch-level features rather than instance-level masks, we don’t report mAP performance metrics for these models. 
+
+C. Experiment 2: Input Mask; Output Top-K Semantic Masks 
+
+The second experiment asks: When given a ground-truth region mask, how well can a given VLM identify other masks with the same semantic class? We provide each VLM with the ground-truth masks from the labeled dataset and generate an embedding for each mask. For each mask, we compute its cosine-similarity with every other mask in the dataset and rank the masks by similarity. We then select the top-k most similar masks. An association is considered correct if at least one of the top-k masks belongs to the same class as the query mask, yielding an accuracy of 1.0.CLIP and SigLIP encode each mask directly as a single em-bedding, while CLIP-DINOiser, Grounded-SAM, SAM3, and C-RADIOv3 use masked average pooling over dense visual features. CLIP-DINOiser uses MaskCLIP features refined with DINO attention maps, Grounded-SAM pools and concatenates multi-scale Grounding-DINO features, and C-RADIOv3 and SAM3 pool features from their respective vision backbones. The resulting embeddings are compared using cosine similar-ity and ranked for top-k evaluation. YOLOE-seg is excluded from this experiment, as its visual encoder features are not accessible. The metrics used in this experiment are top-k accuracy and excess over chance. For each query mask, top-k accuracy measures whether at least one of the k most similar masks belongs to the same class as the query mask. Let N denote the total number of mask instances, and let I(k) 
+
+> i
+
+be an indicator that is 1 if at least one of the top-k retrieved masks for query mask i belongs to the same class, and 0 otherwise. Top-k
+
+accuracy is defined as: Top-k Accuracy = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+I(k) 
+
+> i
+
+. (5) Classes containing fewer than two instances are excluded from this experiment because a query from such a class has no other same-class instance that can be retrieved. 
+
+D. Experiment 3: Input Mask; Output Top-K Text Classes 
+
+The third experiment asks: Given a ground-truth region mask, how well can a given VLM classify its semantic class from a selection of words associated with each class? We provide each VLM with the ground-truth masks from the labeled dataset and generate an embedding for each mask. We also provide each VLM with a word bank and generate an embedding for each word. For each mask embedding, we compute its cosine-similarity with every word embedding in the word bank and select the top-k most similar words. An association is considered correct if at least one of the top-k
+
+words represents the same class as the query mask, yielding an accuracy of 1.0.Each model generates a visual embedding for each ground-truth mask following the procedures described in Experiment 2 (Section IV-C) and then generates a text embedding for each word in the word bank. Each approach ensures that the visual and text embeddings share the same embedding space so cosine-similarity is computed directly between them The models differ in how they generate text embeddings. CLIP and SigLIP directly encode each word in the word bank using their respective text encoders. C-RADIOv3 utilizes its SigLIP2 adaptor’s text encoder. CLIP-DINOiser uses CLIP’s text encoder. Grounded-SAM and SAM3 do not produce text embeddings and visual embeddings in a shared embedding space and are therefore excluded from this experiment as their embed-dings cannot be directly compared. Similar to Experiment 2, YOLOE-seg is excluded from this experiment, as its visual encoder features are not accessible. This experiment uses top-k accuracy as described in Sec-tion IV-C. Model IoU mF1 mAP mAP 50 mAP 75 
+
+CLIP 0.1005 0.1446 0.0195 0.0334 0.0199 CLIP-DINOiser 0.1208 0.1938 - - -Grounded-SAM 0.3279 0.4284 0.1585 0.2412 0.1720 C-RADIOv3 0.2150 0.2809 - - -SAM3 0.4023 0.5069 0.3425 0.4854 0.3760 
+
+SigLIP 0.1456 0.2149 0.0361 0.0771 0.0308 YOLOE-seg 0.1451 0.2206 0.0723 0.1427 0.0609 TABLE I: Text-to-mask Performance on the Hawaii dataset. “-” indicates that the metric is inapplicable to the given VLM. 
+
+V. R ESULTS 
+
+A. Experiment 1: Text-to-Semantic Mask 
+
+Experiment 1 evaluates the ability of each model to as-sociate natural-language class descriptions with the corre-sponding regions in RGB images. Table I summarizes the performance of each model on the Hawaii dataset using metrics defined in Section IV-B. Table I shows that SAM3 achieves the highest mIoU, mF1, and mAP among the evaluated models. Its advantage may partly reflect its substantially larger model capacity, although this experiment does not isolate model size from architectural and training differences. Thus, the results should be interpreted as overall performance differences rather than evidence of a direct relationship between model size and performance. CLIP and SigLIP do not natively generate masks and therefore use FastSAM-proposed masks. Their performance reflects both the quality of the proposed masks and vision-language alignment, rather than semantic alignment alone. Additionally, similarity thresholds for CLIP, SigLIP, and C-RADIOv3 were selected by maximizing mF1 on the Hawaii dataset. Although the model weights were not tuned on this dataset, this threshold selection introduces dataset-specific information into the evaluation. We therefore characterize these results as zero-shot with respect to model weights, but not fully zero-shot at the pipeline level. Each proceeding result should be understood in the context of these limitations. Beyond overall performance, class-level evaluation provides greater insight into the challenges of segmentation. Fig. 5 shows the F1-score for each class and model in the Hawaii dataset. The classes shown in the heat map are divided into three semantic groups in the figure: conventional (top four), landscape (middle four), and coastal (bottom nine). A clear pattern in Fig. 5 is the difference in performance between the three semantic groups. The landscape classes generally achieve the highest F1-scores, followed by the conventional classes, and lastly the coastal classes with the lowest F1-scores. However, this difference may reflect both semantic speci-ficity and the greater segmentation difficulty associated with classes that are small. To characterize this factor, we compute Spearman’s rank correlation [19], with the results reported in Table II. Spearman’s rank correlation is calculated between per-class F1-score and the average class instance size per im-age in the Hawaii dataset. Since classes in the landscape group generally occupy a large proportion of the image and have higher F1-scores, including the landscape classes substantially biased the observed correlation values. We therefore excluded CLIP CLIP-DINOiser Grounded-SAM RADIOv3 SAM3 SigLIP YOLOE-seg                                                                                                       
+
+> car person bridge building mountain sky vegetation water boat buoy float gangway pier piling wharf shore-nat shore-art
+> 0.08 0.29 0.67 0.47 0.73 0.44 0.53 0.00 0.02 0.59 0.01 0.45 0.16 0.38 0.05 0.61 0.43 0.24 0.47 0.15 0.61 0.08 0.50 0.64 0.37 0.81 0.28 0.00 0.14 0.11 0.43 0.53 0.59 0.14 0.01 0.65 0.36 0.98 0.93 0.98 0.70 0.38 0.61 0.36 0.62 0.69 0.92 0.66 0.04 0.68 0.07 0.98 0.94 0.98 0.69 0.15 0.04 0.45 0.63 0.33 0.68 0.12 0.58 0.00 0.02 0.36 0.00 0.20 0.00 0.53 0.00 0.00 0.00 0.00 0.00 0.01 0.00 0.03 0.11 0.00 0.01 0.38 0.06 0.00 0.01 0.14 0.51 0.09 0.20 0.06 0.00 0.01 0.02 0.00 0.01 0.30 0.06 0.40 0.00 0.02 0.18 0.01 0.14 0.03 0.11 0.03 0.15 0.11 0.08 0.12 0.03 0.00 0.03 0.07 0.16 0.07 0.67 0.06 0.04
+> 0.0 0.2 0.4 0.6 0.8
+
+Fig. 5. Text-to-mask F1-scores of each class in the Hawaii dataset. Model ρ p
+
+CLIP 0.1648 0.5905 CLIP-DINOiser 0.3846 0.1944 Grounded-SAM -0.1823 0.5511 C-RADIOv3 0.3297 0.2713 SAM3 -0.1538 0.6158 SigLIP -0.2253 0.4593 YOLOE-seg -0.1074 0.7269 TABLE II: Spearman’s rank correlation between per-class F1-score and class level characteristics in the Hawaii dataset. 
+
+them to focus the analysis on the relationship between con-ventional and coastal classes. The correlation between spatial extent and segmentation performance is weak and inconsistent across models. The ρ
+
+values vary in sign and magnitude, ranging from −0.2253 to 
+
+0.3846 , and none reach a statistical significance of p < 0.05 .This provides limited evidence that the proportion of an image occupied by a class is associated with segmentation perfor-mance. This leaves open the possibility that characteristics specific to coastal classes or environmental context contribute to their weaker segmentation performance. To evaluate the effects of environmental context, Table III compares the F1-scores of the same conventional classes across three datasets (Hawaii, COCO, and GOOSE). For con-sistency, we use a shared set of conventional classes that are present in all three datasets–namely car , person , bridge ,and building . The results show no consistent trend in cross-dataset performance. While some models exhibit higher mF1 scores on Hawaii than on COCO or GOOSE, others perform worse, with the magnitude and direction varying significantly across models. The observed differences do not reveal aconsistent relationship between coastal and terrestrial context. Further analysis would therefore be required to explore the potential affect of domain shift to account for the varied performance. Model Hawaii COCO GOOSE CLIP 0.0507 0.2049 0.1290 CLIP-DINOiser 0.3555 0.3255 0.2807 Grounded-SAM 0.5822 0.4714 0.6010 
+
+C-RADIOv3 0.2718 0.2644 0.0658 SAM3 0.6162 0.5777 0.6190 
+
+SigLIP 0.2580 0.2336 0.3391 
+
+YOLOE-seg 0.3785 0.3850 0.4754 
+
+TABLE III: Text-to-mask performance of conventional classes across multiple datasets. CLIP CLIP-DINOiser Grounded-SAM RADIOv3 SAM3 SigLIP                                                                  
+
+> bridge building car person boat buoy
+> fl oat gangway pier piling shore-art shore-nat wharf
+> 0.59 0.24 0.93 0.15 0.83 0.76 0.80 0.79 0.94 0.48 0.94 0.84 0.88 0.76 0.89 0.55 0.90 0.91 0.80 0.44 0.80 0.15 0.70 0.86 0.95 0.93 0.96 0.83 0.97 0.95 0.88 0.81 0.93 0.21 0.88 0.87 0.09 0.00 0.50 0.16 0.64 0.45 0.38 0.07 0.72 0.19 0.87 0.62 0.45 0.37 0.83 0.30 0.80 0.61 0.85 0.72 0.84 0.38 0.76 0.88 0.55 0.44 0.84 0.45 0.86 0.70 0.74 0.67 0.89 0.46 0.86 0.80 0.09 0.20 0.49 0.15 0.49 0.29
+> 0.0 0.2 0.4 0.6 0.8
+
+Fig. 6. Mask-to-mask top-1 accuracy of each class in the Hawaii dataset. 
+
+B. Experiment 2: Mask-to-Top-K Semantic Masks 
+
+Experiment 2 evaluates each model’s ability to accurately match visual regions with other visual regions that exhibit similar characteristics across images. Fig. 6 shows the top-1 accuracy for each class and model in the Hawaii dataset, with landscape classes excluded to focus the comparison on conventional and coastal classes. Classes are divided into two semantic groups, consistent with Fig. 5: conventional and coastal. Fig. 6 shows that models are generally able to accurately match visual regions across images, regardless of whether the regions belong to conventional or coastal semantic classes. Although some models consistently outperform others, indi-vidual models generally achieve similar top-1 accuracy across the two semantic groups. This suggests that the lower text-to-mask performance observed for coastal classes is not solely attributable to differences in visual representation. 
+
+C. Experiment 3: Mask-to-Top-K Text Classes 
+
+Experiment 3 evaluates each model’s ability to accurately associate given visual regions with correct classifying text. Table IV reports top-1 accuracy for the evaluated models using different word banks. Each section corresponds to a different trial within experiment 3, with the original class labels shown first and alternative labels highlighted in gray. In the first trial, each ground-truth mask was associated with its original word label. In the second trial, alternative words 
+
+class CLIP CLIP-DINOiser C-RADIOv3 SigLIP shore-artificial 0.3058 0.0744 0.0307 0.7190 
+
+shore-natural 0.0000 0.7125 0.2308 0.0246 shore 0.1857 0.8026 0.1714 0.4234 pier 0.0000 0.1098 0.0062 0.0061 wharf 0.0857 0.0571 0.0294 0.0571 dock 0.2814 0.7236 0.1590 0.1608 
+
+piling 0.7381 0.0095 0.0331 0.3095 pole 0.7619 0.0762 0.1325 0.6238 
+
+TABLE IV: Mask-to-text top-1 accuracy using variable word banks. 
+
+were mapped to the same ground-truth masks. Specifically, 
+
+shore-artificial and shore-natural were both mapped to shore . Similarly, pier and wharf were both mapped to dock . Lastly, piling was mapped to pole .In the pier+wharf and piling groups, remapping the classes to the more general or colloquial terms dock and 
+
+pole , respectively, improves accuracy for all models. This suggests that some of the observed difficulty in coastal classi-fication may stem from limited familiarity with specific marine terminology. The shore-artificial+shore-natural 
+
+remapping to shore does not consistently improve perfor-mances across models, but it achieves higher accuracy than at least one of the original labels for every model. Taken together, these results provide further evidence that linguistic repre-sentation can influence VLM performance on coastal visual features, suggesting that the choice of descriptive terminology may be an important factor in vision-language alignment. VI. C ONCLUSION 
+
+This work presents a systematic evaluation of seven VLMs in coastal environments using a densely labeled dataset col-lected across diverse regions of Oahu, Hawaii. Across three complementary experiments, we evaluate text-to-mask, mask-to-mask, and mask-to-text alignment to examine how VLMs associate coastal visual regions with semantic concepts. Over-all, landscape classes achieve stronger text-to-mask perfor-mance than conventional and coastal classes, while mask-to-mask results show that models can generally identify visually similar regions across both groups. Taken together, these results suggest that lower performance on coastal classes cannot be attributed solely to environmental context or visual representation. Instead, segmentation dif-ficulty and linguistic representation appear to be important contributing factors. In particular, replacing specific marine terms with more general or colloquial alternatives improves recognition for several coastal classes, indicating that the choice of terminology can influence vision-language align-ment. Future work will extend this evaluation to additional coastal environments and datasets, investigate domain shift more systematically, and explore methods for improving VLM per-formance through better segmentation and domain-specific linguistic representations. REFERENCES [1] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark, G. Krueger, and I. Sutskever, “Learning transferable visual models from natural language supervi-sion,” in Proc. of the Intl. Conf. on Machine Learning (ICML) , 2021. [2] X. Zhai, B. Mustafa, A. Kolesnikov, and L. Beyer, “Sigmoid loss for language image pre-training,” 2023. [3] O. Sim´ eoni, H. V. Vo, M. Seitzer, F. Baldassarre, M. Oquab, C. Jose, V. Khalidov, M. Szafraniec, S. Yi, M. Ramamonjisoa, F. Massa, D. Haziza, L. Wehrstedt, J. Wang, T. Darcet, T. Moutakanni, L. Sentana, C. Roberts, A. Vedaldi, J. Tolan, J. Brandt, C. Couprie, J. Mairal, H. J´ egou, P. Labatut, and P. Bojanowski, “DINOv3,” 2025. [Online]. Available: https://arxiv.org/abs/2508.10104 [4] S. Liu, Z. Zeng, T. Ren, F. Li, H. Zhang, J. Yang, Q. Jiang, C. Li, J. Yang, H. Su, J. Zhu, and L. Zhang, “Grounding DINO: Marrying DINO with grounded pre-training for open-set object detection,” in Proc. of the European Conf. on Computer Vision (ECCV) , 2024. [5] M. Wysocza´ nska, O. Sim´ eoni, M. Ramamonjisoa, A. Bursuc, T. Trzci´ nski, and P. P´ erez, “CLIP-DINOiser: Teaching CLIP a few DINO tricks for open-vocabulary semantic segmentation,” in Proc. of the European Conf. on Computer Vision (ECCV) , 2024. [6] C. Zhou, C. C. Loy, and B. Dai, “Extract free dense labels from CLIP,” in European Conference on Computer Vision (ECCV) , 2022. [7] A. Kirillov, E. Mintun, N. Ravi, H. Mao, C. Rolland, L. Gustafson, T. Xiao, S. Whitehead, A. C. Berg, W.-Y. Lo, P. Doll´ ar, and R. Girshick, “Segment anything,” 2023. [8] T. Ren, S. Liu, A. Zeng, J. Lin, K. Li, H. Cao, J. Chen, X. Huang, Y. Chen, F. Yan, Z. Zeng, H. Zhang, F. Li, J. Yang, H. Li, Q. Jiang, and L. Zhang, “Grounded SAM: Assembling open-world models for diverse visual tasks,” 2024. [9] M. Ranzinger, G. Heinrich, J. Kautz, and P. Molchanov, “AM-RADIO: Agglomerative vision foundation model reduce all domains into one,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , June 2024, pp. 12 490–12 500. [10] T.-Y. Lin, M. Maire, S. Belongie, L. Bourdev, R. Girshick, J. Hays, P. Perona, D. Ramanan, C. L. Zitnick, and P. Doll´ ar, “Microsoft COCO: Common objects in context,” 2015. [11] P. Mortimer, R. Hagmanns, M. Granero, T. Luettel, J. Petereit, and H.-J. Wuensche, “The GOOSE dataset for perception in unstructured environments,” 2024. [12] L. ˇ Zust, J. Perˇ s, and M. Kristan, “LaRS: A diverse panoptic maritime obstacle detection dataset and benchmark,” in International Conference on Computer Vision (ICCV) , 2023. [13] Roboflow, Inc., “Roboflow: Computer vision developer platform,” 2024, computer software. [Online]. Available: https://roboflow.com [14] N. Carion, L. Gustafson, Y.-T. Hu, S. Debnath, R. Hu, D. Suris, C. Ryali, K. V. Alwala, H. Khedr, A. Huang, J. Lei, T. Ma, B. Guo, A. Kalla, M. Marks, J. Greer, M. Wang, P. Sun, R. R¨ adle, T. Afouras, E. Mavroudi, K. Xu, T.-H. Wu, Y. Zhou, L. Momeni, R. Hazra, S. Ding, S. Vaze, F. Porcher, F. Li, S. Li, A. Kamath, H. K. Cheng, P. Doll´ ar, N. Ravi, K. Saenko, P. Zhang, and C. Feichtenhofer, “SAM 3: Segment anything with concepts,” 2025. [Online]. Available: https://arxiv.org/abs/2511.16719 [15] A. Wang, L. Liu, H. Chen, Z. Lin, J. Han, and G. Ding. (2025) YOLOE: Real-time seeing anything. [Online]. Available: https://arxiv.org/abs/2503.07465 [16] X. Zhao, W. Ding, Y. An, Y. Du, T. Yu, M. Li, M. Tang, and J. Wang, “Fast segment anything,” 2023. [Online]. Available: https://arxiv.org/abs/2306.12156 [17] D. Maggio, Y. Chang, N. Hughes, M. Trang, D. Griffith, C. Dougherty, E. Cristofalo, L. Schmid, and L. Carlone, “Clio: Real-time task-driven open-set 3d scene graphs,” IEEE Robotics and Automation Letters ,vol. 9, no. 10, pp. 8921–8928, 2024. [18] C. R. Samuelson, A. Austin, S. Knoop, B. Romrell, G. R. Slade, T. W. McLain, and J. G. Mangelson, “Terra: Hierarchical terrain-aware 3d scene graph for task-agnostic outdoor mapping,” 2025. [Online]. Available: https://arxiv.org/abs/2509.19579 [19] C. Spearman, “The proof and measurement of association between two things,” The American Journal of Psychology , vol. 15, no. 1, pp. 72–101, 1904.
