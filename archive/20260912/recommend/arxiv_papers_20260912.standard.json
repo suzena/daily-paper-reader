@@ -1,0 +1,96 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-12T20:59:46.166322+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.07753v1",
+      "source": "arxiv",
+      "title": "Cross-modal learning for SAR target recognition using optical vision foundation models",
+      "abstract": "Synthetic Aperture Radar (SAR) is an important modality in a wide range of imaging applications due to its versatile, long range and near all weather operating capabilities. However, Automatic Target Recognition (ATR) remains a challenging problem due to limited labelled data, the strong speckle in SAR images and the significant domain gap between SAR and more abundant optical imagery. In contrast, electro-optical (EO) imagery benefits from massive datasets, clearer visual structure and powerful foundation models. In this work, we investigate how vision foundation models trained on optical data can provide class level supervision for SAR classification.   We propose a cross-modal EO to SAR prototype alignment framework in which a frozen EO encoder, based on a DINOv3 vision foundation model, is used to construct class level optical prototypes without requiring strict EO/SAR pairs. A SAR model is then trained to classify SAR images while aligning its embeddings to the corresponding EO class prototype. At inference time, the SAR model operates independently, without access to optical imagery. We evaluate our approach on the UNICORNv2 dataset, an EO and SAR dataset of civilian vehicles with heavily speckled images and severe class imbalance. EO prototype alignment improves SAR classification accuracy over frozen DINOv3, SAR only finetuning and unpaired distribution alignment baselines, and t-SNE visualizations provide qualitative evidence of clearer separation among classes in the trained SAR embedding space. These results suggest that optical vision foundation models, despite being trained on visible spectrum imagery, provide transferable information for SAR image classification, offering a practical method for using large scale pretrained vision foundation models across challenging sensing modalities.",
+      "authors": [
+        "Lucas Hirsch",
+        "James R. Hopgood",
+        "Javid Khan",
+        "Yoann Altmann",
+        "Mike E. Davies"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "eess.IV"
+      ],
+      "published": "2026-09-07T16:54:30+00:00",
+      "link": "https://arxiv.org/pdf/2609.07753v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "cross-modal EO to SAR prototype alignment with vision foundation models",
+      "llm_evidence_cn": "利用光学视觉基础模型的跨模态EO到SAR原型对齐",
+      "llm_evidence": "利用光学视觉基础模型的跨模态EO到SAR原型对齐",
+      "canonical_evidence": "利用光学视觉基础模型的跨模态EO到SAR原型对齐",
+      "llm_tldr_en": "This paper investigates using optical vision foundation models to provide class-level supervision for SAR target recognition, proposing a cross-modal EO-to-SAR prototype alignment framework with a frozen optical backbone.",
+      "llm_tldr_cn": "针对SAR目标识别标注数据稀缺、斑点噪声强且与光学图像存在域差距的问题，本文探索利用光学视觉基础模型提供类别级监督。方法提出跨模态EO到SAR原型对齐框架，冻结光学基础模型并将其类别知识迁移到SAR分类。实验表明该对齐策略能有效缓解域差异并提升SAR识别性能。该工作为跨模态遥感数据融合与识别提供了可迁移范式。",
+      "llm_tldr": "针对SAR目标识别标注数据稀缺、斑点噪声强且与光学图像存在域差距的问题，本文探索利用光学视觉基础模型提供类别级监督。方法提出跨模态EO到SAR原型对齐框架，冻结光学基础模型并将其类别知识迁移到SAR分类。实验表明该对齐策略能有效缓解域差异并提升SAR识别性能。该工作为跨模态遥感数据融合与识别提供了可迁移范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.09762v1",
+      "source": "arxiv",
+      "title": "MethaneFuse: Learning from Multi-Sensor Satellite Observations for Methane Plume Detection",
+      "abstract": "Methane plume detection from satellite imagery is constrained by incomplete observations: public satellites provide complementary spatial, spectral, and atmospheric evidence, but real plume cases rarely contain fully paired multi-sensor measurements because of revisit schedules, cloud coverage, acquisition quality, and the transient nature of emissions. Most learning-based detectors rely on single-sensor inputs, especially Sentinel-2 (S2), leaving many reported plume cases unusable.   We construct MethaneUnion, a temporal multi-sensor dataset built from Carbon Mapper plume reports and matched S2, Landsat 8/9 (L8/9), EMIT, and Sentinel-5P (S5P) observations. Built on MethaneUnion, MethaneFuse learns from heterogeneous satellite observations under partial sensor availability without requiring complete four-sensor measurements.   MethaneUnion expands usable coverage from 3,211 valid S2-matched plume cases to 8,981 reported plume cases with multi-sensor observations. At the representative 480 m setting, MethaneFuse achieves 84.87 F1 and 93.62 AUROC, improving over the strongest baseline by 5.65 F1 and 8.30 AUROC points while reducing false positives by 8.19 points. Sensor-availability experiments show that MethaneFuse improves detection when S2 is available and transfers plume knowledge to L8/9, EMIT, and S5P when S2 is unavailable. These results demonstrate the value of learning from incomplete heterogeneous sensor observations for practical methane plume detection.",
+      "authors": [
+        "Yuyao Wang",
+        "Juliana Y. Leung",
+        "Di Niu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-09T06:04:56+00:00",
+      "link": "https://arxiv.org/pdf/2609.09762v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-sensor satellite data fusion for plume detection",
+      "llm_evidence_cn": "多传感器卫星数据融合的羽流检测",
+      "llm_evidence": "多传感器卫星数据融合的羽流检测",
+      "canonical_evidence": "多传感器卫星数据融合的羽流检测",
+      "llm_tldr_en": "This paper presents MethaneFuse, which learns from heterogeneous multi-sensor satellite observations (S2, L8/9, EMIT, S5P) built into the MethaneUnion dataset to detect methane plumes despite incomplete paired measurements.",
+      "llm_tldr_cn": "针对卫星甲烷羽流检测中多传感器观测难以完全配对、多数方法仅依赖单一传感器的问题，本文提出多传感器学习方法。方法构建MethaneUnion时序多传感器数据集，整合Sentinel-2、Landsat、EMIT与Sentinel-5P观测，并设计MethaneFuse模型学习异构数据。实验表明该框架能利用互补信息提升羽流检测能力。该工作为遥感多源数据挖掘与融合提供了新范式。",
+      "llm_tldr": "针对卫星甲烷羽流检测中多传感器观测难以完全配对、多数方法仅依赖单一传感器的问题，本文提出多传感器学习方法。方法构建MethaneUnion时序多传感器数据集，整合Sentinel-2、Landsat、EMIT与Sentinel-5P观测，并设计MethaneFuse模型学习异构数据。实验表明该框架能利用互补信息提升羽流检测能力。该工作为遥感多源数据挖掘与融合提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
