@@ -1,0 +1,58 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-13T21:20:38.677192+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.06629v1",
+      "source": "arxiv",
+      "title": "Physico-Geospatial Grounded Scene Interpretation for Mobile Robotics",
+      "abstract": "Recent advancements in deep learning allow robotic agents to interact with dynamic and unstructured environments. Of special interest is the integration of physico-geospatial world knowledge into such systems, either by using physics-aware machine learning models, knowledge graphs to model relationships or spatio-temporal and logical reasoning. In the present work, we introduce an approach to augment the output of pre-trained, unmodified VLMs used for scene interpretation by integrating semantic descriptions, OpenStreetMap building data and street information with positional, temporal and metric information obtained from our sensory systems, fusing this information using LLMs. We apply this concept to an outdoor recording within a university campus, achieving an F1-Score of 0.83 in the task of grounding buildings and 0.64 for path surface grounding on our pilot evaluation set. The results demonstrate the conceptual capability of the proposed solution to deliver physico-geospatial grounded natural language descriptions. Code and results are available at https://datahub.rz.rptu.de/hstr-csrl-public/publications/physico-geospatial-grounded-scene-interpretation",
+      "authors": [
+        "Nicolas Schuler",
+        "Janik Kurtz",
+        "Lea Dewald",
+        "Marcel Sauber",
+        "Félicia Teferle",
+        "Jürgen Graf"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-06T14:24:43+00:00",
+      "link": "https://arxiv.org/pdf/2609.06629v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM fusion of VLM output with geospatial and textual information",
+      "llm_evidence_cn": "大模型融合视觉输出与地理空间及文本信息",
+      "llm_evidence": "大模型融合视觉输出与地理空间及文本信息",
+      "canonical_evidence": "大模型融合视觉输出与地理空间及文本信息",
+      "llm_tldr_en": "This work augments pretrained vision-language models for robotic scene interpretation by fusing semantic descriptions, OpenStreetMap building and street data, and positional, temporal and metric sensor information using large language models.",
+      "llm_tldr_cn": "移动机器人需在动态非结构化环境中理解场景，但预训练视觉语言模型缺乏物理与地理空间世界知识，输出往往停留在语义层面。论文提出增强预训练VLM场景解释的方法，将语义描述、OpenStreetMap建筑与街道信息同传感器提供的位置、时间与度量信息结合，并借助大语言模型进行融合。在校园户外场景中实现了更丰富的场景理解与空间推理。该框架体现了多模态大模型融合遥感地理数据与文本进行环境评估的可行性。",
+      "llm_tldr": "移动机器人需在动态非结构化环境中理解场景，但预训练视觉语言模型缺乏物理与地理空间世界知识，输出往往停留在语义层面。论文提出增强预训练VLM场景解释的方法，将语义描述、OpenStreetMap建筑与街道信息同传感器提供的位置、时间与度量信息结合，并借助大语言模型进行融合。在校园户外场景中实现了更丰富的场景理解与空间推理。该框架体现了多模态大模型融合遥感地理数据与文本进行环境评估的可行性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

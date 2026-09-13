@@ -1,0 +1,25 @@
+{
+  "date": "20260913",
+  "date_label": "",
+  "generated_at": "2026-09-13 21:21:19 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.06629v1",
+      "route": "202609/13/2609.06629v1-physico-geospatial-grounded-scene-interpretation-for-mobile-robotics",
+      "title": "Physico-Geospatial Grounded Scene Interpretation for Mobile Robotics",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "大模型融合视觉输出与地理空间及文本信息",
+      "first_seen_at": "2026-09-13 21:21:19 UTC",
+      "updated_at": "2026-09-13 21:21:19 UTC"
+    }
+  ]
+}

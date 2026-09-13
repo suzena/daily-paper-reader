@@ -1,0 +1,24 @@
+{
+  "label": "2026-09-13",
+  "date": "2026-09-13",
+  "generated_at": "2026-09-13T21:21:20",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202609/13/2609.06629v1-physico-geospatial-grounded-scene-interpretation-for-mobile-robotics",
+      "section": "quick",
+      "title_en": "Physico-Geospatial Grounded Scene Interpretation for Mobile Robotics",
+      "authors": "Nicolas Schuler, Janik Kurtz, Lea Dewald, Marcel Sauber, Félicia Teferle, Jürgen Graf",
+      "date": "2026-09-06",
+      "pdf": "https://arxiv.org/pdf/2609.06629v1",
+      "score": "6.0",
+      "evidence": "大模型融合视觉输出与地理空间及文本信息",
+      "tldr": "移动机器人需在动态非结构化环境中理解场景，并融合物理与地理空间世界知识。本文提出一种方法：不修改预训练VLM，将其场景解释输出与语义描述、OpenStreetMap建筑和街道信息，以及传感器获取的位置、时间和度量信息结合，再交由LLM融合。在校园户外试点中，建筑grounding的F1为0.83，路径表面grounding为0.64。结果表明该方案能生成物理-地理空间接地的自然语言描述，为机器人场景理解提供了可行路径。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Recent advancements in deep learning allow robotic agents to interact with dynamic and unstructured environments. Of special interest is the integration of physico-geospatial world knowledge into such systems, either by using physics-aware machine learning models, knowledge graphs to model relationships or spatio-temporal and logical reasoning. In the present work, we introduce an approach to augment the output of pre-trained, unmodified VLMs used for scene interpretation by integrating semantic descriptions, OpenStreetMap building data and street information with positional, temporal and metric information obtained from our sensory systems, fusing this information using LLMs. We apply this concept to an outdoor recording within a university campus, achieving an F1-Score of 0.83 in the task of grounding buildings and 0.64 for path surface grounding on our pilot evaluation set. The results demonstrate the conceptual capability of the proposed solution to deliver physico-geospatial grounded natural language descriptions. Code and results are available at https://datahub.rz.rptu.de/hstr-csrl-public/publications/physico-geospatial-grounded-scene-interpretation",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
