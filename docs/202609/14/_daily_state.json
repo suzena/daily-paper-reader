@@ -1,0 +1,121 @@
+{
+  "date": "20260914",
+  "date_label": "",
+  "generated_at": "2026-09-14 22:23:57 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.12826v1",
+      "route": "202609/14/2609.12826v1-coralscapesv2-panoptic-and-fine-grained-visual-scene-understanding-in-coral-reefs",
+      "title": "CoralscapesV2: Panoptic and Fine-Grained Visual Scene Understanding in Coral Reefs",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "珊瑚礁细粒度视觉场景理解与分类",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.12533v1",
+      "route": "202609/14/2609.12533v1-earth-agent-pro-towards-real-world-full-chain-earth-observation-with-agents",
+      "title": "Earth-Agent-Pro: Towards Real-World Full-Chain Earth Observation with Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向全链条地球观测执行的Plan-and-Execute智能体框架",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.09840v1",
+      "route": "202609/14/2609.09840v1-temptpi-informer-based-trajectory-prediction-for-maritime-vessels",
+      "title": "TempTPI: Informer-Based trajectory prediction for maritime vessels",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "海事船舶深度学习轨迹预测",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.10224v1",
+      "route": "202609/14/2609.10224v1-uot-gap-a-variational-principle-for-the-modality-gap-in-vision-language-models-via-unbalanced-optimal-transport",
+      "title": "UOT-Gap: A Variational Principle for the Modality Gap in Vision-Language Models via Unbalanced Optimal Transport",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型图文模态融合诊断",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.11058v1",
+      "route": "202609/14/2609.11058v1-emmi-edge-multi-modal-intelligence-for-communication-efficient-mllm-inference-via-fused-representation-compression",
+      "title": "EMMI: Edge Multi-Modal Intelligence for Communication-Efficient MLLM Inference via Fused Representation Compression",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过融合表示压缩实现视觉、文本与遥测模态的通信高效多模态大模型推理",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.12744v1",
+      "route": "202609/14/2609.12744v1-aquacubeai-powered-monitoring-turbidity-on-board-sat-2",
+      "title": "AquaCubeAI-Powered Monitoring Turbidity on-board Φsat-2",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用卫星多光谱影像在星上估计沿岸水体浊度",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    },
+    {
+      "paper_id": "2609.12758v1",
+      "route": "202609/14/2609.12758v1-curriculum-based-adversarial-heterogeneous-agent-reinforcement-learning-for-autonomous-quad-copter-landing-in-maritime-settings",
+      "title": "Curriculum-Based Adversarial Heterogeneous Agent Reinforcement Learning for Autonomous Quad-Copter Landing in Maritime Settings",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海上场景自主无人机回收的异构多智能体强化学习",
+      "first_seen_at": "2026-09-14 22:23:57 UTC",
+      "updated_at": "2026-09-14 22:23:57 UTC"
+    }
+  ]
+}
