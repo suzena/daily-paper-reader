@@ -1,0 +1,122 @@
+Title: EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies
+
+URL Source: https://arxiv.org/pdf/2609.14450v1
+
+Published Time: Tue, 15 Sep 2026 01:19:37 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies 
+
+M. Aman Ansari †, Saifullah Khan †, Rahul Kulkarni †, and P.B. Sujit 
+
+Indian Institute of Science Education and Research Bhopal, India 
+
+{amanansari, mohammad21, rahulv21, sujit }@iiserb.ac.in , 
+
+> †
+
+all authors contributed equally 
+
+## 1 Introduction 
+
+Physical cleaning of the water bodies requires significant human effort to clean garbage, algae, debris and other foreign substances. Therefore, a robotic sys-tem is needed for swimming pool cleaning to reduce human effort and improve efficiency. This paper addresses the problem of cleaning the surface of indoor as well as outdoor water bodies. The surface of water can have floating debris, garbage, leaves, algae, etc., depending on the way it is used and the environment surround-ing it. Although existing methods are available for cleaning the water surface, they are labor-intensive, expensive, can impact water quality, and may result in water wastage. In this paper, we introduce EcoBoat, a cost-effective Autonomous Surface Vehicle (ASV) designed for efficient debris collection. For indoor water bodies such as swimming pools, EcoBoat relies solely on ultrasonic sensors to detect boundaries and floating obstacles, navigating the water using a hybrid approach that combines a random walk method with boundary-following behaviour. For outdoor environments such as ponds and lakes, the system uses GPS to geofence a designated area and employs a random walk approach to ensure surface cover-age for skimming. The algorithm used in this paper is simple and easy to deploy with less memory requirement. Most existing methods rely on sophisticated, costly, and fragile sensor systems and/or complex mapping techniques. In this work, we propose a minimalist approach to achieve effective coverage with min-imal sensing and computation, accepting a potential trade-off in performance to clean the surface of water. 
+
+1.1 Related Work 
+
+Existing solutions for cleaning water bodies are designed specifically for either swimming pools or natural water bodies like lakes and rivers, but not both. There is no hybrid solution that can effectively operate in both environments. For swimming pools, cleaning robots generally fall into two categories: skimmers/surface cleaners and floor-and-wall cleaners. These robots are available arXiv:2609.14450v1 [cs.RO] 13 Sep 2026 2 Ansari et al. 
+
+in both corded and cordless versions. Examples of cordless models include the solar-powered Dolphin Skimmi[1] and Aiper Surfer S1[3], while corded models include Dolphin Premier[2] and Wybot L1 [4]. Although effective, these robots rely on sophisticated and often expensive sensor systems, making them fragile and costly to maintain. Lakes and rivers, on the other hand, require heavy machinery like amphibious excavators and weed harvesters to clear floating debris. These machines, while effective in open water, are not suitable for smaller, controlled environments like swimming pools. This gap in existing solutions highlights the need for a hybrid cleaning robot, one that can autonomously remove floating debris from both swimming pools and natural water bodies. Developing such a system would provide a versatile and efficient alternative to the specialized cleaning solutions currently in use. 
+
+## 2 Problem Statement 
+
+Consider a water surface region R ⊆ R2 with dimensions of length l and width 
+
+w. The objective is to maximize collection of floating debris, garbage, leaves or algae within a predefined time horizon Γ . EcoBoat, designed for efficient debris collection, utilizes low-cost ultrasonic sensors to detect boundaries in indoor environments such as swimming pools. For outdoor environments, it relies on GPS-based geofencing to define a designated area for skimming and collection. 
+
+– For indoor environment: The robot employs a hybrid approach for cov-erage, which is boundary-following behaviour when it detects a boundary or an obstacle on one of its side and random walk approach, in which it moves in a straight line until detecting a boundary or obstacle within a predefined safe distance threshold D using ultrasonic sensors. Upon detection, the robot executes a random turn at a specified angle θi where i = {1, 2, ..., n } from a list of angles Θ before resuming straight-line motion. 
+
+– For outdoor environment: The robot employs a random walk-based ap-proach for debris collection, where the designated cleaning area is geofenced using GPS. When the ASV comes within 1 meter ( G) of the geofence or has to avoid an obstacle, it executes a random turn at a specified angle θi where 
+
+i = {1, 2, ..., n } from a list of angles Θ before resuming straight-line motion. The aim is to make the system cost-effective and minimal. The primary challenge is effective coverage under sensory and computational constraints. 
+
+## 3 Hardware Design and Algorithm 
+
+3.1 Design of EcoBoat 
+
+The EcoBoat was designed and fabricated in-house, utilizing a modified body-surfing board made of expanded polypropylene (EPP) foam as its hull. To mount EcoBoat 3
+
+vital components, a frame structure composed of 45 ×45 mm aluminum extru-sions was fabricated and securely mounted onto the hull using 3D-printed PLA+ mounts affixed to hard points on the underside of the body board. The trash collection mechanism consists of a detachable structure made from 20 ×20 mm aluminum extrusions, with its inner faces covered by a high-density polyethylene (HDPE) fishing net. This structure features a quick-release mechanism, for easy removal and disposal of collected debris after cleaning. The EcoBoat measures 1700 mm × 900 mm × 600 mm and has a dry weight of 15 kg, with an effective payload capacity of approximately 20 kg. The EcoBoat follows a randomized navigation algorithm [9], while collecting floating debris in its path. 
+
+Fig. 1: EcoBoat in action Fig. 2: CAD render of EcoBoat One of its key novelty is a Tesla valve-inspired [8] collection basket, designed to allow debris intake during forward motion while preventing its escape during braking or turning maneuvers. In the EcoBoat’s design, this principle is ap-plied using a symmetric tesla valve inspired geometry to retain collected debris efficiently. 
+
+3.2 System Architecture 
+
+The boat’s architecture is composed of interconnected components, as shown in Fig 3. It includes a main control system, two T200 thrusters, and a series of Li-ion batteries for independent power to each sub-system. These components drive the boat’s movement based on commands from the primary processing unit, a Raspberry Pi [6]. A 2.4.8 PixHawk [7] serves as the main thruster controller and is connected to GPS. Additionally, four ultrasonic distance sensors—two at the front and one on each side are used to detect obstacles and pool boundaries as well as obstacles. Their data is processed by an Arduino Mega, which transmits relevant information to the primary processing system. The boat also features onboard radio telemetry for remote monitoring, with a backup option for manual RC control when required. 4 Ansari et al. 
+
+Fig. 3: System architecture 
+
+3.3 Boundary Detection and Obstacle Avoidance Algorithm 
+
+EcoBoat operates in both indoor and outdoor environments, employing distinct strategies for efficient debris skimming. 
+
+3.4 Indoor Operation 
+
+EcoBoat employs a sensor-based obstacle avoidance and boundary detection hybrid algorithm. It relies on four ultrasonic sensors positioned at the front-right ( dF R ), front-left ( dF L ), right ( dR), and left ( dL) to detect obstacles and determine appropriate maneuvers. 
+
+Key Parameters: D: Safe distance threshold, Q = {dFR , d FL , d R, d L}: Dis-tance sensor readings, Θ = {θ1, θ 2, . . . , θ n}: Set of rotation angles, ψ: Current yaw angle, ψtarget : Target yaw angle after rotation The algorithm categorizes boundary or obstacle-hit scenarios into different types: Hit = 
+
+
+
+FRONT BOTH if dFR , d FL < D
+
+RIGHT SIDE if dR < D
+
+LEFT SIDE if dL < D
+
+FRONT SIDE RIGHT if dFR < D, d R < D
+
+FRONT SIDE LEFT if dFL < D, d L < D
+
+RIGHT FRONT ONLY if dFR < D
+
+LEFT FRONT ONLY if dFL < D
+
+When an obstacle is detected, EcoBoat adjusts its yaw angle using an Inertial Measurement Unit (IMU): 
+
+ψtarget =
+
+(
+
+(ψcurrent + θ) mod 360 ◦, if turning clockwise (ψcurrent − θ) mod 360 ◦, if turning counterclockwise Rotation continues until: 
+
+|ψcurrent − ψtarget | ≤ 10 ◦
+
+Additionally, EcoBoat follows walls when boundaries are detected on either side. If no obstacles or boundaries are detected, it moves forward. EcoBoat 5
+
+3.5 Outdoor Operation 
+
+EcoBoat operates within a geofenced area defined by GPS, using ultrasonic sensors to detect and avoid obstacles. 
+
+Key Parameters: G: Distance threshold (1 meter), Q, Θ, ψ, ψ target : As de-fined in indoor operation. 
+
+Obstacle Classification: (Same as in indoor operation) To prevent geofence breaches, EcoBoat recalculates its yaw angle using the IMU and rotates until: |ψcurrent − ψtarget | ≤ 10 ◦. If no obstacles are detected and the geofence is maintained, EcoBoat continues forward. 
+
+## 4 Experiments 
+
+4.1 Design Experiments 
+
+We iteratively optimized our EcoBoat design through field experiments con-ducted in both indoor pools and lakes. These experiments provided valuable insights that guided improvements in the system’s design. Initially, we explored using a modified kayak as the hull for our autonomous surface vehicle (ASV), with a net-based collection structure attached. However, this setup proved too bulky for indoor operations. To address this, we transitioned to a more compact and lightweight bodyboard as the hull.    
+
+> (a) (b) (c) (d)
+
+Fig. 4: (a) First Iteration (using Kayak hull) (b) Second Iteration (Shift to Body-board) (c) Third Iteration (Improvement in Collector Design) (d)Fourth Itera-tion (Best Performing Design) Following this modification, we iteratively refined our design, testing various configurations for the collection structure. Among these, the Tesla-valve-inspired collection system demonstrated the best performance. This design enhancement significantly improved debris collection efficiency while also reducing weight and bulkiness. These improvements led to lower energy consumption and enhanced usability in both indoor and outdoor environments. 6 Ansari et al. 
+
+(a) (b) (c) 
+
+Fig. 5: (a) Garbage collected at pool (b) Garbage collected at Lake (b) Ecoboat skimming at Lake 
+
+## References 
+
+1. Maytronics, Dolphin Skimmi, https://www.maytronics.com/global/ robotic-pool-cleaners/robotic-pool-skimmer/dolphin-skimmi/9997001.html 2. Maytronics, Dolphin Premier, https://www.premierrobotic.com 3. Aiper, Surfer S1 https://aiper.com/aiper-surfer-s1 4. Wybot,Wybot L1 Robotic Pool Cleaner, https://www.wybotpool.com 5. A. Troupiotis-Kapeliaris et al., “Building an autonomous boat: a multidisciplinary design engineering approach,” 2023 IEEE 10th International Workshop on Metrol-ogy for AeroSpace (MetroAeroSpace), Milan, Italy, 2023, pp. 556-561, (DOI: 10.1109/MetroAeroSpace57412.2023.10189956). 6. Upton, Eben, and Gareth Halfacree. Raspberry Pi user guide. John Wiley & Sons, 2016. 7. L. Meier, P. Tanskanen, F. Fraundorfer and M. Pollefeys, “PIXHAWK: A system for autonomous flight using onboard computer vision,” 2011 IEEE International Conference on Robotics and Automation, Shanghai, China, 2011, pp. 2992-2997, doi: 10.1109/ICRA.2011.5980229. 8. Tesla, N., 1920, –“Valvular Conduit,” U.S. Patent NO. 1,329,559. 9. Lixing Liu, Xu Wang, Xin Yang, Hongjie Liu, Jianping Li, Pengfei Wang, “Path planning techniques for mobile robots: Review and prospect”, Expert Systems with Applications, Volume 227, 2023, 120254, ISSN 0957-4174, https:/doi.org/10.1016/j. eswa.2023.120254.

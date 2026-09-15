@@ -1,0 +1,153 @@
+{
+  "date": "20260915",
+  "date_label": "",
+  "generated_at": "2026-09-15 22:40:11 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.14523v1",
+      "route": "202609/15/2609.14523v1-selective-tool-use-for-agentic-change-visual-question-answering-in-remote-sensing",
+      "title": "Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向遥感变化问答的智能体工具调用视觉语言模型",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.14558v1",
+      "route": "202609/15/2609.14558v1-language-grounded-semantic-target-navigation-for-autonomous-surface-vehicles",
+      "title": "Language-Grounded Semantic Target Navigation for Autonomous Surface Vehicles",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向自主水面艇的语言引导目标导航框架",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.14824v1",
+      "route": "202609/15/2609.14824v1-anassa-an-agentic-ai-orchestration-framework-for-spatial-intelligence",
+      "title": "ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向地理空间智能的智能体式AI编排框架，结合大模型工具执行",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.11580v1",
+      "route": "202609/15/2609.11580v1-a-dataset-and-model-for-imputing-water-surface-elevation-on-a-large-and-extremely-sparse-spatiotemporal-graph",
+      "title": "A Dataset and Model for Imputing Water Surface Elevation on a Large and Extremely Sparse Spatiotemporal Graph",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "卫星测高水位填补数据集与模型",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.13654v1",
+      "route": "202609/15/2609.13654v1-multimodal-foundation-models-adaptation-based-on-domain-aware-relaxed-orthogonal-subspace-for-remote-sensing",
+      "title": "Multimodal Foundation Models Adaptation based on Domain-Aware Relaxed Orthogonal Subspace for Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感的多模态基础模型参数高效自适应",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.14450v1",
+      "route": "202609/15/2609.14450v1-ecoboat-design-and-experimental-validation-of-an-autonomous-body-board-boat-for-cleaning-water-bodies",
+      "title": "EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用于水体清洁的低成本自主水面艇",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.14903v1",
+      "route": "202609/15/2609.14903v1-hydromap-probabilistic-water-surface-elevation-mapping-for-semantic-scene-representation-in-inland-waterways",
+      "title": "HydroMap: Probabilistic Water Surface Elevation Mapping for Semantic Scene Representation in Inland Waterways",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主水面艇的水面语义建图",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.14986v1",
+      "route": "202609/15/2609.14986v1-neighbourhood-based-generalized-dynamic-principal-components-for-spatial-functional-data",
+      "title": "Neighbourhood-Based Generalized Dynamic Principal Components for Spatial Functional Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋学与遥感网格数据的降维",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    },
+    {
+      "paper_id": "2609.15676v1",
+      "route": "202609/15/2609.15676v1-mambampd-a-mamba-driven-segmentation-framework-for-marine-pollution-detection-from-remote-sensing-imagery",
+      "title": "MambaMPD: A Mamba-Driven Segmentation Framework for Marine Pollution Detection from Remote Sensing Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于Mamba的遥感图像海洋污染分割检测框架",
+      "first_seen_at": "2026-09-15 22:40:11 UTC",
+      "updated_at": "2026-09-15 22:40:11 UTC"
+    }
+  ]
+}

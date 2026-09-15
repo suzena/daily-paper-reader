@@ -1,0 +1,357 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-15T22:35:30.014618+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2609.14558v1",
+      "source": "arxiv",
+      "title": "Language-Grounded Semantic Target Navigation for Autonomous Surface Vehicles",
+      "abstract": "Autonomous Surface Vehicles (ASVs) are increasingly expected to operate in ports and harbour environments, where operators may specify navigation targets through language-based descriptions rather than predefined coordinates or fixed target identifiers. However, existing ASV navigation methods mainly execute predefined geometric goals or task-specific objectives and give limited attention to language-grounded target specification. This study proposes Semantically Grounded Navigation (SGNav), a framework that enables an ASV to identify and approach a maritime target from an operator-provided description. SGNav integrates text-guided semantic grounding, harbour-aware candidate filtering, CLIP-based semantic verification, grounded target control-state construction, and Proximal Policy Optimisation-based closed-loop control. It grounds the target description in onboard RGB observations, suppresses visually or semantically irrelevant distractors, and converts the selected target into a compact control-oriented representation for policy execution. Experiments in simulated port environments show that SGNav achieves success rates of $97.0\\pm1.2\\%$, $92.0\\pm1.5\\%$, and $90.0\\pm1.8\\%$ across three representative target-reaching tasks, with semantic target accuracy above $97\\%$ and wrong-target rates below $3\\%$. SGNav also maintains $97.7$--$98.7\\%$ success rates across held-out port layouts. In the Task~3 ablation study, removing harbour-aware filtering or semantic consistency reduces the success rate to $40.4\\pm2.6\\%$ and $50.4\\pm3.1\\%$, respectively. These findings demonstrate the importance of semantic grounding, harbour-aware filtering, and semantic verification for reliable language-grounded ASV navigation. These results indicate that the proposed perception-to-control framework can support language-grounded target approach manoeuvres of ASV under the complex port environments.",
+      "authors": [
+        "Yuqing Lin",
+        "Youngroung Kim"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-13T14:45:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.14558v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "language-grounded target navigation framework for autonomous surface vehicles",
+      "llm_evidence_cn": "面向自主水面艇的语言引导目标导航框架",
+      "llm_evidence": "面向自主水面艇的语言引导目标导航框架",
+      "canonical_evidence": "面向自主水面艇的语言引导目标导航框架",
+      "llm_tldr_en": "Autonomous surface vehicles often receive targets as language descriptions rather than coordinates, yet existing methods only execute predefined geometric goals. This paper proposes SGNav, integrating text-guided semantic grounding, harbour-aware candidate filtering and CLIP-based verification for grounded target control.",
+      "llm_tldr_cn": "港口与港湾环境中的自主水面艇常需根据操作员的自然语言描述确定导航目标，而现有方法多执行预定义几何目标，缺乏语言引导的目标指定能力。本文提出语义接地导航框架SGNav，融合文本引导语义接地、港湾候选过滤与基于CLIP的语义验证，实现从描述到目标的识别与控制。该工作把多模态语言理解引入海洋自主航行，提升了人机交互式导航的灵活性。",
+      "llm_tldr": "港口与港湾环境中的自主水面艇常需根据操作员的自然语言描述确定导航目标，而现有方法多执行预定义几何目标，缺乏语言引导的目标指定能力。本文提出语义接地导航框架SGNav，融合文本引导语义接地、港湾候选过滤与基于CLIP的语义验证，实现从描述到目标的识别与控制。该工作把多模态语言理解引入海洋自主航行，提升了人机交互式导航的灵活性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.14523v1",
+      "source": "arxiv",
+      "title": "Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing",
+      "abstract": "Change visual question answering (Change VQA) requires understanding semantic changes across bi-temporal remote sensing images. Although vision language models (VLMs) have shown promising performance on this task, they remain unreliable when answering questions that require explicit transition statistics, area measurements, or spatial information. To address this limitation, we propose a selective tool use framework in which a single VLM either answers directly or invokes a deterministic change analysis tool to obtain question specific evidence. Specifically, the selected tool operates on bi-temporal semantic maps and returns a structured observation, which the same VLM uses to generate its final answer. To support this framework, we construct a tool augmented extension of CDVQA covering eight question families and three tools for transition, spatial, and temporal analysis. Tool use supervision and observations are derived automatically from the original semantic annotations, without additional manual labeling. We then adapt Qwen3.5-4B using Low Rank Adaptation (LoRA) to jointly learn direct answering, tool invocation, and evidence conditioned answering. Experiments on 7,164 test questions show that selective tool use with reference semantic maps improves overall accuracy from 73.77% to 88.79% and average family accuracy from 69.11% to 89.65%. When the semantic maps are predicted automatically, the framework achieves 77.47% overall accuracy and 75.06% average family accuracy. These results demonstrate the benefit of question-specific semantic evidence for Change VQA, while highlighting the influence of semantic prediction quality on the resulting performance. Code and tool-augmented annotations will be made publicly available at https://github.com/yakoubbazi/ToolChangeVQA.",
+      "authors": [
+        "Yakoub Bazi",
+        "Mohamad M. Al Rahhal",
+        "Mohamed A. Mekhtiche",
+        "Mansour Zuair"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-13T13:58:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.14523v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agentic tool-use VLM for remote sensing change VQA",
+      "llm_evidence_cn": "面向遥感变化问答的智能体工具调用视觉语言模型",
+      "llm_evidence": "面向遥感变化问答的智能体工具调用视觉语言模型",
+      "canonical_evidence": "面向遥感变化问答的智能体工具调用视觉语言模型",
+      "llm_tldr_en": "A selective tool-use framework lets a single VLM answer or invoke a deterministic change analysis tool on bi-temporal remote sensing semantic maps, improving change visual question answering.",
+      "llm_tldr_cn": "变化视觉问答要求理解双时相遥感影像间的语义变化，但现有视觉语言模型在涉及转移统计、面积测量与空间信息的问题上并不可靠。本文提出选择性工具调用框架，允许单个视觉语言模型直接回答或调用确定性变化分析工具，该工具在双时相语义图上运行并返回结构化观测，再由同一模型据此生成最终答案，同时构建了配套数据集。实验表明工具增强显著提升了变化问答的准确性，为智能体式遥感多模态分析提供新思路。",
+      "llm_tldr": "变化视觉问答要求理解双时相遥感影像间的语义变化，但现有视觉语言模型在涉及转移统计、面积测量与空间信息的问题上并不可靠。本文提出选择性工具调用框架，允许单个视觉语言模型直接回答或调用确定性变化分析工具，该工具在双时相语义图上运行并返回结构化观测，再由同一模型据此生成最终答案，同时构建了配套数据集。实验表明工具增强显著提升了变化问答的准确性，为智能体式遥感多模态分析提供新思路。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.14824v1",
+      "source": "arxiv",
+      "title": "ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence",
+      "abstract": "The emergence of large language models (LLMs) and large multimodal models (LMMs) has enabled a new class of agentic systems capable of integrating natural language understanding with tool-based execution. In geographic information systems (GIS), this shift is transforming traditional, expert-driven workflows into semiautonomous systems that can interpret user intent, construct spatial workflows, and execute geospatial analysis tasks. However, existing approaches remain limited by fragmented integration of reasoning, execution, and evaluation, particularly in complex, real-world environments. This study synthesizes recent advances in agentic GIS frameworks, benchmarks, and surveys to identify limitations in spatial reasoning, execution robustness, validation, governance, and evaluation. Building on these insights, it introduces ANASSA (Autonomous Neural Agents for Spatial Systems Architecture), an agentic AI orchestration framework that integrates structured spatial reasoning, multi-agent workflow orchestration, execution feedback, authoritative spatial validation, provenance, uncertainty handling, and human decision authority within a unified system design. The contribution is an architecture-level specification: eleven components across four layers, a six-step Geospatial AI Cognitive Loop, cross-component contracts, and governance mechanisms intended to make agentic geospatial workflows traceable, reproducible, and accountable. Empirical performance evaluation is reserved for implementation and deployment studies.",
+      "authors": [
+        "Constantinos Papantoniou",
+        "Brian Hilton"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-13T22:35:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.14824v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Agentic AI orchestration framework for geospatial/spatial intelligence with LLM tool execution",
+      "llm_evidence_cn": "面向地理空间智能的智能体式AI编排框架，结合大模型工具执行",
+      "llm_evidence": "面向地理空间智能的智能体式AI编排框架，结合大模型工具执行",
+      "canonical_evidence": "面向地理空间智能的智能体式AI编排框架，结合大模型工具执行",
+      "llm_tldr_en": "LLM-driven agentic systems are transforming GIS workflows, yet reasoning, execution and evaluation remain fragmented. ANASSA synthesizes agentic GIS frameworks and benchmarks to propose an orchestration framework for spatial intelligence.",
+      "llm_tldr_cn": "大模型催生的智能体系统正改变GIS工作流，但推理、执行与评估仍集成割裂，难以应对复杂真实环境。本文综述并综合近期智能体GIS框架、基准与调查，提出面向空间智能的智能体式编排框架。分析揭示了空间推理、执行稳健性与有效性方面的局限并给出设计方向，为构建可解释可执行的智能体空间分析系统提供整合思路。",
+      "llm_tldr": "大模型催生的智能体系统正改变GIS工作流，但推理、执行与评估仍集成割裂，难以应对复杂真实环境。本文综述并综合近期智能体GIS框架、基准与调查，提出面向空间智能的智能体式编排框架。分析揭示了空间推理、执行稳健性与有效性方面的局限并给出设计方向，为构建可解释可执行的智能体空间分析系统提供整合思路。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.11580v1",
+      "source": "arxiv",
+      "title": "A Dataset and Model for Imputing Water Surface Elevation on a Large and Extremely Sparse Spatiotemporal Graph",
+      "abstract": "Continuous monitoring of water surface elevation across river networks is critical for flood forecasting, water resource management, and understanding the global water cycle. Yet, the scarcity of in situ gauges across much of the globe constrains the development of reliable modeling frameworks. Satellite altimetry has the potential to alleviate this problem but its use is currently hindered by sparse temporal coverage. To this end, we introduce AmazonSWE, a dataset for training and evaluating large-scale spatiotemporal graph imputation methods that integrates processed satellite altimetry measurements from a range of sources, including the recent wide-swath SWOT sensor. The dataset covers over 19K river sections and 10 years (2016-2026) in the Amazon river basin, with in situ gauges held out for evaluation. Besides contributing a novel real-world use case with the potential for societal impact, AmazonSWE introduces significant technical challenges: with fewer than 1% of sections observed per day, the dataset is far sparser than existing imputation benchmarks, and its directed acyclic river topology is both structurally different from and larger than graphs in existing datasets. We show that prior spatiotemporal graph imputation methods are not adapted to this topology, scale and sparsity, and propose a simple bidirectional selective state space model that outperforms them by sampling connected subgraphs and flattening space and time into a single token sequence with topology-aware positional encodings. Compared to the state-of-the-art published method for SWOT-based WSE densification, which integrates statistics with physical modeling, our model reduces RMSE against in situ gauges by 18-39%, while producing predictions for every river section rather than only those with sufficient nearby satellite coverage.",
+      "authors": [
+        "Ruben Cartuyvels",
+        "Karim Douch",
+        "Gabriele Bertoli",
+        "Mounia El Baz",
+        "Artemis Vrettou",
+        "Sébastien Lefèvre",
+        "Diego Fernandez Prieto"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-10T14:12:02+00:00",
+      "link": "https://arxiv.org/pdf/2609.11580v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "satellite altimetry dataset and model for water surface elevation imputation",
+      "llm_evidence_cn": "卫星测高水位填补数据集与模型",
+      "llm_evidence": "卫星测高水位填补数据集与模型",
+      "canonical_evidence": "卫星测高水位填补数据集与模型",
+      "llm_tldr_en": "AmazonSWE is a large spatiotemporal graph dataset integrating multi-source satellite altimetry, including SWOT, over 19K river sections, enabling training and evaluation of water surface elevation imputation under extreme sparsity.",
+      "llm_tldr_cn": "河网水位连续监测对洪水预报与水资源管理至关重要，但全球原位站点稀缺，卫星测高又受时间覆盖稀疏限制。本文构建AmazonSWE数据集，整合多源卫星测高（含SWOT宽刈幅传感器）测量，覆盖逾1.9万河段，用于训练与评估大规模时空图填补方法。该数据集为稀疏海洋与水文遥感数据的插补建模提供了基准。",
+      "llm_tldr": "河网水位连续监测对洪水预报与水资源管理至关重要，但全球原位站点稀缺，卫星测高又受时间覆盖稀疏限制。本文构建AmazonSWE数据集，整合多源卫星测高（含SWOT宽刈幅传感器）测量，覆盖逾1.9万河段，用于训练与评估大规模时空图填补方法。该数据集为稀疏海洋与水文遥感数据的插补建模提供了基准。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.13654v1",
+      "source": "arxiv",
+      "title": "Multimodal Foundation Models Adaptation based on Domain-Aware Relaxed Orthogonal Subspace for Remote Sensing",
+      "abstract": "Pretrained foundation models (FMs) have achieved remarkable success in computer vision, yet their high fine-tuning cost limits practical deployment. Parameter-efficient fine-tuning (PEFT) methods such as Low-Rank Adaptation (LoRA) improve efficiency by constraining updates to a predefined low-rank subspace. However, when applied to remote sensing tasks with substantial domain shifts, the fixed subspace is constructed without observing the downstream activation distribution and can therefore provide a poor coordinate system for adaptation, a phenomenon herein termed subspace mismatch. To address this issue, a unified framework is introduced, termed Domain-aware Relaxed Orthogonal Subspace adaptation (DROS), which reformulates low-rank adaptation as data-conditioned subspace learning and flexible subspace adaptation. Specifically, the weight decomposition is conditioned on second-order activation statistics estimated from the downstream training distribution, so that the initialization reflects the feature geometry actually induced by the remote-sensing data, followed by flexible geometric transformations enabled by a relaxed orthogonal parameterization. Furthermore, the framework is extended to multimodal settings (MM-DROS) by sharing transformation structures across modality-specific subspaces, facilitating efficient cross-modal interaction. Extensive experiments on multiple remote sensing benchmarks demonstrate that DROS achieves state-of-the-art performance, even surpassing full fine-tuning, without additional inference overhead.",
+      "authors": [
+        "Han Luo",
+        "Ruoyu Yang",
+        "Yinhe Liu",
+        "Yanfei Zhong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-12T02:19:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.13654v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "PEFT adaptation of multimodal foundation models for remote sensing",
+      "llm_evidence_cn": "面向遥感的多模态基础模型参数高效自适应",
+      "llm_evidence": "面向遥感的多模态基础模型参数高效自适应",
+      "canonical_evidence": "面向遥感的多模态基础模型参数高效自适应",
+      "llm_tldr_en": "DROS is a domain-aware relaxed orthogonal subspace adaptation framework that fixes subspace mismatch in PEFT, improving multimodal foundation model transfer to remote sensing tasks.",
+      "llm_tldr_cn": "预训练基础模型在视觉领域表现优异，但微调成本高；LoRA等参数高效微调虽提升效率，却在遥感域偏移显著时因固定子空间未观测下游激活分布而产生子空间错配。本文提出域感知松弛正交子空间自适应框架DROS，重新构建更契合下游分布的低秩坐标系统，并支持多模态遥感适配。实验表明该框架缓解了子空间错配问题，为遥感多模态基础模型的低成本部署提供通用方案。",
+      "llm_tldr": "预训练基础模型在视觉领域表现优异，但微调成本高；LoRA等参数高效微调虽提升效率，却在遥感域偏移显著时因固定子空间未观测下游激活分布而产生子空间错配。本文提出域感知松弛正交子空间自适应框架DROS，重新构建更契合下游分布的低秩坐标系统，并支持多模态遥感适配。实验表明该框架缓解了子空间错配问题，为遥感多模态基础模型的低成本部署提供通用方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14450v1",
+      "source": "arxiv",
+      "title": "EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies",
+      "abstract": "Cleaning water bodies such as swimming pools and lakes typically demands significant manual effort or reliance on costly, sensor-intensive robotic systems. This paper presents EcoBoat, a low-cost autonomous surface vehicle built on a modified hull, designed to collect floating debris in both indoor and outdoor water bodies. For indoor environments, EcoBoat uses ultrasonic sensors to detect boundaries and obstacles, combining random-walk motion with boundary-following behavior. For outdoor environments, it relies on GPS-based geofencing paired with a random-walk strategy for area coverage. A key design feature is a Tesla-valve-inspired collection basket that allows debris intake during forward motion while preventing its escape during turning or braking. Field experiments in pools and lakes validated the design through iterative refinement, demonstrating that a minimalist sensing and computation approach can achieve effective, versatile debris collection across diverse water bodies.",
+      "authors": [
+        "M. Aman Ansari",
+        "Saifullah Khan",
+        "Rahul Kulkarni",
+        "PB Sujit"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-13T11:43:39+00:00",
+      "link": "https://arxiv.org/pdf/2609.14450v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "low-cost autonomous surface vehicle for cleaning water bodies",
+      "llm_evidence_cn": "用于水体清洁的低成本自主水面艇",
+      "llm_evidence": "用于水体清洁的低成本自主水面艇",
+      "canonical_evidence": "用于水体清洁的低成本自主水面艇",
+      "llm_tldr_en": "EcoBoat is a low-cost autonomous surface vehicle using ultrasonic sensing indoors and GPS geofencing outdoors, plus a Tesla-valve collection basket, to autonomously gather floating debris in water bodies.",
+      "llm_tldr_cn": "清理泳池、湖泊等水体通常依赖大量人工或昂贵的传感密集型机器人。本文提出EcoBoat，一种基于改装船体的低成本自主水面艇，室内用超声传感结合随机游走与边界跟随，室外用GPS地理围栏加随机游走覆盖，并设计特斯拉阀式收集篮。实验验证其能有效收集漂浮垃圾，为低成本水面自主清洁提供了可行方案。",
+      "llm_tldr": "清理泳池、湖泊等水体通常依赖大量人工或昂贵的传感密集型机器人。本文提出EcoBoat，一种基于改装船体的低成本自主水面艇，室内用超声传感结合随机游走与边界跟随，室外用GPS地理围栏加随机游走覆盖，并设计特斯拉阀式收集篮。实验验证其能有效收集漂浮垃圾，为低成本水面自主清洁提供了可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14903v1",
+      "source": "arxiv",
+      "title": "HydroMap: Probabilistic Water Surface Elevation Mapping for Semantic Scene Representation in Inland Waterways",
+      "abstract": "Autonomous surface vehicles operating in inland waterways require a persistent representation of both surrounding structures and the water surface. LiDAR-based simultaneous localization and mapping often produces sparse or missing water returns, leaving this operational surface absent from the reconstructed scene. We propose HydroMap, an odometry-decoupled framework that reconstructs water surface elevation from stereo observations and integrates it with the structural map. Per-frame water points form joint cell observations with propagated stereo and pose uncertainty, and successive observations are fused into a persistent probabilistic elevation map. Semantic map conversion then combines the elevation map with structural geometry in a unified 2.5D representation of water, boundaries, structures, and overhead regions. On the Pohang Canal and Leuven Vaart datasets, the elevation RMSE remains below 5 cm relative to LiDAR references expressed in the same map frame. The elevation and semantic maps are published at 2 Hz and 1 Hz, respectively. HydroMap thereby complements LiDAR maps with a persistent representation of the water surface for downstream navigation in inland waterways.",
+      "authors": [
+        "Zhongbi Luo",
+        "Yunjia Wang",
+        "Herman Bruyninckx",
+        "Peter Slaets"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-14T01:46:04+00:00",
+      "link": "https://arxiv.org/pdf/2609.14903v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous surface vehicle semantic mapping of water surface",
+      "llm_evidence_cn": "自主水面艇的水面语义建图",
+      "llm_evidence": "自主水面艇的水面语义建图",
+      "canonical_evidence": "自主水面艇的水面语义建图",
+      "llm_tldr_en": "ASV mapping loses water surface in sparse LiDAR returns; HydroMap fuses stereo water points with pose uncertainty into a persistent probabilistic elevation map.",
+      "llm_tldr_cn": "内河航道中的自主水面艇需要同时表示周边结构与水面，但基于LiDAR的同步定位与建图对水面回波稀疏甚至缺失，导致运行表面在重建场景中缺席。本文提出HydroMap，一种里程计解耦框架，利用双目观测重建水面高程，并将逐帧水面点与传播的位姿和立体不确定性融合为持久概率高程图。语义地图转换进一步结合结构信息，为自主航行提供更完整的场景表示。",
+      "llm_tldr": "内河航道中的自主水面艇需要同时表示周边结构与水面，但基于LiDAR的同步定位与建图对水面回波稀疏甚至缺失，导致运行表面在重建场景中缺席。本文提出HydroMap，一种里程计解耦框架，利用双目观测重建水面高程，并将逐帧水面点与传播的位姿和立体不确定性融合为持久概率高程图。语义地图转换进一步结合结构信息，为自主航行提供更完整的场景表示。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.14986v1",
+      "source": "arxiv",
+      "title": "Neighbourhood-Based Generalized Dynamic Principal Components for Spatial Functional Data",
+      "abstract": "Regular-grid spatial functional datasets arise naturally in gridded environmental, oceanographic, climate, and remote-sensing applications, where each spatial location is associated with an entire curve. Existing spectral spatial functional principal component analysis methods provide an important frequency-domain approach for such data, but they do not directly target finite-neighbourhood least-squares reconstruction from an estimated latent spatial component field. To address this, we propose Spatial Functional Generalized Dynamic Principal Components (SFGDPC), a reconstruction-based dimension-reduction method for regular-grid spatial functional data. Each function is first represented by basis coefficients, and each coefficient vector is reconstructed from a scalar latent spatial field and its Chebyshev neighbourhood on the rectangular grid. The spatial neighbourhood radius is selected using a Bayesian information criterion (BIC)-type conditional reconstruction criterion. In the local-neighbourhood transfer simulation, SFGDPC reduced mean cumulative normalized mean squared error (NMSE) relative to spatial functional principal component analysis (SFPCA) by approximately 38-53% across the reported component counts and covariance conditions. In the Indian Ocean sea surface temperature (SST) application, one SFGDPC component produced lower whole-grid reconstruction error than both the boundary-safe and high-cap SFPCA benchmarks across all 33 annual fields. The results support SFGDPC as a local reconstruction-based complement to spectral SFPCA for regular-grid spatial functional data.",
+      "authors": [
+        "Dharini Pathmanathan",
+        "Teck Xiang Seow",
+        "Philipp Otto",
+        "Sophie Dabo-Niang"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-09-14T03:44:59+00:00",
+      "link": "https://arxiv.org/pdf/2609.14986v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "dimension reduction for oceanographic and remote-sensing gridded data",
+      "llm_evidence_cn": "面向海洋学与遥感网格数据的降维",
+      "llm_evidence": "面向海洋学与遥感网格数据的降维",
+      "canonical_evidence": "面向海洋学与遥感网格数据的降维",
+      "llm_tldr_en": "Regular-grid spatial functional data arise in oceanographic and remote-sensing applications, but existing spectral methods do not target finite-neighbourhood reconstruction. SFGDPC performs reconstruction-based dimension reduction via basis coefficients and neighbourhood components.",
+      "llm_tldr_cn": "规则网格空间函数数据广泛出现在环境、海洋学、气候与遥感应用中，每个空间位置对应一整条曲线，但现有谱域空间函数主成分方法并不直接针对有限邻域的最小二乘重构。本文提出空间函数广义动态主成分SFGDPC，先用基函数系数表示每条函数，再对系数向量进行基于邻域的重构式降维。方法在规则网格空间函数数据上实现有效降维与潜成分估计。该工作为海洋遥感和气候网格数据的高效特征提取提供了实用工具。",
+      "llm_tldr": "规则网格空间函数数据广泛出现在环境、海洋学、气候与遥感应用中，每个空间位置对应一整条曲线，但现有谱域空间函数主成分方法并不直接针对有限邻域的最小二乘重构。本文提出空间函数广义动态主成分SFGDPC，先用基函数系数表示每条函数，再对系数向量进行基于邻域的重构式降维。方法在规则网格空间函数数据上实现有效降维与潜成分估计。该工作为海洋遥感和气候网格数据的高效特征提取提供了实用工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.15676v1",
+      "source": "arxiv",
+      "title": "MambaMPD: A Mamba-Driven Segmentation Framework for Marine Pollution Detection from Remote Sensing Imagery",
+      "abstract": "Accurate marine pollution detection (MPD) is essential for protecting coastal ecosystems and marine biodiversity. Vision Mamba models have shown promise in remote-sensing semantic segmentation by efficiently capturing long-range dependencies and global context, yet their potential for MPD remains underexplored. MPD is particularly challenging because of low signal-to-noise ratios, fragmented pollution patterns, and indistinct boundaries caused by the visual similarity between pollutants and the surrounding sea. To address these issues, we propose MambaMPD, an enhanced Mamba-based framework incorporating two complementary structural priors: Frequency-Aware Augmentation (FAA) and multi-scale Edge-Guided Attention (EGA). FAA integrates wavelet transforms into the encoder to decompose features into multi-scale frequency subbands, enabling the model to capture low-frequency contextual semantics and high-frequency structural details needed to identify small, low-contrast, and irregular pollution patterns. EGA adaptively fuses hierarchical, Laplacian-derived boundary cues with deep semantic representations, refining encoder features before decoding to sharpen boundaries and reduce ambiguity in visually confusing, spatially fragmented scenes. Together, these modules improve sensitivity to subtle pollution signals while preserving fine boundary structures. A U-Net-style decoder with squeeze-and-excitation attention and deep supervision progressively restores and refines semantic and spatial information across scales. Extensive experiments on two benchmark MPD datasets show that MambaMPD achieves higher mIoU than competing methods while requiring substantially less computation than foundation-model-based approaches. On MADOS, it improves F1 by 3.6% over OSDMamba; on M4D, it raises Oil Spill IoU by 6.82% over TransOilSeg.",
+      "authors": [
+        "Shuaiyu Chen",
+        "Wei Han",
+        "Peng Ren",
+        "Chunbo Luo",
+        "Zeyu Fu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-14T14:52:16+00:00",
+      "link": "https://arxiv.org/pdf/2609.15676v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Mamba-based segmentation for marine pollution detection from remote sensing imagery",
+      "llm_evidence_cn": "基于Mamba的遥感图像海洋污染分割检测框架",
+      "llm_evidence": "基于Mamba的遥感图像海洋污染分割检测框架",
+      "canonical_evidence": "基于Mamba的遥感图像海洋污染分割检测框架",
+      "llm_tldr_en": "Proposes MambaMPD, a Mamba-based remote sensing segmentation framework with frequency-aware augmentation and edge-guided attention for marine pollution detection.",
+      "llm_tldr_cn": "针对海洋污染检测中信噪比低、污染斑块破碎且边界模糊等难题，本文提出MambaMPD遥感分割框架。方法在视觉Mamba基础上引入频率感知增强与多尺度边缘引导注意力两项结构先验，以增强对污染区域长程依赖和边界的刻画。实验表明该框架能有效提升海洋污染检测的分割精度，对海岸带生态与生物多样性保护具有应用价值。",
+      "llm_tldr": "针对海洋污染检测中信噪比低、污染斑块破碎且边界模糊等难题，本文提出MambaMPD遥感分割框架。方法在视觉Mamba基础上引入频率感知增强与多尺度边缘引导注意力两项结构先验，以增强对污染区域长程依赖和边界的刻画。实验表明该框架能有效提升海洋污染检测的分割精度，对海岸带生态与生物多样性保护具有应用价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

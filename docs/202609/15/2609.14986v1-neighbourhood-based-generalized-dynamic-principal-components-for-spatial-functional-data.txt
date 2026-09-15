@@ -1,0 +1,660 @@
+Title: Neighbourhood-Based Generalized Dynamic Principal Components for Spatial Functional Data
+
+URL Source: https://arxiv.org/pdf/2609.14986v1
+
+Published Time: Tue, 15 Sep 2026 01:51:51 GMT
+
+Number of Pages: 31
+
+Markdown Content:
+# Neighbourhood-Based Generalized Dynamic Principal Components for Spatial Functional Data 
+
+## Dharini Pathmanathan a,b,* , Teck Xiang Seow a, Philipp Otto c, and Sophie Dabo-Niang d
+
+> a
+
+Institute of Mathematical Sciences, Faculty of Science, Universiti Malaya, 50603 Kuala Lumpur, Malaysia 
+
+> b
+
+Centre of Research for Statistical Modelling and Methodology, Faculty of Science, Universiti Malaya, 50603 Kuala Lumpur, Malaysia 
+
+> c
+
+School of Mathematics and Statistics, University of Glasgow, University Place, Glasgow, G12 8QQ, UK 
+
+> d
+
+Univ. Lille, CNRS, UMR 8524 – Laboratoire Paul Painlev´ e, Inria-Datavers, F-59000 Lille, France 
+
+> *
+
+Corresponding author: dharini@um.edu.my 
+
+Abstract 
+
+Regular-grid spatial functional datasets arise naturally in gridded environmen-tal, oceanographic, climate, and remote-sensing applications, where each spatial location is associated with an entire curve. Existing spectral spatial functional principal component analysis methods provide an important frequency-domain approach for such data, but they do not directly target finite-neighbourhood least-squares reconstruction from an estimated latent spatial component field. To address this, we propose Spatial Functional Generalized Dynamic Principal Components (SFGDPC), a reconstruction-based dimension-reduction method for regular-grid spatial functional data. Each function is first represented by basis coefficients, and each coefficient vector is reconstructed from a scalar latent spatial field and its Chebyshev neighbourhood on the rectangular grid. The spatial neighbourhood radius is selected using a Bayesian information criterion (BIC)-type conditional reconstruction criterion. In the local-neighbourhood transfer simulation, SFGDPC reduced mean cumulative normalized mean squared error (NMSE) relative to spatial functional principal component analysis (SFPCA) by approximately 38–53% across the reported component counts and covariance conditions. In the Indian Ocean sea surface temperature (SST) application, one SFGDPC component produced lower whole-grid reconstruction error than both the boundary-safe and high-cap SFPCA benchmarks across all 33 annual fields. The results support SFGDPC as a local reconstruction-based complement to spectral SFPCA for regular-grid spatial functional data. 
+
+1arXiv:2609.14986v1 [stat.ME] 14 Sep 2026 Keywords: functional data analysis; spatial statistics; dimensionality reduction; nonsta-tionarity; sea surface temperature; environmental statistics. 
+
+# 1 Introduction 
+
+Many modern environmental datasets consist not of a single measurement at each location, but of an entire temporal or spectral profile. Sea surface temperature (SST) over the course of a year [1, 2], rainfall intensity across seasons [3, 4], and remotely sensed vegetation trajectories [5] are typical examples. The resulting data combine two sources of structure: variation within each curve and dependence across spatial locations. Effective dimension reduction should therefore account for both. Such data are commonly described as a spatial functional process {Xs : s ∈ D ⊂ Rr}, where s denotes a spatial location, r is the spatial dimension, and Xs ∈ L2(T ) is a square-integrable functional random variable, typically written as Xs(t) for t ∈ T [2–4]. The present work focuses on the two-dimensional regular-grid case ( r = 2), with observations on a complete finite rectangular lattice, which we index as DN = {1, . . . , n 1} × { 1, . . . , n 2}, N = n1 × n2, where n1 and n2 denote the numbers of grid rows and columns, respectively. Regular-grid environmental and reanalysis products are a motivating data class for this work, as they often contain repeated functional profiles over rectangular spatial lattices. The SST application in Section 4 provides a representative empirical assessment of local reconstruction for this type of data. Several approaches have been developed for spatial functional data. Spectral/filter-based spatial functional principal component analysis (SFPCA) methods incorporate spatial dependence through frequency-domain structure under weak stationarity and have a well-developed asymptotic theory [2]. This spectral framework has also been extended to multivariate functional responses on regular grids [6]; the present paper concerns a univariate functional response per location, for which SFPCA [2] is the natural spectral benchmark. A different line of work is model-based and geostatistical. Hidden dynamic geostatistical models (HDGMs) place a latent dynamic process on spatially indexed data and estimate the resulting model by likelihood- or expectation–maximization (EM)-type methods [7]. Functional hidden dynamic geostatistical models (f-HDGMs) extend this idea to functional responses through basis-coefficient representations and are particularly suited to kriging, covariate adjustment, and irregularly located observations [8, 9]. Functional geostatistical prediction for Hilbert-space-valued data has also been studied in [10]. These methods are model-based and inferential in nature, whereas the method developed here is descriptive and reconstruction-oriented. For large regular-grid functional datasets, an important practical goal is to summarize the observed field using a small number of components while retaining sufficient information for reconstruction. The present work is motivated by a reconstruction question complementary to the spectral SFPCA formulation [2]: can the functional field be represented using a latent component field over a bounded grid neighbourhood, with the size of that neighbourhood chosen as part of the representation? In SFPCA, L is an integer-valued truncation parameter that bounds the spatial lags included in the estimated filters, whereas the neighbourhood radius considered here defines the spatial support of the reconstruction 2model. Generalized dynamic principal components (GDPC) [11], implemented in the gdpc 
+
+R package [12], form a natural reconstruction-based starting point, but the method is formulated for vector time series with a one-dimensional lag structure. These considerations motivate extending its reconstruction principle to functional observations on a two-dimensional regular grid. The central contribution of this paper is Spatial Functional Generalized Dynamic Prin-cipal Components (SFGDPC). For each candidate radius, SFGDPC alternates between estimation of the latent spatial field and the functional loadings. The radius determines the maximum spatial offset included in the reconstruction, and its component-specific value is selected from k = 0 , . . . , s max using a Bayesian information criterion (BIC)-type penalized reconstruction criterion. In this way, SFGDPC retains the least-squares recon-struction principle of GDPC while adapting its component and loading structure to a regular spatial lattice. The resulting framework links functional dimension reduction with finite-neighbourhood spatial reconstruction. We evaluate the proposed method in three complementary settings: two simulation studies and one environmental application. The first is a stationary spatial functional autoregressive moving-average (SFARMA) benchmark favourable to spectral methods, used to examine whether SFGDPC remains competitive under a standard stationary spatial-functional process. The second is a local-neighbourhood latent-driver simulation, representing the regime targeted by the proposed method. The third is an application to Indian Ocean SST anomaly fields, used to assess empirical reconstruction performance and the spatial radii selected by SFGDPC. The remainder of the paper is structured as follows. Section 2 develops the model, estimation algorithm, and BIC-type radius-selection criterion. Section 3 reports the simulation studies, and Section 4 presents the SST application. Sections 5 and 6 contain the discussion and conclusion, respectively. 
+
+# 2 Methodology 
+
+Let {Xs : s ∈ Z2} be a functional spatial process with values in L2(T ). The observations are located on the complete rectangular lattice D = {1, . . . , n 1} × { 1, . . . , n 2}, with 
+
+N = n1n2. All observations are approximated in a common, fixed, m-dimensional basis 
+
+{ϕ1, . . . , ϕ m}:
+
+X(m) 
+
+> s
+
+(t) = 
+
+> m
+
+X
+
+> j=1
+
+zsj ϕj (t), zs = ( zs1, . . . , z sm )⊤ ∈ Rm.
+
+The basis may consist of functional principal components, splines, or Fourier functions. Let Z = ( z⊤ 
+
+> s
+
+: s ∈ D ) ∈ RN ×m denote the coefficient matrix after any analysis-specific centring. Its rows follow the ordering i(r, c ) = c + ( r − 1) n2, for 1 ≤ i(r, c ) ≤ N .32.1 Spatial neighbourhood 
+
+For an integer radius k ≥ 0, define the full Chebyshev offset set Hk = {− k, . . . , k }2, with 
+
+qk = |H k| = (2 k + 1) 2 and ck = qk − 1. For each site i, the noncentral offsets in Hk are scanned in row-major order, with the row offset varying slowest. Offsets whose translated sites lie inside D are retained and compacted into the leading slots. If fewer than ck valid neighbours exist, the remaining trailing slots are filled with the target index itself. Writing 
+
+νk, 0(i) = i and letting νk, 1(i), . . . , ν k,c k (i) denote the resulting compacted and self-padded indices, define the slot-selection operators Π k,r ∈ RN ×N by (Π k,r f )i = fνk,r (i), r = 0 , . . . , c k. (1) No index is mapped across a lattice row boundary, and the number of design columns is the same at every site. The spatial design matrix is then 
+
+Fk(f ) = Πk, 0f, . . . , Πk,c k f, 1N
+
+ ∈ RN ×(qk +1) , (2) so that the intercept occupies the final column. 
+
+## 2.2 Spatial functional generalized dynamic component 
+
+For a fixed radius k, one component comprises a spatial score field f = ( fi : i ∈ D )⊤ ∈ RN ,an intercept α ∈ Rm, and loading vectors βk,r ∈ Rm, r = 0 , . . . , c k. The coefficient vector at site i is reconstructed as 
+
+bzi = α +
+
+> ck
+
+X
+
+> r=0
+
+βk,r fνk,r (i). (3) Let 
+
+Bk = [ βk, 0, . . . , β k,c k ] ∈ Rm×qk , Ck =
+
+"
+
+B⊤
+
+> k
+
+α⊤
+
+#
+
+∈ R(qk +1) ×m.
+
+The fitted coefficient matrix is bZk = Fk(f )Ck. (4) Equation (3) is a reconstruction parameterization and need not be assumed to be the true data-generating model. At interior sites, slot 0 represents the centre, while each slot r = 1 , . . . , c k corresponds to the r-th noncentral offset in the fixed row-major ordering. Under this ordering, βk,r has its usual lag-specific interpretation at interior sites. At boundary sites, invalid offsets are removed and the surviving neighbours are compacted. The slot indices do not retain a universal fixed-offset interpretation. The trailing self-padded slots contribute an additional effective centre loading P 
+
+> r∈P i
+
+βk,r , where Pi is the set of padded slots at site i. Lag-specific interpretation of the fitted loadings is exact only at interior sites. The same boundary convention is used in estimation, reconstruction, and model selection. The fitted object stores the intercept separately and the loading columns in reverse design order; the latter are reordered before reconstruction or interpretation. 4For a nondegenerate score field, the implementation removes translation and scale inde-terminacy by imposing 
+
+1⊤ 
+
+> N
+
+f = 0 , ∥f ∥22 = N − 1, (5) so that f has zero mean and unit sample standard deviation. Its sign remains arbitrary. The handling of a degenerate score update is described below. For fixed k, SFGDPC seeks to minimize the reconstruction loss 
+
+Lk(f, C ) = 1
+
+N m ∥Z − Fk(f )C∥2 
+
+> F
+
+(6) over score fields satisfying (5) and C ∈ R(qk +1) ×m. We use ( bfk, bCk) to denote the output of the alternating least-squares algorithm described below; global minimization of (6) is not guaranteed. Only the fitted matrix and the attained loss are essential for reconstruction. For a fixed score field, the least-squares coefficient matrix C is unique if and only if Fk(f ) has full column rank. Here ∥Z − Fk(f )C∥F denotes the Frobenius norm. The methodology then minimizes an ordinary Frobenius loss in coefficient space. This loss equals integrated squared functional error when the basis is orthonormal. For a basis with Gram matrix Gab = R 
+
+> T
+
+ϕa(t)ϕb(t) dt , exact L2 fitting requires either transformed coefficients z⋆s = G1/2zs or a Gram-weighted loss. In practice we use the unweighted coefficient-space loss. 
+
+## 2.3 Finite-sample existence and the conditional loading update 
+
+The finite-sample SFGDPC methodology does not require second-order stationarity or isotropy. The adoption of a common loading vector for each neighbourhood slot across sites constitutes a structural constraint of the chosen reconstruction parameterization rather than an assumption of stationarity. Any stationarity assumptions used below pertain to specific data-generating mechanisms or competing methods and are not requirements of the SFGDPC estimator. The following finite-sample conditions provide a sufficient theoretical setting for the existence of a minimizer of the restricted fixed-radius problem over Fk and for the uniqueness of the conditional loading update. Computational handling outside the full-rank setting is described subsequently. 
+
+(A1) Common representation and finite data. The basis functions are linearly independent, m < ∞, and every entry of Z is finite. The data contain no missing values. If normalized error is reported, ∥Z∥F > 0. 
+
+(A2) Valid lattice and candidate radii. The observed sites form the complete rectangle D with known dimensions n1 and n2, where N = n1n2 ≥ 2. The vectorization is as specified above, and K = {0, . . . , s max } for a fixed finite integer smax ≥ 0. For each 
+
+k ∈ K , qk + 1 ≤ N .
+
+(A3) Stable score designs. For each k ∈ K , let Fk be a nonempty compact set of score fields satisfying (5). For the finite-sample existence result, assume that there exists ηk > 05such that 
+
+λmin {Fk(f )⊤Fk(f )} ≥ ηk for every f ∈ F k. (7) This sufficient condition excludes rank-degenerate score configurations and ensures that the least-squares coefficient matrix is uniquely defined and continuous in f .
+
+Proposition 1. Under (A1)–(A3), for fixed f ∈ F k, the unique least-squares coefficient matrix is bCk(f ) = {Fk(f )⊤Fk(f )}−1Fk(f )⊤Z. (8) 
+
+Moreover, the profiled loss f 7 → L k{f, bCk(f )} is continuous on Fk and attains its minimum. Hence the restricted problem 
+
+min   
+
+> f∈F k
+> C∈R(qk+1) ×m
+
+Lk(f, C )
+
+has at least one solution. 
+
+Proof : Condition (7) makes f 7 → bCk(f ) continuous. Consequently, f 7 → L k{f, bCk(f )}
+
+is continuous on the compact set Fk and attains its minimum. Therefore, the restricted problem over Fk has at least one solution. The sign of any minimizing score field may be fixed by any deterministic convention if a unique orientation is desired. Remark 1. Assumption (A3) is an idealized sufficient condition for the existence and continuity result and is not verified by the implementation. For a fixed score, the im-plementation attempts a symmetric positive-definite solution of the normal equations and uses a Moore–Penrose inverse if that solve fails or returns nonfinite values. Outside the full-rank setting of the Proposition, the implemented loading update is represented by bCk(f ) = Fk(f )+Z, which coincides with (8) when Fk(f ) has full column rank. This distinguishes full-rank uniqueness from computational well-definedness under the pseu-doinverse fallback. The condition qk + 1 ≤ N is retained because it is necessary for possible full-column-rank uniqueness, although it is not required merely to compute a pseudoinverse solution. 
+
+Remark 2. If the centred raw score has nonfinite or near-zero sample standard deviation, the implementation returns the zero field rather than reinitializing it. The convergence flag indicates only that the algorithm terminated before the iteration limit and does not certify that the score is nondegenerate. The selection criterion continues to use the nominal parameter count pk for such a candidate. 
+
+## 2.4 Alternating least-squares computation 
+
+For a current score f , the intercept and loading matrix are updated using (8). For fixed α
+
+and Bk, define 
+
+Ak(Bk) = 
+
+> ck
+
+X
+
+> r=0
+
+(βk,r ⊗ Πk,r ) ∈ RN m ×N .
+
+The unconstrained least-squares score update is characterized by 
+
+f raw = Ak(Bk)+ vec  Z − 1N α⊤ , (9) 6where A+ denotes the Moore–Penrose inverse. The implementation does not form Ak(Bk)+
+
+explicitly. Instead, it accumulates the equivalent dense N × N normal equations using the centre and neighbour slots νk,r (i) and solves them directly. If the direct solve fails or returns nonfinite values, the Moore–Penrose inverse of the normal-equation matrix is used. When the centred raw score has finite sample standard deviation exceeding 10 −12 , it is centred and rescaled according to 
+
+f ← √N − 1 MN f raw 
+
+∥MN f raw ∥2
+
+, MN = IN − N −11N 1⊤ 
+
+> N
+
+. (10) If the sample standard deviation is nonfinite or no greater than 10 −12 , the implementation instead returns the zero field. Unless an initial score field is supplied, the current working coefficient matrix is centred across grid locations and its first right singular vector is computed. The corresponding score vector is then formed and standardized according to (5). At component step ℓ, the working matrix is E(ℓ−1) , with E(0) = Z. This initialization is independent of k, so all candidate radii within the same component step use the same initial score field. Since the intercept is unrestricted and the loading matrix is unconstrained in scale, this normalization does not change the minimum attainable reconstruction loss: its effect can be absorbed by adjusting the intercept and rescaling the loadings. Since the loading and intercept parameters are refitted after the normalized score update, the loss evaluated after each complete pair of exact updates is non-increasing. 
+
+Remark 3. The updates stop when the relative change between successive mean squared error (MSE) values is no larger than the prescribed numerical tolerance, or when the iteration limit is reached. This relative change is the absolute change in MSE divided by the absolute previous MSE plus machine epsilon, which prevents division by zero. 
+
+Remark 4. All candidate radii use the same working matrix, boundary rule, initialization policy, numerical tolerance, and iteration limit. A warning is issued if one or more candidate fits fail to converge within the iteration limit; the implemented selector nevertheless minimizes the criterion over all candidate fits. If the minimum is attained by more than one radius, the smallest is selected. Since the objective in (6) is non-convex jointly in ( f, C ), the algorithm may reach a local stationary solution. The analyses use one initialization per candidate, and no multiple-start procedure is applied. 
+
+## 2.5 Selection of the spatial radius 
+
+The alternating least-squares procedure is applied to every candidate radius k ∈ K =
+
+{0, . . . , s max }. Let bZk denote the resulting fitted coefficient matrix, and define 
+
+Rk = Z − bZk, bσ2 
+
+> k
+
+= ∥Rk∥2
+
+> F
+
+N m , pk = m(qk + 1) .
+
+Here, pk counts the qk loading vectors and the intercept vector, each of dimension m,conditional on the fitted score field. 7The implemented BIC-type reconstruction criterion is BIC( k) = N m log max  bσ2
+
+> k
+
+, ϵ mach 
+
+ + pk log( N m ). (11) Here, ϵmach is the machine-level positive floor used by the implementation to avoid taking the logarithm of zero. The selected radius is bk ∈ arg min k∈K BIC( k), with the smallest minimizer selected in the event of a tie. This criterion is a conditional BIC-type reconstruction criterion rather than a full likelihood-based BIC for the joint latent-field model. It treats the N m entries of the coefficient matrix as scalar reconstruction targets and does not specify a likelihood for their spatial or cross-coefficient dependence. It penalizes the loading and intercept parameters whose number increases with the Chebyshev radius. The latent field f is treated as a fitted component-score vector and is not included in pk.Its nominal dimension is the same for every candidate radius, so adding a penalty based only on that nominal dimension would contribute the same term for all k and would not alter the selected radius. Nevertheless, because the latent field is re-estimated jointly with a radius-dependent loading matrix, the parameter count pk does not represent a complete effective-degrees-of-freedom calculation for the joint nonlinear fit. The criterion should therefore be interpreted as a reconstruction-based radius-selection rule, in the spirit of generalized dynamic principal components [11], rather than as a likelihood BIC for the full latent spatial model. Although an approximate leave-one-out criterion and alternative penalized-reconstruction criteria are available in the implementation, all analyses in this paper use the BIC-type criterion in (11). 
+
+## 2.6 Several components and reconstruction error 
+
+If p ≥ 1 components are requested, set E(0) = Z. At step ℓ = 1 , . . . , p , one component is fitted to E(ℓ−1) , with fitted contribution bE(ℓ)comp = Fbkℓ ( bf (ℓ)) bC(ℓ)
+
+> bkℓ
+
+∈ RN ×m, and the residual is updated as E(ℓ) = E(ℓ−1) − bE(ℓ)comp .The cumulative reconstruction after p sequentially extracted components is 
+
+bZ(p) =
+
+> p
+
+X
+
+> ℓ=1
+
+bE(ℓ)comp , E(p) = Z − bZ(p).
+
+This is sequential residual fitting rather than simultaneous optimization over all com-ponents, and the resulting components need not be mutually orthogonal. In the SST application, only one component is fitted, so no deflation step is required. The cumulative coefficient-space mean squared error (MSE) and normalized mean squared error (NMSE) are MSE p =
+
+Z − bZ(p) 2
+
+> F
+
+N m , NMSE p =
+
+Z − bZ(p) 2
+
+> F
+
+∥Z∥2
+
+> F
+
+.
+
+The denominator ∥Z∥2 
+
+> F
+
+is computed once from the original input matrix and is not 8recomputed from the residual matrix at any deflation step. For all cross-method comparisons below, the coefficient field was column-centred across spatial locations, separately for each basis coefficient, before fitting. The same centred field was used as the reference for all reconstruction errors. SFGDPC NMSE was computed using the unweighted coefficient-space Frobenius norm, whereas SFPCA and, where included, functional principal component analysis (FPCA) used functional L2-NMSE based on the basis Gram matrix. The relationship between these conventions is given below. For a non-orthonormal basis with Gram matrix G, the corresponding cumulative functional NMSE is NMSE L2,p =
+
+X
+
+> s∈D
+
+ zs − bz(p)
+
+> s
+
+⊤ G  zs − bz(p)
+
+> s
+
+X
+
+> s∈D
+
+z⊤ 
+
+> s
+
+Gz s
+
+.
+
+The 15-term Fourier bases used in both simulation studies and the SST application were numerically orthonormal. In each case, the maximum absolute deviation of the evaluated Gram matrix from I15 was 1 .38 × 10 −6. Coefficient-space NMSE and Gram-weighted functional L2-NMSE were numerically equivalent at the reported precision. They coincide exactly when the basis is orthonormal. 
+
+# 3 Simulation Studies 
+
+We conducted two simulation experiments to evaluate SFGDPC under complementary forms of spatial functional dependence. The first used a stationary SFARMA-type process and served as a conventional benchmark for comparison with SFPCA. The second used a finite-support local-neighbourhood transfer mechanism, representing the setting for which neighbourhood-based reconstruction is specifically intended. Ordinary FPCA was included as a non-spatial reference. In each replication, all methods were fitted to the same simulated coefficient field and retained the same number of components. The coefficient field was column-centred once across grid locations, separately for each basis coefficient, before being supplied to SFGDPC, SFPCA, and FPCA. Cumulative reconstruction error for each method was evaluated relative to this common centred field under the norm conventions described in Section 2.6. We report Monte Carlo means and standard deviations of cumulative NMSE. Radius recovery is examined separately for the first SFGDPC component when the data-generating mechanism has a finite neighbourhood radius. 
+
+## 3.1 Simulation 1: Stationary SFARMA Benchmark 
+
+The first experiment considered a stationary SFARMA-type spatial functional process. This setting provides a standard stationary dependence structure for which spectral spatial functional principal component methods are naturally suited [2]. The purpose of the experiment was to assess whether SFGDPC remained competitive when the data-generating mechanism was not specifically based on a finite local neighbourhood. 9The experiment used 1000 Monte Carlo replications for each innovation setting: Gaussian innovations and Student’s t innovations with five degrees of freedom ( t5). The heavier-tailed condition was included to assess sensitivity to departures from Gaussianity. In each replication, ordinary FPCA, SFPCA, and SFGDPC were fitted to the same simulated spatial functional field, and cumulative reconstruction NMSE was evaluated after one, two, and three retained components. SFGDPC selected its neighbourhood radius separately for each sequential component using the BIC-type reconstruction criterion. Each simulated field was observed on a 50 × 50 grid and represented using a 15-term Fourier basis. SFPCA used a supplied maximum filter radius of Lmax = 3 and a filter-mass threshold of β = 1, so no additional mass-based filter truncation was applied. Its spectral smoothing bandwidth q was chosen using the data-adaptive rule described in Supplementary Section S1. The spectral density was evaluated on a 100 × 100 frequency grid. SFGDPC searched over k = 0 , . . . , 3 using the BIC-type criterion, with convergence tolerance 10 −4 and a maximum of 500 iterations. All methods were fitted to the same centred field within each replication. The complete SFARMA data-generating equations, parameter values, basis construction, and implementation settings appear in Supplementary Section S1. Table 1: Cumulative reconstruction NMSE under the stationary SFARMA benchmark over 1,000 Monte Carlo replications. Entries are Monte Carlo means with standard deviations in parentheses. Lower NMSE corresponds to better reconstruction; boldface identifies the lowest mean within each row and does not imply statistical significance.                             
+
+> Innovation Components FPCA SFPCA SFGDPC Gaussian 10.5990 (0.0427) 0.4697 (0.0394) 0.4708 (0.0378) Gaussian 20.3719 (0.0316) 0.2938 (0.0220) 0.2863 (0.0200)
+> Gaussian 30.2357 (0.0218) 0.1950 (0.0155) 0.1852 (0.0119)
+> t510.6019 (0.0425) 0.4751 (0.0396) 0.4752 (0.0378)
+> t520.3729 (0.0303) 0.2966 (0.0231) 0.2889 (0.0206)
+> t530.2365 (0.0208) 0.1965 (0.0169) 0.1862 (0.0121)
+
+Table 1 shows similar one-component reconstruction performance for SFPCA and SFGDPC under both innovation distributions. After two and three retained components, SFGDPC had the lowest mean cumulative NMSE. The same pattern under Gaussian and t5 in-novations indicates that this finding was not sensitive to the heavier-tailed condition examined. The BIC-selected SFGDPC radius was strongly concentrated at k = 1, including all first-component fits. All selected fits met the implemented numerical stopping criterion, and cumulative NMSE was non-increasing across retained components in every replication. Since the SFARMA process has no unique generating Chebyshev radius, these selections are interpreted descriptively. Supplementary Section S1 gives the detailed simulation settings and component-wise summaries of the selected radii. 10 3.2 Simulation 2: Local-Neighbourhood Transfer Model 
+
+The second experiment evaluated the intended operating regime of SFGDPC. The coeffi-cient vector at each spatial location was generated from values of a latent spatial field within a finite Chebyshev neighbourhood. Let S = {suv = ( u, v ) : u = 1 , . . . , n lat , v = 1 , . . . , n lon } denote the regular rectangular grid, and let f = ( f1, . . . , f N )⊤ be a scalar Gaussian spatial field. Here, nlat and nlon 
+
+denote the numbers of grid points in the latitude and longitude directions, respectively, and N = nlat nlon . Under the nonstationary treatment, its covariance was generated using a nonstationary covariance construction [13], 
+
+C(s, s ′) = 2ρsρs′
+
+ρ2 
+
+> s
+
++ ρ2
+
+> s′
+
+exp 
+
+(
+
+−√2∥s − s′∥
+
+pρ2 
+
+> s
+
++ ρ2
+
+> s′
+
+)
+
+.
+
+The local range increased linearly along the first grid direction from ρlow = 1 to ρhigh = 4, whereas the stationary control used the constant range ρ0 = 2 .5. Each realization of the latent field was centred and standardized before constructing the coefficient field. The treatment and control conditions were paired by applying their respective covariance transformations to the same replication-specific standard-normal draws. For a true neighbourhood radius ktrue , let Hktrue = {(a, b ) ∈ Z2 : |a| ∨ | b| ≤ ktrue } denote the full Chebyshev offset set, including the centre. For a target location si = ( ui, v i) and offset h = ( a, b ), define the clamping map 
+
+π(si, h ) = (min {max( ui + a, 1) , n lat }, min {max( vi + b, 1) , n lon }) .
+
+The ordered vector of latent-field values in the clamped Chebyshev window centred at si
+
+is ϕi(f ) = ( fπ(si,h ) : h ∈ H ktrue )⊤. The coefficient vector was then generated as 
+
+zi = Bϕi(f ) + εi, i = 1 , . . . , N, 
+
+where B was a deterministic non-separable loading matrix and, conditional on the gener-ated signal, the entries of εi were independent, mean-zero Gaussian variables with the coefficient-specific standard deviations specified below. The SFGDPC estimator retained the compacting self-padding convention described in the methodology section. Exact cor-respondence between the generating and fitted neighbourhood constructions is interpreted primarily for interior locations. The loading matrix was fixed across replications and normalized so that ∥B∥F = √m.Its explicit construction, including the offset-dependent smooth and directional terms, appears in Supplementary Section S2. The main experiment used nlat = nlon = 40, m = 15, ktrue = 2, and a noise ratio of 0 .15. The signal at each interior location depended directly on (2 ktrue +1) 2 = 25 latent-field values. For coefficient dimension ℓ, the noise standard deviation was σε,ℓ = 0 .15 sd( μ1ℓ, . . . , μ N ℓ ), where μi = Bϕi(f ). The observed coefficient matrix was centred across spatial locations, separately for each basis coefficient, before fitting all methods. No column standardization was applied. 11 SFGDPC used this centred matrix without further centring or rescaling. Cumulative reconstruction NMSE for SFGDPC, SFPCA, and FPCA was evaluated relative to the same centred observed coefficient field. The nonstationary treatment and stationary control were each evaluated using 100 Monte Carlo replications, and three components were retained. SFGDPC was fitted with 
+
+smax = 3, using a convergence tolerance of 10 −4 and a maximum of 500 iterations. The neighbourhood radius was selected separately for each sequential component using the BIC-type reconstruction criterion. SFPCA retained the same number of components and was fitted using the fsd R im-plementation [2], available from the GitHub repository. The maximum supplied spatial filter radius was Lmax = 9, no filter-mass truncation was applied ( β = 1), and the spectral density was evaluated on a 200 × 200 frequency grid. The q ≤ 1 fallback was not triggered in any replication, and the effective SFPCA filter radius was L = 9 in all 100 replications under both covariance conditions. The radius L = 9 is the largest boundary-safe integer satisfying the interior-validity condition 1 + 2 L ≤ n − 2L for a 40 × 40 grid. This boundary-safe condition ensures a nonempty interior region for the SFPCA interior error diagnostic; the reported NMSE values are whole-grid reconstruction errors, with no interior exclusion. Ordinary FPCA was again included as a non-spatial reference. Table 2: Cumulative reconstruction NMSE for the local-neighbourhood transfer simulation. Entries are Monte Carlo means with standard deviations in parentheses. Lower NMSE corresponds to better reconstruction; boldface identifies the lowest mean within each row and does not imply statistical significance.                                           
+
+> Condition pFPCA SFPCA SFGDPC Nonstationary 10.3634 (0.0397) 0.0819 (0.0087) 0.0506 (0.0051)
+> Nonstationary 20.2109 (0.0268) 0.0561 (0.0071) 0.0334 (0.0035)
+> Nonstationary 30.0982 (0.0127) 0.0497 (0.0068) 0.0247 (0.0027)
+> Stationary 10.3511 (0.0358) 0.0795 (0.0085) 0.0453 (0.0043)
+> Stationary 20.1991 (0.0239) 0.0534 (0.0069) 0.0297 (0.0032)
+> Stationary 30.0889 (0.0107) 0.0469 (0.0065) 0.0221 (0.0024)
+> Notes: Results are based on 100 Monte Carlo replications on a 40 ×40 grid with ktrue = 2,
+> m= 15, and noise ratio 0 .15. SFGDPC used BIC selection over k= 0 , . . . , 3. SFPCA used
+> Lmax = 9, no filter-mass truncation ( β= 1), and a 200 ×200 frequency grid.
+
+Table 2 shows that SFGDPC had the lowest mean cumulative NMSE for every component count under both covariance conditions. SFGDPC also attained lower NMSE than SFPCA in all 100 replications for each component count, while ordinary FPCA had the largest mean NMSE in every case. The persistence of the reconstruction difference under the stationary control indicates that it cannot be attributed solely to the spatially varying covariance range. Instead, the result is consistent with an advantage from matching the reconstruction method to the finite-support local transfer mechanism used to generate the coefficient field. In the main 40 × 40 design, the first SFGDPC component selected the generating radius 12 ktrue = 2 in all 100 replications under both covariance conditions. This is evidence of radius recovery under this design, rather than a claim of uniform recovery. Supplementary Section S3.1 gives the subsequent-component selections. The supplementary sensitivity study produced exact first-component recovery under the baseline, 60 × 60, higher-noise, and lag-zero-loading ( ktrue = 0) conditions. The selector instead chose a smaller radius for every replication on the 20 × 20 grid and under the generating-radius-three condition. These results indicate that the selected radius represents the dominant reconstruction scale under the examined conditions but need not recover the complete generating support; see Supplementary Section S3.2. 
+
+3.2.1 Sensitivity to the SFPCA Filter Radius 
+
+We assessed the sensitivity of the comparison to the SFPCA filter radius using the centred, nonstationary local-neighbourhood transfer design. SFPCA was evaluated at 
+
+L ∈ { 3, 5, 7, 9} on the 40 × 40 grid and at L ∈ { 9, 11 , 13 , 14 } on the 60 × 60 grid. Within each replication, the candidate radii were applied to the same simulated coefficient field, while SFGDPC was fitted once because its estimates do not depend on L.Mean SFPCA cumulative NMSE decreased monotonically with L for all retained compo-nent counts. SFGDPC retained lower NMSE for p = 1 , 2, 3 at the largest boundary-safe radius on each grid, with the same ordering observed in all 100 replications. This conclu-sion is restricted to the evaluated radii and the implemented boundary conventions. Full numerical results are given in Supplementary Table S4. 
+
+3.2.2 Illustrative First-Component Spatial Filters 
+
+Figure 1 shows the true local loading kernel and the first-component spatial filters estimated from one realization of the centred nonstationary treatment. The realization used the 40 ×40 grid, ktrue = 2, and noise ratio 0 .15, matching the main Monte Carlo design. Details of filter normalization and sign alignment are provided in Supplementary Section S2.1. For this realization, the SFGDPC filter is broadly consistent with several principal central and neighbouring-lag features of the true kernel. The displayed SFGDPC lag representation corresponds to interior grid locations; boundary neighbourhoods use the compacting self-padding convention described in Section 2. The figure is a qualitative illustration, while the replicated cumulative NMSE results in Table 2 constitute the primary performance evidence. 13 Horizontal grid lag Vertical grid lag −2 −1 0 1 2−2 −1 012True loading kernel SFGDPC SFPCA Figure 1: True local loading kernel and estimated first-component SFGDPC and SFPCA filters for one simulated realization of the nonstationary local-neighbourhood model. SFGDPC selected bk1 = 2, while SFPCA used L = 9. Only spatial lags in [ −2, 2] 2 are displayed. Each filter family was normalized to unit integrated squared mass over its full support, and all curves use a common amplitude scale. 14 4 Indian Ocean Sea Surface Temperature Application 
+
+## 4.1 Data description and exploratory diagnostics 
+
+We illustrate the proposed method using Indian Ocean sea surface temperature (SST) observations from 1982 to 2014. The original data are spatio-temporal, but for the present analysis they are represented as spatially indexed annual temperature curves. For each retained grid location and year, the within-year temperature profile was represented using a 15-term Fourier basis, following the SST representation of Kuenzer et al. [2]. The Fourier basis provides a natural representation of the annual temperature cycle. Each annual field is treated as a collection of functional observations indexed by spatial location. Each calendar year was analysed as a separate spatial-functional field; both methods were fitted independently to all 33 annual fields, and temporal dependence between years was not modelled. The application is spatial functional rather than a joint spatio-temporal analysis. The preprocessing follows the spatial functional SST setup used for the SFPCA compari-son. At each spatial location, the mean annual curve over 1982–2014 was subtracted to form annual anomaly fields. The resulting coefficient array was then spatially coarsened by retaining every third longitude and latitude grid point, beginning with the first grid point in each direction, while retaining all 33 annual fields. Each annual coefficient field was subsequently centred across the retained spatial locations before fitting SFGDPC; the SFPCA implementation performs the corresponding spatial centring internally. The resulting coefficient array had dimension 15 × 45 × 40 × 33, corresponding to 15 Fourier coefficients, 45 longitude grid points, 40 latitude grid points, and 33 annual fields. Equiv-alently, each annual field was analysed on a 40 × 45 latitude-by-longitude grid, giving 
+
+N = 40 × 45 = 1800 spatial locations. Hence, for each year, the data were represented by a coefficient matrix Z ∈ R1800 ×15 , with rows corresponding to spatial grid locations and columns corresponding to Fourier coefficient dimensions. The global overview in Figure 2(a) uses the National Oceanic and Atmospheric Admin-istration (NOAA) Optimum Interpolation Sea Surface Temperature (OISST) product, which combines satellite and in situ observations on a regular global grid [1]. The study region exhibits a pronounced north–south temperature gradient, with warmer conditions in the north and cooler conditions in the south (Figure 2). The representative annual curves further reveal spatial differences in both average temperature and seasonal variation, motivating the treatment of the observations as spatially indexed functions. Figure 3 presents an empirical functional spatial correlogram of the raw annual SST curves after centring across locations on the coarsened diagnostic grid. At each Chebyshev lag h,normalized coefficient inner products were averaged over valid pairs at offsets ( h, 0), (0 , h ), (h, h ), and ( h, −h), and then over years. This exploratory summary was computed without subtracting the location-specific mean annual curves used to construct the anomaly fields analysed in Section 4.2. The plotted similarity decreases as the spatial lag increases, with stronger similarity among neighbouring functional observations than among distant ones. This exploratory pattern is consistent with local spatial dependence and motivates the use of a local-neighbourhood reconstruction method. It should not be interpreted as evidence that the SST field follows an exact finite-neighbourhood data-generating mechanism. 15 (a) 180°W 135°W 90°W 45°W 0° 45°E 90°E 135°E 180°E 90°S 45°S 0° 45°N 90°N Longitude Latitude 0°C 5°C 10°C 15°C 20°C 25°C 30°C 
+
+## (b) 60°E 70°E 80°E 90°E 40°S 30°S 20°S Longitude Latitude    
+
+> NW NE SW SE Centre
+> 9°C 10°C 15°C 20°C 25°C 27°C
+
+## (c) Month Temperature (°C) J F M A M J J A S O N D15 20 25 NW (64.9°E, 20.1°S) NE (86.1°E, 20.1°S) SW (64.9°E, 38.9°S) SE (86.1°E, 38.9°S) Centre (76.6°E, 29.1°S) 
+
+Figure 2: Geographical overview and sea surface temperature (SST) summaries for the Indian Ocean application, 1982–2014. (a) Global long-term mean NOAA OISST, displayed at approximately 1 ◦ spacing from the 0 .25 ◦ source grid; the red rectangle marks the study region. (b) Long-term mean SST calculated from the functional dataset on the native 0.25 ◦ grid; the coloured points mark the five selected locations. (c) Average annual SST curves at these locations. 16 Chebyshev grid lag (coarsened grid, stride 3) Functional correlation modal selected k = 3 1 2 3 4 5 6 7 8 9 10 11 12 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 Centred annual fields Figure 3: Empirical functional spatial correlogram on the coarsened diagnostic grid. Functional similarity is computed from normalized Fourier-coefficient inner products for raw annual SST curves after centring across locations. At each lag, values are averaged over valid pairs in four directions and then over years. The dashed vertical line marks the modal BIC-selected SFGDPC radius, k = 3. 
+
+## 4.2 Reconstruction comparison 
+
+For each annual coefficient field, we fitted one SFGDPC component and one SFPCA component. This is a one-component reconstruction comparison across 33 annual SST anomaly fields. SFGDPC was fitted with a fixed maximum Chebyshev search radius smax = 4 , without additional column standardization of the coefficient matrix. The BIC-type reconstruction criterion selected the spatial radius k separately for each year. The convergence tolerance was 10 −4, and the maximum number of iterations was 500. The production driver also checked the fitted dimensions and verified equality between the stored NMSE and the manually computed NMSE. The selected fit for 2004 reached the 500-iteration limit and was retained with the convergence flag set to FALSE ; its attained reconstruction was used in the reported comparison. For comparison, SFPCA was fitted to the same spatially coarsened annual spatial-functional data with one component using the fsd R implementation for SFPCA [2], available from the GitHub repository. The main high-cap benchmark used a maximum supplied filter radius of Lmax = 42, a filter-mass threshold of β = 0 .95, and a 400 × 400 frequency grid for spectral-density estimation. Under this setting, the selected effective SFPCA filter radius did not reach the supplied cap; the largest selected value was L = 41. We also report an SFPCA benchmark with Lmax = 9. Both SST benchmarks used 
+
+β = 0 .95, a 400 × 400 frequency grid, and whole-grid reconstruction error without interior 17 Table 3: Summary of one-component whole-grid reconstruction performance for the Indian Ocean SST anomaly fields, 1982–2014. Two SFPCA benchmarks are reported: a boundary-safe reference setting with Lmax = 9, and a generous high-cap setting with 
+
+Lmax = 42, β = 0 .95, and a 400 × 400 frequency grid. SFGDPC was fitted with smax = 4 and BIC-selected k.Method Mean NMSE Median NMSE Years best SFPCA, Lmax = 42 0.465 0.479 0/33 SFPCA, Lmax = 9 0.518 0.530 0/33 SFGDPC, smax = 4 0.284 0.283 33/33 1985 1990 1995 2000 2005 2010 2015 0.2  0.3  0.4  0.5 
+
+> One−component reconstruction NMSE by year
+> Year NMSE SFPCA SFGDPC
+
+Figure 4: One-component whole-grid reconstruction NMSE by year for the Indian Ocean SST anomaly fields. The SFPCA curve corresponds to the main high-cap benchmark with 
+
+Lmax = 42, β = 0 .95, and a 400 × 400 frequency grid. Both methods were fitted to the same coarsened annual coefficient fields. exclusion; only the supplied maximum filter radius differed. Applying the interior-validity condition 1 + 2 L ≤ n − 2L to the limiting grid dimension 
+
+n = 40 gives L ≤ 9.75, so the largest boundary-safe integer radius is L = 9. The high-cap 
+
+Lmax = 42 run is treated as the main empirical SFPCA benchmark because it allows a wider candidate filter range under the whole-grid reconstruction criterion. Table 3 shows that SFGDPC had lower one-component whole-grid NMSE than both SFPCA benchmarks in all 33 annual fields. Mean NMSE was 0 .284 for SFGDPC, compared with 0 .465 for the high-cap SFPCA benchmark and 0 .518 for the boundary-safe benchmark. Figure 4 displays the year-by-year one-component NMSE values. The SFGDPC curve lies below the SFPCA curve throughout the study period, indicating that the lower average error is not driven by a single anomalous year. Figure 5 shows the BIC-selected SFGDPC spatial radius for each year. The selected radii were concentrated at small local 18 neighbourhoods. The BIC-selected radius was k = 3 in 25 of the 33 years, k = 2 in 6 years, and k = 4 in 2 years. The fitted leading component usually used a 7 × 7 Chebyshev window. The two years with k = 4 reach the imposed search cap smax = 4. Overall, the selected radii indicate predominantly local reconstruction scales within the candidate set, most often k = 2 and k = 3, while leaving open the possibility that a larger search cap could be relevant for a small number of years. 1985 1990 1995 2000 2005 2010 2015 2.0  2.5  3.0  3.5  4.0 
+
+> BIC−selected SFGDPC spatial radius by year
+> Year Selected k
+
+Figure 5: BIC-selected SFGDPC spatial radius by year for the Indian Ocean SST anomaly fields. Neither the annual reconstruction errors nor the selected radii exhibited a clear monotonic temporal pattern. 
+
+# 5 Discussion 
+
+SFGDPC builds on the finite-sample reconstruction perspective underlying GDPC [11], which was developed for vector time series with the aim of adapting to possible non-stationary behaviour. In the spatial functional setting, SFPCA [2] provides a spectral principal-component decomposition for weakly stationary functional random fields on regular grids. SFGDPC extends the reconstruction principle of GDPC to functional observations on a two-dimensional spatial grid and selects the neighbourhood radius as part of each component fit. This reconstruction-based approach complements spectral SFPCA. Its finite-sample criterion does not require second-order stationarity, isotropy, or estimation of a spatial spectral density. The contrasting simulation settings clarify the role of the proposed method. In the stationary SFARMA benchmark, mean one-component NMSE was nearly identical for the two spatial methods, with SFPCA marginally lower. SFGDPC gave lower mean cumulative NMSE after two and three components were retained. Its advantage is stronger in the 19 local-neighbourhood transfer experiment and persists under both the stationary control and the nonstationary treatment. The persistence of the reconstruction advantage under the stationary control shows that it does not depend on the nonstationary covariance specification. The result is consistent with the suitability of neighbourhood-based reconstruction for the finite-support local transfer mechanism used in this experiment. The SFPCA-radius sensitivity analysis showed lower whole-grid cumulative NMSE for SFGDPC at every radius examined, under the implemented boundary conventions. The selected SFGDPC radius provides an interpretable estimate of the dominant spatial reconstruction scale. Exact recovery of the generating radius in the main simulation supports this interpretation, while the sensitivity results show that exact radius recovery is not uniform across all examined designs. In the SST application, SFGDPC had lower one-component whole-grid reconstruction error in all 33 annual fields. Within the specified search range k = 0 , . . . , 4, the selected radii were concentrated at k = 2 and k = 3, with the upper bound k = 4 selected in only two years. Together, the stationary SFARMA benchmark and the SST application indicate that the usefulness of SFGDPC is not confined to data generated from its own reconstruction mechanism. SFGDPC is particularly appropriate when the objective is accurate whole-field recon-struction through a compact neighbourhood, when the neighbourhood scale is of interest, or when stationarity is questionable. SFPCA remains a natural alternative when the scientific objective is a frequency-domain description of spatial functional dependence under weak stationarity. The choice between the methods should therefore reflect the scientific objective and anticipated dependence structure. The finite-sample proposition establishes existence of a minimizer for the fixed-radius problem restricted to Fk, and uniqueness of the conditional loading update when the spatial design has full column rank. The implemented Moore–Penrose inverse fallback also provides a computational update in rank-deficient cases. The current implementation is designed for complete regular rectangular grids and uses a dense spatial-field update, which may limit scalability to larger grids. 
+
+# 6 Conclusion 
+
+This paper introduced SFGDPC as a neighbourhood-based reconstruction method for spatial functional data on regular grids. For each candidate radius, SFGDPC alternates between estimation of the latent spatial field and the functional loadings, after which the component-specific radius is selected using the BIC-type reconstruction criterion. This provides a local and interpretable representation without requiring a stationary covariance model in the finite-sample fitting criterion. These results support its use when spatial information is concentrated in local neighbourhoods, while its performance in the stationary benchmark indicates that it remains competitive outside that setting. The framework forms a basis for further development of reconstruction-based spatial functional dimension reduction. Further work may develop sparse or structured field-update solvers for larger grids, extend the neighbourhood construction to irregular spatial 20 domains, and further evaluate data-driven selection of the number of components. 
+
+## Funding 
+
+This work was supported by the Universiti Malaya Research Excellence Grant, Universiti Malaya [grant number UMREG044-2024]. 
+
+# References 
+
+[1] R. W. Reynolds, T. M. Smith, C. Liu, D. B. Chelton, K. S. Casey, M. G. Schlax, Daily high-resolution-blended analyses for sea surface temperature, J. Clim. 20 (2007) 5473–5496. doi: 10.1175/2007JCLI1824.1 .[2] T. Kuenzer, S. H¨ ormann, P. Kokoszka, Principal component analysis of spatially indexed functions, J. Am. Stat. Assoc. 116 (2021) 1444–1456. doi: 10.1080/01621459. 2020.1732395 .[3] P. Delicado, R. Giraldo, C. Comas, J. Mateu, Statistics for spatial functional data: Some recent contributions, Environmetrics 21 (2010) 224–239. doi: 10.1002/env. 1003 .[4] J. Mateu, R. Giraldo (Eds.), Geostatistical Functional Data Analysis, John Wiley & Sons, Hoboken, NJ, 2021. doi: 10.1002/9781119387916 .[5] C. Liu, S. Ray, G. Hooker, M. Friedl, Functional factor analysis for periodic remote sensing data, Ann. Appl. Stat. 6 (2012) 601–624. doi: 10.1214/11-AOAS518 .[6] I. Si-ahmed, L. Hamdad, C. J. Agonkoui, Y. Kande, S. Dabo-Niang, Principal component analysis of multivariate spatial functional data, Big Data Res. 39 (2025) 100504. doi: 10.1016/j.bdr.2024.100504 .[7] C. Calculli, A. Fass` o, F. Finazzi, A. Pollice, A. Turnone, Maximum likelihood estimation of the multivariate hidden dynamic geostatistical model with application to air quality in Apulia, Italy, Environmetrics 26 (2015) 406–417. doi: 10.1002/env. 2345 .[8] Y. Wang, F. Finazzi, A. Fass` o, D-STEM v2: A software for modeling functional spatio-temporal data, J. Stat. Softw. 99 (2021) 1–29. doi: 10.18637/jss.v099.i10 .[9] P. Maranzano, P. Otto, A. Fass` o, Adaptive LASSO estimation for functional hidden dynamic geostatistical models, Stoch. Environ. Res. Risk Assess. 37 (2023) 3615–3637. doi: 10.1007/s00477-023-02466-5 .[10] A. Menafoglio, P. Secchi, M. Dalla Rosa, A universal kriging predictor for spatially dependent functional data of a Hilbert space, Electron. J. Stat. 7 (2013) 2209–2240. doi: 10.1214/13-EJS843 .[11] D. Pe˜ na, V. J. Yohai, Generalized Dynamic Principal Components, J. Am. Stat. Assoc. 111 (2016) 1121–1131. doi: 10.1080/01621459.2015.1072542 .21 [12] D. Pe˜ na, E. Smucler, V. J. Yohai, gdpc: An R package for generalized dynamic principal components, J. Stat. Softw. 92 (2020) 1–23. doi: 10.18637/jss.v092.c02 .[13] C. J. Paciorek, M. J. Schervish, Spatial modelling using a new class of nonstationary covariance functions, Environmetrics 17 (2006) 483–506. doi: 10.1002/env.785 .22 Supplementary Material 
+
+Neighbourhood-Based Generalized Dynamic Principal Components for Spatial Functional Data Notation. Throughout this supplement, d denotes the number of basis coefficients per functional observation, written m in the main article; here d = m = 15 in all experiments. 
+
+# S1 Stationary SFARMA Benchmark 
+
+This section provides the complete data-generating mechanism and implementation set-tings for the stationary SFARMA benchmark reported in the simulation section of the main article. Let Xs,t ∈ Rd, s, t = 1 , . . . , 50, denote the basis-coefficient vector of the functional observation at grid location ( s, t ). The coefficient field was generated from the spatial functional autoregressive moving-average model 
+
+Xs,t = A10 Xs−1,t + A01 Xs,t −1 + εs,t + B10 εs−1,t + B01 εs,t −1 + B11 εs−1,t −1.
+
+Thus, the autoregressive lag set was P = {(1 , 0) , (0 , 1) }, and the moving-average lag set was Q = {(0 , 0) , (1 , 0) , (0 , 1) , (1 , 1) }.The functional observations were represented using d = 15 Fourier basis functions on [0 , 1]. The innovation scale matrix was diagonal, with Σ ℓℓ = exp( −ℓ/ 2) for ℓ = 1 , . . . , d ,and zero off-diagonal entries. The autoregressive and moving-average operators were regenerated in each Monte Carlo replication. For an operator associated with spatial lag h, an initial d × d random matrix was generated as 
+
+fMh,ab = ξh,ab 
+
+√a2 + b2 , a, b = 1 , . . . , d, 
+
+where the ξh,ab were independent standard-normal random variables. For each nonzero moving-average lag, the operator was normalized as 
+
+Bh = 0 .5 fMh
+
+∥ fMh∥F
+
+, h ∈ { (1 , 0) , (0 , 1) , (1 , 1) },
+
+whereas the zero-lag moving-average operator was fixed as B00 = Id.1For the two autoregressive lags, first define 
+
+Ah = fMh
+
+∥ fMh∥F
+
+, h ∈ P .
+
+The common scaling constant was 
+
+cA =
+
+√0.2
+
+r
+
+max  
+
+> h,g∈P
+
+AhAg F
+
+,
+
+and the final autoregressive operators were Ah = cAAh, h ∈ P . This scaling was used to produce a stable stationary SFARMA field. The fields were generated using fsd::fsd.sfarma on a 50 × 50 grid with a burn-in of 10, with do.fixed.point = FALSE and max.iter = -1 . No additional boundary correction was applied outside the simulation convention implemented by fsd.sfarma .Two innovation distributions were considered. The Gaussian condition used noise = "normal" , whereas the heavier-tailed condition used noise = 5 , corresponding to the t5
+
+innovation option in fsd.sfarma .The Gaussian and t5 experiments used reproducible parallel random-number streams with initial seeds 147 and 10147, respectively. Both experiments used three parallel workers with L’Ecuyer–CMRG streams initialized by clusterSetRNGStream and static task scheduling. Exact reproduction of these runs requires the same worker count and scheduling. Within each replication, the simulated coefficient field was column-centred across the 2500 spatial locations, separately for each of the d = 15 basis coefficients. FPCA, SFPCA, and SFGDPC were then applied to the same centred field. All methods retained three components. SFPCA selected its spectral smoothing param-eter q using the data-adaptive rule implemented in spca.automatic . It was fitted with 
+
+Lmax = 3, β = 1, and freq.res = 50. For a positive value of freq.res , each frequency axis contains twice that number of grid points. Thus, freq.res = 50 gives a 100 × 100 frequency grid. The setting freq.res = 0 uses only the zero frequency. With β = 1, no additional filter-mass truncation was applied, so the effective filter radius was L = 3 by construction. Ordinary FPCA was obtained through the same implementation by setting q = 0, Lmax =0, and freq.res = 0. For the FPCA call, inner was set equal to the effective SFPCA radius. The effective radius was L = 3 in every replication, so inner = 3 was used throughout. The inner argument controls an additional interior-error diagnostic; the reported NMSE uses the whole grid. 2SFGDPC was fitted with smax = 3, crit = "BIC" , normalize = 1 , a convergence toler-ance of 10 −4, and a maximum of 500 alternating least-squares iterations. No nondefault initialization or number of starts was supplied in the simulation driver, so the package defaults were used. The setting normalize = 1 applies no additional centring or scaling to the supplied coefficient matrix. The latent score field is still centred and standardized during alternating least-squares fitting. For all three methods, performance after p components was evaluated using the cumula-tive reconstruction. In particular, the SFGDPC error was computed as NMSE SFGDPC (p) = 
+
+Z −
+
+> p
+
+X
+
+> j=1
+
+bZj
+
+> 2
+> F
+
+∥Z∥2
+
+> F
+
+, p = 1 , 2, 3,
+
+so that its definition agreed with the cumulative SFPCA reconstruction error. The final experiment comprised 1000 Monte Carlo replications for each innovation dis-tribution. The SFARMA benchmark also provides an off-model assessment of the neighbourhood-radius selector. Although the model is defined using finite autoregressive and moving-average lag sets, the resulting autoregressive spatial process is not generated through a single finite Chebyshev loading neighbourhood. Consequently, there is no unique ktrue 
+
+against which exact, under-, or over-selection can be defined. The selected radii in this benchmark are therefore reported descriptively rather than interpreted as recovery fre-quencies. Table S1 summarizes the neighbourhood radii selected by SFGDPC. The selected radius was concentrated at k = 1 under both innovation distributions. Table S1: Mean and standard deviation of the BIC-selected SFGDPC radius under the stationary SFARMA benchmark over 1000 Monte Carlo replications.                        
+
+> Innovation Component Mean selected kSD selected k
+> Gaussian 11.000 0.000 Gaussian 21.004 0.063 Gaussian 31.002 0.045
+> t511.000 0.000
+> t521.004 0.063
+> t531.007 0.083
+
+3S2 Construction of the Local Loading Matrix 
+
+For the local-neighbourhood transfer simulation, let 
+
+Dktrue = {(a, b ) : −ktrue ≤ a, b ≤ ktrue }
+
+denote the ordered set of spatial offsets. With ktrue = 2, the number of offsets was 
+
+Mtrue = (2 ktrue + 1) 2 = 25. The offsets were generated using expand.grid(di = -2:2, dj = -2:2) . Consequently, the first coordinate varied fastest and the second coordinate varied slowest. In particular, the ordering began as ( −2, −2) , (−1, −2) , (0 , −2) , (1 , −2) , (2 , −2) , (−2, −1) , . . . .Let ( ar, b r), r = 1 , . . . , M true , denote the rth offset in this ordering. The loading matrix 
+
+B = [ b1, . . . , bMtrue ], of dimension d × Mtrue , assigns a d-dimensional coefficient profile to every spatial offset. Define the coefficient-domain evaluation points tℓ = ( ℓ − 1) /(d − 1), ℓ = 1 , . . . , d , with 
+
+d = 15. For offset r, the spatial attenuation weight was wr = exp {− 0.20( a2 
+
+> r
+
++ b2 
+
+> r
+
+)}.The smooth offset-specific profile was 
+
+pr(t) = sin 
+
+(r + 1) πt 
+
+2
+
+
+
+exp( −0.8t) + 0 .4 cos 
+
+(r + 2) πt 
+
+3
+
+
+
+exp( −0.5t),
+
+where r = 1 , . . . , 25 follows the one-based indexing used in the simulation code. The directional contribution was dr(t) = 0 .25 ar sin(2 πt ) + 0 .25 br cos(2 πt ). Before normalization, the ℓth entry of the rth loading profile was therefore 
+
+eBℓr = wr {pr(tℓ) + dr(tℓ)} , ℓ = 1 , . . . , d, r = 1 , . . . , 25 .
+
+The complete loading matrix was finally normalized according to 
+
+B = √d eB
+
+∥ eB∥F
+
+, ∥B∥F = √d. 
+
+The same deterministic matrix B was used in every Monte Carlo replication. For a target grid location ( i, j ), the latent-field value associated with offset ( ar, b r) was obtained from 
+
+eir = min {max( i + ar, 1) , n lat }, ejr = min {max( j + br, 1) , n lon }.
+
+Thus, coordinates extending beyond the observed grid were clamped to the nearest ob-4served boundary coordinate. The noiseless coefficient vector was then 
+
+μij = B
+
+
+
+fei1,ej1 , . . . , f ei25 ,ej25 
+
+⊤
+
+.
+
+For interior locations, this construction coincides with a complete Chebyshev neighbour-hood of radius ktrue = 2. At boundary locations, the generator used nearest-boundary clamping, whereas the fitted SFGDPC method used the compacting self-padding con-vention described in the main article. The generating and fitted boundary conventions were therefore not identical, and exact correspondence with the generating mechanism is interpreted primarily for interior locations. 
+
+## S2.1 Construction of the illustrative filter comparison 
+
+The illustrative filter comparison in the main article was constructed from one simulated realization of the nonstationary local-neighbourhood model described in Section 3.2 of the main article. The displayed true local loading kernel was formed directly from the 25 columns of the matrix B, with each column assigned to its corresponding offset in D2. It was not obtained from a separate principal component decomposition of B.Let Gab = R 10 ψa(t)ψb(t) d t denote the Gram matrix of the Fourier basis. For a collection of coefficient vectors C = [ c1, . . . , cJ ], the functional L2 mass used in the plotting script was 
+
+M(C) = tr  C⊤GC  =
+
+> J
+
+X
+
+> j=1
+
+c⊤ 
+
+> j
+
+Gcj .
+
+The true kernel was normalized over its complete support D2. Each SFGDPC component was normalized over its selected compact neighbourhood support. Each SFPCA filter was first normalized using its complete support {ℓ : ∥ℓ∥∞ ≤ L}, with L = 9, and was then restricted to the displayed window W = {ℓ : ∥ℓ∥∞ ≤ 2}.The proportion of the SFPCA filter mass contained in the displayed window was calcu-lated as PW = M(CW )/M(Cfull ). The signs of estimated components and filters are arbitrary. The first SFGDPC and SFPCA filter families were therefore oriented relative to the true lag-zero loading profile. Specifically, an estimated filter family was multiplied by −1 whenever c⊤ 
+
+> 0
+
+Gb0 < 0, where 
+
+c0 is the estimated lag-zero coefficient vector and b0 is the true lag-zero loading vector. For the displayed SFPCA first filter, the reported window-mass proportion was 0 .765. 5S3 BIC Selection of the Neighbourhood Radius 
+
+## S3.1 Selections across sequential components 
+
+Table S2 reports the radii selected for all three sequential SFGDPC components in the main local-neighbourhood simulation. Recovery of the generating radius is interpreted primarily for the first component. Components 2 and 3 were fitted to sequential residual fields; their selected radii therefore describe the spatial scales remaining after removal of the preceding components. Table S2: BIC-selected SFGDPC radius in the local-neighbourhood transfer simulation over 100 Monte Carlo replications. For Components 2 and 3, selection of k = 2 is descriptive because the components were fitted to sequential residual fields.                             
+
+> Covariance condition Component Mean selected
+> kSD of selected
+> k
+> Proportion selecting
+> k= 2 Nonstationary 12.00 0.000 1.00 Nonstationary 21.19 0.394 0.19 Nonstationary 31.10 0.302 0.10 Stationary control 12.00 0.000 1.00 Stationary control 21.25 0.435 0.25 Stationary control 31.07 0.256 0.07
+
+## S3.2 Sensitivity to field size, noise and generating radius 
+
+A focused sensitivity study examined selection of the first SFGDPC neighbourhood radius under changes in spatial field size, coefficient-wise noise level, and generating radius. Only the first component was examined because ktrue defines the dominant generating neighbourhood before sequential residualization. This study concerns the behaviour of the SFGDPC BIC selector and is separate from the reconstruction comparison between SFGDPC and SFPCA. In this subsection, kgen denotes the nominal radius used to construct the finite loading neighbourhood in the data-generating mechanism; this quantity is recorded as k true in the simulation code. For kgen = 0, only the focal latent-field value enters the loading, although the latent Gaussian process itself remains spatially correlated. For the smaller grid, kgen = 2 applies exactly to interior locations, whereas boundary locations are affected by the generator’s coordinate-clamping convention. Correct, under-, and over-selection are defined relative to this nominal generating radius. For each generating radius, the loading matrix was constructed using the rule in Section S2 with the corresponding ordered offset set. Changing kgen therefore also changes the offset-indexed profiles. 6The nonstationary local-neighbourhood generator was retained throughout. It used d =15, with the Gaussian-process correlation range varying from 1 to 4 grid cells across latitude. The common candidate set was k ∈ { 0, 1, 2, 3, 4}, so that smax = 4. This allowed both under- and over-selection and kept the kgen = 3 condition below the search boundary. SFGDPC was fitted using BIC, normalize = 1 , a convergence tolerance of 10 −4, and a maximum of 500 alternating least-squares iterations. After generation, the observed coefficient matrix was column-centred across spatial locations before fitting SFGDPC. NMSE was evaluated relative to this same centred observed field. Each scenario used 100 Monte Carlo replications. Replication r was assigned seed 271+ r,giving seeds 272 through 371, and the same replication seeds were used across scenarios. Table S3 summarizes the empirical BIC selection frequencies across the six sensitivity scenarios. Table S3: Empirical BIC selection frequencies for the first SFGDPC component over 100 Monte Carlo replications per scenario. Exact, under, and over denote bk = kgen , bk < k gen ,and bk > k gen , respectively.                                                                   
+
+> Scenario Grid Noise ratio Nominal generating radius kgen
+> Selected radius (frequency) Exact Under Over Baseline 40 ×40 0.15 2bk= 2 (1.00) 1.00 0.00 0.00 Small field 20 ×20 0.15 2bk= 1 (1.00) 0.00 1.00 0.00 Large field 60 ×60 0.15 2bk= 2 (1.00) 1.00 0.00 0.00 Higher noise 40 ×40 0.30 2bk= 2 (1.00) 1.00 0.00 0.00 Lag-zero loading 40 ×40 0.15 0bk= 0 (1.00) 1.00 0.00 0.00 Larger generating radius 40 ×40 0.15 3bk= 2 (1.00) 0.00 1.00 0.00
+
+All 600 replications completed without error, and all 3000 candidate fits reported conver-gence. No selected radius reached the search limit smax = 4. Manual and stored NMSE calculations agreed to within 2 .8 × 10 −17 .The nominal radius was selected in every replication under the baseline, large-field, higher-noise, and lag-zero-loading conditions. In contrast, BIC underselected in every replication on the 20 × 20 field and when kgen = 3. These results demonstrate exact recovery under several of the examined conditions, but they do not establish uniform or asymptotically consistent recovery. The field-size comparison should not be interpreted as a pure sample-size experiment. Under kgen = 2, the proportions of locations whose radius-two generating window extends beyond the observed grid are 36 .0%, 19 .0%, and 12 .9% for the 20 ×20, 40 ×40, and 60 ×60 grids, respectively. Since the generator uses nearest-boundary clamping whereas the fitted SFGDPC method uses compacting self-padding, the smaller-field result combines reduced field size with a larger relative contribution from the boundary region. 7For kgen = 3, the outermost Chebyshev ring accounts for approximately 5 .3% of the squared Frobenius norm of the deterministic loading matrix. Selection of bk = 2 is there-fore consistent with BIC identifying a more compact dominant reconstruction scale, al-though it remains under-selection under the strict generating-support definition. 
+
+# S4 Sensitivity to the SFPCA Filter Radius 
+
+The SFPCA comparison was examined over several fixed filter radii. For this sensitivity study, the supplied radii were restricted to values satisfying 1 + 2 L ≤ n − 2L, or equiva-lently L ≤ (n−1) /4. This prespecified boundary-safe rule ensures that a nonempty region remains sufficiently separated from the grid boundary under the interior-diagnostic con-vention used by the SFPCA implementation. It is a design restriction for the present sensitivity analysis rather than a general admissibility condition for whole-grid SFPCA reconstruction. Under this rule, the largest examined integer radii were L = 9 on the 40 × 40 grid and L = 14 on the 60 × 60 grid. The sensitivity analysis used 100 Monte Carlo replications under the nonstationary local-neighbourhood transfer model. Within each replication, all candidate SFPCA radii were evaluated using the same simulated coefficient field. SFGDPC was fitted once per field because its estimates do not depend on the SFPCA filter radius. The SFPCA spectral smoothing parameter q was determined using the same data-adaptive rule implemented in spca.automatic as in Section S1. Table S4: Cumulative reconstruction NMSE in the SFPCA filter-radius sensitivity anal-ysis under the centred nonstationary local-neighbourhood transfer design. 
+
+Grid Method Radius L p = 1 p = 2 p = 3 40 × 40 SFPCA 3 0.1423 (0.0194) 0.1278 (0.0223) 0.1264 (0.0237) 40 × 40 SFPCA 5 0.1080 (0.0117) 0.0825 (0.0117) 0.0765 (0.0113) 40 × 40 SFPCA 7 0.0906 (0.0097) 0.0651 (0.0084) 0.0588 (0.0081) 40 × 40 SFPCA 9 0.0819 (0.0087) 0.0561 (0.0071) 0.0497 (0.0068) 40 × 40 SFGDPC – 0.0506 (0.0051) 0.0334 (0.0035) 0.0247 (0.0027) 
+
+60 × 60 SFPCA 9 0.0744 (0.0060) 0.0545 (0.0053) 0.0495 (0.0052) 60 × 60 SFPCA 11 0.0686 (0.0055) 0.0485 (0.0046) 0.0434 (0.0046) 60 × 60 SFPCA 13 0.0648 (0.0053) 0.0446 (0.0042) 0.0395 (0.0041) 60 × 60 SFPCA 14 0.0634 (0.0053) 0.0432 (0.0042) 0.0380 (0.0041) 60 × 60 SFGDPC – 0.0435 (0.0028) 0.0260 (0.0018) 0.0192 (0.0014)          
+
+> Notes: Entries are Monte Carlo means with standard deviations in parentheses over 100 paired replications. Lower NMSE indicates better reconstruction; boldface identifies the lowest mean within each grid and component count. SFPCA used β= 1 and a 200 ×200 frequency grid, and its effective filter radius equalled the listed value in every replication. SFGDPC was fitted once per simulated field using BIC selection over k= 0 , . . . , 3.
+
+8The Monte Carlo mean SFPCA NMSE decreased monotonically as L increased on both grids. At the largest radius examined under the prespecified boundary-safe rule on the 60 × 60 grid, the reductions in mean NMSE obtained by SFGDPC relative to SFPCA were approximately 31 .4%, 39 .9%, and 49 .4% after one, two, and three components, respectively. 
+
+# S5 Representation Under the Stationary Control 
+
+The stationary control also permits a population-level comparison of the representational structures of the two spatial methods. Although the loading matrix B has full row rank, the noise-free coefficient field is generated from a single scalar stationary latent process through a shift-invariant multivariate spatial kernel. Ignoring finite-domain boundary effects, its spectral density matrix at spatial frequency 
+
+θ can be written as 
+
+FZ (θ) = gf (θ)b(θ)b(θ)∗,
+
+where gf is the spectral density of the scalar latent field and 
+
+b(θ) = X
+
+> ℓ
+
+Bℓ exp  −iℓ⊤θ .
+
+Consequently, rank {FZ (θ)} ≤ 1 at each spatial frequency in the noise-free population model. Thus, with unrestricted filters, one spatial dynamic principal component is sufficient to represent the stationary signal at the population level. SFPCA is therefore not intrinsi-cally unable to represent the data-generating structure. Finite-sample estimation, filter truncation, and the different boundary conventions may contribute to the observed re-construction difference; the present experiments do not isolate their contributions. The improvement of SFPCA with increasing L in the nonstationary sensitivity study in Ta-ble S4 is compatible with a contribution from filter truncation, but does not establish its contribution under the stationary control. 9
