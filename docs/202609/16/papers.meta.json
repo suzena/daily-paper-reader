@@ -1,0 +1,69 @@
+{
+  "label": "2026-09-16",
+  "date": "2026-09-16",
+  "generated_at": "2026-09-16T22:00:35",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202609/16/2609.14523v1-selective-tool-use-for-agentic-change-visual-question-answering-in-remote-sensing",
+      "section": "deep",
+      "title_en": "Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing",
+      "authors": "Yakoub Bazi, Mohamad M. Al Rahhal, Mohamed A. Mekhtiche, Mansour Zuair",
+      "date": "2026-09-13",
+      "pdf": "https://arxiv.org/pdf/2609.14523v1",
+      "score": "8.0",
+      "evidence": "面向遥感变化问答的智能体式工具调用框架",
+      "tldr": "变化视觉问答需理解双时相遥感影像的语义变化，但VLM在转移统计、面积和空间问题上不可靠。本文提出选择性工具调用：VLM可直接作答，或调用确定性工具在语义图上获取结构化证据再作答。作者构建覆盖八类问题、三种工具的CDVQA扩展集，并用LoRA微调Qwen3.5-4B联合学习工具调用与证据条件作答。在7,164题上，参考语义图使总体准确率从73.77%升至88.79%，自动语义图时为77.47%，表明问题特定证据有效但受语义预测质量影响。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Change visual question answering (Change VQA) requires understanding semantic changes across bi-temporal remote sensing images. Although vision language models (VLMs) have shown promising performance on this task, they remain unreliable when answering questions that require explicit transition statistics, area measurements, or spatial information. To address this limitation, we propose a selective tool use framework in which a single VLM either answers directly or invokes a deterministic change analysis tool to obtain question specific evidence. Specifically, the selected tool operates on bi-temporal semantic maps and returns a structured observation, which the same VLM uses to generate its final answer. To support this framework, we construct a tool augmented extension of CDVQA covering eight question families and three tools for transition, spatial, and temporal analysis. Tool use supervision and observations are derived automatically from the original semantic annotations, without additional manual labeling. We then adapt Qwen3.5-4B using Low Rank Adaptation (LoRA) to jointly learn direct answering, tool invocation, and evidence conditioned answering. Experiments on 7,164 test questions show that selective tool use with reference semantic maps improves overall accuracy from 73.77% to 88.79% and average family accuracy from 69.11% to 89.65%. When the semantic maps are predicted automatically, the framework achieves 77.47% overall accuracy and 75.06% average family accuracy. These results demonstrate the benefit of question-specific semantic evidence for Change VQA, while highlighting the influence of semantic prediction quality on the resulting performance. Code and tool-augmented annotations will be made publicly available at https://github.com/yakoubbazi/ToolChangeVQA.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/16/2609.14824v1-anassa-an-agentic-ai-orchestration-framework-for-spatial-intelligence",
+      "section": "deep",
+      "title_en": "ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence",
+      "authors": "Constantinos Papantoniou, Brian Hilton",
+      "date": "2026-09-13",
+      "pdf": "https://arxiv.org/pdf/2609.14824v1",
+      "score": "8.0",
+      "evidence": "结合大模型与多模态模型、面向空间智能的智能体AI编排框架",
+      "tldr": "大语言与多模态模型推动GIS从专家驱动转向半自主智能体，可理解意图、构建并执行空间工作流，但推理、执行与评估割裂，空间推理、鲁棒性、验证和治理仍受限。ANASSA提出智能体AI编排框架，统一结构化空间推理、多智能体工作流、执行反馈、权威空间验证、溯源、不确定性与人类决策权。其核心是架构级规范：四层十一组件、六步地理空间AI认知循环、跨组件契约与治理机制。目标是让地理空间智能体流程可追踪、可复现、可问责，实证性能评估留待实现与部署研究。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "The emergence of large language models (LLMs) and large multimodal models (LMMs) has enabled a new class of agentic systems capable of integrating natural language understanding with tool-based execution. In geographic information systems (GIS), this shift is transforming traditional, expert-driven workflows into semiautonomous systems that can interpret user intent, construct spatial workflows, and execute geospatial analysis tasks. However, existing approaches remain limited by fragmented integration of reasoning, execution, and evaluation, particularly in complex, real-world environments. This study synthesizes recent advances in agentic GIS frameworks, benchmarks, and surveys to identify limitations in spatial reasoning, execution robustness, validation, governance, and evaluation. Building on these insights, it introduces ANASSA (Autonomous Neural Agents for Spatial Systems Architecture), an agentic AI orchestration framework that integrates structured spatial reasoning, multi-agent workflow orchestration, execution feedback, authoritative spatial validation, provenance, uncertainty handling, and human decision authority within a unified system design. The contribution is an architecture-level specification: eleven components across four layers, a six-step Geospatial AI Cognitive Loop, cross-component contracts, and governance mechanisms intended to make agentic geospatial workflows traceable, reproducible, and accountable. Empirical performance evaluation is reserved for implementation and deployment studies.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/16/2609.10917v1-hipervit-a-hierarchical-perceiver-vision-transformer-architecture-for-multi-scale-texture-recognition",
+      "section": "quick",
+      "title_en": "HiPerViT: A Hierarchical Perceiver-Vision Transformer Architecture for Multi-Scale Texture Recognition",
+      "authors": "João Pedro C. A. de Sá, Odemir Martinez Bruno",
+      "date": "2026-09-10",
+      "pdf": "https://arxiv.org/pdf/2609.10917v1",
+      "score": "6.0",
+      "evidence": "二阶统计先验的细粒度纹理识别，可迁移至底栖覆盖分类",
+      "tldr": "纹理识别常依赖高阶空间统计而非物体形状，标准ViT的物体中心表征难以显式暴露这类信息，导致纹理敏感度不足。HiPerViT在纯视觉流程中引入二阶统计先验，将全局与局部视图的紧凑双线性描述编码为统计token，并通过Perceiver式潜变量蒸馏与一阶空间表征交互。在六个纹理基准上稳定超越强基线，DTD提升3.05个百分点，GTOS-Mobile提升10.48，1200Tex提升10.10。分析表明增益主要源于二阶统计作为一等表征信号，而非特定融合拓扑。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Texture recognition remains challenging for modern vision models because discriminative evidence is often carried by higher-order spatial statistics rather than by object shape alone. While Vision Transformers provide strong long-range modeling capacity, their standard object-centric representations do not explicitly expose such statistical structure, which limits texture sensitivity in fine-grained recognition settings. We present HiPerViT, a compact vision-only architecture that injects an explicit second-order statistical prior into a transformer-based recognition pipeline. The method combines global and local image views with a compact bilinear descriptor encoded as a statistical token, and integrates this token with first-order spatial representations through Perceiver-style latent distillation. This design enables direct interaction between spatial tokens and second-order feature co-occurrence statistics, providing the model with explicit access to texture-relevant information without requiring multimodal pretraining or ensemble construction. Across six texture recognition benchmarks, HiPerViT achieves consistent improvements over strong vision-only baselines under the reported evaluation protocols, including gains of +3.05 percentage points on DTD, +10.48 on GTOS-Mobile, and +10.10 on 1200Tex. Beyond benchmark performance, our analyses show that these gains are largely invariant to the backbone depth used to extract second-order statistics and to the ordering of interaction and distillation stages. This pattern suggests that the primary source of improvement is not a specific fusion topology, but the explicit availability of second-order statistical information as a first-class representational signal. These results support explicit statistical tokenization as an effective and robust design principle for texture-centric visual recognition.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/16/2609.13283v1-multimodal-multiresolution-foundation-model-for-lunar-remote-sensing",
+      "section": "quick",
+      "title_en": "Multimodal-Multiresolution Foundation Model for Lunar Remote Sensing",
+      "authors": "Paolo Fraccaro, Gabby Nyirjesy, Daniela Szwarcman, Himanshu Patil, Vishal Gaur, Rohit Lal, Rachel A. Slank, Geoffrey Dawson, Hiyam Debary, Michael K. Barker, Andrew Annex, Vishnu Viswanathan, Zachary Morse, Ethan I. Schaefer, Nikolaos Dionelis, Ankur Kumar, Campbell D. Watson, Manil Maskey, Rebekah I. Dawson-Rigas, Juan Bernabé-Moreno, Rahul Ramachandran, Sujit Roy",
+      "date": "2026-09-08",
+      "pdf": "https://arxiv.org/pdf/2609.13283v1",
+      "score": "6.0",
+      "evidence": "面向遥感影像融合的多模态多分辨率基础模型",
+      "tldr": "月球遥感缺乏统一的多模态多分辨率基础模型。作者构建SomBench，含近200万共配准瓦片、11种模态与1米/100米双尺度，并改造TerraMind掩码令牌架构，引入采集几何上下文和跨分辨率联合训练。在WAC/NAC撞击坑检测、IMP分割与极地冰前景回归四项基准上，预训练模型匹配或超越ImageNet基线与随机初始化，WAC撞击坑检测仅用50%数据即超过最强ImageNet基线全量训练。LoRA在部分任务优于全量微调，开源检查点、数据与代码。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "We present a multimodal foundation model for lunar remote sensing, pretrained from scratch on SomBench, a geographically partitioned corpus of nearly two million co-registered tile bundles spanning 11 modalities at two spatial scales (1 m/pixel and 100 m/pixel). The model adapts the TerraMind masked-token architecture with two lunar-specific extensions: acquisition geometry is provided as explicit context, and meter- and hundred-meter-scale tiles are trained jointly so that a single set of weights covers both resolutions. FlexiViT patch embeddings allow adaptation to different patch sizes without retraining, while modality-wise inputs enable flexible multimodal fine-tuning. Qualitative generation experiments suggest the model learns meaningful cross-modal correspondences, including terrain derivatives from elevation and illumination-consistent reflectance from geometry. We evaluate on four benchmarks: crater detection at WAC and NAC scales, irregular mare patch (IMP) segmentation, and polar ice prospectivity regression. Across tasks, the pretrained model matches or outperforms ImageNet-pretrained baselines and an architecturally identical random-init control. On multimodal ice prospectivity regression, pretrained variants achieve the best results, while the random-init model outperforms most baselines, suggesting gains arise from both the architecture and pretraining. Label efficiency is notable for WAC crater detection, where the pretrained model trained on 50% of the data exceeds the strongest ImageNet baseline trained on the full dataset. Among adaptation strategies, LoRA matches or surpasses full fine-tuning on crater detection and IMP segmentation while using far fewer trainable parameters, whereas full fine-tuning performs best for ice prospectivity regression. We release the pretrained checkpoint, benchmark datasets, and fine-tuning code to support reproducible lunar AI research.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,184 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-16T21:57:42.195293+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2609.14523v1",
+      "source": "arxiv",
+      "title": "Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing",
+      "abstract": "Change visual question answering (Change VQA) requires understanding semantic changes across bi-temporal remote sensing images. Although vision language models (VLMs) have shown promising performance on this task, they remain unreliable when answering questions that require explicit transition statistics, area measurements, or spatial information. To address this limitation, we propose a selective tool use framework in which a single VLM either answers directly or invokes a deterministic change analysis tool to obtain question specific evidence. Specifically, the selected tool operates on bi-temporal semantic maps and returns a structured observation, which the same VLM uses to generate its final answer. To support this framework, we construct a tool augmented extension of CDVQA covering eight question families and three tools for transition, spatial, and temporal analysis. Tool use supervision and observations are derived automatically from the original semantic annotations, without additional manual labeling. We then adapt Qwen3.5-4B using Low Rank Adaptation (LoRA) to jointly learn direct answering, tool invocation, and evidence conditioned answering. Experiments on 7,164 test questions show that selective tool use with reference semantic maps improves overall accuracy from 73.77% to 88.79% and average family accuracy from 69.11% to 89.65%. When the semantic maps are predicted automatically, the framework achieves 77.47% overall accuracy and 75.06% average family accuracy. These results demonstrate the benefit of question-specific semantic evidence for Change VQA, while highlighting the influence of semantic prediction quality on the resulting performance. Code and tool-augmented annotations will be made publicly available at https://github.com/yakoubbazi/ToolChangeVQA.",
+      "authors": [
+        "Yakoub Bazi",
+        "Mohamad M. Al Rahhal",
+        "Mohamed A. Mekhtiche",
+        "Mansour Zuair"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-13T13:58:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.14523v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agentic tool-use framework for remote sensing change VQA with a vision language model",
+      "llm_evidence_cn": "面向遥感变化问答的智能体式工具调用框架",
+      "llm_evidence": "面向遥感变化问答的智能体式工具调用框架",
+      "canonical_evidence": "面向遥感变化问答的智能体式工具调用框架",
+      "llm_tldr_en": "Vision language models are unreliable for remote sensing change VQA requiring transition statistics or area measurements; the paper proposes selective tool use where a VLM either answers directly or invokes a deterministic change analysis tool.",
+      "llm_tldr_cn": "遥感变化视觉问答需要理解双时相影像的语义变化，但现有视觉语言模型在回答涉及转移统计、面积测量或空间信息的提问时并不可靠。本文提出选择性工具调用框架，让同一个视觉语言模型直接作答，或在需要时调用确定性变化分析工具获取结构化证据，再据此生成最终答案。该设计提升了变化问答的准确性与可解释性，为智能体式遥感分析提供了可复用范式。",
+      "llm_tldr": "遥感变化视觉问答需要理解双时相影像的语义变化，但现有视觉语言模型在回答涉及转移统计、面积测量或空间信息的提问时并不可靠。本文提出选择性工具调用框架，让同一个视觉语言模型直接作答，或在需要时调用确定性变化分析工具获取结构化证据，再据此生成最终答案。该设计提升了变化问答的准确性与可解释性，为智能体式遥感分析提供了可复用范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.14824v1",
+      "source": "arxiv",
+      "title": "ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence",
+      "abstract": "The emergence of large language models (LLMs) and large multimodal models (LMMs) has enabled a new class of agentic systems capable of integrating natural language understanding with tool-based execution. In geographic information systems (GIS), this shift is transforming traditional, expert-driven workflows into semiautonomous systems that can interpret user intent, construct spatial workflows, and execute geospatial analysis tasks. However, existing approaches remain limited by fragmented integration of reasoning, execution, and evaluation, particularly in complex, real-world environments. This study synthesizes recent advances in agentic GIS frameworks, benchmarks, and surveys to identify limitations in spatial reasoning, execution robustness, validation, governance, and evaluation. Building on these insights, it introduces ANASSA (Autonomous Neural Agents for Spatial Systems Architecture), an agentic AI orchestration framework that integrates structured spatial reasoning, multi-agent workflow orchestration, execution feedback, authoritative spatial validation, provenance, uncertainty handling, and human decision authority within a unified system design. The contribution is an architecture-level specification: eleven components across four layers, a six-step Geospatial AI Cognitive Loop, cross-component contracts, and governance mechanisms intended to make agentic geospatial workflows traceable, reproducible, and accountable. Empirical performance evaluation is reserved for implementation and deployment studies.",
+      "authors": [
+        "Constantinos Papantoniou",
+        "Brian Hilton"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-13T22:35:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.14824v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agentic AI orchestration framework combining LLMs and multimodal models for spatial intelligence",
+      "llm_evidence_cn": "结合大模型与多模态模型、面向空间智能的智能体AI编排框架",
+      "llm_evidence": "结合大模型与多模态模型、面向空间智能的智能体AI编排框架",
+      "canonical_evidence": "结合大模型与多模态模型、面向空间智能的智能体AI编排框架",
+      "llm_tldr_en": "ANASSA synthesizes advances in agentic GIS to propose an orchestration framework where LLMs and multimodal models interpret intent, build spatial workflows, and execute geospatial analysis.",
+      "llm_tldr_cn": "大语言模型与多模态大模型推动了具备自然语言理解与工具执行能力的智能体系统，正在把GIS中专家驱动的传统工作流转变为半自主系统。本文综述并综合近期智能体GIS框架、基准与调研，指出空间推理、执行鲁棒性与结果验证方面仍存在碎片化整合的局限。ANASSA提出面向空间智能的智能体AI编排框架，为自动化地理空间分析提供统一方案，可启发海洋遥感领域的智能体架构设计。",
+      "llm_tldr": "大语言模型与多模态大模型推动了具备自然语言理解与工具执行能力的智能体系统，正在把GIS中专家驱动的传统工作流转变为半自主系统。本文综述并综合近期智能体GIS框架、基准与调研，指出空间推理、执行鲁棒性与结果验证方面仍存在碎片化整合的局限。ANASSA提出面向空间智能的智能体AI编排框架，为自动化地理空间分析提供统一方案，可启发海洋遥感领域的智能体架构设计。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.10917v1",
+      "source": "arxiv",
+      "title": "HiPerViT: A Hierarchical Perceiver-Vision Transformer Architecture for Multi-Scale Texture Recognition",
+      "abstract": "Texture recognition remains challenging for modern vision models because discriminative evidence is often carried by higher-order spatial statistics rather than by object shape alone. While Vision Transformers provide strong long-range modeling capacity, their standard object-centric representations do not explicitly expose such statistical structure, which limits texture sensitivity in fine-grained recognition settings. We present HiPerViT, a compact vision-only architecture that injects an explicit second-order statistical prior into a transformer-based recognition pipeline. The method combines global and local image views with a compact bilinear descriptor encoded as a statistical token, and integrates this token with first-order spatial representations through Perceiver-style latent distillation. This design enables direct interaction between spatial tokens and second-order feature co-occurrence statistics, providing the model with explicit access to texture-relevant information without requiring multimodal pretraining or ensemble construction. Across six texture recognition benchmarks, HiPerViT achieves consistent improvements over strong vision-only baselines under the reported evaluation protocols, including gains of +3.05 percentage points on DTD, +10.48 on GTOS-Mobile, and +10.10 on 1200Tex. Beyond benchmark performance, our analyses show that these gains are largely invariant to the backbone depth used to extract second-order statistics and to the ordering of interaction and distillation stages. This pattern suggests that the primary source of improvement is not a specific fusion topology, but the explicit availability of second-order statistical information as a first-class representational signal. These results support explicit statistical tokenization as an effective and robust design principle for texture-centric visual recognition.",
+      "authors": [
+        "João Pedro C. A. de Sá",
+        "Odemir Martinez Bruno"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-10T00:05:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.10917v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "second-order statistical prior for fine-grained texture recognition relevant to benthic cover classification",
+      "llm_evidence_cn": "二阶统计先验的细粒度纹理识别，可迁移至底栖覆盖分类",
+      "llm_evidence": "二阶统计先验的细粒度纹理识别，可迁移至底栖覆盖分类",
+      "canonical_evidence": "二阶统计先验的细粒度纹理识别，可迁移至底栖覆盖分类",
+      "llm_tldr_en": "HiPerViT injects an explicit second-order statistical prior as a bilinear statistical token into a transformer pipeline, improving fine-grained multi-scale texture recognition.",
+      "llm_tldr_cn": "纹理识别中判别性证据常由高阶空间统计承载，标准视觉Transformer以物体为中心的表征难以显式建模此类统计结构，限制了细粒度识别性能。本文提出HiPerViT，将二阶统计先验以紧凑双线性描述子编码为统计token，并融合全局与局部视图注入Transformer流水线。该架构有望提升珊瑚礁底栖覆盖等以纹理为主的细粒度分类任务表现。",
+      "llm_tldr": "纹理识别中判别性证据常由高阶空间统计承载，标准视觉Transformer以物体为中心的表征难以显式建模此类统计结构，限制了细粒度识别性能。本文提出HiPerViT，将二阶统计先验以紧凑双线性描述子编码为统计token，并融合全局与局部视图注入Transformer流水线。该架构有望提升珊瑚礁底栖覆盖等以纹理为主的细粒度分类任务表现。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "classification models for coral reef benthic cover",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.13283v1",
+      "source": "arxiv",
+      "title": "Multimodal-Multiresolution Foundation Model for Lunar Remote Sensing",
+      "abstract": "We present a multimodal foundation model for lunar remote sensing, pretrained from scratch on SomBench, a geographically partitioned corpus of nearly two million co-registered tile bundles spanning 11 modalities at two spatial scales (1 m/pixel and 100 m/pixel). The model adapts the TerraMind masked-token architecture with two lunar-specific extensions: acquisition geometry is provided as explicit context, and meter- and hundred-meter-scale tiles are trained jointly so that a single set of weights covers both resolutions. FlexiViT patch embeddings allow adaptation to different patch sizes without retraining, while modality-wise inputs enable flexible multimodal fine-tuning. Qualitative generation experiments suggest the model learns meaningful cross-modal correspondences, including terrain derivatives from elevation and illumination-consistent reflectance from geometry. We evaluate on four benchmarks: crater detection at WAC and NAC scales, irregular mare patch (IMP) segmentation, and polar ice prospectivity regression. Across tasks, the pretrained model matches or outperforms ImageNet-pretrained baselines and an architecturally identical random-init control. On multimodal ice prospectivity regression, pretrained variants achieve the best results, while the random-init model outperforms most baselines, suggesting gains arise from both the architecture and pretraining. Label efficiency is notable for WAC crater detection, where the pretrained model trained on 50% of the data exceeds the strongest ImageNet baseline trained on the full dataset. Among adaptation strategies, LoRA matches or surpasses full fine-tuning on crater detection and IMP segmentation while using far fewer trainable parameters, whereas full fine-tuning performs best for ice prospectivity regression. We release the pretrained checkpoint, benchmark datasets, and fine-tuning code to support reproducible lunar AI research.",
+      "authors": [
+        "Paolo Fraccaro",
+        "Gabby Nyirjesy",
+        "Daniela Szwarcman",
+        "Himanshu Patil",
+        "Vishal Gaur",
+        "Rohit Lal",
+        "Rachel A. Slank",
+        "Geoffrey Dawson",
+        "Hiyam Debary",
+        "Michael K. Barker",
+        "Andrew Annex",
+        "Vishnu Viswanathan",
+        "Zachary Morse",
+        "Ethan I. Schaefer",
+        "Nikolaos Dionelis",
+        "Ankur Kumar",
+        "Campbell D. Watson",
+        "Manil Maskey",
+        "Rebekah I. Dawson-Rigas",
+        "Juan Bernabé-Moreno",
+        "Rahul Ramachandran",
+        "Sujit Roy"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-09-08T14:55:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.13283v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal multi-resolution foundation model for remote sensing imagery fusion",
+      "llm_evidence_cn": "面向遥感影像融合的多模态多分辨率基础模型",
+      "llm_evidence": "面向遥感影像融合的多模态多分辨率基础模型",
+      "canonical_evidence": "面向遥感影像融合的多模态多分辨率基础模型",
+      "llm_tldr_en": "A multimodal foundation model for remote sensing pretrained on co-registered multi-modality tiles at two spatial scales, enabling flexible multimodal fine-tuning across resolutions.",
+      "llm_tldr_cn": "月球遥感数据模态与分辨率多样，缺乏统一的多模态基础模型以支持跨任务迁移。本文提出面向月球遥感的多元多分辨率基础模型，在约两百万共配准瓦片、11种模态、1米与100米双尺度语料上从零预训练，采用TerraMind掩码token架构并加入采集几何上下文与双尺度联合训练。定性生成实验表明模型学到有意义的跨模态表征，为遥感多模态融合提供可借鉴的建模思路。",
+      "llm_tldr": "月球遥感数据模态与分辨率多样，缺乏统一的多模态基础模型以支持跨任务迁移。本文提出面向月球遥感的多元多分辨率基础模型，在约两百万共配准瓦片、11种模态、1米与100米双尺度语料上从零预训练，采用TerraMind掩码token架构并加入采集几何上下文与双尺度联合训练。定性生成实验表明模型学到有意义的跨模态表征，为遥感多模态融合提供可借鉴的建模思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-15</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-16</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-15 22:40:11 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-16 22:00:33 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今天共处理9篇论文，精读3篇、速读6篇，重点落在遥感视觉问答与自主水面航行。最值得看的是两篇8.0分精读：《Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing》和《Language-Grounded Semantic Target Navigation for Autonomous Surface Vehicles》。建议普通读者先读这两篇，理解智能体按需调用工具与语言导航思路，再浏览速读中的水位插补、遥感多模态适配和EcoBoat。</p>
+<p>2026-09-16 日报精选4篇遥感AI论文，精读两篇8.0分智能体研究：选择性工具调用做变化视觉问答、ANASSA空间智能编排框架。最值得关注智能体在遥感变化检测与空间推理中的落地，以及多尺度纹理识别和月球多模态基础模型。普通读者可先读两篇8分精读，理解智能体如何调用工具提升遥感问答能力。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -78,12 +78,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing">Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing</span></li><li><span class="dpr-home-dashboard-paper-title" title="Language-Grounded Semantic Target Navigation for Autonomous Surface Vehicles">Language-Grounded Semantic Target Navigation for Autonomous Surface Vehicles</span></li><li><span class="dpr-home-dashboard-paper-title" title="ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence">ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing">Selective Tool Use for Agentic Change Visual Question Answering in Remote Sensing</span></li><li><span class="dpr-home-dashboard-paper-title" title="ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence">ANASSA: An Agentic AI Orchestration Framework for Spatial Intelligence</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -91,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="A Dataset and Model for Imputing Water Surface Elevation on a Large and Extremely Sparse Spatiotemporal Graph">A Dataset and Model for Imputing Water Surface Elevation on a Large and Extremely Sparse Spatiotemporal Graph</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multimodal Foundation Models Adaptation based on Domain-Aware Relaxed Orthogonal Subspace for Remote Sensing">Multimodal Foundation Models Adaptation based on Domain-Aware Relaxed Orthogonal Subspace for Remote Sensing</span></li><li><span class="dpr-home-dashboard-paper-title" title="EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies">EcoBoat: Design and Experimental Validation of an Autonomous Body-Board Boat For Cleaning Water Bodies</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="HiPerViT: A Hierarchical Perceiver-Vision Transformer Architecture for Multi-Scale Texture Recognition">HiPerViT: A Hierarchical Perceiver-Vision Transformer Architecture for Multi-Scale Texture Recognition</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multimodal-Multiresolution Foundation Model for Lunar Remote Sensing">Multimodal-Multiresolution Foundation Model for Lunar Remote Sensing</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 </div>
 
