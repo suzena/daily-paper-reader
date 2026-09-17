@@ -1,0 +1,475 @@
+Title: Search-Based Metamorphic Testing of Vision-Language Models in Autonomous Underwater Robotic Software
+
+URL Source: https://arxiv.org/pdf/2609.17007v1
+
+Published Time: Wed, 16 Sep 2026 01:05:45 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Search-Based Metamorphic Testing of Vision-Language Models in Autonomous Underwater Robotic Software 
+
+Muhammad Yousaf 1,2 , Aitor Arrieta 3 , Shaukat Ali 1 , Paolo Arcaini 4 ,and Shuai Wang 5 
+
+> 1
+
+Simula Research Laboratory, Oslo, Norway  
+
+> 2
+
+Oslo Metropolitan University, Oslo, Norway  
+
+> 3
+
+Mondragon University, Mondragon, Spain  
+
+> 4
+
+National Institute of Informatics, Tokyo, Japan  
+
+> 5
+
+Group Research and Development, DNV AS, Oslo, Norway 
+
+muhammady@simula.no, aarrieta@mondragon.edu, shaukat@simula.no, arcaini@nii.ac.jp, shuai.wang@dnv.com 
+
+Abstract. Our industry partner focuses on quality assurance for in-dustrial systems across multiple domains, including maritime systems, such as overwater vessels and autonomous underwater robots (AURs). Despite the strong performance of vision-language models (VLMs) in scene understanding, image captioning, and object recognition, their use in AUR software operating in underwater environments is underexplored. Therefore, in this context, it is important to evaluate the quality of VLMs for integration into AUR software and, so, automated software testing tools are needed to assess their suitability and improve their dependability. To this end, we propose a search-based metamorphic testing approach (MetaVLM ) that identifies a minimal set of transformations on underwater images to induce incorrect model predictions, thereby revealing VLM failures. We employ NSGA-II as a multi-objective search algorithm and evaluate it over open-source VLMs BLIP and CLIP , against a random search baseline. Results demonstrate the strengths and limitations of each VLM in the context of AUR software systems. Based on the results, we derive lessons for software engineering practitioners and researchers working on quality assurance of VLM-based software systems. 
+
+Keywords: Software testing, search-based software engineering, meta-morphic testing, vision-language models, autonomous underwater robots 
+
+## 1 Introduction 
+
+Autonomous underwater robots (AURs) are used in the maritime domain to perform a wide range of activities, such as underwater surveying, trash collection, and monitoring underwater equipment (e.g., in the oil and gas sector). Such AURs often employ perception software that processes images of the underwater environment to analyze scenes and perform various tasks [5]. To this end, per-ception software often relies on deep learning models that, however, depend on arXiv:2609.17007v1 [cs.SE] 15 Sep 2026 2 M. Yousaf et al. 
+
+scarce labeled data. Moreover, the underwater environment itself is challenging due to motion, turbidity, and illumination variations. Vision-language models (VLMs) have demonstrated promising performance across tasks such as object identification and scene understanding with limited or no labeled data [1,20]. As a result, there is an increasing industrial interest in evaluating their performance for use as components within AUR software. Naturally, this calls for techniques to test VLMs, assess their suitability for critical applications, and further improve their quality to enable their use in AUR software. Towards building systematic techniques for testing VLMs in AUR software, as part of the EU project InnoGuard (https://innoguard.eu/), we are developing novel methods to ensure the dependability of autonomous cyber-physical systems, including AURs, with a focus on the use of AI foundation models, specifically VLMs in this paper. This work is carried out in collaboration with DNV AS , which specializes in quality assurance and certification for industrial systems in different domains, including the maritime one. To this end, the focus of this paper is to develop a systematic, automated testing tool to assess the industrial use of VLMs in AUR software as a starting point, and later for other applications in the maritime domain. We present MetaVLM , a multi-objective, search-based metamorphic testing approach for VLMs to reveal prediction failures in response to changes in un-derwater images. Metamorphic testing addresses the test oracle problem using metamorphic relations to identify incorrect VLM behavior. MetaVLM has two objectives: (i) applying a minimal sequence of transformations to a source image to ensure that it remains realistic; (ii) maximizing the number of prediction failures induced by the differences between the source and the transformed image. We employ NSGA-II as the multi-objective search algorithm in MetaVLM and test two open-source VLMs, BLIP and CLIP , on a set of underwater images to assess their robustness. We use random search ( Rand ) as a comparison baseline. Our results show that MetaVLM is significantly more effective than Rand in detecting VLM prediction failures. In particular, MetaVLM discovers low-order MR compositions with higher violation rates than Rand . Moreover, MetaVLM 
+
+detected more severe violations than Rand for both VLMs even with minimal transformations. These findings highlight the importance of multi-objective search in identifying not merely more failures, but failures with minimal image transformations. Finally, we provide a set of lessons learned from our empirical evaluation that are beneficial for other practitioners and researchers working on robotic software and interested in investigating the use of VLMs in their context. 
+
+## 2 Industrial Context 
+
+In the maritime domain, DNV AS operates as an independent third-party provider of classification, certification, and advisory services, with the overarching goal of safeguarding life, property, and the environment. As a classification society, the key objective is to establish rules and standards to verify that vessels and their Search-Based Metamorphic Testing of VLMs in AUR Software 3
+
+associated systems comply with these requirements throughout their lifecycle, from design and construction to operation and modification. With the rapid maritime digitalization paving the way, vessels are increasingly realized as complex cyber-physical systems composed of intelligent software subsystems (e.g., control and navigation). These subsystems are often developed by multiple vendors and integrated late in the lifecycle, introducing emerging system behaviors (e.g., interoperability) that are challenging to verify from an industrial assurance perspective. The assurance of complex maritime software systems increasingly depends on advanced techniques, such as simulation-based testing, to evaluate system behavior across diverse, safety-critical scenarios. At the same time, assurance is shifting toward continuous, data-driven processes, where large volumes of test and operational data are collected and used. In this paper, we focus on Autonomous Underwater Robots (AURs) used for industrial tasks, such as inspection, underwater repair, and trash collection. We focus on underwater trash collection as a representative use case and test object detection capabilities enabled by VLMs in AURs. In maritime settings, reliable detection and classification of trash are essential for dependable operations, e.g., to avoid damaging vegetation. However, challenging conditions, such as low visibility and occlusion, degrade performance, making robust perception models critical for deployment and necessitating systematic, automated testing. We collaborate with DNV AS to design a systematic, automated testing of VLMs in AURs to expose robustness issues and support the dependable integration of VLMs into AUR software. 
+
+## 3 Proposed approach MetaVLM 
+
+3.1 Approach Overview 
+
+We represent an AUR’s VLM-based perception module as V, which takes as input a textual prompt P and an image I, producing an output y = V(P, I ), where y
+
+denotes the predicted labels with object counts associated with each predicted class. We reuse the prompt P from [24], which is an instruction-style, zero-shot, domain-specific prompt. Table 1 reports the prompt template and an example output. We adopt six equality-based metamorphic relations (MRs) based on geometric image properties used in [12,17], namely rotation, scaling, histogram equalization, downsampling, shear, and translation (see Table 2). These MRs, in the context of VLMs, have not been tested on underwater images before; however, they have been studied in other domains, e.g., autonomous driving [27]. A metamorphic transformation Tθ is defined as a parameterized function applied to a source image I, producing a transformed image I′ as follows 6:
+
+I′ = Tθ (I)       
+
+> 6For simplicity, in the paper we will talk about source image and transformed image
+> instead of source test case and follow-up test case .
+
+4 M. Yousaf et al. 
+
+Table 1: Prompt template and example output       
+
+> Prompt Template Example Output
+> System Message “Identify and list all visible objects in this underwater image in four categories: (1) Animals, (2) Vegetation, (3) Objects, and (4) Trash. For each category, list the detected items with counts. If a category is definitely absent, write ‘None’.” (same for both VLMs) Classes Animals: [detected animals with counts] Animals: 1 fish Vegetation: [detected plants with counts] Vegetation: 1 plant Objects: [man-made objects with counts] Objects: 1 plastic bottle Trash: [trash items with counts] Trash: 1 piece of trash Final Labels Predicted classes {‘trash’, ‘object’, ‘vegeta-tion’, ‘animal’}
+
+Table 2: Equality-based MRs applied in MetaVLM (adapted from [12])                                     
+
+> MR Name Parameter Nominal value θnRange of θ
+> MR1 Rotation Angle 0◦[−5◦,+5 ◦]
+> MR2 Scaling Zoom factor 1[0 .7,1.3]
+> MR3 Histogram eq. Clip limit 1[1 .0,2.0]
+> MR4 Downsampling Scale factor 1[0 .9,1.0]
+> MR5 Shear Horizontal shear coefficient 0[−0.15 ,+0 .15]
+> MR6 Translation Horizontal shift percentage 0[−0.03 ,+0 .03]
+
+where θ denotes the transformation parameters. These MRs capture realistic variations encountered in underwater environments, preserving as much semantic information as possible. The expected behavior of a robust V is: 
+
+y = y′ with y = V(P, I ) and y′ = V(P, I ′)
+
+Our goal is to apply minimal transformations that induce the maximum changes in predictions, thereby revealing MR violations (i.e., y̸ = y′). We apply multiple MRs (called MR compositions ) over an image rather than a single one because real-world underwater images are often affected by several simultaneous factors, e.g., AUR motion may cause rotation, translation, and blur, while changing depth may also reduce brightness and contrast. In addition, MR compo-sitions are well known to reduce testing costs [13,3]. We select multiple MRs and apply them sequentially to an image I to obtain a transformed image I′. We call 
+
+order (between 1 and 6) the number of applied MRs within an MR composition. We formulate the problem as a multi-objective optimization problem. For the selected MRs and their transformation parameters θ (e.g., rotation angle for MR2 in Table 2), we aim to (1) minimize the magnitude of the transformations ( Tθ ) applied to the input as compared to nominal values of that parameter, and (2) maximize the VLMs predictions difference between y and y′.The first objective ensures that we apply subtle, realistic changes, while the second objective captures the severity of the model’s prediction differences between the source and transformed image. The VLM’s prediction differences are quantified either using object counts (i.e., the difference in the number of objects identified in I and I′) or prediction confidence scores (i.e., the difference in confidence Search-Based Metamorphic Testing of VLMs in AUR Software 5
+
+Table 3: General encoding of metamorphic relations                     
+
+> MR1 (Rotation) MR2 (Scaling) . . . MR6 (Translation)
+> Encoding Bool θ(angle) Bool θ(zoom) . . . Bool θ(shift) Example True 3◦False 0.0 . . . True 0.02
+
+scores associated with each class). We consider both measures because different VLMs may produce outputs in different formats. 
+
+3.2 Solution Encoding 
+
+The solution encoding defines which of the six MRs are selected in MR composi-tion and their associated parameters θ. Table 3 shows the solution encoding in the first row and an example of individual in the second row. The search space consists of 12 variables, organized into six pairs of activation and transformation parameter variables, each corresponding to one MR. For each MR, the first variable is a Boolean that indicates the status of the MR, i.e., whether it is active or not; the second variable, instead, indicates its associated parameter value. MR parameters for MR1-MR6 are shown in Table 2, where the Parameter 
+
+column specifies the parameter name, the Nominal value column shows the default values, while the Range column specifies the allowed range of parameter values. For example, for MR1 (Rotation), the parameter is the angle, with values ranging from -5.0 to +5.0. When two or more MRs are selected, they are applied sequentially in the fixed order. For example, if MR3 and MR6 are selected, MR3 will be applied to the input image I to obtain I′, followed by the application of MR6 to I′ to obtain the final transformed image (for simplicity, we call I′ even the last obtained transformed image). 
+
+3.3 Objective Functions 
+
+Given a source image I and a transformed image I′, the evaluation with V
+
+produces outputs y and y′. The problem has two objectives: 
+
+min ftrans and max fpred 
+
+Metamorphic Relation Magnitude The first objective ftrans minimizes the magnitude of the applied transformations, ensuring that the transformed image remains as close as possible to the source image. This is calculated as the normalized distance between the applied transformation parameters and their nominal values (see Table 2). A smaller value means a more subtle transformation. Let M denote the set of six MRs, and θ denote the set of parameter values. MR i denotes the i-th MR, whereas θi denotes the parameter value of the i-th MR. A solution consists of a set of selected MR indexes, denoted by SelMRsInds , and 
+
+θni denotes the normal parameter value of the i-th MR, as specified in Table 2. Based on the selected MR indexes, we calculate the objective functions as: 
+
+ftrans = X
+
+> j∈SelMRsInds
+
+|θnj − θj |
+
+θmax  
+
+> j6M. Yousaf et al.
+
+where θmax  
+
+> j
+
+represents the maximum deviation for the parameter of j-th MR. For example, for zoom the maximum scaling deviation relative to the nominal value is 0.3 (i.e., max(1 − 0.7, 1.3 − 1) ). 
+
+Prediction Deviation The second objective maximizes the difference between the model-predicted classes on the source and transformed images. Let C be the set of classes that a V predicts. For example, in the case of an AUR responsible for trash collection, possible objects to identify using the VLM are: 
+
+C = {Trash , Objects , Animal , Vegetation } (1) Due to differences in their architectures, some VLMs predict object counts, while other VLMs predict classes together with confidence scores. Considering those adopted in our experiments, BLIP belongs to the former type, while CLIP 
+
+to the latter type. Therefore, depending on the nature of outputs, we define two different ways to compute this objective. For BLIP , the objective is computed using the predicted object counts for each class it outputs. Let the number of occurrences of each predicted class for an image X by a V be denoted as Ccount X .The count of the i-th predicted class is represented as Ccount iX . Given an image 
+
+I and the corresponding transformed image I′, the objective is computed as: 
+
+fpred =
+
+> |C|
+
+X
+
+> j=1
+
+nor( |Ccount jI − Ccount jI′ |) with nor( x) = xx + 1 (2) If a VLM returns confidence scores for each class (e.g., CLIP ), we define the prediction difference as the absolute difference in confidence scores between the source and transformed images. Let the confidence scores associated with the predicted classes on an image X by a V be denoted by Cconf X , whereas the confidence of the i-th predicted class is represented as Cconf iX . Given an image 
+
+I and the corresponding transformed image I′, the objective is computed as: 
+
+fpred =
+
+> |C|
+
+X
+
+> j=1
+
+Cconf jI − Cconf jI′ (3) 
+
+## 4 Experimental Setup 
+
+We aim to assess whether MetaVLM can effectively expose failures in VLMs integrated into AUR software. To this end, we focus on the trash collection functionality of an AUR, in which the robot relies on its perception software to identify and collect waste. In this context, we test a VLM that performs such identification. Code and experimental results are available online: (https: //github.com/Myusuf121/MetaVLM). Search-Based Metamorphic Testing of VLMs in AUR Software 7
+
+4.1 Research Questions 
+
+We aim to evaluate the effectiveness of MetaVLM relative to a simple baseline, i.e., Random Search ( Rand ), as well as study the effect of various MRs and their characteristics on failures. Thus, we formulate the following research questions. 
+
+RQ1 : How is the effectiveness of MetaVLM compared to that of Rand ?
+
+We investigate whether MetaVLM , with NSGA-II as search algorithm, is nec-essary to identify MR violations, or a simple approach like Rand is sufficient. 
+
+RQ2 : Which MR compositions are effective in triggering VLM prediction fail-ures? We answer this RQ with two sub-RQs. 
+
+RQ2.a How do the order of MR compositions relate to prediction violations? 
+
+We study how the order of MR compositions (1 to 6) relates to prediction violations, assessed using a binary metric. Such an assessment depends on the output produced by a VLM. For example, a violation occurs if at least one main label changes in the transformed image compared to the source image. 
+
+RQ2.b Which exact MR compositions achieve the highest number of viola-tions? 
+
+Compared to RQ2.a, we analyze specific MR compositions rather than their occurrences, e.g., {MR2, MR3, MR4}, indicating these MRs were applied to the input image in this order. 
+
+RQ3 : What is the strength of violations induced by the MR compositions? 
+
+We study the strength of violation by measuring the extent to which the outputs differ between the source and transformed images. 
+
+4.2 Subject Images and VLMs 
+
+For our experiments, we selected images from the SeaClear dataset [31], an open-source underwater dataset containing high-resolution (1920 × 1080) images captured in diverse environments, including pools, oceans, and deep-sea. From this dataset, we selected images correctly classified by BLIP [11] (a VLM that showed superior performance in [24]), as our goal is to detect MR violations rather than existing classification errors. Thus, the final set Bench contains 30 correctly classified underwater images covering 5 to 22 different objects and trash classes. We selected two open-source VLMs for evaluation, namely BLIP [11] and 
+
+CLIP [14], based on their availability and applicability to image classification and scene understanding tasks. Both VLMs have shown promising performance in classifying and understanding underwater images in recent studies [24,29,30]. 
+
+4.3 Evaluation Metrics and Statistical Tests Evaluation metrics To answer RQ1, we employ the hypervolume (HV) quality indicator. HV measures the volume of the objective space covered by the obtained Pareto front with respect to a reference point. In MetaVLM , it captures the trade-off between minimizing the magnitude of MR transformations and maximizing 8 M. Yousaf et al. 
+
+the prediction differences. A higher HV value indicates better performance, as it reflects better diversity and convergence toward optimal solutions. In RQ2, we investigate whether a transformed image causes a prediction failure. To this end, we use a Boolean metric for MR violations. For BLIP , a violation occurs if at least one object count changes in the transformed image compared to the source image. For example, only “animal” is predicted in the source image, but “animal” and “vegetation” are predicted in the transformed image. Given a source image I and a transformed image I′, the violation for 
+
+BLIP is defined as: 
+
+BV blip (I, I ′) = 
+
+(
+
+1, ∃ j ∈ C : |Ccount jI − Ccount jI′ | ≥ 10, otherwise (4) For CLIP , a violation is calculated based on the difference between the confi-dence scores of each class, calculated as: 
+
+BV clip (I, I ′) = 
+
+(
+
+1, ∃ j ∈ C : |Cconf jI − Cconf jI′ | ≥ Th 
+
+0, otherwise (5) where Th is the threshold over which a difference is considered a violation. We experiment with Th ∈ { 1% , 3% , 5% }. We compute the violation rate VR for each VLM as the ratio of the number of violations to the total number of attempts for a given MR composition or order. Let S = {(I1, I ′
+
+> 1
+
+), . . . , (In, I ′
+
+> n
+
+)} denote a set of solutions (i.e., source and transformed images). The overall violation rate over S is defined as: 
+
+VR (S ) = 1
+
+|S |
+
+X
+
+> (I,I ′)∈S
+
+BV vlm (I, I ′) (6) where BV vlm (I, I ′) ∈ { 0, 1} indicates whether a Boolean violation occurs between source and transformed image for the respective VLM ( BLIP or CLIP ) per Eqs. (4) and (5). We will compute the violation rate over two types of solution sets: the set of solutions So obtained with MR compositions of a given order ( o ∈ { 1, . . . , 
+
+6}); the set of solutions Sc (with c ∈ { 1, . . . , 64 }) obtained with a specific MR composition among the 64 possible ones. For RQ3, we measure the violation strength to assess the severity of the detected violations. We employ the mean violation strength metric to quantify the magnitude of violations. For BLIP , it represents the average difference in object counts. Namely, given a set A of pairs of source and transformed images I
+
+and I′ leading to violations (i.e., BV vlm (I, I ′) = 1 ), the metric is defined as: 
+
+VS blip (A) = 1
+
+|A|
+
+X
+
+> (I,I ′)∈A
+
+X
+
+> j∈violClasses (I,I ′)
+
+|Ccount jI − Ccount jI′ |
+
+with violClasses (I, I ′) = {j ∈ C : |Ccount jI − Ccount jI′ | ≥ 1}
+
+(7) Search-Based Metamorphic Testing of VLMs in AUR Software 9
+
+Table 4: RQ1 – Comparison of MetaVLM vs Rand for CLIP and BLIP on 30 images (benchmarks Bench ) using hypervolume. ˆA12 is reported as small , medium , or 
+
+large . The best approach is MetaVLM , Rand , or no significant difference ( ≡)                                                                                                                                                                       
+
+> CLIP BLIP
+> Bench p-value ˆA12 Best p-value ˆA12 Best
+> B1<0.001 large MetaVLM 0.910 -≡
+> B20.089 -≡0.044 large Rand
+> B30.186 -≡0.571 -≡
+> B4<0.001 large MetaVLM 0.031 large MetaVLM
+> B5<0.001 large MetaVLM 0.850 -≡
+> B60.076 -≡0.002 large Rand
+> B70.076 -≡<0.001 large Rand
+> B8<0.001 large MetaVLM 0.473 -≡
+> B90.570 -≡0.014 large MetaVLM
+> B10 0.031 large Rand 0.104 -≡
+> B11 <0.001 large MetaVLM 0.473 -≡
+> B12 0.089 -≡0.021 large Rand
+> B13 0.910 -≡0.038 large MetaVLM
+> B14 0.477 -≡0.571 -≡
+> B15 <0.001 large MetaVLM <0.001 large MetaVLM CLIP BLIP
+> Bench p-value ˆA12 Best p-value ˆA12 Best
+> B16 0.003 large MetaVLM 0.021 large MetaVLM
+> B17 0.011 large MetaVLM 0.0312 large MetaVLM
+> B18 0.677 -≡0.009 large MetaVLM
+> B19 0.273 -≡<0.001 large Rand
+> B20 0.089 -≡0.104 -≡
+> B21 0.004 large MetaVLM <0.001 large MetaVLM
+> B22 0.186 -≡0.011 large MetaVLM
+> B23 <0.001 large MetaVLM 0.089 -≡
+> B24 0.007 large MetaVLM 0.003 large Rand
+> B25 0.850 -≡0.002 large Rand
+> B26 <0.001 large MetaVLM 0.186 -≡
+> B27 0.017 large MetaVLM 0.006 large MetaVLM
+> B28 <0.001 large MetaVLM 0.571 -≡
+> B29 <0.001 large MetaVLM 0.676 -≡
+> B30 0.002 large MetaVLM 0.021 large MetaVLM
+
+where violClasses represents the set of classes with violations, and VS blip measures the mean violation strength as the average violation magnitude in objects for 
+
+BLIP . Similarly, for CLIP , the mean violation strength represents the average difference in confidence scores at threshold Th ∈ { 1% , 3% , 5% }:
+
+VS clip (A) = 1
+
+|A|
+
+X
+
+> (I,I ′)∈A
+
+X
+
+> j∈violClasses (I,I ′)
+
+|Cconf jI − Cconf jI′ |
+
+with violClasses (I, I ′) = {j ∈ C : |Cconf jI − Cconf jI′ | ≥ Th }
+
+(8) Higher mean values indicate greater violation strengths and more severe failures, while lower values indicate violations of lower strengths. 
+
+Statistical tests RQ1 uses HV, whereas RQ3 uses mean violation strength as evaluation metrics. For both RQs, we analyze statistical differences using the Mann–Whitney U test and report effect sizes via Vargha–Delaney ( ˆA12 ), selected based on the guide in [2]. If the p-value computed by the Mann-Whitney U test is less than 0.05, this indicates a significant difference between MetaVLM 
+
+and Rand . If there are significant differences, we use ˆA12 to estimate the effect size, categorized in four levels [10]: negligible when ˆA12 ∈ (0 .44 , 0.56) , small 
+
+when ˆA12 ∈ (0 .34 , 0.44] or ˆA12 ∈ [0 .56 , 0.64) , medium when ˆA12 ∈ (0 .29 , 0.34] or 
+
+ˆA12 ∈ [0 .64 , 0.71) , large when ˆA12 ∈ [0 , 0.29] or ˆA12 ∈ [0 .71 , 1] .
+
+## 5 Results and analyses 
+
+5.1 RQ1 – Comparison with Rand in terms of effectiveness 
+
+Table 4 reports the results of the statistical tests when comparing MetaVLM ,against Rand based on HV values, for BLIP and CLIP . Each row represents a 10 M. Yousaf et al. 
+
+unique image (benchmark image Bi). The Best column indicates which approach performs significantly better, determined based on the results of the Whitney U test (p-value column) and ˆA12 value. If no conclusion can be drawn from the statistical test (i.e., p-value > 0.05 ), the symbol ≡ is shown to indicate no significant difference between the two compared approaches. For CLIP , the results in Table 4 show that Rand is significantly better than 
+
+MetaVLM only once, significantly outperformed by MetaVLM in 16 benchmarks with large effect sizes ( ˆA12 > 0.71 ), and no differences in the rest. This indicates that MetaVLM consistently achieves equal or superior effectiveness than Rand 
+
+across the evaluated benchmarks. These results suggest that finding maximum prediction deviations while keeping the transformed images as close as possible to the source images in CLIP is challenging, and that a simple algorithm such as 
+
+Rand is often insufficient, motivating the need for a guided search algorithm such as NSGA-II adopted in MetaVLM .For BLIP , the results in Table 4 show that: MetaVLM significantly outperforms 
+
+Rand on 11 benchmarks with large effect sizes, Rand performs significantly better on 7 benchmarks with large effect sizes, and no significant differences are observed for the remaining 12 benchmarks. Overall, these results show that MetaVLM 
+
+provides a favorable but moderate advantage over Rand for BLIP . This suggests that in BLIP it is easier to find larger prediction deviations while still preserving high similarity between the transformed and source images. This means that 
+
+BLIP is less reliable than CLIP in our context. 
+
+RQ1: MetaVLM with NSGA-II is effective for testing VLMs, with effectiveness depending on the VLM being tested. 
+
+5.2 RQ2 – Binary Violations RQ2.1 (Analysis by order of MR compositions) Table 5 presents the results of MR compositions of different orders (1–6), in terms of percentage of occurrences and binary violation rates VR , for MetaVLM and Rand across CLIP and 
+
+BLIP . For both VLMs, Rand has roughly equal percentages of MR compositions occurrences; each order accounts for around 16.6%, i.e., it does not target any specific order of MR composition. As a result, its violation rate depends mainly on the order; for example, for CLIP , Rand achieves violation rates of 42.9%, 1.8%, and 0% at first order for the three thresholds, and increases significantly to 91.7%, 22.7%, and 1.6% at order 6. For BLIP , Rand achieves a violation rate of 37.8% at first order, increasing to 58.8% at order 6. This indicates that Rand exposes failures mainly via a brute-force approach and high-order MR compositions. In contrast, MetaVLM , guided by the two optimization objectives, favors lower-order MR compositions. For CLIP , MetaVLM favors lower-order MR compositions (1-3), each with higher occurrence: 26.6% for first, 44.2% for second, and 23% for third. The higher-order MR compositions (i.e., 4–6), instead, have occurrence percentages of 5.1%, 0.8%, and 0.2% respectively. At VR 1% , MetaVLM achieves violation rates of 73.3%, 97.7%, and 99.1% for lower orders of 1-3; violation rates Search-Based Metamorphic Testing of VLMs in AUR Software 11 
+
+Table 5: RQ2.1 – Analysis by order of MR compositions: occurrence ( Occ )and violation rates ( VR ) of MetaVLM and Rand , for CLIP (Eq. (5)) with three confidence thresholds Th ∈ { 1% , 3% , 5% } and for BLIP (Eq. (4)). 
+
+(a) CLIP MetaVLM Rand 
+
+Order Occ % VR Th Occ % VR Th 
+
+1% 3% 5% 1% 3% 5% 1 26.6 73.3 5.5 0.0 16.7 42.9 1.8 0.0 2 44.2 97.7 39.8 4.6 16.7 63.7 5.2 0.1 3 23.0 99.1 68.1 16.7 16.7 75.2 9.4 0.3 4 5.1 98.7 75.2 22.0 16.7 82.4 13.5 0.6 5 0.8 97.9 69.8 27.9 16.7 87.6 18.2 1.0 6 0.2 99.3 85.8 44.2 16.6 91.7 22.7 1.6 (b) BLIP MetaVLM Rand 
+
+Order Occ % VR Occ % VR 
+
+1 74.6 92.8 16.7 37.8 2 17.6 88.1 16.7 47.4 3 5.1 77.8 16.6 51.4 4 2.0 78.3 16.6 54.5 5 0.6 75.2 16.7 56.9 6 0.1 76.7 16.6 58.8 
+
+Table 6: RQ2.2 – Analysis of top-10 MR compositions (Com.) and their violation rates ( VR ) of MetaVLM and Rand , for CLIP (Eq. (6)) with three confidence thresholds Th ∈ { 1% , 3% , 5% } and for BLIP (Eq. (4)). 
+
+(a) CLIP MetaVLM Rand MetaVLM Rand MetaVLM Rand                                                                             
+
+> Com. VR Th Com. VR Th Com. VR Th Com. VR Th Com. VR Th Com. VR Th
+> 1% 1% 3% 3% 5% 5% {2,3} 21.6 {1,2,3,4,5,6} 20.6 {2,3} 24.8 {1,2,3,4,5,6} 31.9 {1,2,3} 20.4 {1,2,3,4,5,6} 42.8 {1,3} 10.7 {1,3,4,5,6} 3.5 {1,2,3} 12.9 {1,2,3,5,6} 5.4 {2,3} 15.3 {1,2,3,4,5} 7.6 {2} 8.5 {1,2,3,4,5} 3.5 {1,3} 11.2 {1,2,3,4,5} 5.3 {2,3,5} 13.2 {1,2,3,5,6} 6.7 {3} 7.7 {1,2,3,4,6} 3.4 {2,3,5} 10.2 {1,2,3,4,6} 5.2 {1,3} 11.8 {1,2,3,4,6} 6.3 {1,2,3} 6.6 {1,2,3,5,6} 3.4 {1,3,5} 5.4 {2,3,4,5,6} 4.4 {1,2,3,5} 7.0 {2,3,4,5,6} 4.0 {2,3,5} 6.1 {2,3,4,5,6} 3.2 {2,3,6} 4.5 {1,3,4,5,6} 4.3 {2,3,6} 6.7 {1,2,3,4} 3.1 {3,5} 4.8 {3} 3.0 {1,2,3,5} 3.7 {1,2,3,6} 2.1 {1,3,5} 3.8 {1,3,4,5,6} 2.9 {1} 3.8 {1,2,4,5,6} 2.7 {2} 2.5 {1,2,3,4} 2.1 {1,2,3,6} 3.6 {1,2,3,6} 2.8 {1,3,5} 3.5 {2} 2.4 {2,6} 2.1 {1,2,3,5} 2.0 {1,3,6} 3.2 {1,2,3,5} 2.6 {2,3,6} 2.9 {1} 2.2 {3,5} 2.0 {2,3,4,5} 1.8 {2,3,4} 2.4 {1,2,3} 2.4
+
+(b) BLIP MetaVLM Rand                       
+
+> Com. VR Com. VR
+> {2} 38.1 {1,2,3,4,5,6} 19.1 {5} 12.4 {1,2,3,4,5} 3.2 {1} 10.9 {1,2,3,5,6} 3.2 {3} 7.9 {1,2,3,4,6} 3.2 {6} 5.9 {2,3,4,5,6} 3.2 {2,3} 4.2 {1,2,4,5,6} 3.0 {3,5} 3.3 {2} 2.9 {1,3} 2.1 {1,3,4,5,6} 2.9 {3,6} 1.7 {6} 2.4 {1,2} 1.6 {5} 2.4
+
+tend to decrease with higher thresholds, e.g., at 3% and 5%, since violations are only considered when differences are large. For BLIP , MetaVLM favors first-and second-order MR compositions, resulting in occurrences of 74.6% and 17.6%, and yields high violation rates, i.e., 92.8% and 88.1%, respectively. Higher-order MRs (4–6) are rarely selected, collectively <3% of the total distribution. This implies that MetaVLM , compared to Rand , suc-cessfully finds solutions with smaller-order MR compositions, resulting in higher occurrences, i.e., producing higher violation rates with smaller transformations on source images for both VLMs. 
+
+RQ2.2 (Top MR compositions) We investigate which exact MR compositions lead to more violations. Tables 6a and 6b provide the top ten MR composi-tions triggering the highest violation rates for CLIP and BLIP , respectively. For conciseness, we only report the MR number and we omit the prefix “MR”. 12 M. Yousaf et al. 
+
+Across both VLMs, Rand produces the most frequent violations with the highest order MR compositions (i.e., { 1,2,3,4,5,6 }) obtaining 20.6%, 31.9%, 42.8% of the violations for CLIP and 19.1% for BLIP . This MR composition produces numerous violations since it significantly alters the image semantics, often resulting in larger changes in target images relative to the source images. In contrast, MetaVLM identifies lower-order MR compositions, which result in violations. For CLIP (Table 6a), MetaVLM detects violations that are primarily trig-gered by MR2 (Scaling) and MR3 (Histogram Eq.), e.g., 21.6% and 24.8% for VR 1% 
+
+and VR 3% , respectively. The MR composition { 1,2,3 } yields the highest number of violations for VR 5% , i.e., 20.4%. We observe few single MR compositions: { 2}, {3}, { 1} at VR 1% , with 8.5%, 7.7% and 3.8% of the violations; and {2} at VR 3% ,with 2.5% violations. Instead, there is no single MR compositions for VR 5% due to the large threshold. These results show that, unlike Rand , MetaVLM discovers more violations while applying fewer MRs. Moreover, the composition of scale and his-togram equalization ( MR2,MR3 ) is particularly effective at revealing VLM failures. For BLIP (Table 6b), MetaVLM obtains violations largely triggered by single transformations. MR composition { 2} (Scaling) achieves the highest violation rate of 38.1%, significantly outperforming Rand , which achieves only 2.9% for the same composition. MR composition { 5} (Shear) and { 1} (Rotation) rank second and third, achieving the highest violation rates of 12.4% and 10.9%, respectively. Pairwise MR compositions also produce sufficient violation rates, notably { 2,3 }at 4.2%. Overall, BLIP is more sensitive to single geometric transformations and 
+
+MetaVLM significantly outperforms Rand in detecting such violations. 
+
+RQ2: MetaVLM detects violations with fewer transformations than Rand ,thereby demonstrating its effectiveness. Moreover, violation effectiveness varies across MR compositions and VLMs, showing that optimal compositions are model-dependent. 
+
+5.3 RQ3 – Strength of Metamorphic Relation Violations 
+
+Table 7 reports mean violation strength as defined in Eq. (8) for CLIP (threshold 
+
+Th ∈ { 1% , 3% , 5% }) and in Eq. (7) for BLIP . Overall, for CLIP , the mean violation strength increases as the order of the MR compositions increases; MetaVLM shows lower violation strength at order 1 (0.05, 0.04, and 0.05 for VS 1% , VS 3% , and 
+
+VS 5% ) and the strength increases with increasing order, peaking at 0.14, 0.14, and 0.09 for order 6. 7 We also observe a constant mean violation strength at orders 4 and 5 for VS 1% and orders 3 and 4 for VS 5% .Compared to MetaVLM , Rand shows relatively lower mean violation strengths around (0.03–0.06) across all orders of the MR compositions, with a notable value of 0 for order 1. For BLIP , we observe different mean violation strengths across all orders for both approaches. For orders 1-3, MetaVLM shows high violation strength at orders 2 and 3 (8.37 and 6.38, respectively), then dropping to 2.87 at order 6. Rand ,   
+
+> 7Only VS 5% shows an exception with a slight decrease from order 5 to order 6.
+
+Search-Based Metamorphic Testing of VLMs in AUR Software 13 
+
+Table 7: RQ3 – Comparison by order of MR compositions and their mean violation strengths (VS) of MetaVLM and Rand , for CLIP (Eq. (8)) with three confidence thresholds Th ∈ { 1% , 3% , 5% } and for BLIP (Eq. (7)). ˆA12 effect size is reported as small , medium , or large , and no significant difference ( ≡)
+
+(a) CLIP                                                               
+
+> Order VS 1% ˆA12 VS 3% ˆA12 VS 5% ˆA12
+> MetaVLM Rand MetaVLM Rand MetaVLM Rand
+> 10.05 0.03 medium 0.04 0.04 ≡0.05 0.00 ≡
+> 20.08 0.04 large 0.07 0.05 medium 0.07 0.06 ≡
+> 30.11 0.04 large 0.09 0.05 large 0.08 0.06 medium
+> 40.12 0.04 large 0.10 0.05 large 0.08 0.06 large
+> 50.12 0.05 large 0.11 0.05 large 0.10 0.06 large
+> 60.14 0.05 large 0.14 0.06 large 0.09 0.06 large
+
+(b) BLIP                     
+
+> Order VS ˆA12
+> MetaVLM Rand
+> 13.38 2.74 small
+> 28.37 2.76 large
+> 36.38 2.51 medium
+> 43.93 2.28 medium
+> 53.95 2.25 small
+> 62.87 2.21 small
+
+instead, shows high strength at orders 1-2 (2.74 and 2.76) with a continuous decrease for the rest of the orders, dropping to 2.21 at order 6. Overall, MetaVLM , compared to Rand , achieves a greater mean violation strength across all orders. The results of the statistical tests further show that 
+
+MetaVLM for CLIP is significantly better than Rand with medium or large effect sizes in most cases, except for VS 3% in order 1 and for VS 5% in orders 1 and 2, where no significant differences are observed. For BLIP , for all orders MetaVLM is significantly better than Rand with small, medium, or large effect sizes. 
+
+RQ3: MetaVLM generally finds violations of significantly higher strengths than 
+
+Rand , proving its effectiveness in testing VLMs. 
+
+## 6 Discussion and Lessons Learned 
+
+Smaller transformations can reveal failures in VLM-based perception modules. Our results show that introducing a small number of transformations can cause VLMs to produce incorrect predictions. This suggests that VLM-based perception modules are sensitive to minor changes to inputs, and therefore must be tested for robustness beyond standard benchmark evaluations. 
+
+Metamorphic testing provides a practical test oracle. In the underwater domain, datasets are scarce and ground-truth labeling is limited and expensive. Thus, metamorphic relations offer a scalable way for identifying failures without requiring explicit ground-truth labels. 
+
+Search-based testing significantly improves VLM prediction failures discovery over random search. MetaVLM (NSGA-II) consistently identifies a minimal set of metamorphic transformations that reveal more VLM prediction failures compared to random search, showing that guided exploration of the transformation space is essential for efficient testing. 
+
+Different VLMs may need different objective functions. BLIP and CLIP ,due to their different architectures, produce different types of outputs. We did not 14 M. Yousaf et al. 
+
+use the same objective functions for both models, and as a result, we observed different degrees of violation across the models. This suggests that applying 
+
+MetaVLM to different VLMs may require different objective functions. However, this does not affect the effectiveness of MetaVLM , as our experiments show it is effective at testing both CLIP and BLIP .
+
+## 7 Threats to Validity 
+
+Internal validity. An internal validity threat is related to the configuration of NSGA-II, in MetaVLM , as well as Rand . We chose the default parameter set-tings across all experiments and compared MetaVLM with Rand to ensure a fair comparison. Another internal threat concerns the order in which active MRs are applied. In our case, they are applied sequentially in a given order. Different orders may produce different final transformed images and, consequently, may affect the results. This requires additional experiments in the future. 
+
+External validity. We consider two generic VLMs and use images selected from the SeaClear dataset. Thus, the results may not generalize to other VLMs or different images. In particular, the considered VLMs differ in their output characteristics, and other models may show different behavior under the same MR configurations. This highlights the need for further empirical evaluations with additional VLMs, broader datasets, and other perception-related tasks. 
+
+Construct validity. A construct validity threat is related to the measures used to assess the MR violations. For RQ1, we used hypervolume to evaluate the quality of the obtained Pareto fronts. We employed Mann-Whitney U test, p-value, and Vargha-Delaney ˆA12 effect sizes for statistical analysis. For RQ2, we used Boolean violation as a metric and evaluated violation rates. Although these metrics are aligned with the specific output types by VLMs, they remain dependent on the chosen model architectures, i.e., differences in confidence scores and object counts. Another construct validity threat is related to the image selection process. Since we selected 30 benchmark images having no classification errors, it may bias the evaluation towards stable input images. Finally, the set of six MRs and their parameter ranges were chosen to represent small but meaningful underwater perturbations; different MRs or different bounds could lead to different results. 
+
+Conclusion validity. Both MetaVLM and Rand include inherent randomness, which may affect the results. To mitigate this threat, each approach is executed 10 times, following a well-established guide [2]. Moreover, the computational cost of iterative VLM inference limits adding more images and evaluations. To improve confidence in results, we analyzed them with well-established statistical tests as recommended in the same guide. 
+
+## 8 Related Work 
+
+Prior work [12] has used image transformations as MRs to test deep learning-based systems. Examples include real-world environmental transformations, e.g., Search-Based Metamorphic Testing of VLMs in AUR Software 15 
+
+blur, rain, and fog [27], image-level transformations such as RGB-channel per-mutation, convolution-order permutation, normalization, scaling [6], background changes [28], object insertion, 3D reconstruction for object detection [19], and scenario-based transformations for multiple object tracking [22]. Adaptive Meta-morphic Testing (MT) has also been used to guide the selection of transformations for image classification [16]. Few studies have combined search-based and metamorphic testing together to generate test inputs and reveal faults in deep learning models [4,7]. Since exhaustively searching all possible MR compositions and their transformation parameters is computationally expensive, we employ multi-objective optimization, i.e., NSGA-II, to better identify MR compositions that expose VLM failures. We apply a set of geometric transformations to generate follow-up test images in the underwater domain. While such transformations have been studied in other domains, our novelty lies in applying them to underwater environments and combining multiple transformations simultaneously to generate more realistic transformed images. MT has been applied to test multimodal systems [15], including image caption-ing [26,25], automated speech recognition [8], and more recently, vision-language action models, visual entailment, and embodied AI [21,18,9,23]. In contrast, we focus on testing VLMs in AURs using metamorphic testing, applying multiple transformations to the input image to design effective MRs. 
+
+## 9 Conclusion 
+
+This paper proposes a multi-objective, search-based metamorphic testing ap-proach for vision-language models (VLMs) that serve as perception modules for identifying trash in autonomous underwater robots (AURs). We consider two competing objectives: first, to minimize changes to the source underwater images, i.e., to apply as few metamorphic transformations as possible; and second, to maximize changes in the model’s output predictions relative to the source images. We used MetaVLM as a multi-objective search algorithm and Rand search as a baseline. We evaluated two VLMs, namely CLIP and BLIP . Our results show that 
+
+MetaVLM is more effective in detecting failures and consistently outperforms Rand 
+
+by selecting low-order MR compositions with higher violation rates. Our future work includes studying other specialized VLMs for maritime and multi-objective search algorithms, as well as defining domain-specific metamorphic relations for underwater environments. 
+
+Acknowledgments This work is supported by the InnoGuard Doctoral Network under the Marie Skłodowska-Curie Actions of the European Commission (Grant Agreement No. 101169233). P. Arcaini is supported by the ASPIRE grant (No. JPMJAP2301) from JST. Aitor Arrieta is a member of the Software and Systems Engineering research group at Mondragon Unibertsitatea (IT1519-22), supported by the Department of Education, Universities and Research of the Basque Country. 16 M. Yousaf et al. 
+
+## References 
+
+1. Alawode, B., Ganapathi, I.I., Javed, S., Werghi, N., Bennamoun, M., Mahmood, A.: AquaticCLIP: A vision-language foundation model for underwater scene analysis. CoRR abs/2502.01785 (2025) 2. Arcuri, A., Briand, L.: A practical guide for using statistical tests to assess ran-domized algorithms in software engineering. In: 2011 33rd International Conference on Software Engineering (ICSE). pp. 1–10 (2011) 3. Arrieta, A.: On the cost-effectiveness of composite metamorphic relations for testing deep learning systems. In: Proc. of the 7th International Workshop on Metamorphic Testing. pp. 42–47. MET ’22, ACM (2023) 4. Ben Braiek, H., Khomh, F.: DeepEvolution: A search-based testing approach for deep neural networks. In: 2019 IEEE International Conference on Software Maintenance and Evolution (ICSME). pp. 454–458 (2019) 5. Chen, L., Huang, Y., Dong, J., Xu, Q., Kwong, S., Lu, H., Lu, H., Li, C.: Underwater optical object detection in the era of artificial intelligence: Current, challenge, and future. ACM Comput. Surv. 58 (3) (Sep 2025) 6. Dwarakanath, A., Ahuja, M., Sikand, S., Rao, R.M., Bose, R.P.J.C., Dubash, N., Podder, S.: Identifying implementation bugs in machine learning based image classi-fiers using metamorphic testing. In: Proc. of the 27th ACM SIGSOFT International Symposium on Software Testing and Analysis. p. 118–128. ACM (2018) 7. Haj Yahmed, A., Ben Braiek, H., Khomh, F., Bouzidi, S., Zaatour, R.: Diverget: a search-based software testing approach for deep neural network quantization assessment. Empirical Software Engineering 27 (7), 193 (2022) 8. Ji, P., Feng, Y., Liu, J., Zhao, Z., Chen, Z.: ASRTest: automated testing for deep-neural-network-driven speech recognition systems. In: Proc. of the 31st ACM SIGSOFT International Symposium on Software Testing and Analysis. pp. 189–201. ACM (2022) 9. Jiang, M., Hu, B., Zhang, X.Y.: Metamorphic testing for textual and visual en-tailment: A unified framework for model evaluation and explanation. Inf. Softw. Technol. 187 (C) (Nov 2025) 10. Kitchenham, B., Madeyski, L., Budgen, D., Keung, J., Brereton, P., Charters, S., Gibbs, S., Pohthong, A.: Robust statistical methods for empirical software engineering. Empirical Softw. Engg. 22 (2), 579–630 (apr 2017) 11. Li, J., Li, D., Xiong, C., Hoi, S.: BLIP: Bootstrapping language-image pre-training for unified vision-language understanding and generation. In: Proc. of the Interna-tional Conference on Machine Learning (ICML). pp. 12888–12900. PMLR (2022) 12. Li, R., Liu, Y., Zhu, C., Zhou, Z., Zheng, Z.: Adaptive metamorphic testing for object detection systems. In: 2024 IEEE 24th International Conference on Software Quality, Reliability, and Security Companion (QRS-C). pp. 517–526 (2024) 13. Qiu, K., Zheng, Z., Chen, T.Y., Poon, P.L.: Theoretical and empirical analyses of the effectiveness of metamorphic relation composition. IEEE Transactions on Software Engineering 48 (3), 1001–1017 (2022) 14. Radford, A., Wook Kim, J., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., Sutskever, I.: Learning transferable visual models from natural language supervision. In: Proc. of the 38th International Conference on Machine Learning, ICML 2021, 18-24 July 2021, Virtual Event. vol. 139, pp. 8748–8763. PMLR (2021) 15. Segura, S., Fraser, G., Sanchez, A.B., Ruiz-Cortés, I.: A survey on metamorphic testing. IEEE Transactions on Software Engineering 42 (9), 805–824 (2016) Search-Based Metamorphic Testing of VLMs in AUR Software 17 16. Spieker, H., Gotlieb, A.: Adaptive metamorphic testing with contextual bandits. Journal of Systems and Software 165 , 110574 (2020) 17. Sun, C.A., Xing, J., Li, X., Zhang, X., Fu, A.: Metamorphic testing of image processing applications: A general framework and optimization strategies. In: Proc. of the 9th ACM International Workshop on Metamorphic Testing. p. 26–33. ACM (2024) 18. Valle, P., Segura, S., Ali, S., Arrieta, A.: Metamorphic testing of vision–language action–enabled robots. In: 2026 IEEE International Conference on Software Testing, Verification and Validation (ICST). pp. 52–63 (2026) 19. Wang, S., Su, Z.: Metamorphic object insertion for testing object detection systems. In: 35th IEEE/ACM International Conference on Automated Software Engineering (ASE 2020). pp. 1053–1065. IEEE (2020) 20. Wang, Z., Zhu, Y., Yan, Y., Tian, X., Shao, X., Li, M., Li, W., Su, G., Cui, W., Fan, D.: UnderwaterVLA: Dual-brain vision-language-action architecture for autonomous underwater navigation. CoRR abs/2509.22441 (2025) 21. Wang, Z., Zhou, Z., Song, J., Huang, Y., Shu, Z., Ma, L.: VLATest: Testing and evaluating vision-language-action models for robotic manipulation. Proc. ACM Softw. Eng. 2(FSE) (Jun 2025) 22. Xie, X., Duan, Y., Chen, S., Xuan, J.: Towards the robustness of multiple ob-ject tracking systems. In: 2022 IEEE 33rd International Symposium on Software Reliability Engineering (ISSRE). pp. 402–413 (2022) 23. Xu, G., Xiao, D., Peng, Y., Wang, S.: MetaSpace: Metamorphic testing for spatial cognition in embodied agents. Proc. ACM Program. Lang. 10 (OOPSLA1) (Apr 2026) 24. Yousaf, M., Arrieta, A., Ali, S., Arcaini, P., Wang, S.: Assessing vision-language models for perception in autonomous underwater robotic software. CoRR 
+
+abs/2602.10655 (2026) 25. Yu, B., Zhong, Z., Li, J., Yang, Y., He, S., He, P.: ROME: Testing image caption-ing systems via recursive object melting. In: Proc. of the 32nd ACM SIGSOFT International Symposium on Software Testing and Analysis. p. 766–778. ACM (2023) 26. Yu, B., Zhong, Z., Qin, X., Yao, J., Wang, Y., He, P.: Automated testing of image captioning systems. In: Proc. of the 31st ACM SIGSOFT International Symposium on Software Testing and Analysis. p. 467–479. ACM (2022) 27. Zhang, M., Zhang, Y., Zhang, L., Liu, C., Khurshid, S.: DeepRoad: GAN-based metamorphic testing and input validation framework for autonomous driving sys-tems. In: Proc. of the 33rd ACM/IEEE International Conference on Automated Software Engineering. p. 132–142. ACM (2018) 28. Zhang, Z., Wang, P., Guo, H., Wang, Z., Zhou, Y., Huang, Z.: DeepBackground: Metamorphic testing for deep-learning-driven image recognition systems accompa-nied by background-relevance. Inf. Softw. Technol. 140 (C) (Dec 2021) 29. Zheng, Z., Chen, Y., Zeng, H., Vu, T.A., Hua, B.S., Yeung, S.K.: MarineInst: A foundation model for marine image analysis with instance visual description. In: Computer Vision – ECCV 2024. Proc., Part II. pp. 239–257. Springer-Verlag (2024) 30. Zheng, Z., Zhang, J., Vu, T.A., Diao, S., Wong, Y.H.T., Yeung, S.K.: MarineGPT: Unlocking secrets of ocean to the public. CoRR abs/2310.13596 (2023) 31. Ðuraš, A., Wolf, B.J., Ilioudi, A., Palunko, I., De Schutter, B.: A dataset for detection and segmentation of underwater marine debris in shallow waters. Scientific Data 
+
+11 (1), 921 (Aug 2024)

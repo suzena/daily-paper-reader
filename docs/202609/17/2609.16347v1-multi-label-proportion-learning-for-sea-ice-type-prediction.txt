@@ -1,0 +1,516 @@
+Title: Multi-Label Proportion Learning for Sea-Ice Type Prediction
+
+URL Source: https://arxiv.org/pdf/2609.16347v1
+
+Published Time: Wed, 16 Sep 2026 00:25:59 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+# Samira Alkaee Taleghan 
+
+University of Colorado Denver Denver, Colorado, USA samira.alkaeetaleghan@ucdenver.edu 
+
+# Younghyun Koo 
+
+National Snow and Ice Data Center (NSIDC), CIRES, University of Colorado Boulder Boulder, Colorado, USA younghyun.koo@colorado.edu 
+
+# Andrew P. Barrett 
+
+National Snow and Ice Data Center (NSIDC), CIRES, University of Colorado Boulder Boulder, Colorado, USA andrew.barrett@colorado.edu 
+
+# Farnoush Banaei-Kashani 
+
+University of Colorado Denver Denver, Colorado, USA farnoush.banaei-kashani@ucdenver.edu 
+
+## Abstract 
+
+Sea-ice type prediction is important for climate monitoring, mar-itime navigation, and decision-making in polar regions. The main source of label data for this task is the ice chart, produced manually by ice analysts who interpret satellite imagery to delineate ice zones into polygons. Each polygon is assigned total sea-ice concentra-tion and partial concentrations of the ice types present within the polygon. Although ice charts are valuable, their production is labor-intensive and expensive, motivating recent efforts to automate the process using deep learning. However, deep learning models re-quire patch-level (or pixel-level) label data for training, while ice charts provide only polygon-level annotations. As a workaround, supervised approaches often create approximate patch-level labels from polygon-level ice chart labels by assigning each sample the dominant ice type of its parent polygon. This approach enables supervised training but creates an ill-posed learning problem with intrinsically approximate solution. In this paper, we redefine sea-ice type prediction as a weakly supervised multi-label proportion learning problem to be able to directly use the polygon-level ice chart labels and avoid unnecessary label approximation for im-proved prediction accuracy. To address this problem, we propose a two-module framework where first Multiple Instance Learning (MIL) is used for water–ice classification, and then a multi-label proportion learning (MLPL) is introduced for ice-type composition prediction. We further extend this framework with a multimodal model that integrates SAR imagery with AMSR2 brightness temper-atures and ERA5 reanalysis data through modality-guided auxiliary regularization. Evaluated on the AI4Arctic dataset, the SAR-only model reduces MAE by 14.5% and more than doubles mean ice-class F1 over the best supervised baseline. The multimodal model further reduces MAE by 21.5% and raises mean F1 by 41.2% over the SAR-only model, and by 52.7% over the supervised multimodal baseline. 
+
+## CCS Concepts 
+
+• Computing methodologies → Machine learning approaches .
+
+## Keywords 
+
+Sea Ice Type Prediction, Multiple Instance Learning, Learning with Label Proportion, Multisensor Remote Sensing 
+
+## 1 Introduction 
+
+Sea-ice type prediction is important for climate monitoring, numer-ical modeling, maritime navigation, and decision-making in polar regions. Because sea-ice type reflects ice thickness, age, strength, and navigability, reliable type information is essential for under-standing polar climate processes and supporting safe activity in ice-covered waters [56, 60]. The main source of sea-ice type infor-mation is the ice chart. Ice charts are produced manually by expert ice analysts, who interpret multi-sensor satellite imagery and aux-iliary data sources using domain expertise and visual inspection to delineate ice zones into polygons. Synthetic Aperture Radar (SAR) is especially important in this process because it provides high-resolution observations and can operate through clouds and polar darkness [12]. Despite their value, ice charts are labor-intensive and expensive to produce, motivating efforts to automate sea-ice type prediction using deep learning. In operational ice charting, analysts manually draw polygons over regions of relatively homogeneous ice conditions and assign each polygon a set of standardized codes following the World Me-teorological Organization (WMO) "egg code" and the SIGRID3 data format [9]. Rather than assigning a single ice type per polygon, the egg code records the total sea ice concentration (SIC) (the fraction of ice cover from 0–100%) along with the partial concentrations for up to three co-occurring ice types, each characterized by its stage of development (SOD), a proxy for ice thickness, and floe size (FLOE). Figure 1 shows an example of ice-chart polygons produced by the Danish Meteorological Institute (DMI) overlaid on a Sentinel-1 SAR scene, together with the WMO egg code assigned to each polygon. Importantly, these labels describe the aggregate composition of the entire polygon, not the class identity of each individual pixel or patch. Conditions within a polygon may vary substantially, and mixed polygons can contain several ice types with different partial concentrations. Recent advances in deep learning have opened new opportu-nities to automate sea-ice type prediction and support ice-chart generation[23, 34, 57]. By extracting spatial and textural features from SAR imagery, deep learning models can overcome the con-straints of manual interpretation, enabling more scalable and timely ice charting. However, training such models requires labeled data at the pixel or patch level — labels that are rarely available for sea ice; ice charts provide only polygon-level annotations. As a arXiv:2609.16347v1 [cs.LG] 14 Sep 2026 Alkaee Taleghan et al. 
+
+Figure 1: Ice-chart polygons and their WMO egg codes. (a) Sentinel-1A EW HH scene, 14 October 2021 07:12 UTC, Fram Strait north-west of Svalbard, DMI ice chart. (b) SIGRID-3 egg code per polygon. 
+
+result, supervised approaches convert polygon annotations into pixel- or patch-level labels by assigning each sample the dominant ice type of its parent polygon, thereby reducing the egg code’s multi-label proportional structure to a single class [4, 27, 42]. This workaround enables supervised training, but it creates an ill-posed learning problem: dominant-label reduction discards partial concen-tration information, introduces label noise in mixed polygons, and ignores the uncertainty inherent in training from heterogeneous polygon-level annotations. The mismatch between the polygon-level proportion annota-tions available in ice charts and the pixel-level labels required by standard supervised methods defines the core challenge of this work. Rather than inferring noisy dominant-class labels, we preserve the original structure of ice-chart supervision by treating each polygon as a bag of unlabeled image patches whose collective composition is described by label proportions. This setting naturally aligns with Multiple Instance Learning (MIL), where supervision is provided for bags rather than individual instances [13, 40], and with Learning with Label Proportions (LLP), where aggregated instance predic-tions are trained to match known bag-level class proportions [44]. Because ice-chart polygons may contain multiple co-occurring ice types, the resulting task is both multi-label and proportion-based. This formulation avoids dominant-class assumptions and directly leverages the full annotation richness of operational ice charts. We propose a two-module framework that mirrors the structure of the ice-charting task. The first module performs coarse water–ice classi-fication using a MIL formulation. The second module estimates the ice-type composition of ice polygons using multi-label proportion learning (MLPL). In the second module, the core SAR-only model uses evidential Dirichlet aggregation, allowing patches to contribute variable evidence to polygon-level proportion estimates rather than forcing every patch to contribute equal softmax mass. This is im-portant because boundary patches, ambiguous textures, and mixed regions should not influence the bag-level estimate in the same way as visually informative ice-type patterns. As an extension, we intro-duce a multimodal auxiliary-regularized architecture that integrates SAR imagery with AMSR2 brightness temperatures and ERA5 at-mospheric reanalysis fields through AMSR2 ice-concentration con-sistency and ERA5 environmental-compatibility regularization. The main contributions of this work are: (1) we formulate the polygon-level labeling stage of operational sea-ice charting as a weakly supervised problem that preserves partial concentra-tions instead of reducing each polygon to a dominant class, and introduce a two-module framework that combines binary MIL with multi-label proportion learning: first identifying ice-covered polygons, then predicting fine-grained multi-label ice-type propor-tions directly from polygon-level concentration labels; (2) we adapt evidential Dirichlet aggregation to bag-level sea-ice proportion learning, allowing patches to contribute variable evidence rather than equal softmax mass; and (3) we extend the framework with modality-guided auxiliary regularization, incorporating AMSR2 ice-concentration consistency and ERA5 environmental compatibility. Additionally, we investigate bag-size calibration and uncertainty-weighted Dirichlet training as extensions that further improve pro-portion accuracy, and analyze the trade-off between patch-selection budget and prediction performance. The remainder of the paper is organized as follows: Section 2 reviews related work, Section 3 presents the methodology, Section 4 reports the experiments and results, and Section 5 concludes the paper. 
+
+## 2 Related Work 2.1 Sea Ice Type Classification 
+
+Supervised sea ice classification methods aim to automatically iden-tify and distinguish ice types from satellite imagery using labeled training data. Early CNN-based studies demonstrated the feasibil-ity of deep learning for sea ice classification. Li et al. [33] applied CNNs to Gaofen-3 SAR imagery to distinguish ice from open wa-ter, and Boulze et al. [4] used CNNs on Sentinel-1 data to classify ice types with higher accuracy than traditional methods. Deeper architectures such as AlexNet [26], VGG16 [52], ResNet [19], and DenseNet [20] further improved performance through hierarchical feature extraction and residual learning. Xu et al. [62] fine-tuned AlexNet for SAR-based ice–water classification, while Khaleghian et al. [25] showed VGG16’s superiority with augmented training. Specialized, attention-based, and multi-sensor architectures further improved sea-ice classification from SAR data [10, 17, 27, 39, 53, 66]. IceBench [55] provided a standardized benchmark for sea-ice type classification using representative CNN models and common met-rics. Despite these advances, supervised methods often reduce mixed polygons to single labels. In contrast, our work learns di-rectly from polygon-level multi-label proportions, preserving mixed ice-type composition. 
+
+## 2.2 Multi Instance Learning 
+
+Multiple Instance Learning (MIL) is a weakly supervised framework in which labels are assigned to bags of instances rather than individ-ual samples [13, 40]. Under the classical assumption, a positive bag contains at least one positive instance, while a negative bag contains only negative instances. MIL has since been extended to diverse applications in computer vision, remote sensing, and medical imag-ing [1, 8, 45]. Traditional MIL uses models such as kNN, SVMs, and Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+decision trees [2, 11, 61], while deep MIL typically extracts instance features with CNNs and aggregates them at the bag level. Mean and max pooling can respectively dilute informative instances or ignore broader context; attention-based MIL addresses this by learning instance importance weights [22]. Attention-based MIL has pro-gressed from global self-attention models such as TransMIL [51] to local-context approaches such as CAMIL [16]. Other variants introduce clustering, distribution-guided scoring, pseudo-bag distil-lation, graph-based spatial modeling, and multi-task or multimodal learning [32, 37, 38, 41, 43, 47, 59, 65]. In sea-ice mapping, Alter-CNN uses polygon-level proportions to infer pixel-level ice/water labels [31], whereas our method directly predicts polygon-level ice-type proportions. Multi-Instance Multi-Label Learning (MIML) extends MIL to bags associated with multiple labels. Zhou et al. [67] formalized this setting and introduced methods such as MimlBoost and MimlSvm, while later deep approaches such as MIML-FCN+ incorporated fully convolutional networks [63]. MIL is used in remote sensing to learn from coarse labels by treating images or regions as bags and pixels, spectra, patches, or superpixels as instances. Applications include hyperspectral target characterization [24], attention-based scene classification [35], superpixel-based hyperspectral classification [21], and multi-resolution Earth-observation learning [15]. However, classical MIL typically assumes binary or categorical bag-level labels and does not directly represent the fractional composition of multiple co-occurring classes. Although MIML extends MIL to multiple labels per bag, it generally models label presence rather than their associ-ated proportions. 
+
+## 2.3 Learning with Label Proportion 
+
+Learning With Label Proportions (LLP) extends weak supervision by providing class proportions for each bag rather than instance labels [44, 48]. Early methods adapted conventional classifiers, such as Proportional SVM ( ∝SVM), to enforce bag-level proportion con-straints [64]. More recent approaches include EasyLLP, which re-constructs instance-level losses from bag proportions [5], LLP-BP, which refines pseudo-instance labels using belief propagation [18], and theoretically grounded formulations under mutual contam-ination [49]. Deep and generative LLP methods have also been proposed, including LLP-GAN [36] and the Batch Averager frame-work, which averages instance predictions within each bag and matches them to known proportions using KL divergence [3]. In sea-ice applications, MIPL-Ice [58] introduced an initial LLP-based framework for polygon-level multi-class classification, but did not fully develop or evaluate the multi-instance proportion-learning setting considered here. In remote sensing, LLP has been applied to SAR classification, crop mapping, and satellite imagery using aggre-gate proportion labels [14, 28, 29, 46]. However, LLP is commonly formulated for proportions of mutually exclusive instance classes and does not explicitly address settings where multiple co-occurring labels and their partial concentrations are jointly represented at the bag level. 
+
+## 3 Methodology 
+
+Our approach mirrors manual ice charting: first separating open wa-ter from ice-covered regions, then estimating ice-type composition 
+
+Figure 2: Overview of the proposed model flow structure. 
+
+within the ice. This motivates a two-module weakly supervised ar-chitecture. The first treats water–ice discrimination as a binary MIL problem, while the second uses Multi-Label Proportion Learning (MLPL) to estimate up to three co-occurring ice types from polygon-level partial concentrations. Both modules use only polygon-level supervision, with no patch- or pixel-level labels. Figure 2 shows the overall model flow. 
+
+## 3.1 Problem Formulation 
+
+Formalizing this setup, we represent each annotated polygon as a weakly supervised bag of image patches. For polygon 𝑖 , the bag is defined as B𝑖 = {𝑥 𝑖 1, . . . , 𝑥 𝑖𝑁 𝑖 }, where 𝑥 𝑖 𝑗 ∈ R𝐻 ×𝑊 ×𝑀 denotes the 𝑗 -th extracted patch, 𝑀 is the number of input channels, and 
+
+𝑁 𝑖 is the number of valid patches in the polygon. The patches are generated on a regular grid over the polygon bounding box and are retained only when the fraction of patch pixels falling inside the polygon exceeds a predefined coverage threshold. Because ice-chart polygons are irregular, some retained patches may intersect polygon boundaries. For these boundary patches, pixels outside the polygon are imputed from valid pixels inside the same polygon, so that background or zero-padding artifacts are not introduced into the MIL bag. Each training bag is constructed from patches contained within an ice-chart polygon. The corresponding polygon-level water/ice type provides the weak supervision signal for the ice–water classifi-cation module. The objective of this module is to learn a binary MIL classifier that aggregates patch-level evidence to predict a bag-level water–ice label: ˆ𝑦 bin  
+
+> 𝑖
+
+= 𝑓 ice  
+
+> 𝜃
+
+(B 𝑖 ), (1) where 𝑦 bin  
+
+> 𝑖
+
+∈ { 0, 1} denotes the polygon-level water-ice label, with 
+
+𝑦 bin  
+
+> 𝑖
+
+= 0 for open water and 𝑦 bin  
+
+> 𝑖
+
+= 1 for sea ice. For polygons labeled as sea ice, the egg-code provides a more de-tailed description of the ice composition. Specifically, it records up to three dominant ice types (𝑆 𝐴 , 𝑆 𝐵 , 𝑆 𝐶 ), listed in descending order of thickness, together with their corresponding partial concentra-tions 𝐶 𝐴 , 𝐶 𝐵 , 𝐶 𝐶 ∈ { 10 , 20 , . . . , 100 } and the total ice concentration 
+
+𝐶𝑇 . Therefore, each ice polygon is treated as a multi-label propor-tion bag: more than one ice type is present, and the label specifies the concentration of each present type. From these quantities, we construct a bag-level proportion vector y𝑖 = [𝑦 𝑖 1, 𝑦 𝑖 2, . . . , 𝑦 𝑖𝐾 ] ∈ Alkaee Taleghan et al. 
+
+Δ𝐾 −1 over 𝐾 = 7 classes: six ice stages and open water. The six ice classes are New/Nilas, Young/Grey/White, Thin First-Year, Medium/Thick First-Year, Old/Multi-Year, and Glacier ice. The open-water component inside an ice polygon is recovered as the comple-ment of the total assigned ice concentration, 𝑦 𝑖, water = 1−Í𝐾 −1 
+
+> 𝑐 =1
+
+𝑦 𝑖𝑐 =
+
+1 − 𝐶𝑇 .The second module operates on ice polygons and learns to es-timate the fine-grained multi-label ice-type composition vector 
+
+y𝑖 from the bag of patches. Its objective is to learn a proportion estimator ˆy𝑖 = 𝑓 prop  
+
+> 𝜃
+
+(B 𝑖 ), ˆy𝑖 ∈ Δ𝐾 −1, (2) that matches the polygon-level concentration vector y𝑖 . This cor-responds to a multi-label proportion learning (MLPL) setting: the supervision signal is provided only as a polygon-level vector of ice-type partial concentrations, while the class identity of each individual patch remains latent. Because ice-chart polygons vary substantially in size and shape, the number of patches per bag 𝑁 𝑖 is naturally variable. The model must therefore aggregate information over bags of different cardinalities rather than assuming a fixed number of instances. 
+
+## 3.2 Ice-Water Classification Module 
+
+The ice-water classification module is a binary MIL classifier that learns to separate ice-containing bags from open-water bags. For this coarse water-ice decision, we use the lower-resolution patch set produced by coarsening the raw 40 m SAR grid by a factor of five. This is appropriate because the water-ice boundary is a coarse, visually dominant SAR signal, whereas finer spatial detail is mainly needed for the later ice-type proportion prediction module. Given the bag defined above, each patch 𝑥 𝑖 𝑗 is passed through a convolutional feature extractor to obtain a patch-level embedding 
+
+hice  
+
+> 𝑖 𝑗
+
+= 𝜙 ice  
+
+> 𝜃
+
+(𝑥 𝑖 𝑗 ), where 𝜙 ice  
+
+> 𝜃
+
+denotes the feature extractor of the ice-water classification module. The backbone consists of a ResNet feature extractor followed by a feature projection layer. For stan-dard three-channel SAR input, the ResNet backbone is used in its conventional form. For multimodal input, the first convolutional layer is modified to accept the larger number of input channels. The pretrained weights corresponding to the first three channels are retained, while the additional channel weights are initialized sepa-rately and learned during training. For each patch embedding h𝑖 𝑗 ,an instance-level classifier predicts the probability that the patch contains ice, 𝑝 ice  
+
+> 𝑖 𝑗
+
+= 𝜎 (𝑔 𝜃 (h𝑖 𝑗 )) , where 𝑔 𝜃 is a multilayer classifier and 𝜎 (·) is the sigmoid activation function. We use attention-guided top-𝑘 MIL aggregation. A learnable two-layer attention network with a Tanh nonlinearity assigns an importance score to each patch: 
+
+𝑎 𝑖 𝑗 = exp  w⊤ 
+
+> 2
+
+tanh (W1h𝑖 𝑗 ) / 𝜏 Í𝑁 𝑖  
+
+> 𝑚 =1
+
+exp  w⊤ 
+
+> 2
+
+tanh (W1h𝑖𝑚 ) / 𝜏  , (3) where W1 ∈ R128 ×𝐷 and w2 ∈ R128 are the learnable parameters of the attention network, and 𝜏 is the attention temperature. The aggregation then selects the 𝑘 patches with the largest attention weights, T𝑖 = TopK 
+
+
+
+{𝑎 𝑖 𝑗 }𝑁 𝑖 
+
+> 𝑗 =1
+
+, 𝑘 
+
+
+
+, where 𝑘 = 10 in our experiments. The bag-level ice probability is computed as the mean of the in-stance predictions over the selected patches: ˆ 𝑦 ice  
+
+> 𝑖
+
+= 1 
+
+> | T 𝑖 |
+
+Í𝑗 ∈ T 𝑖 𝑝 ice  
+
+> 𝑖 𝑗
+
+.The binary module is optimized with a focal loss using only bag-level water–ice labels. This module encourages the feature extractor to learn representations that distinguish ice-related SAR and multi-modal patterns from open water. 
+
+## 3.3 Inter-module Patch Selection 
+
+Between the ice-water classification module and the ice-type pro-portion prediction module, we insert an attention-guided clustering step to select a compact and informative subset of patches from each bag. This step addresses the fact that ice-chart polygons can contain many visually redundant patches, making full-bag training computationally expensive while providing limited additional in-formation. After the ice-water classification module, each patch is passed through the trained module to obtain its feature embedding and attention weight. The patch embeddings are first reduced with PCA and then clustered using 𝑘 -means with 𝑘 = 7. The clusters are unsupervised modes in feature space, not class assignments; 𝑘 = 7slightly over-segments relative to the six ice classes to separate distinct textures—including water-like regions, which occur within ice polygons because the total ice concentration is below 100%— without creating sparsely populated clusters. For each cluster, we compute a cluster relevance score as the mean attention weight of the patches assigned to that cluster. We then select a fixed percent-age of the bag’s patches (the selection budget) and distribute these slots across clusters in proportion to their relevance scores. Thus, clusters with higher attention receive more selected patches, while low-attention clusters contribute fewer or no patches. Within each cluster, selected patches are chosen by their distance to the cluster centroid, with the closest patches retained first. This combines two criteria: attention identifies discriminative regions, while clustering preserves visual diversity and avoids selecting only near-duplicate patches. The selected subset is then used as the input bag for the ice-type proportion prediction module. 
+
+## 3.4 Sea Ice Type Proportion Prediction Module 
+
+The second module addresses the analyst’s fine decision: given that a region contains ice, what is the concentration of each ice type? After inter-module patch selection, the sea ice type proportion pre-diction module operates on higher-resolution patches from the ice polygon. The higher-resolution patches are used here because dis-tinguishing ice stages of development requires finer textural detail than separating water from ice. The target is a multi-label propor-tion vector y𝑖 ∈ Δ𝐾 −1 where up to three ice types may be present in the same polygon with corresponding partial concentrations. This module is trained under a multi-label proportion learning (MLPL) formulation, since each polygon may contain several ice types simultaneously and the supervision specifies their partial concentrations rather than a single class label. Each selected patch 
+
+𝑥 𝑖 𝑗 is encoded by the proportion prediction backbone to obtain a feature vector h𝑖 𝑗 = 𝜙 prop  
+
+> 𝜃
+
+(𝑥 𝑖 𝑗 ), h𝑖 𝑗 ∈ R𝐷 , where 𝜙 prop  
+
+> 𝜃
+
+denotes the backbone of the proportion prediction module. The backbone consists of a ResNet50 feature extractor followed by a feature pro-jection layer. A patch-level instance head then produces class logits 
+
+o𝑖 𝑗 = 𝑟 prop  
+
+> 𝜃
+
+(h𝑖 𝑗 ), o𝑖 𝑗 ∈ R𝐾 .For the standard proportion model, the logits are mapped to patch-level class proportions using a simplex-valued activation, Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+p𝑖 𝑗 = 𝐴 (o𝑖 𝑗 ), where 𝐴 (·) is either softmax or, in the sparse variant, entmax 1.5. The entmax activation allows sparse class-proportion vectors, which is appropriate for ice-chart polygons because only a small subset of the possible ice classes is usually present. The bag-level proportion estimate is obtained by averaging the patch-level proportion vectors over the selected bag: ˆy𝑖 = 1
+
+𝑁 𝑖 𝑁 𝑖 ∑︁ 
+
+> 𝑗 =1
+
+p𝑖 𝑗 . (4) This softmax-mean aggregation defines the baseline proportion model. The model is optimized by matching this bag-level prediction to the egg-code-derived concentration vector: 
+
+Lprop = 𝐷 KL (y𝑖 ∥ ˆy𝑖 ) . (5) 
+
+Evidential Dirichlet Proportion Head. The softmax-mean baseline maps each patch to a normalized class-proportion vector and then averages these vectors across the bag. This imposes a sum-to-one constraint on every patch prediction, so each patch contributes the same total probability mass regardless of its informativeness. In weakly supervised sea-ice proportion prediction, this assumption can be restrictive: ambiguous or texture-poor patches are aver-aged with highly informative patches and may dilute the bag-level prediction toward a less discriminative composition. To relax this constraint, we use an evidential Dirichlet proportion head inspired by evidential deep learning [50]. Rather than applying softmax to the patch logits, the model maps each patch logit vector 
+
+o𝑖 𝑗 to a non-negative evidence vector e𝑖 𝑗 = softplus (o𝑖 𝑗 ) = log (1 +
+
+exp (o𝑖 𝑗 )) . Unlike softmax probabilities, the evidence values are not constrained to sum to one. Their relative magnitudes determine the class direction of the prediction, while their absolute magnitudes allow patches to contribute different amounts of evidence. For polygon 𝑖 , patch-level evidence is aggregated across the bag as E𝑖 = Í𝑁 𝑖  
+
+> 𝑗 =1
+
+e𝑖 𝑗 . Because polygons contain different numbers of patches, the aggregated evidence is normalized by bag size before being converted into a Dirichlet concentration parameter, 𝜶 𝑖 =
+
+1 + 𝑠 E𝑖 /𝑁 𝑖 , where 𝑠 is an evidence scaling factor and 1 denotes a uniform Dirichlet prior. The predicted bag-level proportion vector is the mean of the Dirichlet distribution, ˆ y𝑖 = 𝜶 𝑖 /𝛼 𝑖 0, where 𝛼 𝑖 0 =
+
+Í𝐾 𝑐 =1 𝛼 𝑖𝑐 . Thus, the direction of 𝜶 𝑖 determines the predicted ice-type composition, while the total concentration 𝛼 𝑖 0 provides a relative proxy for the amount of evidence accumulated for the bag. In this work, we use the Dirichlet formulation primarily as an evidence-weighted aggregation mechanism, rather than as a fully calibrated uncertainty estimator. The target polygon-level proportion vector is also represented as a Dirichlet distribution. To avoid degenerate zero entries, the target vector is first Laplace-smoothed as ˜ y𝑖 = (y𝑖 + 𝜀 /𝐾 )/( 1 + 𝜀 ).The smoothed target is then converted into a target Dirichlet pa-rameter 𝜷 𝑖 = 1 + 𝜅 ˜y𝑖 , where 𝜅 controls the concentration of the target distribution. The evidential head is trained by minimizing the closed-form KL divergence between the predicted and target Dirichlet distributions, LDir = 𝐷 KL 
+
+Dir (𝜶 𝑖 ) ∥ Dir (𝜷 𝑖 ). Unlike the simplex KL of the softmax-mean baseline in Eq. (5), which places the target first, the closed-form Dirichlet divergence places the pre-dicted distribution Dir (𝜶 𝑖 ) as its first argument; this is the standard form of 𝐷 KL between two Dirichlet distributions and matches our implementation. Averaged over the 𝐾 classes for scale comparabil-ity with the baseline loss, this divergence expands as 
+
+LDir = 1
+
+𝐾 log Γ(𝛼 𝑖 0) − log Γ(𝛽 𝑖 0)−
+
+> 𝐾
+
+∑︁ 
+
+> 𝑐 =1
+
+[log Γ(𝛼 𝑖𝑐 ) − log Γ(𝛽 𝑖𝑐 )] +
+
+> 𝐾
+
+∑︁ 
+
+> 𝑐 =1
+
+(𝛼 𝑖𝑐 − 𝛽 𝑖𝑐 ) [ 𝜓 (𝛼 𝑖𝑐 ) − 𝜓 (𝛼 𝑖 0)] 
+
+!
+
+, (6) where Γ(·) and 𝜓 (·) denote the gamma and digamma functions, respectively. The 1 /𝐾 factor is a constant rescaling that leaves the optimum unchanged and can equivalently be absorbed into 𝜆 Dir . For the Dirichlet variant, this term constitutes the proportion objective, 
+
+Lprop = 𝜆 Dir LDir , which replaces Eq. (5). This objective encourages the predicted Dirichlet mean to match the polygon-level ice-type proportions while also regularizing the total evidence scale. A prediction with an incorrect class compo-sition and large concentration is penalized more strongly than a similarly incorrect but low-evidence prediction. However, since no patch-level confidence or uncertainty labels are available, we interpret 𝛼 𝑖 0 only as a relative confidence proxy. Calibration of this quantity is evaluated separately and is not assumed by the model formulation. 
+
+## 3.5 Multi-Modal Extensions 
+
+The proportion prediction module described above operates exclu-sively on SAR imagery. While SAR captures the textural and geo-metric signatures of ice surfaces, the ice type present in a polygon is also influenced by thermodynamic and oceanographic conditions that a SAR snapshot alone cannot observe. We extend the propor-tion prediction module to incorporate three complementary sources of environmental context: AMSR2 passive microwave brightness temperatures, ERA5 atmospheric reanalysis fields, and auxiliary geometric scalars. These are fused with the SAR backbone in one of two ways, depending on how the non-SAR channels are coupled with the spatial feature extractor. Each patch is represented as a 16-channel tensor. The channels are organized as follows: three SAR channels (HH, HV, and inci-dence angle), one distance-to-land channel, four AMSR2 brightness temperature channels ( 𝑇 𝐻 
+
+> 18 .7
+
+, 𝑇 𝑉 
+
+> 18 .7
+
+, 𝑇 𝐻 
+
+> 36 .5
+
+, 𝑇 𝑉 
+
+> 36 .5
+
+), five ERA5 channels (rotated 10 m u and v wind components, 2 m temperature, total column water vapor, and total column cloud liquid water), two lati-tude/longitude channels, and one normalized month channel. These inputs provide complementary information: SAR captures local backscatter texture and structure at patch resolution, while AMSR2, ERA5, geolocation, and month provide broader thermodynamic, atmospheric, and geographic context. Because these non-SAR vari-ables are generally smoother and less spatially resolved than SAR within an individual patch, we evaluate two fusion strategies. 
+
+Early Fusion. In the early-fusion variant, all 16 channels are passed jointly through the ResNet50 backbone. The first convolu-tional layer is adapted to accept 16 input channels, with ImageNet weights retained for the three SAR channels and the remaining thirteen initialized to zero. Alkaee Taleghan et al. 
+
+Late Fusion. In the late-fusion variant, SAR channels are pro-cessed by the ResNet50 backbone while the thirteen environmental channels are spatially averaged and encoded by a shallow MLP, producing henv  
+
+> 𝑖 𝑗
+
+∈ R𝐷 env . The two feature vectors are concatenated before the instance proportion head. Since AMSR2, ERA5, and auxiliary scalars are spatially quasi-constant at patch resolution, spatial averaging is appropriate and avoids applying convolutional processing to uninformative spatial structure. 
+
+Modality-Guided Auxiliary Regularization. Building on the late-fusion architecture, this variant adds two training-time auxiliary regularizers while leaving the inference architecture unchanged. Both regularizers are shallow MLPs trained end-to-end with the proportion head: one encourages consistency between the predicted total ice concentration and an AMSR2-derived ice-concentration signal, and the other provides an ERA5-driven environmental-compatibility prior. The first auxiliary loss encourages the predicted total ice con-centration to be consistent with a signal learned from AMSR2 passive-microwave brightness temperatures. A three-layer MLP 
+
+𝑔 SIC  
+
+> 𝜃
+
+maps the bag-mean AMSR2 vector ¯ sAMSR2  
+
+> 𝑖
+
+∈ R4, formed from 
+
+(18 .7H , 18 .7V , 36 .5H , 36 .5V ), to a scalar ice fraction ˆ 𝑐 𝑖 ∈ [ 0, 1]. The MLP uses hidden layers of width 32 and 16 with ReLU activations and a final sigmoid. The proportion head is encouraged to predict an ice total, defined as one minus the water-class proportion, that matches this estimate: 
+
+LSIC = ∑︁ 
+
+> 𝑐 ≠water
+
+ˆ𝑦 𝑖𝑐 − 𝑔 SIC 
+
+> 𝜃
+
+
+
+¯sAMSR2 
+
+> 𝑖
+
+!2
+
+. (7) We learn the AMSR2-derived ice-concentration estimate directly from the bag-mean brightness temperatures, coupling the SAR-driven proportion estimate to a microwave-derived total-ice signal. The second auxiliary loss, Lenv , is a learned environmental-compatibility regularizer. Ice type reflects thickness and age accu-mulated over weeks to years and is interpreted primarily from SAR backscatter and texture, supplemented by passive-microwave and optical/infrared imagery [7, 30]. Atmospheric state does not deter-mine ice type, but it correlates with ice growth and melt regimes, so ERA5 is used only as a soft, data-driven prior over plausible ice types. A two-layer MLP 𝑔 env  
+
+> 𝜃
+
+maps the bag-mean ERA5 vector ¯e𝑖 ∈ R5, consisting of rotated 10 m 𝑢 and 𝑣 wind components, 2 m temperature, total column water vapor, and total column cloud liquid water, to a per-class compatibility vector 𝝅 𝑖 ∈ [ 0, 1]𝐾 . The MLP uses one hidden layer of width 32 with ReLU activation and a final sigmoid. Each entry 𝜋 𝑖𝑐 is an end-to-end learned compati-bility score. The regularizer discourages the proportion head from assigning mass to classes with low learned compatibility: 
+
+Lenv (𝑖 ) =
+
+> 𝐾
+
+∑︁ 
+
+> 𝑐 =1
+
+ˆ𝑦 𝑖𝑐 
+
+ 1 − 𝜋 𝑖𝑐 
+
+. (8) The final training objective is 
+
+L = Lprop + 𝜆 SIC LSIC + 𝜆 env Lenv , (9) where 𝜆 SIC and 𝜆 env control the relative contribution of the two aux-iliary terms. Both auxiliary heads are trained end-to-end from the polygon-level objective, with the environmental loss acting as a soft regularizer whose influence decreases as the learned compatibility 
+
+Table 1: Mapping from WMO stage-of-development codes to target classes.               
+
+> ID Class WMO codes
+> C0 New/Nilas 81, 82 C1 Young/Grey/White 83, 84, 85 C2 Thin First-Year 87, 88, 89 C3 Med./Thick First-Year 86, 91, 93 C4 Old/Multi-Year 95, 96, 97 C5 Glacier 98
+
+Table 2: Input channels for SAR-only and multimodal set-tings.         
+
+> Group Definition
+> SAR + inc., 3 ch. Sentinel-1 HH and HV backscatter and incidence angle. Dist.-to-land, 1 ch. Distance to nearest land/coastline. AMSR2, 4 ch. Brightness temperatures at 18.7 and 36.5 GHz, H/V polariza-tions. ERA5, 5 ch. Near-surface wind, temperature, and atmospheric water vari-ables. Geo. + month, 3 ch. Latitude, longitude, and normalized acquisition month. SAR-only 3 channels: Sentinel-1 HH and HV + incidence. Multimodal 16 channels: all groups above.
+
+scores increase. Its contribution is further limited by 𝜆 env = 0.1, with 𝜆 SIC = 0.5. Both auxiliary losses are used only during training; at inference, predictions are produced by the proportion head alone. 
+
+## 4 Experimental Evaluation 
+
+This section describes the dataset, preprocessing pipeline, model configurations, training setup, evaluation metrics, baselines, and experimental results used to assess the proposed framework. 
+
+## 4.1 Dataset and Preprocessing 
+
+We evaluate on the raw AI4Arctic Sea Ice Challenge Dataset [6, 54], released by DTU, DMI, and NERSC for the ESA AutoICE chal-lenge. The dataset contains 513 Sentinel-1 Extra-Wide GRD scenes acquired over the Canadian and Greenlandic Arctic between Janu-ary 2018 and December 2021. Each scene has 40 m pixel spacing, dual-polarization HH/HV SAR channels, co-located AMSR2 passive-microwave measurements, ERA5 weather variables, and manually produced WMO egg-code ice charts from the Greenland Ice Service and Canadian Ice Service. We use the raw dataset because it pre-serves the complete polygon-level egg-code information, including all ice types and their partial concentrations. This proportion-based supervision is required by the proposed model formulation. WMO stage-of-development codes are grouped into six ice-type classes, listed in Table 1; an additional open-water class 𝐶 6 is recovered within each ice polygon as the residual 1 − 𝐶𝑇 .Each ice-chart polygon is rasterized onto the SAR grid and tiled into non-overlapping 20 × 20-pixel patches. Before patch extraction, 203 polygons with inconsistent concentration labels were removed, retaining only those satisfying 𝐶 𝑇 = 𝐶 𝐴 +𝐶 𝐵 +𝐶 𝐶 . Candidate patches are kept when at least 10% of their pixels lie inside the polygon; remaining out-of-polygon pixels are filled using nearest-neighbour imputation from in-polygon pixels. Module 2 uses patches at the raw SAR resolution (40 m), while Module 1 uses a coarser patch set obtained by downsampling the SAR grid by a factor of 5 (200 m). Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+Figure 3: Dataset label statistics. (a) Class presence frequency across ice classes. (b) Distribution of the number of ice types per polygon. 
+
+Auxiliary non-SAR channels are resampled using bilinear inter-polation to the SAR grid. Patch locations are defined at the raw grid-spacing and projected to the coarser grid to preserve align-ment. Before inter-module patch selection, bags contained 1–25,414 raw-resolution patches, with a mean of 2,973.4 patches per bag. The input channels for each setting are summarised in Table 2. To ensure reliable bag-level estimates, we exclude polygons with fewer than 1 patch for Module 1 and fewer than 10 patches for Module 2. All channels are 𝑧 -score normalized using training-set statistics, and bags are randomly split into 70 / 15 / 15 train, validation, and test sets. To assess possible scene-level overlap under this random polygon split, we additionally evaluate a scene-disjoint split in which all polygons from the same Sentinel-1 scene are assigned to a single subset. After filtering, Module 1 contains 7,118 bags: 628 water and 6,490 ice, split into 4,984 training, 1,067 validation, and 1,067 test bags. Module 2 contains 6,136 ice bags after removing polygons with fewer than 10 valid patches, split into 4,296 training, 920 validation, and 920 test bags. Figure 3 summarizes the label statistics of the ice-chart polygon dataset. Medium/Thick FY is the most frequent class, appearing in 53.8% of bags, while Glacier (generally icebergs originating from land-ice) is the rarest at 12.7%. Most polygons are multi-label: 42.4% contain two ice types and 35.8% contain three, meaning 78.2% con-tain more than one ice type. Figure 4 shows per-class concentration distributions conditioned on class presence, by polygon count (solid) and patch area (hatched). Medium/Thick FY is the most common class (53 .8% of polygons) and Glacier the rarest (12 .7%); 78 .2% of polygons are multi-label. Patch-area weighting shifts these: Glacier covers just 2 .6% of ice area, while Old/Multi-Year rises from 31 .7% to 47 .6%. To address imbalance in the SAR-only model, we use three sampling strategies: undersampling bags dominated by a frequent class with no rare class present, ensuring each rare class appears at least once per mini-batch, and repeating bags with ≥ 60% con-centration of a target class 3 ×. The multimodal model uses the unchanged training set so that the effect of auxiliary channels can be evaluated without sampling interventions. 
+
+## 4.2 Baselines 
+
+To evaluate the proposed framework, we compare against super-vised IceBench [55] patch classifiers (CNN, AlexNet, VGG-16, DenseNet-121, and ResNet-50/101/152). Each patch is assigned the domi-nant ice type of its parent polygon (arg max 𝑐 𝑦 𝑐 ) and trained with 
+
+Figure 4: Per-class concentration distributions by polygon count (solid) and by patch area (hatched). 
+
+weighted cross-entropy; a WeightedRandomSampler further bal-ances training samples. Bag-level proportions are obtained by av-eraging patch-level softmax predictions. For weakly supervised baselines, we adapt DeepLLP [3], ABMIL [22], and TransMIL [51] to the same polygon-level proportion setting. In our implementation, DeepLLP uses a ResNet-50 patch encoder followed by a softmax instance-proportion head, and bag proportions are obtained by aver-aging patch-level predictions. ABMIL replaces the uniform averag-ing of patch-level predictions with learned attention-based aggrega-tion; in our experiments, we evaluate its class-specific attention vari-ant. TransMIL is adapted as a context encoder: patch embeddings are first contextualized with Transformer self-attention, and the resulting patch-level proportions are then aggregated and trained against the polygon-level concentration vector. All weakly super-vised baselines use the same selected bags and are optimized using KL-based proportion supervision. We additionally evaluate two internal LLP variants. Softmax + WKL uses a single-head propor-tion model with softmax-normalized patch predictions, bag-level averaging, and weighted KL divergence to address class imbalance in the concentration targets. Entmax + asym.(asymmetric) replaces softmax with entmax 1.5 to obtain sparser patch-level distributions and adds an asymmetric penalty to reduce underprediction of rare or high-concentration ice classes. Softmax LLP and Entmax LLP are internal LLP variants included as controlled weakly-supervised comparisons. 
+
+## 4.3 Experimental Setup 
+
+Both modules use separate ResNet-50 backbones with 512d feature projections and dropout 0 .2. Module 1 is trained as an attention-top-
+
+𝑘 MIL classifier with 𝑘 = 10, attention temperature 𝜏 = 0.5, focal loss ( 𝛾 = 2, 𝛼 = 0.25), Adam optimizer, learning rate 5 ×10 −5, weight decay 10 −5, and early stopping patience 15, for up to 100 epochs. Module 2 is trained on the top 25% attention-selected patches. For the SAR-only Dirichlet model, module 2 is trained for up to 200 epochs using Adam with learning rate 5 ×10 −5, weight decay 10 −5,cosine scheduling, and early stopping patience 10. The Dirichlet head uses mean-scale evidence aggregation with 𝑠 = 𝜅 = 100, 
+
+𝜀 = 0.01, and 𝜆 Dir = 1. For the multimodal models, module 2 is trained for up to 100 epochs using Adam with learning rate 10 −4,weight decay 10 −5, cosine scheduling, and early stopping patience 15. All experiments were run on an NVIDIA RTX PRO 6000 GPU. Alkaee Taleghan et al. 
+
+Table 3: Module 1 test results (binary water vs. ice). 
+
+Configuration Ch. Acc. Prec. Rec. F1 AUC 
+
+SAR-only 3 90.6 99.0 90.7 94.7 96.1 Multimodal Early Fusion 16 84.4 97.6 84.9 90.8 87.9 
+
+## 4.4 Evaluation Metrics 
+
+For evaluation metric, the ice-water classification module is eval-uated as a binary bag-level classification problem. We report bag-level accuracy, precision, recall, F1 score, and AUROC, with Ice treated as the positive class. For the sea ice type proportion predic-tion module, the primary metric is per-class mean absolute error (MAE) between the predicted and true bag-level proportions: MAE 𝑐 = 1
+
+|B 𝑐 |∑︁ 𝑖 ∈ B 𝑐 
+
+|𝑦 𝑖𝑐 − ˆ𝑦 𝑖𝑐 | . (10) Here, B𝑐 denotes the set of test bags in which class 𝑐 is present. The overall MAE is reported as the unweighted mean of the per-class MAE values across the ice classes. Presence detection is evaluated by thresholding predicted proportions, ˆ 𝑧 𝑖𝑐 = ⊮[ ˆ𝑦 𝑖𝑐 > 0.1], using chart-derived labels 𝑧 𝑖𝑐 as ground truth. We report class-wise binary F1 scores; the reported average (Avg) is unweighted average across ice classes. 
+
+## 4.5 Results 
+
+Table 3 reports module 1 test metrics across both configurations. The SAR-only attention-topk model achieves an F1 score of 94.7 and AUC of 96.1, establishing a strong binary detection baseline. Its high precision (99.0) shows that ice predictions are rarely false positives, while recall (90.7) indicates that only a small fraction of ice polygons are missed. The 16-channel multimodal early-fusion model performs worse, with F1=90.8 and AUC=87.9. This likely reflects a scale mismatch: the auxiliary AMSR2, ERA5, geolocation, and seasonal channels are coarse and have similar or the same values for large groups of neighboring patches, so they add limited information for this binary task and may dilute the SAR signal. Table 4 reports per-class proportion MAE and Table 5 reports per-class presence F1 for SAR-only input. Supervised IceBench classifiers perform poorly because dominant-class patch labels do not capture the mixed-proportion structure of ice-chart polygons. DenseNet-121 is the strongest supervised baseline, but it still falls well behind all weakly supervised proportion-learning methods. Proportion-learning baselines improve substantially by optimizing directly on polygon-level concentration vectors. DeepLLP lowers MAE to 0.275 and raises F1 to 40.0, while ABMIL performs worst among the proportion-learning baselines, suggesting that shared attention pooling is insufficient for multi-label ice mixtures. Trans-MIL improves further through inter-patch context, reaching 0.267 MAE and 47.6 F1. The LLP internal variants that built on the same backbone, bags, and KL supervision as our model perform best among non-Dirichlet methods: WKL and Entmax raise F1 to 52.0 and 54.2. However, both retain higher 𝐶 3 MAE than the proposed model, indicating residual bias in high-concentration proportion prediction. The proposed Dirichlet head achieves the best overall 
+
+Table 4: Module 2 per-class proportion MAE — SAR-only.                                                                                                              
+
+> Method 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6All
+> Supervised classifiers (IceBench)
+> CNN 0.278 0.319 0.386 0.530 0.265 0.387 0.353 0.361 AlexNet 0.302 0.338 0.397 0.530 0.277 0.362 0.366 0.368 VGG-16 0.235 0.320 0.350 0.514 0.233 0.331 0.284 0.331 DenseNet-121 0.229 0.285 0.285 0.493 0.207 0.233 0.294 0.289 ResNet-50 0.255 0.284 0.359 0.494 0.217 0.288 0.322 0.316 ResNet-101 0.264 0.314 0.378 0.529 0.245 0.362 0.341 0.349 ResNet-152 0.235 0.301 0.385 0.515 0.250 0.376 0.366 0.344
+> Weakly-supervised proportion-learning baselines
+> DeepLLP 0.232 0.249 0.302 0.328 0.256 0.283 0.299 0.275 ABMIL 0.221 0.241 0.341 0.342 0.247 0.322 0.287 0.286 TransMIL 0.194 0.222 0.315 0.391 0.253 0.226 0.266 0.267 Softmax + WKL 0.173 0.222 0.323 0.342 0.198 0.273 0.288 0.255 Entmax + asym 0.168 0.218 0.308 0.387 0.202 0.237 0.200 0.253
+> Proposed model
+> Dirichlet 0.184 0.235 0.276 0.320 0.207 0.260 0.168 0.247
+
+Table 5: Module 2 per-class presence F1 — SAR-only.                                                                                                           
+
+> Method 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6Avg
+> Supervised classifiers (IceBench)
+> CNN 15.5 11.9 10.3 0.0 25.3 11.3 12.0 12.4 AlexNet 15.9 3.5 10.1 0.0 17.7 10.7 4.7 9.7 VGG-16 16.6 8.6 16.6 0.0 34.1 13.1 34.5 14.8 DenseNet-121 17.9 12.0 39.1 3.4 50.2 20.6 31.6 23.9 ResNet-50 16.0 14.9 25.0 4.7 42.8 14.3 16.5 19.6 ResNet-101 16.6 11.2 10.9 0.0 32.9 11.7 16.6 13.9 ResNet-152 16.2 8.8 14.8 0.0 39.6 10.7 7.5 15.0
+> Weakly-supervised proportion-learning baselines
+> DeepLLP 10.7 48.7 47.7 71.2 47.1 14.6 47.5 40.0 ABMIL 5.4 48.5 43.4 71.6 49.7 0.0 52.9 36.4 TransMIL 28.0 48.4 47.6 71.6 55.5 34.6 66.2 47.6 Softmax + WKL 44.1 50.2 54.0 71.0 51.9 40.7 55.7 52.0 Entmax + asym 42.8 52.2 52.2 68.8 59.6 49.8 73.3 54.2
+> Proposed Model
+> Dirichlet 46.4 54.1 54.6 73.4 62.8 37.3 76.6 54.8
+
+performance, with 0.247 MAE and 54.8 F1, outperforming all base-lines on both aggregate metrics. On a per-class basis it attains the lowest MAE for 𝐶 2, 𝐶 3, and 𝐶 6 and the highest F1 for every class except 𝐶 5. Its largest MAE reductions over Entmax occur on 𝐶 3
+
+(0.387 →0.320), 𝐶 2 (0.308 →0.276), and 𝐶 6 (0.200 →0.168). By using non-negative patch evidence instead of a strict softmax constraint, the model down-weights ambiguous patches and reduces dilution from boundary or texture-poor regions. We also evaluate two instance-label-reconstruction LLP methods, EasyLLP [5] and LLP-BP [18], adapted to the same bag structure. EasyLLP produced a proportion MAE of 0.372, while LLP-BP im-proved to 0.268. However, both methods still underperformed the Dirichlet head. This suggests that methods aimed at reconstructing instance labels from bag proportions are less suitable for ambiguous sea-ice patches, whereas the Dirichlet head better models patch contributions as uncertain evidence. Table 6 reports per-class proportion MAE and Table 7 reports per-class presence F1 for multimodal input. We denote the late-fusion model with both modality-guided auxiliary regularizers as LF + Aux-Cons. As the supervised multimodal baseline, we use DenseNet-121, which was selected because it achieved the best performance among the supervised classifiers in the SAR-only com-parison. DenseNet-121 obtains an overall MAE of 0 .307, while all Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+Table 6: Module 2 per-class proportion MAE — Multimodal.                                    
+
+> Method 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6All
+> Supervised classifier
+> DenseNet-121 0.300 0.321 0.269 0.279 0.333 0.340 0.283 0.307
+> Proposed Model (multimodal)
+> Early Fusion 0.208 0.224 0.276 0.176 0.216 0.233 0.228 0.222 Late Fusion 0.199 0.225 0.202 0.168 0.224 0.182 0.204 0.200 Late Fusion + Aux-Cons 0.187 0.213 0.206 0.172 0.204 0.182 0.203 0.194
+
+Table 7: Module 2 per-class presence F1 — Multimodal.                                    
+
+> Method 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6Avg
+> Supervised classifier
+> DenseNet-121 30.0 44.1 57.8 69.0 55.5 48.0 53.5 50.7
+> Proposed model (multimodal)
+> Early Fusion 70.5 72.1 70.1 85.7 82.3 60.0 73.2 73.4 Late Fusion 77.4 74.3 72.4 85.0 87.6 64.6 77.1 76.9 Late Fusion + Aux-Cons 77.9 75.1 74.8 88.4 85.0 63.1 78.9 77.4
+
+Table 8: Module-level and end-to-end performance of the proposed framework.           
+
+> Framework M1 F1 M2 MAE M2 F1 E2E MAE E2E F1
+> SAR-only 94.7 0.247 54.8 0.271 50.5 Multimodal 90.8 0.194 77.4 0.208 69.4
+
+proposed multimodal variants achieve much lower errors. Early Fu-sion reduces the overall MAE to 0 .222, Late Fusion further improves it to 0 .200, and the LF + Aux-Cons model obtains the best overall MAE of 0 .194. Late Fusion performs better than Early Fusion, sug-gesting that SAR and auxiliary environmental variables are more effective when processed separately before feature combination. This is likely because AMSR2, ERA5, geolocation, and seasonal vari-ables provide broader contextual information, while SAR carries finer spatial and textural information. The LF + Aux-Cons model gives the lowest MAE for 𝐶 0, 𝐶 1, 𝐶 4, and 𝐶 6, and matches the best performance for 𝐶 5, showing that the auxiliary regularizers im-prove proportion prediction across most classes. The presence F1 results show a similar trend. The supervised DenseNet-121 baseline reaches an average F1 of only 50 .7, while Early Fusion improves this to 73 .4 and Late Fusion to 76 .9. The LF + Aux-Cons model achieves the best average F1 of 77 .4. Overall, auxiliary environmental in-puts improve both proportion and presence prediction, with the LF + Aux-Cons model performing best. Late Fusion outperforms Early Fusion by matching each modality to its native scale: AMSR2, ERA5, and geographic scalars are quasi-constant within a patch, so Early Fusion wastes backbone capacity convolving near-flat fields, whereas Late Fusion averages them into a MLP and fuses only at the head, leaving SAR texture intact. Table 8 compares Module 2 performance evaluated indepen-dently with the full end-to-end pipeline. End-to-end composition introduces only a modest increase in MAE, while the reduction in F1 is more noticeable due to errors propagated from Module 1. This shows that most of the end-to-end degradation is caused by gating errors rather than by proportion estimation in Module 2. Table 9 compares the random polygon-level and scene-disjoint splits. The proposed Dirichlet model remains the best-performing 
+
+Table 9: Comparison of random polygon-level and scene-disjoint evaluation.                  
+
+> Method Random split Scene-disjoint MAE F1 MAE F1
+> Dirichlet 0.247 54.8 0.260 51.3
+> Entmax + asym 0.253 54.2 0.265 50.0 TransMIL 0.267 47.6 0.273 34.6
+
+Table 10: Multimodal ablation study (Module 2).                                            
+
+> Group Configuration 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6All / F1
+> Auxiliary-regularizer Ablation (Late Fusion Backbone)
+> No aux. (Late Fusion) 0.199 0.225 0.202 0.168 0.224 0.182 0.204 0.200 / 76.9 SIC consistency only 0.194 0.219 0.198 0.170 0.212 0.189 0.205 0.197 / 76.5 Env. compatibility only 0.204 0.223 0.208 0.168 0.207 0.183 0.196 0.199 / 76.4 Both (LF + Aux-Cons) 0.187 0.213 0.206 0.172 0.204 0.182 0.203 0.194 /77.4
+
+method under the stricter scene-disjoint evaluation, indicating that its advantage is preserved on unseen scenes. 
+
+Ablation and Sensitivity Analysis. Table 10 reports the auxiliary-regularizer ablation for the multimodal late fusion backbone. Re-moving both auxiliary regularizers already achieves a strong MAE of 0.200 and mean ice-class F1 of 76.9, confirming that the late-fusion architecture itself captures most of the gain from auxiliary environ-mental inputs. Adding the SIC consistency alone reduces overall MAE to 0.197, with improvements on the thinner ice classes 𝐶 0–𝐶 2,consistent with passive-microwave brightness temperatures being particularly informative for distinguishing multi-year from first-year ice. The environmental-compatibility regularizer alone yields a smaller MAE improvement (0.199), with its gains concentrated on 
+
+𝐶 4 (0.207) and 𝐶 6 (0.196), suggesting that ERA5 atmospheric state provides complementary context. Combining both auxiliary regu-larizers achieves the best overall MAE of 0.194 and mean ice-class F1 of 77.4, achieving the lowest MAE on three of the six ice classes (𝐶 0, 𝐶 1, 𝐶 4) and matching the best result on 𝐶 5. The complementary class-level behavior of the two regularizers — SIC improving the thinner classes 𝐶 0–𝐶 2 and environmental compatibility improving 
+
+𝐶 4 and 𝐶 6 — explains why their combination is better than either alone. Table 11 reports sensitivity of the Dirichlet head to its two key hyperparameters on the SAR-only configuration. The evidence scal-ing factor 𝑠 controls the magnitude of the Dirichlet concentration relative to the KL target (25% patch budget). At 𝑠 = 50 the model under-concentrates (MAE 0.248, F1 54.5), while 𝑠 = 150 introduces over-sharpening that hurts 𝐶 2 and 𝐶 3 (MAE 0.258, F1 50.9). The default 𝑠 = 100 achieves the best MAE (0.247) and F1 (54.8), match-ing the target 𝜅 = 100 scale as intended by the design. Replacing mean-scale aggregation with an unnormalized sum raises 𝐶 3 MAE from 0.320 to 0.407 and overall MAE to 0.260 with F1 dropping to 50.1, confirming that bag-size invariance is necessary for stable proportion estimates across polygons of varying patch count. The patch-selection budget (top-%) controls what fraction of each poly-gon’s patches is forwarded from Module 1 to Module 2. Using all patches gives the best MAE (0.222), while a 25% budget reduces computation but worsens MAE to 0.247 by discarding useful concen-tration information. A 75% budget nearly matches the no-selection Alkaee Taleghan et al. 
+
+Table 11: Dirichlet head sensitivity analysis (SAR-only). Per-class values are MAE.                                         
+
+> Configuration 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6MAE F1
+> Evidence scale sensitivity ( 𝑠 ) — 25% patch budget
+> 𝑠 =50 0.189 0.216 0.263 0.350 0.214 0.254 0.175 0.248 54.5
+> 𝑠 =100 (default) 0.184 0.235 0.276 0.320 0.207 0.260 0.168 0.247 54.8
+> 𝑠 =150 0.178 0.213 0.313 0.346 0.206 0.292 0.158 0.258 50.9 Unnormalized sum agg. 0.173 0.218 0.293 0.407 0.208 0.261 0.169 0.260 50.1
+> Patch-selection budget sensitivity ( 𝑠 =100 )
+> 25% 0.184 0.235 0.276 0.320 0.207 0.260 0.168 0.247 54.8 50% 0.186 0.213 0.270 0.358 0.205 0.240 0.147 0.245 55.4 75% 0.182 0.225 0.236 0.325 0.203 0.184 0.162 0.226 61.1 100% (no clustering) 0.179 0.233 0.244 0.323 0.183 0.172 0.135 0.222 60.8
+
+Table 12: Computational efficiency at different patch-selection budgets.                                     
+
+> SAR-only Multimodal (LF + Aux-Cons) Budget Train Infer. GPU Train Infer. GPU
+> (s/epoch) (ms/bag) (GB) (s/epoch) (ms/bag) (GB) 25% 73.1 44.6 6.5 88.8 54.0 7.0 50% 124.3 97.1 12.0 151.7 98.9 12.7 75% 165.5 113.7 16.9 224.3 142.8 17.9 100% 262.6 188.1 25.3 317.9 307.2 25.8
+
+baseline (MAE 0.226, F1 61.1). Notably, the multimodal variants reach much stronger results (0.194 MAE) at only the 25% budget, indicating that auxiliary AMSR2 and ERA5 context partly substi-tutes for patch quantity: with discriminative environmental signal per patch, fewer patches are needed to recover accurate polygon-level proportions. In terms of computational cost, Table 12 shows that reducing the patch budget from 100% to 25% provides approxi-mately 3 .6× faster training in both configurations, 4 .2× (5 .7×) faster SAR-only (multimodal) inference, and roughly 4 × lower peak GPU memory. Table 13 reports component ablations on the SAR-only Dirichlet head, all evaluated using all patches. Bag-size calibration scales the Dirichlet concentration parameter by a log-amplified size factor (𝛽 = 0.25, 𝑁 ref = 2973), so that larger polygons produce sharper posteriors and smaller polygons retain a stronger prior pull. This reduces MAE from 0.222 to 0.219 and raises mean ice-class F1 from 60.8 to 62.7, with the largest gains on 𝐶 0 and 𝐶 1, at the cost of small degradations on 𝐶 2, 𝐶 4, and 𝐶 5. Uncertainty-weighted training multiplies each bag’s loss by a confidence weight derived from the Dirichlet vacuity, conf 𝑤 = clamp (1 − 𝐾 /𝛼 0, min = 0.1), down-weighting ambiguous bags early in training when the evidence head is uninformative. This yields the best overall result, reducing MAE to 0.213 and raising mean ice-class F1 to 63.8, with notable gains on 𝐶 3 (0.292 vs. 0.323) and 𝐶 5 (0.166 vs. 0.172). Self-training with pseudo-labels blends each bag’s KL target with the model’s own high-confidence Dirichlet prediction after a warm-up of 30 epochs. Bags whose total evidence 𝛼 0 ≥ 150 are assigned a blended target ˜ y𝑖 = 0.5 y𝑖 + 0.5 ˆ y𝑖 , where ˆ y𝑖 = 𝜶 𝑖 /𝛼 𝑖 0 is the model’s current estimate; ambiguous bags retain their original egg-code labels. This achieves MAE 0.216, with gains on 𝐶 0–𝐶 4 (e.g., 𝐶 1: 0.211 vs. 0.233), but degrades the rare 𝐶 5 class (0.206 vs. 0.172) and yields lower mean F1 (61.7) than uncertainty weighting, suggesting that blending 
+
+Table 13: Dirichlet head component ablation (SAR-only), 100% patch budget. F1 = mean F1 over ice classes (%).                                
+
+> Configuration 𝐶 0𝐶 1𝐶 2𝐶 3𝐶 4𝐶 5𝐶 6MAE F1
+> Bag-size calibration
+> Without calibration 0.179 0.233 0.244 0.323 0.183 0.172 0.135 0.222 60.8 With calibration ( 𝛽 =0.25 )0.160 0.217 0.247 0.317 0.191 0.182 0.133 0.219 62.7
+> Uncertainty weighting
+> Without weighting 0.179 0.233 0.244 0.323 0.183 0.172 0.135 0.222 60.8 Uncertainty-weighted (floor =0.1)0.175 0.215 0.245 0.292 0.186 0.166 0.134 0.213 63.8
+> Self-training with pseudo-labels
+> Without pseudo-labels 0.179 0.233 0.244 0.323 0.183 0.172 0.135 0.222 60.8 Pseudo-labels ( 𝑤 =0.5,𝛼 0≥150 ) 0.159 0.211 0.241 0.305 0.176 0.206 0.136 0.216 61.7
+
+model predictions into rare-class targets can degrade class-presence detection. 
+
+## 5 Conclusions and Future Work 
+
+We presented a weakly supervised framework for sea ice type pro-portion prediction from SAR imagery using only WMO egg-code polygon labels, without patch-level annotation. The framework first separates water from ice, then estimates multi-label ice-type proportions within ice polygons. The SAR-only Dirichlet model improves over the baselines by replacing fixed softmax aggregation with evidential aggregation, allowing patches to contribute accord-ing to their evidence. Adding multimodal auxiliary context further improves performance. The late-fusion model with both auxiliary regularizers achieves the best results, with an overall MAE of 0.194 and mean ice-class F1 of 77.4%. Future work will extend the framework in several directions. First, calibrating the Dirichlet evidence could provide meaningful uncertainty estimates for identifying ambiguous polygons that re-quire analyst review, and could support an active-learning strategy that prioritizes uncertain samples for expert annotation. Second, the current two-module architecture could be extended toward joint multi-task learning with a shared feature encoder, while graph-based spatial modeling could explicitly capture relationships among neighboring patches. 
+
+## Acknowledgments 
+
+This research was funded by the National Science Foundation (NSF) under grant number 2531101. 
+
+## References 
+
+[1] Jaume Amores. 2013. Multiple instance classification: Review, taxonomy and comparative study. Artificial Intelligence 201 (2013), 81–105. doi:10.1016/j.artint. 2013.06.003 [2] Stuart Andrews, Ioannis Tsochantaridis, and Thomas Hofmann. 2002. Support Vector Machines for Multiple-Instance Learning. In Advances in Neural Infor-mation Processing Systems (NIPS) , Vol. 15. MIT Press, Cambridge, MA, USA, 561–568. [3] Ehsan Mohammady Ardehaly and Aron Culotta. 2017. Co-Training for Demo-graphic Classification Using Deep Learning from Label Proportions. In Proceed-ings of the IEEE International Conference on Data Mining Workshops (ICDMW) .IEEE, New Orleans, LA, USA, 1017–1024. [4] Hugo Boulze, Anton Korosov, and Julien Brajard. 2020. Classification of Sea Ice Types in Sentinel-1 SAR Data Using Convolutional Neural Networks. Remote Sensing 12, 13 (2020), 2165. doi:10.3390/rs12132165 [5] Robert Busa-Fekete, Hee Sung Choi, Travis Dick, Claudio Gentile, and Andres Munoz Medina. 2023. Easy Learning from Label Proportions. In Advances in Neural Information Processing Systems (NeurIPS) , Vol. 36. Curran Associates, Inc., Red Hook, NY, USA, 14957–14968. Multi-Label Proportion Learning for Sea-Ice Type Prediction 
+
+[6] Jørgen Buus-Hinkler, Tore Wulf, Andreas Rønne Stokholm, Anton Korosov, Roberto Saldo, Leif Toudal Pedersen, David Arthurs, Rune Solberg, Nicolas Longépé, and Matilde Brandt Kreiner. 2022. Raw AI4Arctic Sea Ice Challenge Dataset. doi:10.11583/DTU.21284967.v3 [7] Canadian Ice Service. 2005. Manual of Standard Procedures for Observing and Reporting Ice Conditions (MANICE) (9 ed.). Environment and Climate Change Canada. Stage of development defined by ice thickness and age; Chapters 1 and 3. [8] Marc-André Carbonneau, Veronika Cheplygina, Eric Granger, and Ghyslain Gagnon. 2018. Multiple instance learning: A survey of problem characteristics and applications. Pattern Recognition 77 (2018), 329–353. doi:10.1016/j.patcog. 2017.10.009 [9] U.S. National Ice Center. 2022. U.S. National Ice Center Arctic and Antarctic Sea Ice Charts in SIGRID-3 Format, Version 1. [10] X. Chen, M. Patel, F. Pena Cantu, J. Park, J. Noa Turnes, L. Xu, and D. A. Clausi. 2023. MMSeaIce: Multi-task mapping of sea ice parameters from AI4Arctic Sea Ice Challenge Dataset. EGUsphere (2023), 1–17. [11] Yann Chevaleyre and Jean-Daniel Zucker. 2001. Solving Multiple-Instance and Multiple-Part Learning Problems with Decision Trees and Rule Sets: Application to the Mutagenesis Problem. In Proceedings of the Conference of the Canadian Society for Computational Studies of Intelligence . Springer, Berlin, Heidelberg, 204–214. [12] W. Dierking. 2013. Sea ice monitoring by synthetic aperture radar. Oceanography 
+
+26, 2 (2013), 100–111. [13] Thomas G. Dietterich, Richard H. Lathrop, and Tomás Lozano-Pérez. 1997. Solv-ing the multiple instance problem with axis-parallel rectangles. Artificial Intelli-gence 89, 1 (1997), 31–71. doi:10.1016/S0004-3702(96)00034-3 [14] Yongke Ding, Yuanxiang Li, and Wenxian Yu. 2017. Learning from label pro-portions for SAR image classification. EURASIP Journal on Advances in Signal Processing 2017, 1 (2017), 44. doi:10.1186/s13634-017-0478-8 [15] Joseph Early, Ying-Jung Chen Deweese, Christine Evers, and Sarvapali Ramchurn. 2023. Extending scene-to-patch models: Multi-resolution multiple instance learning for Earth observation. Environmental Data Science 2 (2023), e42. doi:10. 1017/eds.2023.30 [16] Olympia Fourkioti, Michiel De Vries, Chuyang Jin, Daniel C. Alexander, and Chris Bakal. 2023. CAMIL: Context-Aware Multiple Instance Learning for Cancer Detection and Subtyping in Whole Slide Images. arXiv preprint arXiv:2305.05314 
+
+(2023). [17] Yanling Han, Hang Shen, Zhonghua Hong, Yun Zhang, Haiyan Pan, Ruyan Zhou, and Jing Wang. 2022. Remote Sensing Sea Ice Classification Based on DenseNet and Heterogeneous Data Fusion. Journal of Applied Remote Sensing 16, 4 (2022), 044517. doi:10.1117/1.JRS.16.044517 [18] Shreyas Havaldar, Navodita Sharma, Shubhi Sareen, Karthikeyan Shanmugam, and Aravindan Raghuveer. 2024. Learning from Label Proportions: Bootstrap-ping Supervised Learners via Belief Propagation. In International Conference on Learning Representations (ICLR) . Vienna, Austria. [19] K. He, X. Zhang, S. Ren, and J. Sun. 2016. Deep Residual Learning for Image Recognition. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, Las Vegas, NV, USA, 770–778. [20] G. Huang, Z. Liu, L. Van Der Maaten, and K. Q. Weinberger. 2017. Densely Connected Convolutional Networks. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, Honolulu, HI, USA, 4700– 4708. [21] Shiluo Huang, Zheng Liu, Wei Jin, and Ying Mu. 2024. Superpixel-based multi-scale multi-instance learning for hyperspectral image classification. Pattern Recognition 149 (2024), 110257. doi:10.1016/j.patcog.2024.110257 [22] Maximilian Ilse, Jakub Tomczak, and Max Welling. 2018. Attention-Based Deep Multiple Instance Learning. In Proceedings of the International Conference on Machine Learning (ICML) . PMLR, Stockholm, Sweden, 2127–2136. [23] Sepideh Jalayer, Samira Alkaee Taleghan, Rafael Pires de Lima, Behzad Vahedi, Nick Hughes, Farnoush Banaei-Kashani, and Morteza Karimzadeh. 2025. En-hancing and Interpreting Deep Learning for Sea Ice Charting Using the AutoICE Benchmark. Remote Sensing Applications: Society and Environment 38 (2025), 101538. [24] Changzhe Jiao, Chao Chen, Ronald G. McGarvey, Stephanie Bohlman, Licheng Jiao, and Alina Zare. 2018. Multiple instance hybrid estimator for hyperspectral target characterization and sub-pixel target detection. ISPRS Journal of Pho-togrammetry and Remote Sensing 146 (2018), 235–250. doi:10.1016/j.isprsjprs. 2018.08.012 [25] S. Khaleghian, H. Ullah, T. Kræmer, N. Hughes, T. Eltoft, and A. Marinoni. 2021. Sea ice classification of SAR imagery based on convolution neural networks. 
+
+Remote Sensing 13, 9 (2021), 1734. [26] A. Krizhevsky, I. Sutskever, and G. E. Hinton. 2012. ImageNet Classification with Deep Convolutional Neural Networks. In Advances in Neural Information Processing Systems , Vol. 25. Curran Associates, Inc., Red Hook, NY, USA, 1097– 1105. [27] Ryan Kruk, M. Christopher Fuller, Alexander S. Komarov, Dustin Isleifson, and Ian Jeffrey. 2020. Proof of Concept for Sea Ice Stage of Development Classification Using Deep Learning. Remote Sensing 12, 15 (2020), 2486. doi:10.3390/rs12152486 [28] Laura Elena Cué La Rosa and Dário Augusto Borges Oliveira. 2022. Learning from Label Proportions with Prototypical Contrastive Clustering. In Proceedings of the AAAI Conference on Artificial Intelligence , Vol. 36. AAAI Press, Palo Alto, CA, USA, 2153–2161. doi:10.1609/aaai.v36i2.20112 [29] Laura Elena Cué La Rosa, Dário Augusto Borges Oliveira, and Pedram Ghamisi. 2023. Learning Crop-Type Mapping From Regional Label Proportions in Large-Scale SAR and Optical Imagery. IEEE Transactions on Geoscience and Remote Sensing 61 (2023), 1–15. doi:10.1109/TGRS.2023.3318161 [30] Thomas Lavergne et al. 2024. Pan-Arctic sea ice concentration from SAR and passive microwave. The Cryosphere 18 (2024), 5277–5300. doi:10.5194/tc-18-5277-2024 [31] Fan Li and Graham Taylor. 2015. Alter-CNN: An Approach to Learning from Label Proportions with Application to Ice-Water Classification. In Neural Information Processing Systems Workshops (NIPSW) on Learning and Privacy with Incomplete Data and Weak Supervision . Montreal, QC, Canada, 100–106. [32] Jing Li, Wen Li, Anthony Sisk, Han Ye, William D. Wallace, William Speier, and Corey W. Arnold. 2021. A Multi-Resolution Model for Histopathology Image Classification and Localization with Multiple Instance Learning. Computers in Biology and Medicine 131 (2021), 104253. [33] J. Li, C. Wang, S. Wang, H. Zhang, Q. Fu, and Y. Wang. 2017. Gaofen-3 Sea Ice Detection Based on Deep Learning. In 2017 Progress in Electromagnetics Research Symposium-Fall (PIERS-FALL) . IEEE, Singapore, 933–939. [34] W. Li, C. Y. Hsu, and M. Tedesco. 2024. Advancing Arctic sea ice remote sensing with AI and deep learning: Opportunities and challenges. Remote Sensing 16, 20 (2024), 3764. [35] Zhili Li, Kai Xu, Jiafen Xie, Qi Bi, and Kun Qin. 2020. Deep Multiple Instance Convolutional Neural Networks for Learning Robust Scene Representations. 
+
+IEEE Transactions on Geoscience and Remote Sensing 58, 5 (2020), 3685–3702. doi:10.1109/TGRS.2019.2960889 [36] Jiabin Liu, Bo Wang, Zhiquan Qi, Yingjie Tian, and Yong Shi. 2019. Learning from Label Proportions with Generative Adversarial Networks. In Advances in Neural Information Processing Systems (NeurIPS) , Vol. 32. Curran Associates, Inc., Red Hook, NY, USA, 7169–7179. [37] Ming Y. Lu, Drew F. Williamson, Tiffany Y. Chen, Richard J. Chen, Matteo Barbieri, and Faisal Mahmood. 2021. Data-Efficient and Weakly Supervised Computational Pathology on Whole-Slide Images. Nature Biomedical Engineering 5, 6 (2021), 555–570. [38] Huimin Luo, Jun Huang, Hong Ju, et al. 2025. Multimodal Multi-Instance Evi-dence Fusion Neural Networks for Cancer Survival Prediction. Scientific Reports 
+
+15 (2025), 10470. doi:10.1038/s41598-025-93770-3 [39] H. Lyu, W. Huang, and M. Mahdianpari. 2022. Eastern arctic sea ice sensing: First results from the RADARSAT constellation mission data. Remote Sensing 14, 5 (2022), 1165. [40] Oded Maron and Tomás Lozano-Pérez. 1997. A Framework for Multiple-Instance Learning. In Advances in Neural Information Processing Systems , Vol. 10. MIT Press, Cambridge, MA, USA, 570–576. [41] Sayan Pal, Antonios Valkanas, Felix Regol, and Mark Coates. 2022. Bag Graph: Multiple Instance Learning Using Bayesian Graph Neural Networks. In Proceed-ings of the AAAI Conference on Artificial Intelligence (AAAI) , Vol. 36. AAAI Press, Palo Alto, CA, USA, 7922–7930. [42] J. W. Park, A. A. Korosov, M. Babiker, J. S. Won, M. W. Hansen, and H. C. Kim. 2020. Classification of sea ice types in Sentinel-1 synthetic aperture radar images. 
+
+The Cryosphere 14, 8 (2020), 2629–2645. [43] Linhao Qu, Xiaoyuan Luo, Shaolei Liu, Manning Wang, and Zhijian Song. 2022. DGMIL: Distribution Guided Multiple Instance Learning for Whole Slide Im-age Classification. In Proceedings of the International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI) . Springer Nature Switzerland, Cham, 24–34. [44] Novi Quadrianto, Alex J. Smola, Tibério S. Caetano, and Quoc V. Le. 2008. Esti-mating Labels from Label Proportions. In Proceedings of the 25th International Conference on Machine Learning (ICML) . ACM, New York, NY, USA, 776–783. [45] Gwenolé Quellec, Guy Cazuguel, Béatrice Cochener, and Mathieu Lamard. 2017. Multiple-Instance Learning for Medical Image and Video Analysis. IEEE Reviews in Biomedical Engineering 10 (2017), 213–234. doi:10.1109/RBME.2017.2651164 [46] Raúl Ramos-Pollán and Fabio A. González. 2025. On-orbit model training for satellite imagery with label proportions. European Journal of Remote Sensing 58, 1 (2025), 2570319. doi:10.1080/22797254.2025.2570319 [47] Meng Ren, Min Huang, Yifeng Zhang, et al. 2025. Enhanced Hierarchical At-tention Mechanism for Mixed MIL in Automatic Gleason Grading and Scoring. 
+
+Scientific Reports 15 (2025), 15980. doi:10.1038/s41598-025-00048-9 [48] Stefan Rüping. 2010. SVM Classifier Estimation from Group Probabilities. In 
+
+Proceedings of the 27th International Conference on Machine Learning (ICML) .Omnipress, Madison, WI, USA, 911–918. [49] Clayton Scott and Jianxin Zhang. 2020. Learning from Label Proportions: A Mutual Contamination Framework. In Advances in Neural Information Processing Systems (NeurIPS) , Vol. 33. Curran Associates, Inc., Red Hook, NY, USA, 22256– 22267. Alkaee Taleghan et al. 
+
+[50] Murat Sensoy, Lance Kaplan, and Melih Kandemir. 2018. Evidential Deep Learn-ing to Quantify Classification Uncertainty. In Advances in Neural Information Processing Systems , Vol. 31. Curran Associates, Inc., Red Hook, NY, USA, 3179– 3189. [51] Zhuchen Shao, Hao Bian, Yang Chen, Yifeng Wang, Jian Zhang, Xiangyang Ji, and Yongbing Zhang. 2021. TransMIL: Transformer-Based Correlated Multiple Instance Learning for Whole Slide Image Classification. In Advances in Neural Information Processing Systems (NeurIPS) , Vol. 34. Curran Associates, Inc., Red Hook, NY, USA, 2136–2147. [52] K. Simonyan and A. Zisserman. 2014. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556 (2014). [53] W. Song, M. Li, Q. He, D. Huang, C. Perra, and A. Liotta. 2018. A Residual Con-volution Neural Network for Sea Ice Classification with Sentinel-1 SAR Imagery. In 2018 IEEE International Conference on Data Mining Workshops (ICDMW) . IEEE, Singapore, 795–802. [54] A. Stokholm, J. Buus-Hinkler, T. Wulf, A. Korosov, R. Saldo, L. T. Pedersen, D. Arthurs, I. Dragan, I. Modica, J. Pedro, A. Debien, X. Chen, M. Patel, F. J. P. Cantu, J. N. Turnes, J. Park, L. Xu, K. A. Scott, D. A. Clausi, Y. Fang, M. Jiang, S. Taleghanidoozdoozan, N. C. Brubacher, A. Soleymani, Z. Gousseau, M. Smaczny, P. Kowalski, J. Komorowski, D. Rijlaarsdam, J. N. van Rijn, J. Jakobsen, M. S. J. Rogers, N. Hughes, T. Zagon, R. Solberg, N. Longépé, and M. B. Kreiner. 2024. The AutoICE Challenge. The Cryosphere 18 (2024), 3471–3494. doi:10.5194/tc-18-3471-2024 [55] Samira Alkaee Taleghan, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2025. IceBench: A Benchmark for Deep-Learning-Based Sea-Ice Type Classification. Remote Sensing 17, 9 (2025), 1646. [56] Samira Alkaee Taleghan, Morteza Karimzadeh, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2024. Semi-Supervised Multi-Source Sea Ice Classification in Small-Data Regime. In 2024 IEEE International Conference on Big Data (BigData) . IEEE, Washington, DC, USA, 2019–2026. [57] Samira Alkaee Taleghan, Morteza Karimzadeh, Andrew P. Barrett, Walter N. Meier, and Farnoush Banaei-Kashani. 2025. Ice-FMBench: A Foundation Model Benchmark for Sea Ice Type Segmentation. In Proceedings of the 1st ACM SIGSPA-TIAL International Workshop on Polar Data Science . ACM, New York, NY, USA, 1–10. [58] Samira Alkaee Taleghan, Behzad Vahedi, Morteza Karimzadeh, Andrew Barrett, Walt Meier, Siri Jodha S. Khalsa, and Farnoush Banaei-Kashani. 2022. MIPL-Ice: A Multi-Instance Proportion-Label Learning Method for Polygon-Level Sea Ice Classification. In Proceedings of the AGU Fall Meeting . AGU. [59] Ming Tu, Jinyi Huang, Xiaodong He, and Bowen Zhou. 2019. Multiple Instance Learning with Graph Neural Networks. arXiv preprint arXiv:1906.04881 (2019). [60] Timo Vihma. 2014. Effects of Arctic Sea Ice Decline on Weather and Climate: A Review. Surveys in Geophysics 35 (2014), 1175–1214. doi:10.1007/s10712-014-9284-0 [61] Jun Wang and Jean-Daniel Zucker. 2000. Solving the Multiple-Instance Problem: A Lazy Learning Approach. In Proceedings of the 17th International Conference on Machine Learning (ICML) . Morgan Kaufmann, San Francisco, CA, USA, 1119– 1126. [62] Y. Xu and K. A. Scott. 2017. Sea Ice and Open Water Classification of SAR Imagery Using CNN-Based Transfer Learning. In 2017 IEEE International Geoscience and Remote Sensing Symposium (IGARSS) . IEEE, Fort Worth, TX, USA, 3262–3265. [63] Hao Yang, Tianyi Zhou, Jianfei Cai, and Yew-Soon Ong. 2017. MIML-FCN+: Multi-Instance Multi-Label Learning via Fully Convolutional Networks with Privileged Information. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, Honolulu, HI, USA, 1577–1585. [64] Felix Yu, Dong Liu, Sanjiv Kumar, Tony Jebara, and Shih-Fu Chang. 2013. ∝SVM for Learning with Label Proportions. In Proceedings of the International Conference on Machine Learning (ICML) . PMLR, Atlanta, GA, USA, 504–512. [65] Hongrun Zhang, Yanda Meng, Yitian Zhao, Yihong Qiao, Xiaoyun Yang, Sarah E. Coupland, and Yalin Zheng. 2022. DTFD-MIL: Double-Tier Feature Distillation Multiple Instance Learning for Histopathology Whole Slide Image Classifica-tion. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, New Orleans, LA, USA, 18802–18812. [66] T. Zhang, Y. Yang, M. Shokr, C. Mi, X. M. Li, X. Cheng, and F. Hui. 2021. Deep learning based sea ice classification with Gaofen-3 fully polarimetric SAR data. 
+
+Remote Sensing 13, 8 (2021), 1452. [67] Zhi-Hua Zhou, Min-Ling Zhang, Sheng-Jun Huang, and Yu-Feng Li. 2012. Multi-instance multi-label learning. Artificial Intelligence 176, 1 (2012), 2291–2320. doi:10.1016/j.artint.2011.10.002

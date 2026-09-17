@@ -1,0 +1,185 @@
+{
+  "date": "20260917",
+  "date_label": "",
+  "generated_at": "2026-09-17 22:03:01 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.16347v1",
+      "route": "202609/17/2609.16347v1-multi-label-proportion-learning-for-sea-ice-type-prediction",
+      "title": "Multi-Label Proportion Learning for Sea-Ice Type Prediction",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于卫星影像与冰图的海冰类型深度学习预测",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.17124v1",
+      "route": "202609/17/2609.17124v1-lotusim-energy-a-maritime-simulator-for-human-drone-interaction-in-autonomous-offshore-operation-amp-maintenance",
+      "title": "LOTUSim-Energy: A Maritime Simulator for Human-Drone Interaction in Autonomous Offshore Operation \\&amp; Maintenance",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向自主海上运维的异构无人海事仿真平台",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.18069v1",
+      "route": "202609/17/2609.18069v1-geocueformer-geometry-guided-wavelet-representation-and-prediction-cued-dual-stage-decoder-for-underwater-semantic-segmentation",
+      "title": "GeoCueFormer: Geometry-Guided Wavelet Representation and Prediction-Cued Dual-Stage Decoder for Underwater Semantic Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海洋生态系统监测的水下语义分割",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.14561v1",
+      "route": "202609/17/2609.14561v1-glam-training-a-latent-world-model-over-global-spatiotemporal-memory-for-active-exploration-and-navigation",
+      "title": "GLAM: Training a latent world model over global spatiotemporal memory for active exploration and navigation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向主动探索与导航的具身智能体潜在世界模型",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.15361v1",
+      "route": "202609/17/2609.15361v1-robust-and-efficient-communication-for-multi-agent-learning",
+      "title": "Robust and Efficient Communication for Multi-Agent Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "有损信道下的多智能体强化学习通信架构",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.16288v1",
+      "route": "202609/17/2609.16288v1-drift-field-net-learning-ocean-lagrangian-advection-fields-from-in-situ-and-satellite-observations",
+      "title": "Drift Field Net: Learning Ocean Lagrangian advection fields from in-situ and satellite observations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "从卫星观测预测海洋表层流场的深度网络",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.16486v1",
+      "route": "202609/17/2609.16486v1-vpref-a-cross-domain-benchmark-for-referring-remote-sensing-image-segmentation",
+      "title": "VPRef: A Cross-Domain Benchmark for Referring Remote Sensing Image Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感的语言-图像指代分割基准",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.16591v1",
+      "route": "202609/17/2609.16591v1-flat-resampling-image-and-text-into-1d-flexible-length-aligned-transmodal-tokens-for-retrieval-and-generation",
+      "title": "FLAT: Resampling Image and Text into 1D Flexible-Length Aligned Transmodal Tokens for Retrieval and Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "图文联合多模态表示学习与生成",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.16871v1",
+      "route": "202609/17/2609.16871v1-spear-next-causal-latent-forecasting-across-multiple-horizons-for-spectral-temporal-earth-representation-learning",
+      "title": "SPEAR NeXT Causal Latent Forecasting Across Multiple Horizons for Spectral Temporal Earth Representation Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态光谱时序地球观测基础模型",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.17007v1",
+      "route": "202609/17/2609.17007v1-search-based-metamorphic-testing-of-vision-language-models-in-autonomous-underwater-robotic-software",
+      "title": "Search-Based Metamorphic Testing of Vision-Language Models in Autonomous Underwater Robotic Software",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主水下机器人软件中的视觉语言模型",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    },
+    {
+      "paper_id": "2609.18531v1",
+      "route": "202609/17/2609.18531v1-how-much-hyperspectral-information-does-chlorophyll-retrieval-really-need",
+      "title": "How Much Hyperspectral Information Does Chlorophyll Retrieval Really Need?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "卫星水色遥感数据与叶绿素反演",
+      "first_seen_at": "2026-09-17 22:03:01 UTC",
+      "updated_at": "2026-09-17 22:03:01 UTC"
+    }
+  ]
+}

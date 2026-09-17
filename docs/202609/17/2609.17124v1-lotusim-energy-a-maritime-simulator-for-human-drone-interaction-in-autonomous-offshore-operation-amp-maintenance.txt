@@ -1,0 +1,313 @@
+Title: LOTUSim-Energy: A Maritime Simulator for Human-Drone Interaction in Autonomous Offshore Operation &amp; Maintenance
+
+URL Source: https://arxiv.org/pdf/2609.17124v1
+
+Published Time: Wed, 16 Sep 2026 01:12:56 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# LOTUSim-Energy: A Maritime Simulator for Human-Drone Interaction in Autonomous Offshore Operation & Maintenance 
+
+Juliette Grosset 1, Marie Dubromel 1, H´ el` ene Lechˆ ene 1, Quentin Arzel 1, C´ edric Buche 2 
+
+> 1CROSSING IRL 2010, Naval Group 2CROSSING IRL 2010, CNRS, IMT Atlantique
+
+Abstract — Offshore maintenance requires operations in the air, the surface, and the subsea domain and include human supervision. This paper presents LOTUSim-Energy , a real-time maritime simulator designed for multi-domain human–drone interaction for offshore operation and maintenance. The plat-form unifies heterogeneous unmanned vehicles (Unmanned Aerial Vehicles: UAVs, Unmanned Surface Vehicles: USVs, Autonomous Underwater Vehicles: AUVs, Remotely Operated Vehicles: ROVs) within a distributed architecture coupling environmental forcing (wind, waves, currents) and provides immersive user interfaces for supervision (desktop and virtual reality). A structured offshore task library enables repeatable evaluation of autonomy stacks under realistic metocean distur-bances. The simulator supports realistic physics, energy-aware battery modeling, and fault-detection pipelines as modular validation tools. System-level performance is demonstrated on a multi-domain inspection scenario for monopile and tran-sition piece structure, where we evaluate the reliability of integrated waypoint-follower plugin and Automatic Identifica-tion System (AIS)-referenced trajectory tracking under real-time energy monitoring. By combining unified environmental physics, heterogeneous vehicle simulation, and immersive su-pervision, LOTUSim-Energy provides an integration testbed for prototyping and rehearsing offshore human–robot collaboration workflows, as a step toward de-risking sea deployment. 
+
+Index Terms — Marine robotics, Simulator, Real-time Mar-itime Simulation, Offshore Operation & Maintenance, Energy, Ocean Current Modelling, Human-In-The-Loop. 
+
+I. I NTRODUCTION 
+
+The maintenance of offshore wind farms is shifting toward human-supervised multi-robot teams. However, deploying such teams remains a formidable challenge: aerial, surface, and subsea assets must coordinate while battling tightly coupled wind, wave, and current disturbances. In these environments, a single perception failure or a miscalculation in energy reserves can lead to catastrophic asset loss. Given the narrow weather windows and stringent safety constraints, high-fidelity simulation is a non-negotiable prerequisite for de-risking human-robot coordination and validating inte-grated autonomy stacks before sea trials. To safely deploy autonomous fleets in harsh maritime environments, we require a simulation framework capable of integrating two interdependent pillars: 1) Realistic Environmental Physics: ocean currents, waves and aerial disturbance (wind). 2) Human-in-the-Loop (HITL): interactive supervision af-fects the reliability of multi-robot coordination. Existing simulation platforms [1], [2], [3], [4], excel in one domain, from high-fidelity rendering to sensors or AI training, but fail to integrate HITL and environmental physics. The primary contribution of this paper is LOTUSim-Energy 1, an integrated simulation ecosystem for maritime robotics providing:  
+
+> •
+
+An Interactive Multi-Domain Simulator : A unified architecture coupling cross-domain vehicle dynamics (air/surface/subsea) with physics-consistent metocean fields (wind, waves, and currents). It provides a modular, multi-user interface for immersive supervision, manual takeover, and mission procedure rehearsal, built on 
+
+LOTUSim [5].  
+
+> •
+
+A Benchmarking Task Library : A configurable set of offshore Operation & Maintenance (O&M) scenarios for multi-domain inspection. This library offers repeat-able evaluation of heterogeneous autonomy systems and HITL intervention under realistic maritime disturbances.  
+
+> •
+
+An Integrated Offshore Autonomy Stack : A modu-lar suite designed for heterogeneous coordination and mission-level monitoring, including: 
+
+– Navigation & Tracking: AIS-referenced trajectory followers and geometric waypoint controllers for UAV, USV, and subsea assets. 
+
+– Mission-Aware Sensing: A battery simulation plugin for real-time charge/discharge monitoring based on propulsion effort, and a YOLO-based vision pipeline for detecting structural cracks and corrosion. II. C ONTEXT 
+
+This section summarises offshore wind technology and economics, emphasising the O&M challenges that motivate robotics and high-fidelity simulation. 
+
+A. Offshore Wind Turbine Technology & O&M 
+
+Modern offshore wind turbines convert kinetic energy in the wind into electrical power. Power is exported to shore through array and export subsea cables and one or more offshore substations. The lifecycle of offshore wind turbines comprises four phases 2: planning & development, installation & construction, O&M (training, logistics, in-spection, servicing, and balance-of-plant maintenance), and decommissioning. Long-horizon O&M remains technically challenging and costly due to harsh marine conditions, limited weather   
+
+> 1LOTUSim-Energy: https://www.youtube.com/watch?v= NRd-LjRrrac
+> 2Lifecycle of offshore wind: https://tinyurl.com/2s39zh7p arXiv:2609.17124v1 [cs.RO] 15 Sep 2026
+
+windows, and complex operational coordination. Robotics and digitalisation are expected to shift O&M from manual, reactive practices toward remote, data-driven, and proactive operations. Aerial and underwater vehicles enable safer in-spections, faster survey cycles (e.g., blade inspection times projected to decrease by up to ∼40% 3), and improved predic-tive monitoring. Realising these benefits requires planning, control, and validation tools capable of evaluating strategies under realistic environmental and operational constraints, motivating task- and system-level simulators. O&M typically contributes 15–35% of lifetime costs 4.
+
+B. Simulation for Offshore Wind O&M requirements 
+
+Autonomous O&M of offshore wind farms involves coor-dinated deployment for heterogeneous robotic systems across multiple domains, including aerial (Unmanned Aerial Vehi-cle, UAV), surface (Unmanned Surface Vehicle, USV), and subsea (Autonomous Underwater Vehicle, AUV / Remotely Operated Vehicle, ROV) platforms. Therefore, reliable de-ployment of such systems requires realistic simulation envi-ronments supporting cross-domain physics for drone swarms. In addition, human interaction is essential for supervision and mission validation. A simulation platform suitable for offshore O&M must therefore provide: 1) realistic environmental physics (air–surface–subsea); 2) Human-in-the-Loop (HITL) interaction 
+
+C. Multi-Domain Simulation for Maritime 
+
+Several platforms [1], [2], [3], [4] offer high-fidelity rendering but lack native support for HITL interaction. Such capabilities are essential for offshore operations, where human supervision and intervention play a critical role. Many simulators also fall short in realistic environmen-tal physics, particularly in modeling underwater current disturbances. Common approaches rely on static or user-defined flow fields, including precomputed fixed CFD envi-ronments (USVsim [6]), constant and unidirectional currents (LRAUVSim [7] and MarineGym [3]), or simplified profiles (Stonefish [4] and HoloOcean [2]). Such simplifications limit the study of realistic offshore conditions, where the combined effects of air, surface, and underwater disturbances can significantly influence vehicle behavior. Some simulators focus specifically on offshore wind ap-plications, but these are primarily designed for logistics planning, asset management, or cost analysis rather than robotics-centric mission rehearsal. While recent efforts (e.g., Northwind [8]) demonstrate growing interest in autonomous O&M, comprehensive reviews [9] highlight the persistent lack of unified environments that integrate HITL interaction, realistic underwater physics, and multi-domain operations. Representative maritime robotics simulators, spanning both offshore-wind-specific and general-purpose platforms, are compared in Table I; LOTUSim-Energy leverages key fea-tures of existing platforms (e.g. wind turbine model, O&M planning) while introducing several novel contributions:  
+
+> 3https://tinyurl.com/529tuts7
+> 4https://tinyurl.com/3u4x6uuw
+> •
+
+Unified air, surface, and subsea physics with dynamic environmental forces;  
+
+> •
+
+A current model enabling depth-dependent drift and shear effects;  
+
+> •
+
+Immersive HITL interfaces for real-time and multi-operator mission rehearsal By combining high-fidelity environmental modeling with advanced human–robot interaction capabilities, LOTUSim-Energy enables realistic validation of autonomous O&M strategies prior to deployment. III. LOTUS IM -E NERGY ARCHITECTURE 
+
+LOTUSim-Energy is a distributed, server–client simula-tion framework designed for multi-domain robotics. Gazebo serves as the central orchestrator for asset management and simulation timing (deterministic step scheduler), while separate client modules execute specific simulation tasks. The core simulation control module interfaces with three primary client modules:  
+
+> •
+
+Physics: LOTUSim-Xdyn as the physics interface,  
+
+> •
+
+Agent Interaction: ROS 2 for inter-agent messaging and hardware-in-the-loop bridges,  
+
+> •
+
+Rendering: Unity as the optional high-fidelity renderer for human–robot interaction (HRI). This architecture supports real-time human–robot interac-tion, scalable multi-vehicle simulation across air/surface/-subsea domains, and accelerated-time runs for learning-based methods. This will allow users to perform complete maintenance on all the different parts of a wind turbine (blade, nacelle, monopile...) with manned, unmanned, or hybrid drones. LOTUSim-Energy ’s server–client design al-lows computationally intensive tasks (e.g. hydrodynamics) to run remotely while Gazebo maintains a barrier-synchronised update loop. Figure 1 summarises the architecture 5.
+
+Fig. 1: LOTUSim-Energy architecture At each simulation timestep (user-configurable), Gazebo queries the three client classes via dedicated plugins: (i) 
+
+Physics , (ii) Rendering , and (iii) Agent Interaction . Each client computes updates, locally or remotely, and returns results before the next barrier, ensuring a consistent world  
+
+> 5LOTUSim-Energy: https://github.com/IRL-Crossing-CNRS/ LOTUSim-Energy
+
+TABLE I: State-of-the-art simulator platforms for autonomous O&M and immersive operator decision-making. N/A: not reported by the cited work.                                                                                                             
+
+> MIMRee [10] Northwind [8] ACOMAR [11] ROMEO [12] OceanSim [1] HoloOcean [2] MarineGym [3] Stonefish [4] LOTUSim-Energy
+> Country UK Norway Denmark EU N/A N/A N/A N/A France/Autralia Domain Surface Air Underwater Air Underwater Underwater Underwater Underwater + Surface + Ground Air + Surface + Underwater Drone Integration D×D×DDDDD
+> Rendering Engine Gazebo Unity Gazebo Custom Isaac Sim Unreal Engine Isaac Sim Custom (OpenGL) Unity VR / AR ×D×D××××D+ Multi-user Energy Model Statistical ×××N/A N/A N/A N/A Theoretical methods Data Fusion ××D×N/A N/A N/A N/A ×(On-Going) Wind Turbine Model ×D×D××××D
+> O&M Planning DD×D××××D
+> Weather Prediction ×D×D×××××(Real-time)
+
+state. To limit scheduling bias from asset load order, update requests are randomly permuted each tick (with a repro-ducible seed). Both real-time (Real Time Factor: RTF ≈1) and accelerated-time (RTF >1) modes are supported. 
+
+A. Physics 
+
+A unified physics interface exports each asset’s pose/twist, actuation, and environment parameters to external engines and re-ingests the resulting wrenches or updated poses. For marine vehicles, LOTUSim–Xdyn includes USVs/AU-Vs/ROVs, with six-degree-of-freedom dynamics (including added mass, damping, wave, and current forces) connected via gRPC/WebSocket. Aerial agents use standard Gazebo rigid-body models and wind plugins. This abstraction allows users to swap or extend physics backends without changing the core simulator. 
+
+B. Agent Interaction 
+
+Agents interface through ROS 2 (DDS), exposing topics, actions, and services for guidance, planning, perception, and logging. This allows integration of existing autonomy stacks or real hardware bridges with minimal effort. For hu-man–robot interaction, Unity provides operator UIs (desktop and virtual reality), supports authority handover, and logs op-erator actions for repeatable studies. By decoupling physics and visualisation from agent logic, LOTUSim–Energy en-sures consistent simulation timing while enabling flexible, real-time, or accelerated agent interaction. 
+
+C. Rendering 
+
+Rendering is optional and often disabled for large-scale training. When enabled, Unity subscribes to asset states and produces photorealistic views, along with synthetic sensor outputs (RGB/IR, depth, segmentation, lidar/sonar stubs) with pixel-accurate ground truth. Users can inject custom effects (e.g., spray, lighting, turbidity) via shaders to support perception research. These features will allow operators and learning algorithms to train more effectively, bridging the gap toward real-life deployments in wind farms. 
+
+D. Human-in-the-Loop & Multi-User LOTUSim-Energy provides a high-fidelity Desktop/VR interface for collaborative training and mission oversight. Integrating Leap Motion and eye tracking, the platform sup-ports gesture-based interaction and attention logging. Real-time synchronisation via Photon Unity Networking (PUN2) maintains a consistent world state for distributed teams through two specialised roles:  
+
+> •
+
+Embodied Operator: Physics-constrained manual con-trol for mission rehearsal.  
+
+> •
+
+Supervisor/Spectator: Free-flight mode for oversight and dynamic waypoint placement. IV. LOTUS IM -E NERGY ENVIRONMENT MODEL 
+
+A. Surface 
+
+In LOTUSim-Energy , surface vessel dynamics are simu-lated using Xdyn 6, an open-source lightweight framework for real-time ship motion. The solver implements Fos-sen’s equations of motion [13] and accounts for a wide range of hydrodynamic effects, including diffraction and Froude–Krylov forces. In addition, Xdyn provides customis-able manoeuvring models and actuator modules, with recent extensions incorporating wind-propulsion concepts for large cargo ships [14]. For surface waves, Xdyn employs linear Airy wave theory [15], [16], which models gravity-wave propagation under assumptions of uniform depth and con-stant fluid properties. Although simplified, this formulation is computationally efficient and well-suited for simulating wave–hull interactions in real time. Simulation outputs such as surface elevations and flow fields can be exported as 2D or 3D grids for further offline analysis. In the forked version integrated into LOTUSim-Energy , current profiles are also included, enabling a more complete treatment of the environmental disturbances acting on surface robots. As a result, USVs and surface drones in our scenarios are directly influenced by realistic wave and wind forcing, a critical requirement for evaluating control and guidance strategies in offshore wind maintenance (see Fig. 2). 
+
+Fig. 2: Surface agents deployed in LOTUSim-Energy .
+
+B. Aerial 
+
+Wind dynamics are handled through Gazebo’s wind plugin [17], which supports dynamic wind fields varying in both 
+
+> 6https://gitlab.com/sirehna_naval_group/sirehna/xdyn
+
+time and space 7. This allows users to configure realistic at-mospheric conditions, ensuring that all aerial drones respond consistently to the imposed wind environment (Fig. 3). 
+
+Fig. 3: Left: X500 drone agents in LOTUSim-Energy . Right: User wind interface to set different wind forces 
+
+C. Underwater 
+
+Realistic current modeling is critical for autonomous in-spection near monopiles, cables, and subsea foundations, directly shaping vehicle guidance, energy-aware planning, and station-keeping. LOTUSim-Energy implements an Ek-man model [18] with three steady-state vertical layers. A surface layer, where wind stress and the Coriolis effect produce the Ekman spiral, and a bottom layer, shaped by frictional drag and bathymetric gradients, bound an inter-mediate geostrophic interior unaffected by either boundary. Together, these layers yield depth-dependent profiles relevant to robotic agents at different turbine zones. We implemented two current models in Xdyn: a baseline constant flow and an Ekman-inspired formulation, where the velocity components (u, v, w ) are expressed as functions of 
+
+(x, y, z, t ). This extended module is referred to as LOTUSim-Xdyn 8.
+
+1) Domain and coordinate conventions: We adopt a local ENU coordinate system tangent to WGS84 at the site origin, with Ωh ⊂ R2 the wind farm’s horizontal footprint and 
+
+H : Ω h → R>0 the bathymetric depth (m). The space–time domain is: 
+
+Ω = {(x, y, z, t ) : ( x, y ) ∈ Ωh, z ∈ [−H(x, y ), 0] ,t ∈ [t0, t f ]} (1) The current field (u, v, w ) : Ω → R3 gives velocity (m s −1) along (x, y, z ); for Ekman-layer formulations we define: 
+
+zs(x, y, z ) = −z (depth from surface) (2) 
+
+zb(x, y, z ) = H(x, y ) + z (depth from seabed) (3) with both zs, z b ∈ [0 , H (x, y )] .
+
+2) Parameters: The current equations in each layer use the following parameters:  
+
+> •
+
+Coriolis parameter f = 2Ω sin( φ), with φ the latitude and Ω Earth’s rotation rate; its sign sets the spiral rotation (northern/southern hemisphere).           
+
+> 7https://github.com/gazebosim/gz-sim/tree/gz-sim9/src/systems/wind_effects
+> 8LOTUSim-Xdyn is amodified version of Xdyn. Source Code: https:// github.com/naval-group/lxdyn
+> •
+
+Drag coefficient CD , following Curcic and Haus [19]: 
+
+CD =
+
+((0 .79 + 0 .08 U10 ) × 10 −3, U10 < 20 .5 m /s,
+
+2.43 × 10 −3, U10 ≥ 20 .5 m /s.
+
+(4)  
+
+> •
+
+Wind stress τs = CD ρair U 210 uses the 10 m wind U10 .
+
+3) Top layer: Surface currents combine Airy wave orbital velocities with the Ekman spiral (northern hemisphere for-mulation): 
+
+u = ¯ u + V0e−πz s/D s cos 
+
+ π
+
+4 − πz s
+
+Ds
+
+− ϕ
+
+
+
+v = ¯ v + V0e−πz s/D s sin 
+
+ π
+
+4 − πz s
+
+Ds
+
++ ϕ
+
+
+
+w = 0 
+
+(5) where zs is the depth (null at the surface, positive down-wards), Ds is the surface Ekman layer depth, V0 is the surface current velocity, and ϕ is the wind orientation at the surface. This layer may be superimposed on Airy wave orbital velocities in the surface physics module 
+
+4) Middle Layer: 
+
+u = ¯ u, v = ¯ v, w = 0 (6) The middle layer is unaffected by the waves or the seabed. 
+
+5) Bottom Layer: For irregular seabeds, additional cor-rection terms are applied to maintain continuity and satisfy boundary conditions. In the northern hemisphere, this yields the following formulation of the bottom Ekman spiral:                 
+
+> u= ¯ u
+> 
+> 1−e−πz b/D bcos
+> πz b
+> Db
+> 
+> −¯ve −πz b/D bsin
+> πz b
+> Db
+> 
+> v= ¯ ue −πz b/D bsin
+> πz b
+> Db
+> 
+> + ¯ v
+> 
+> 1−e−πz b/D bcos
+> πz b
+> Db
+> 
+> w= 0
+> (7)
+
+where zb is the depth (null at the seabed, positive upwards) and Db is the bottom Ekman layer depth (with eddy viscosity 
+
+νE ), governing the shear encountered by seabed-proximal tasks (e.g., scour and CP surveys). V. A UTONOMOUS OFFSHORE O&M The following subsections describe how the environment, assets, vessel models, autonomy modules and operator inter-faces are integrated to enable realistic operations planning, risk assessment, and rehearsal of common O&M tasks. 
+
+A. Environment configuration LOTUSim-Energy ingests MetOcean products from the Copernicus Marine Service 9 as boundary conditions and for day-specific calibration. Time-stamped wind, wave, and current fields from day D are assimilated to estimate Ekman-layer coefficients. The calibrated model is then propagated to day D+1 to generate physics-consistent forecasts of sub-surface currents to support safety analysis, risk management, and scheduling of offshore wind O&M operations. 
+
+> 9https://data.marine.copernicus.eu/products
+
+B. Scene LOTUSim-Energy already ships with a pre-built Unity scene representing a multi-turbine offshore wind farm (Fig. 4a), so a wind-turbine maintenance scenario is imme-diately available. The scene includes turbine digital twins and environmental fields (wind, waves, currents) driven by LOTUSim-Xdyn ’s environment physics. It is wired to the simulator’s vehicle stack, allowing users to spawn UAV/USV/ROV agents and rehearse common O&M prim-itives detailed in Table II (launch/recovery, waypoint transit, station-keeping, blade-face inspection passes, subsea tran-sects) while logging time/energy budgets and safety hold states. 
+
+a bFig. 4: Left: Illustration of a wind turbine farm scenario. Right: BlueROV and LRAUV operating underwater 
+
+C. Drones 
+
+Subsea operations are critical for offshore O&M, as most degradation, wear, and essential inspections occur underwa-ter. Currently, LOTUSim-Energy supports two representative underwater agents (see Fig. 4b): 1) a tethered BlueROV for close-range visual inspections, cathodic protection (CP) checks, and light intervention; 2) a long-endurance LRAUV for wide-area surveys and cable or structure transects. Both vehicles operate in teleoperation, shared-control, or fully autonomous modes under the same metocean conditions described in Section IV. In addition to these underwater drones, LOTUSim-Energy 
+
+provides X500 models for aerial operations and a WAMV vessel model for surface-level tasks. 
+
+D. Battery Simulator Plugin 
+
+To enable energy-aware mission planning, we developed a modular battery simulator plugin that couples state-of-charge estimation to each vehicle’s instantaneous propulsive effort, rather than assuming a constant power draw. The plugin publishes real-time voltage and state-of-charge for use by mission planners and operators, enabling energy-aware evaluation of autonomy strategies under realistic power con-straints. VI. E XPERIMENTAL INSPECTION SCENARIO 
+
+A. Simulation Environment and System Setup 
+
+As shown in Figure 5, a multi-domain inspection path for monopile and TP was defined, including surface, underwa-ter, and aerial waypoint sequences (highlighted in blue in Table II): TABLE II: Representative offshore wind O&M tasks                       
+
+> Agent type: UAV (aerial), USV (surface), ROV (tethered subsea), AUV (untethered subsea), CTV (crew transfer vessel). Sensors: RGB (visible), IR (thermal), LiDAR (laser), MBES (multibeam), SSS (side-scan sonar), DVL (Doppler velocity log), INS (inertial nav.), UT (ultrasonic thickness), EO (electro-optical), AIS (Automatic Identification System), GPS. Structures: LE (leading edge),TP (transition piece), TLP (tension-leg platform). Rows shaded in blue are the tasks empirically demonstrated in Section VI; the remaining rows are supported by the underlying agent/sensor stack but have not yet been benchmarked end-to-end.
+> Category Task Agent Type Autonomy Primary Sensors
+> Inspection (Topside) Blade surface scan (orbit pattern) UAV Shared Auto RGB IR LiDAR Inspection (Topside) Tower/TP corrosion & fastener check UAV Teleop Shared RGB LiDAR Inspection (Subsea) Monopile/TP scour survey ROV AUV USV Auto MBES SSS DVL INS Inspection (Subsea) Cable route & burial depth check AUV USV Auto MBES SSS Magnetom. Inspection (Subsea) Cathodic protection (CP) & anode condition ROV Teleop Shared CP probe Camera Sonar Inspection (Floating) Mooring / TLP tendon inspection ROV AUV Auto Sonar UT Camera Cleaning / Minor Repair Biofouling removal (subsea) ROV Teleop Shared Camera Sonar MetOcean Ops Access-window rehearsal (CTV) USV CTV Auto Shared Wind AIS Environmental Monitoring Marine-mammal exclusion zone (MMEZ) USV UAV Auto Acoustics EO/IR Radar Emergency / Response Man-overboard drill & abort logic USV UAV Auto Shared AIS EO/IR GPS
+> •
+
+Surface Monitoring: A support vessel or USV follows a wide-area trajectory to provide situational awareness and monitor the operational zone using an AIS-based waypoint follower.  
+
+> •
+
+Underwater Inspection: The BlueROV2 performs aclose-range survey of the submerged TP structural com-ponents. The trajectory enables high-resolution inspec-tion to detect marine growth, corrosion, or structural defects such as cracks.  
+
+> •
+
+Aerial Inspection: X500 drones conduct an aerial in-spection of the monopile and above-water structures, enabling visual assessment of external surfaces and de-tection of corrosion or damage through onboard sensing and computer vision. 
+
+Fig. 5: Cross-domain inspection path B. Waypoint-Following Navigation Framework 
+
+A Gazebo-integrated Waypoint Follower plugin guides vessels through 2D coordinate sequences via a closed-loop PID heading controller with bang–bang linear velocity regu-lation, initialised with conservative default values (zero head-ing/integral terms, vehicle at rest): a 0.5 m waypoint-reach tolerance, acceleration limits of 0.5 m /s2/0.01 rad /s2 (lin-ear/angular), and velocity saturation of 1–10 m /s/0.05 rad /s.Dynamic replanning via a ROS2 service interface allows runtime adaptation to evolving mission objectives. 
+
+C. AIS-Referenced Trajectory Following 
+
+The USV waypoint follower is driven along a waypoint sequence derived from a real AIS track of a small Class B vessel (Fig. 6), illustrating AIS-referenced guidance rather than a controller-tracking benchmark, since the track reflects an independently controlled vessel with its own disturbances and GNSS noise, not a ground-truth reference. 
+
+Fig. 6: Real AIS plot compared to simulated plot for 10 points 
+
+D. Visual Inspection Using Onboard Detection 
+
+The platform integrates a YOLO-based real-time object detection framework 10 to identify structural anomalies such as cracks and corrosion. Figure 7 illustrates detections per-formed underwater with a BlueROV2 and aerially with an X500 UAV during blade inspection. 
+
+Fig. 7: Fault detected (corrosion, cracks) by BlueROV (un-derwater) and X500 (air)  
+
+> 10 YOLO model: https://tinyurl.com/yc3jr99t
+
+E. Deployment Use Cases & Interaction 1) Ocean Current: An actively propelled LRAUV com-manded to hold a straight trajectory is exposed to the Ekman-based, vertically resolved current field. Despite active propulsion, depth-dependent lateral drift and rotational flow require continuous thruster compensation. 
+
+2) HITL: The operator interacts through a dual-layer interface: monitoring AIS data for vessels transiting to the mission zone, and, for inspection tasks, precision control of the onboard camera for structural assessment (e.g., cracks). This is augmented by the battery plugin, which tracks vehicle capacity and discharge (e.g., LRAUV in Fig. 8), letting operators adapt inspection intensity to ensure reserve for safe recovery. 
+
+Fig. 8: Real-time monitoring of LRAUV battery capacity and discharge via the plugin. Leap Motion further lets operators control the embarked camera (zooming, reorienting) via hand gestures, without a full VR headset. The same Desktop/VR interface (Fig. 9) also drives an education mode with real-time wind/weather controls for stakeholder outreach. 
+
+bFig. 9: Left: User interacting through VR. Right: Electricity production monitored depending on wind strength VII. C ONCLUSION 
+
+We introduced LOTUSim-Energy , a robotics-centric sim-ulator unifying vehicle dynamics, environmental forcing, multi-user supervision, and benchmarking metrics for guid-ance, planning, and perception. Future work will add physics-based underwater image formation for degraded-image datasets, a risk layer for biodiversity planning con-straints, and benchmarking of energy-aware planners and fault detection under sim-to-real protocols. ACKNOWLEDGEMENTS 
+
+This work has been funded by the French Ministry for Europe and Foreign Affairs (MEAE) — Franco-Australian Indo-Pacific Centre for Energy Transition (FACET). REFERENCES [1] J. Song, H. Ma, O. Bagoren, A. V. Sethuraman, Y. Zhang, and K. A. Skinner, “Oceansim: A gpu-accelerated underwater robot perception simulation framework,” arXiv preprint arXiv:2503.01074 ,2025. [Online]. Available: https://arxiv.org/abs/2503.01074 [2] B. Romrell, A. Austin, B. Meyers, R. Anderson, C. Noh, and J. G. Mangelson, “A preview of holoocean 2.0,” 2025. [Online]. Available: https://arxiv.org/abs/2510.06160 [3] S. Chu, Z. Huang, Y. Li, M. Lin, D. Li, I. Carlucho, Y. R. Petillot, and C. Yang, “Marinegym: A high-performance reinforcement learning platform for underwater robotics,” in 2025 IEEE/RSJ IROS , 2025, pp. 17 146–17 153. [4] M. Grimaldi, P. Cieslak, E. Ochoa, V. Bharti, H. Rajani, I. Carlucho, M. Koskinopoulou, Y. R. Petillot, and N. Gracias, “Stonefish: Supporting machine learning research in marine robotics,” 2025. [Online]. Available: https://arxiv.org/abs/2502.11887 [5] C. Buche, J. Grosset, H. Lechˆ ene, M. Dubromel, P. Havez-Bodivit, M. Neo, and J. Prodhon, “LOTUSim: Multi-domain simulator for marine robotics,” in 2026 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . Pittsburgh, USA: IEEE, 2026, arXiv:2607.03072. [6] M. Paravisi, D. H. Santos, V. Jorge, G. Heck, L. M. Gonc ¸alves, and A. Amory, “Unmanned surface vehicle simulator with realistic environmental disturbances,” Sensors , vol. 19, no. 5, p. 1068, Mar. 2019. [Online]. Available: http://dx.doi.org/10.3390/s19051068 [7] T. R. Player, A. Chakravarty, M. M. Zhang, B. Y. Raanan, B. Kieft, Y. Zhang, and B. Hobson, “From concept to field tests: Accelerated development of multi-auv missions using a high-fidelity faster-than-real-time simulator,” 2023. [Online]. Available: https://arxiv.org/abs/2311.10377 [8] F. Stadtmann, H. A. G. Wassertheurer, and A. Rasheed, “Demonstration of a standalone, descriptive, and predictive digital twin of a floating offshore wind turbine,” ser. International Conference on Offshore Mechanics and Arctic Engineering, vol. 8, 06 2023, p. V008T09A039. [Online]. Available: https://doi.org/10.1115/OMAE2023-103112 [9] S. Aldhaheri, Y. Hu, Y. Xie, P. Wu, D. Kanoulas, and Y. Liu, “Underwater robotic simulators review for autonomous system development,” 2025. [Online]. Available: https://arxiv.org/abs/2504. 06245 [10] F. Jovan and S. Bernardini, “Multi-robot coordination in operations and maintenance of off shore wind farms with temporal planning,” in ICAPS , Aug. 2021, pp. 2–13. [Online]. Available: https: //icaps21.icaps-conference.org/demos/demos/380.pdf [11] M. von Benzon, F. Sørensen, E. Uth, J. Jouffroy, J. Liniger, and S. Pedersen, “An open-source benchmark simulator: Control of a bluerov2 underwater robot,” Journal of Marine Science and Engineer-ing , vol. 10, p. 1898, 2022. [12] D. Gambhava and M. Gr¨ afe, “D6.5 – use-case demonstration into o&m platform - communication, intelligent reporting &information visualisation,” Nov. 2020, public report. [Online]. Available: https://www.romeoproject.eu/wp-content/uploads/2020/11/ ROMEO D6.5 Use-case-demonstration-into-OM-Platform.pdf [13] T. I. Fossen, Handbook of Marine Craft Hydrodynamics and Motion Control . Wiley, Apr. 2011. [Online]. Available: http: //dx.doi.org/10.1002/9781119994138 [14] A. Babarit and M. Charlou, “Cn-aeromodels: A c++ implementation of aerodynamic models for wind propulsion systems of cargo ships,” 
+
+Journal of Open Source Software , vol. 9, no. 102, p. 6940, Oct. 2024. [Online]. Available: http://dx.doi.org/10.21105/joss.06940 [15] Y. Goda, Random Seas and Design of Maritime Structures .WORLD SCIENTIFIC, Jun. 2010. [Online]. Available: http: //dx.doi.org/10.1142/7425 [16] G. Rodenbusch and G. Forristall, “An empirical model for random directional wave kinematics near the free surface,” in Offshore Technology Conference , ser. 86OTC. OTC, May 1986. [Online]. Available: http://dx.doi.org/10.4043/5097-MS [17] N. Koenig and A. Howard, “Design and use paradigms for gazebo, an open-source multi-robot simulator,” in 2004 IEEE/RSJ IROS , vol. 3, 2004, pp. 2149–2154 vol.3. [18] A. Constantin and R. S. Johnson, “Ekman-type solutions for shallow-water flows on a rotating sphere: A new perspective on a classical problem,” Physics of Fluids , vol. 31, no. 2, Feb. 2019. [Online]. Available: http://dx.doi.org/10.1063/1.5083088 [19] M. Curcic and B. K. Haus, “Revised estimates of ocean surface drag in strong winds,” Geophysical Research Letters , vol. 47, no. 10, May 2020. [Online]. Available: http://dx.doi.org/10.1029/2020GL087647
