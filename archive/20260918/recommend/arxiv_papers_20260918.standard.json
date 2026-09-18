@@ -1,0 +1,254 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-18T21:34:03.996733+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.20691v1",
+      "source": "arxiv",
+      "title": "Custom PX4 firmware for autonomous hybrid aerial-marine missions",
+      "abstract": "Mapping and monitoring aquatic environments can benefit from hybrid aerial-amphibious drones able to combine flight and water-surface navigation within the same mission. This paper presents a PX4 firmware extension for such platforms, introducing manual and autonomous marine navigation modes integrated with the standard PX4 mission pipeline and QGroundControl interface. The proposed framework preserves existing flight functionalities and safety mechanisms while enabling unified planning and execution of hybrid aerial-marine missions with differentiated aerial and marine waypoints. Simulated case studies validate the implementation and demonstrate stable surface navigation under calm and wavy conditions.",
+      "authors": [
+        "Andrea Capuozzo",
+        "Fabio Ruggiero",
+        "Vincenzo Lippiello"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-17T16:58:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.20691v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "autonomous hybrid aerial-marine navigation firmware for aquatic monitoring",
+      "llm_evidence_cn": "面向水生监测的自主空中-水面导航固件",
+      "llm_evidence": "面向水生监测的自主空中-水面导航固件",
+      "canonical_evidence": "面向水生监测的自主空中-水面导航固件",
+      "llm_tldr_en": "Aquatic mapping needs hybrid aerial-amphibious drones; this work extends PX4 firmware with manual and autonomous marine navigation modes, validated in simulation under calm and wavy conditions.",
+      "llm_tldr_cn": "水生环境测绘与监测可借助兼具飞行与水面航行能力的混合无人机，但现有飞控固件缺乏水面自主导航支持。本文扩展PX4固件，引入手动与自主水面航行模式，并与标准任务管线及QGroundControl界面集成，保留原有飞行功能与安全机制。仿真案例验证了在平静与波浪条件下稳定的水面导航，为统一的空中-水面任务规划与执行提供了可行框架。",
+      "llm_tldr": "水生环境测绘与监测可借助兼具飞行与水面航行能力的混合无人机，但现有飞控固件缺乏水面自主导航支持。本文扩展PX4固件，引入手动与自主水面航行模式，并与标准任务管线及QGroundControl界面集成，保留原有飞行功能与安全机制。仿真案例验证了在平静与波浪条件下稳定的水面导航，为统一的空中-水面任务规划与执行提供了可行框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.13453v1",
+      "source": "arxiv",
+      "title": "A Machine Learning API for Earth Observation Data Cubes Based on openEO",
+      "abstract": "Earth Observation (EO) data are increasingly organized as spatio-temporal data cubes, while machine learning (ML) methods operate on tabular feature matrices or structured tensor inputs. This mismatch forces platform-specific transformations that are difficult to reproduce or transfer across cloud infrastructures. The openEO specification provides a unified interface for EO data access and processing across heterogeneous backends, but lacks a standardized approach for ML integration.   We propose a process-level ML specification for openEO structured into three stages: model initialization, model actions (training, tuning, inference, validation), and model management. It supports classical algorithms such as Random Forest and SVM, as well as deep learning architectures for time-series and spatial patch-based modeling, including TempCNN, Temporal Attention Encoders, and foundation model inference. Three prototype implementations in R and Python demonstrate feasibility across diverse technology stacks. A crop type mapping use case demonstrates cross-backend interoperability by submitting an identical process graph to independent R and Python backends and comparing predictions and evaluation metrics.   Two further use cases demonstrate deep learning on time series and foundation model inference, each executed on a dedicated backend. The prototypes reveal, however, that full cross-backend portability requires deeper harmonization of serialization formats and execution semantics than the process level alone can enforce; backend library versions and preprocessing conventions outside the specification's boundary also affect reproducibility. Addressing both through explicit backend conformance profiles represents the most important near-term direction. The specification advances the reproducibility, portability, and accessibility of ML workflows on EO data cubes across cloud platforms.",
+      "authors": [
+        "Brian Pondi",
+        "Jonas Hurst",
+        "Rolf Simoes",
+        "Jonas Starke",
+        "Marius Appel",
+        "Edzer Pebesma"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-11T19:14:52+00:00",
+      "link": "https://arxiv.org/pdf/2609.13453v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Machine learning API for Earth observation data cubes enabling oceanographic remote sensing mining",
+      "llm_evidence_cn": "面向地球观测数据立方体的机器学习接口，服务海洋遥感数据挖掘",
+      "llm_evidence": "面向地球观测数据立方体的机器学习接口，服务海洋遥感数据挖掘",
+      "canonical_evidence": "面向地球观测数据立方体的机器学习接口，服务海洋遥感数据挖掘",
+      "llm_tldr_en": "Paper addresses the mismatch between Earth observation data cubes and ML input formats by proposing a process-level ML specification for openEO covering initialization, training, inference and management across heterogeneous cloud backends.",
+      "llm_tldr_cn": "针对地球观测数据立方体与机器学习所需表格或张量输入不匹配、转换难以跨云平台复现迁移的问题，论文基于openEO提出流程级ML规范。该规范分为模型初始化、模型动作（训练、调参、推理、验证）与模型管理三阶段，兼容随机森林、SVM及深度学习模型。工作为遥感数据挖掘提供了标准化、可复现接口，便于海洋等遥感任务跨后端部署。",
+      "llm_tldr": "针对地球观测数据立方体与机器学习所需表格或张量输入不匹配、转换难以跨云平台复现迁移的问题，论文基于openEO提出流程级ML规范。该规范分为模型初始化、模型动作（训练、调参、推理、验证）与模型管理三阶段，兼容随机森林、SVM及深度学习模型。工作为遥感数据挖掘提供了标准化、可复现接口，便于海洋等遥感任务跨后端部署。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.17929v1",
+      "source": "arxiv",
+      "title": "Multi-Session Multimodal Underwater Mapping with Acoustic and Optical Imaging",
+      "abstract": "Accurate seafloor mapping is essential for marine science, archaeology, and environmental monitoring. However, integrating data from different sensors, such as side-scan sonar and optical cameras, collected across separate survey sessions, remains challenging due to positioning drift and sensor offsets. This paper presents a multi-session, multimodal underwater mapping framework based on factor graph optimization. The method jointly optimizes vehicle trajectories, 3D landmark positions, sensor extrinsics, and per-session global alignment transformations. By combining rigid inter-session corrections with local trajectory deformations, it compensates for both inter-session offsets and intra-session distortions from accumulated navigation errors. The proposed methodology was validated on real-world datasets collected along the Catalan coast. Results show measurable improvements in map consistency over both unoptimized and rigid-alignment baselines across all metrics, including Pixel Accuracy and mean Intersection over Union. The method achieves a 3.4% improvement in pixel accuracy over the unoptimized baseline, corresponding to improved semantic labelling across approximately 14700 $\\text{m}^2$ of mapped area. Qualitative results further show consistent co-registration between sonar and optical maps, even in the presence of significant trajectory distortions and inter-session misalignments. These findings demonstrate the potential of the proposed framework to generate coherent multimodal seafloor maps from heterogeneous underwater surveys.",
+      "authors": [
+        "Precious Philip-Ifabiyi",
+        "Valerio Franchi",
+        "Fausto Ferreira",
+        "Nuno Gracias"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-15T23:37:13+00:00",
+      "link": "https://arxiv.org/pdf/2609.17929v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal underwater mapping for marine monitoring",
+      "llm_evidence_cn": "面向海洋监测的多模态水下测绘",
+      "llm_evidence": "面向海洋监测的多模态水下测绘",
+      "canonical_evidence": "面向海洋监测的多模态水下测绘",
+      "llm_tldr_en": "Integrating side-scan sonar and optical imagery across survey sessions is hard due to drift and sensor offsets. This factor-graph framework jointly optimizes trajectories, landmarks, extrinsics, and session alignments for accurate seafloor mapping.",
+      "llm_tldr_cn": "海底测绘对海洋科学、考古与环境监测至关重要，但跨航次采集的侧扫声呐与光学相机数据因定位漂移与传感器外参偏差难以整合。本文提出基于因子图优化的多航次多模态水下测绘框架，联合优化轨迹、三维地标、传感器外参与航次间全局对齐变换。方法兼顾刚性航次间校正与局部轨迹形变，补偿累积导航误差。",
+      "llm_tldr": "海底测绘对海洋科学、考古与环境监测至关重要，但跨航次采集的侧扫声呐与光学相机数据因定位漂移与传感器外参偏差难以整合。本文提出基于因子图优化的多航次多模态水下测绘框架，联合优化轨迹、三维地标、传感器外参与航次间全局对齐变换。方法兼顾刚性航次间校正与局部轨迹形变，补偿累积导航误差。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18893v1",
+      "source": "arxiv",
+      "title": "SOL-SLAM: Inverse Compositional Gauss-Newton Direct Registration for Fast Sonar-Only Local SLAM",
+      "abstract": "Autonomous underwater navigation typically relies on complex and expensive multi-modal sensor suites designed to prioritize global Simultaneous Localization and Mapping (SLAM) accuracy. However, local reactive behaviors such as coarse navigation and obstacle avoidance require only local consistency---a capability that should be feasible using only a Forward-Looking Sonar (FLS), yet remains largely unaddressed, leaving a critical gap in FLS-only local SLAM.   Moreover, existing acoustic SLAM frameworks predominantly rely on sparse feature extraction methods that discard substantial portions of the already information-sparse acoustic returns. To overcome these limitations, this work introduces a dense direct registration approach that aligns full acoustic intensity scans to a recursively updated local map. Real-time execution is achieved via an Inverse Compositional Gauss-Newton optimization strategy that minimizes computational overhead.   Experimental evaluations show that this dense method yields significant improvements on translation error compared to sparse keypoint baselines, maintaining stable sub-meter tracking precision over wide displacement gaps. Moreover, this approach delivers odometry performance comparable to multi-sensor fusion pipelines (FLS, DVL, and IMU), bypassing expensive payload dependencies in feature-rich environments. We validate real-world applicability through AUV field trials, running the full local SLAM approach onboard an embedded, resource-constrained computer.",
+      "authors": [
+        "Kalvik Jakkala",
+        "Jason O'Kane"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-16T16:25:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.18893v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Sonar-only SLAM for autonomous underwater navigation",
+      "llm_evidence_cn": "面向自主水下导航的仅声呐SLAM",
+      "llm_evidence": "面向自主水下导航的仅声呐SLAM",
+      "canonical_evidence": "面向自主水下导航的仅声呐SLAM",
+      "llm_tldr_en": "Proposes SOL-SLAM, a dense direct registration approach using inverse compositional Gauss-Newton to enable fast local SLAM with only a forward-looking sonar for autonomous underwater navigation.",
+      "llm_tldr_cn": "针对自主水下导航依赖复杂昂贵的多模态传感器套件、而局部反应式行为仅需局部一致性却缺乏仅用前视声呐方案的问题，本文提出SOL-SLAM。现有声学SLAM多依赖稀疏特征提取，丢弃了大量本就稀疏的声呐回波信息，本文采用逆合成高斯-牛顿的稠密直接配准方法。该方法在仅用前视声呐条件下实现快速局部SLAM，填补了该领域空白。该工作为低成本自主水下导航提供了新方案。",
+      "llm_tldr": "针对自主水下导航依赖复杂昂贵的多模态传感器套件、而局部反应式行为仅需局部一致性却缺乏仅用前视声呐方案的问题，本文提出SOL-SLAM。现有声学SLAM多依赖稀疏特征提取，丢弃了大量本就稀疏的声呐回波信息，本文采用逆合成高斯-牛顿的稠密直接配准方法。该方法在仅用前视声呐条件下实现快速局部SLAM，填补了该领域空白。该工作为低成本自主水下导航提供了新方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20680v1",
+      "source": "arxiv",
+      "title": "Towards Scaling Marine Perception with Synthetic Data",
+      "abstract": "Scalable machine learning in challenging underwater environments is strongly limited by the lack of labeled real-world training data. This data is often expensive and laborious to gather, making large-scale real-world data challenging to gather and curate. However, simulated data can help close the gap, enabling many learning-based tasks for underwater perception. In this work, we extend OceanSim, an IsaacSim-based underwater perception simulator, with a Synthetic Data Generation (SDG) pipeline for training models to be used in underwater scenarios. The proposed pipeline enables users to generate large, automatically labeled, photorealistic datasets with configurable scene appearance, structure, and sensor settings. We evaluate the pipeline on a real-world sea urchin detection task and study how different forms of synthetic scene variation affect sim-to-real performance. Based on these experiments, we discuss findings on our results, main limitations of the current pipeline and identify future directions for improving underwater rendering fidelity, scene diversity, and the evaluation of sim-to-real generalization. The open-source code can be found at https://github.com/umfieldrobotics/OceanSim.",
+      "authors": [
+        "Haoyu Ma",
+        "Onur Bagoren",
+        "Anja Sheppard",
+        "Elias Fandi",
+        "Ashrith Edukulla",
+        "Tanner Aslan",
+        "Natasha Sieh",
+        "Jingyu Song",
+        "Katherine A. Skinner"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-09-17T16:51:02+00:00",
+      "link": "https://arxiv.org/pdf/2609.20680v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Synthetic data generation pipeline for scalable underwater marine perception",
+      "llm_evidence_cn": "面向可扩展水下海洋感知的合成数据生成流程",
+      "llm_evidence": "面向可扩展水下海洋感知的合成数据生成流程",
+      "canonical_evidence": "面向可扩展水下海洋感知的合成数据生成流程",
+      "llm_tldr_en": "Extends the OceanSim underwater perception simulator with a synthetic data generation pipeline that produces large, automatically labeled photorealistic datasets to scale learning-based marine perception.",
+      "llm_tldr_cn": "针对水下环境标注真实数据稀缺且采集昂贵、制约可扩展机器学习的问题，本文扩展了基于IsaacSim的水下感知模拟器OceanSim，提出合成数据生成流程。该流程可生成大规模、自动标注、照片级真实感的数据集，场景外观、结构与传感器设置均可配置。作者在真实海胆数据集上评估了该流程，验证了合成数据对水下感知任务的支撑作用。该工作为海洋感知模型的规模化训练提供了数据基础。",
+      "llm_tldr": "针对水下环境标注真实数据稀缺且采集昂贵、制约可扩展机器学习的问题，本文扩展了基于IsaacSim的水下感知模拟器OceanSim，提出合成数据生成流程。该流程可生成大规模、自动标注、照片级真实感的数据集，场景外观、结构与传感器设置均可配置。作者在真实海胆数据集上评估了该流程，验证了合成数据对水下感知任务的支撑作用。该工作为海洋感知模型的规模化训练提供了数据基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20731v1",
+      "source": "arxiv",
+      "title": "Underwater Visual Target Tracking with Target-Specific Depth Estimation and Adaptive Model-Fusion Predictive Control",
+      "abstract": "Vision-based underwater target tracking is challenged by unreliable depth measurements and unknown target motion. This paper proposes a stereo visual-servoing framework for an autonomous underwater vehicle (AUV). For perception, the framework derives a stable 3D relative state from stereo images through target-specific depth extraction and Kalman filtering. It constructs a target-depth mask from color, disparity, and temporal cues to select reliable target pixels, and then filters the resulting depth measurement and detected image center separately. For control, the framework decouples yaw regulation from translational control, avoiding computationally expensive coupled multi-DOF optimization and enabling real-time translational MPC. The translational controller employs adaptive model-fusion predictive control, combining constant-velocity and zero-velocity target models to accommodate different target-motion patterns. It updates the model weights using historical prediction errors and computes translational commands subject to actuation, following-distance, and field-of-view constraints. Through simulations and real-world experiments, we validate the effectiveness of the proposed framework and show it has better performance than existing frameworks.",
+      "authors": [
+        "Yuheng Zhou",
+        "Haiyang Cheng",
+        "Yanqi Feng",
+        "Pangkit Fong",
+        "Mei Xuan Lee",
+        "Marcus Gee",
+        "Chongrong Fang",
+        "Jianping He"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-17T17:22:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.20731v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous underwater vehicle visual target tracking",
+      "llm_evidence_cn": "自主水下航行器视觉目标跟踪",
+      "llm_evidence": "自主水下航行器视觉目标跟踪",
+      "canonical_evidence": "自主水下航行器视觉目标跟踪",
+      "llm_tldr_en": "Underwater visual target tracking suffers unreliable depth and unknown target motion; this stereo visual-servoing framework for AUVs extracts target-specific depth with Kalman filtering and decouples yaw from translation via adaptive model-fusion predictive control.",
+      "llm_tldr_cn": "视觉水下目标跟踪面临深度测量不可靠与目标运动未知的难题。本文面向自主水下航行器提出立体视觉伺服框架，感知端通过目标特定深度提取与卡尔曼滤波获得稳定三维相对状态，并利用颜色、视差与时间线索构建目标深度掩膜筛选可靠像素；控制端将偏航调节与平移控制解耦，避免高维耦合优化。方法提升了相对状态估计的稳定性与实时控制性能。该工作为水下智能体的目标跟踪与自主作业提供了感知控制一体化方案。",
+      "llm_tldr": "视觉水下目标跟踪面临深度测量不可靠与目标运动未知的难题。本文面向自主水下航行器提出立体视觉伺服框架，感知端通过目标特定深度提取与卡尔曼滤波获得稳定三维相对状态，并利用颜色、视差与时间线索构建目标深度掩膜筛选可靠像素；控制端将偏航调节与平移控制解耦，避免高维耦合优化。方法提升了相对状态估计的稳定性与实时控制性能。该工作为水下智能体的目标跟踪与自主作业提供了感知控制一体化方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

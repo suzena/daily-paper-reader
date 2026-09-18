@@ -1,0 +1,105 @@
+{
+  "date": "20260918",
+  "date_label": "",
+  "generated_at": "2026-09-18 21:36:05 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.20691v1",
+      "route": "202609/18/2609.20691v1-custom-px4-firmware-for-autonomous-hybrid-aerial-marine-missions",
+      "title": "Custom PX4 firmware for autonomous hybrid aerial-marine missions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向水生监测的自主空中-水面导航固件",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    },
+    {
+      "paper_id": "2609.13453v1",
+      "route": "202609/18/2609.13453v1-a-machine-learning-api-for-earth-observation-data-cubes-based-on-openeo",
+      "title": "A Machine Learning API for Earth Observation Data Cubes Based on openEO",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向地球观测数据立方体的机器学习接口，服务海洋遥感数据挖掘",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    },
+    {
+      "paper_id": "2609.17929v1",
+      "route": "202609/18/2609.17929v1-multi-session-multimodal-underwater-mapping-with-acoustic-and-optical-imaging",
+      "title": "Multi-Session Multimodal Underwater Mapping with Acoustic and Optical Imaging",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋监测的多模态水下测绘",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    },
+    {
+      "paper_id": "2609.18893v1",
+      "route": "202609/18/2609.18893v1-sol-slam-inverse-compositional-gauss-newton-direct-registration-for-fast-sonar-only-local-slam",
+      "title": "SOL-SLAM: Inverse Compositional Gauss-Newton Direct Registration for Fast Sonar-Only Local SLAM",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主水下导航的仅声呐SLAM",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    },
+    {
+      "paper_id": "2609.20680v1",
+      "route": "202609/18/2609.20680v1-towards-scaling-marine-perception-with-synthetic-data",
+      "title": "Towards Scaling Marine Perception with Synthetic Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向可扩展水下海洋感知的合成数据生成流程",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    },
+    {
+      "paper_id": "2609.20731v1",
+      "route": "202609/18/2609.20731v1-underwater-visual-target-tracking-with-target-specific-depth-estimation-and-adaptive-model-fusion-predictive-control",
+      "title": "Underwater Visual Target Tracking with Target-Specific Depth Estimation and Adaptive Model-Fusion Predictive Control",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主水下航行器视觉目标跟踪",
+      "first_seen_at": "2026-09-18 21:36:05 UTC",
+      "updated_at": "2026-09-18 21:36:05 UTC"
+    }
+  ]
+}

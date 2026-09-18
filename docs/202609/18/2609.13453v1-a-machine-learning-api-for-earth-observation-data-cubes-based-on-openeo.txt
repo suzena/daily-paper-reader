@@ -1,0 +1,1324 @@
+Title: A Machine Learning API for Earth Observation Data Cubes Based on openEO
+
+URL Source: https://arxiv.org/pdf/2609.13453v1
+
+Published Time: Tue, 15 Sep 2026 00:19:10 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+# A Machine Learning API for Earth Observation Data Cubes Based on openEO 
+
+## Brian Pondi 1* , Jonas Hurst 1, Rolf Simoes 2, Jonas Starke 1, Marius Appel 3,Edzer Pebesma 1
+
+> 1*
+
+Institute for Geoinformatics, University of Münster, Heisenbergstr. 2, Münster, 48149, North-Rhine Westphalia, Germany. 
+
+> 2
+
+FGV Agro - Center for Agribusiness Studies, Fundação Getulio Vargas, Av. Paulista, 542, São Paulo, 01310-000, São Paulo, Brazil. 
+
+> 3
+
+Bochum University of Applied Sciences, Am Hochschulcampus 1, Bochum, 44801, North-Rhine Westphalia, Germany. *Corresponding author(s). E-mail(s): brian.pondi@uni-muenster.de; Contributing authors: jhurst@uni-muenster.de; rolfsimoes@gmail.com; jstarke@uni-muenster.de; marius.appel@hs-bochum.de; edzer.pebesma@uni-muenster.de; 
+
+Abstract 
+
+Earth Observation (EO) data are increasingly organized and analyzed as spatio-temporal data cubes, while machine learning (ML) methods operate on tabular feature matrices or structured tensor inputs. This representational mismatch means that integrating ML into EO workflows currently requires platform-specific transformations that are difficult to reproduce or transfer across cloud infrastructures. The openEO specification provides a unified interface for EO data access and processing across heterogeneous backends, but lacks a standardized approach for ML integration. We propose a process-level ML specification for openEO that structures workflows into three stages: model initialization, model actions covering training, tuning, inference, validation, and model management. The specification supports classical algorithms such as Random Forest and SVM as well as deep learning archi-tectures for time-series and spatial patch-based modeling, including TempCNN and Temporal Attention Encoders and foundation model inference. Three prototype implementations in R and Python demonstrate feasibility across diverse technology stacks. A crop type mapping use case demonstrates cross-backend inter-operability by submitting an identical process graph to independent R and Python backends and comparing the resulting predictions and evaluation metrics. Two further use cases demonstrate deep learning on time series and foundation model inference, each executed on a dedicated backend. Prototype implementations reveal, however, that full cross-backend porta-bility requires deeper harmonization of serialization formats and execution semantics than the process level alone can enforce; backend library versions and preprocessing conventions outside the specification bound-ary also affects reproducibility. Addressing both through explicit backend conformance profiles represents the most important near-term direction. The specification advances the reproducibility, portability, and accessibility of ML workflows on EO data cubes across cloud platforms.  
+
+> Keywords: openEO, earth observation, data cubes, machine learning, deep learning, interoperability
+
+# 1 Introduction 
+
+Earth Observation (EO) data are increasingly organized and analyzed as data cubes : multidimensional arrays with explicit spatial, temporal, and band dimensions (x, y, time, band ) [1, 2]. This representation supports scalable analytics, reproducible querying, and consistent spatio-temporal alignment across large EO data archives. Driven by advances in satellite technology and open data-sharing policies, large volumes of EO data are now freely available for applications such as land-cover monitoring, carbon stock estimation, and disaster 1arXiv:2609.13453v1 [cs.LG] 11 Sep 2026 response [3, 4]. Due to the petabyte scale of these datasets (e.g., more than 90 PB in the Copernicus Data Space Ecosystem as of May 2026 1), EO data cubes are predominantly stored and processed in cloud environments. Meanwhile, machine learning (ML) has become a central analytical tool for extracting patterns and pre-dictions from these datasets, with applications across land-cover classification [5], crop yield estimation [6], and disaster monitoring [7]. Yet a fundamental representational gap exists between EO data cubes and what ML models actually consume. Classical methods such as Random Forests [8] and Support Vector Machines [9] expect tabular feature matrices, while deep learning models require structured multi-dimensional arrays with fixed shape and ordering. Bridging this gap requires systematic transformations between cubes, tables, and tensors (Fig. 1) to satisfy each model’s input constraints. In practice, these transformations are implemented in an ad hoc and platform-specific manner, tightly coupled to particular software stacks or ML libraries. Workflows developed for one platform are consequently difficult to reproduce, reuse, or transfer across infrastructures, even when operating on conceptually identical EO data cubes [10]. Rolf et al. [11] have argued that satellite data constitute a distinct modality in ML whose spatio-temporal structure requires specialized methods rather than the direct reuse of approaches designed for natural images. The absence of shared abstractions for EO-specific ML operations forces each platform to re-implement these methods independently, fragmenting effort and limiting reproducibility across infrastructures.  
+
+> Fig. 1 Representation transformations between EO data cubes, tabular feature matrices (classical ML), tensor representations (deep learning), and prediction cubes. Each transformation must bridge a structural mismatch between the cube’s named dimen-sions and the model’s expected input layout.
+
+The openEO specification standardizes EO data access and processing through a common API for querying and manipulating data cubes across heterogeneous cloud backends [10]. In April 2026, the Open Geospatial Consortium (OGC) approved and published the openEO API as an OGC Community Standard and the ope-nEO Processes as an OGC Community Practice [12, 13]. As openEO adoption scales under formal governance, ad hoc and backend-specific ML workarounds become increasingly unsustainable: a gap that individual plat-forms could manage independently now requires a shared solution at the specification level. Yet openEO’s support for ML remains limited and fragmented. A small number of ML-related processes exist in isolated back-ends and have been labeled as “experimental” for more than four years, notably fit_class_random_forest 
+
+and predict_random_forest in VITO’s Terrascope platform 2, but these evolved without a shared struc-ture and are not portable across backends. User-defined functions (UDFs) allow deep learning workflows in principle, but they typically depend on backend-specific environments, which limits both portability and repro-ducibility. Extending openEO to support ML, therefore, requires not just additional endpoints but a coherent process-level specification that integrates with the existing data cube model. To address this gap, we propose a standardized ML specification for EO data cubes within the openEO ecosystem. The specification structures ML workflows into three stages: (i) model initialization, (ii) model actions covering training, tuning, inference, and validation, and (iii) model management, covering saving and loading. By defining these operations at the process level, the same workflow can be expressed once and executed across heterogeneous backends while remaining agnostic to the underlying ML representation. We evaluate two claims: (i) that a process-level ML specification can express the three dominant supervised ML workflow types in EO practice—feature-based, time-series, and patch-based—within a single declarative abstraction, and (ii) that an identical process graph submitted to independent openEO backends yields predic-tions whose overall accuracy and dominant per-location class assignment agree within the variation expected from differences in underlying ML library defaults. 
+
+> 1https://dashboard.dataspace.copernicus.eu/, accessed May 2026.
+> 2https://docs.terrascope.be/Developers/WebServices/OpenEO/OpenEO.html
+
+2The contributions of this work are threefold: (i) a backend-agnostic, process-level ML specification integrated with the openEO process catalog, covering classical ML, deep learning on time series, and foundation-model workflows; (ii) prototype implementations in both R and Python; and (iii) representative use cases demonstrating how the specification improves interoperability, reproducibility, and accessibility of ML workflows on EO data cubes. The modular process structure provides a foundation for future extension to emerging paradigms, including federated learning [14] and large-scale foundation models [15]. 
+
+# 2 Background 
+
+## 2.1 Data Cubes 
+
+A widely used data structure in EO is the raster data cube : a multidimensional array with consistent spatial, temporal, and spectral axes that organizes large satellite image collections into a uniform, queryable form [16]. Image collections comprise sets of satellite images, each containing multiple spectral bands or variables. Within a single image, bands typically share a common spatial extent, acquisition timestamp, and reference system, although their pixel resolutions may differ [2]. Unlike the regular structure of data cubes, conventional image collections often include scenes with irregular spatial coverage, variable acquisition intervals, and differing coordinate reference systems, making uniform processing more challenging. By standardizing indexing along named dimensions (x, y, time, band ) and attaching explicit metadata, data cubes ensure that the same query produces identical samples across backends. Deterministic re-slicing and consistent dimension labels further guarantee that training, validation, and inference draw on the same spatio-temporal references regardless of the execution environment. These properties make the data cube the natural anchor for the ML specification proposed in this paper: the initialization, fit, predict, and management processes defined in later sections all operate on this shared structure. Figure 2 illustrates a workflow for converting image files into the canonical cube layout (x, y, time, band )
+
+that underpins sampling and batching throughout the specification.   
+
+> Fig. 2 A workflow for converting image/raster files into a pixel-aligned image/raster data cube (x, y, time, band ). Adapted from [16].
+
+The regular, tensor-like structure of raster data cubes makes them naturally compatible with a wide range of ML architectures. Convolutional and recurrent models benefit directly from the spatial and temporal ordering that cubes preserve [17], and architectures developed specifically for EO data, including TempCNN [5], ConvLSTM [18], and Temporal Self-Attention networks [19], exploit this structure to learn phenological and spatial patterns from aligned observation sequences. Complementing raster cubes, vector data cubes 3 provide a structured representation for training and val-idation data. Like raster cubes, they are modeled as n-dimensional arrays, but include at least one spatial dimension that maps to a set of 2-D vector geometries such as points, lines, or polygons. Additional axes cap-ture time, attributes, or category labels. This design enables vector cubes to store ground-truth annotations such as field parcel boundaries, land-cover classes, or point measurements in a queryable form. Crucially, vec-tor data cubes can be joined with raster data cubes by spatial and temporal relationships, providing a clean interface between feature inputs and target variables in supervised learning workflows. 
+
+## 2.2 ML Workflow Types for EO Data Cubes 
+
+EO data present distinctive challenges for ML. Unlike conventional tabular datasets, satellite imagery is inherently spatio-temporal, high-dimensional, and spatially autocorrelated [11, 20]. Observations combine multiple spectral bands, fine spatial resolution, and repeated temporal acquisitions, characteristics that violate the independent and identically distributed (i.i.d.) assumption underlying many standard ML methods. Linear 
+
+> 3https://r-spatial.org/r/2022/09/12/vdc.html
+
+3regression, logistic regression, and naive Bayes classifiers assume that observations are drawn independently and identically from a fixed distribution, an assumption that breaks down when adjacent pixels share spatial context or when repeated acquisitions are temporally correlated. Even ensemble methods such as Random Forests [8] and gradient boosting machines, while more robust in practice, rely on tabular feature vectors that must be carefully engineered to encode spatio-temporal structure explicitly. Support Vector Machines [9] face similar constraints. ML workflows for EO must therefore explicitly account for spatial and temporal structure rather than treating observations as exchangeable samples. Within openEO, satellite collections are exposed as data cubes that can be queried and transformed through standardized processes. This abstraction enables consistent extraction of pixel time series, image patches, or aggregated features across backends. However, different ML models consume EO data in fundamentally different forms, and the way a data cube is decomposed into learning units shapes the entire ML workflow and determines which operations must be supported. The three use cases in Sections 5, 6.1, and 6.2 demonstrate that process-level abstraction can support all three dominant decomposition strategies described below. In practice, three workflow types dominate EO ML applications, each defined by how the data cube is transformed into the input structure expected by the model. 
+
+Feature-based workflows convert observations at each location into engineered descriptors, including spectral indices, textural measures, and ancillary layers, aggregated into a two-dimensional tabular feature matrix (N × F ), where N is the number of samples and F the number of features. This matrix is the canonical input for classical estimators such as Random Forests or SVMs [21, 22]. Supporting this workflow type requires processes for feature extraction, spatial aggregation, and sampling that transform a cube into this canonical form. 
+
+Time-series workflows treat each cube location as a temporal signal, modeling phenological trajecto-ries or disturbance dynamics directly from observation sequences rather than engineered features [23]. Deep sequence models such as TempCNNs [5] and attention-based architectures [19] consume inputs shaped as 
+
+(B × T × C), where B is batch size, T the number of time steps, and C the number of spectral channels. Sup-porting this workflow type requires processes for temporal interpolation, gap-filling, and consistent extraction of ordered sequences from data cubes. 
+
+Spatial patch-based workflows leverage local spatial context by operating on patches extracted from data cubes, enabling convolutional networks to capture texture, structure, and spatial dependencies [6, 17, 18]. Two-dimensional patch models consume inputs shaped as (B × C × H × W ), while spatio-temporal models extend this to (B × T × C × H × W ) [24] or full 4-D stacks (B × T × C × Z × Y × X) for volumetric representations [25], where H, W , and Z are the spatial and vertical extents of the patch. Bi-temporal change detection models consume a specialised variant shaped as (B × 2 × C × H × W ), where the second dimension indexes the two acquisition dates being compared [26]. Supporting this workflow type requires tiling, patch extraction, batching, and reconstruction of predictions into spatially coherent output cubes. In operational settings these workflow types frequently intersect: feature engineering may precede tem-poral modeling, and hybrid architectures often combine spatial and temporal context. The three types were selected because they cover the dominant supervised ML paradigms currently employed in EO practice and represent the breadth of operations a general specification must support. Emerging approaches such as graph-based learning or large foundation models can be incorporated incrementally through the same process-level abstraction without altering the core design. 
+
+## 2.3 ML API Conventions and Standards 
+
+Covering this range of workflow types within a single specification requires grounding in both EO-specific requirements and the API conventions that have emerged in the broader ML ecosystem. Supervised ML APIs have converged on a design pattern that scikit-learn [27] established: configure a model with hyperparame-ters, train it via fit(X, y) , and apply it via predict(X) , with each stage kept separate. PyTorch’s Module 4
+
+abstraction and the Keras compile /fit API 5 carry the same separation into deep learning; the Hugging Face 
+
+Transformers library [28] extends it to pretrained Natural Language model pipelines, and MLflow [29] applies it to model lifecycle management through experiment tracking and model registries. The proposed specifica-tion’s three-stage structure, introduced in Section 3, maps directly onto this same separation, transposed to the declarative process-level abstraction of openEO and the dimensional structure of EO data cubes. ONNX (Open Neural Network Exchange) [30], an open standard governed by the Linux Foundation and backed by industry software and vendor consortium, including Microsoft, Meta, IBM, NVIDIA, AWS, Intel, AMD, Huawei Technologies, Siemens, Alibaba Group, Tencent, Qualcomm, and Arm represent trained ML models as portable computation graphs independent of the training framework. A model trained in PyTorch, scikit-learn, Tensorflow, XGBoost, LibSVM, or Keras can be exported to ONNX and run in any ONNX-compatible runtime, separating training from deployment. Because EO backends may rely on different ML execution stacks—as the prototype implementations in Section 4 illustrate—ONNX is the recommended format 
+
+> 4https://docs.pytorch.org/docs/2.12/notes/modules.html
+> 5https://keras.io/api/models/model_training_apis/
+
+4for model exchange: a model produced on one backend can be loaded and applied on another without bridging code. The SpatioTemporal Asset Catalog (STAC) 6 is an open JSON specification for cataloguing geospatial data assets with queryable, provider-agnostic metadata, used by major EO data providers and open data archives. The STAC Machine Learning Model (STAC MLM) extension [31] applies this framework to spatio-temporal ML models, standardizing how architecture, input and output specifications, model hyperparameters, pretrained source, tasks and software dependencies are recorded as catalog assets. Because openEO backends already interact with STAC-compliant catalogs for data access, aligning model management with the same infrastructure means trained models can be shared and retrieved through workflows EO practitioners already have in place. 
+
+# 3 ML API Specification 
+
+Building on the workflow types in Section 2.2 and the API conventions in Section 2.3, this section describes the ML API processes for the openEO ecosystem. The specification is organized into three stages: model initialization, model actions, and model management, each covering a distinct subset of processes for end-to-end ML on EO data cubes. The proposed processes are described as JSON schemas, available in the project repository on GitHub 7.An example schema is provided in Appendix B. This follows the openEO community’s standard development workflow: GitHub is the platform for proposing and iterating on process specifications through open issues and pull requests. Once a specification has been implemented in at least two independent production backends, it is promoted to the stable, versioned catalogue at https://processes.openeo.org/, which is the normative specification. The broader openEO Processes specification—which defines the framework within which the proposed ML processes sit—has been approved and published as an OGC Community Practice (version 1.2, April 2026; https://docs.ogc.org/cp/24-060.html), situating this work within an established international open geospatial standards context. Five core principles defined by the authors guided the design of the API: • Modularity : Decoupling initialization, action, and management into discrete processes allows users to compose complex pipelines from simple building blocks and swap algorithms without rewriting entire workflows. • Consistency : Uniform naming conventions, parameter ordering, and behavior across all ML processes minimize surprises for users, improving learnability and reducing integration friction. • Backend-Agnosticism : Defining processes independently of execution engines allows backends to map ML processes to native libraries such as scikit-learn, XGBoost, PyTorch, or caret, while preserving a consistent user experience. • Sensible Defaults : Processes expose well-chosen default hyperparameters that cover the majority of common use cases, so that simple ML tasks run without configuration, reducing errors and accelerating prototyping. • Extensibility : A compact core API covers common ML tasks while supporting extension through commu-nity proposals, enabling new algorithms and workflow types to be added incrementally without modifying existing processes. The selection of processes presented in this section is intentionally pragmatic rather than exhaustive, and the rationale for inclusion is explicit. Processes were selected on three criteria: (i) they correspond to ML capabilities already widely used in operational EO analysis; (ii) they cover at least one of the three workflow types identified in Section 2, ensuring that feature-based, time-series, and spatial patch-based workflows are all supported; and (iii) mature, tested implementations exist in established libraries so that backends can realize the processes without bespoke ML development. Processes that do not yet meet criterion (iii), such as graph neural network architectures, are deliberately excluded from the current specification and left for future community proposals. In particular, several classification processes were introduced to make methods available in EO-focused libraries, such as the sits package [23] in R, accessible within the openEO ecosystem. This scoped selection provides a concrete starting point while keeping the process set open for future extension. 
+
+## 3.1 Model Initialization 
+
+Model initialization processes carry the prefix mlm_ and produce untrained model definition objects. Each process name follows the pattern: 
+
+mlm_<type>_<model> 
+
+> 6https://stacspec.org
+> 7https://github.com/PondiB/openEO-processes
+
+5where <type> is an abbreviated ML task category, such as class for classification, regr for regression, segm 
+
+for segmentation, and gen for generative models, and <model> identifies the algorithm or architecture, such as random_forest , svm , xgboost , tempcnn , or tae .Each initialization process returns a Model object that captures the selected algorithm together with its initial hyperparameters and references to the corresponding training and inference routines. This represen-tation allows users to define models ranging from classical algorithms to deep learning architectures, while deferring all computation to later process stages. All initialization processes expose a seed parameter for controlling stochastic behavior and supporting reproducible experimentation. Hyperparameters are given sensible default values so that models can be trained immediately without configuration; any parameter can be explicitly overridden during the initialization call to suit the specific task. These parameters can alternatively be designated as tuning candidates for the dedicated search processes ml_tune_grid , which evaluates a user-defined grid of configurations, and ml_tune_random ,which samples configurations from user-defined distributions [32]. 
+
+Integrating new algorithms. The specification is designed so that new model types can be added without modifying any existing process. A contributor adds a new mlm_ process by: (i) choosing a name that follows the mlm_<type>_<model> convention; (ii) defining the process schema in JSON, specifying parameters, their types, and default values following the same structure shown in Appendix B; (iii) returning a Model object whose train field holds the backend training routine and whose predict field holds the inference routine. Once registered, the new process is immediately accessible through ml_fit and ml_predict without any changes to those processes. The openEOcraft decorator mechanism illustrated in Section 6.1 demonstrates this pattern concretely: a single decorated R function becomes a fully registered openEO process accessible to all client libraries. Table 1 lists the representative initialization processes currently included in the specification.                                 
+
+> Table 1 Examples of ML Initialization Processes (mlm_ prefix) with representative tunable parameters.
+> Process Name Description
+> mlm_class_catboost Initializes a CatBoost classification model for later training using ml_fit . Typical tunable parameters include the number of trees, learning rate, tree depth, loss function, and random seed.
+> mlm_class_mlp Initializes a Multi-Layer Perceptron classification model. Tunable parameters include the number of hidden layers, units per layer, activation functions, learn-ing rate, batch size, and training epochs.
+> mlm_class_random_forest Initializes a Random Forest classification model for later training using ml_fit .Example tunable parameters include the number of trees and the maximum num-ber of variables per split.
+> mlm_class_svm Initializes a Support Vector Machine classification model. Tunable parameters include the kernel type, regularization parameter, and kernel coefficient.
+> mlm_class_xgboost Initializes an XGBoost classification model for later training using ml_fit .Representative tunable parameters include learning rate, maximum tree depth, subsampling ratio, and regularization terms.
+> mlm_class_tempcnn Initializes a Temporal Convolutional Neural Network model for time series clas-sification. Tunable parameters include the number of convolutional layers, kernel sizes, dropout rates, optimizer settings, and learning rate.
+> mlm_class_tae Initializes a Temporal Attention Encoder model for time series classification. Example tunable parameters include epochs, weight decay, batch size, optimizer, and learning rate.
+> mlm_class_lighttae Initializes a lightweight Temporal Attention Encoder model. Tunable parameters typically include epochs, weight decay, batch size, optimizer, and learning rate.
+> mlm_regr_svm Initializes aSupport Vector Machine regression model. Tunable parameters include kernel type, regularization strength, kernel coefficient, and the epsilon-insensitive loss parameter.
+> mlm_regr_random_forest Initializes a Random Forest regression model for later training using ml_fit .Example tunable parameters include the number of trees and the maximum num-ber of variables per split.
+
+## 3.2 Model Actions 
+
+Model action processes carry the prefix ml_ and execute the core stages of an ML workflow: training, hyperpa-rameter tuning, validation, inference, uncertainty estimation, and spatial post-processing. Each process name follows the pattern: 
+
+ml_<action> 
+
+6The central process in this group is ml_fit , which takes the untrained Model object produced by any initialization process and trains it against a vector data cube containing input features and target labels. In this iteration of the specification, train and test partitioning is handled internally; users provide their full labelled dataset without pre-splitting. Once trained, the model is passed to ml_predict for predictions, or to ml_predict_probabilities for probability outputs on classification tasks. Both prediction processes also accept models loaded from serialized formats, with ONNX [30] recommended for cross-backend portability. These probability outputs feed directly into downstream processes. ml_uncertainty_class quantifies prediction confidence using measures such as least-confidence, margin, or probability ratio, enabling human-in-the-loop workflows by highlighting regions where model certainty is low or training data are sparse. 
+
+ml_smooth_class applies Bayesian spatial smoothing to probability outputs, reducing per-pixel classification noise and improving spatial coherence in scenes with mixed land cover types [23]. Finally, ml_label_class 
+
+converts a probability cube into a labeled output cube by applying softmax normalization and selecting the class with the highest probability at each location. Hyperparameter search is supported through ml_tune_grid and ml_tune_random , and model evaluation through ml_validate , which computes user-selected performance metrics against a user-provided validation set, and ml_validate_kfold , which accepts an untrained model and a full training set, manages fold assign-ment internally, and returns the model refitted on the full training set alongside cross-validation scores. Table 2 summarizes the full set of model action processes. The design is open for extension, and new processes can be contributed under the same naming convention.                                   
+
+> Table 2 ML Action Processes (ml_ prefix), including training, tuning, validation, and inference.
+> Process Name Description
+> ml_fit Fits a machine learning model to a data cube of input features and target values. Trains the model using the provided data and returns a trained model object.
+> ml_tune_grid Performs grid-based hyperparameter tuning for an initialized machine learning model using user-defined parameter ranges and evaluation criteria.
+> ml_tune_random Performs randomized hyperparameter tuning for an initialized machine learning model by sampling parameter configurations from user-defined distributions.
+> ml_validate Evaluates a trained machine learning model against a user-provided validation set and computes user-selected performance metrics.
+> ml_validate_kfold Accepts an untrained model and afull training set, performs k-fold cross-validation with internally managed fold assignment, and returns the model refitted on the full training set enriched with aggregate per-class and overall cross-validation scores.
+> ml_predict Applies a trained machine learning model to a data cube of input features and returns the predicted values.
+> ml_predict_probabilities Applies a model to input features and returns predicted class probabilities. Adds a new classes dimension with probability values for each class.
+> ml_uncertainty_class Estimates classification uncertainty using methods such as margin, ratio, or least-confidence based on predicted probability distributions.
+> ml_smooth_class Applies spatial smoothing to classification probability results using Bayesian infer-ence, improving spatial coherence in heterogeneous scenes.
+> ml_label_class Converts a probability data cube to a labeled data cube by applying softmax normalization and selecting the class with the highest probability.
+
+## 3.3 Model Management 
+
+Model management processes handle the storage and retrieval of ML artifacts, enabling models to be saved, shared, discovered, and reloaded across sessions and backends. The processes follow existing openEO naming conventions, as listed in Table 3. Saving and loading are aligned with the STAC MLM extension [31] (see Section 2.3), so that saved models are catalogued as reproducible assets discoverable by other users and backends. For models that are intended for local use rather than broad sharing, the load_ml_model process provides direct access to models already registered within the current backend. 7Table 3 Model Management Processes. 
+
+Process Name Description 
+
+load_ml_model Loads a machine learning model from the current backend by its ID and returns it for use in subsequent processes. 
+
+load_stac_ml Loads a machine learning model from a STAC MLM Item into the current session, enabling reuse of externally catalogued models. 
+
+save_ml_model Saves a trained machine learning model and produces an accompanying STAC Item compliant with the STAC MLM Extension, making the model discoverable and reusable by others. 
+
+# 4 Prototype Implementations 
+
+Three prototype implementations of the proposed openEO ML specification have been developed, each demonstrating how standardized ML processes can be integrated into EO data cube environments. The imple-mentations span R and Python ecosystems and cover both classical ML and deep learning workflows. All three can be used with the openEO client libraries for R, Python, Julia, and JavaScript, as well as the openEO web editor (Fig. 3), illustrating the applicability of the specification across diverse programming environments. 
+
+Fig. 3 openEO backend interaction with client libraries across languages. 
+
+None of the three implementations covers the full ML specification at this stage; feature completion is a goal for future development. Table 4 summarizes the capabilities of each implementation. 
+
+Table 4 Overview of the three prototype implementations of the proposed ML specification and their respective capabilities. Color coding distinguishes the two R-based backends, openEOcubes and openEOcraft (blue), from the Python-based openeo-processes-dask-ml backend (green). Checkmarks indicate supported features; crosses indicate features not yet implemented. 
+
+openEOcubes openEOcraft openeo-processes-dask-ml 
+
+Language of implementation R R Python Full openEO backend 3 3 7
+
+Data cube engine gdalcubes sits xarray Supported ML frameworks R Torch, Caret R Torch, Caret PyTorch, Scikit-Learn Engineered feature vectors 3 3 3
+
+Pixel-wise time series 3 3 3
+
+Spatial neighborhoods 7 7 3
+
+Load pre-trained ML models 3 3 3
+
+Predict with loaded model 3 3 3
+
+Initialize new models 3 3 3
+
+Train and finetune models 3 3 3
+
+Save models with metadata 3 3 7
+
+Model saving formats ONNX R Object 7
+
+Model loading formats ONNX, .pt R Object Torchscript, .pt 
+
+84.1 openEOcubes 
+
+openEOcubes is an R backend built on top of gdalcubes [2], a library for managing spatiotemporal raster data as data cubes, exposed through the openEO specification via a dedicated driver [33]. Classical ML workflows are supported through the caret package [34]. Because ONNX model export is not natively available in R, the reticulate 8 package is used to invoke Python tooling for serializing R-trained models to ONNX format, enabling model portability across frameworks. Deep learning workflows are handled through the torch 9 package for R, which supports training and inference of neural network models within the openEO process model. 
+
+## 4.2 openEOcraft 
+
+openEOcraft 10 is a generic, open-source R backend designed to expose arbitrary R data cube implementations as openEO-compliant services. In contrast to openEOcubes, which is tightly coupled to gdalcubes, openEOcraft introduces a flexible abstraction layer built around a lightweight decorator mechanism ( @openeo-process )that registers R functions as openEO processes without requiring changes to the core API. This mechanism enables straightforward integration of the sits [23] package, an R library for satellite image time-series classification, into openEO-compliant workflows. sits provides a broad range of classical ML and deep learning methods, and its integration demonstrates how the proposed specification accommodates diverse modelling approaches across R libraries while remaining consistent with the openEO process model.                                   
+
+> 1#* @openeo-process
+> 2mlm_class_tempcnn <-function (
+> 3cnn_layers = c(64, 64, 64),
+> 4cnn_kernels = c(5, 5, 5),
+> 5learning_rate = 5e-4,
+> 6epochs = 150,
+> 7batch_size = 64,
+> 8seed = NULL
+> 9) {
+> 10 list (
+> 11 train = function (training_set) {
+> 12 if (! is.null (seed)) set.seed(seed)
+> 13 model <- sits:: sits_tempcnn (
+> 14 cnn_layers = cnn_layers,
+> 15 cnn_kernels = cnn_kernels,
+> 16 opt_hparams = list (lr = learning_rate),
+> 17 epochs = epochs,
+> 18 batch_size = batch_size
+> 19 )
+> 20 sits:: sits_train (training_set, model)
+> 21 }
+> 22 )
+> 23 }
+> Listing 1 Minimal example of exposing a new model initialization process via the @openeo-process decorator in openEOcraft.
+
+Listing 1 illustrates the decorator pattern in practice. The decorated function is registered as the openEO process mlm_class_tempcnn and becomes immediately accessible to all openEO client libraries with a well-defined parameter interface. The function returns a model definition object represented as an R list that encapsulates the training routine while delegating the concrete implementation to the sits library. Addi-tional ML methods can be integrated by adding new decorated functions that follow the same mlm_ naming conventions and return structure. openEOcraft’s preprocessing is built around cube_regularize , which wraps sits' sits_regularize 
+
+and performs temporal regularization and cloud masking as a single bundled step rather than as separate composable openEO processes. Running the RF workflow in Section 5 requires aggregate_temporal_period 
+
+and mask to be exposed individually, which means decomposing sits internals. Since sits is maintained by INPE (Brazil’s National Institute for Space Research) and lies outside the authors’ control, this refactoring was not feasible; openEOcraft is therefore excluded from that comparison. It was selected as a prototype backend because sits has been in active development for over five years, tested at continental scale across South America, and covers both classical ML and deep learning in a single package. The sits tibble—the package’s native data structure for training samples, distributed in most published datasets as RDS files on GitHub 11 —also makes it a distinctive case for examining how proprietary data formats interact with the specification, a point taken up in Section 7. 
+
+## 4.3 openeo-processes-dask-ml 
+
+openeo-processes-dask-ml 12 extends the openeo-processes-dask library with the ML processes introduced in this paper. Unlike openEOcubes and openEOcraft, it is not a standalone openEO backend but a process 
+
+> 8https://rstudio.github.io/reticulate/
+> 9https://torch.mlverse.org/
+> 10 https://github.com/Open-Earth-Monitor/openEOcraft
+> 11 https://github.com/e-sensing/sitsdata
+> 12 https://github.com/Open-EO/openeo-processes-dask-ml
+
+9implementation library intended for use within existing backends, such as IBM’s tensorlakehouse-openeo-driver 13 and EODC’s openeo-argoworkflows 14 . It uses xarray [35] as its data cube engine and relies on Dask for distributed computation. This is the only implementation among the three that supports all three EO ML workflow types: engineered feature vectors, pixel-wise time series, and spatial neighborhoods. A key feature is automatic input and output reshaping: the STAC MLM metadata associated with a loaded model specifies the expected input shape and its correspondence to data cube dimensions, and the implementation automatically reshapes the EO data cube to match before inference and reconstructs the model output into a data cube after prediction. At present, the implementation supports inference from pre-trained models but does not yet include fine-tuning support. Adoption by operational backends has been limited by the challenge of robustly integrating parallelized Dask computations with ML frameworks such as PyTorch and CUDA for GPU-accelerated infer-ence. Section 6.2 demonstrates the current capabilities through a patch-level prediction use case using an EO foundation model. Together, the three implementations demonstrate that a standardized ML specification can be realized across multiple openEO backend services and programming environments, supporting interoperable and repro-ducible ML workflows on EO data cubes across both classical ML and deep learning paradigms. Sections 5 and 6 exercise these implementations through revealing feasibility demonstrations—each use case shows what the specification achieves under realistic conditions and where current limits remain, an approach the broader federated openEO platform (https://openeo.cloud/) took from proof-of-concept [36] to matured federation [37]. 
+
+# 5 Cross-Backend Interoperability: Crop Type Mapping in Brittany, France 
+
+To demonstrate how the proposed openEO ML specification enables interoperable EO workflows across mul-tiple backends, we designed a crop type mapping use case in which an identical client-side process graph is submitted to R-based openEOcubes and Python-based openeo-processes-dask-ml without modification; openEOcraft is not included in this comparison for reasons detailed in Section 4. The same Random Forest classifier is trained to identify crop types in Brittany (Breizh), France, and applied to map crop types in a neighboring region on each backend independently, allowing the predictions and evaluation metrics to be directly compared. This use case specifically targets the feature-based workflow type introduced in Section 2.2, in which a data cube is reduced to a tabular feature matrix before being passed to a classical ML estimator. 
+
+## 5.1 Workflow Design 
+
+The workflow (Fig. 4) separates a training region from an independent prediction region. The prediction area is located in northwestern Brittany, covering approximately −4.02 ◦ to −3.74 ◦ longitude and 48 .10 ◦ to 48 .20 ◦
+
+latitude. The training area is directly north of it, covering −4.02 ◦ to −3.74 ◦ longitude and 48 .20 ◦ to 48 .30 ◦
+
+latitude. Two Sentinel-2 Level 2A data cubes are loaded for the May to September 2017 growing season, including 12 reflectance bands and the Scene Classification Layer (SCL), and filtered to scenes with cloud cover below 50 % to reduce noise in the temporal composites. Both cubes undergo identical preprocessing to ensure consistent feature construction across training and inference. Cloud and cloud-shadow masking is derived from the SCL band, after which the SCL band is dropped and only the reflectance bands are retained. Temporal aggregation is performed using 
+
+aggregate_temporal_period to generate cloud-free monthly median composites. The Normalized Difference Vegetation Index (NDVI) is then derived and appended as an additional feature band. These steps regularize the original spatio-temporal data cubes and produce feature-consistent representations suitable for classical ML. For training, we use field polygons with crop type labels from the BreizhCrops dataset [38] for 2017 and clip them to the bounding box of the training area, yielding 3,173 labeled field-parcel polygons. The 
+
+aggregate_spatial operation reduces the preprocessed training cube to a vector data cube containing, for each labeled geometry, the median value of every spectral band. Model initialization follows the standardized pattern introduced in Section 3. The classifier is created via mlm_class_random_forest , specifying 150 trees, square-root feature sampling at each split, and a fixed random seed for reproducibility. Training is executed through ml_fit (invoked in the Python client via the 
+
+fit() wrapper), returning a trained model object. For inference, the trained model is applied to the indepen-dently preprocessed prediction cube using ml_predict (via the predict() wrapper), producing a categorical data cube of crop type predictions over the prediction region. The output is exported as GeoTIFF using 
+
+save_result and submitted as an asynchronous backend job. 
+
+> 13 https://github.com/IBM/tensorlakehouse-openeo-driver
+> 14 https://github.com/eodcgmbh/openeo-argoworkflows
+
+10 1 import openeo  
+
+> 23
+
+# Connect to the openEO backend and authenticate with basic credentials.  
+
+> 4
+
+connection = openeo.connect(  
+
+> 5
+
+url= "<host-url>" , auth_type= "basic" , 
+
+> 6
+
+auth_options={ "username" : "<user>" , "password" : "<password>" } 
+
+> 7
+
+) 
+
+> 89
+
+# Define the Sentinel-2 collection, bands, labeled training data.  
+
+> 10
+
+COLLECTION_NAME = "sentinel-2-l2a"  
+
+> 11
+
+BAND_NAMES = [  
+
+> 12
+
+"coastal" , "blue" , "green" , "red" , "rededge1" , "rededge2" , 
+
+> 13
+
+"rededge3" , "nir" , "nir08" , "nir09" , "swir16" , "swir22" , "scl"  
+
+> 14
+
+] 
+
+> 15 16
+
+# training data  
+
+> 17
+
+training_data_path = "./breizh_data.geojson"  
+
+> 18 19
+
+# Load Sentinel-2 data, mask clouds, build monthly median composites, and add NDVI.  
+
+> 20
+
+def prepare_datacube(bbox):  
+
+> 21
+
+datacube = connection.load_collection(  
+
+> 22
+
+collection_id=COLLECTION_NAME,  
+
+> 23
+
+spatial_extent=bbox,  
+
+> 24
+
+temporal_extent=[ "2017-05-01T00:00:00Z" , "2017-09-30T23:59:59Z" ],  
+
+> 25
+
+bands=BAND_NAMES,  
+
+> 26
+
+max_cloud_cover=50,  
+
+> 27
+
+) 
+
+> 28
+
+# construct cloud mask  
+
+> 29
+
+scl = datacube.band( "SCL" ) 
+
+> 30
+
+cloud_mask = (scl == 3) | (scl == 8) | (scl == 9)  
+
+> 31 32
+
+# filter datacube by cloud mask  
+
+> 33
+
+datacube = datacube.filter_bands(b for b in BAND_NAMES if b != "SCL" ) 
+
+> 34
+
+datacube = datacube.mask(cloud_mask)  
+
+> 35 36
+
+# build monthly median aggregate  
+
+> 37
+
+datacube = datacube.aggregate_temporal_period(period= "month" , reducer= "median" ) 
+
+> 38 39
+
+# add ndvi  
+
+> 40
+
+datacube = datacube.ndvi(red= "red" , nir= "nir" , target_band= "NDVI" ) 
+
+> 41 42
+
+return datacube  
+
+> 43 44 45
+
+# Prepare separate datacubes for model training and spatial prediction.  
+
+> 46
+
+datacube_predict = prepare_datacube({ "west" : -4.02, "south" : 48.10, "east" : -3.74, "north" : 48.20, "crs" : 4326})  
+
+> 47
+
+datacube_train = prepare_datacube({ "west" : -4.02, "south" : 48.20, "east" : -3.74, "north" : 48.30, "crs" : 4326})  
+
+> 48 49
+
+# aggregate spatial statistics over labeled training geometries  
+
+> 50
+
+training_data = datacube_train.aggregate_spatial(training_data_path, "median" ) 
+
+> 51 52
+
+# Initialize and train the Random Forest model  
+
+> 53
+
+rf_model = connection.mlm_class_random_forest(num_trees=150, seed=42, max_variables= "sqrt" ) 
+
+> 54
+
+rf_model_fitted = rf_model.fit(training_set=training_data, target= "class_name" ) 
+
+> 55 56
+
+# Apply the trained model to the prediction datacube  
+
+> 57
+
+predictions = rf_model_fitted.predict(datacube_predict)  
+
+> 58 59
+
+# Save the classified result as GeoTIFF, run the batch job, and download the outputs.  
+
+> 60
+
+result = predictions.save_result( "GTiff" ) 
+
+> 61
+
+job = result.create_job()  
+
+> 62
+
+job.start_and_wait()  
+
+> 63
+
+job.get_results().download_files( "output" )
+
+Fig. 4 Python openEO client workflow for crop type mapping using a Random Forest classifier. The workflow loads Sentinel-2 data, applies SCL-based cloud masking, selects reflectance bands, computes monthly median composites, derives NDVI, aggregates training features over labeled geometries, trains the model, and applies it to a separate prediction region. 
+
+## 5.2 Comparison of Results 
+
+The most direct test of cross-backend interoperability is whether two independent implementations of the same process graph reach comparable predictive performance. Both backends achieve an overall accuracy of 0.82 on the held-out prediction region (Table 5), despite relying on different language ecosystems (R with 
+
+caret versus Python with scikit-learn ) and different data cube engines ( gdalcubes versus xarray ). Per-class metrics follow the same pattern in both implementations: high precision and recall for corn, wheat, and rapeseed, and substantially lower scores for permanent and temporary meadows. The remaining numerical differences are small (typically within ± 0.05 across all metrics) and are consistent with implementation-level choices in the underlying ML libraries that the openEO process graph does not constrain — for example, the specific Random Forest variant, default split criteria, and internal random-number-generator behavior. The fixed seed therefore guarantees reproducibility within a backend, but not across backends written against different ML frameworks. 11 Table 5 Per-class precision, recall, and F1 score for the Random Forest crop type classifier on the held-out prediction region.                                              
+
+> openEOcubes openeo-processes-dask-ml
+> Overall Accuracy 0.82 0.82
+> Class Precision Recall F1 Precision Recall F1
+> Barley 0.93 0.87 0.90 0.94 0.90 0.92 Corn 0.98 0.98 0.98 0.99 0.96 0.97 Permanent meadows 0.65 0.63 0.64 0.70 0.56 0.62 Rapeseed 0.99 0.97 0.98 1.00 1.00 1.00 Temporary meadows 0.70 0.73 0.71 0.67 0.80 0.73 Wheat 0.95 0.97 0.96 0.95 0.99 0.97
+
+Per-class metrics against ground truth do not directly measure agreement between the two backends. We therefore also compute Cohen’s κ over 258,168 paired pixels at 30 m resolution, treating the two backend predictions as independent raters. The backends reach κ = 0 .76 , characterised by Landis and Koch [39] as “substantial” agreement. We report the point estimate without a confidence interval, since adjacent pixels within fields are not statistically independent [40].      
+
+> Fig. 5 Crop type maps for the prediction region in Brittany (Breizh), France, produced by applying the trained Random Forest classifier to the Sentinel-2 data cube. The maps show the spatial distribution of the six crop classes included in the BreizhCrops training dataset, as produced by the openeo-processes-dask-ml (top) and openEOcubes (bottom) implementations.
+
+Visual inspection of the predicted maps (Fig. 5) confirms that the spatial patterns produced by the two backends are highly consistent at the parcel scale, with minor disagreements concentrated along field boundaries and in mixed-cover patches. The class-frequency histogram (Fig. 6) shows that the marginal dis-tributions of predicted classes also align closely between backends, with the largest discrepancy occurring in the temporary-meadow / wheat split — the same classes that contribute most to the lower per-class metrics in Table 5. Because the prediction area also contains urban surfaces, forests, and water bodies that the six-class crop classifier was not trained to recognize, a pixel-wise comparison overstates the relevance of background 12 Fig. 6 Relative frequency of classes assigned to a pixel in the prediction area for the openEOcubes and openeo-processes-dask-ml 
+
+> implementations.
+
+disagreements for the agricultural use case. We therefore complement the pixel-level metrics with a field-level comparison: for each BreizhCrops field polygon, we extract the modal predicted class from each backend and compute the proportion of polygons assigned the same class. Across all 3,173 fields, the two backends agree on the modal crop type for 85 % of polygons. The residual disagreements concentrate on field types where per-class metrics are weakest in Table 5, notably the permanent-meadow / temporary-meadow split, consistent with both backends struggling on the same inherently ambiguous cases rather than failing in implementation-specific ways. Random Forest is widely used in EO classification practice [21, 22]. R and Python implementations use different random number generators and tree-building strategies, so pixel-level exact agreement across back-ends is not expected even with a fixed seed. Statistical equivalence is the right bar, and the findings meet it. A difference would become concerning if backends diverged on classes each handles well independently, or if spatial disagreement followed geographic rather than classification boundaries; neither condition holds here. Full bitwise reproducibility still requires deeper harmonization of ML library defaults and serialization conventions, a point we return to in Section 7. 
+
+# 6 Use Cases: Deep Learning and Foundation Model Workflows 
+
+The following two use cases complement the feature-based Random Forest workflow presented in Section 5 by covering the remaining two EO ML workflow types introduced in Section 2: pixel-wise time series classification and spatial patch-based inference. Together, all three use cases demonstrate that the proposed ML API specification is applicable across the full range of supervised ML paradigms currently employed in EO practice. 
+
+## 6.1 TempCNN for Land Cover Mapping in Brazil 
+
+This use case demonstrates how the proposed ML API enables a reproducible, backend-agnostic deep learning workflow for land cover monitoring in Brazil. The workflow uses a Temporal Convolutional Neural Network (TempCNN) [5] trained on pixel-level Sentinel-2 time series and executed within an openEO-compliant back-end via the sits package [23]. It highlights three core aspects of the ML API: model initialization, model tuning/training and prediction, and serialization of model artifacts in the backend. Training data consist of 6,007 labelled Sentinel-2 time series covering the state of Rondônia in the Brazil-ian Amazon. Each sample comprises a 16-day composite for 2022 (23 observations) at 10 metres spatial resolution and is assigned to one of nine land cover classes relevant to deforestation monitoring, includ-ing Clear_Cut_Bare_Soil , Clear_Cut_Burned_Area , Clear_Cut_Vegetation , and Forest . Samples were collected through visual interpretation and are available in the sitsdata package 15 under a CC-BY 4.0 license. Because openEOcraft exposes the standardized ML processes introduced in Section 3, the entire pipeline is captured in a single process graph (see Appendix A) and can be replayed across infrastructures without modifying the client code. Figure 7 summarises the workflow. 
+
+> 15 https://github.com/e-sensing/sitsdata
+
+13 1 # Import relevant libraries/packages  
+
+> 2
+
+library (openeo)  
+
+> 34
+
+# Connect to the backend  
+
+> 5
+
+connection <- connect (host = "<host-url>" , user = "<user>" , password = "<password>" ) 
+
+> 67
+
+# Access processes  
+
+> 8
+
+p <- processes ()  
+
+> 910
+
+# Training data (public sits samples)  
+
+> 11
+
+deforestation_data <- 
+
+> 12
+
+"https://github.com/e-sensing/sitsdata/raw/main/data/samples_deforestation_rondonia.rds"  
+
+> 13 14
+
+# Initialize the TempCNN model (base hyperparameters; grid values override per run)  
+
+> 15
+
+tempcnn_model_init <- p$ mlm_class_tempcnn ( 
+
+> 16
+
+optimizer = "adam" , epochs = 20, batch_size = 64  
+
+> 17
+
+) 
+
+> 18 19
+
+# Hyperparameter search space for fine-tuning  
+
+> 20
+
+param_grid <- list ( 
+
+> 21
+
+learning_rate = c(0.0005, 0.0001),  
+
+> 22
+
+epochs = c(20, 40)  
+
+> 23
+
+) 
+
+> 24 25
+
+# Grid search: score each combination, then refit on the full training set  
+
+> 26
+
+tempcnn_tuned <- p$ ml_tune_grid ( 
+
+> 27
+
+model = tempcnn_model_init,  
+
+> 28
+
+training_data = deforestation_data,  
+
+> 29
+
+target = "label" , 
+
+> 30
+
+parameters = param_grid,  
+
+> 31
+
+scoring = "accuracy" , 
+
+> 32
+
+cv = 0,  
+
+> 33
+
+seed = 42  
+
+> 34
+
+) 
+
+> 35 36
+
+# Save the tuned model; return_model keeps a handle for ml_predict  
+
+> 37
+
+tempcnn_model <- p$ save_ml_model ( 
+
+> 38
+
+data = tempcnn_tuned,  
+
+> 39
+
+name = "tempcnn_rondonia_tuned_v1" , 
+
+> 40
+
+return_model = TRUE  
+
+> 41
+
+) 
+
+> 42 43
+
+# Load Sentinel-2 data cube (bands must match the training RDS)  
+
+> 44
+
+datacube <- p$ load_collection ( 
+
+> 45
+
+id = "mpc-sentinel-2-l2a" , 
+
+> 46
+
+spatial_extent = list (west = -63.50, east = -63.35,  
+
+> 47
+
+south = -8.92, north = -8.78),  
+
+> 48
+
+temporal_extent = c("2022-01-01" , "2022-12-31" ),  
+
+> 49
+
+bands = list ("B02" , "B03" , "B04" , "B05" , "B06" , "B07" , "B08" , 
+
+> 50
+
+"B11" , "B12" , "B8A" ) 
+
+> 51
+
+) 
+
+> 52 53
+
+# Regularize the data cube to 16-day intervals  
+
+> 54
+
+datacube <- p$ cube_regularize (data = datacube, period = "P16D" , resolution = 30)  
+
+> 55 56
+
+# Compute NDVI and append as an additional feature band  
+
+> 57
+
+datacube <- p$ ndvi (data = datacube, red = "B04" , nir = "B08" , target_band = "NDVI" ) 
+
+> 58 59
+
+# Apply the tuned TempCNN to the preprocessed data cube  
+
+> 60
+
+data <- p$ ml_predict (data = datacube, model = tempcnn_model)  
+
+> 61 62
+
+# Export the prediction as GeoTIFF and submit as a backend job  
+
+> 63
+
+ml_job <- p$ save_result (data = data, format = "GTiff" ) 
+
+> 64
+
+job <- create_job (graph = ml_job,  
+
+> 65
+
+title = "TempCNN fine-tuning + inference" ) 
+
+> 66
+
+job <- start_job (job)  
+
+> 67 68
+
+# Poll until the job finishes, then retrieve outputs  
+
+> 69
+
+while (status(job) != "finished" ) Sys.sleep(30)  
+
+> 70 71
+
+# Download the land cover GeoTIFF and tuning report  
+
+> 72
+
+download_results(job = job, folder = "./results/" )
+
+Fig. 7 R openEO client code fine-tuning a TempCNN with grid search on labelled Sentinel-2 time series from Rondônia, Brazil, computing NDVI as an additional feature, applying the tuned model for land-cover inference, and downloading the prediction GeoTIFF and tuning report on job completion. 
+
+After authenticating with the backend, the client initializes a TempCNN via mlm_class_tempcnn , specify-ing the optimizer and base hyperparameters as provenance metadata. ml_tune_grid then conducts a four-run grid search over two learning rates ( 0.0005 , 0.0001 ) and two epoch counts (20, 40), scoring each candidate by validation accuracy on the Rondônia samples (Table 6). The best configuration—learning rate 0.0005 ,40 epochs—achieves 93.1 % validation accuracy and is refitted on the full training set before being persisted via save_ml_model . This artifact can subsequently be retrieved using load_stac_ml in a new job, ensuring reproducibility of both architecture and weights across sessions. 14 Table 6 TempCNN grid search results on the Rondônia training set. Run 2 was selected for final training. Run Learning rate Epochs Validation accuracy (%) 1 0.0005 20 89.6 2 0.0005 40 93.1       
+
+> 30.0001 20 86.4 40.0001 40 88.2
+
+For inference, the workflow loads a Sentinel-2 Level 2A data cube clipped to the Rondônia area of interest for 2022, with spatial (x, y ), temporal (time ), and band (band ) dimensions. Preprocessing is applied within the same process graph to guarantee consistent feature engineering: the cube is harmonized to 16-day intervals and resampled to a consistent spatial resolution, yielding an aligned multivariate time series per pixel. The ndvi 
+
+process derives and appends a vegetation index band, producing an augmented feature cube that combines spectral reflectances with a derived index.  
+
+> Fig. 8 Land cover classification map for the Rondônia study area, generated by applying the trained TempCNN model to Sentinel-2 time series. The map shows the spatial distribution of the nine land cover classes used in training and demonstrates execution of a deep learning workflow on EO data cubes, from preprocessing and inference to export of a categorical output cube.
+
+The ml_predict process streams each multiband pixel time series through the trained TempCNN along the temporal dimension, generating a categorical prediction per spatial location. This operation reduces the feature cube to a single classification layer while preserving the spatial grid. The result is exported as GeoTIFF via save_result and executed asynchronously through create_job and start_job . Once the job completes, 
+
+download_results retrieves both the land cover GeoTIFF and the tuning report from the backend. All preprocessing and inference steps remain encoded in the process graph, ensuring reproducibility and backend-agnostic execution. The exported map is visualized in Fig. 8. 
+
+## 6.2 Foundation Model Inference for EO Embeddings 
+
+Recent advances in self-supervised representation learning have produced a growing set of so-called Foundation Models (FM) for EO. These models transform their input into compact, task-agnostic embedding vectors which can generalize to a wide variety of downstream tasks [41]. Many FMs operate on spatial neighborhoods and are therefore supported only by the openeo-processes-dask-ml implementation at the time of writing. As no openEO backend has adopted this implementation yet, client code cannot be provided. The process graph is instead constructed manually and invoked as if received through the openEO API. While the previous use cases (5 and 6.1) focused on pixel-level time series, we demonstrate in this section how our proposed API support state-of-the-art spatial patch-based ML tasks: Specifically: we show how 15 load_stac_ml and ml_predict can be chained to load a the pre-trained Terramind FM from an external STAC catalog and transform an EO datacube into a datacube of embeddings through the openEO API.      
+
+> Fig. 9 Conceptual chaining of load_stac_ml and ml_predict to transform a Sentinel-2 EO data cube into a data cube of embeddings using the TerraMind foundation model.
+
+The pre-trained TerraMind-v1-base backbone [42] is loaded as a STAC MLM Item [31] via load_stac_ml 
+
+(Fig. 9). The STAC MLM metadata specifies the model’s expected input and output shapes and their corre-spondence to EO data cube dimensions (the batch dimension is created dynamically and can be of arbitrary length): • Model input: {batch: -1, band: 12, y: 224, x: 224} 
+
+• Model output: {batch: -1, embedding_level: 24, patch: 196, embedding: 1024} 
+
+The ml_predict process matches model input and output dimension shapes to the data cube dimensions and transforms them accordingly: • time is present in the data cube but not in the model input; the model is therefore applied independently at each time step. • band is present in the data cube and the model input but absent from the model output; this dimension is dropped in the output. • x, y are present in the data cube and the model input but absent from the model output. The model is applied along the spatial dimensions, and each prediction covers the full spatial footprint of the input patch. The spatial dimensions in the output data cube are therefore reduced such that y = ⌊2242 ÷ 224 ⌋ = 10 and 
+
+x = ⌊2213 ÷ 224 ⌋ = 9 . The remaining 2242 − 10 × 224 = 2 pixels in y and 2213 − 9 × 224 = 197 pixels in x
+
+are insufficient to form a complete input patch and are not represented in the output. • embedding_level , patch , and embedding are absent from the model input but present in the model output; these dimensions are therefore added to the output data cube. The resulting data cube of embeddings is not visualized here, as embeddings are an abstract, high-dimensional representation for which direct visual interpretation is not meaningful. In a next step, an application-specific downstream task model could derive meaningful results from the embeddings (e.g., a water segmentation map), or they could be saved to file and downloaded to the client, thereby elevating the openEO-API to serve as an interface for ad-hoc earth embedding generation. 
+
+## 6.3 Synthesis Across Use Cases 
+
+Considered together, the three use cases in Sections 5, 6.1, and 6.2 cover the full range of supervised ML workflow types for EO data cubes identified in Section 2.2: feature-based classification using Random Forests, pixel-wise time-series classification using TempCNN, and spatial patch-based inference using a geospatial foundation model. In each case, the same core processes — the mlm_ initialization family, ml_fit or ml_tune_* 
+
+, ml_predict , and the model management processes — are composed within a single declarative process graph. Use Cases 5 and 6.1 execute these graphs end-to-end on live backends; Use Case 5 runs across two of the three prototype backends rather than all three, because openEOcraft’s bundled preprocessing step is not directly composable into the process graph that comparison requires (Section 4). Use Case 6.2 demonstrates 16 the dimensional reshaping logic. This consistency across diverse model families and workflow types confirms that the three-stage specification is sufficient to cover the full range of supervised ML workflows currently employed in EO practice, and motivates the reflection on its broader implications that follows. 
+
+# 7 Discussion 
+
+Building on the use cases of Sections 5–6.2, this section reflects on how the proposed specification realizes its stated aims, what the prototype implementations revealed about the practical challenges of standardizing ML across heterogeneous EO backends, and what remains to be addressed in future work. 
+
+## 7.1 Core Aims and Their Realization 
+
+7.1.1 Accessibility 
+
+By abstracting ML workflows into high-level processes with sensible default hyperparameters, the specifica-tion allows domain experts to apply methods such as Random Forest, XGBoost, TempCNN, or TAE without requiring deep programming or ML expertise. Multi-language client support further lowers the entry barrier by letting users work in their preferred environment. At the same time, configurability within the specification is preserved: hyperparameters defined in each process schema can be explicitly overridden during initializa-tion or systematically explored through the dedicated tuning processes ml_tune_grid and ml_tune_random .Integration with the STAC MLM extension supports discovery and reuse of pre-trained models, reducing the computational burden for users who do not need to train from scratch. The inclusion of validation and tuning processes extends the specification beyond single-pass model execution, enabling systematic model development and evaluation within the same declarative workflow abstraction. Accessibility depends, however, on more than standardized APIs. The need to accommodate backend-specific conventions for model serialization and data handling, including formats such as sits tibbles and R data frames, highlights that further standardization of data exchange formats across environments remains an open challenge. The range of models and configurable parameters available in practice also depends on which processes each backend has implemented; users who require access to the full parameter space of an underlying library retain more flexibility by using it directly, and the specification is designed for portability and accessibility rather than as a substitute for direct library use. 
+
+7.1.2 Interoperability 
+
+The specification enables portable ML workflows across cloud backends, local installations, and self-hosted systems through backend-agnostic process definitions. The three prototype implementations demonstrate that equivalent conceptual workflows can be executed across diverse infrastructures. Use Case 5 con-firms this at the process level: an identical client-side process graph submitted to both openEOcubes and openeo-processes-dask-ml without modification yields predictions that match in overall accuracy, and con-verge on the same dominant class at the parcel level with substantial pixel-level agreement ( κ = 0 .76 ), despite the backends relying on entirely different execution engines. Achieving full interoperability across backends, however, requires alignment that goes beyond the API layer. Cross-backend execution remains challenging due to differences in programming language ecosystems, feature engineering conventions, and model serialization mechanisms. ONNX adoption as the recommended serialization format enables cross-platform model exchange, but introduces practical constraints: R backends currently require Python bridging via the reticulate package to export ONNX artifacts, and models stored as sits-specific R class objects are not directly portable to Python backends. These issues reflect a broader challenge: while the specification successfully standardizes process interfaces, deeper harmonization of data for-mats, serialization standards, and execution semantics is needed before seamless cross-backend reproducibility can be taken for granted. Random Forest was selected as the reference algorithm because it is the most widely used classifier in EO workflows [21, 22] and is available natively across all three prototype backends; the criteria for distinguishing specification failures from implementation-level noise in such a comparison are established in Section 5. For applications requiring stronger guarantees, ONNX model exchange—loading an identical trained artifact on a second backend via load_stac_ml —would reduce remaining differences to preprocessing divergences alone. 
+
+7.1.3 Reproducibility 
+
+Reproducibility is built into the specification through seed control, explicit hyperparameter records, and composable process graphs that encode complete analytical workflows. The use cases demonstrate successful model persistence and reloading via save_ml_model and load_stac_ml , enabling full pipeline recreation across sessions and computational environments. When save_ml_model is invoked, the specification allows contextual metadata including software dependencies, model inputs and outputs, and system configurations 17 to be recorded and exported as a STAC MLM Item, providing a structured mechanism for preserving the computational environment alongside the model artifact. In practice, reproducibility is still affected by variations in backend libraries and dependency management. Identical process graphs may yield slightly different numerical results if model implementations, library ver-sions, preprocessing steps, or data coverage differ across backends. Handling vector training labels introduces further ambiguity in cases of partial spatial overlaps, mixed pixels, or temporal misalignment between features and labels. Addressing these issues fully will require both tighter conventions for data exchange and more explicit backend conformance reporting. 
+
+7.1.4 Extensibility 
+
+The modular process structure provides a foundation for community-driven extensions that can accommodate emerging ML paradigms without altering the core specification. The integration of the TerraMind foundation model [42] in Use Case 6.2 demonstrates how large pre-trained models can be incorporated into the same standardized interface for inference and downstream adaptation. Foundation models such as TESSERA [43], Prithvi [44] and TerraMind [42], trained on large EO datasets, offer the possibility of reducing labeled data requirements and improving model generalization across regions and tasks. Federated learning workflows [14] represent another candidate for incremental integration through the same process-level abstraction. Random Forest is a natural starting point: local forests trained on regional data cubes at each backend can be retrieved via load_stac_ml and aggregated into a global ensemble [45, 46], with no raw training data leaving any backend. Long-term success will require sustained community participation, consistent governance, and iterative refinement based on operational feedback. The openEO ecosystem supports these goals through its Project Steering Committee and regular community meetings, which provide structured mechanisms for shared decision-making and transparent evolution of the specification. 
+
+## 7.2 Lessons from Prototype Implementations 
+
+The three prototype implementations reveal how backend-specific design choices interact with the shared specification and where the boundaries of portability currently lie. openEOcubes, built on gdalcubes, R Torch, and caret, supports both feature-based and time-series work-flows but requires custom ONNX export pathways that depend on Python bridging, introducing a fragility that would not arise in a natively cross-language serialization standard. openEOcraft supports both workflow types, but as discussed in Section 4, its bundled preprocessing step, and its sits -native data model constrain direct portability to other backends. The Python implementation using xarray and Dask enables distributed computation and is the only implementation covering all three workflow types, but it introduces different constraints around memory management, process scheduling, and GPU integration that have so far limited adoption by operational backends. Together, these differences illustrate both the value and the limits of a shared specification. The spec-ification successfully defines a consistent conceptual model that allows users to express ML workflows in a backend-agnostic form. What it cannot yet fully guarantee is that those workflows execute identically across backends, because execution fidelity depends on decisions made below the process level: library versions, seri-alization formats, and data structure conventions that fall outside the scope of the current specification. Addressing this gap systematically, through explicit backend conformance profiles that document process availability, supported formats, and known behavioral differences, would substantially improve the practical utility of the specification in operational and research settings alike. 
+
+# 8 Conclusion 
+
+This paper introduced a standardized ML specification for EO data cubes within the openEO ecosystem, organized into three coherent stages: model initialization, model actions, and model management. Three prototype implementations in R and Python, validated through crop type mapping, land cover classification, and foundation model inference use cases, demonstrate that the specification is practically realizable across diverse technology stacks and that an identical process graph submitted to independent backends yields predictions that match in overall accuracy and converge on the same dominant class at the parcel level. The use cases collectively cover all three EO ML workflow types identified in this paper: feature-based classi-fication, pixel-wise time-series modeling, and spatial patch-based inference. This breadth confirms that a single, backend-agnostic process-level abstraction is sufficient to express the dominant supervised ML paradigms cur-rently employed in EO practice. The integration of the TerraMind foundation model [42] and compliance with the STAC MLM extension [31] further demonstrate that the specification extends naturally to pre-trained model reuse and catalog-based model discovery, reducing the barrier to entry for users who do not need to train from scratch. 18 Although the specification facilitates portability of ML-based processing of EO data cubes, full interop-erability across backends, however, requires deeper alignment of data formats, model serialization standards, and execution semantics than the current process-level specification alone can enforce. Reproducibility is still affected by backend library versions and preprocessing conventions that fall outside the specification bound-ary. Addressing these gaps systematically, through explicit backend conformance profiles and tighter data exchange conventions, is the most important direction for near-term development. The modular architecture provides a foundation for incremental extension. The decorator-based registration mechanism demonstrated in openEOcraft shows how new algorithms can be integrated without modifying the core API, and the same process-level abstraction provides a foundation for future extension to emerging paradigms, including federated learning [14] and self-supervised foundation models [41, 43, 44]. Operational adoption in environments such as the Copernicus Data Space Ecosystem, the federated openEO platform, VITO’s Terrascope platform, and IBM’s TensorLakeHouse is a natural next step, contingent on the robust integration of distributed computation frameworks with ML execution backends. By defining process-level abstractions that bridge EO data cubes with tabular and tensor-based ML repre-sentations, the specification makes ML workflows on EO data more interoperable, reproducible, and accessible across the infrastructure heterogeneity that characterizes operational Earth observation today. 
+
+# 9 Availability and Requirements 
+
+ML API Specification: The proposed ML API specification is openly available under the Apache License Version 2.0 in the proposals directory of the following repository: https://github.com/PondiB/ openeo-processes/tree/ml-api. 
+
+Use Case Examples: Reproducible code for all use cases presented in this paper, including the crop type mapping workflow (Section 5), the TempCNN land cover classification (Section 6.1), and the foundation model embedding pipeline (Section 6.2), is openly available under the Apache License Version 2.0 at: https: //github.com/PondiB/openeo-ml-showcase. 
+
+openEOcubes: Source code is available under the Apache License Version 2.0 at: https://github.com/ PondiB/openeocubes. 
+
+openEOcraft: Source code is available under the MIT License at: https://github.com/ Open-Earth-Monitor/openeocraft. 
+
+openeo-processes-dask-ml: Source code is available under the Apache License Version 2.0 at: https: //github.com/Open-EO/openeo-processes-dask-ml. 
+
+Operating System: All three prototype implementations are compatible with Windows, macOS, and Linux. 
+
+Acknowledgments. We gratefully acknowledge financial support from the European Union’s Horizon Europe research and innovation programme. Authors BP and JS are supported under agreement No. 101059548 for the Open-Earth-Monitor Cyberinfrastructure (OEMC) project and under agreement No. 101058386 for the interdisciplinary Digital Twin Engine for Science (interTwin) project. Author JH is supported under agreement No. 101131841 for the Embed2Scale project. Additional funding was provided by the Swiss State Secretariat for Education, Research and Innovation and by UK Research and Innovation. 
+
+Authors’ contributions: Brian Pondi: Writing – Original Draft, Conceptualization, Software, Method-ology, Visualization, Validation, Investigation. Jonas Hurst: Writing – Original Draft, Formal Analysis, Software, Validation, Visualization, Investigation. Rolf Simoes: Writing – Original Draft, Software, Vali-dation, Visualization, Investigation. Jonas Starke: Software, Visualization, Data Curation, Investigation. 
+
+Marius Appel: Writing – Review and Editing, Supervision. Edzer Pebesma: Writing – Review and Editing, Supervision, Resources, Project Administration. 
+
+Data Availability: The BreizhCrops benchmark dataset is openly available from [38] at https:// breizhcrops.org/. The Rondônia deforestation dataset is provided by Brazil’s National Institute for Space Research (Instituto Nacional de Pesquisas Espaciais) at https://github.com/e-sensing/sitsdata. 
+
+Funding: This work was supported by the European Commission under Horizon Europe agreement No. 101059548 (Open-Earth-Monitor Cyberinfrastructure), No. 101058386 (interdisciplinary Digital Twin Engine for Science), and No. 101131841 (Embed2Scale), as well as by the Swiss State Secretariat for Education, Research and Innovation, and by UK Research and Innovation. 
+
+Competing Interests: The authors declare no competing interests. 19 Appendix A ML Process Graph 
+
+This appendix provides a concrete example of an openEO JSON process graph generated from the ML workflow described in Section 6.1. The graph captures all data cube preprocessing, TempCNN hyperparameter fine-tuning, model export, and inference steps required to execute the workflow on a backend (Fig. A1). By expressing these steps declaratively, the process graph makes the sequence of operations, data dependencies, and model interactions explicit and reproducible.  
+
+> 1
+
+{ 
+
+> 2
+
+"process_graph" : {  
+
+> 3
+
+"loadcollection1" : {  
+
+> 4
+
+"process_id" : "load_collection" , 
+
+> 5
+
+"arguments" : {  
+
+> 6
+
+"id" : "mpc-sentinel-2-l2a" , 
+
+> 7
+
+"spatial_extent" : { "west" :-63.50, "south" :-8.92, "east" :-63.35, "north" :-8.78},  
+
+> 8
+
+"temporal_extent" : [ "2022-01-01" ,"2022-12-31" ],  
+
+> 9
+
+"bands" : [ "B02" ,"B03" ,"B04" ,"B05" ,"B06" ,"B07" ,"B08" ,"B11" ,"B12" ,"B8A" ] 
+
+> 10
+
+} 
+
+> 11
+
+},  
+
+> 12
+
+"cuberegularize1" : {  
+
+> 13
+
+"process_id" : "cube_regularize" , 
+
+> 14
+
+"arguments" : { "data" :{ "from_node" :"loadcollection1" }, "period" :"P16D" ,"resolution" :30}  
+
+> 15
+
+},  
+
+> 16
+
+"ndvi1" : {  
+
+> 17
+
+"process_id" : "ndvi" , 
+
+> 18
+
+"arguments" : { "data" :{ "from_node" :"cuberegularize1" }, "red" :"B04" ,"nir" :"B08" ,"target_band" :"NDVI" } 
+
+> 19
+
+},  
+
+> 20
+
+"mlmclasstempcnn1" : {  
+
+> 21
+
+"process_id" : "mlm_class_tempcnn" , 
+
+> 22
+
+"arguments" : { "optimizer" :"adam" ,"learning_rate" :0.0005, "epochs" :20, "batch_size" :64}  
+
+> 23
+
+},  
+
+> 24
+
+"mltunegrid1" : {  
+
+> 25
+
+"process_id" : "ml_tune_grid" , 
+
+> 26
+
+"arguments" : {  
+
+> 27
+
+"model" :{ "from_node" :"mlmclasstempcnn1" },  
+
+> 28
+
+"training_data" :"{<deforestation_data>}" , 
+
+> 29
+
+"target" :"label" , 
+
+> 30
+
+"parameters" :{ "learning_rate" :[0.0005,0.0001], "epochs" :[20,40]},  
+
+> 31
+
+"scoring" :"accuracy" ,"cv" :0, "seed" :42  
+
+> 32
+
+} 
+
+> 33
+
+},  
+
+> 34
+
+"savemlmodel1" : {  
+
+> 35
+
+"process_id" : "save_ml_model" , 
+
+> 36
+
+"arguments" : { "data" :{ "from_node" :"mltunegrid1" }, "name" :"tempcnn_rondonia_tuned_v1" ,"return_model" :true}  
+
+> 37
+
+},  
+
+> 38
+
+"mlpredict1" : {  
+
+> 39
+
+"process_id" : "ml_predict" , 
+
+> 40
+
+"arguments" : { "data" :{ "from_node" :"ndvi1" }, "model" :{ "from_node" :"savemlmodel1" }}  
+
+> 41
+
+},  
+
+> 42
+
+"saveresult1" : {  
+
+> 43
+
+"process_id" : "save_result" , 
+
+> 44
+
+"arguments" : { "data" :{ "from_node" :"mlpredict1" }, "format" :"GTiff" },  
+
+> 45
+
+"result" : true  
+
+> 46
+
+} 
+
+> 47
+
+} 
+
+> 48
+
+}
+
+Fig. A1 openEO JSON process graph for the TempCNN fine-tuning and land cover mapping workflow. Each node in 
+
+process_graph corresponds to one openEO process, with from_node references expressing the data flow between operations. 
+
+Each node in the graph corresponds to a single openEO process, and data flow between nodes is expressed through from_node references rather than intermediate variables, making dependencies explicit. The load_collection , cube_regularize , and ndvi nodes define the preprocessing applied to the Sentinel-2 data cube before inference. The mlm_class_tempcnn node declares the base TempCNN architecture and hyperparameters; ml_tune_grid evaluates a parameter grid on the labelled training samples, selects the best configuration, and refits the model on the full training set (writing tuning_results.json in the job workspace). The save_ml_model node persists the tuned model while return_model: true keeps it available as an input to downstream processes. ml_predict applies the tuned model to the preprocessed cube, and 
+
+save_result exports the classification as a GeoTIFF. The result: true flag on the final node signals to the backend which output to return when the job completes. 20 Appendix B Example ML Process Schema 
+
+This appendix shows an example JSON process specification for ml_predict (Fig. B2), illustrating how ML processes are formally defined within the openEO process catalog. Process specifications define the expected inputs, outputs, and data types, providing a shared contract that all backend implementations must satisfy.  
+
+> 1
+
+{ 
+
+> 2
+
+"id" : "ml_predict" , 
+
+> 3
+
+"summary" : "Apply a trained ML model to a data cube" , 
+
+> 4
+
+"description" : "Applies a machine learning model to a data cube of  
+
+> 5
+
+input features and returns the predicted values." , 
+
+> 6
+
+"categories" : [ "machine learning" ],  
+
+> 7
+
+"experimental" : true,  
+
+> 8
+
+"parameters" : [  
+
+> 9
+
+{ 
+
+> 10
+
+"name" : "data" , 
+
+> 11
+
+"description" : "The data cube containing the input features." , 
+
+> 12
+
+"schema" : {  
+
+> 13
+
+"type" : "object" , 
+
+> 14
+
+"subtype" : "datacube"  
+
+> 15
+
+} 
+
+> 16
+
+},  
+
+> 17
+
+{ 
+
+> 18
+
+"name" : "model" , 
+
+> 19
+
+"description" : "A trained ML model, as returned by ml_fit or  
+
+> 20
+
+loaded via load_ml_model or load_stac_ml." , 
+
+> 21
+
+"schema" : {  
+
+> 22
+
+"type" : "object" , 
+
+> 23
+
+"subtype" : "ml-model"  
+
+> 24
+
+} 
+
+> 25
+
+} 
+
+> 26
+
+],  
+
+> 27
+
+"returns" : {  
+
+> 28
+
+"description" : "A data cube with the predicted values. The input  
+
+> 29
+
+feature dimensions are removed and a new dimension named  
+
+> 30
+
+'predictions' of type 'other' is added. If a single value is  
+
+> 31
+
+returned per location, this dimension carries a single label '0'." , 
+
+> 32
+
+"schema" : {  
+
+> 33
+
+"type" : "object" , 
+
+> 34
+
+"subtype" : "datacube" , 
+
+> 35
+
+"dimensions" : [{ "type" : "other" }]  
+
+> 36
+
+} 
+
+> 37
+
+} 
+
+> 38
+
+}
+
+Fig. B2 JSON process specification for ml_predict , defining the expected input types, output structure, and data cube trans-formation behavior. The experimental flag indicates that the process definition is subject to revision as the specification matures. 
+
+The specification follows the same structural pattern as all other openEO process definitions, ensuring that ml_predict is treated as a first-class citizen in the process catalog rather than a special-case exten-sion. Both parameters are typed as openEO objects: data must be a data cube, and model must be an 
+
+ml-model object produced by ml_fit , load_ml_model , or load_stac_ml . The return type is also a data cube, which means the output of ml_predict can be passed directly to any subsequent openEO process, such as ml_uncertainty_class , ml_label_class , or save_result , without requiring format conversion. The experimental flag signals that the definition may be refined through community feedback before it is promoted to a stable process. 21 Appendix C openEO Workflow for Foundation Model Embeddings 
+
+This appendix provides the openEO process graph corresponding to the embedding pipeline described in Section 6.2 (Fig. C3). The workflow loads Sentinel-2 data as a data cube, retrieves the pre-trained TerraMind foundation model described as a STAC MLM Item, and applies the model to compute embeddings. The output is a high-dimensional data cube intended for downstream processing rather than immediate export.  
+
+> 1
+
+{ 
+
+> 2
+
+"process_graph" : {  
+
+> 3
+
+"load_data" : {  
+
+> 4
+
+"process_id" : "load_stac" , 
+
+> 5
+
+"arguments" : {  
+
+> 6
+
+"url" : "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a" , 
+
+> 7
+
+"spatial_extent" : { "west" : 8.2, "east" : 8.5, "south" : 48.9, "north" : 49.1},  
+
+> 8
+
+"temporal_extent" : [ "2024-08-05" , "2024-08-12" ],  
+
+> 9
+
+"bands" : [  
+
+> 10
+
+"coastal" , "blue" , "green" , "red" , 
+
+> 11
+
+"rededge1" , "rededge2" , "rededge3" , 
+
+> 12
+
+"nir" , "nir08" , "nir09" , "swir16" , "swir22"  
+
+> 13
+
+],  
+
+> 14
+
+"resolution" : 10  
+
+> 15
+
+} 
+
+> 16
+
+},  
+
+> 17
+
+"load_model" : {  
+
+> 18
+
+"process_id" : "load_stac_ml" , 
+
+> 19
+
+"arguments" : {  
+
+> 20
+
+"uri" : "<url-to-stac-mlm-item>" , 
+
+> 21
+
+"model_asset" : "weights"  
+
+> 22
+
+} 
+
+> 23
+
+},  
+
+> 24
+
+"predict" : {  
+
+> 25
+
+"process_id" : "ml_predict" , 
+
+> 26
+
+"arguments" : {  
+
+> 27
+
+"data" : { "from_node" : "load_data" },  
+
+> 28
+
+"model" : { "from_node" : "load_model" } 
+
+> 29
+
+},  
+
+> 30
+
+"result" : true  
+
+> 31
+
+} 
+
+> 32
+
+} 
+
+> 33
+
+}
+
+Fig. C3 openEO process graph for computing EO embeddings from Sentinel-2 data using the TerraMind foundation model. The workflow loads an EO data cube, retrieves a pre-trained model via load_stac_ml , and applies inference via ml_predict . The resulting embedding cube is an intermediate output intended for further downstream processing. 
+
+In contrast to the supervised ML pipelines in Sections 5 and 6.1, this workflow contains no ml_fit step, as the foundation model is pre-trained and used exclusively for inference. The three steps are therefore: (i) EO data loading via load_stac , (ii) model retrieval via load_stac_ml , and (iii) embedding generation via ml_predict . The resulting embedding cube can subsequently be passed to further openEO processes within the same declarative workflow, for example for dimensionality reduction, clustering, or fine-tuning on a downstream classification task. 22 References 
+
+[1] Baumann, P., Misev, D., Merticariu, V., Pham Huu, B.: Datacubes: Towards space/time analysis-ready data. In: Döllner, J., Jobst, M., Schmitz, P. (eds.) Service-Oriented Mapping: Changing Paradigm in Map Production and Geoinformation Management, pp. 269–299. Springer, Cham (2018). https://doi.org/10. 1007/978-3-319-72434-8_14 [2] Appel, M., Pebesma, E.: On-demand processing of data cubes from satellite image collections with the gdalcubes library. Data 4(3), 92 (2019) https://doi.org/10.3390/data4030092 [3] Wulder, M.A., Masek, J.G., Cohen, W.B., Loveland, T.R., Woodcock, C.E.: Opening the archive: How free data has enabled the science and monitoring promise of landsat. Remote Sensing of Environment 
+
+122 , 2–10 (2012) https://doi.org/10.1016/j.rse.2012.01.010 [4] Kansakar, P., Hossain, F.: A review of applications of satellite earth observation data for global societal benefit and stewardship of planet earth. Space Policy 36 , 46–54 (2016) https://doi.org/10.1016/j.spacepol. 2016.05.005 [5] Pelletier, C., Webb, G.I., Petitjean, F.: Temporal convolutional neural network for the classification of satellite image time series. Remote Sensing 11 (5), 523 (2019) https://doi.org/10.3390/rs11050523 [6] Qiao, M., He, X., Cheng, X., Li, P., Luo, H., Zhang, L., Tian, Z.: Crop yield prediction from multi-spectral, multi-temporal remotely sensed imagery using recurrent 3d convolutional neural networks. International Journal of Applied Earth Observation and Geoinformation 102 , 102436 (2021) https://doi.org/10.1016/ j.jag.2021.102436 [7] Xie, B., Xu, J., Jung, J., Yun, S.-H., Zeng, E., Brooks, E.M., Dolk, M., Narasimhalu, L.: Machine learning on satellite radar images to estimate damages after natural disasters. In: Proceedings of the 28th Inter-national Conference on Advances in Geographic Information Systems. SIGSPATIAL ’20, pp. 461–464. Association for Computing Machinery, New York, NY, USA (2020). https://doi.org/10.1145/3397536. 3422349 [8] Breiman, L.: Random forests. Machine Learning 45 (1), 5–32 (2001) https://doi.org/10.1023/A: 1010933404324 [9] Cortes, C., Vapnik, V.: Support-vector networks. Machine Learning 20 (3), 273–297 (1995) https://doi. org/10.1007/BF00994018 [10] Schramm, M., Pebesma, E., Milenković, M., Foresta, L., Dries, J., Jacob, A., Wagner, W., Mohr, M., Neteler, M., Kadunc, M., Miksa, T., Kempeneers, P., Verbesselt, J., Gößwein, B., Navacchi, C., Lippens, S., Reiche, J.: The openEO API — harmonising the use of earth observation cloud services using virtual data cube functionalities. Remote Sensing 13 (6), 1125 (2021) https://doi.org/10.3390/rs13061125 [11] Rolf, E., Klemmer, K., Robinson, C., Kerner, H.: Position: Mission critical — satellite data is a distinct modality in machine learning. In: Proceedings of the Forty-first International Conference on Machine Learning. ICML ’24 (2024). https://proceedings.mlr.press/v235/rolf24a.html 
+
+[12] Mohr, M.: openEO API 1.2. Approval Date: 2026-03-05. Publication Date: 2026-04-15. http://www. opengis.net/doc/cs/openeo-api/1.2 (2026) [13] Mohr, M.: openEO Processes 1.2. Approval Date: 2026-03-05. Publication Date: 2026-04-15. http://www. opengis.net/doc/cp/openeo-processes/1.2 (2026) [14] Moreno-Álvarez, S., Paoletti, M.E., Sanchez-Fernandez, A.J., Rico-Gallego, J.A., Han, L., Haut, J.M.: Federated learning meets remote sensing. Expert Systems with Applications 255 , 124583 (2024) https: //doi.org/10.1016/j.eswa.2024.124583 [15] Xiao, A., Xuan, W., Wang, J., Huang, J., Tao, D., Lu, S., Yokoya, N.: Foundation Models for Remote Sensing and Earth Observation: A Survey (2024). https://arxiv.org/abs/2410.16602 [16] Kopp, S., Becker, P., Doshi, A., Wright, D.J., Zhang, K., Xu, H.: Achieving the full vision of earth observation data cubes. Data 4(3), 94 (2019) https://doi.org/10.3390/data4030094 [17] Zhu, X.X., Tuia, D., Mou, L., Xia, G.-S., Zhang, L., Xu, F., Fraundorfer, F.: Deep learning in remote 23 sensing: A comprehensive review and list of resources. IEEE Geoscience and Remote Sensing Magazine 
+
+5(4), 8–36 (2017) https://doi.org/10.1109/MGRS.2017.2762307 [18] Rußwurm, M., Körner, M.: Convolutional LSTMs for Cloud-Robust Segmentation of Remote Sensing Imagery (2018). https://arxiv.org/abs/1811.02471 [19] Sainte Fare Garnot, V., Landrieu, L.: Lightweight Temporal Self-Attention for Classifying Satellite Image Time Series (2020). https://arxiv.org/abs/2007.00586 [20] Adegun, A.A., Viriri, S., Tapamo, J.-R.: Review of deep learning methods for remote sensing satellite images classification: experimental survey and comparative analysis. Journal of Big Data 10 (1), 93 (2023) https://doi.org/10.1186/s40537-023-00824-8 [21] Belgiu, M., Drăguţ, L.: Random forest in remote sensing: A review of applications and future directions. ISPRS Journal of Photogrammetry and Remote Sensing 114 , 24–31 (2016) https://doi.org/10.1016/j. isprsjprs.2016.01.011 [22] Maxwell, A.E., Warner, T.A., Fang, F.: Implementation of machine-learning classification in remote sensing: an applied review. International Journal of Remote Sensing 39 (9), 2784–2817 (2018) https: //doi.org/10.1080/01431161.2018.1433343 [23] Simoes, R., Camara, G., Queiroz, G., Souza, F., Andrade, P.R., Santos, L., Carvalho, A., Ferreira, K.: Satellite image time series analysis for big earth observation data. Remote Sensing 13 (13), 2428 (2021) https://doi.org/10.3390/rs13132428 [24] Shi, X., Chen, Z., Wang, H., Yeung, D.-Y., Wong, W.-k., Woo, W.-c.: Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting (2015). https://arxiv.org/abs/1506.04214 [25] Bodnar, C., Bruinsma, W.P., Lucic, A., Stanley, M., Vaughan, A., Brandstetter, J., Garvan, P., Riechert, M., Weyn, J.A., Dong, H., Gupta, J.K., Thambiratnam, K., Archibald, A.T., Wu, C.-C., Heider, E., Welling, M., Turner, R.E., Perdikaris, P.: A Foundation Model for the Earth System (2024). https: //arxiv.org/abs/2405.13063 [26] Rolih, B., Fucka, M., Wolf, F., Zajc, L.C.: Be the change you want to see: Revisiting remote sensing change detection practices. IEEE Transactions on Geoscience and Remote Sensing 63 , 1–11 (2025) https: //doi.org/10.1109/tgrs.2025.3585342 [27] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Pretten-hofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., Duchesnay, É.: Scikit-learn: Machine learning in Python. Journal of Machine Learning Research 12 ,2825–2830 (2011) https://doi.org/10.5555/1953048.2078195 [28] Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., Davison, J., Shleifer, S., Platen, P., Ma, C., Jernite, Y., Plu, J., Xu, C., Scao, T.L., Gugger, S., Drame, M., Lhoest, Q., Rush, A.M.: Transformers: State-of-the-art natural language processing. In: Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations, pp. 38–45. Association for Computational Linguistics, Online (2020). https://doi.org/ 10.18653/v1/2020.emnlp-demos.6 [29] Chen, A., Chow, A., Davidson, A., DCunha, A., Ghodsi, A., Hong, S.A., Konwinski, A., Mewald, C., Murching, S., Nykodym, T., Ogilvie, P., Parkhe, M., Singh, A., Xie, F., Zaharia, M., Zang, R., Zheng, J., Zumar, C.: Developments in mlflow: A system to accelerate the machine learning lifecycle. In: Proceedings of the Fourth International Workshop on Data Management for End-to-End Machine Learning. DEEM ’20. Association for Computing Machinery, New York, NY, USA (2020). https://doi.org/10.1145/3399579. 3399867 [30] ONNX Community: ONNX: Open Neural Network Exchange. https://onnx.ai. Accessed: June 2026 (2019) [31] Charette-Migneault, F., Avery, R., Pondi, B., Omojola, J., Vaccari, S., Membari, P., Peressutti, D., Yu, J., Sundwall, J.: Machine learning model specification for cataloging spatio-temporal models. In: Proceedings of the 3rd ACM SIGSPATIAL International Workshop on Searching and Mining Large Collections of Geospatial Data. GeoSearch ’24, pp. 36–39. Association for Computing Machinery, New York, NY, USA 24 (2024). https://doi.org/10.1145/3681769.3698586 [32] Bergstra, J., Bengio, Y.: Random search for hyper-parameter optimization. Journal of Machine Learning Research 13 , 281–305 (2012) https://doi.org/10.5555/2188385.2188395 [33] Pondi, B., Appel, M., Pebesma, E.: OpenEOcubes: an open-source and lightweight R-based RESTful web service for analyzing earth observation data cubes. Earth Science Informatics 17 (2), 1809–1818 (2024) https://doi.org/10.1007/s12145-024-01249-y [34] Kuhn, M.: Building predictive models in R using the caret package. Journal of Statistical Software 28 (5), 1–26 (2008) https://doi.org/10.18637/jss.v028.i05 [35] Hoyer, S., Hamman, J.: xarray: N-D labeled Arrays and Datasets in Python. Journal of Open Research Software 5(1) (2017) https://doi.org/10.5334/jors.148 [36] Jacob, A., Mohr, M., Zellner, P.J., Dries, J., Claus, M., Briese, C., Griffiths, P., Pebesma, E.: openEO platform brings analysis-ready data on demand. In: Proceedings of the 2021 Conference on Big Data from Space (BiDS’21) (2021). https://doi.org/10.2760/125905 [37] Mohr, M., Pebesma, E., Dries, J., Lippens, S., Janssen, B., Thiex, D., Milcinski, G., Schumacher, B., Briese, C., Claus, M., Jacob, A., Sacramento, P., Griffiths, P.: Federated and reusable processing of earth observation data. Scientific Data 12 (1), 194 (2025) https://doi.org/10.1038/s41597-025-04513-y [38] Rußwurm, M., Pelletier, C., Zollner, M., Lefèvre, S., Körner, M.: BreizhCrops: A Time Series Dataset for Crop Type Mapping (2020). https://arxiv.org/abs/1905.11893 [39] Landis, J.R., Koch, G.G.: The measurement of observer agreement for categorical data. Biometrics 33 (1), 159–174 (1977) https://doi.org/10.2307/2529310 [40] Foody, G.M.: Thematic map comparison: Evaluating the statistical significance of differences in clas-sification accuracy. Photogrammetric Engineering & Remote Sensing 70 (5), 627–633 (2004) https: //doi.org/10.14358/PERS.70.5.627 [41] Jakubik, J., Roy, S., Phillips, C.E., Fraccaro, P., Godwin, D., Zadrozny, B., Szwarcman, D., Gomes, C., Nyirjesy, G., Edwards, B., Kimura, D., Simumba, N., Chu, L., Mukkavilli, S.K., Lambhate, D., Das, K., Bangalore, R., Oliveira, D., Muszynski, M., Ankur, K., Ramasubramanian, M., Gurung, I., Khallaghi, S., Li, H., Cecil, M., Ahmadi, M., Kordi, F., Alemohammad, H., Maskey, M., Ganti, R., Weldemariam, K., Ramachandran, R.: Foundation Models for Generalist Geospatial Artificial Intelligence (2023). https://arxiv.org/abs/2310.18660 [42] Jakubik, J., Yang, F., Blumenstiel, B., Scheurer, E., Sedona, R., Maurogiovanni, S., Bosmans, J., Dionelis, N., Marsocci, V., Kopp, N., Ramachandran, R., Fraccaro, P., Brunschwiler, T., Cavallaro, G., Bernabe-Moreno, J., Longépé, N.: TerraMind: Large-Scale Generative Multimodality for Earth Observation (2025). https://arxiv.org/abs/2504.11171 [43] Feng, Z., Atzberger, C., Jaffer, S., Knezevic, J., Sormunen, S., Young, R., Lisaius, M.C., Immitzer, M., Jackson, T., Ball, J., Coomes, D.A., Madhavapeddy, A., Blake, A., Keshav, S.: TESSERA: Temporal embeddings of surface spectra for earth representation and analysis (2026) https://doi.org/10.48550/ arXiv.2506.20380 [44] Szwarcman, D., Roy, S., Fraccaro, P., Gislason, T.E., Blumenstiel, B., Ghosal, R., Oliveira, P.H., Almeida, J.L.d.S., Sedona, R., Kang, Y., Chakraborty, S., Wang, S., Gomes, C., Kumar, A., Truong, M., Godwin, D., Lee, H., Hsu, C.-Y., Akbari Asanjan, A., Mujeci, B., Shidham, D., Keenan, T., Arevalo, P., Li, W., Alemohammad, H., Olofsson, P., Hain, C., Kennedy, R., Zadrozny, B., Bell, D., Cavallaro, G., Watson, C., Maskey, M., Ramachandran, R., Bernabe Moreno, J.: Prithvi-EO-2.0: A Versatile Multi-Temporal Foundation Model for Earth Observation Applications (2025). https://arxiv.org/abs/2412.02732 [45] Hauschild, A.-C., Lemanczyk, M., Matschinske, J., Frisch, T., Zolotareva, O., Holzinger, A., Baumbach, J., Heider, D.: Federated Random Forests can improve local performance of predictive models for various healthcare applications. Bioinformatics 38 (8), 2278–2286 (2022) https://doi.org/10.1093/bioinformatics/ btac065 [46] Liu, Y., Liu, Y., Liu, Z., Liang, Y., Meng, C., Zhang, J., Zheng, Y.: Federated forest. IEEE Transactions on Big Data 8, 843–854 (2020) https://doi.org/10.1109/TBDATA.2020.2992755 25

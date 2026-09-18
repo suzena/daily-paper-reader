@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-17</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-18</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-17 22:03:01 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-18 21:36:05 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>2026-09-17 日报共筛出 11 篇速读、0 篇精读，海洋智能方向值得关注。海冰类型预测、自主海上运维人机交互仿真、水下语义分割三篇均获 7.0 分，可优先从这三篇了解多标签学习、无人机交互与几何引导分割的进展。普通读者建议先读这三篇的摘要与结论，再按兴趣决定是否深入。</p>
+<p>今日速览6篇论文，精读0篇、速读6篇，覆盖自主混合空海PX4固件、openEO地球观测机器学习API与水下声光测绘。</p>
+<p>最值得看的是7.0分的《Custom PX4 firmware for autonomous hybrid aerial-marine missions》，另可顺带关注6.0分的openEO机器学习API和6.0分多会话水下测绘方向。</p>
+<p>普通读者若时间有限，建议先精读PX4这篇，再从两篇6.0分中选与自身场景最相关的一篇扩展阅读。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -91,12 +93,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">6 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-Label Proportion Learning for Sea-Ice Type Prediction">Multi-Label Proportion Learning for Sea-Ice Type Prediction</span></li><li><span class="dpr-home-dashboard-paper-title" title="LOTUSim-Energy: A Maritime Simulator for Human-Drone Interaction in Autonomous Offshore Operation \&amp;amp; Maintenance">LOTUSim-Energy: A Maritime Simulator for Human-Drone Interaction in Autonomous Offshore Operation \&amp;amp; Maintenance</span></li><li><span class="dpr-home-dashboard-paper-title" title="GeoCueFormer: Geometry-Guided Wavelet Representation and Prediction-Cued Dual-Stage Decoder for Underwater Semantic Segmentation">GeoCueFormer: Geometry-Guided Wavelet Representation and Prediction-Cued Dual-Stage Decoder for Underwater Semantic Segmentation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Custom PX4 firmware for autonomous hybrid aerial-marine missions">Custom PX4 firmware for autonomous hybrid aerial-marine missions</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Machine Learning API for Earth Observation Data Cubes Based on openEO">A Machine Learning API for Earth Observation Data Cubes Based on openEO</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multi-Session Multimodal Underwater Mapping with Acoustic and Optical Imaging">Multi-Session Multimodal Underwater Mapping with Acoustic and Optical Imaging</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
 </section>
 </div>
 

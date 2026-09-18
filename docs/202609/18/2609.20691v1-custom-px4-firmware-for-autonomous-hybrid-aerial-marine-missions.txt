@@ -1,0 +1,362 @@
+Title: Custom PX4 firmware for autonomous hybrid aerial-marine missions
+
+URL Source: https://arxiv.org/pdf/2609.20691v1
+
+Published Time: Fri, 18 Sep 2026 01:38:33 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# Custom PX4 firmware for autonomous hybrid aerial-marine missions 
+
+Andrea Capuozzo, Fabio Ruggiero, Vincenzo Lippiello 
+
+PRISMA Lab, Department of Electrical Engineering and Information Technology, University of Naples Federico II, Via Claudio 21, Naples, 80125, Italy Corresponding author’s email: andrea.capuozzo@unina.it 
+
+Abstract. Mapping and monitoring aquatic environments can bene-fit from hybrid aerial–amphibious drones able to combine flight and water-surface navigation within the same mission. This paper presents a PX4 firmware extension for such platforms, introducing manual and autonomous marine navigation modes integrated with the standard PX4 mission pipeline and QGroundControl interface. The proposed frame-work preserves existing flight functionalities and safety mechanisms while enabling unified planning and execution of hybrid aerial–marine missions with differentiated aerial and marine waypoints. Simulated case studies validate the implementation and demonstrate stable surface navigation under calm and wavy conditions. 
+
+Keywords: PX4 custom firmware, hybrid drones, autonomous marine navigation 
+
+## 1 INTRODUCTION 
+
+Mapping and monitoring aquatic environments are costly operations that require skilled personnel, specialized equipment, dedicated support infrastructures, and significant logistical resources. In addition, traditional inspection campaigns ex-pose operators to safety risks and can negatively impact the investigated ecosys-tems, for instance, through water and noise pollution caused by support vessels. Advances in robotics [1, 2] helped mitigate these limitations by allowing opera-tions to be conducted in safer, more efficient, and less invasive ways. Hybrid aerial–amphibious drones, also referred to as unmanned aerial–aquatic vehicles (UAAVs), represent a versatile class of robotic platforms operating both in flight and on the water surface within a unified design. UAAVs can combine aerial inspection of target areas with water-based operations, including land-ing to deploy probes, collect samples, perform close-range measurements, and navigate on the surface. Despite the increasing interest in hybrid robotic plat-forms, open-source autopilot software—such as PX4 [3], ArduPilot [4], iNav [5], or Betaflight [6]—primarily targets single-domain vehicles and supports aerial and underwater systems as separate configurations. As a result, their capability to integrate aerial flight and water-surface navigation within a unified control and mission-execution architecture remains limited. arXiv:2609.20691v1 [cs.RO] 17 Sep 2026 2 A. Capuozzo et al. 
+
+This paper addresses this limitation by introducing custom modules and control modes within the PX4 firmware, enabling full integration with its exist-ing functionalities while preserving the standard control architecture. The PX4 firmware 1 was selected due to its modular structure, compatibility with multiple flight-controller boards, and permissive Berkeley Software Distribution (BSD) license, which allows firmware extensions without mandatory upstream contri-bution. The proposed code is freely available to the community 2
+
+The remainder of this paper is organized as follows. Section 2 discusses re-lated work on marine survey drones and autopilot firmware frameworks. Section 3 presents the firmware customization and navigation mode design. Section 4 de-scribes the control strategies for hybrid aerial–marine operations. Section 5 re-ports results from simulated scenarios, while Section 6 discusses the findings. Finally, Section 7 concludes the paper and outlines future work. 
+
+## 2 RELATED WORKS 
+
+Several approaches have been proposed in the literature to employ aerial and sur-face robotic platforms in marine inspections. Unmanned aerial vehicles (UAVs) are widely adopted as rapid and cost-effective tools for large-scale inspection and mapping of marine habitats [7], leveraging their ability to efficiently cover extensive areas from an elevated viewpoint. Complementarily, unmanned surface vehicles (USVs) and unmanned underwater vehicles (UUVs) are used to perform close-range inspection and data collection tasks. For instance, a cooperative sys-tem composed of a UAV, a UUV, and a USV to inspect floating structures from multiple perspectives before allowing manned vessels is presented in [8]. Open-source USV platforms based on frameworks such as ArduPilot have demonstrated improvements in efficiency and safety for surface water sampling tasks [9, 10]. These systems highlight the potential of robotic platforms to re-duce operational costs while maintaining high-quality environmental data acqui-sition [10]. More generally, the combination of aerial and surface viewpoints has been recognized as beneficial for enhancing situational awareness and navigation performance during marine inspection missions [11, 12]. Despite these advances, most existing solutions rely either on multi-vehicle cooperation, where distinct platforms operate under separate control architec-tures, or on hybrid platforms in which different dedicated control systems still handle the aerial and marine functionalities. For instance, in the multicopter– hovercraft system presented in [13], the two locomotion modes are managed through separate PX4-based flight-control architectures. A first example of a more integrated solution is represented by SailMAV [14], a fixed-wing aerial– aquatic vehicle capable of alternating between flight and wind-driven sailing while relying on a single PX4-based onboard controller. However, its architec-ture is specifically developed around a fixed-wing flying–sailing configuration and the associated sailing dynamics and control requirements.    
+
+> 1The custom version presented in this work is based on the release v1.15.0
+> 2https://github.com/prisma-lab/PX4-HybridAerialMarineCustom PX4 hybrid firmware 3
+
+Overall, although the relevance of hybrid aerial–marine operations is increas-ingly recognized, firmware-level integration that unifies flight and marine navi-gation within a single control architecture remains largely unexplored, particu-larly for multirotor aerial–aquatic vehicles employing active propulsion for water-surface navigation. This motivates the development presented in this work. 
+
+2.1 Contributions 
+
+To the best of the authors’ knowledge, a unified PX4 firmware extension for both aerial flight and marine surface navigation has not yet been addressed in the literature. This motivates the proposed firmware-level framework, which integrates aerial flight, water landing, marine navigation, takeoff, QGroundCon-trol [15] mission planning, waypoint classification, and safety-mode switching within a single PX4 architecture. The framework targets multirotor aerial–aquatic vehicles with independent marine propulsion. Its mission-management architecture is platform-independent, whereas the marine control is tailored to a two-fixed-thruster configuration, as described in Section 4.1. The main contributions are: ( i) integration of the ma-rine navigation module within the PX4 framework; ( ii ) extension of the PX4 Navigator for hybrid aerial–marine mission execution; ( iii ) PX4 implementation of manual and autonomous water-surface control strategies; and ( iv ) integration of the proposed modes into QGroundControl for hybrid mission planning and aerial–marine waypoint differentiation. 
+
+## 3 FIRMWARE ARCHITECTURE 
+
+The proposed PX4 firmware extension follows the native modular architecture of PX4 3 and introduces a dedicated Marine Navigation module for surface opera-tion. The module provides a unified framework for both manual and autonomous marine navigation, handling surface-specific guidance logic, mode transitions, and thruster actuation. Moreover, the PX4 Navigator module is extended to support hybrid aerial– marine missions, allowing smooth transitions between flight and marine–surface navigation phases. Dedicated interface updates expose the new modes in QGC, enabling intuitive mode selection and a clear distinction between aerial and marine waypoints. 
+
+3.1 Marine Navigation module 
+
+The Marine Navigation module is the key component of the extended PX4 firmware and acts as a manager between the manual and autonomous marine navigation modes. It is implemented as a class inheriting from the following standard PX4 base classes:    
+
+> 3https://docs.px4.io/main/en/concept/architecture 4A. Capuozzo et al.
+> (a) (b)
+
+Fig. 1: State diagrams of: (a) the Marine Navigation module and (b) the cus-tomized Navigator module for marine mission branches. Blue boxes denote states, white boxes actions; solid and dashed lines indicate transitions and in-state actions, respectively. 
+
+– ModuleBase , which provides the core module functionalities; 
+
+– ModuleParams , which enables the definition and access of control parame-ters; 
+
+– ScheduledWorkItem , which schedules the execution of the module main func-tion run( ·) at a frequency of 50 Hz. All the information required for the module operation is exchanged through uORB 4 topics. The state diagram of the module is shown in Fig. 1a. When the system is started, the Marine Navigation module remains in a waiting state until a 
+
+vehicle control mode uORB message signals the need for a navigation mode switch. The transition can be manually triggered by the pilot to enter or exit the marine manual navigation mode, or automatically requested by the Nav-igator module when a marine segment is required during mission execution, activating the autonomous marine navigation mode. During autonomous navi-gation, the pilot can always retake control—either aerial or marine manual nav-igation—through a safety switch. Otherwise, autonomous navigation continues until the marine path is completed. In this work, the manual navigation mode is primarily intended as a safety mechanism that allows the operator to retake control of the UAAV during au-tonomous missions and is therefore designed for limited use. In manual navigation mode, the custom module reads the inputs from the radio controller (RC) and directly converts them into pulse-width modulation   
+
+> 4https://docs.px4.io/main/en/middleware/uorb PX4 hybrid firmware 5
+
+(PWM) signals for thruster control. In autonomous navigation mode, path gen-eration and path-following algorithms are executed to compute the thrust and torque commands to be applied to the UAAV, which are then transformed into PWM signals for thruster actuation through the appropriate control allocation matrix. The adopted control strategies for both modes are detailed in Section 4. 
+
+3.2 Navigator module 
+
+The PX4 Navigator module is responsible for autonomous flight modes and mission execution. The proposed customization enables the integration of marine segments within the mission execution pipeline. The main modifications were applied to the following files: mission base.h , mission base.cpp , mission.h ,
+
+mission.cpp , and mission block.cpp . These changes implement the behavior described by the state diagram managing marine paths in Fig. 1b. Mission waypoints, selected through QGC, are classified as either aerial or marine based on a user-defined altitude threshold; waypoints below this altitude are considered marine. When an aerial waypoint is processed by the navigator module, the marine navigation logic remains idle and the standard PX4 con-trollers manage flight execution. Conversely, when a marine waypoint is received, the navigation logic transitions to an approach phase and temporarily overrides the PX4 standard controllers to guide the vehicle toward the destination way-point while maintaining the previous altitude. Once the waypoint is reached, a landing command is issued and the UAAV performs a water landing. During this phase, the logic ensures that the vehicle is oriented toward the direction of the subsequent waypoint in order to avoid unnecessary maneuvers on the wa-ter surface. If the following waypoint is also classified as marine, the navigation mode switches to the autonomous marine mode described in Section 3.1 and re-mains active until a new aerial waypoint is received or the pilot retakes manual control, returning the state to idle (this transition may occur from any state). If the next waypoint is aerial, a takeoff command is issued and the UAAV climbs to a user-defined safe altitude above sea level before proceeding toward the way-point, after which the logic returns to the marine idle state. The transition to the idle state also occurs when the mission is completed and no additional aerial or marine waypoints remain. 
+
+3.3 QGroundControl interface 
+
+The QGroundControl customizations introduced in this work 5, made publicly available to the community 6, ensure that these core functionalities, described in Section 2.1 are preserved. The first customization enables the selection of the newly introduced flight modes directly from the navigation mode menu, as shown in Fig. 2a: PRISMA Auto Marine for autonomous marine navigation and PRISMA Manual TS for     
+
+> 5The custom version presented in this work is based on the release v4.3.0
+> 6https://github.com/prisma-lab/qgroundcontrol/tree/Stable_V4.3hybridUAV 6A. Capuozzo et al.
+> (a) (b)
+
+Fig. 2: (a) QGC navigation mode selection showing the marine modes PRISMA Auto Marine and PRISMA Manual TS . (b) QGC mission plan with aerial and marine (in blue) waypoints. manual marine navigation. This functionality is implemented on the PX4 side rather than within QGC itself, by assigning valid nav state identifiers 7 to the navigation modes and ensuring that the corresponding mode names are correctly communicated to QGroundControl 8.The second customization allows users to quickly distinguish between aerial and marine waypoints. When QGroundControl is launched and a mission is up-loaded, waypoint altitudes are evaluated and, if a value falls below the threshold defined in Section 3.2, the waypoint color is changed to blue (see Fig. 2b). 
+
+## 4 METHODOLOGY 
+
+Before discussing the mathematical details of how the marine navigation control modes are implemented, it is necessary to state some preliminary assumptions. 
+
+4.1 UAAV specification 
+
+The UAAV reference platform considered in this work is illustrated in Fig. 3a. The vehicle consists of a quadrotor equipped with two buoyant hulls and two fixed, non-steerable marine propellers for surface navigation. A dedicated pay-load bay is located on the upper structure, allowing the integration of mission-specific equipment and sensing tools.      
+
+> 7https://docs.px4.io/main/en/msg docs/VehicleStatus
+> 8Handled through the file PX4-Autopilot/src/lib/modes/ui.hpp PX4 hybrid firmware 7
+> (a) r=0.075m (b)
+
+Fig. 3: (a) Rendering of the UAAV reference model used in this work. (b) Sim-plified UAAV model, used in simulations, showing the body reference frame, the thrust generated by the marine propellers, and the dimensions of the main components. 
+
+4.2 Control allocation for marine vessels 
+
+In low-speed applications, a three-degrees-of-freedom model is sufficient to de-scribe the UAAV motion, accounting for surge (motion along the x-axis of the body frame), sway (motion along the y-axis of the body frame), and yaw (ro-tation about the z-axis of the body frame denoted by the angle ψ ∈ [−π, π)), leading to the generalized force vector τ = [ fx, f y , n ]T ∈ R3, where fx, f y ∈ R
+
+denote the forces applied along the x− and y−axis of the body frame, respec-tively, and n ∈ R denotes the torque about the z-axis of the body frame. In [16], it is shown that, in the general case of a vessel equipped with k > 0marine propellers—either steerable, allowing the thrust direction to be varied, or fixed—each generating a thrust Ti ∈ R with i = 1 , . . . , k , with positive and negative values denoting forward and backward thrust, respectively, and located at position pi = [ ℓi,x , ℓ i,y ]T ∈ R2, the generalized forces can be expressed as 
+
+τ =
+
+
+
+cos α1 . . . cos αk
+
+sin α1 . . . sin αk
+
+ℓ1 . . . ℓk
+
+ T , (1) where αi ∈ [−π, π) is the orientation of the propeller pi, T = [ T1, . . . , T k]T ∈ Rk,and ℓi = ℓi,x sin αi − ℓi,y cos αi.As shown in Fig. 3, where the configuration of the reference UAAV platform is illustrated, the vessel layout includes only two non-steerable marine propellers. This simplifies (1) into ¯τ =
+
+ 1 1
+
+−ℓ1,y −ℓ2,y 
+
+
+
+¯T , (2) with ¯ τ = [ fx, n]T ∈ R2 and ¯T = [ TL, TR]T , as the thrust generated by the left and right propellers, respectively. 8 A. Capuozzo et al. 
+
+4.3 Manual navigation control 
+
+The manual navigation control is implemented as a feedforward strategy mod-ulating each propeller’s thrust and providing the pilot with the perception of independent control over total thrust and a virtual rudder. This design enables precise maneuvering, including pivoting without requiring forward motion. The controller reads the radio control (RC) inputs through the uORB topic 
+
+manual control setpoint , specifically the throttle and roll fields of the re-ceived message, interpreting them as total thrust t and steering s values, respec-tively, with t, s ∈ [−1, 1]. In particular, s ∈ [−1, 0] corresponds to left steering, whereas s ∈ [0 , 1] corresponds to right steering. The thrust commands to be generated by each propeller are then computed as 
+
+TL =
+
+(
+
+t if s ≥ 0
+
+t(1 + 2 s) if s < 0 ,
+
+TR =
+
+(
+
+t(1 − 2s) if s > 0
+
+t if s ≤ 0 .(3) Note that TL, TR ∈ [−1, 1] since they represent normalized thrust values. 
+
+4.4 Autonomous navigation control 
+
+The autonomous navigation controller adopts a path-following strategy for un-deractuated marine vehicles based on the hand-position framework and input–output feedback linearization presented in [17]. The controlled output is a virtual point 
+
+h = [ ξ1, ξ2]T ∈ R2, referred to as the hand-position point, located at a fixed distance l ahead of the UAAV center of mass p = [ x, y]T ∈ R2 along the x axis of the body frame ξ1 = x + l cos ψ and ξ2 = y + l sin ψ. The choice of controlling the hand-position point introduces an additional controllable output: a surge ac-tuation applied at p generates a surge motion of h, while a yaw actuation induces a lateral motion of h proportional to l. This property enables the application of input–output feedback linearization to underactuated marine platforms. Applying the coordinate transformation and input mapping described in [17], and denoting by ξ3, ξ 4 ∈ R the relative velocity components of h, by Vx, V y ∈ R
+
+the unknown ocean current components expressed in the world frame, and by 
+
+u1, u 2 ∈ R the virtual control inputs, the external dynamics can be written as ˙ξ1 = ξ3 + Vx,
+
+˙ξ2 = ξ4 + Vy ,
+
+˙ξ3 = u1,
+
+˙ξ4 = u2.
+
+(4) The virtual inputs are related to the generalized force vector ¯ τ through the feedback-linearization mapping ¯τ =
+
+cos ψ −l sin ψ
+
+sin ψ l cos ψ
+
+−1 u1 − Fξ, 1(·)
+
+u2 − Fξ, 2(·)
+
+
+
+, (5) PX4 hybrid firmware 9
+
+with Fξ, 1(·), F ξ, 2(·) ∈ R the nonlinear drift dynamics of the hand-point acceler-ation. The virtual inputs u1 and u2 are designed for a generic C2 path γ(s) = (x(s), y (s)), where s ≥ 0 denotes the arc-length parameter, and include feed-forward terms accounting for its local curvature [17]. In this work, the marine path is defined as a sequence of straight-line segments connecting consecutive waypoints, resulting in a path with zero curvature and constant tangent direc-tion. Under these assumptions, curvature-dependent feedforward terms vanish, leading to the following simplified choice of the virtual inputs 
+
+u1 = −kvx 
+
+ ξ3 − ˙x(s) − kpx 
+
+ ξ1 − x(s) − kIx Ix,u2 = −kvy 
+
+ ξ4 − ˙y(s) − kpy 
+
+ ξ2 − y(s) − kIy Iy , (6) where ˙ x(s) = ˙ st x and ˙ y(s) = ˙ st y , with [ tx, ty ] denoting the constant unit tangent of the active path segment. Following the path-following law in [17], the actual path-progress rate ˙ s is obtained by modulating a nominal rate ˙ snom according to the hand-point tracking error. The constants kvx , kvy , kpx , kpy , kIx , kIy ∈ R+ are the control gains. The integral terms are defined as Ix = R t
+
+> 0
+
+ ξ1(τ ) − x(s(τ ))  dτ 
+
+and Iy = R t
+
+> 0
+
+ ξ2(τ ) − y(s(τ ))  dτ , and provide steady-state rejection of constant environmental disturbances such as ocean currents. Following [17], the path-progress dynamics are regulated as a function of the hand-point tracking error, e2 
+
+> h
+
+=  ξ1 −x(s)2 + ξ2 −y(s)2. The path-progress dy-namics are defined as ˙ s = ˙ snom 
+
+ 1 − tanh( e2
+
+> h
+
+). The nominal rate ˙ snom is reduced near the target waypoint by scaling it with dwp /d slow , where dwp is the remain-ing waypoint distance and dslow defines the slowdown region. Once dwp < d r ,with dr the waypoint acceptance radius, ˙ snom is set to zero. For small tracking errors, tanh( e2
+
+> h
+
+) ≈ 0, γ(s) advances at nearly the nominal rate. Conversely, when the error increases, tanh( e2
+
+> h
+
+) → 1, the progression rate reduces. This γ(s) error-dependent progression is particularly useful at waypoint transitions and during turning maneuvers, since it avoids the generation of an excessively distant mov-ing target and allows the controller to re-establish alignment before proceeding along the next segment. Once the virtual inputs are computed, the generalized forces ¯ τ are obtained from (5) and subsequently mapped to the individual propeller commands through the inversion of (2). To account for steady ocean currents in the implementation, the hand-point velocities are evaluated using water-relative kinematics. Specifically, the mea-sured ground velocity, estimated by the PX4 state estimator using GNSS and inertial measurements, is corrected by subtracting an online estimate of the cur-rent velocity ˆ vc ∈ R2
+
+ ˙xr
+
+˙yr
+
+
+
+=
+
+ ˙x
+
+˙y
+
+
+
+− ˆvc. (7) 10 A. Capuozzo et al. 
+
+Accordingly, the relative velocity components of the hand-position point are computed as 
+
+ξ3 = ˙ xr − l sin ψ ˙ψ, ξ4 = ˙ yr + l cos ψ ˙ψ. (8) The estimate ˆ vc is updated online from the hand-point velocity tracking error, which provides an indication of the persistent drift affecting the vehicle motion. In compact form, this adaptation can be expressed as ˙ˆvc = kcev − kcl ˆvc, ev =
+
+ξ3 − ˙xd
+
+ξ4 − ˙yd
+
+
+
+, (9) where kc and kcl are positive adaptation and leakage gains, respectively. In the proposed PX4 implementation, this current-compensation mechanism is combined with an alignment-gated update strategy. The alignment metric is computed as the cosine of the angle between the vehicle’s ground velocity direction and the tangent of the active path segment. Therefore, the current estimate ˆ vc and the integral action are updated only when this metric exceeds the threshold galign ,th and the surge velocity is above a minimum threshold vth .This prevents unreliable compensation during turning maneuvers and low-speed transients, where the tracking error is mainly caused by reorientation and hy-drodynamic effects rather than by persistent environmental disturbances. 
+
+## 5 SIMULATIONS 
+
+5.1 Simulation set up 
+
+The simulations were carried out on a standard personal computer equipped with an Intel Core i7 (11 th generation) processor and 32 GB of RAM, running 
+
+Ubuntu 22.04 . The marine environment was simulated in the Virtual RobotX 
+
+(VRX) environment [18] using Gazebo Garden v7.9.0 , while the UAAV dynamics and control architecture were executed through the PX4 Autopilot firmware in software-in-the-loop (SITL) mode. In SITL mode, the PX4 flight stack executes the same firmware-level logic intended for onboard deployment, while Gazebo emulates the vehicle dynamics, sensors, and actuators. The simulations therefore provide a direct software-level validation of the proposed PX4 architecture and its aerial, marine, and transition-management functions. The buoyancy model was modified by representing the floating behavior as a mass–spring–damper system to include water damping effects during drone–sea interaction [19]. This prevents persistent oscillations that would otherwise arise from a purely elastic buoyant restoring force. The simplified UAAV model used in the simulations is shown in Fig. 3b. The UAAV parameters are: mass m = 20 kg, buoyant-hull length L = 1 m, distance between buoyant-hull centers D = 0 .6m, buoyant-hull radius R = 0 .075 m, total height h = 0 .375 m, and maximum bidirectional marine-propeller thrust Tmax = 5 N. The hand-position distance, autonomous-navigation gains, nominal progression rate, and control thresholds PX4 hybrid firmware 11 [m]      
+
+> 30 35 40 45 50 55
+> [m]
+> -20 -15 -10 -5 0510
+> UAAV Reference Starting point Waypoints
+
+(a) 0 50 100 150   
+
+> t[s]
+> 00.2 0.4 0.6 0.8 11.2
+> Error [m]
+
+(b) 
+
+Fig. 4: Case study 1) : (a) comparison between executed marine path and refer-ence; (b) off-track error norm. were selected empirically through trial-and-error tuning to obtain stable path-following performance. The adopted values are l = 1 .7 m, kvx = kvy = 1, 
+
+kpx = kpy = 0 .7, kIx = kIy = 0 .05, ˙ snom = 5 m/s, vth = 1 .2 m/s, dslow = 3 m, 
+
+dr = 0 .5 m, kc = 0 .7, kcl = 0 .02 and galign ,th = 0 .75. Two case studies are considered, both involving a hybrid aerial–marine mis-sion in which the UAAV takes off from land, reaches a target area over water, lands, follows a boustrophedon path of eight QGC-selected marine waypoints, and then returns to the starting point. The two cases differ only in environ-mental conditions: calm sea in the first case and a Gerstner-wave field [20] in the second. The analysis focuses on the marine phase, assessing path-following performance and the ability of the UAAV to remain on track. The accompany-ing video 9 shows the full execution of the first mission, including pilot-initiated manual takeover for safety recovery. 
+
+5.2 Case study 1) 
+
+Figure 4a reports the executed path and the off-track error norm, computed as the distance between the UAAV position and the reference position along the prescribed marine path. The vehicle follows eight waypoints arranged in a boustrophedon pattern. The error remains bounded, with peaks occurring mainly during turns, where inertial and hydrodynamic effects temporarily limit rapid reorientation. Its maximum value stays below the vehicle length, indicating that the deviation remains within one characteristic vehicle dimension and providing a normalized interpretation of tracking accuracy, consistent with ship-domain approaches based on length-dependent safety regions [21]. After each turn, the controller restores alignment with the reference path, yielding low errors along straight segments and localized peaks at segment transitions.  
+
+> 9
+
+https://youtu.be/dyPZIZCPyYU 12 A. Capuozzo et al. 0 50 100 150      
+
+> t[s]
+> -2 024
+> Force [N]
+> 050 100 150
+> t[s]
+> -1 -0.5 00.5 1
+> Torque [Nm]
+
+(a) 0 50 100 150   
+
+> t[s]
+> -1 -0.8 -0.6 -0.4 -0.2 00.2 0.4 0.6 0.8 1
+> Propeller thrust [N/Nmax]
+> Left Right
+
+(b) 
+
+Fig. 5: Case study 1) : (a) computed force and torque controls; (b) left and right normalized propeller control inputs. [m]       
+
+> 30 40 50 60 70 80 90
+> [m]
+> 0510 15 20 25
+> UAAV Reference Starting point Waypoints
+
+(a) t [s]     
+
+> 050 100 150
+> Error [m]
+> 00.2 0.4 0.6 0.8 11.2 1.4
+
+(b) 
+
+Fig. 6: Case study 2) : (a) comparison between executed marine path and refer-ence; (b) off-track error norm. This behavior is further explained by Fig. 5, which shows the forces, torques, and propeller control inputs generated by the autonomous navigation controller. Near the end of each marine segment, forward thrust is reduced to ensure conver-gence to the waypoint; when motion toward the next waypoint starts, a stronger torque aligns the vessel with the new heading. This deceleration, reorientation, and re-acceleration sequence explains the transient turning errors and the sub-sequent recovery of path-following performance. 
+
+5.3 Case study 2) 
+
+In this scenario, the UAAV again executes an eight-waypoint boustrophedon path. The wave field is composed of two incident wave components with a period PX4 hybrid firmware 13 t [s]        
+
+> 050 100 150
+> Force [N]
+> -2 -1 012345
+> t[s]
+> 050 100 150
+> Torque [Nm]
+> -0.5 00.5 1
+
+(a) t [s]     
+
+> 050 100 150
+> Propeller thrust [N/Nmax]
+> -1 -0.8 -0.6 -0.4 -0.2 00.2 0.4 0.6 0.8 1
+> Left Right
+
+(b) 
+
+Fig. 7: Case study 2) : (a) computed force and torque controls; (b) left and right normalized propeller control inputs. of 4 s, an angular separation of 0 .4 rad, and a median wave amplitude of 1 .5 m. Figure 6 shows the executed path and the corresponding reference path. Overall, the tracking performance remains acceptable. Compared with case study 1) , the error slightly increases along the straight segments, although it remains below the vehicle-length threshold in these portions of the path. Larger deviations are observed during turning maneuvers, where the com-bined effect of wave-induced disturbances, vehicle inertia, and hydrodynamic transients makes pivoting less stable. In a few turns, the tracking error exceeds the vehicle-length threshold, indicating that the wave field mainly affects the most demanding phases of the path rather than the straight-line motion. Figure 7 reports the resulting force and torque commands, together with the propeller control inputs. As expected, the wave disturbances produce more pronounced oscillations in the control signals compared with the calm-water case. 
+
+## 6 DISCUSSION 
+
+The results in Section 5 highlight both the strengths and limitations of the proposed firmware extension and autonomous marine navigation control. The modified firmware manages hybrid missions, including marine naviga-tion phases and the required safety mechanisms. It allows rapid mode switching, enabling the operator to promptly regain control in emergency situations. How-ever, hybrid missions are not yet checked for feasibility before execution, e.g., based on battery state, nor adapted online through actions such as automatic return-to-home when the remaining energy becomes insufficient. Moreover, the current framework supports only navigation-oriented marine tasks; future exten-sions should include richer surface-operation directives. Regarding the control algorithm, simulations show stable navigation perfor-mance, also under non-ideal environmental conditions, while keeping the pro-peller inputs within the admissible normalized range. Further improvements could be achieved at the path-planning level, smoothing waypoint transitions and reducing the transient deviations during maneuvers. 14 A. Capuozzo et al. 
+
+Finally, the manual navigation mode could be improved, since its feedforward structure still requires skilled operators. Future work should introduce assistance mechanisms to reduce pilot workload and enable reliable water-surface control also by non-expert users. 
+
+## 7 CONCLUSION AND FUTURE WORK 
+
+This paper proposes a new PX4 firmware version for UAAVs operating in hy-brid aerial–marine autonomous missions. The objective is to provide a unified control framework ensuring safe operation for the pilot, the vehicle, and the surrounding environment. The introduced marine control modes enable manual and autonomous navigation while preserving the standard user interface. Sim-ulation results demonstrate the effectiveness of the extended firmware and its potential for further development. Future work will improve firmware capabili-ties and safety mechanisms through mission feasibility checks, online replanning, and additional specifications for hybrid mission execution. The marine control framework will also be extended through improved path planning and a more accessible manual control mode, together with hardware experiments to validate the proposed framework on the physical UAAV platform. 
+
+## Acknowledgments 
+
+The research leading to these results has been partially supported by Centro Nazionale 5 (CN5) - National Biodiversity Future Center (NBFC) - SPOKE 1 
+
+(Codice progetto MUR: CN0000033 CUP UNINA: E63C22000990007). This re-search was also partially supported by the Space It Up project funded by the 
+
+Italian Space Agency (ASI), and the Ministry of University and Research (MUR) under contract n. 2024-5-E.0 - CUP n. I53D24000060005. The rendering of Fig. 3a has been obtained using AI tool such as OpenAI ChatGPT (v. 5.2) with simple prompt commands. 
+
+## References         
+
+> 1. R. Bogue, “The role of robots in environmental monitoring,” Industrial Robot: The International Journal of Robotics Research and Application , vol. 50, no. 3, pp. 369–375, 2023. 2. D. Ventura, A. Bonifazi, M. F. Gravina, and G. D. Ardizzone, “Unmanned aerial systems (UASs) for environmental monitoring: A review with applications in coastal habitats,” in Aerial Robots – Aerodynamics, Control and Applications ,O. D. L. Mejia and J. A. E. Gomez, Eds. IntechOpen, 2017, pp. 165–184. 3. “PX4 autopilot,” https://px4.io/, 2026. 4. “Ardupilot,” https://ardupilot.org/, 2026. 5. “INAV: Navigation-enabled flight control software,” https://github.com/ iNavFlight/inav, 2026. 6. “Betaflight,” https://www.betaflight.com/, 2026.
+
+PX4 hybrid firmware 15 7. D. Ventura, A. Bonifazi, M. F. Gravina, A. Belluscio, and G. Ardizzone, “Mapping and classification of ecologically sensitive marine habitats using unmanned aerial vehicle (UAV) imagery and object-based image analysis (OBIA),” Remote Sensing ,vol. 10, no. 9, p. 1331, 2018. 8. J. Lindsay, J. Ross, M. L. Seto, E. Gregson, A. Moore, J. Patel, and R. Bauer, “Collaboration of heterogeneous marine robots toward multidomain sensing and situational awareness on partially submerged targets,” IEEE Journal of Oceanic Engineering , vol. 47, no. 4, pp. 880–894, 2022. 9. D. F. Carlson, S. Akbulut, J. F. Rasmussen, C. S. Hestbech, M. H. Andersen, and C. Melvad, “Compact and modular autonomous surface vehicle for water research: The naval operating research drone assessing climate change (NORDACC),” Hard-wareX , vol. 15, p. e00453, 2023. 10. P. Gogendeau, S. Bonhommeau, H. Fourati, M. Julien, M. Contini, T. Chevrier, A. E. Nieblas, and S. Bernard, “An autonomous surface vehicle for acoustic track-ing, bathymetric and photogrammetric surveys,” Ocean Engineering , vol. 331, p. 121201, 2025. 11. X. Xiao, J. Dufek, T. Woodbury, and R. R. Murphy, “UAV assisted USV visual navigation for marine mass casualty incident response,” in 2017 IEEE/RSJ Inter-national Conference on Intelligent Robots and Systems (IROS) , 2017, pp. 6105– 6110. 12. T. Huang, Z. Chen, W. Gao, Z. Xue, and Y. Liu, “A USV-UAV cooperative tra-jectory planning algorithm with hull dynamic constraints,” Sensors , vol. 23, no. 4, p. 1845, 2023. 13. D. Manoharan, C. Gajendran, M. K. Padmanabhan, S. Vignesh, S. Rajesh, and G. D. Bhuvaneshwaran, “Design and development of autonomous amphibious un-manned aerial vehicle for in situ water quality assessment and water sampling,” 
+
+Journal of Unmanned Vehicle Systems , vol. 9, no. 3, pp. 182–204, 2021. 14. A. Farinha, L. Romanello, R. Zufferey, J. Lawson, S. F. Armanini, and M. Kovac, “Sailmav: Water-surface locomotion and biodiversity monitoring,” IEEE Transac-tions on Field Robotics , vol. 2, pp. 208–229, 2025. 15. “Qgroundcontrol,” https://qgroundcontrol.com/, 2026. 16. T. A. Johansen, T. P. Fuglseth, P. Tøndel, and T. I. Fossen, “Optimal constrained control allocation in marine surface vessels with rudders,” Control Engineering Practice , vol. 16, no. 4, pp. 457–464, 2008. 17. C. Paliotta, E. Lefeber, K. Y. Pettersen, J. Pinto, M. Costa, and J. T. de Figueiredo Borges de Sousa, “Trajectory tracking and path following for underactuated marine vehicles,” IEEE Transactions on Control Systems Technology , vol. 27, no. 4, pp. 1423–1437, 2019. 18. B. Bingham, C. Ag¨ uero, M. McCarrin, J. Klamo, J. Malia, K. Allen, T. Lum, M. Rawson, and R. Waqar, “Toward maritime robotic simulation in Gazebo,” in 
+
+OCEANS 2019 MTS/IEEE SEATTLE , 2019, pp. 1–10. 19. M. B. Kramer, J. Andersen, S. Thomas, F. B. Bendixen, H. Bingham, R. Read, N. Holk, E. Ransley, S. Brown, Y.-H. Yu, T. T. Tran, J. Davidson, C. Horvath, C.-E. Janson, K. Nielsen, and C. Eskilsson, “Highly accurate experimental heave decay tests with a floating sphere: A public benchmark dataset for model validation of fluid–structure interaction,” Energies , vol. 14, no. 2, p. 269, 2021. 20. J. Tessendorf, “Simulating ocean water,” SIGGRAPH Course Notes, Simulating Nature: Realistic and Interactive Techniques , 2001, sIGGRAPH 2001. 21. R. Szlapczy´ nski, P. Krata, and J. Szlapczy´ nska, “Ship domain applied to deter-mining distances for collision avoidance manoeuvres in give-way situations,” Ocean Engineering , vol. 165, pp. 43–54, 2018.

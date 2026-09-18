@@ -1,0 +1,966 @@
+Title: Underwater Visual Target Tracking with Target-Specific Depth Estimation and Adaptive Model-Fusion Predictive Control
+
+URL Source: https://arxiv.org/pdf/2609.20731v1
+
+Published Time: Fri, 18 Sep 2026 01:40:49 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Underwater Visual Target Tracking with Target-Specific Depth Estimation and Adaptive Model-Fusion Predictive Control 
+
+Yuheng Zhou 1, Haiyang Cheng 1, Yanqi Feng 1, Pangkit Fong 1,Mei Xuan Lee 2, Marcus Gee 3, Chongrong Fang 1 and Jianping He 1∗
+
+Abstract —Vision-based underwater target tracking is chal-lenged by unreliable depth measurements and unknown target motion. This paper proposes a stereo visual-servoing framework for an autonomous underwater vehicle (AUV). For perception, the framework derives a stable 3D relative state from stereo images through target-specific depth extraction and Kalman filtering. It constructs a target-depth mask from color, disparity, and temporal cues to select reliable target pixels, and then filters the resulting depth measurement and detected image center separately. For control, the framework decouples yaw regulation from translational control, avoiding computationally expensive coupled multi-DOF optimization and enabling real-time trans-lational MPC. The translational controller employs adaptive model-fusion predictive control, combining constant-velocity and zero-velocity target models to accommodate different target-motion patterns. It updates the model weights using historical prediction errors and computes translational commands subject to actuation, following-distance, and field-of-view constraints. Through simulations and real-world experiments, we validate the effectiveness of the proposed framework and show it has better performance than existing frameworks. 
+
+I. I NTRODUCTION 
+
+In applications such as ecological observation, inspection, and docking [1], [2], underwater target tracking requires an AUV to maintain a desired relative position while keeping the moving target within its camera’s field of view. Reliable close-range tracking, however, depends on consistently accurate estimates of the target’s position and motion. While acoustic localization is well established and effective over medium and long ranges, it generally has limited spatial resolution and is susceptible to measurement noise and multipath interference at closer ranges [3]. These shortcomings are exacerbated when tracking highly maneuverable targets with unknown motion. Consequently, optical cameras are well suited to close-range underwater target tracking because they provide detailed target appearance and motion cues. To translate these visual observations into vehicle com-mands, visual servoing is commonly categorized into image-based visual servoing (IBVS) and position-based visual servo-ing (PBVS) [4]. IBVS directly regulates image features, but changes in the shape, pose, and apparent size of deformable underwater targets weaken the relation between image-space  
+
+> 1Yuheng Zhou, Haiyang Cheng, Yanqi Feng, Pangkit Fong, Chongrong Fang and Jianping He are with the Department of Automation, Shang-hai Jiao Tong University, Shanghai, China
+
+{wsklxzm6, chy_maer, fengyanqi, fpjgaoge, crfang, jphe}@sjtu.edu.cn           
+
+> 2Mei Xuan Lee is with the University of Toronto, Toronto, Canada
+
+austinmx.lee@mail.utoronto.ca          
+
+> 3Marcus Gee is with the University of Calgary, Calgary, Canada
+
+marcus.gee@ucalgary.ca  
+
+> Fig. 1. Schematic of vision-based underwater target tracking.
+
+error and physical distance. PBVS reconstructs the target’s metric 3D relative state and regulates the vehicle in Cartesian space, allowing tracking distance and camera visibility to be handled explicitly. We therefore adopt PBVS for close-range underwater target tracking. Reliable PBVS requires an accurate, target-specific metric depth estimate. Monocular cues such as bounding-box size provide only indirect range estimates and are sensitive to changes in target size, pose, and deformation. Stereo match-ing provides metric depth [2], [5], but converting a scene-level disparity map into a reliable target-depth measurement involves two challenges. First, underwater scattering, color attenuation, weak texture, and refraction can degrade stereo correspondence [3], [6]. Second, stereo matching alone cannot determine which disparity measurements belong to the target. Detection boxes provide only coarse target regions and often include background pixels, while foreground–background dis-parity mixing near target boundaries can contaminate depth aggregation [7]. Background subtraction can refine the target region, but it may absorb hovering or slow-moving targets into the background model [8]. We therefore introduce a target-depth mask that selects reliable target pixels before depth aggregation, thereby improving target-depth estimation and supporting robust 3D relative-state estimation. Given the estimated relative state, the controller must track unknown target motion in real time while satisfying actuation, following-distance, and field-of-view constraints. Conventional PID, sliding-mode, and adaptive controllers gen-erally do not optimize future tracking behavior under multiple constraints [9], [10]. Existing MPC approaches often focus on predefined trajectories or rely on a fixed target-motion model [11]–[14]. These limitations, combined with the high computational cost of jointly optimizing yaw and translation, arXiv:2609.20731v1 [cs.RO] 17 Sep 2026 make it difficult to accommodate unknown target motion while meeting real-time control requirements. We therefore separate yaw regulation from translational control to enable efficient constrained translational MPC. The translational controller employs adaptive model-fusion predictive control, combining constant-velocity and zero-velocity target models with weights updated online from historical multi-step prediction errors. This online adaptation accommodates changes in target motion while reducing fixed-model lag and overshoot. Our main contributions are summarized as follows: 1) We develop a target-specific perception method that combines color, disparity, and temporal cues to extract reliable target depth from scene-level stereo estimates. Separate filtering of image-plane and depth observations offers a stable estimate of the target’s 3D relative state. 2) We design a real-time controller that decouples yaw regulation from translational control, enabling efficient QP-based translational MPC under multiple constraints. The controller adaptively combines constant-velocity and zero-velocity target models using weights updated from historical multi-step prediction errors, enabling adaptation to changing target motion. 3) We integrate the proposed estimator and controller into a complete PBVS underwater target-tracking system. Simulations and physical pool experiments on an eight-thruster AUV validate the perception module, controller, and overall closed-loop system. II. R ELATED WORK 
+
+A. Underwater Target Perception 
+
+Underwater target perception must provide reliable tar-get localization and metric depth despite degraded visibility and background interference [3], [15], [16]. General-purpose tracking-by-detection methods improve 2D target association but do not directly provide target-specific metric depth [17]. Stereo-based approaches combine target localization with ge-ometric depth estimation. Wu et al. combined YOLO with SGBM to detect fish and estimate their stereo depth [5], while Lwin et al. used dual-eye cameras to estimate the 3D pose of a predefined docking marker [2]. Object-centric stereo matching and background modeling can reduce background interference [7], [8]. However, detector-defined regions may include background pixels, while background models may fail for slowly moving targets. Such errors in target-region selection can make depth aggregation unstable. Accurate target segmentation alone does not guarantee reliable depth. Underwater attenuation and backscatter can corrupt stereo correspondence, producing invalid or noisy disparities even on target pixels [6]. UWStereo and Fast-FoundationStereo improve disparity estimation through do-main adaptation and efficient zero-shot inference [18], [19], but their disparity maps may still contain unreliable pixels in degraded underwater imagery. Consequently, segmentation masks, including those generated by models such as SAM 2 [20], cannot by themselves determine which target pixels have  
+
+> Fig. 2. Overall framework of the proposed underwater visual target-tracking system. Stereo images and IMU measurements provide a filtered 3D target-relative state; decoupled yaw control and adaptive model-fusion translational MPC generate constrained commands for the eight-thruster AUV.
+
+disparities suitable for metric-depth estimation. This motivates our joint use of color, disparity, and temporal cues to select reliable target pixels before depth aggregation and filtering. 
+
+B. Underwater Tracking Control 
+
+Underwater target-following control must convert visual feedback into vehicle motion while handling nonlinear dynam-ics, disturbances, and motion coupling. Sha et al. developed a dual-loop controller for vision-based tracking with a multi-thruster AUV [9]. Meng et al. combined nonsingular terminal sliding-mode control with fuzzy inference to coordinate dis-tance and azimuth tracking for a robotic manta [10]. These controllers demonstrate practical robustness but generate com-mands mainly from current tracking errors without explicitly predicting future target motion or constraint evolution. Model predictive control (MPC) enables future motion to be optimized subject to system constraints. Zhang et al. formu-lated constrained 3D AUV trajectory tracking as a quadratic program [11], while Shen et al. developed a Lyapunov-based MPC scheme for stable trajectory tracking [12]. Gao et al. applied MPC to agile trajectory tracking of a fully vectored underwater robot [13]. For underwater visual servoing, Gao et al. combined nonlinear MPC for constrained image-trajectory prediction with adaptive neural-network compensation for uncertain vehicle dynamics but did not adapt the target-motion model [14]; a related image-based MPC scheme incorporated target-motion estimation under a single fixed motion model [21]. Adaptive multi-model estimation frameworks [22]–[24] mix motion hypotheses using single-step likelihoods for state estimation; our formulation instead weights models by histori-cal multi-step prediction errors and applies the fused prediction inside the control horizon. III. M ETHODOLOGY 
+
+A. Task Definition and System Framework 
+
+This section formulates the target tracking task and defines the state interface between visual perception and control. For the task, the AUV is required to maintain a desired relative position with respect to the target while keeping the target within the camera field of view. The left-camera frame {Oc −XcYcZc}, and the right-handed AUV body frame 
+
+{Ob − XbYbZb} are shown in Fig. 1. For perception, the visual module estimates the target-relative position and velocity in the camera frame: 
+
+pc, + 
+
+> k
+
+= Xc, + 
+
+> k
+
+, Y c, + 
+
+> k
+
+, Z c, +
+
+> k
+
+T , vc, + 
+
+> k
+
+=
+
+h ˙Xc, + 
+
+> k
+
+, ˙Y c, + 
+
+> k
+
+, ˙Zc, +
+
+> k
+
+iT
+
+,
+
+where the superscript + denotes the states after the decoupled image-center and depth filters. For control, the state is first transformed into the body frame using the calibrated camera-to-body extrinsic parameters: 
+
+epbk = rbBC + Rbcpc, + 
+
+> k
+
+, evbk = Rbcvc, + 
+
+> k
+
+. (1) Here, rbBC denotes the camera position relative to the body origin, and Rbc maps vectors from the camera frame to the body frame. The transformed state is then fused with the AUV attitude and angular-rate measurements to obtain the filtered body-frame state pb, + 
+
+> k
+
+and vb, + 
+
+> k
+
+.Let p∗ = [ p∗
+
+> x
+
+, p ∗ 
+
+> y
+
+, p ∗ 
+
+> z
+
+]T denote the desired translational com-ponent of the relative pose in the body frame. The translational tracking error is defined as 
+
+ebk = pb, + 
+
+> k
+
+− p∗. (2) The controller generates commands from the state defined in Eq. (2) while satisfying force, force-rate, following-distance, and field-of-view constraints. The complete architecture is summarized in Fig. 2. 
+
+B. Target-Specific State Estimation 
+
+This section converts rectified stereo observations into a target-specific relative state for control. The pipeline recon-structs scene depth from stereo disparity, selects reliable target pixels using color, disparity, and temporal cues for target-specific depth measurement, and separately filters the depth and image center to estimate the target’s 3D relative state. 
+
+1) Stereo Geometric Measurement: Let Ik = (ILk , I Rk )
+
+denote the rectified left and right images at frame k.Fast-FoundationStereo [19] estimates the left-referenced disparity map Dk ∈ RH×W from rectified stereo images. For a left-image pixel π = ( u, v ), where u and v are horizontal and vertical pixel coordinates, its disparity is dk(π) = [ Dk]v,u .Stereo triangulation and pinhole back-projection give [25] 
+
+Zck(π) = fxBdk(π) ,Xck(π) = u − cx
+
+fx
+
+Zck(π), Y ck (π) = v − cy
+
+fy
+
+Zck(π),
+
+(3) 
+
+> (a) Normal frame.
+> (b) Temporal recovery frame. Fig. 3. Target-depth mask generation in (a) a normal frame and (b) a temporal recovery frame with incomplete color–disparity overlap.
+
+where fx, f y , (cx, c y ), and B are the calibrated focal lengths, principal point, and the stereo baseline. 
+
+2) Target-Depth Mask: Building on the 3D measurements obtained above, the target-depth mask combines color, dis-parity, and temporal-consistency cues. Color and disparity are first used to construct separate cue-specific masks, whose intersection forms a conservative joint mask. When the joint mask is too sparse, temporal support recovers additional pixels that remain consistent with the previous valid observation. Fig. 3 illustrates both cases. Let Rk denote the target region and Id the valid disparity interval. The valid pixels within the target region are Ωv,k =
+
+{π ∈ R k | dk(π) ∈ I d}. To obtain local background statistics, we expand the target region by a factor s > 1 to form Rext  
+
+> k
+
+,and define the surrounding band as Bk = Rext  
+
+> k
+
+\ R k.We first construct a color-based mask. To avoid hue discon-tinuities, each pixel is represented by its hue, saturation, and value as 
+
+ck(π) = 
+
+
+
+Sk(π) cos θk(π)
+
+Sk(π) sin θk(π)
+
+Vk(π)
+
+ , θk(π) = 2πH k(π)180 , (4) where Hk, Sk, and Vk denote hue, saturation, and value, with Sk, V k ∈ [0 , 1] . The mean μk and covariance Σk of the background colors are estimated from Bk. Covariance shrinkage improves the stability of the inverse covariance [26]: 
+
+eΣk = (1 − λ)Σk + λ
+
+3 tr( Σk)I3, (5) where λ ∈ [0 , 1] controls the shrinkage strength. The color abnormality score is 
+
+sc,k (π) = ( ck(π) − μk)T eΣ−1 
+
+> k
+
+(ck(π) − μk). (6) Otsu’s method [27] determines the color threshold τc,k , then 
+
+Mc,k = {π ∈ Ωv,k | sc,k (π) ≥ τc,k } . (7) We independently construct a disparity-based mask. Be-cause the target is generally closer than its local background, its pixels tend to have larger disparities. Applying Otsu’s method to the valid disparities gives the threshold τd,k and the mask 
+
+Md,k = {π ∈ Ωv,k | dk(π) ≥ τd,k } . (8) The two cue-specific masks are intersected to obtain the conservative joint mask: 
+
+Ms,k = Mc,k ∩ M d,k . (9) When the joint mask is insufficient, temporal support uses the reference from the most recent frame with an available depth measurement, qref = [ uref , v ref , d ref ]T, which contains the filtered image center and median disparity. The normalized distance between a current pixel and this reference is 
+
+δk(π) = (u − uref )2
+
+σ2
+
+> u
+
++ (v − vref )2
+
+σ2
+
+> v
+
++ (dk(π) − dref )2
+
+σ2
+
+> d
+
+. (10) Here, σu, σv , and σd normalize the horizontal, vertical, and disparity deviations, and γ is the temporal-consistency thresh-old. The temporal support is Mp,k = {π ∈ Ωv,k | δk(π) ≤
+
+γ}, and the recovery region is Mr,k = ( Mc,k ∪M d,k )∩M p,k .The final target-depth mask is 
+
+Mf,k =
+
+
+
+Ms,k , |M s,k | ≥ Ns,
+
+Ms,k ∪ M r,k , |M s,k | < N s, |M r,k | ≥ Nr ,
+
+∅, |M s,k | < N s, |M r,k | < N r .
+
+(11) Here, Ns and Nr are minimum pixel counts required for the joint and recovery masks, respectively. Recovery therefore adds only temporally consistent pixels retaining current-frame color or disparity evidence. If Mf,k is nonempty, the valid depths within the final mask are aggregated and will be filtered by the following method. 
+
+3) Decoupled Filtering of Image-Center and Depth Mea-surements: The detected image center and target depth are filtered independently before 3D state reconstruction. For the depth measurement, a constant-velocity Kalman filter [28] uses the state ζk = [ Zck, ˙Zck]T. Its prediction model is 
+
+ζ− 
+
+> k
+
+= Fkζ+
+
+> k−1
+
+, Fk =
+
+1 ∆tk
+
+0 1
+
+
+
+. (12) The measurement model is 
+
+zk = HZ ζk + εz,k , HZ = [1 , 0] , ε z,k ∼ N (0 , R z,k ). (13) The process covariance combines a random-acceleration model [29] with depth diffusion: 
+
+Qk = σ2
+
+> a
+
+∆t4
+
+> k
+
+/4 ∆t3
+
+> k
+
+/2∆t3
+
+> k
+
+/2 ∆t2
+
+> k
+
+
+
++
+
+qz max(∆ tk, ∆t0) 00 0
+
+
+
+. (14) Let nk = |M f,k |. The robust scale of the selected depth samples and the adaptive measurement variance are [30] 
+
+bσZ,k = 0 .7413 IQR  {Zck(π)}π∈M f,k 
+
+ , R z,k = ηR
+
+π
+
+2nk
+
+bσ2
+
+> Z,k
+
+.
+
+(15) The factor 0.7413 converts IQR to a robust standard-deviation estimate, and ηR is a tuning coefficient. More valid depth samples and lower depth dispersion correspond to a smaller measurement variance Rz,k . The Kalman update is applied when a valid depth measurement is available; otherwise, 
+
+ζ+ 
+
+> k
+
+= ζ− 
+
+> k
+
+.
+
+Algorithm 1 Online Stereo Relative-State Estimation  
+
+> 1:
+
+Require: Ik, Rk, ξk, ∆tk. 
+
+> 2:
+
+Ensure: pc, + 
+
+> k
+
+, vc, + 
+
+> k
+
+. 
+
+> 3:
+
+Dk ← FAST FOUNDATION STEREO (Ik) [19].  
+
+> 4:
+
+(Ω v,k , Bk) ← VALID ROI (Dk, Rk). 
+
+> 5:
+
+(Mc,k , Md,k ) ← MASKS using (7)–(8).  
+
+> 6:
+
+Ms,k ← JOINT MASK using (9).  
+
+> 7:
+
+Mf,k ← RECOVER MASK using (10)–(11).  
+
+> 8:
+
+if DEPTH AVAILABLE (Mf,k , Dk) then  
+
+> 9:
+
+zk ← median π∈M f,k Zck(π) using (3).  
+
+> 10:
+
+¯dk ← median π∈M f,k dk(π). 
+
+> 11:
+
+else  
+
+> 12:
+
+zk ← ∅, ¯dk ← ∅. 
+
+> 13:
+
+end if  
+
+> 14:
+
+(ξ+ 
+
+> k
+
+, ˙ξ+ 
+
+> k
+
+) ← α-β(ξk). 
+
+> 15:
+
+ζ+ 
+
+> k
+
+← KALMAN UPDATE using (12)–(15).  
+
+> 16:
+
+(pc, + 
+
+> k
+
+, vc, + 
+
+> k
+
+) ← RECONSTRUCT using (16).  
+
+> 17:
+
+if ¯dk̸ = ∅ then  
+
+> 18:
+
+qref ← [u+ 
+
+> k
+
+, v + 
+
+> k
+
+, ¯dk]T. 
+
+> 19:
+
+end if  
+
+> 20:
+
+return pc, + 
+
+> k
+
+, vc, + 
+
+> k
+
+.For the detected center ξk = [ uk, v k]T, an α-β filter outputs 
+
+ξ+ 
+
+> k
+
+= [ u+ 
+
+> k
+
+, v + 
+
+> k
+
+]T and ˙ξ+ 
+
+> k
+
+= [ ˙ u+ 
+
+> k
+
+, ˙v+ 
+
+> k
+
+]T, and continues to update when depth is unavailable. Let s+ 
+
+> k
+
+= [u+ 
+
+> k
+
+, v + 
+
+> k
+
+, Z c, + 
+
+> k
+
+]T and ˙s+ 
+
+> k
+
+= [ ˙ u+ 
+
+> k
+
+, ˙v+ 
+
+> k
+
+, ˙Zc, + 
+
+> k
+
+]T.Define the pinhole mapping g(u, v, Z ) = [( u − cx)Z/f x, (v −
+
+cy )Z/f y , Z ]T. The reconstructed state satisfies: 
+
+pc, + 
+
+> k
+
+= g(s+ 
+
+> k
+
+), vc, + 
+
+> k
+
+= Jg (s+ 
+
+> k
+
+) ˙ s+ 
+
+> k
+
+,Jg (u, v, Z ) = 
+
+
+
+Z/f x 0 (u − cx)/f x
+
+0 Z/f y (v − cy )/f y
+
+0 0 1
+
+ . (16) The filtered camera-frame state is then transformed into the body frame based on Eq. (1) and provided to the controller. In addition, the filtered image center and the median dis-parity ¯dk = median π∈M f,k dk(π) will update the reference 
+
+qref = [ u+ 
+
+> k
+
+, v + 
+
+> k
+
+, ¯dk]T used for temporal mask recovery when a valid depth measurement is available. Otherwise, the previous reference is retained. The overall state estimation procedure is organized in Algorithm 1. 
+
+C. Controller Design 
+
+At each visual update k, the controller receives the tracking error based on Eq. (2) through the above perception module. The controller separates yaw and translational control. AHOLD/TURN state machine manages yaw, while the trans-lational MPC predicts relative motion with two models by fusing their predictions using the online weight, and computes constrained translational commands. All variables in this sec-tion are expressed in the body frame, and the superscript b is omitted. The current control-side filtered position and velocity are denoted as p+ 
+
+> k
+
+and v+ 
+
+> k
+
+.
+
+1) Yaw Control and Rotation Compensation: To coordinate with the MPC, the yaw controller augments the cascaded PID with a state machine and rotation-matrix prediction, allowing it to adjust the yaw angle for target tracking while maintaining decoupled rotational and translational control. Define the horizontal line-of-sight angle αk =atan2( p+
+
+> y,k
+
+, p +
+
+> x,k
+
+). A hysteretic HOLD/TURN logic enters TURN when |αk| > α on for a preset dwell time and sets 
+
+ψ∗ 
+
+> k
+
+= ψk + αk; it returns to HOLD when |αk| < α off , where 
+
+αoff < α on , and freezes the yaw reference. An IMU-based cascaded PID independently tracks ψ∗ 
+
+> k
+
+and generates the yaw torque ˆNk.Because the relative state is expressed in the body frame, the yaw-induced frame rotation must be included in the translational prediction. Using the first-order yaw dynamics 
+
+mw ˙ω + dwω = N [31], and holding ˆNk and the state-machine mode fixed during each QP solve, we obtain: 
+
+ˆωh+1 |k = aω ˆωh|k + bω ˆNh|k, (17) where 
+
+aω = exp 
+
+
+
+− dwTs
+
+mw
+
+
+
+, bω = 1 − aω
+
+dw
+
+. (18) 
+
+ˆωh|k is the predicted angular velocity at time k + h, calculated at time k. The corresponding yaw increment and passive body-frame rotation are 
+
+∆ ˆψh|k = Ts
+
+2
+
+ ˆωh|k + ˆ ωh+1 |k
+
+ ,
+
+ˆRh|k = Rz
+
+
+
+−∆ ˆψh|k
+
+
+
+, h = 0 , . . . , n − 1.
+
+(19) Here, mw, dw, Ts, and n denote the effective inertia, damping, sampling interval, and prediction-horizon length, respectively. The rotation sequence is computed before the translational QP and held fixed during the solve, preserving linearity and convexity. 
+
+2) Adaptive Model-Fusion Predictive Control: The con-troller uses two models to predict relative motion and com-bines their predictions through a weighted sum. The weights are calculated from the accuracy of each model’s past predic-tions. The resulting fused prediction is then used in the MPC cost function to compute the control force. At the current time k, Model 1 assumes a stationary target, while Model 2 assumes a moving target. Under Model 2, more thrust is needed to reduce the distance to the target. This additional force is denoted by f d,k . The relative-velocity and position updates are given below: 
+
+v(1)  
+
+> k+1
+
+= Rk+1 
+
+h
+
+Φv(1)  
+
+> k
+
++ Γf k
+
+i
+
+, (20) 
+
+v(2)  
+
+> k+1
+
+= Rk+1 
+
+h
+
+Φv(2)  
+
+> k
+
++ Γ f k − f d,k 
+
+i
+
+, (21) 
+
+p(m) 
+
+> k+1
+
+= Rk+1 p(m) 
+
+> k
+
++ Tsv(m) 
+
+> k
+
+, m ∈ { 1, 2}. (22) Here, f k is the driving force applied to AUV. f d,k is updated by smoothing f k−1.The translational dynamics follow a low-speed model with linearized damping, Mt ˙v+DLv = f [31]. Using a first-order Taylor approximation, we obtain: 
+
+Φ = eΛTs , Γ = −
+
+Z Ts
+
+> 0
+
+eΛsM −1 
+
+> t
+
+ds, (23) where Λ = −M −1 
+
+> t
+
+DL, M t is the translational inertia including added mass, DL is the linear damping matrix, and 
+
+Ts is the sampling period.               
+
+> Fig. 4. Sampling window for the fusion-weight update. Selected data pairs must satisfy two conditions. The condition h≤k−ℓensures that the prediction–observation pair is available. The condition h+ ( k−ℓ)≤Lmax
+> excludes pairs with a large combined prediction age and horizon.( Lmax = 7
+> in this illustration).
+
+The historical prediction error of model m is defined as 
+
+ϵ(m) 
+
+> ℓ,h
+
+= p+ 
+
+> ℓ+h
+
+− ˆp(m),eva  
+
+> ℓ+h|ℓ
+
+, m ∈ { 1, 2}. (24) It is used to evaluate the accuracy of the model. Here, ˆp(m),eva 
+
+> ℓ+h|ℓ
+
+is the h-step relative-position prediction starting from time ℓ
+
+of model m. The controller selects several sets of past data for this evaluation. Each set is specified by a prediction start time ℓ and a prediction horizon h.For each set, model m starts from the state at time ℓ. The model reads the driving force applied to the AUV at each time step from ℓ to ℓ + h (f ℓ, . . . , f ℓ+h). Based on these forces, the model predicts the target’s relative position at time 
+
+ℓ + h. This prediction is compared with the measured relative position p+ 
+
+> ℓ+h
+
+. The pairs of ℓ and h used for validation are selected as shown in Fig. 4. The fused error eℓ,h (a) is defined as 
+
+eℓ,h (a) = aϵ (1)  
+
+> ℓ,h
+
++ (1 − a)ϵ(2) 
+
+> ℓ,h
+
+. (25) Here, ϵ(m) 
+
+> ℓ,h
+
+is one scalar component of ϵ(m) 
+
+> ℓ,h
+
+, and a is its fusion weight. The expected squared error is 
+
+E
+
+h
+
+e2
+
+> ℓ,h
+
+(a)
+
+i
+
+= a2E
+
+h ϵ(1) 
+
+> ℓ,h
+
+2i
+
++ (1 − a)2E
+
+h ϵ(2) 
+
+> ℓ,h
+
+2i
+
++ 2 a(1 − a)E
+
+h
+
+ϵ(1) 
+
+> ℓ,h
+
+ϵ(2) 
+
+> ℓ,h
+
+i
+
+.
+
+(26) Minimizing Ee2
+
+> ℓ,h
+
+(a) gives 
+
+a =
+
+E
+
+h ϵ(2) 
+
+> ℓ,h
+
+2i
+
+− E
+
+h
+
+ϵ(1) 
+
+> ℓ,h
+
+ϵ(2) 
+
+> ℓ,h
+
+i
+
+E
+
+h ϵ(1) 
+
+> ℓ,h
+
+2i
+
++ E
+
+h ϵ(2) 
+
+> ℓ,h
+
+2i
+
+− 2E
+
+h
+
+ϵ(1) 
+
+> ℓ,h
+
+ϵ(2) 
+
+> ℓ,h
+
+i . (27) The fused predictions use the diagonal weight matrix a:
+
+ˆp = aˆp(1) + ( I − a)ˆ p(2) ,
+
+ˆv = aˆv(1) + ( I − a)ˆ v(2) . (28) At time k, the MPC solves the following quadratic program: 
+
+minimize  
+
+> fseq ,k
+> n
+
+X
+
+> h=1
+
+
+
+∥eh∥2 
+
+> Qp
+
++ ∥vh∥2
+
+> Qv
+
+
+
++
+
+> n−1
+
+X
+
+> h=0
+
+
+
+∥f h|k∥2 
+
+> Qf
+
++ ∥∆f h|k∥2
+
+> Sf
+
+
+
+subject to f min ≤ f h|k ≤ f max ,
+
+∆f min ≤ ∆f h|k ≤ ∆f max ,h = 0 , . . . , n − 1.
+
+(29) Here, f seq ,k = col {f 0|k, . . . , f n−1|k} is the stacked force sequence, and ∥x∥2 
+
+> W
+
+≜ xTW x. Moreover, eh = ˆ ph|k − p∗,
+
+∆f h+1 |k = f h+1 |k − f h|k. The matrices Qp, Qv , Qf , and Sf
+
+are the corresponding penalty weights, and all inequalities are elementwise. The optimal force is combined with the attitude torques and allocated to the eight thrusters. IV. E XPERIMENTS AND RESULTS 
+
+A. Platform and Experimental Setup 
+
+We conducted a series of video-replay, simulation, and real tracking experiments using an eight-thruster AUV [32] in a 
+
+4 m × 2 m × 1 m pool, assessing target-depth measurement quality, relative-state stability, and tracking accuracy. The AUV carries a forward-looking stereo camera, and a fish-shaped model serves as the tracking target. Four horizontal thrusters control planar motion and yaw, while four vertical thrusters control heave, roll, and pitch. An external host computer runs perception, state estimation, and upper-level control through ROS 2, while the onboard controller handles attitude control and thruster actuation. Controller simulations are performed in a Unity-based underwater environment in-tegrated with ROS 2. All methods use the same inputs and initial conditions, with calibrated camera parameters and fixed algorithm parameters. 
+
+B. Target-Depth Measurement and State-Filtering Evaluation 
+
+Two replay experiments are conducted on the same 12 real-world videos, comprising four static-disturbance and eight dynamic sequences. The dynamic sequences cover target and vehicle motion, attitude changes, and target yaw. All methods share the same rectified images, detection boxes, and disparity maps, while the same final validity criteria are applied to every method. Each metric is first computed per video and then summarized by its median across the 12 videos. 
+
+1) Mask comparison: This experiment evaluates target-depth masking without output filtering; output filtering is disabled for all methods. A frame is considered valid if the selected mask covers at least 5% of the detection box, provides a finite median depth within 0.1–5 m, and has a depth interquartile range (Z-IQR) no greater than 0.20 m. The valid-frame rate (VR) is the fraction of valid frames in each video. We compare the complete mask Mf (Ours-T), its single-frame variant without temporal recovery (Ours-S), and the disparity-only ablation (Ours-D), together with BBox, GrabCut [33], and MOG2 [34]. Table II summarizes the quantitative results.   
+
+> TABLE I MACRO -MEDIANS OF PER -VIDEO P95 FRAME -TO -FRAME CHANGES IN THE REPLAY EXPERIMENTS .
+
+Configuration ∆Z/ m ↓ ∆u/ px ↓ ∆v/ px ↓ LOS /◦ ↓
+
+BBox + Raw 0.7161 5.350 4.250 0.5667 
+
+Mf + Raw 0.0449 5.350 4.250 0.5667 
+
+Mf + Filters 0.0264 5.175 3.293 0.4896                                                     
+
+> TABLE II MACRO -MEDIAN TARGET -DEPTH RESULTS . VR DENOTES THE VALID -FRAME RATE , Z-IQR THE DEPTH INTERQUARTILE RANGE ,∆ZTHE FRAME -TO -FRAME DEPTH CHANGE ,AND P95 THE 95 TH PERCENTILE .
+> Method VR ↑IQR-Med. (m) ↓IQR-P95 (m) ↓∆Z-P95 (m) ↓Time (ms) ↓
+> Ours-T 0.9840 0.0150 0.0592 0.0449 5.92 Ours-S 0.9819 0.0152 0.0593 0.0452 5.15 Ours-D 0.9821 0.0304 0.1325 0.0879 0.24
+> BBox 0.2891 0.2435 0.9383 0.7161 0.41 GrabCut 0.2876 0.2443 1.0025 0.7099 178.50 MOG2 0.3073 0.3616 0.9079 0.1121 7.95
+
+Ours-T achieves the highest median per-video VR of 
+
+98 .40% and the lowest macro-median Z-IQR of 0.0150 m . In contrast, the conventional baselines remain below 31% VR and have macro-median Z-IQR values of at least 0.2435 m .GrabCut requires 178 .50 ms per frame, about 30 × the time required by Ours-T. 
+
+2) Mask and decoupled image-center/depth filtering: This experiment separates the contributions of the two stages that stabilize the relative state. BBox + Raw aggregates all valid disparities inside the detection box, Mf + Raw restricts the aggregation to the proposed target-depth mask, and Mf
+
++ Filters additionally applies the depth Kalman filter and image-center α-β filter. The metrics are the P95 frame-to-frame changes of the target depth, of the image-plane center coordinates, and of the line-of-sight (LOS) angle. Both raw configurations use the same unfiltered detection-box center for the image-plane measurements; therefore, the mask affects only the depth channel in this comparison. Table I shows that the mask provides most of the depth stabilization: replacing the box aggregate by Mf cuts the macro-median P95 ∆Z from 0.7161 m to 0.0449 m , a factor of about 16 , because the background disparities that dominate the box are removed before the median is taken. The image-plane metrics are unchanged between these two configurations, since both derive ∆u, ∆v, and the LOS angle from the same unfiltered box center. The depth filter then removes a further 41% of the residual jitter, down to 0.0264 m , and the image-center filter improves image-plane continuity on all three channels. The two stages are thus complementary: the mask suppresses outliers from background disparities, and the filters attenuate the residual measurement noise. 
+
+C. Yaw-Control Ablation in Simulation 
+
+A Unity simulation is used to isolate the contribution of the yaw channel: the proposed model-fusion MPC is run with and without yaw control, and the errors are reported as the norm of the 3D position error using MAE, P95, and maximum Fig. 5. Closed-loop pool tracking at t = 0 , 3, 6, and 9 s : onboard detections and filtered relative positions (top), with corresponding overhead views (bottom).  
+
+> Fig. 6. Position-error norms with and without yaw control in the rectangular-motion simulation.
+> Fig. 7. Target-depth mask on a representative fish sample. The proposed method suppresses background and mismatched disparities, while temporal support recovers short missing regions.
+
+error. In the ablated case the yaw reference is held at its initial value, so that the two runs differ only in whether the vehicle is allowed to reorient toward the target. The hydrodynamic damping is scaled to 30 × the engine default so that the simulated vehicle exhibits the strongly damped, low-speed response characteristic of the physical AUV, and the target traverses a 0.75 m × 0.75 m rectangle at approximately 
+
+0.15 m /s.Enabling yaw control reduces the MAE from 4.21 to 
+
+3.22 cm (23 .5% ), with smaller gains in the P95 and maximum errors ( 14 .9% and 12 .1% ); Fig. 6 plots the corresponding position-error norms. That the improvement is largest in the mean indicates that yaw control acts mainly by shortening the recovery after each direction change rather than by lowering the transient peak. 
+
+D. Controller Comparison on Physical AUV 
+
+The controllers are compared on the physical AUV over a common 20 s pool trial, with errors reported along the forward (Xb) axis. The target travels 200 cm during 15 s of acceleration    
+
+> Fig. 8. Absolute forward-position errors for the fusion and fixed-model controllers (top) and for PID, SMC, and the fusion model (bottom). TABLE III FORWARD -POSITION ERRORS OVER THE COMMON 20 s POOL TRIAL .
+
+Method MAE /cm ↓ P95 /cm ↓ Max /cm ↓
+
+PID 5.23 11.81 20.59 SMC 6.84 11.45 14.67 
+
+Fusion model 4.07 8.87 18.78 Fixed model 1 5.28 13.98 27.35 Fixed model 2 7.39 12.47 24.31 
+
+and constant-speed motion and then stops for 5 s , so that the trial exercises both the tracking and the settling behavior of each controller. All methods share the relative-state estimation front-end described above and the same reference standoff, so the comparison reflects the control stage alone. Figure 5 shows the resulting tracking sequence, in which the target stays near the image center while the vehicle follows it across the pool. Table III compares PID, SMC, the proposed fusion model, and its two fixed-model variants in terms of MAE, P95, and maximum error. The fusion model attains the lowest MAE and P95, reducing the MAE by 22 .2% and 40 .5% relative to PID and SMC and by 44 .9% and 22 .9% relative to the two fixed-model variants. SMC attains the lowest maximum error, but its higher MAE and P95 indicate a conservative response. The top panel of Fig. 8 isolates the effect of the model fusion by driving the same controller with Model 1 only (Fixed model 1), Model 2 only (Fixed model 2), and their adaptive fusion. Each fixed model is accurate only over the motion phase that matches its assumption. Fixed model 1 never predicts forward travel and therefore holds a large sustained error while the target moves, whereas Fixed model 2 keeps predicting forward travel once the target stops at t = 15 s and produces the largest post-stop excursion. The fusion model stays near the lower envelope of both throughout the trial, showing that the adaptive weights follow the transition from constant-speed motion to rest instead of committing to either assumption. The bottom panel compares the fusion model with PID and SMC, where it additionally damps the overshoot that both exhibit at the stop. V. C ONCLUSION AND FUTURE WORK 
+
+We presented an underwater visual-servoing framework for target tracking with a multi-thruster AUV. Color–disparity– temporal mask fusion and decoupled filtering improve relative-state stability, while adaptive model-fusion MPC handles changing target motion under yaw and actuation constraints. Video replay, simulation, and closed-loop pool experiments validate the complete system. Future work will address dis-parity refinement, observation loss, and open-water general-ization. ACKNOWLEDGMENT 
+
+The authors used Claude Code and Codex for language polishing, data organization, figure preparation, and code de-velopment. All AI-assisted materials were carefully reviewed, verified, and approved by the authors, who take full responsi-bility for the content and reported results. REFERENCES [1] A. S. Tijjani, A. Chemori, and V. Creuze, “A survey on tracking control of unmanned underwater vehicles: Experiments-based approach,” 
+
+Annual Reviews in Control , vol. 54, pp. 125–147, 2022. [2] K. N. Lwin, N. Mukada, M. Myint, D. Yamada, A. Yanou, T. Matsuno, K. Saitou, W. Godou, T. Sakamoto, and M. Minami, “Visual docking against bubble noise with 3-d perception using dual-eye cameras,” IEEE Journal of Oceanic Engineering , vol. 45, no. 1, pp. 247–270, 2018. [3] D. Q. Huy, N. Sadjoli, A. B. Azam, B. Elhadidi, Y. Cai, and G. Seet, “Object perception in underwater environments: A survey on sensors and sensing methodologies,” Ocean Engineering , vol. 267, p. 113202, 2023. [4] F. Chaumette and S. Hutchinson, “Visual servo control, part i: Basic approaches,” IEEE Robotics and Automation Magazine , vol. 13, no. 4, pp. 82–90, 2006. [5] H. Wu, S. He, Z. Deng, L. Kou, K. Huang, F. Suo, and Z. Cao, “Fishery monitoring system with auv based on yolo and sgbm,” in Proceedings of the 38th Chinese Control Conference , 2019, pp. 4726–4731. [6] D. Akkaynak and T. Treibitz, “A revised underwater image formation model,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2018, pp. 6723–6732. [7] A. D. Pon, J. Ku, C. Li, and S. L. Waslander, “Object-centric stereo matching for 3d object detection,” in Proceedings of IEEE International Conference on Robotics and Automation , 2020, pp. 8383–8389. [8] T. Bouwmans, “Traditional and recent approaches in background model-ing for foreground detection: An overview,” Computer Science Review ,vol. 11–12, pp. 31–66, 2014. [9] Z. Sha, X. Wang, M. Yang, H. Lei, and F. Zhang, “A portable au-tonomous underwater vehicle with multi-thruster propulsion: Design, development, and vision-based tracking control,” IEEE Robotics and Automation Letters , vol. 10, no. 4, pp. 3046–3053, 2025. [10] Y. Meng, Z. Wu, Y. Li, D. Chen, M. Tan, and J. Yu, “Vision-based underwater target following control of an agile robotic manta with flexible pectoral fins,” IEEE Robotics and Automation Letters , vol. 8, no. 4, pp. 2277–2284, 2023. [11] Y. Zhang, X. Liu, M. Luo, and C. Yang, “Mpc-based 3-d trajectory tracking for an autonomous underwater vehicle with constraints in complex ocean environments,” Ocean Engineering , vol. 189, p. 106309, 2019. [12] C. Shen, Y. Shi, and B. Buckham, “Trajectory tracking control of an auv using lyapunov-based model predictive control,” IEEE Transactions on Industrial Electronics , vol. 65, no. 7, pp. 5796–5805, 2018. [13] T. Gao, Y. Luo, C. Lv, W. Luo, X. Fu, N. Zhao, X. Luo, and Y. Shen, “Model predictive control for an autonomous underwater robot with fully vectored propulsion,” in 2024 IEEE International Conference on Robotics and Automation (ICRA) , 2024, pp. 10 482–10 488. [14] J. Gao, A. A. Proctor, Y. Shi, and C. Bradley, “Hierarchical model pre-dictive image-based visual servoing of underwater vehicles with adaptive neural network dynamic control,” IEEE Transactions on Cybernetics ,vol. 46, no. 10, pp. 2323–2334, 2016. [15] B. Alawode, Y. Guo, M. Ummar, N. Werghi, J. Dias, A. Mian, and S. Javed, “UTB180: A high-quality benchmark for underwater tracking,” in Proceedings of the Asian Conference on Computer Vision , 2022, pp. 442–458. [16] C. Zhang, L. Liu, G. Huang, H. Wen, X. Zhou, and Y. Wang, “WebUOT-1M: Advancing deep underwater object tracking with a million-scale benchmark,” in Advances in Neural Information Processing Systems ,vol. 37. Curran Associates, Inc., 2024, pp. 50 152–50 167. [17] Y. Zhang, P. Sun, Y. Jiang, D. Yu, F. Weng, Z. Yuan, P. Luo, W. Liu, and X. Wang, “ByteTrack: Multi-object tracking by associating every detection box,” in Proceedings of the European Conference on Computer Vision , 2022, pp. 1–21. [18] Q. Lv, J. Dong, Y. Li, S. Chen, H. Yu, S. Zhang, and W. Wang, “Uwstereo: A large synthetic dataset for underwater stereo matching,” 
+
+IEEE Transactions on Circuits and Systems for Video Technology ,vol. 35, no. 11, pp. 11 216–11 228, 2025. [19] B. Wen, S. Dewan, and S. Birchfield, “Fast-foundationstereo: Real-time zero-shot stereo matching,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2026, pp. 7513– 7524. [20] N. Ravi, V. Gabeur, Y.-T. Hu, R. Hu, C. Ryali, T. Ma, H. Khedr, R. Rädle, C. Rolland, L. Gustafson, E. Mintun, J. Pan, K. V. Alwala, N. Carion, C.-Y. Wu, R. Girshick, P. Dollar, and C. Feichtenhofer, “SAM 2: Segment anything in images and videos,” in International Conference on Learning Representations , 2025. [21] J. Liu, J. Gao, W. Yan, Y. Chen, and B. Yang, “Image-based visual servoing of underwater vehicles for tracking a moving target using model predictive control with motion estimation,” International Journal of Vehicle Design , vol. 91, no. 1–3, pp. 46–66, 2023. [22] H. A. P. Blom and Y. Bar-Shalom, “The interacting multiple model algorithm for systems with markovian switching coefficients,” IEEE Transactions on Automatic Control , vol. 33, no. 8, pp. 780–783, 1988. [23] E. Mazor, A. Averbuch, Y. Bar-Shalom, and J. Dayan, “Interacting multiple model methods in target tracking: A survey,” IEEE Transactions on Aerospace and Electronic Systems , vol. 34, no. 1, pp. 103–123, 1998. [24] K. Na, S. Choi, and J. Kim, “Adaptive target tracking with interacting heterogeneous motion models,” IEEE Transactions on Intelligent Trans-portation Systems , vol. 23, no. 11, pp. 21 301–21 313, 2022. [25] R. I. Hartley and A. Zisserman, Multiple View Geometry in Computer Vision , 2nd ed. Cambridge University Press, 2004. [26] O. Ledoit and M. Wolf, “Honey, i shrunk the sample covariance matrix,” 
+
+The Journal of Portfolio Management , vol. 30, no. 4, pp. 110–119, 2004. [27] N. Otsu, “A threshold selection method from gray-level histograms,” 
+
+IEEE Transactions on Systems, Man, and Cybernetics , vol. 9, no. 1, pp. 62–66, 1979. [28] R. E. Kalman, “A new approach to linear filtering and prediction problems,” Journal of Basic Engineering , vol. 82, no. 1, pp. 35–45, 1960. [29] Y. Bar-Shalom, X.-R. Li, and T. Kirubarajan, Estimation with Applica-tions to Tracking and Navigation . Wiley, 2002. [30] P. J. Huber and E. M. Ronchetti, Robust Statistics , 2nd ed. Wiley, 2009. [31] T. I. Fossen, Handbook of Marine Craft Hydrodynamics and Motion Control . Wiley, 2011. [32] J. Xu, D. Lin, P. Fong, C. Fang, X. Duan, and J. He, “AUCamp: An un-derwater camera-based multi-robot platform with low-cost, distributed, and robust localization,” 2025. [33] C. Rother, V. Kolmogorov, and A. Blake, “GrabCut: Interactive fore-ground extraction using iterated graph cuts,” ACM Transactions on Graphics , vol. 23, no. 3, pp. 309–314, 2004. [34] Z. Zivkovic, “Improved adaptive gaussian mixture model for background subtraction,” in Proceedings of the 17th International Conference on Pattern Recognition , vol. 2, 2004, pp. 28–31.
