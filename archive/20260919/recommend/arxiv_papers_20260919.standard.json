@@ -1,0 +1,211 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-19T20:59:30.503435+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.13436v1",
+      "source": "arxiv",
+      "title": "Toward Self-Adaptive Physical AI: Can LLM Agents Manage Long-Horizon Physical Tasks?",
+      "abstract": "Large Language Model (LLM) agents offer a promising path toward autonomously managing long-term physical tasks without human intervention. However, physical tasks require agents to continuously observe the environment, make consequential actions, and remain effective as the environment changes. Existing approaches either require substantial data and retraining, or primarily focus on agents operating in the virtual world. In this work, we explore the feasibility of building a self-adaptive physical AI agent that manages long-term physical tasks in a zero-shot manner and adapts to environmental changes without human intervention. We design a multi-agent framework that integrates planning, tool calling, observation, and verification, and evaluate it on agricultural tasks against reinforcement learning (RL) agents under different weather patterns. Our results show that zero-shot LLM agents can achieve comparable management outcomes to RL agents under the same weather pattern and adapt more effectively than RL when evaluated under a shifted environment, highlighting a promising path toward self-adaptive physical AI agents.",
+      "authors": [
+        "Varun Kaushik",
+        "Yayun Tan",
+        "Xiaofan Yu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-11T18:52:40+00:00",
+      "link": "https://arxiv.org/pdf/2609.13436v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LLM multi-agent framework for long-horizon physical tasks",
+      "llm_evidence_cn": "面向长时程物理任务的大模型多智能体框架",
+      "llm_evidence": "面向长时程物理任务的大模型多智能体框架",
+      "canonical_evidence": "面向长时程物理任务的大模型多智能体框架",
+      "llm_tldr_en": "A multi-agent framework integrating planning, tool calling, observation and verification explores zero-shot, self-adaptive LLM agents that manage long-horizon physical tasks under environmental change.",
+      "llm_tldr_cn": "大模型智能体为无需人工干预地自主管理长期物理任务提供了路径，但物理任务要求持续观测环境、执行关键动作并适应变化，现有方法要么依赖大量数据与重训练，要么仅面向虚拟世界。论文构建集成规划、工具调用、观测与验证的多智能体框架，探索零样本管理长时程物理任务并自适应环境变化的可行性。该工作为自适应物理AI智能体提供架构与实证基础。",
+      "llm_tldr": "大模型智能体为无需人工干预地自主管理长期物理任务提供了路径，但物理任务要求持续观测环境、执行关键动作并适应变化，现有方法要么依赖大量数据与重训练，要么仅面向虚拟世界。论文构建集成规划、工具调用、观测与验证的多智能体框架，探索零样本管理长时程物理任务并自适应环境变化的可行性。该工作为自适应物理AI智能体提供架构与实证基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.15054v1",
+      "source": "arxiv",
+      "title": "BusMA: A Bus Communication Substrate for Multi-Agent Systems",
+      "abstract": "Multi-Agent (MA) systems are effective at solving complex tasks that demand planning, tool use, and the synthesis of evidence from multiple sources. Existing systems typically adopt Hierarchical Manager-Worker (HMW) or Router-based Message Passing (RMP) structures as their communication protocol. However, these designs restrict agent autonomy: Worker agents cannot directly consult specific \"peers\", and misrouted messages can propagate errors. Inspired by bus architectures in computer systems, we propose BusMA, a communication framework that allows any agent to address other agents through a shared channel, i.e., the Bus. It consists of agent registration, message routing, and shared memory management components. Worker agents, each equipped with tools, have their own local memory and can reason, act (tool usage), and communicate by posting shared messages with specific intents. We introduce four intents: discussion, challenge, guidance, and request for explanation, which support fine-grained communication among agents. A Chair agent monitors the shared memory to coordinate interactions and facilitate convergence among Workers. To evaluate the effectiveness of BusMA, we conduct extensive experiments with two frontier LLMs across 13 tasks spanning visual reasoning, mathematical reasoning, and knowledge retrieval demonstrate that BusMA consistently outperforms state-of-the-art HMW and RMP methods.",
+      "authors": [
+        "Yanwen Peng",
+        "Delvin Ce Zhang",
+        "Xi Wang",
+        "Nikolaos Aletras"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-14T05:19:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.15054v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent communication substrate architecture",
+      "llm_evidence_cn": "多智能体通信基座架构",
+      "llm_evidence": "多智能体通信基座架构",
+      "canonical_evidence": "多智能体通信基座架构",
+      "llm_tldr_en": "BusMA is a bus-based communication substrate for multi-agent systems, using agent registration, message routing and shared memory so any agent can address peers directly and avoid error propagation.",
+      "llm_tldr_cn": "多智能体系统擅长处理需要规划、工具使用与多源证据综合的复杂任务，但现有分层管理或路由式通信协议限制智能体自主性，且误路由消息会传播错误。论文提出BusMA总线式通信框架，包含智能体注册、消息路由与共享内存管理，使任意智能体都能通过共享通道直接寻址其他智能体。该设计提升了多智能体协作的灵活性与鲁棒性，可作为智能体架构的通信基座。",
+      "llm_tldr": "多智能体系统擅长处理需要规划、工具使用与多源证据综合的复杂任务，但现有分层管理或路由式通信协议限制智能体自主性，且误路由消息会传播错误。论文提出BusMA总线式通信框架，包含智能体注册、消息路由与共享内存管理，使任意智能体都能通过共享通道直接寻址其他智能体。该设计提升了多智能体协作的灵活性与鲁棒性，可作为智能体架构的通信基座。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20620v1",
+      "source": "arxiv",
+      "title": "A Simulation Platform for AUV Fault Recovery: Exploring LLM-Based Diagnostic Strategies",
+      "abstract": "Autonomous underwater vehicles (AUVs) operating beyond reliable communications must recover from failures without human intervention. We investigate an architecture in which conventional deterministic layered control autonomy manages normal operations, while an invokable large language model (LLM) serves as a diagnostic and recovery planner when onboard anomaly detection identifies performance outside expected limits. Because language models are stochastic, rigorous evaluation requires ensemble testing rather than individual demonstrations. We present a closed-loop simulation architecture that couples real-time C vehicle software with a higher-level orchestration layer for physics-based fault injection, structured prompting, language-model interaction, mission file generation, validation, execution, and LLM-judge scoring. The framework, which we call SPAR (Simulation Platform for AUV Recovery), supports evaluation across fault realizations, prompt structures, reasoning models, and mission conditions. We vary these for a mass-shift fault over 480 SPAR trials, evaluating a frontier model and three off-the-shelf locally deployable LLMs. Model choice dominates diagnosis: the frontier model places the CG-shift mechanism in its top three hypotheses in 85-90% of trials, versus 60-78% for the best local model. Reasoning analysis indicates that local-model success is associated with following the complete diagnostic procedure, whereas weaker models often commit prematurely to elevator failure even though the actuator tracks its command. Diagnosis and operational decision performance do not appear to be coupled in this dataset. The contributions are an architecture extending unanticipated-fault recovery from detection to mitigation and an ensemble methodology for evaluating LLM-assisted mission management on low-power AUVs.",
+      "authors": [
+        "Khalid Halba",
+        "Kylie Cooper",
+        "James G. Bellingham"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-17T16:03:13+00:00",
+      "link": "https://arxiv.org/pdf/2609.20620v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LLM as diagnostic planner for autonomous underwater vehicles",
+      "llm_evidence_cn": "大语言模型作为自主水下航行器的诊断规划器",
+      "llm_evidence": "大语言模型作为自主水下航行器的诊断规划器",
+      "canonical_evidence": "大语言模型作为自主水下航行器的诊断规划器",
+      "llm_tldr_en": "AUVs operating beyond reliable communications must recover from failures autonomously. This architecture lets deterministic layered control handle normal operations while an invokable LLM acts as diagnostic and recovery planner when anomaly detection triggers, using a closed-loop simulation platform with physics-based fault injection and ensemble testing.",
+      "llm_tldr_cn": "在通信不可靠的深海环境中，自主水下航行器需在无人干预下从故障中恢复。本文研究一种混合架构：由确定性分层控制自主性负责常规运行，当星上异常检测发现性能超限时，调用大语言模型充当诊断与恢复规划器。由于语言模型具有随机性，作者搭建闭环仿真平台，耦合实时载具软件与高层编排层，支持物理故障注入、结构化提示与集成测试。该工作探索了大语言模型作为海洋自主系统故障诊断智能体的可行性。",
+      "llm_tldr": "在通信不可靠的深海环境中，自主水下航行器需在无人干预下从故障中恢复。本文研究一种混合架构：由确定性分层控制自主性负责常规运行，当星上异常检测发现性能超限时，调用大语言模型充当诊断与恢复规划器。由于语言模型具有随机性，作者搭建闭环仿真平台，耦合实时载具软件与高层编排层，支持物理故障注入、结构化提示与集成测试。该工作探索了大语言模型作为海洋自主系统故障诊断智能体的可行性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.18139v1",
+      "source": "arxiv",
+      "title": "Multi-View Mixture-of-Experts with Vision-Language Reranking for Cross-View Object Geo-Localization",
+      "abstract": "Cross-view object geo-localization (CVOGL) locates a target in satellite imagery using drone or street-view queries. Existing methods train separate detectors for each viewpoint, leading to parameter redundancy and impeding cross-view knowledge sharing. Moreover, top-ranked satellite candidates are often visually similar, so visual appearance and categorical labels alone are insufficient to resolve such ambiguity. To address these, we propose MVLGeo, an efficient framework designed to unify multiple viewpoints and reduce model redundancy. First, we introduce environmental contextual text from the query view as cues to distinguish visually similar candidates via Vision-Language Reranking (VL-Rerank). Second, we design a multi-view Mixture-of-Experts architecture (MV-MoE) with a shared encoder and view-specific experts to reduce redundancy and promote knowledge sharing, while cross-view contrastive learning aligns their representations for consistency. Third, we introduce an adaptive elliptical prior (ESAM-Prior) as auxiliary positional encoding for anisotropic geometric perception. Extensive experiments on the CVOGL benchmarks confirm that MVLGeo, as a unified model for multiple query viewpoints, achieves state-of-the-art performance, demonstrating robustness to input degradation and generalization across viewpoints. Code and models will be available on GitHub to facilitate future work.",
+      "authors": [
+        "Xuyu Fan",
+        "Qi Ming",
+        "Zhu Han",
+        "Liuqian Wang",
+        "Siyuan Cao",
+        "Xiaohan Zhang",
+        "Xudong Zhao",
+        "Mingjing Zhao",
+        "Yuhan Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-16T05:21:54+00:00",
+      "link": "https://arxiv.org/pdf/2609.18139v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "vision-language reranking with text cues for satellite imagery localization",
+      "llm_evidence_cn": "融合文本线索与卫星影像的视觉语言重排序",
+      "llm_evidence": "融合文本线索与卫星影像的视觉语言重排序",
+      "canonical_evidence": "融合文本线索与卫星影像的视觉语言重排序",
+      "llm_tldr_en": "Cross-view object geo-localization locates targets in satellite imagery from drone or street views, but visually similar candidates are ambiguous. MVLGeo unifies viewpoints with a multi-view mixture-of-experts and uses environmental contextual text via vision-language reranking to disambiguate candidates. It reduces redundancy while improving localization accuracy.",
+      "llm_tldr_cn": "跨视角目标地理定位需用无人机或街景查询在卫星影像中定位目标，但现有方法为各视角单独训练检测器造成冗余，且排名靠前的卫星候选视觉相似难以区分。本文提出MVLGeo框架，用多视角混合专家统一视角并减少冗余，并引入查询视角的环境上下文文本进行视觉语言重排序以消歧。该方法提升了跨视角定位精度，展示了影像与文本融合在遥感分析中的潜力。",
+      "llm_tldr": "跨视角目标地理定位需用无人机或街景查询在卫星影像中定位目标，但现有方法为各视角单独训练检测器造成冗余，且排名靠前的卫星候选视觉相似难以区分。本文提出MVLGeo框架，用多视角混合专家统一视角并减少冗余，并引入查询视角的环境上下文文本进行视觉语言重排序以消歧。该方法提升了跨视角定位精度，展示了影像与文本融合在遥感分析中的潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18752v1",
+      "source": "arxiv",
+      "title": "QMSR: Query-Conditioned Mask-wise Expert Routing for Robust Open-Vocabulary Underwater Object Retrieval",
+      "abstract": "Open-vocabulary object retrieval remains challenging in complex underwater environments. Although underwater image enhancement (UIE) can improve visual quality, fixed UIE strategies may even underperform the Raw representation in retrieval, indicating that enhancement should not be applied as a uniform preprocessing step. To address this problem, we propose \\textbf{QMSR}, a query-conditioned mask-wise expert routing framework for underwater open-vocabulary retrieval. Specifically, QMSR selects one pretrained UIE expert for each query--candidate pair and predicts a continuous Raw--Expert fusion strength, enabling adaptive enhancement while preserving useful Raw semantics. During training, a privileged ranking oracle provides expert-selection and fusion-strength supervision, while an annealed soft-routing relaxation facilitates optimization of the hard Top-1 routing policy. Experiments show that QMSR improves NDCG@10 by 17.6\\% over an image--query shared router, while consistently outperforming fixed UIE strategies and remaining effective on held-out query categories. These results demonstrate the effectiveness of query-conditioned and candidate-specific enhancement routing for underwater open-vocabulary retrieval.",
+      "authors": [
+        "Fuming Zhang",
+        "Dongyue Huang",
+        "Junjie Wen",
+        "Lihua Xie"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-16T14:43:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.18752v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater open-vocabulary object retrieval with vision-language routing",
+      "llm_evidence_cn": "面向水下开放词汇目标检索的视觉语言专家路由",
+      "llm_evidence": "面向水下开放词汇目标检索的视觉语言专家路由",
+      "canonical_evidence": "面向水下开放词汇目标检索的视觉语言专家路由",
+      "llm_tldr_en": "Open-vocabulary object retrieval is hard underwater because fixed image enhancement can hurt retrieval. QMSR is a query-conditioned mask-wise expert routing framework that selects an enhancement expert per query-candidate pair and predicts continuous Raw-Expert fusion. It adaptively enhances while preserving raw semantics, improving underwater retrieval robustness.",
+      "llm_tldr_cn": "复杂水下环境中开放词汇目标检索困难，固定式水下图像增强甚至可能不如原始图像，说明增强不宜作为统一预处理。本文提出QMSR查询条件化的掩码级专家路由框架，为每个查询-候选对选择一个预训练增强专家，并预测连续的原始与增强融合强度，从而自适应增强同时保留原始语义。实验表明该方法提升了水下目标检索的鲁棒性与准确性，体现了多模态语义在海洋感知中的应用。",
+      "llm_tldr": "复杂水下环境中开放词汇目标检索困难，固定式水下图像增强甚至可能不如原始图像，说明增强不宜作为统一预处理。本文提出QMSR查询条件化的掩码级专家路由框架，为每个查询-候选对选择一个预训练增强专家，并预测连续的原始与增强融合强度，从而自适应增强同时保留原始语义。实验表明该方法提升了水下目标检索的鲁棒性与准确性，体现了多模态语义在海洋感知中的应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

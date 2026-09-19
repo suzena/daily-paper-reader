@@ -1,0 +1,89 @@
+{
+  "date": "20260919",
+  "date_label": "",
+  "generated_at": "2026-09-19 21:01:14 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.13436v1",
+      "route": "202609/19/2609.13436v1-toward-self-adaptive-physical-ai-can-llm-agents-manage-long-horizon-physical-tasks",
+      "title": "Toward Self-Adaptive Physical AI: Can LLM Agents Manage Long-Horizon Physical Tasks?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向长时程物理任务的大模型多智能体框架",
+      "first_seen_at": "2026-09-19 21:01:14 UTC",
+      "updated_at": "2026-09-19 21:01:14 UTC"
+    },
+    {
+      "paper_id": "2609.20620v1",
+      "route": "202609/19/2609.20620v1-a-simulation-platform-for-auv-fault-recovery-exploring-llm-based-diagnostic-strategies",
+      "title": "A Simulation Platform for AUV Fault Recovery: Exploring LLM-Based Diagnostic Strategies",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "大语言模型作为自主水下航行器的诊断规划器",
+      "first_seen_at": "2026-09-19 21:01:14 UTC",
+      "updated_at": "2026-09-19 21:01:14 UTC"
+    },
+    {
+      "paper_id": "2609.15054v1",
+      "route": "202609/19/2609.15054v1-busma-a-bus-communication-substrate-for-multi-agent-systems",
+      "title": "BusMA: A Bus Communication Substrate for Multi-Agent Systems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多智能体通信基座架构",
+      "first_seen_at": "2026-09-19 21:01:14 UTC",
+      "updated_at": "2026-09-19 21:01:14 UTC"
+    },
+    {
+      "paper_id": "2609.18139v1",
+      "route": "202609/19/2609.18139v1-multi-view-mixture-of-experts-with-vision-language-reranking-for-cross-view-object-geo-localization",
+      "title": "Multi-View Mixture-of-Experts with Vision-Language Reranking for Cross-View Object Geo-Localization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合文本线索与卫星影像的视觉语言重排序",
+      "first_seen_at": "2026-09-19 21:01:14 UTC",
+      "updated_at": "2026-09-19 21:01:14 UTC"
+    },
+    {
+      "paper_id": "2609.18752v1",
+      "route": "202609/19/2609.18752v1-qmsr-query-conditioned-mask-wise-expert-routing-for-robust-open-vocabulary-underwater-object-retrieval",
+      "title": "QMSR: Query-Conditioned Mask-wise Expert Routing for Robust Open-Vocabulary Underwater Object Retrieval",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向水下开放词汇目标检索的视觉语言专家路由",
+      "first_seen_at": "2026-09-19 21:01:14 UTC",
+      "updated_at": "2026-09-19 21:01:14 UTC"
+    }
+  ]
+}
