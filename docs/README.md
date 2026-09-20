@@ -48,7 +48,7 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-19</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-20</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
     <strong class="dpr-home-dashboard-count">共 5 篇</strong>
@@ -58,7 +58,7 @@
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>5</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-19 21:01:14 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-20 21:16:54 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共生成 5 篇推荐（精读 0 篇，速读 5 篇）</p>
-<p>速读：《Toward Self-Adaptive Physical AI: Can LLM Agents Manage Long-Horizon Physical Tasks?》（7.0/10）, 《A Simulation Platform for AUV Fault Recovery: Exploring LLM-Based Diagnostic Strategies》（7.0/10）, 《BusMA: A Bus Communication Substrate for Multi-Agent Systems》（6.0/10）</p>
-<p>这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。</p>
+<p>2026-09-20 日报共处理 5 篇速读、0 篇精读，主题集中在零样本视觉语言导航、分布式空中集群与低信噪比卫星遥感传输。</p>
+<p>三篇 6.0 分速读中，《LG-VLN》用 LangGraph 状态编排实现零样本 VLN、《AeroWeaver》把飞行技能编织进自适应集群执行，这两条线最值得先看。</p>
+<p>普通读者建议先读这两篇的框架与编排思路，等出现精读或代码开源后再投入深挖。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -96,7 +96,7 @@
     <strong class="dpr-home-dashboard-count">5 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Toward Self-Adaptive Physical AI: Can LLM Agents Manage Long-Horizon Physical Tasks?">Toward Self-Adaptive Physical AI: Can LLM Agents Manage Long-Horizon Physical Tasks?</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Simulation Platform for AUV Fault Recovery: Exploring LLM-Based Diagnostic Strategies">A Simulation Platform for AUV Fault Recovery: Exploring LLM-Based Diagnostic Strategies</span></li><li><span class="dpr-home-dashboard-paper-title" title="BusMA: A Bus Communication Substrate for Multi-Agent Systems">BusMA: A Bus Communication Substrate for Multi-Agent Systems</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="LG-VLN: A Zero-Shot Vision-and-Language Navigation Framework with LangGraph State Orchestration">LG-VLN: A Zero-Shot Vision-and-Language Navigation Framework with LangGraph State Orchestration</span></li><li><span class="dpr-home-dashboard-paper-title" title="AeroWeaver: An Embodied-Agent Harness for Weaving Aerial Skills into Distributed, Adaptive Swarm Execution">AeroWeaver: An Embodied-Agent Harness for Weaving Aerial Skills into Distributed, Adaptive Swarm Execution</span></li><li><span class="dpr-home-dashboard-paper-title" title="Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels">Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>5</strong></span></div>
 </section>

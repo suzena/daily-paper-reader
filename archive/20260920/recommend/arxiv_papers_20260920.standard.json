@@ -1,0 +1,217 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-20T21:13:41.467470+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.15098v1",
+      "source": "arxiv",
+      "title": "LG-VLN: A Zero-Shot Vision-and-Language Navigation Framework with LangGraph State Orchestration",
+      "abstract": "Continuous-environment vision-and-language navigation (VLN-CE) requires interpreting natural-language instructions in unseen 3D environments and executing continuous low-level actions. Existing methods often depend on LiDAR, panoramic cameras, or extra sensors; separate geometric-mapping and semantic-navigation visual representations can cause long-trajectory spatial-semantic inconsistencies. We propose LG-VLN, a monocular zero-shot framework with shared visual features and LangGraph-based state orchestration. An online feed-forward 3D reconstruction network predicts depth, camera poses, and dense point clouds for agent-pose estimation and global map fusion. Geometry and navigation share dense CleanDIFT features: semantic consistency rejects incorrect inter-frame correspondences, while target-instance constraints define visual references whose similarity combines with local BLIP-2 image-text relevance to form a semantic value map. LangGraph represents instruction parsing, geometric perception, semantic value updates, path planning, action execution, and failure recovery as a directed state graph with conditional transitions, persistent state, and modular recovery mechanisms. On a fixed 550-episode subset of the R2R-CE val-unseen split, LG-VLN achieves 21.3% success and 12.1% success weighted by path length. Ablations show shared semantic features improve navigation, further boosted by combining visual similarity and image-text relevance. Results establish shared visual representations and explicit state orchestration as effective for zero-shot VLN-CE using monocular RGB alone. Code will be publicly released for reproducibility.",
+      "authors": [
+        "Jianhe Zhao",
+        "Yanhua Qiu",
+        "Zhiyu Zhang",
+        "Zibo Zhao",
+        "Jinhua Xie"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-09-14T06:23:31+00:00",
+      "link": "https://arxiv.org/pdf/2609.15098v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Agentic LangGraph state orchestration for vision-language navigation",
+      "llm_evidence_cn": "面向视觉语言导航的智能体状态编排",
+      "llm_evidence": "面向视觉语言导航的智能体状态编排",
+      "canonical_evidence": "面向视觉语言导航的智能体状态编排",
+      "llm_tldr_en": "LG-VLN is a monocular zero-shot vision-and-language navigation framework sharing visual features with LangGraph state orchestration for consistent long-trajectory navigation.",
+      "llm_tldr_cn": "针对连续环境视觉语言导航依赖额外传感器、几何建图与语义导航表示分离导致长程不一致的问题，本文提出单目零样本框架LG-VLN。该框架用在线前馈三维重建网络预测深度、相机位姿与点云，并让几何与导航共享稠密CleanDIFT特征，同时由LangGraph进行状态编排。实验表明共享特征缓解了长轨迹空间语义不一致，为智能体视觉语言导航提供了可迁移的状态编排范式。",
+      "llm_tldr": "针对连续环境视觉语言导航依赖额外传感器、几何建图与语义导航表示分离导致长程不一致的问题，本文提出单目零样本框架LG-VLN。该框架用在线前馈三维重建网络预测深度、相机位姿与点云，并让几何与导航共享稠密CleanDIFT特征，同时由LangGraph进行状态编排。实验表明共享特征缓解了长轨迹空间语义不一致，为智能体视觉语言导航提供了可迁移的状态编排范式。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18520v1",
+      "source": "arxiv",
+      "title": "AeroWeaver: An Embodied-Agent Harness for Weaving Aerial Skills into Distributed, Adaptive Swarm Execution",
+      "abstract": "Collective intelligence is a collaborative autonomy paradigm in which multiple agents pursue shared objectives through local perception, information exchange, and coordinated action. UAV swarms embody this paradigm by coordinating multiple vehicles in tasks such as search, inspection, and tracking. Recent advances in large language model (LLM) agents have strengthened natural-language task understanding and high-level planning, providing a flexible semantic interface between mission descriptions and collective behavior. While these advances expand semantic reasoning, applying LLM agents to UAV swarms raises challenges in grounding model decisions in executable capabilities, reconciling global task reasoning with distributed execution, and using mission-specific experience for continual adaptation. To address these challenges, we introduce AeroWeaver, an embodied-agent harness that weaves individual UAV skills into coordinated mission-level behavior. AeroWeaver connects semantic decisions to governed skills, organizes role-conditioned local agents for distributed coordination, and uses role-indexed state-action-reward experience to refine skill selection online. Experiments and runtime validation show that AeroWeaver maintains valid skill execution under tested conditions and supports body-local multi-UAV operation without a central agent generating joint actions from global context, while reward-guided online updates provide a training-free path for adaptive learning swarm agents from accumulated execution experience. Code: https://github.com/Admire-ljb/AeroWeaver.",
+      "authors": [
+        "Jiabin Lou",
+        "Yirong Yang",
+        "Haopeng Wang",
+        "Xuxin Lv",
+        "Xinyu Liu",
+        "Diyuan Hou",
+        "Xuehong Liu",
+        "Rongye Shi",
+        "Wenjun Wu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-16T11:49:38+00:00",
+      "link": "https://arxiv.org/pdf/2609.18520v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM embodied-agent harness for autonomous swarm monitoring tasks",
+      "llm_evidence_cn": "面向自主集群任务的LLM具身智能体框架",
+      "llm_evidence": "面向自主集群任务的LLM具身智能体框架",
+      "canonical_evidence": "面向自主集群任务的LLM具身智能体框架",
+      "llm_tldr_en": "Presents AeroWeaver, an embodied LLM-agent harness that grounds natural-language task planning into executable UAV swarm skills for distributed adaptive execution.",
+      "llm_tldr_cn": "针对将大语言模型智能体应用于无人机集群时高层语义规划难以落地为可执行能力的问题，本文提出AeroWeaver具身智能体框架。方法通过技能编织机制把自然语言任务理解与分布式集群执行对齐，协调全局任务推理与局部感知行动。实验展示了该框架在搜索、巡检等集群任务中的自适应执行能力。该工作为自主无人集群的智能体架构提供了可借鉴范式。",
+      "llm_tldr": "针对将大语言模型智能体应用于无人机集群时高层语义规划难以落地为可执行能力的问题，本文提出AeroWeaver具身智能体框架。方法通过技能编织机制把自然语言任务理解与分布式集群执行对齐，协调全局任务推理与局部感知行动。实验展示了该框架在搜索、巡检等集群任务中的自适应执行能力。该工作为自主无人集群的智能体架构提供了可借鉴范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20150v1",
+      "source": "arxiv",
+      "title": "Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels",
+      "abstract": "Conventional satellite remote sensing transmission follows a reconstruct-then-infer paradigm that optimizes pixel-level fidelity, creating an objective mismatch with downstream tasks such as classification and detection, especially at low SNR. This paper investigates a task-oriented framework that bypasses image reconstruction and directly transmits semantic features extracted by a multitask-pretrained backbone. A lightweight channel adaptation module (CAM) compresses feature dimensionality for bandwidth reduction, and a feature restorer recovers task-relevant structure after channel corruption. With the backbone frozen, the CAM and task-specific downstream heads are jointly optimized with task and feature-level supervision under random-SNR training. Under the adopted AWGN setting, experiments on scene classification and object detection show consistent gains over reconstruction-oriented JSCC baselines across different SNR conditions, with the largest improvements in the low-SNR regime.",
+      "authors": [
+        "Shuoyuan Sun",
+        "Hongyu Wang",
+        "Mugen Peng",
+        "Wenjia Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-17T12:41:44+00:00",
+      "link": "https://arxiv.org/pdf/2609.20150v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "satellite remote sensing task-oriented semantic feature transmission for classification",
+      "llm_evidence_cn": "面向分类任务的卫星遥感语义特征传输",
+      "llm_evidence": "面向分类任务的卫星遥感语义特征传输",
+      "canonical_evidence": "面向分类任务的卫星遥感语义特征传输",
+      "llm_tldr_en": "Proposes a task-oriented framework that transmits semantic features from a multitask backbone instead of reconstructed images for satellite remote sensing over low-SNR channels.",
+      "llm_tldr_cn": "针对传统卫星遥感先重建后推断范式在低信噪比下与分类检测等下游任务目标不一致的问题，本文提出任务导向的语义特征传输框架。方法绕过图像重建，直接传输多任务预训练骨干提取的语义特征，并用轻量信道适配模块压缩维度、特征恢复器修复受损结构。实验验证了低信噪比下下游任务性能的提升。该框架为星上智能遥感传输提供了新思路。",
+      "llm_tldr": "针对传统卫星遥感先重建后推断范式在低信噪比下与分类检测等下游任务目标不一致的问题，本文提出任务导向的语义特征传输框架。方法绕过图像重建，直接传输多任务预训练骨干提取的语义特征，并用轻量信道适配模块压缩维度、特征恢复器修复受损结构。实验验证了低信噪比下下游任务性能的提升。该框架为星上智能遥感传输提供了新思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20325v1",
+      "source": "arxiv",
+      "title": "AgriScope: Pixel-Grounded Multimodal Understanding for Agricultural Images",
+      "abstract": "Agricultural image understanding requires fine-grained recognition of plant diseases, pests, crop structures, and botanical species under complex real-world conditions. Despite recent advances in Multimodal Large Language Models (MLLMs), existing models remain limited to text-only outputs and lack pixel-level visual grounding capabilities. In this work, we introduce AgriScope, a unified pixel-grounded multimodal framework for agricultural image understanding. AgriScope jointly supports image-level, region-level, and pixel-level understanding within a unified framework, enabling tasks such as grounded caption generation, referring expression segmentation, and multi-turn multimodal interaction for agricultural imagery. AgriScope integrates biologically specialized semantic representations with dense spatial grounding through biological-semantic encoding, dense spatial representations, and pixel decoding. To support large-scale grounded learning, we introduce AgriGround, a large-scale pixel-grounded agricultural multimodal instruction-tuning dataset containing over 500K images and 11M instruction-following samples spanning plant disease analysis, crop and weed identification, insect pest recognition, and fine-grained botanical understanding. AgriGround is constructed through a multi-stage automatic annotation pipeline that integrates multimodal caption generation, phrase-level grounding, segmentation mask generation, and task-oriented instruction synthesis to produce densely grounded supervision. Extensive experiments across multiple agricultural vision-language tasks demonstrate the effectiveness of AgriScope in pixel-grounded multimodal understanding, establishing a strong benchmark for agricultural vision-language learning and visual grounding. The dataset and code will be made publicly available at (https://github.com/boudiafA/AgriScope)",
+      "authors": [
+        "Abderrahmene Boudiaf",
+        "Mohamad Alanssari",
+        "Irfan Hussain",
+        "Sajid Javed"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-17T12:59:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.20325v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "pixel-grounded multimodal large language model for environmental imagery understanding",
+      "llm_evidence_cn": "面向环境影像理解的像素级多模态大模型",
+      "llm_evidence": "面向环境影像理解的像素级多模态大模型",
+      "canonical_evidence": "面向环境影像理解的像素级多模态大模型",
+      "llm_tldr_en": "AgriScope is a unified pixel-grounded multimodal framework supporting image, region and pixel-level agricultural image understanding with grounded captions and segmentation.",
+      "llm_tldr_cn": "农业图像理解需要在复杂真实条件下细粒度识别病害、虫害、作物结构和物种，但现有多模态大模型多限于文本输出，缺乏像素级视觉定位能力。论文提出AgriScope统一像素级多模态框架，在同一框架内同时支持图像级、区域级和像素级理解，实现带定位的图像描述生成、指代表达分割与多轮多模态交互，并融合生物学知识。该工作为遥感/环境影像的像素级多模态理解与文本报告结合提供了可迁移范式。",
+      "llm_tldr": "农业图像理解需要在复杂真实条件下细粒度识别病害、虫害、作物结构和物种，但现有多模态大模型多限于文本输出，缺乏像素级视觉定位能力。论文提出AgriScope统一像素级多模态框架，在同一框架内同时支持图像级、区域级和像素级理解，实现带定位的图像描述生成、指代表达分割与多轮多模态交互，并融合生物学知识。该工作为遥感/环境影像的像素级多模态理解与文本报告结合提供了可迁移范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.20662v1",
+      "source": "arxiv",
+      "title": "Earth Surface Immune System for Rapid Monitoring of Unknown Anomalies",
+      "abstract": "Earth surface anomalies, driven by escalating climate change, and expanding human activities, are increasing in both frequency and diversity, yet their limited historical data and unpredictability make them fundamentally different from conventional remote sensing targets. Existing methods address specific anomaly categories or stop at localization, leaving a gap between detection and actionable information. Here we present ESIA, an Earth Surface Immune System whose architecture is constrained by three principles from the biological immune system, refined over millions of years against equally diverse and uncertain threats. A non-specific innate immune stage treats anomalies as unobserved changes in time-series satellite imagery, generating binary localization maps at 14.51 km2/s without assuming any anomaly category, surpassing the strongest general baseline by 37% in F1. A specific adaptive immune stage applies negative selection to filter text prompts and matches surviving prompts with localized image patches through a multi-modal foundation model, enabling open-vocabulary recognition of unknown anomaly attributes including category, affected area, and damage severity, with recognition F1 exceeding 80%. A mutation mechanism tunes minimal embeddings at test time, adapting to each scene in 3.26s using a single reference image pair. We validate ESIA on a global-scale dataset covering 19,801.60 km2 across six anomaly categories, comparing against 22 models, and further apply it to quantify degraded farmland in the Dnipro Delta following the Kakhovka Dam collapse and assess burn severity from 2025 Palisades Fire in Los Angeles. This unprecedented flexibility in handling unknown anomalies opens new avenues for real-time disaster response and environmental surveillance.",
+      "authors": [
+        "Jingtao Li",
+        "Qian Zhu",
+        "Xinyu Wang",
+        "Deren Li",
+        "Liangpei Zhang",
+        "Yanfei Zhong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-17T16:39:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.20662v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "remote sensing anomaly monitoring with actionable output from satellite time series",
+      "llm_evidence_cn": "基于时序卫星影像的遥感异常监测与可行动信息生成",
+      "llm_evidence": "基于时序卫星影像的遥感异常监测与可行动信息生成",
+      "canonical_evidence": "基于时序卫星影像的遥感异常监测与可行动信息生成",
+      "llm_tldr_en": "Presents ESIA, an Earth Surface Immune System inspired by biological immunity to rapidly detect and characterize unknown anomalies in time-series satellite imagery.",
+      "llm_tldr_cn": "针对气候变化与人类活动导致的地表异常种类多样、历史样本稀缺，且传统遥感方法只能定位、难以给出可行动信息的问题，本文提出地球表面免疫系统ESIA。该架构借鉴生物免疫三原则，先以非特异性先天免疫阶段在时序卫星影像中检测未观测变化并定位。实验表明其能快速监测未知异常并弥合从检测到行动的信息鸿沟。该工作为遥感异常数据挖掘提供了新范式。",
+      "llm_tldr": "针对气候变化与人类活动导致的地表异常种类多样、历史样本稀缺，且传统遥感方法只能定位、难以给出可行动信息的问题，本文提出地球表面免疫系统ESIA。该架构借鉴生物免疫三原则，先以非特异性先天免疫阶段在时序卫星影像中检测未观测变化并定位。实验表明其能快速监测未知异常并弥合从检测到行动的信息鸿沟。该工作为遥感异常数据挖掘提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "date": "20260920",
+  "date_label": "",
+  "generated_at": "2026-09-20 21:16:54 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.15098v1",
+      "route": "202609/20/2609.15098v1-lg-vln-a-zero-shot-vision-and-language-navigation-framework-with-langgraph-state-orchestration",
+      "title": "LG-VLN: A Zero-Shot Vision-and-Language Navigation Framework with LangGraph State Orchestration",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向视觉语言导航的智能体状态编排",
+      "first_seen_at": "2026-09-20 21:16:54 UTC",
+      "updated_at": "2026-09-20 21:16:54 UTC"
+    },
+    {
+      "paper_id": "2609.18520v1",
+      "route": "202609/20/2609.18520v1-aeroweaver-an-embodied-agent-harness-for-weaving-aerial-skills-into-distributed-adaptive-swarm-execution",
+      "title": "AeroWeaver: An Embodied-Agent Harness for Weaving Aerial Skills into Distributed, Adaptive Swarm Execution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主集群任务的LLM具身智能体框架",
+      "first_seen_at": "2026-09-20 21:16:54 UTC",
+      "updated_at": "2026-09-20 21:16:54 UTC"
+    },
+    {
+      "paper_id": "2609.20150v1",
+      "route": "202609/20/2609.20150v1-task-oriented-semantic-feature-transmission-for-multi-task-satellite-remote-sensing-over-low-snr-channels",
+      "title": "Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向分类任务的卫星遥感语义特征传输",
+      "first_seen_at": "2026-09-20 21:16:54 UTC",
+      "updated_at": "2026-09-20 21:16:54 UTC"
+    },
+    {
+      "paper_id": "2609.20325v1",
+      "route": "202609/20/2609.20325v1-agriscope-pixel-grounded-multimodal-understanding-for-agricultural-images",
+      "title": "AgriScope: Pixel-Grounded Multimodal Understanding for Agricultural Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向环境影像理解的像素级多模态大模型",
+      "first_seen_at": "2026-09-20 21:16:54 UTC",
+      "updated_at": "2026-09-20 21:16:54 UTC"
+    },
+    {
+      "paper_id": "2609.20662v1",
+      "route": "202609/20/2609.20662v1-earth-surface-immune-system-for-rapid-monitoring-of-unknown-anomalies",
+      "title": "Earth Surface Immune System for Rapid Monitoring of Unknown Anomalies",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于时序卫星影像的遥感异常监测与可行动信息生成",
+      "first_seen_at": "2026-09-20 21:16:54 UTC",
+      "updated_at": "2026-09-20 21:16:54 UTC"
+    }
+  ]
+}

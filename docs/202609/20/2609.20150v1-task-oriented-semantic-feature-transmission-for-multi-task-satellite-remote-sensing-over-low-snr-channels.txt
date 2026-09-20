@@ -1,0 +1,290 @@
+Title: Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels
+
+URL Source: https://arxiv.org/pdf/2609.20150v1
+
+Published Time: Fri, 18 Sep 2026 01:09:16 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# Task-Oriented Semantic Feature Transmission for Multi-Task Satellite Remote Sensing over Low-SNR Channels 
+
+Shuoyuan Sun, Hongyu Wang, Mugen Peng, and Wenjia Xu* 
+
+State Key Laboratory of Networking and Switching Technology Beijing University of Posts and Telecommunications Email: xuwenjia@bupt.edu.cn, shuoyuansun@bupt.edu.cn 
+
+Abstract —Conventional satellite remote sensing transmission follows a reconstruct-then-infer paradigm that optimizes pixel-level fidelity, creating an objective mismatch with downstream tasks such as classification and detection, especially at low SNR. This paper investigates a task-oriented framework that bypasses image reconstruction and directly transmits semantic features ex-tracted by a multitask-pretrained backbone. A lightweight chan-nel adaptation module (CAM) compresses feature dimensionality for bandwidth reduction, and a feature restorer recovers task-relevant structure after channel corruption. With the backbone frozen, the CAM and task-specific downstream heads are jointly optimized with task and feature-level supervision under random-SNR training. Under the adopted AWGN setting, experiments on scene classification and object detection show consistent gains over reconstruction-oriented JSCC baselines across different SNR conditions, with the largest improvements in the low-SNR regime. 
+
+Index Terms —task-oriented semantic communication, seman-tic feature transmission, remote sensing, multi-task pretraining, JSCC, low-SNR robustness 
+
+I. I NTRODUCTION 
+
+Low-Earth-orbit (LEO) satellite constellations provide global Earth observation and time-sensitive remote sensing, yet their downlinks face strict spectrum constraints and wide SNR variation driven by elevation angle, atmospheric atten-uation, interference, and orbital geometry. Meanwhile, re-mote sensing is shifting from image delivery to immediate decision-making—scene classification, horizontal bounding-box (HBB) detection, and oriented bounding-box (OBB) de-tection—requiring the communication layer to serve down-stream task utility rather than image recovery alone. Existing semantic communication systems for remote sens-ing largely follow a reconstruct-then-infer paradigm. Deep joint source–channel coding (DeepJSCC) [1] methods such as SwinJSCC [2], MambaJSCC [3], and NTSCC [4] map source images directly to channel symbols, but optimize pixel-level fidelity (MSE or SSIM). This creates a fundamental objective mismatch: the communication module preserves pixel-level details irrelevant to downstream classification or detection. At low SNR, reconstructed images suffer disproportionate task-metric drops because noise-induced artifacts disrupt the discriminative cues that downstream models rely on. 
+
+Code: https://github.com/IntelliSensing/MTPjscc.git *Corresponding author: Wenjia Xu. 
+
+Fig. 1. (a) Conventional reconstruction-based image transmission versus (b) proposed task-oriented semantic feature transmission. The proposed method extracts features with a multitask-pretrained backbone, transmits them through a CAM, and performs downstream tasks directly from recovered features without image reconstruction. 
+
+Task-oriented semantic communication [5], [6] offers an alternative: transmitting only representations directly useful for downstream tasks—object-level structure and category-discriminative patterns—making more effective use of scarce downlink resources. A key enabler is multitask-pretrained remote sensing back-bones. Under the multi-task pretraining (MTP) paradigm [7], a shared backbone trained jointly on semantic segmentation, in-stance segmentation, and rotated object detection yields trans-ferable representations across downstream tasks. We adopt such a backbone as the semantic feature extractor, using its high-level features as the transmitted payload in place of the raw image. However, noisy channels can degrade feature discriminative arXiv:2609.20150v1 [cs.CV] 17 Sep 2026 quality. We therefore introduce a channel adaptation module (CAM) between the pretrained backbone and downstream task heads. A feature compressor reduces channel dimensionality for bandwidth-constrained transmission, and a feature re-storer recovers task-relevant structure after channel corruption. Combined with random-SNR training, the CAM preserves downstream task utility without reconstructing images. This paper makes three main contributions. First, we pro-pose a task-oriented semantic feature transmission framework for satellite remote sensing, where a multitask-pretrained back-bone extracts transferable high-level representations and the communication pipeline transmits semantic features instead of reconstructed images. The framework is instantiated across scene classification, horizontal object detection, and oriented object detection to examine whether feature-domain trans-mission better aligns communication with downstream task utility. Second, we develop a lightweight channel adaptation module (CAM), composed of a feature compressor and a feature restorer, and train it jointly with each downstream task head under random-SNR conditions to improve robustness to channel distortion while maintaining transmission efficiency. Third, experiments on EuroSAT, DIOR, and DIOR-R show that, under the same compression ratios, backbone, task heads, AWGN evaluation protocol, and clarified separation between pretraining and downstream evaluation data, the proposed framework consistently outperforms reconstruction-oriented JSCC methods, with the most significant gains observed in the low-SNR regime. II. S YSTEM OVERVIEW AND TASK -O RIENTED FEATURE 
+
+EXTRACTION 
+
+The proposed framework consists of three stages: (1) a frozen multitask-pretrained backbone extracts task-oriented semantic features from a remote sensing image; (2) a channel adaptation module (CAM) compresses, transmits, and recovers these features through a noisy channel; and (3) downstream task heads perform inference directly on the recovered fea-tures without image reconstruction. This section describes the feature extraction stage; the CAM is presented in Section III. Following MTP paradigm [7], a shared backbone is trained with joint supervision from semantic segmentation, instance segmentation, and rotated object detection on the SAMRS [8]. The resulting representations capture transferable task-relevant structure, including category-discriminative patterns, spatial relationships, and multi-scale object semantics, and generalize across downstream classification and detection applications. These multitask-pretrained features serve as the semantic payload for transmission. We adopt a stage-wise pretraining scheme and denote the resulting backbone as IMP+MTP. IMP refers to the ImageNet-22K pretrained initialization of InternImage-XL [9], and MTP denotes the subsequent supervised multi-task pretraining stage on SAMRS. The backbone therefore starts from a strong generic visual checkpoint and is further pretrained with remote sensing task supervision, reducing the gap between generic pretraining and downstream dense prediction. 
+
+A. Backbone and Feature Pyramid Interface 
+
+InternImage-XL [9] serves as the backbone. It employs dy-namic sparse kernels and adaptive spatial aggregation for long-range context with locality and efficiency suited to dense visual tasks, and uses layer normalization, feed-forward networks, and GELU activations for stable optimization. Given an input image x ∈ R3×H×W , the encoder produces a hierarchy of multi-scale feature maps: 
+
+{zℓ}Lℓ=1 = fθ (x), zℓ ∈ RCℓ×Hℓ×Wℓ . (1) This hierarchy serves as a shared feature pyramid with spatial resolutions 1/4, 1/8, 1/16 , 1/32 of the input, encouraging transferable rather than task-specific representations. 
+
+B. Multi-Task Pretraining 
+
+Three dense prediction heads—UperNet [10] (semantic seg-mentation), Mask R-CNN [11] (instance segmentation), and Oriented R-CNN [12] (rotated detection)—are attached to the shared backbone and optimized jointly on SAMRS (dataset details in Section IV). Let Lrod denote the rotated detection loss, let Lb 
+
+> ins
+
+and Lm
+
+> ins
+
+denote the instance box loss and instance mask loss, respec-tively, and let Lsem denote the semantic segmentation loss. Since SAMRS is composed of three subsets ( i ∈ { 1, 2, 3}), the total objective is: 
+
+L =
+
+> 3
+
+X
+
+> i=1
+
+
+
+Li 
+
+> rod
+
++ Li,b  
+
+> ins
+
++ Li,m  
+
+> ins
+
++ Li
+
+> sem
+
+
+
+. (2) These heads are not retained; their complementary supervision teaches cross-task semantic structure that single-task training cannot capture. III. C HANNEL ADAPTATION MODULE FOR 
+
+TASK -O RIENTED TRANSMISSION 
+
+This section details the CAM that transmits the payload 
+
+z over a noisy, bandwidth-constrained channel. It consists of a feature compressor (dimensionality reduction) and afeature restorer (dimensionality recovery after corruption). The entire pipeline operates in the feature domain with no image reconstruction. 
+
+A. Payload Selection 
+
+From the hierarchy {zℓ}Lℓ=1 produced by the frozen back-bone, we select the last-stage feature map as the payload: 
+
+z ≜ zL ∈ RC×H′×W ′
+
+. (3) Shallower maps {zℓ}L−1 
+
+> ℓ=1
+
+are not transmitted. Classification uses only ˜z; detection replaces the non-transmitted layers with zero tensors and combines them with ˜z via an FPN [13]. The backbone θ is frozen; only the CAM and task heads are updated. Fig. 2. Overall architecture. A frozen multitask-pretrained backbone extracts task-oriented features; the last-stage feature map is compressed by the feature compressor ( 1×1 Conv + GN), transmitted through the channel, and recovered by the feature restorer to obtain ˜z. The recovered feature is fed directly into task heads: GAP + linear classifier for classification, or FPN + detection heads for HBB/OBB detection—no image is reconstructed. 
+
+B. Feature Compressor, Channel, and Feature Restorer 
+
+Transmitting z directly faces two challenges: insufficient channel capacity for the full C-dimensional feature, and noise corruption of discriminative structure. The CAM addresses both: 
+
+˜z = Dψ (Hγ (Eϕ(z))) , (4) where Eϕ is the feature compressor ( C → C′, C′ ≪ C), Hγ
+
+denotes the channel at SNR γ, and Dψ is the feature restorer (C′ → C). Each component is detailed below. 
+
+1) Feature Compressor: The feature compressor applies a learned 1 × 1 convolution with group normalization [14] to reduce dimensionality from C to C′ (C′ ≪ C): 
+
+¯z:,i,j = GN( We z:,i,j + be) , (5) where We ∈ RC′×C and be ∈ RC′
+
+. The encoded 
+
+¯z ∈ RC′×H′×W ′
+
+reduces transmitted symbols per spa-tial position by C/C ′, yielding overall compression ratio 
+
+ρ = C′H′W ′/(3 HW ) combined with the backbone’s spa-tial downsampling. Group normalization stabilizes the feature distribution before transmission. 
+
+2) Channel Model: Dynamic satellite downlink conditions are abstracted as an AWGN channel with random-SNR sam-pling, deferring propagation-specific effects (fading, Doppler) to future work. The channel output is r = ¯z + n, n ∼N (0 , σ 2I), with γ sampled from: 
+
+γ ∼ Uniform (Γ) , Γ = {20 , 13 , 10 , 0, −10 , −13 , −20 } dB .
+
+(6) The noise variance is set by the average signal power: 
+
+Ps = 1
+
+C′H′W ′ ∥¯z∥22, σ2 = Ps · 10 −γ/ 10 . (7) Noise is injected during both training and inference. Random-SNR training prevents overfitting to a single operating point. 
+
+3) Feature Restorer: The feature restorer applies a learned 
+
+1×1 convolution with group normalization to expand the noise-corrupted features back to C dimensions: 
+
+˜z:,i,j = GN( Wd r:,i,j + bd) , (8) where Wd ∈ RC×C′
+
+and bd ∈ RC . The recovered ˜z ∈
+
+RC×H′×W ′
+
+matches the original dimensions of z, so task heads require no architectural modification. 
+
+C. Task Heads 
+
+Each task head takes ˜z and produces task-specific predic-tions. For classification (CLS), GAP followed by a linear classifier yields: 
+
+ˆp = Softmax (WcGAP (˜ z) + bc). (9) For detection, zero-filled shallow layers and ˜z are fed into an FPN neck: 
+
+(ˆ s, ˆb) = h(HBB ) 
+
+> ω
+
+(FPN (01, . . . , 0L−1, ˜z)) , ˆb = ( x, y, w, h ).
+
+(10) For oriented detection: 
+
+(ˆ s, ˆbo) = h(OBB ) 
+
+> ω
+
+(FPN (01, . . . , 0L−1, ˜z)) , ˆbo = ( x, y, w, h, α ).
+
+(11) For detection, only the recovered last-stage feature carries task information, while the shallower pyramid inputs are zero-filled placeholders required by the FPN interface. FPN and detection head parameters are jointly optimized with the CAM. 
+
+D. Training Objective 
+
+The CAM and active task head are jointly optimized with 
+
+L = L(t) 
+
+> task
+
++ λLrec , (12) where λ is a fixed weighting coefficient (default λ = 0 .2). The task losses are 
+
+L(CLS ) 
+
+> task
+
+= CE (ˆ p, y ), (13) 
+
+L(HBB ) 
+
+> task
+
+= Lcls (ˆ s, s ) + Lbox (ˆb, b ), (14) 
+
+L(OBB ) 
+
+> task
+
+= Lcls (ˆ s, s ) + Lobox (ˆbo, b o). (15) The feature reconstruction loss enforces consistency between 
+
+z and ˜z:
+
+Lrec = 1
+
+CH ′W ′ ∥˜z − z∥22. (16) This balances task effectiveness and feature-level recover-ability. The backbone θ is frozen; only ϕ = {We, be},
+
+ψ = {Wd, bd}, and task head ω are updated. Fig. 3. Performance across SNR conditions for (a) classification on EuroSAT (Acc., ρ = 1 /96 ), (b) HBB detection on DIOR (mAP, ρ = 1 /15 ), and (c) OBB detection on DIOR-R (mAP, ρ = 1 /15 ). Dashed lines: random-SNR performance. The proposed method outperforms all compared methods, with the gap widening at low SNR. 
+
+1) Task-Specific Implementation Details: 
+
+IV. E XPERIMENTS 
+
+A. Experimental Details 
+
+This subsection describes the pretraining dataset, down-stream evaluation datasets, the common evaluation protocol, and task-specific implementation details used throughout the experiments. 
+
+1) Pretraining Dataset: SAMRS [8] provides joint super-vision for semantic segmentation, instance segmentation, and rotated object detection. It comprises three subsets (SOTA, SIOR, FAST) derived from DOTA-V2.0 [15], DIOR [16], and FAIR1M-2.0 [17] by converting rotated bounding-box annotations with SAM [18], totaling 105,090 images and 1,668,241 instances at canonical sizes 1024 ×1024 , 800 ×800 ,and 600 ×600 . For each rotated box, SAM produces a binary instance mask; the minimum enclosing horizontal rectangle serves as the axis-aligned box, and semantic maps are formed by assigning each box’s category to its mask pixels. 
+
+2) Downstream Datasets: EuroSAT [19] contains 27,000 Sentinel-2 images ( 64 × 64 ) across 10 land-use classes. We use the public train/val split. DIOR [16] contains 23,463 images ( 800 × 800 ) across 20 categories with 192,472 HBB instances, split into 5,862/5,863/11,738 for train/val/test. We report results on the test set. DIOR-R [16] provides OBB annotations for the same 23,463 DIOR images (192,158 in-stances, parameterized by center, width, height, angle). The same split is used. 
+
+3) Evaluation Protocol: All methods use the same frozen IMP+MTP backbone and the same downstream head architec-ture. For each method, the downstream head is trained under the same protocol on top of the corresponding communication pipeline. The proposed method extracts z at the transmitter, transmits it through the CAM, and feeds ˜z directly into the task head. The compared methods (SwinJSCC [2], Mamba-JSCC [3], NTSCC [4]) are trained on the same split under the same compression ratio and random-SNR channel using their original encoder–decoder architectures; at test time, each method reconstructs an image that is passed through the same frozen backbone and task head. Task heads are trained identi-cally atop the frozen backbone, and evaluation uses identical SNR conditions. This isolates a single factor: whether the com-munication layer transmits task-oriented features (proposed) or reconstructed images (compared methods). An AWGN channel is adopted, with the model trained under randomly sampled SNR from Γ = {20 , 13 , 10 , 0, −10 , −13 , −20 } dB. 
+
+a) Classification (EuroSAT): Images are resized to 224 ×
+
+224 . The backbone produces four-stage features with channels 
+
+(192 , 384 , 768 , 1536) and spatial sizes (56 , 28 , 14 , 7) . Only 
+
+z ∈ R1536 ×7×7 is transmitted, compressed to C′ = 32 
+
+(ρ ≈ 1/96 ). The classification head applies GAP + linear classifier on the recovered 1536 -d feature. Training uses AdamW (lr 2×10 −5, weight decay 0.05 ) with 5-epoch linear warmup from 10 −6 followed by cosine annealing, batch size 
+
+64 , 100 epochs. Augmentation: random resized crop, flip, RandAugment, random erasing. Loss weight λ = 0 .2. Metric: Top-1 classification accuracy (Acc., %). 
+
+b) HBB Detection (DIOR): The backbone produces four-stage spatial resolutions (200 , 100 , 50 , 25) . The payload z ∈
+
+R1536 ×25 ×25 is compressed to C′ = 205 (ρ ≈ 1/15 ). The recovered ˜z is combined with zero-filled shallow layers and fed into an FPN [13] (256 channels) + Faster R-CNN [20]. Training uses AdamW (lr 1×10 −4, weight decay 0.05 ) with 5-epoch warmup from 10 −6, cosine annealing, batch size 8,
+
+36 epochs. Augmentation: horizontal flip, resized crop, multi-scale training (shorter side ∈ [640 , 800] ). λ = 0 .2. Metric: mean average precision (mAP, %). 
+
+c) OBB Detection (DIOR-R): All settings match the HBB configuration except that the detection head is Oriented R-CNN [12] and random rotation is added to augmentation. Metric: mAP(%). 
+
+B. Comparison with Reconstruction-Oriented SOTA Methods 
+
+We compare the proposed method against three reconstruction-oriented SOTA methods, SwinJSCC [2], MambaJSCC [3], and NTSCC [4], on all three downstream tasks under the evaluation protocol described above. Performance is reported at each SNR in Γ and under Fig. 4. Ablation of CAM across SNR conditions for (a) classification, (b) HBB detection, and (c) OBB detection. Filled markers denote trained SNR points, hollow markers denote unseen points, and dashed lines denote random-SNR performance. 
+
+a random condition γ ∼ Uniform (Γ) . This comparison directly tests whether transmitting task-oriented features is more effective than transmitting images that must later be reconstructed for inference. 
+
+1) Scene Classification: Fig. 3(a) summarizes classification accuracy under all trained SNR conditions. Under the random condition, the proposed method achieves 
+
+99 .01 % versus 65 .37 % for MambaJSCC. At −20 dB the gap widens to 97 .57 % versus 34 .12 %. Even at 20 dB, feature trans-mission leads ( 99 .15 % versus 93 .56 % for NTSCC), showing that task-oriented features are a better communication target even under favorable conditions. The proposed method maintains ≥ 97 .57 % across the entire SNR range, while compared methods drop to 18 –
+
+34 % at −20 dB. This stability is likely due to the fact that classification depends primarily on high-level semantics in the last-stage features, while GAP reduces sensitivity to local perturbations. Notably, this behavior indicates that preserving semantic separability is more important than preserving pixel fidelity for this task. 
+
+2) Horizontal Object Detection: Fig. 3(b) summarizes hor-izontal detection mAP under all trained SNR conditions. Under the random condition, the proposed method achieves 
+
+59 .25 % versus 51 .01 % for MambaJSCC. The gap grows as SNR decreases: +1 .89 at 20 dB, +11 .41 at 0 dB, +21 .27 at 
+
+−10 dB, +20 .58 at −20 dB. Detection is more sensitive to spatial structure than classification; reconstruction artifacts can disrupt localization cues, whereas feature-domain transmission avoids an explicit image reconstruction stage and therefore tends to preserve task-relevant structure more directly. 
+
+3) Rotated Object Detection: Fig. 3(c) summarizes oriented detection mAP under all trained SNR conditions. Under the random condition, the proposed method achieves 
+
+54 .61 % versus 47 .05 % for MambaJSCC. At −20 dB the gap widens to 43 .63 % versus 21 .97 %, and at −10 dB to 55 .48 %versus 34 .46 %. Compared methods degrade more steeply than in HBB detection, as oriented boxes are sensitive to local geometry and boundary precision. Furthermore, angle predic-tion depends on fine-grained structural consistency, which is particularly vulnerable to reconstruction noise. Across all three tasks, the proposed method’s drop from 20 
+
+to −20 dB is ∆CLS = −1.58 Acc., ∆HBB = −15 .74 mAP, 
+
+∆OBB = −15 .35 mAP. Detection is far more SNR-sensitive than classification, as it relies on spatially precise localization cues vulnerable to noise. These cross-task differences further support the need to align the transmitted representation with the actual downstream objective. 
+
+C. Ablation Study 
+
+To verify the effectiveness of the feature restorer in the CAM, we compare two variants: w/o CAM (compressor only) and w CAM (full CAM with restorer) in Fig. 4. 
+
+1) Experimental Setup: The w/o CAM variant compresses from C = 1536 to C′ (C′ = 32 for classification, C′ =205 for detection) and injects AWGN noise, but removes the restorer. The task head is adapted to accept C′-dimensional input directly. The w CAM variant retains the full CAM: after compression and noise injection, the restorer expands features back to C dimensions. Both variants share the same frozen backbone and random-SNR training protocol. 
+
+2) Results and Analysis: The w CAM variant consistently outperforms w/o CAM. Under the random condition, the restorer improves HBB mAP by +0 .50 (59.25 vs. 58.75) and OBB by +0 .50 (54.61 vs. 54.11). Classification im-proves by +0 .16 Acc. (99.01 vs. 98.85), as expected since GAP-based classification is less sensitive to dimensionality than FPN-based detection. The advantage is consistent across SNR: +1 .03 at −10 dB for both HBB and OBB, +1 .79 at 
+
+20 dB where dimensionality expansion helps the FPN produce richer features, and +0 .10 at −20 dB where the noise floor dominates. The compressor performs the critical compression, while the restorer provides consistent refinement for detection. 
+
+D. Complexity Analysis 
+
+This subsection compares the parameters, FLOPs, and la-tency of transmission-related modules only; the shared back-bone, FPN, and task heads are excluded. FLOPs for methods with custom CUDA operators may be partially estimated; wall-clock latency is measured with torch.cuda.Event .Table I compares modules under the detection setting ( C′ =205 , feature 1536 ×25 ×25 ). The CAM uses 633 .24 K parameters TABLE I COMPLEXITY OF TRANSMISSION -RELATED MODULES UNDER THE DETECTION SETTING (DIOR-R, C′ = 205 , FEATURE 1536 × 25 × 25 ). BACKBONE , FPN, AND TASK HEADS ARE EXCLUDED . † FLOP S PARTIALLY ESTIMATED DUE TO CUSTOM CUDA OPERATORS .Method Params FLOPs Latency (ms) Ours (compressor only) 315.29K 197.44M 0.12 ± 0.00 
+
+Ours (full CAM) 633.24K 399.04M 0.47 ± 0.19 
+
+SwinJSCC 33.07M 34.02G 18 .23 ± 1.05 
+
+MambaJSCC 14.55M 6.51G † 16 .52 ± 0.94 
+
+NTSCC 28.63M 1.76G 4.47 ± 0.28 
+
+Note : Latency measured on one GPU with 200 iterations. 
+
+and 399 .04 M FLOPs— 1–2 orders of magnitude below the compared methods ( 14 .55 –33 .07 M parameters, 1.76 –34 .02 GFLOPs). Latency is 0.47 ms versus 4.47 –18 .23 ms for the compared methods. Under the classification setting ( C′ = 32 ,feature 1536 ×7×7), the overhead is even smaller: 101 .44 K pa-rameters, 5.20 M FLOPs, and 0.22 ms latency. This efficiency results from using only two 1 × 1 convolutions on compact backbone features rather than full-resolution images. V. C ONCLUSION 
+
+This paper presents a task-oriented semantic feature trans-mission framework for multi-task satellite remote sensing over varying-SNR channels. Instead of reconstructing images be-fore inference, the proposed framework directly transmits task-relevant semantic features extracted by a multitask-pretrained backbone and performs downstream inference on recovered features. The lightweight channel adaptation module preserves discriminative feature quality under channel noise, leading to strong classification and detection performance with smooth degradation across the trained SNR range. Under the same compression ratios and AWGN settings, the framework con-sistently outperforms reconstruction-oriented JSCC methods, with the most pronounced gains in the low-SNR regime. Future work will extend the channel model beyond AWGN to fading, Doppler, and time-selective channels representative of LEO satellite links, incorporate adaptive rate control with variable compression ratios and explicit payload accounting, and explore progressive multi-scale semantic feature trans-mission for small-object localization and oriented detection. Hardware-aware deployment with lightweight onboard back-bones, model compression, and energy-aware inference on resource-constrained satellite platforms will also be investi-gated for practical implementation. VI. A CKNOWLEDGEMENT 
+
+This work has been funded by the National Natural Science Foundation of China under Grant 62301063. REFERENCES [1] E. Bourtsoulatze, D. Burth Kurka, and D. G¨ und¨ uz, “Deep joint source-channel coding for wireless image transmission,” IEEE Transactions on Cognitive Communications and Networking , vol. 5, no. 3, pp. 567–579, 2019. [2] K. Yang, S. Wang, J. Dai, X. Qin, K. Niu, and P. Zhang, “Swinjscc: Taming swin transformer for deep joint source-channel coding,” IEEE Transactions on Cognitive Communications and Networking , vol. 11, no. 1, pp. 90–104, 2025. [3] T. Wu, Z. Chen, M. Tao, Y. Sun, X. Xu, W. Zhang, and P. Zhang, “Mam-bajscc: Adaptive deep joint source–channel coding with generalized state space model,” IEEE Transactions on Wireless Communications , vol. 25, pp. 9264–9279, 2026. [4] J. Dai, S. Wang, K. Tan, Z. Si, X. Qin, K. Niu, and P. Zhang, “Nonlinear transform source-channel coding for semantic communications,” IEEE Journal on Selected Areas in Communications , vol. 40, no. 8, pp. 2300– 2316, 2022. [5] J. Bao, P. Basu, M. Dean, C. Partridge, A. Swami, W. Leland, and J. A. Hendler, “Towards a theory of semantic communication,” in 2011 IEEE Network Science Workshop , 2011, pp. 110–117. [6] H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, “Deep learning enabled semantic communication systems,” IEEE Transactions on Signal Pro-cessing , vol. 69, pp. 2663–2675, 2021. [7] D. Wang, J. Zhang, M. Xu, L. Liu, D. Wang, E. Gao, C. Han, H. Guo, B. Du, D. Tao, and L. Zhang, “Mtp: Advancing remote sensing foundation model via multitask pretraining,” IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , vol. 17, pp. 11 632–11 654, 2024. [8] D. Wang, J. Zhang, B. Du, M. Xu, L. Liu, D. Tao, and L. Zhang, “Samrs: Scaling-up remote sensing segmentation dataset with segment anything model,” Advances in Neural Information Processing Systems , vol. 36, pp. 8815–8827, 2023. [9] W. Wang, J. Dai, Z. Chen, Z. Huang, Z. Li, X. Zhu, X. Hu, T. Lu, L. Lu, H. Li et al. , “Internimage: Exploring large-scale vision foundation models with deformable convolutions,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2023, pp. 14 408–14 419. [10] T. Xiao, Y. Liu, B. Zhou, Y. Jiang, and J. Sun, “Unified perceptual parsing for scene understanding,” in Proceedings of the European conference on computer vision (ECCV) , 2018, pp. 418–434. [11] K. He, G. Gkioxari, P. Doll´ ar, and R. Girshick, “Mask r-cnn,” in 
+
+Proceedings of the IEEE international conference on computer vision ,2017, pp. 2961–2969. [12] X. Xie, G. Cheng, J. Wang, X. Yao, and J. Han, “Oriented r-cnn for object detection,” in Proceedings of the IEEE/CVF international conference on computer vision , 2021, pp. 3520–3529. [13] T.-Y. Lin, P. Doll´ ar, R. Girshick, K. He, B. Hariharan, and S. Belongie, “Feature pyramid networks for object detection,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2017, pp. 2117–2125. [14] Y. Wu and K. He, “Group normalization,” in Proceedings of the European conference on computer vision (ECCV) , 2018, pp. 3–19. [15] G.-S. Xia, X. Bai, J. Ding, Z. Zhu, S. Belongie, J. Luo, M. Datcu, M. Pelillo, and L. Zhang, “Dota: A large-scale dataset for object detection in aerial images,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2018, pp. 3974–3983. [16] K. Li, G. Wan, G. Cheng, L. Meng, and J. Han, “Object detection in optical remote sensing images: A survey and a new benchmark,” ISPRS journal of photogrammetry and remote sensing , vol. 159, pp. 296–307, 2020. [17] X. Sun, P. Wang, Z. Yan, F. Xu, R. Wang, W. Diao, J. Chen, J. Li, Y. Feng, T. Xu et al. , “Fair1m: A benchmark dataset for fine-grained object recognition in high-resolution remote sensing imagery,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 184, pp. 116– 130, 2022. [18] A. Kirillov, E. Mintun, N. Ravi, H. Mao, C. Rolland, L. Gustafson, T. Xiao, S. Whitehead, A. C. Berg, W.-Y. Lo et al. , “Segment anything,” in Proceedings of the IEEE/CVF international conference on computer vision , 2023, pp. 4015–4026. [19] P. Helber, B. Bischke, A. Dengel, and D. Borth, “Eurosat: A novel dataset and deep learning benchmark for land use and land cover classi-fication,” IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , vol. 12, no. 7, pp. 2217–2226, 2019. [20] S. Ren, K. He, R. Girshick, and J. Sun, “Faster r-cnn: Towards real-time object detection with region proposal networks,” IEEE transactions on pattern analysis and machine intelligence , vol. 39, no. 6, pp. 1137–1149, 2016.
