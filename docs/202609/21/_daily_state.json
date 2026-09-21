@@ -1,0 +1,41 @@
+{
+  "date": "20260921",
+  "date_label": "",
+  "generated_at": "2026-09-21 22:30:16 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.19621v1",
+      "route": "202609/21/2609.19621v1-geography-as-the-organizing-grammar-of-geospatial-models",
+      "title": "Geography as the Organizing Grammar of Geospatial Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "地理作为GeoAI组织语法并涵盖海洋与智能体",
+      "first_seen_at": "2026-09-21 22:30:16 UTC",
+      "updated_at": "2026-09-21 22:30:16 UTC"
+    },
+    {
+      "paper_id": "2609.19961v1",
+      "route": "202609/21/2609.19961v1-neuro-symbolic-agentic-ai-for-networked-low-altitude-uavs",
+      "title": "Neuro-Symbolic Agentic AI for Networked Low-Altitude UAVs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主决策的智能体AI参考架构",
+      "first_seen_at": "2026-09-21 22:30:16 UTC",
+      "updated_at": "2026-09-21 22:30:16 UTC"
+    }
+  ]
+}
