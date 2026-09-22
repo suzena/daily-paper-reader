@@ -1,0 +1,185 @@
+{
+  "date": "20260922",
+  "date_label": "",
+  "generated_at": "2026-09-22 21:49:50 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.23133v1",
+      "route": "202609/22/2609.23133v1-aquacap-a-training-free-underwater-embodied-agent-with-code-as-policy",
+      "title": "AquaCap: A Training-Free Underwater Embodied Agent with Code-as-Policy",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "免训练水下具身智能体用于自主导航与操作",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.17218v1",
+      "route": "202609/22/2609.17218v1-infotaxa-information-calibrated-label-free-clustering-for-fine-grained-visual-taxonomy",
+      "title": "InfoTaxa: Information-Calibrated Label-Free Clustering for Fine-Grained Visual Taxonomy",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向生物多样性监测的细粒度视觉分类聚类",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.16232v1",
+      "route": "202609/22/2609.16232v1-toward-governance-aware-autonomous-gis-a-narrative-review-of-ethical-and-privacy-risks-in-llm-enabled-geoai",
+      "title": "Toward Governance-Aware Autonomous GIS: A Narrative Review of Ethical and Privacy Risks in LLM-Enabled GeoAI",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "LLM赋能的智能体GIS与多模态地理输入",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.19143v1",
+      "route": "202609/22/2609.19143v1-panorama-panoptic-grounded-captioning-via-mask-proposal-selection",
+      "title": "PANORAMA: Panoptic Grounded Captioning via Mask Proposal Selection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态图文接地描述",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.19768v1",
+      "route": "202609/22/2609.19768v1-oceanmoe-structured-conditional-sparse-computation-for-long-horizon-multivariate-ocean-forecasting",
+      "title": "OceanMoE: Structured Conditional Sparse Computation for Long-Horizon Multivariate Ocean Forecasting",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "稀疏混合专家的海洋预报",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.21061v1",
+      "route": "202609/22/2609.21061v1-lora-enhanced-contrastive-learning-with-sas-vision-transformers",
+      "title": "LoRA Enhanced Contrastive Learning with SAS Vision Transformers",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下声呐图像深度学习目标识别",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.22379v1",
+      "route": "202609/22/2609.22379v1-marsrecon-self-supervised-and-multimodal-surface-representations-for-mars",
+      "title": "MarsRecon: Self-Supervised and Multimodal Surface Representations for Mars",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "轨道影像与文本、坐标的自监督多模态对齐",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.23875v1",
+      "route": "202609/22/2609.23875v1-vista-an-attention-based-multi-agent-reinforcement-learning-architecture-for-space-situational-awareness-sensor-tasking",
+      "title": "VISTA: An Attention-Based Multi-Agent Reinforcement Learning Architecture for Space Situational Awareness Sensor Tasking",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主传感任务分配的注意力多智能体强化学习架构",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.24195v1",
+      "route": "202609/22/2609.24195v1-odometry-aided-real-time-mapping-for-underwater-robots-using-forward-looking-sonar",
+      "title": "Odometry-Aided Real-Time Mapping for Underwater Robots Using Forward-Looking Sonar",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下机器人前视声呐实时建图",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.24409v1",
+      "route": "202609/22/2609.24409v1-deco-efficient-decouple-to-couple-learning-for-multi-task-visual-grounding",
+      "title": "DeCo: Efficient Decouple-to-Couple Learning for Multi-Task Visual Grounding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合语言与视觉的多模态大模型定位框架",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    },
+    {
+      "paper_id": "2609.24664v1",
+      "route": "202609/22/2609.24664v1-agentic-ai-enabling-autonomous-self-organizing-and-evolving-uav-networks",
+      "title": "Agentic AI Enabling Autonomous, Self-Organizing, and Evolving UAV Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主感知网络的智能体AI",
+      "first_seen_at": "2026-09-22 21:49:50 UTC",
+      "updated_at": "2026-09-22 21:49:50 UTC"
+    }
+  ]
+}

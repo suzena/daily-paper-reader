@@ -1,0 +1,376 @@
+Title: InfoTaxa: Information-Calibrated Label-Free Clustering for Fine-Grained Visual Taxonomy
+
+URL Source: https://arxiv.org/pdf/2609.17218v1
+
+Published Time: Wed, 16 Sep 2026 01:38:47 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+# InfoTaxa: Information-Calibrated Label-Free Clustering for Fine-Grained Visual Taxonomy 
+
+## David Ahmedt-Aristizabal 1, Mohammad Ali Armin 1, Lars Petersson 11 Imaging and Computer Vision Group, CSIRO, Australia 
+
+{David.Ahmedtaristizabal, Mohammadali.Armin, Lars.Petersson }@csiro.au. 
+
+## Abstract 
+
+Label-free clustering of frozen pretrained visual embed-dings offers a scalable route to biodiversity monitoring, but image-only fine-grained taxonomy exhibits a consistent coarse-to-fine failure mode: clusters recover broad tax-onomic structure yet plateau at species level. We study this behaviour on BIOSCAN-5M through an information-calibrated clustering analysis. BioCLIP 2 features with UMAP and HDBSCAN reach 0.79 AMI at family and 0.67 
+
+at genus, substantially improving over the prior image baseline and remaining competitive with oracle-K, graph-based, and learned clustering heads on the same frozen features. To diagnose whether the remaining plateau is method-limited or information-limited, we introduce Info-Taxa , which combines clustering efficiency—the fraction of probe-estimated image information recovered by an un-supervised partition—with paired DNA as an audit signal only, not an inference input. The density pipeline recov-ers approximately 0.90 and 0.81 of the image-available in-formation at order and family, respectively. Held-out late-fusion probes show that adding DNA to the image em-bedding reduces species-level prediction error by approx-imately two bits. Robustness analyses cover multiple image encoders, described-species and rare-class subsets, probe diagnostics, and held-out-species coarse-rank generalisa-tion and same-species retrieval. Thus, in the tested setting, species-level label-free clustering is both clustering-limited and representation-limited: improved clustering may re-cover additional image-exposed structure, but cannot close the DNA-audited information gap alone. 
+
+## 1. Introduction 
+
+Label-free clustering of frozen pretrained visual embed-dings is an attractive route to scalable biodiversity mon-itoring. Images are inexpensive to collect, modern vi-sion foundation models provide strong transferable repre-sentations, and cluster assignments can support taxonomic 
+
+Figure 1. InfoTaxa diagnoses label-free image clustering at in-ference. Visual embeddings are clustered without BIOSCAN la-bels, while paired DNA is used only as an audit signal to quan-tify the clustering-limited and representation-limited components of the species-level plateau. 
+
+triage without exhaustive specimen-level annotation at in-ference [7, 16, 19, 24]. This setting is particularly relevant for insect biodiversity, where specimen volumes are large, expert labels are expensive, and many categories are long-tailed [5]. Yet image-only fine-grained taxonomy exhibits a consistent coarse-to-fine failure mode: visual embeddings recover broad taxonomic structure but degrade sharply at the finest ranks, especially species [5, 7, 19]. This raises a central question: is fine-rank failure due to (i) suboptimal clustering, (ii) embedding geometry, or (iii) missing taxonomic signal in the representation? If the sig-nal is present but poorly organised, stronger clustering or category-discovery methods should help [23, 25, 26]; if it is not exposed, improved clustering alone cannot close the gap. Fine-grained biological taxonomy provides a natural testbed for this question because labels are organised hi-erarchically, from order and family to genus and species. Insects are especially challenging because species bound-aries may be visually subtle or cryptic, and DNA barcod-ing is widely used when morphology is ambiguous [2, 8]. BIOSCAN-5M is therefore particularly useful: it provides paired specimen images, DNA barcodes, and Linnaean la-1arXiv:2609.17218v1 [cs.CV] 15 Sep 2026 bels [5]. In this paper, the inference pipeline remains image-only; paired DNA is used only as an audit signal to measure where current visual embeddings stop exposing fine-rank taxonomic information. To make this distinction, we introduce InfoTaxa , an information-calibrated diagnostic framework for label-free clustering of frozen pretrained visual embeddings in fine-grained taxonomy. InfoTaxa combines three rank-wise quantities: image-only clustering AMI, probe-estimated image information, and held-out image+DNA late-fusion gain Gfuse . The first two define clustering efficiency, which measures clustering headroom; the third audits held-out sig-nal beyond the frozen image embedding. Figure 1 sum-marises this setting: visual embeddings are clustered with-out BIOSCAN labels, while paired DNA is used only af-ter clustering as an audit signal. A simple image-only pipeline, BioCLIP 2 features [7] with UMAP reduction [13] and HDBSCAN clustering [12], reaches 0.79 AMI at fam-ily and 0.67 AMI at genus on BIOSCAN-5M, substantially improving over the prior image baseline. However, it still plateaus at species level, motivating a diagnostic of whether the remaining error is clustering-limited or representation-limited. At order and family, the density pipeline recovers ap-proximately 0.90 and 0.81 of probe-estimated image in-formation, respectively, indicating limited clustering head-room on the same frozen features. At species, cluster-ing efficiency drops to 0.54, showing unrecovered image-exposed structure, while adding DNA to image yields a 1.99-bit held-out late-fusion gain. Throughout, Gfuse is the primary audit measure; the marginal DNA–image probe difference ∆ is supporting evidence and is not interpreted as conditional mutual information. Supporting analyses cover additional encoders, label provenance, rare-class sub-sets, and probe diagnostics, while held-out-species analy-ses separately assess coarse-rank generalisation and same-species retrieval. Thus, in the tested frozen representations, species-level label-free clustering is both clustering-limited and representation-limited: improved clustering may re-cover more image-exposed structure, but cannot remove the held-out DNA-audited signal beyond image alone. Finally, InfoTaxa separates information content from clusterability: DNA embeddings expose at least as much taxonomic information as image embeddings at every rank, but image embeddings cluster better at coarse ranks. The image–DNA crossover is therefore geometric rather than informational. InfoTaxa is not a new clustering algo-rithm or mutual-information estimator; its contribution is the calibrated combination of standard clustering, held-out probes, and a paired auxiliary-modality audit to attribute the species-level failure mode. Our contributions are: 1. We formulate fine-grained visual taxonomy as label-free clustering of frozen pretrained image embeddings and report a strong BIOSCAN-5M operating point: Bio-CLIP 2 + UMAP + HDBSCAN reaches 0.79 family AMI and 0.67 genus AMI. 2. We introduce InfoTaxa, an information-calibrated diag-nostic framework that uses clustering efficiency to quan-tify clustering headroom relative to probe-estimated im-age information. 3. We use paired DNA as an audit signal: held-out late fusion quantifies the species-level signal beyond image, while marginal modality-probe differences provide sup-porting robustness evidence. 
+
+## 2. Related work 
+
+Fine-grained visual recognition and biodiversity. Fine-grained recognition involves visually subtle class bound-aries, while biodiversity datasets additionally contain long-tailed classes, hierarchical labels, and many rare species [9, 24]. Biological vision foundation models ad-dress this setting through large-scale organism image pre-training and taxonomic structure. BioCLIP and Bio-CLIP 2 learn organism-centred representations using bio-logical supervision [7, 19], whereas DINOv2 provides a non-biological visual control without taxonomic pretrain-ing [16]. BIOSCAN-5M is particularly relevant because it pairs specimen images, DNA barcodes, and taxonomy at scale [5]. Prior work primarily evaluates classification or clustering performance; in contrast, InfoTaxa asks how much taxonomic information image embeddings expose at each rank, and whether the species-level plateau reflects clustering or missing image-exposed information. 
+
+Label-free clustering with frozen vision features. Strong frozen features can make simple clustering competitive with more elaborate learned objectives: SCAN learns a clus-tering head after self-supervised pretraining [23], while FINCH and graph-based methods recover structure from nearest-neighbour relations without a fixed parametric clas-sifier [17]. Closest to our clustering protocol, Lowe et al. [10] benchmark frozen supervised and self-supervised encoders with conventional clusterers, including UMAP-reduced features and AMI evaluation, and show that en-coder choice often dominates clusterer choice. InfoTaxa differs by asking why fine-rank clustering fails: it cali-brates the partition against probe-estimated image informa-tion and a paired DNA audit. In fine-grained taxonomy, a weak clustering score is ambiguous: it may reflect a poor clustering algorithm, unfavourable embedding geometry, or insufficient taxonomic information in the representation. We use label-free specifically for the clustering stage: no BIOSCAN taxonomic labels are used to form the partition, although frozen foundation models may have used exter-nal supervision during pretraining. InfoTaxa addresses this ambiguity by measuring how much probe-estimated image information is recovered by an unsupervised partition. 2Figure 2. InfoTaxa overview . The top branch forms clusters from frozen image embeddings without BIOSCAN labels or paired DNA. Post-hoc evaluation uses taxonomic labels for cross-validated probes and clustering evaluation, while paired DNA is used only to measure held-out late-fusion gain beyond image; ∆ is supporting evidence. Together, clustering efficiency η and the DNA audit distinguish cluster-ing headroom from the representation-limited component. 
+
+Category discovery and generalized discovery. Category discovery methods recover novel semantic classes when la-belled and unlabelled data are mixed. Generalized cate-gory discovery (GCD) and SimGCD use partial supervi-sion and often assume labelled examples or the true number of classes [25, 26]. These methods provide useful upper-bound references, but do not match our benchmark-label-free inference setting, where BIOSCAN taxonomic labels and the number of biological classes are unavailable when clusters are formed. We therefore compare methods by the information they receive—discovered K, oracle K, learned oracle-K heads, or semi-supervised labels—and use Info-Taxa to distinguish clustering inefficiency from limitations of the visual representation. 
+
+DNA barcoding as a calibration signal. DNA barcod-ing supports species identification when morphology is ambiguous or cryptic [2, 8]. Genomic models such as HyenaDNA provide sequence embeddings for biological tasks [15], while multimodal models such as CLIBD align image, DNA, and text representations [6]. These ap-proaches show that DNA provides strong fine-rank taxo-nomic signal. Our goal is different: InfoTaxa does not use DNA for clustering, but uses paired DNA only as an audit signal to quantify species-level signal not exposed by cur-rent image embeddings. 
+
+Information-theoretic diagnostics. Information-theoretic ideas have informed representation learning, including the information bottleneck principle [20] and mutual-information objectives in self-supervised learning [22]. Di-rect mutual-information estimation, however, is statistically delicate [11]. We therefore use held-out discriminative probes as practical lower bounds on the information ex-posed by frozen embeddings. Unlike work that uses mutual information mainly as a training objective or representation-learning principle, InfoTaxa combines probe-based bit bud-gets with clustering scores to diagnose fine-grained visual taxonomy rank by rank. 
+
+## 3. Method 
+
+We introduce InfoTaxa , an information-calibrated frame-work for diagnosing label-free clustering of frozen pre-trained visual embeddings in fine-grained taxonomy. It combines an image-only inference pipeline, which reduces and partitions frozen visual embeddings without BIOSCAN labels or paired DNA, with a post-hoc audit that uses cross-validated probes and paired DNA to measure clustering headroom and held-out taxonomic signal beyond image. Figure 2 summarises the framework. Although we instan-tiate InfoTaxa on insect taxonomy, the framework applies more generally to paired settings with three ingredients: a frozen representation whose unsupervised partition is be-ing diagnosed, categorical or hierarchical evaluation labels, and an auxiliary paired modality used strictly post hoc as an audit signal. BIOSCAN-5M is our primary evaluation be-cause it provides these ingredients at scale; broader valida-tion across taxa, acquisition settings, and auxiliary modali-ties remains future work. 
+
+3.1. Problem setup 
+
+We consider a paired image–DNA dataset 
+
+D = {(xi, s i, y 1 
+
+> i
+
+, . . . , y ri )}Ni=1 , (1) where xi is a specimen image, si is its paired DNA bar-code sequence, and yri is the taxonomic label at rank 
+
+r. In BIOSCAN-5M, we evaluate order, family, genus, species, and barcode index number (BIN). Because BINs are barcode-derived, species is the main fine-rank biolog-ical endpoint and BIN is an additional diagnostic. The 3image-only pipeline uses only xi to form cluster assign-ments. DNA barcodes and taxonomic labels are used only after clustering for evaluation, information measurement, and audit experiments. 
+
+3.2. Image-only clustering pipeline 
+
+For each image encoder, we extract and cache frozen visual embeddings 
+
+zimg  
+
+> i
+
+= fimg (xi). (2) No encoder is fine-tuned on BIOSCAN-5M. The image-only inference path reduces each embedding and assigns a cluster label, 
+
+ci = h
+
+
+
+g
+
+
+
+zimg 
+
+> i
+
+ 
+
+, (3) where g(·) is a dimensionality-reduction operator and h(·)
+
+is an unsupervised clustering algorithm. We use label-free clustering at inference to mean that neither BIOSCAN tax-onomic labels nor paired DNA is used to fit g(·) or h(·).This does not imply unsupervised encoder pretraining: Bio-CLIP 2 is biologically supervised, whereas DINOv2 is a non-biological visual control. Our default pipeline uses UMAP [13] followed by HDBSCAN [12], which discov-ers the number of clusters from embedding geometry. We also compare graph-based clustering, oracle-K methods, learned clustering heads, and semi-supervised category-discovery methods to test whether the coarse-to-fine plateau persists across alternative partitions of the same frozen fea-tures. Encoders, configurations, and evaluation protocols are specified in Sec. 4.1. 
+
+3.3. Probe-based information audit 
+
+Clustering shows what structure an unsupervised partition recovers; held-out probes estimate the taxonomic informa-tion exposed by frozen representations. For a modality 
+
+m ∈ { img , dna }, the probe predicts Yr from Zm. DNA embeddings are extracted as 
+
+zdna  
+
+> i
+
+= fdna (si), (4) using HyenaDNA [15]. DNA is not used to construct the image-only clusters. The primary probe is a shallow MLP trained under cross-validation and evaluated out of sample; linear, wider, and non-parametric probes are used as diagnostics. Held-out cross-entropy gives a practical lower bound on the mutual information exposed by the frozen representation: 
+
+bIϕ(Zm; Yr ) = bH(Yr ) − CE ϕ(Yr | Zm), (5) where bH(Yr ) is the label entropy in bits, estimated with a Miller–Madow correction [14]. We interpret probe esti-mates as lower bounds on representation information, not exact mutual information values. We use paired DNA to audit predictive taxonomic signal beyond the image embedding. Our primary measure is the held-out late-fusion gain          
+
+> Gfuse
+> r= CE ϕimg (Yr|Zimg )−CE ϕfuse
+> 
+> Yr|[Zimg , Z dna ]
+> 
+> ,(6)
+
+where both terms are evaluated out of sample. A posi-tive Gfuse  
+
+> r
+
+means that adding DNA reduces held-out tax-onomic prediction error. We interpret this as an opera-tional incremental-prediction gain, not an exact conditional mutual-information estimate. For supporting comparison between the two modality-specific probes, we also report the marginal DNA–image probe difference 
+
+∆r = bIϕ(Zdna ; Yr ) − bIϕ(Zimg ; Yr ). (7) Because ∆r is a difference of marginal lower-bound esti-mates, it is neither a lower bound on conditional mutual in-formation nor the primary evidence that DNA adds signal beyond image. Agreement between Gfuse  
+
+> r
+
+and ∆r provides a consistency check between the late-fusion audit and sepa-rate modality probes. 
+
+3.4. Clustering efficiency 
+
+To compare taxonomic association recovered by a clus-tering partition with the probe-predictive structure of the frozen image embedding, let C denote the cluster assign-ments produced by the image-only pipeline. We define clus-tering efficiency as 
+
+ηr = bI(C; Yr )
+
+bIϕ(Zimg ; Yr ) . (8) The numerator is plug-in mutual information in bits be-tween cluster assignments and rank-r labels, and the de-nominator is probe-estimated image information. High ηr
+
+indicates that the partition recovers taxonomic association comparable in scale to that captured by the image probe; low ηr indicates substantial unrecovered probe-predictive structure. This ratio is a pipeline-specific empirical diag-nostic, not a formal information bound. UMAP and HDB-SCAN are fitted transductively on the full evaluation set, so an assignment may depend on the embedding geometry of other specimens as well as its own embedding. We therefore do not invoke a per-specimen data-processing argument or interpret ηr as an exact fraction of individual image infor-mation recovered by clustering. Moreover, the denominator is a probe lower bound and plug-in cluster MI can be pos-itively biased. We use ηr to compare clustering headroom across ranks under the evaluated protocol, not as an impos-sibility theorem. 
+
+3.5. Robustness protocols 
+
+We test whether the species-level audit is sensitive to en-coder choice, label provenance—including placeholder or potentially barcode-informed species labels—rare classes, 4probe specification, or closed-label memorisation. We re-peat the audit across multiple image encoders, restrict it to taxonomist-described species, remove low-count classes, vary probe families and capacities, and include a label-permutation baseline. We separately assess generalisa-tion to unseen species by excluding entire species from probe training. These probes predict family and genus only; species-level open-set evidence is measured by same-species nearest-neighbour retrieval among held-out species. This distinguishes coarse-rank transfer from fine-grained retrieval without fitting a closed-set classifier for unseen species. 
+
+## 4. Experiments 
+
+4.1. Experimental setup 
+
+Dataset and taxonomic labels. We evaluate on BIOSCAN-5M [5], using the cropped 256 evaluation split, comprising 39,373 test images and 7,887 test-unseen im-ages, for a total of 47,260 specimens. Each specimen has a cropped image, a DNA barcode, and taxonomic labels at five ranks: order, family, genus, species, and barcode in-dex number (BIN). The combined evaluation set contains 27 orders, 355 families, 1,819 genera, 4,363 species, and 5,296 BINs. We treat species as the main fine-grained biological endpoint and BIN as an additional barcode-derived diagnostic. At the species rank, BIOSCAN-5M contains both established scientific names and operational placeholder labels. Following the BIOSCAN-5M curation convention, labels with an established scientific name are treated as taxonomist-described species, whereas labels be-ginning with a lowercase letter, containing a period or nu-meral, or including “malaise” are treated as placeholders rather than established binomials [5]. Placeholders may reflect barcode-informed operational taxonomy, although their provenance is not uniform. The described-species au-dit excludes these placeholders, reducing but not eliminat-ing possible dependence between barcode evidence and the target definition. 
+
+Representations and implementation. All encoders are frozen. Our primary image representation is BioCLIP 2 ViT-L/14 [7]; DINOv2 ViT-L/14 [16] provides a non-biological visual control, and additional encoders are in-cluded in the robustness sweep. DNA embeddings are ex-tracted with HyenaDNA [15]. All clustering results are label-free at inference: BIOSCAN taxonomic labels and paired DNA are not used to fit the dimensionality-reduction or clustering stages. BioCLIP 2 may use external biological supervision during pretraining; thus, our label-free claim concerns inference-time clustering rather than representa-tion pretraining. Our headline image-only configuration, denoted H, uses BioCLIP 2 features, UMAP-50 [13], and HDBSCAN [12] with minimum cluster size 100. For com-
+
+Table 1. Headline label-free BIOSCAN-5M AMI(global) under protocol H. Our values are mean ± standard deviation over five seeds; prior values are approximate readings from [5].                
+
+> Method Order Family Genus Species BIN BIOSCAN-5M DINO-v1 ViT-B + UMAP-50 + Ward [5] ∼.25 ∼.36 ∼.29 ∼.22 ∼.21 BioCLIP 2 + UMAP-50 + HDBSCAN .53 ±.003 .79 ±.002 .67 ±.003 .50 ±.001 .49 ±.001
+
+parison with the multi-resolution Leiden sweep, protocol R uses the same BioCLIP 2 + UMAP-50 features and selects the HDBSCAN minimum cluster size independently at each taxonomic rank from {10 , . . . , 300 }.
+
+Metrics. We report adjusted mutual information (AMI) for clustering. All AMI values are global: every speci-men is included, and HDBSCAN noise assignments are re-tained as one additional cluster. For the information audit, we report probe-based mutual-information lower bounds in bits, their fraction of label entropy, the primary held-out late-fusion gain Gfuse (Sec. 3.3)—the reduction in held-out cross-entropy when paired DNA is added to the im-age embedding— and the supporting marginal DNA–image probe difference ∆. Clustering efficiency uses plug-in mutual information between cluster assignments and taxo-nomic labels, normalised by probe-estimated image infor-mation. As defined in Sec. 3.4, it is a pipeline-specific diagnostic of clustering headroom rather than a formal recovered-information bound. 
+
+Baselines and comparison groups. We compare three baseline groups. First, BioCLIP 2 is the main biologi-cal encoder and DINOv2 the non-biological control. Sec-ond, on fixed BioCLIP 2 features, we compare discovered-
+
+K methods—HDBSCAN, Leiden [21], and FINCH [17]— oracle-K methods (k-means and Ward), learned cluster-ing heads (SCAN [23], TURTLE [4], and TEMI [1]), and the semi-supervised SimGCD upper-bound baseline [26]. HDBSCAN uses headline configuration H; the remaining methods use representative fixed-feature operating points for their respective clustering regimes. Finally, we eval-uate DNA-supervised image-only projections and DNA-requiring upper bounds to test whether DNA supervision can recover species information from frozen image em-beddings. Complete implementation and hyperparameter-selection details are provided in the Supplementary Mate-rial. 
+
+4.2. Image-only clustering on BIOSCAN-5M 
+
+We first establish whether label-free image clustering provides a strong operating point before the DNA au-dit. Table 1 compares headline protocol H with the prior BIOSCAN-5M zero-shot image-clustering baseline of Gharaee et al. [5]. That baseline uses ImageNet-1K self-supervised DINO-v1 ViT-B, UMAP-50, and Ward cluster-ing on the combined test and test-unseen split. Its val-ues are approximate readings from the published figure and therefore provide a benchmark reference rather than a matched reimplementation. Under protocol H, BioCLIP 2 5order family genus species BIN 0.0 0.2 0.4 0.6 0.8 AMI 
+
+> Image-only clustering is strong at coarse ranks and plateaus at species
+> Prior image baseline BioCLIP-2 + UMAP + HDBSCAN Leiden, fixed features FINCH, fixed features SimGCD 50% labels
+> BIOSCAN-5M DINO-v1 + Ward
+> BioCLIP 2 + UMAP + HDBSCAN
+
+Figure 3. AMI across taxonomic ranks. The headline pipeline improves over the prior BIOSCAN-5M image baseline, while image-only methods retain a species/BIN decline. SimGCD uses BIOSCAN labels and is a semi-supervised reference. Table 2. Representative clustering comparison on frozen Bio-CLIP 2, AMI(global). HDBSCAN uses headline protocol H; other rows use method-specific operating points. SimGCD uses BIOSCAN labels and is a semi-supervised reference.                                                             
+
+> Regime Method Order Family Genus Species BIN K-discovery HDBSCAN (H) 0.530 0.790 0.670 0.500 0.490 K-discovery Leiden 0.496 0.779 0.702 0.546 0.531 K-discovery FINCH 0.602 0.735 0.675 0.594 0.509 K-oracle k-means@ K0.585 0.728 0.650 0.536 0.516 K-oracle Ward@ K0.584 0.732 0.646 0.527 0.507 Deep TEMI [1] 0.342 0.723 0.683 0.555 0.521 Deep SCAN [23] 0.529 0.696 0.627 0.533 0.523 Deep TURTLE [4] 0.526 0.469 0.405 0.290 0.290 Semi-sup. SimGCD [26] 0.599 0.814 0.768 0.593 0.570
+
+increases family AMI from approximately 0.36 to 0.79 and genus AMI from approximately 0.29 to 0.67. This is a frozen-representation plus clustering operating point, not a claim that HDBSCAN itself is a new clustering method. Figure 3 visualises the corresponding coarse-to-fine pat-tern. The headline pipeline improves substantially over the prior reference, particularly at family and genus, but image-only approaches decline at species and BIN. SimGCD is included only as a semi-supervised reference because it uses BIOSCAN labels. Table 2 tests whether this pat-tern depends on the clustering method. It compares rep-resentative partitions from frozen BioCLIP 2 representa-tions across discovered-K, oracle-K, learned oracle-K, and semi-supervised regimes. HDBSCAN repeats headline pro-tocol H, while the remaining methods use their method-specific operating points. At family and genus, the headline density pipeline remains competitive with the non-semi-supervised alternatives. At species, several alternatives— including FINCH, Leiden, TEMI, SCAN, and oracle-K
+
+methods—recover more structure than HDBSCAN H (e.g. FINCH: 0.594 versus 0.500). This establishes a clustering-limited component of the species plateau: improved parti-tions can recover additional structure from the frozen image representation. However, oracle-K and learned methods still retain a pronounced fine-rank decline. InfoTaxa there-fore uses the clustering-efficiency diagnostic in Sec. 4.3 to quantify this headroom, and the DNA audit in Sec. 4.4 to test the complementary representation question. 
+
+Table 3. Clustering-efficiency diagnostic for headline protocol H. Values are bits except for η. bI(C; Y ) and η are mean ± standard deviation over five UMAP seeds; the image-probe estimate is fixed across seeds.                           
+
+> Quantity Order Family Genus Species BIN
+> bI(C;Y)bits 2.16 ±.01 4.65 ±.03 5.09 ±.01 5.17 ±.02 5.18 ±.02
+> bIϕ(Zimg ;Y)bits 2.39 5.72 8.33 9.65 9.41
+> η.90 ±.00 .81 ±.00 .61 ±.00 .54 ±.00 .55 ±.00
+
+Table 4. Per-rank BIOSCAN-5M audit in bits. Gfuse is the held-out late-fusion gain from adding DNA to image; ∆ is the support-ing marginal DNA–image probe difference. Gfuse and ∆ are mean 
+
+± standard deviation over three probe seeds. 
+
+Rank H(Y ) bIϕ(Zimg ; Y ) bIϕ(Zdna ; Y ) Gfuse ∆
+
+Order 2.47 2.39 2.45 0.06 ±.00 0.06 ±.00 
+
+Family 6.13 5.72 6.08 0.35 ±.00 0.36 ±.00 
+
+Genus 9.46 8.33 9.36 1.02 ±.01 1.03 ±.01 
+
+Species 11.80 9.65 11.65 1.99 ±.01 2.00 ±.01 
+
+BIN 11.97 9.41 11.52 2.02 ±.01 2.11 ±.00 
+
+4.3. Clustering efficiency 
+
+Section 4.2 shows that alternative partitions can recover ad-ditional species structure, but that the coarse-to-fine plateau persists across clustering regimes. InfoTaxa quantifies the remaining clustering headroom through clustering effi-ciency: the taxonomic association recovered by the current partition relative to probe-estimated image information. Ta-ble 3 reports this diagnostic for headline protocol H, with cluster MI and η averaged across five UMAP seeds. At or-der and family, η is 0.90 and 0.81, indicating that the den-sity partition captures taxonomic association close in scale to that accessible to the image probe. Thus, the frozen rep-resentation is both informative and readily clusterable at coarse ranks, leaving limited clustering headroom. At genus and species, η falls to 0.61 and 0.54, respectively. The head-line partition therefore leaves substantial probe-predictive image structure unrecovered at fine ranks, so improved clus-tering can still help. This is the clustering-limited compo-nent diagnosed by InfoTaxa. Section 4.4 then addresses the complementary question: whether paired DNA adds held-out predictive taxonomic signal beyond the frozen image embedding. Together, the two measurements distinguish recoverable clustering headroom from the representation-limited component of the species-level plateau. 
+
+4.4. DNA audit of the species-level plateau 
+
+Paired DNA is not used to construct the image-only clus-ters. To complement the clustering-headroom measurement in Sec. 4.3, InfoTaxa uses paired DNA as an audit signal to test whether it adds held-out predictive taxonomic sig-nal beyond the frozen image embedding. Table 4 reports the primary held-out late-fusion gain Gfuse , together with the supporting marginal DNA–image probe difference ∆.At coarse ranks, adding DNA provides little additional sig-6Order Family Genus Species BIN 246810 12 bits                
+
+> Information across ranks
+> H(Y) (label entropy)
+> I(Zdna ;Y)
+> I(Zimg ;Y)
+> I(C;Y) (clusters)
+> Order Family Genus Species BIN 0246810 12 bits
+> two separate bars: not an additive decomposition
+> Image clustering budget |DNA audit (adjacent bars)
+> H(Y)recovered I(C;Y)
+> image-exposed headroom image I(Zimg ;Y)
+> DNA late-fusion gain Gfuse
+
+Figure 4. Information-calibrated view. Left: label entropy, image and DNA probe information, and cluster MI. Right: adjacent bars compare the image-clustering budget—cluster MI and image-exposed headroom—with the DNA audit—image-probe information and held-out late-fusion gain Gfuse —with H(Y ) marked. This is a diagnostic comparison, not an additive mutual-information decomposition. At species, image-exposed clustering headroom exceeds the late-fusion gain. Table 5. Robustness of the InfoTaxa DNA audit. Order–BIN columns report the supporting marginal DNA–image probe differ-ence ∆ in bits; the final column reports the primary species-level held-out late-fusion gain Gfuse sp in bits.                         
+
+> Configuration Order Family Genus Species BIN Gfuse sp
+> BioCLIP 2, all species 0.06 0.36 1.03 2.00 2.11 1.99 BioCLIP 2, taxonomist-described species 0.06 0.36 1.06 1.85 1.97 1.84 DINOv2, all species 0.08 0.65 1.86 3.50 3.62 3.45
+
+nal: Gfuse is 0.06 bits at order and 0.35 bits at family. The gain increases to 1.02 bits at genus and 1.99 bits at species. Thus, when the image embedding is already avail-able, paired DNA lowers held-out species cross-entropy by approximately two bits. This is the primary evidence that the species-level plateau cannot be attributed only to the current clustering partition. At species, the supporting marginal probe difference is ∆ = 2 .00 bits, within 0.01 bits of the late-fusion gain. This agreement is consistent with the audit, but ∆ is neither interpreted as conditional mutual information nor used as a formal decomposition of DNA-exclusive information. Figure 4 visualises the com-plementary clustering and DNA-audit diagnostics. Together with the clustering headroom in Table 3, these measure-ments give InfoTaxa its two-part diagnosis: stronger clus-tering may recover additional image-exposed structure, but cannot remove the held-out DNA-audited signal beyond im-age. 
+
+4.5. Robustness of the DNA audit 
+
+We test whether the DNA audit used by InfoTaxa is sen-sitive to label provenance, encoder choice, class rarity, or probe specification. Table 5 provides the most di-rect controls. Restricting the evaluation to taxonomist-described species reduces the supporting marginal species-level DNA–image difference from 2.00 to 1.85 bits, while the primary held-out late-fusion gain remains 1.84 bits, compared with 1.99 bits on all species. Thus, the main re-sult does not rest on placeholder labels alone. This control reduces, but cannot fully eliminate, possible dependence 
+
+Table 6. Encoder-sweep robustness of the InfoTaxa DNA audit us-ing the same HyenaDNA reference. ∆ is the supporting marginal DNA–image probe difference; Gfuse is the primary held-out late-fusion gain. Gfuse values are mean ± standard deviation over three probe seeds. †CLIBD [6] is contrastively pretrained with paired DNA on BIOSCAN-5M itself and is reported as an in-domain ro-bustness probe.                                                             
+
+> ∆(bits) Gfuse (bits) Image encoder Order Family Genus Species BIN Species BIN BioCLIP 2 [7] 0.06 0.36 1.03 2.00 2.11 1.99 ±.01 2.02 ±.01
+> DINOv2-L [16] 0.08 0.65 1.86 3.50 3.62 3.45 ±.01 3.52 ±.01
+> DINOv3-L [18] 0.12 0.77 2.11 3.91 4.04 3.85 ±.01 3.91 ±.01
+> MetaCLIP-L [27] 0.19 1.10 2.68 4.45 4.56 4.40 ±.01 4.43 ±.00
+> SigLIP-L [28] 0.20 1.06 2.64 4.39 4.51 4.33 ±.01 4.39 ±.01
+> EVA02-B [3] 0.19 1.05 2.77 4.83 4.96 4.77 ±.01 4.83 ±.01
+> CLIBD †[6] 0.02 0.22 0.58 1.11 1.20 1.10 ±.01 1.12 ±.01
+
+between barcode evidence and fine-rank target definitions. Species remains the primary biological endpoint; BIN is retained as an explicitly barcode-derived diagnostic. Ta-ble 6 extends this analysis across six externally pretrained frozen image encoders. For every encoder, the supporting marginal DNA–image difference increases towards species and BIN. More importantly, the primary species-level held-out late-fusion gain remains positive for all tested encoders, ranging from 1.99 to 4.77 bits. BioCLIP 2, the domain-specialised representation used by the headline pipeline, yields the smallest species-level gain among these exter-nally pretrained encoders. These results support the scoped conclusion that the InfoTaxa audit is not an artefact of one visual encoder. The final row adds CLIBD [6], whose image tower is contrastively aligned to paired DNA on BIOSCAN-5M itself. CLIBD narrows the species-level late-fusion gain to 1.10 bits, but the audit gap remains above one bit at species and BIN; we therefore report CLIBD as an in-domain robustness probe rather than as the headline operat-ing point. Rare classes amplify the audit gap but do not create it. The held-out late-fusion species gain decreases from 2.00 bits for all species to 1.69, 1.30, and 0.97 bits when retaining only species with at least 5, 10, and 20 speci-7mens, respectively. The gap therefore remains substantial among better-sampled classes. The held-out-species anal-ysis addresses a separate generalisation question. When all specimens from selected species are excluded from probe training, image embeddings predict the family and genus of those unseen species better than DNA embed-dings. Species-level open-set evidence is instead measured by same-species nearest-neighbour retrieval among held-out species, which strongly favours DNA ( 0.990 versus 
+
+0.780 ). This analysis therefore does not evaluate a closed-set species classifier on unseen species; it contrasts coarse taxonomic transfer with fine-grained same-species retrieval. Finally, the probe diagnostics provide no evidence that the main result is caused by a weak image probe or detectable positive bias under the permutation check. The permu-tation baseline yields zero estimated MI, and the wider MLP does not improve the species-level image estimate. Full rare-class, held-out-species, and probe-diagnostic re-sults are provided in the Supplementary Material. Together, these controls support the robustness of the InfoTaxa DNA audit while retaining Gfuse , rather than ∆, as the primary evidence of held-out signal beyond image. 
+
+4.6. Additional validation and operating modes 
+
+InfoTaxa further separates information content from clus-terability. In the oracle-K agglomerative comparison in the Supplementary Material, DNA exposes at least as much probe-based taxonomic information as image at every rank, yet image embeddings cluster better at order and fam-ily, whereas DNA clusters better from genus to BIN. This image–DNA crossover therefore reflects embedding ge-ometry rather than information content. Simple DNA-supervised image projections also do not improve species clustering over frozen BioCLIP 2; the strongest tested pro-jection, CCA, reaches 0.510 species AMI on held-out test-unseen, below the raw image baseline of 0.562. Finally, the multi-resolution Leiden sweep provides full-coverage triage partitions, while rank-tuned HDBSCAN protocol R provides a diagnostic reference with stronger family and genus AMI. These supporting analyses are consistent with the InfoTaxa diagnosis; full results are provided in the Sup-plementary Material. 
+
+## 5. Discussion and limitations 
+
+InfoTaxa shows that label-free clustering of frozen pre-trained image embeddings varies strongly across the tax-onomic hierarchy. BioCLIP 2 with UMAP and HDBSCAN provides a strong family/genus operating point, while species remains both clustering-limited and representation-limited. Lower clustering efficiency indicates unrecovered image-exposed structure that better partitions may recover, whereas the held-out late-fusion audit shows that paired DNA adds substantial predictive signal beyond the frozen image embedding. Here, label-free refers to inference-time clustering: BIOSCAN labels and paired DNA are not used to form clusters, although BioCLIP 2 receives biological supervision during pretraining. The marginal DNA–image difference supports the audit but is not interpreted as condi-tional mutual information. The analysis is diagnostic rather than absolute. DNA is used only as a paired audit signal, probes are lower bounds, and clustering efficiency is a pipeline-specific ratio rather than a formal impossibility bound. The described-species control reduces, but cannot fully eliminate, possible depen-dence between barcode evidence and fine-rank labels. The audit localises the gap to the frozen image embedding as read out by held-out probes; it does not prove that raw im-ages contain no further species cues or separate missing vi-sual evidence from information discarded by the encoder. Probe-capacity, non-parametric, and permutation diagnos-tics provide no evidence that the gap is caused by probe un-derfitting or positive estimator bias, and CLIBD shows that DNA-aligned in-domain pretraining narrows but does not close the gap. Fine-tuning, richer image acquisition, meta-data, additional sensing, or future biology-specialised en-coders may expose further species cues. InfoTaxa is formu-lated as a paired-modality audit template, but its full empir-ical validation here is on BIOSCAN-5M; FishNet provides only a DNA-free check of the coarse-to-fine image falloff, not the paired-DNA audit. Broader validation across taxa, acquisition settings, and auxiliary modalities remains future work. 
+
+## 6. Conclusion 
+
+We introduced InfoTaxa, an information-calibrated frame-work for diagnosing label-free clustering from frozen pre-trained visual embeddings. On BIOSCAN-5M, BioCLIP 2 with UMAP and HDBSCAN reaches 0.79 family and 0.67 genus AMI, competitive with representative graph-based, oracle-K, and learned alternatives. Label-free means that no BIOSCAN labels or paired DNA form the partition. At order and family, clustering efficiency shows that the density pipeline recovers most probe-estimated image in-formation, leaving limited headroom. At species, Info-Taxa identifies two limitations. The current partition leaves image-exposed structure unrecovered, so improved cluster-ing may help. However, paired DNA, used only as an audit signal, reduces held-out prediction cross-entropy by approximately two bits when added to image. This find-ing is robust across encoder, label-provenance, rare-class, and probe controls. Thus, species-level image-only clus-tering is both clustering-limited and representation-limited in the tested frozen embeddings: stronger clustering alone cannot eliminate the held-out signal beyond image, which may require richer visual representations or additional sens-ing. 8References 
+
+[1] Nikolas Adaloglou, Felix Michels, Hamza Kalisch, and Markus Kollmann. Exploring the Limits of Deep Image Clustering using Pretrained Models. In Proceedings of the British Machine Vision Conference , 2023. 5, 6 [2] David Bickford, David J. Lohman, Navjot S. Sodhi, Peter K. L. Ng, Rudolf Meier, Kevin Winker, Kristen K. Ingram, and Indraneil Das. Cryptic species as a window on diversity and conservation. Trends in Ecology & Evolution , 22(3): 148–155, 2007. 1, 3 [3] Yuxin Fang, Quan Sun, Xinggang Wang, Tiejun Huang, Xin-long Wang, and Yue Cao. EVA-02: A visual representation for neon genesis. Image and Vision Computing , 2024. 7, 1 [4] Artyom Gadetsky, Yulun Jiang, and Maria Brbic. Let Go of Your Labels with Unsupervised Transfer. In Proceedings of the 41st International Conference on Machine Learning ,pages 14382–14407, 2024. 5, 6 [5] Zahra Gharaee, Scott C Lowe, ZeMing Gong, Pablo M Arias, Nicholas Pellegrino, Austin T Wang, Joakim B Haurum, Iuliia Zarubiieva, Lila Kari, Dirk Steinke, et al. Bioscan-5m: A multimodal dataset for insect biodiversity. 
+
+Advances in Neural Information Processing Systems , 37: 36285–36313, 2024. 1, 2, 5 [6] ZeMing Gong, Austin Wang, Xiaoliang Huo, Joakim Brus-lund Haurum, Scott C Lowe, Graham W Taylor, and Angel Chang. Clibd: Bridging vision and genomics for biodiversity monitoring at scale. In International Conference on Learn-ing Representations , pages 92306–92336, 2025. 3, 7, 1 [7] Jianyang Gu, Sam Stevens, Elizabeth Campolongo, Matthew Thompson, Net Zhang, Jiaman Wu, Andrei Kopanev, Zheda Mai, Alexander White, James Balhoff, et al. Bioclip 2: Emergent properties from scaling hierarchical contrastive learning. Advances in Neural Information Processing Sys-tems , 38:102778–102811, 2025. 1, 2, 5, 7 [8] Paul D. N. Hebert, Alina Cywinska, Shelley L. Ball, and Jeremy R. deWaard. Biological identifications through DNA barcodes. Proceedings of the Royal Society B: Biological Sciences , 270(1512):313–321, 2003. 1, 3 [9] Faizan Farooq Khan, Xiang Li, Andrew J Temple, and Mo-hamed Elhoseiny. Fishnet: A large-scale dataset and bench-mark for fish recognition, detection, and functional trait pre-diction. In Proceedings of the IEEE/CVF international con-ference on computer vision , pages 20496–20506, 2023. 2, 3[10] Scott C Lowe, Joakim Bruslund Haurum, Sageev Oore, Thomas B Moeslund, and Graham W Taylor. An empirical study into clustering of unseen datasets with self-supervised encoders. arXiv preprint arXiv:2406.02465 , 2024. 2 [11] David McAllester and Karl Stratos. Formal limitations on the measurement of mutual information. In International Con-ference on Artificial Intelligence and Statistics , pages 875– 884. PMLR, 2020. 3 [12] Leland McInnes, John Healy, and Steve Astels. HDB-SCAN: Hierarchical density based clustering. Journal of Open Source Software , 2(11):205, 2017. 2, 4, 5 [13] Leland McInnes, John Healy, and James Melville. Umap: Uniform manifold approximation and projection for dimen-sion reduction. arXiv preprint arXiv:1802.03426 , 2018. 2, 4, 5 [14] George A. Miller. Note on the bias of information estimates. In Information Theory in Psychology: Problems and Meth-ods , pages 95–100. Free Press, Glencoe, IL, 1955. 4 [15] Eric Nguyen, Michael Poli, Marjan Faizi, Armin Thomas, Michael Wornow, Callum Birch-Sykes, Stefano Massaroli, Aman Patel, Clayton Rabideau, Yoshua Bengio, et al. Hye-nadna: Long-range genomic sequence modeling at single nu-cleotide resolution. pages 43177–43201, 2023. 3, 4, 5, 1 [16] Maxime Oquab, Timoth´ ee Darcet, Th´ eo Moutakanni, Huy Vo, Marc Szafraniec, Vasil Khalidov, Pierre Fernandez, Daniel Haziza, Francisco Massa, Alaaeldin El-Nouby, et al. Dinov2: Learning robust visual features without supervision. 
+
+arXiv preprint arXiv:2304.07193 , 2023. 1, 2, 5, 7 [17] Saquib Sarfraz, Vivek Sharma, and Rainer Stiefelhagen. Effi-cient parameter-free clustering using first neighbor relations. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2019. 2, 5 [18] Oriane Sim´ eoni, Huy V. Vo, Maximilian Seitzer, Federico Baldassarre, Maxime Oquab, et al. DINOv3. arXiv preprint arXiv:2508.10104 , 2025. 7, 1 [19] Samuel Stevens, Jiaman Wu, Matthew J Thompson, Eliza-beth G Campolongo, Chan Hee Song, David Edward Carlyn, Li Dong, Wasila M Dahdul, Charles Stewart, Tanya Berger-Wolf, et al. Bioclip: A vision foundation model for the tree of life. In Proceedings of the IEEE/CVF conference on com-puter vision and pattern recognition , pages 19412–19424, 2024. 1, 2 [20] Naftali Tishby, Fernando C. Pereira, and William Bialek. The information bottleneck method. In Proceedings of the 37th Annual Allerton Conference on Communication, Con-trol, and Computing , pages 368–377, 1999. 3 [21] Vincent A. Traag, Ludo Waltman, and Nees Jan van Eck. From louvain to leiden: Guaranteeing well-connected com-munities. Scientific Reports , 9(1):5233, 2019. 5 [22] Michael Tschannen, Josip Djolonga, Paul K. Rubenstein, Sylvain Gelly, and Mario Lucic. On mutual information maximization for representation learning. In International Conference on Learning Representations (ICLR) , 2020. 3 [23] Wouter Van Gansbeke, Simon Vandenhende, Stamatios Georgoulis, Marc Proesmans, and Luc Van Gool. SCAN: Learning to classify images without labels. In Proceedings of the European Conference on Computer Vision (ECCV) ,2020. 1, 2, 5, 6 [24] Grant Van Horn, Oisin Mac Aodha, Yang Song, Yin Cui, Chen Sun, Alex Shepard, Hartwig Adam, Pietro Perona, and Serge Belongie. The inaturalist species classification and detection dataset. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , pages 8769–8778, 2018. 1, 2 [25] Sagar Vaze, Kai Han, Andrea Vedaldi, and Andrew Zisser-man. Generalized category discovery. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 7492–7501, 2022. 1, 3 [26] Xin Wen, Bingchen Zhao, and Xiaojuan Qi. Parametric classification for generalized category discovery: A baseline 
+
+9study. In Proceedings of the IEEE/CVF International Con-ference on Computer Vision (ICCV) , 2023. 1, 3, 5, 6 [27] Hu Xu, Saining Xie, Xiaoqing Ellen Tan, Po-Yao Huang, Russell Howes, Vasu Sharma, Shang-Wen Li, Gargi Ghosh, Luke Zettlemoyer, and Christoph Feichtenhofer. Demysti-fying CLIP data. In International Conference on Learning Representations (ICLR) , 2024. 7, 1 [28] Xiaohua Zhai, Basil Mustafa, Alexander Kolesnikov, and Lucas Beyer. Sigmoid loss for language image pre-training. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2023. 7, 1 
+
+10 InfoTaxa: Information-Calibrated Label-Free Clustering for Fine-Grained Visual Taxonomy 
+
+# Supplementary Material 
+
+## A. Clustering and probe configurations 
+
+Operating-point selection. Table 7 documents the con-figurations used for the clustering comparison. For each method, it specifies the input representation, whether the number of clusters K is discovered or supplied as an or-acle, whether BIOSCAN taxonomic labels are used to fit the method, the selection rule, and whether inference is transductive. The discovered-K density and graph meth-ods use fixed configurations on UMAP-50 embeddings. Oracle-K methods receive only the rank cardinality, not the class assignments. Learned heads are trained self-supervised on frozen features with oracle K. SimGCD alone uses BIOSCAN labels and is included as a semi-supervised upper-bound reference. No label-free operating point is selected using test-set AMI. 
+
+Table 7. Clustering configurations and operating-point selection. “Oracle K” supplies the true rank cardinality; “Labels fit” indi-cates whether BIOSCAN labels are used to train the method rather than only to evaluate it.                                                          
+
+> Method Features KLabels fit Transd. Selection / grid HDBSCAN (H) UMAP-50 disc. no yes fixed mcs =100
+> Leiden UMAP-50 disc. no yes fixed γ=1 .0, SNN k=30
+> FINCH UMAP-50 disc. no yes last stable partition k-means@ KUMAP-50 oracle no no K=rank cardinality Ward@ KUMAP-50 oracle no yes K=rank cardinality TEMI raw oracle no yes default head, oracle K
+> SCAN raw oracle no yes default head, oracle K
+> TURTLE raw oracle no yes default head, oracle K
+> SimGCD raw oracle yes yes 50% labels (upper bound)
+
+Encoder checkpoints. Table 8 lists the frozen checkpoints used for the encoder robustness analysis. All image features are extracted once and cached; no encoder is fine-tuned. CLIP-L denotes the MetaCLIP ViT-L/14 checkpoint [27]. CLIBD is included as an additional in-domain multimodal encoder; unlike the other image encoders, its released image tower was pretrained on BIOSCAN-5M with paired DNA and text supervision. 
+
+Table 8. Frozen encoder checkpoint identifiers used for the en-coder robustness analysis, with embedding dimension d.                     
+
+> Encoder Checkpoint d
+> BioCLIP 2 [7] imageomics/bioclip-2 (ViT-L/14) 768 DINOv2-L [16] vit large patch14 dinov2.lvd142m 1024 DINOv3-L [18] vit large patch16 dinov3.lvd1689m 1024 MetaCLIP-L [27] vit large patch14 clip 224.metaclip 2pt5b 1024 SigLIP-L [28] vit large patch16 siglip 256.webli 1024 EVA02-B [3] eva02 base patch14 224.mim in22k 768 CLIBD [6] bioscan-ml/clibd (ver 1 0 ,bioscan 5m/image dna 4gpu )768 DNA (HyenaDNA) [15] LongSafari/hyenadna-tiny-1k-seqlen-hf 128
+
+Seed uncertainty under a fixed representation. Table 9 quantifies sensitivity to five UMAP seeds for discovered-K
+
+and oracle-K clusterers operating on BioCLIP 2 + UMAP-50. Each method uses the same UMAP representation within a seed, and FINCH is evaluated at the hierarchy level whose cluster count is closest to the rank cardinality. Stan-dard deviations are small ( ≤ 0.015 ), indicating stable rank-wise behaviour under this protocol. No label-free method is best at every rank; at species, Leiden and Ward recover more AMI than the fixed HDBSCAN configuration. 
+
+Table 9. Seed uncertainty for discovered-K and oracle-K clus-terers on BioCLIP 2 + UMAP-50, reported as AMI(global), mean 
+
+± standard deviation over five UMAP seeds. Learned heads and SimGCD are not re-seeded in this analysis.                                     
+
+> Regime Method Order Family Genus Species BIN K-discovery HDBSCAN (H) .530 ±.003 .790 ±.006 .670 ±.001 .500 ±.001 .490 ±.001
+> K-discovery Leiden .509 ±.002 .793 ±.003 .700 ±.003 .540 ±.002 .525 ±.001
+> K-discovery FINCH .593 ±.015 .739 ±.004 .671 ±.002 .520 ±.000 .511 ±.000
+> K-oracle k-means@ K.586 ±.004 .727 ±.001 .630 ±.001 .478 ±.001 .451 ±.001
+> K-oracle Ward@ K.586 ±.002 .732 ±.001 .645 ±.002 .526 ±.001 .506 ±.001
+
+CLIBD as an additional biological multimodal encoder. 
+
+CLIBD [6] aligns image, DNA, and text representations with contrastive training on BIOSCAN-5M itself, mak-ing it a strong test of whether an in-domain multimodal image encoder changes the audit conclusions. We eval-uate its released image tower as a frozen encoder under the same evaluation protocol: features are extracted once from the released test-split embeddings, row-aligned to our evaluation metadata using the released split identifiers, and never fine-tuned. Under five UMAP seeds with protocol H (UMAP-50 + HDBSCAN), CLIBD image embeddings obtain AMI(global) of 0.563 ±.013 at order, 0.776 ±.001 
+
+at family, 0.634 ±.003 at genus, 0.489 ±.002 at species, and 0.474 ±.002 at BIN. These values are comparable to the BioCLIP 2 headline operating point in Table 9. Un-der the probe audit, CLIBD exposes 10 .54 bits of species-level image information and reduces the held-out species late-fusion gain to Gfuse =1 .10 ±.01 bits, with ∆=1 .11 ; at BIN, Gfuse =1 .12 ±.01 bits. The gap therefore narrows but remains above one bit at both fine ranks. Because CLIBD pretraining uses BIOSCAN-5M and paired barcode infor-mation, its inference-time clustering remains label-free in our sense, but its pretraining overlaps the evaluation dis-tribution more strongly than any other tested encoder. We therefore report it as an in-domain robustness probe rather than as the headline operating point. 1B. Rare-class control 
+
+BIOSCAN-5M is long-tailed, so rare species could inflate the measured late-fusion gain. Table 10 repeats the held-out late-fusion audit after retaining only species with at least 5, 10, or 20 specimens. The species-level gain decreases as rare classes are removed, but remains 0.97 bits with at least 20 specimens per species. Thus, the fine-rank gap is ampli-fied by the long tail but is not solely a few-shot artefact. 
+
+Table 10. Rare-class control. Held-out late-fusion gain Gfuse  
+
+> r
+
+from adding DNA to image, in bits, after retaining taxa with at least the stated number of specimens per species. 
+
+Rank ≥ 1 ≥ 5 ≥ 10 ≥ 20 
+
+Genus 1.02 0.93 0.82 0.69 Species 2.00 1.69 1.30 0.97 BIN 2.10 1.71 1.21 0.82 #Species 4363 3226 1732 923 
+
+## C. Held-out-species coarse-rank generalisation and same-species retrieval 
+
+Random specimen folds measure closed-label representa-tion information because the same species can appear in both probe-training and evaluation folds. To assess coarse-rank generalisation beyond seen species, we exclude all specimens of selected species from probe training and eval-uate family and genus prediction on those held-out species. As reported in Table 11, these species-held-out probes eval-uate coarse-rank transfer only; they do not evaluate species classification. 
+
+Table 11. Held-out-species evaluation. Family and genus entries are held-out top-1 accuracy for probes evaluated on species ex-cluded from training. Species-level open-set evidence is evalu-ated separately by same-species kNN@1 retrieval among held-out species. Joint denotes late fusion of image and DNA representa-tions.                  
+
+> Protocol Target Image DNA Joint Species-held-out probe Genus .732 .603 .810 Species-held-out probe Family .874 .745 .924 Held-out-species kNN@1 retrieval Species .780 .990 –
+
+Species-level open-set evidence is instead measured by same-species nearest-neighbour retrieval among the held-out species. This retrieval test asks whether specimens of an unseen species remain close to conspecific specimens in the frozen embedding space, without fitting a closed-set species classifier. Table 11 shows that image embeddings predict the family and genus of unseen species better than DNA embeddings, whereas same-species retrieval strongly favours DNA. 
+
+## D. Probe diagnostics 
+
+Table 12 compares MLP and non-parametric kNN probes for BioCLIP 2 image embeddings. At family, the two probes agree closely. At species, kNN is weaker, indicat-ing that the MLP provides the tighter lower bound among the tested probes in the high-class-count regime. The label-permutation control yields zero estimated MI, showing no detectable positive bias under this permutation check. 
+
+Table 12. Probe diagnostics for BioCLIP 2 image embeddings. The MLP gives the tightest species-level lower bound among the tested probes; the permutation control yields zero estimated MI.                 
+
+> Rank H(Y)MLP MI kNN MI Permuted MI Class-subset range Family 6.13 5.73 5.58 0.000 [5.02, 5.47] Species 11.80 9.65 8.47 0.000 [9.39, 9.42]
+
+Table 13 extends the analysis to image, DNA, and late-fusion representations across four taxonomic ranks and multiple probe families. Each entry reports held-out cross-entropy CE and its implied lower bound MI = H(Y ) − CE 
+
+in bits. Reporting CE is necessary because the late-fusion gain Gfuse is defined as a held-out CE reduction. Across the tested probe families, the MLP is tied for or provides the largest lower bound in each setting; the wider MLP is close, while linear and kNN probes are gen-erally looser. The image–DNA CE difference widens to-ward species and BIN. The image-probe permutation con-trol yields MI = 0 at every rank because its held-out CE does not improve on the marginal predictor, showing no de-tectable positive bias under this check. 
+
+Table 13. Extended probe diagnostics on BioCLIP 2 image, Hye-naDNA, and late-fusion features. Each cell is held-out CE / MI in bits under 4-fold cross-validation. The permutation column is an image-probe control with shuffled labels.                                                                   
+
+> Rank Modality Linear MLP Wide kNN Perm. MI Family Image 0.39/5.73 0.40/5.73 0.44/5.69 0.54/5.58 0.00 DNA 1.19/4.94 0.05/6.08 0.05/6.07 0.58/5.54 –Fusion 0.20/5.92 0.06/6.07 0.07/6.06 ––Genus Image 1.14/8.32 1.12/8.33 1.23/8.23 1.65/7.81 0.00 DNA 1.16/8.29 0.10/9.35 0.14/9.32 0.93/8.53 –Fusion 0.54/8.92 0.10/9.35 0.15/9.30 ––Species Image 2.19/9.62 2.15/9.65 2.39/9.41 3.33/8.47 0.00 DNA 0.78/11.02 0.15/11.65 0.22/11.58 1.20/10.60 –Fusion 0.95/10.85 0.17/11.63 0.29/11.51 ––BIN Image 2.60/9.37 2.56/9.42 2.98/8.99 3.67/8.30 0.00 DNA 1.01/10.97 0.45/11.53 0.68/11.30 1.41/10.57 –Fusion 1.33/10.64 0.54/11.43 0.98/10.99 ––
+
+## E. Image–DNA clusterability crossover 
+
+This experiment separates probe-exposed taxonomic infor-mation from clustering geometry. Figure 5 compares image and DNA embeddings under oracle-K agglomerative clus-tering. DNA exposes at least as much probe-based taxo-2nomic information as image at every rank. Under this clus-tering comparison, however, image embeddings cluster bet-ter at order and family, whereas DNA embeddings perform better from genus through BIN. The crossover is therefore geometric rather than informational: DNA retains coarse-rank information, but image embeddings provide more clus-terable coarse-rank geometry under oracle-K agglomera-tive clustering. 
+
+Figure 5. Image–DNA crossover under oracle-K agglomera-tive clustering. Image embeddings cluster better at order and family, whereas DNA embeddings perform better from genus through BIN. The crossover reflects embedding geometry rather than probe-exposed information. Table 14. DNA-supervised image projections evaluated on held-out test unseen , AMI(global). None of the image-only pro-jections improves species clustering over raw BioCLIP 2. Rows below the divider use DNA at inference and are reference compar-isons. 
+
+Representation at inference Family Genus Species BIN Raw image, BioCLIP 2 .683 .734 .562 .560 CCA image projection .683 .727 .510 .508 MLP-distilled DNA latent .600 .532 .264 .261 Relational DNA-NT-Xent .680 .704 .497 .494 CCA fusion, image ⊕ DNA .525 .677 .645 .643 DNA alone, HyenaDNA .442 .586 .650 .650 
+
+## F. DNA-supervised image projections 
+
+This experiment tests whether simple DNA-supervised mappings can improve image-only clustering from frozen BioCLIP 2 features. Table 14 compares the raw image rep-resentation with a CCA image projection, MLP distillation from a DNA-side latent representation, and a relational con-trastive variant in which DNA neighbours define positives. None of the tested image-only DNA-supervised representa-tions improves species AMI over raw BioCLIP 2. 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00 Resolution gamma 10 2
+
+> 10 3
+> 10 4
+> Number of clusters (log scale)
+> order family genus species BIN
+> One resolution knob traverses coarse-to-fine cluster granularity
+
+Figure 6. Cluster-count trajectory of a multi-resolution Leiden sweep over BioCLIP 2 + UMAP-50. One resolution parameter produces full-coverage partitions across a coarse-to-fine range of granularities; selected operating points need not match taxonomic class counts. 
+
+The final two rows use DNA at inference and are in-cluded as reference comparisons rather than image-only candidates. They show that DNA and image–DNA fusion can yield stronger fine-rank clustering, but do not alter the image-only result. 
+
+## G. Multi-resolution Leiden sweep 
+
+Taxonomy is hierarchical, whereas most clustering eval-uations use one flat partition at a time. Figure 6 visu-alises a multi-resolution Leiden sweep on a shared-nearest-neighbour graph over BioCLIP 2 + UMAP-50 embeddings. A single resolution parameter γ produces full-coverage par-titions with progressively finer cluster granularity. These partitions provide candidate operating points from family through fine ranks, but their cluster counts need not match taxonomic cardinalities. In particular, the selected species and BIN operating points both contain K = 3369 
+
+clusters, below the 4,363 species and 5,296 BINs in the evaluation set. The sweep should therefore be interpreted as a low-tuning, full-coverage triage mode rather than exact recovery of Linnaean class counts. Table 15 compares the selected Leiden operating points with rank-tuned HDBSCAN protocol R. Protocol R selects HDBSCAN minimum cluster size independently at each rank using AMI, so it is a diagnostic reference rather than the fixed headline protocol H. Leiden provides full cover-age and a single-resolution triage mode, whereas protocol R achieves higher family and genus AMI. 
+
+## H. External FishNet coarse-to-fine falloff 
+
+FishNet [9] provides an external DNA-free check of whether frozen image representations exhibit a coarse-to-fine falloff. Figure 7 reports probe-estimated image infor-mation as a fraction of label entropy for BioCLIP 2 and DI-NOv2 across taxonomic ranks. For both encoders, this frac-tion is high at order and family and decreases toward finer 3Table 15. Multi-resolution Leiden and rank-tuned HDBSCAN un-der protocol R on BioCLIP 2 + UMAP-50. AMI is global, with HDBSCAN noise retained in scoring. Protocol R is distinct from fixed headline protocol H.                            
+
+> Method Order Family Genus Species BIN Leiden multi-resolution AMI .558 .739 .614 .502 .493 HDBSCAN protocol R AMI .570 .806 .650 .492 .478 Leiden K/noise 111/0% 373/0% 1907/0% 3369/0% 3369/0% HDBSCAN K/noise 35/8% 69/6% 250/14% 129/10% 250/14%
+
+Figure 7. Coarse-to-fine image-information falloff on FishNet. Probe-estimated image information, expressed as a fraction of la-bel entropy, is high at coarse ranks and decreases toward finer ranks for BioCLIP 2 and DINOv2. Because FishNet species are extremely sparse, the species-level estimate is not interpreted as evidence for an information ceiling. 
+
+ranks. This result supports the presence of a coarse-to-fine falloff on a second biological dataset. It is not used to in-fer an information ceiling or a representation-limited com-ponent because FishNet does not provide the paired DNA audit used here, and its species labels are extremely sparse. The species-level estimate is therefore confounded by few-shot sampling. 4

@@ -1,0 +1,288 @@
+Title: Odometry-Aided Real-Time Mapping for Underwater Robots Using Forward-Looking Sonar
+
+URL Source: https://arxiv.org/pdf/2609.24195v1
+
+Published Time: Tue, 22 Sep 2026 02:13:17 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# Odometry-Aided Real-Time Mapping for Underwater Robots Using Forward-Looking Sonar 
+
+Siyuan Du ∗12 , Kanzhong Yao ∗1, Youdong Wang 1, Yingqi Liu 1, Qingwen Liu 2, Qunhui Yang 2, Zhe Sun †1, Xuelong Li †1
+
+Abstract — Reliable perception is essential for underwater vehicles operating in complex environments, where light at-tenuation and scattering often degrade visibility and com-promise optical sensing. Forward-looking sonar (FLS) offers an alternative by providing high-frame-rate acoustic imaging under poor optical conditions. However, real-time FLS mapping remains challenging due to unresolved target elevation, spatially non-uniform noise, and fragmented target boundaries, which hinder feature extraction and introduce geometric ambiguity during projection. To address these challenges, we propose a cascaded feature reconstruction pipeline combining fast Fourier transform (FFT)-based denoising, fast multiscale constant false alarm rate (MCFAR) detection, and gradient-adaptive bound-ary connection to extract geometric features from degraded sonar images with low latency. We integrate attitude-aware geometric projection with incremental occupancy accumulation to construct a depth-referenced 2.5D map for local mapping in confined underwater environments. The sonar’s vertical posi-tion is referenced to an external sensor, while target elevation is assigned under an explicit geometric assumption rather than measured directly by FLS. Experiments in a 3 m × 5 m pool demonstrate centimeter-scale planar mapping accuracy, with a root-mean-square error (RMSE) below 3 cm across three sequences and an average processing time of 42.4 ms per frame. 
+
+I. INTRODUCTION Underwater vehicles are widely used for missions includ-ing infrastructure inspection, hydrological data collection, and resource exploration [1]. However, turbidity, suspended sediment, and darkness pose perceptual challenges that can impair traditional optical cameras [2][3][4]. Although green-light underwater LiDAR provides 3D information, optical scattering and attenuation reduce its range in turbid waters, while high costs limit its adoption [5]. Acoustic perception is less affected by poor visibility, but Mechanically Scanned Imaging Sonars (MSIS) rely on physical rotation to emit single beams [6]. This leads to prolonged imaging cycles and motion distortion during navigation, limiting their ability to meet real-time requirements for agile obstacle avoidance. In contrast, FLS achieves high-frame-rate imaging via multi-beam arrays, supporting real-time perception in turbid and dark underwater environments [7][8][3]. 
+
+This work was done during an internship at TeleAI. 
+
+> 1
+
+Institute of Artificial Intelligence (TeleAI), China Telecom, China. 
+
+> 2
+
+Tongji University, Shanghai, China. E-mails: Siyuan Du (dueen1123@tongji.edu.cn), Kanzhong Yao (yaokz1@chinatelecom.cn), Youdong Wang (wangyd24@chinatelecom.cn), Yingqi Liu (18553471556@163.com), Qingwen Liu (qliu@tongji.edu.cn), Qunhui Yang (yangqh@tongji.edu.cn), Zhe Sun (sunzhe@nwpu.edu.cn), and Xuelong Li (xuelong li@ieee.org). 
+
+> ∗
+
+Equal contribution. †Corresponding authors. 
+
+Fig. 1. Scenario of ROV underwater detection and obstacle perception. 
+
+Despite the advantages of FLS, autonomous underwater obstacle avoidance still faces algorithmic challenges. Many sonar-based strategies rely on reactive control driven by raw sonar images or end-to-end models [9] [10]. These approaches provide limited global spatial understanding, restricting long-horizon path planning. In aerial robotics, agile autonomous navigation frameworks, such as Ego-Planner [11], have demonstrated the benefits of real-time dense occupancy grid maps. This mapping-based navigation paradigm also holds promise for underwater applications. However, real-time FLS grid mapping faces non-uniform environmental noise, fragmented target edges, projection distortion due to missing vertical resolution, and multipath artifacts. To address the aforementioned perception and mapping challenges, this paper proposes an odometry-aided real-time mapping system using FLS. Designed for confined under-water environments with degraded visibility, the system pro-vides a reliable environmental representation for centimeter-scale local obstacle mapping and autonomous navigation. It extracts robust geometric features from degraded sonar images and incorporates attitude information to correct pro-jection distortions, thereby constructing a depth-referenced 2.5D occupancy grid map. Experiments are conducted in a (3 ×5) m pool to evaluate short-range obstacle perception and local mapping, providing a foundation for local path planning and safe obstacle avoidance. The main contributions of this paper are as follows: 1) An efficient feature reconstruction pipeline for degraded sonar images that integrates frequency-domain denois-ing, fast MCFAR detection, and adaptive boundary connection to extract geometric features in real time arXiv:2609.24195v1 [cs.RO] 21 Sep 2026 under non-uniform noise. 2) A probabilistic mapping model addressing FLS ele-vation ambiguity. By combining view-frustum distor-tion correction with a Log-Odds update mechanism, this approach physically suppresses projection ghosting, supporting 24 Hz real-time processing with centimeter-level mapping errors. 3) A hardware implementation validated through multiple trails in an experimental pool with obstacles. II. RELATED WORK 
+
+A. Mechanically Scanning Imaging Sonar Mapping 
+
+Due to their robustness against poor lighting and turbidity, acoustic sensors are widely used for underwater perception. Early localization and SLAM frameworks mainly relied on MSIS [12][13], using line-feature extraction and scan match-ing for structured environments and large-scale seafloor map-ping. Although MSIS provides high-resolution imagery for static inspection, its sequential beam-scanning mechanism introduces long acquisition latency, causing motion distortion on highly maneuverable platforms (AUVs/ROVs) [14]. This limitation makes MSIS unsuitable for agile obstacle avoid-ance and real-time dynamic mapping. 
+
+B. Multimodal Mapping: Fusion of Vision and FLS 
+
+To address the real-time limitations of MSIS, high-frame-rate multibeam FLS has been widely adopted. However, FLS projects three-dimensional acoustic returns onto a two-dimensional image, leaving target elevation unresolved. To mitigate this ambiguity, multimodal mapping approaches integrate FLS with complementary visual sensors, such as monocular or stereo cameras. Early fusion methods aligned independently reconstructed optical and acoustic 3D models, but their computational cost limited real-time operation [15]. Tightly coupled systems, such as SVin2 [16] and the method of Cardaillac et al. [17], improved efficiency using visual observations for odometry, yet produced sparse landmark maps with limited utility for ROV obstacle avoidance and path planning [18]. Recent work has shifted toward cross-modal dense 3D mapping. Collado-Gonzalez et al. [19] associated visual regions of interest with sonar echo clusters for geomet-ric reconstruction. Learning-based methods include Sonar-Sweep [20], which uses plane-sweeping cost volumes for dense depth estimation, and OA-Stereo [21], which refines disparity through self-supervised opti-acoustic matching. Gutnik et al. [22] also explored self-supervised sensor fusion for AUV 3D obstacle avoidance. Despite these advances, opti-acoustic mapping still de-pends on usable visual information. In highly turbid wa-ters, optical backscatter severely reduces image contrast and obscures texture [23], potentially compromising visual association and depth estimation. This limitation motivates sonar-based mapping under poor visibility. 
+
+C. FLS-Only Perception and Mapping 
+
+To achieve reliable perception in optically denied en-vironments, researchers have pursued FLS-only mapping. However, without multimodal assistance, balancing real-time performance and mapping fidelity remains a formidable challenge. At the perception front-end, early CFAR-based meth-ods [24] extract acoustic features susceptible to fragmenta-tion and misassociation under severe FLS noise. To resolve FLS elevation ambiguity, methods using specific motion con-straints, such as multi-view space carving [25] or 90-degree rolling [26], have emerged, but these restrict operational efficiency. Recently, Zhi et al. [27] introduced an oscillating FLS mechanism for 3D coverage. However, their reliance on simple thresholding for real-time denoising can disrupt target-edge continuity, limiting reconstruction fidelity. Regarding back-end map representation, high-precision volumetric albedo models [28] are computationally pro-hibitive for online execution. Conversely, real-time grid mapping methods [29] [30] often idealize FLS images as 2D rays for efficiency. This simplification ignores projection distortions caused by ROV pitch motions, resulting in ghost-ing artifacts and positional deviations around complex 3D structures. To break the inherent trade-off between real-time perfor-mance and reconstruction accuracy, our proposed framework introduces a cascaded feature reconstruction pipeline and a frustum geometric correction mechanism. This approach achieves centimeter-level precision while maintaining a 24 Hz real-time processing capability. III. M ETHODOLOGY 
+
+A. Sonar Image Processing 1) Frequency-Domain Filtering: Sonar images often suf-fer from concentric arc artifacts caused by hardware crosstalk or range-dependent background noise, which manifest as horizontal stripes in polar coordinates. To mitigate this, we introduce a 2D-FFT-based frequency-domain filtering preprocessing method. First, the polar image Ipad (x, y ) is converted into the frequency domain: 
+
+F(u, v ) =  
+
+> M−1
+
+X 
+
+> x=0
+> N−1
+
+X
+
+> y=0
+
+Ipad (x, y )e−j2π( ux M + vy N ), (1) where M and N denote the image dimensions, while u and 
+
+v represent the vertical and horizontal spatial frequencies. Since horizontal stripes lack horizontal intensity variations, their energy is concentrated in the extremely low-frequency region. To accurately filter out this interference, a frequency mask is designed as follows ( W denotes the cutoff band-width): 
+
+H(u, v ) = 
+
+(
+
+0, v ∈ [0 , W − 1] ∪ [N − W + 1 , N − 1] ,
+
+1, otherwise ,
+
+(2) Direct frequency truncation can induce the Gibbs phe-nomenon, causing negative artifacts in the reconstructed im-age. Thus, an inverse Fourier transform with a non-negativity Fig. 2. Overview of the proposed sonar mapping pipeline: Temporal alignment and interpolation of multi-sensor data, (A) Sonar image processing pipeline, (B) Frustum-based coordinate rectification, and (C) Incremental probabilistic mapping performance. 
+
+constraint is applied to the filtered spectrum to compute the final reconstructed image, Iout (x, y ):
+
+Iout (x, y ) = max  0, ℜ F−1 {F (u, v )H(u, v )}  , (3) where ℜ{·} denotes the real part of a complex number, 
+
+F−1{·} represents the inverse Fourier transform. 
+
+2) Fast Multiscale Truncated CFAR: Due to severe re-verberation variations in sonar images, traditional fixed thresholds fail to balance detection and false alarm rates. We introduce the CFAR. Assuming exponentially distributed noise, the decision threshold T = αˆσ is computed using the noise expectation ˆσ from N reference cells. To maintain a preset false alarm probability ( Pf a ), the exact threshold coefficient αs is given by: 
+
+αs = N
+
+
+
+P − 1 
+
+> N
+> f a
+
+− 1
+
+
+
+, (4) Since MCFAR is computationally prohibitive for real-time ROV obstacle avoidance, we propose a Fast Multiscale Truncated CFAR using prefix sum acceleration. For single-beam data I(r) (r ∈ [0 , M − 1] ), a 1D prefix sum is constructed as follows: 
+
+P (k) = 
+
+> k−1
+
+X
+
+> i=0
+
+I(i), P (0) = 0 , (5) At any scale s, with an outer training window radius Rt,s 
+
+and an inner guard window radius Rg , the total energy of the local training window Etrain,s can be directly calculated using the prefix sum and boundary truncation functions: 
+
+Etrain,s =P (rout end + 1) − P (rout start )
+
+− P (rin end + 1) − P (rin start ), (6) where rc is the index of the cell under test; rout start =max(0 , r c − Rt,s ) and rout end = min( M − 1, r c + Rt,s )
+
+denote the boundary-truncated start and end indices of the outer training window, respectively; and rin start =max(0 , r c−Rg ) and rin end = min( M −1, r c+Rg ) represent the truncated start and end indices of the inner guard window. The local noise expectation is given by ˆσs =
+
+Etrain,s /N train,s . To prevent thermal noise amplification in deep water or acoustic shadows where ˆσs → 0, a sensitivity lower bound Tmin is introduced to form the truncated threshold Ts:
+
+Ts = max  αs ˆσs, T min 
+
+, (7) To enhance robustness against complex reverberation, a Majority Voting strategy is applied. The final decision 
+
+Df inal (rc) is true only when the threshold is exceeded in most scales: 
+
+Df inal (rc) = 
+
+(
+
+1, PSs=1 I I(rc) > T s
+
+ ≥ ⌊ S/ 2⌋ + 1 0, otherwise ,
+
+(8) where S denotes the total number of scales, I(rc) is the intensity value of the cell at position rc, Ts represents the detection threshold at the s-th scale, and I(·) is the indicator function. This mechanism efficiently suppresses isolated noise, yielding clean, high-fidelity data for subsequent 3D point cloud reconstruction. 
+
+3) Top-k Echo Extraction and Adaptive Connection: 
+
+Sonar targets typically produce strong front-edge echoes followed by noisy tails. To suppress these tails, we scan each beam from near to far and retain only the first k detected target pixels, preserving the target’s front edge. Since these edges are often fragmented, standard mor-phological closing may excessively thicken thin targets. We therefore use an adaptive directional connection method based on the structure tensor. The local edge direction ϕ(x, y )
+
+is estimated from its components ( Jxx , J yy , J xy ): 
+
+ϕ(x, y ) = 12 atan2 (2 Jxy , J xx − Jyy ) + π
+
+2 , (9) The orientation field is discretized into angular subsets, each assigned a directional elliptical structuring element. To reduce computation, morphological closing is restricted to minimal bounding boxes within dynamic ROIs, and the results are mapped back to the full image. This approach bridges edge gaps while limiting target thickening and main-taining real-time performance. 
+
+B. 3D Distortion Compensation via Frustum-Edge Model 
+
+FLS projects 3D acoustic echoes onto a 2D plane, los-ing elevation resolution. Conventional 3D reconstruction assumes ϕ = 0 , which causes severe point cloud distortion during pitching maneuvers. To ensure accurate mapping, this paper proposes an attitude compensation method based on frustum-edge approximation.       
+
+> Fig. 3. Geometric model of the FLS, illustrating the transformation from the world frame Cwto the sonar frame Cs, and the representation of a spatial point Pwithin the acoustic frustum.
+
+First, invalid echoes caused by strong sea-surface reflec-tions during high-pitch maneuvers must be eliminated. Under a two-dimensional side-view approximation with a flat water surface, the upward-facing upper frustum boundary intersects the surface at the slant range Rsurf :
+
+Rsurf = H
+
+sin  δp + Φv
+
+> 2
+
+ , (10) where H denotes the real-time depth of the sonar, δp is the sonar pitch angle, and Φv is the vertical field of view (FOV). The system identifies pixels with range l > R surf as sea-surface multipath reverberation and filters them out, ensuring the physical consistency of the projected data. For the remaining valid echoes, a 3D point Ps = [ xs, y s, z s]T in the sonar coordinate frame can be theoretically represented in the standard spherical coordinate system as: 
+
+Ps =
+
+l cos ϕ cos θl cos ϕ sin θl sin ϕ
+
+ , (11) where l denotes the range, θ is the horizontal azimuth angle, and ϕ represents the vertical elevation angle as Fig. 3. Since the exact elevation angle ϕ of the echo cannot be directly obtained, conventional methods typically assume ϕ = 0 for 3D projection. However, this leads to significant point cloud distortion when the vehicle undergoes substantial pitching motion.                   
+
+> Fig. 4. Side view of the effect of vehicle pitch on FLS distance measurement. Here, Pdenotes the reflection point generating the shortest echo distance dwithin the frustum, and δp represents the current pitch angle of the sonar.
+
+To accurately map the local sonar point Ps to the world coordinate system, we employ the following transformation, and {Rws , t ws } denotes the rotation from the sonar frame to the world frame: 
+
+Pw = Rws Ps + tws , (12) We adopt a piecewise projection model based on the sonar pitch angle. For small pitch angles, an empirical pitch-suppression strategy is applied. For larger pitch angles, an assumed frustum-boundary elevation is substituted into the spherical-coordinate expression without approximating the trigonometric terms. The three cases are described below and illustrated in Fig. 4. 
+
+1) Small Pitch Angle State |δp | ≤ Φv /2: When the vehicle’s pitch angle remains within the vertical FOV, the central region of the sonar frustum covers the horizontal extension plane in the world coordinate system. In this case, the detected targets at the leading edge can be assumed to be captured by the central beam (i.e., the elevation angle is approximated as ϕ ≈ 0). Consequently, the 3D coordinates 
+
+Ps in the sonar frame are represented as: 
+
+Ps =
+
+l cos θl sin θ
+
+0
+
+ , (13) To reduce the influence of small pitch variations on the map, the pitch component of the projection rotation is set to zero while yaw and roll are retained: 
+
+Rws ← R (δy, 0, δr ), (14) where R(·) denotes the mapping from Euler angles (yaw, pitch, roll) to the corresponding rotation matrix in SO (3) ,
+
+δy and δr denote the sonar yaw and roll angle, respectively. Fig. 5. The results of sonar image processing pipeline: (a) Raw image, (b) FFT-based denoising, (c) Fast-MCFAR and dual-threshold filtering, (d) Top-k echo extraction, (e) Target gradient estimation derived from (b), and (f) Adaptive connection based on (d) and (e). 
+
+2) Large Positive Pitch State δp > Φv /2: When the vehi-cle’s upward pitch exceeds half the vertical FOV, the earliest return is assumed to originate from the lower boundary of the sonar frustum. Substituting the lower frustum boundary angle into the spherical-coordinate expression yields the estimated echo-point coordinates in the sonar frame: 
+
+Ps =
+
+
+
+l cos   Φv
+
+> 2
+
+ cos θl cos   Φv
+
+> 2
+
+ sin θ
+
+−l sin   Φv
+
+> 2
+
+ , (15) When transforming to the world coordinate system, the true 3D attitude Rws of the sonar must be retained for rigorous mapping: 
+
+Rws = R(δy, δp, δr ), (16) 
+
+3) Large Negative Pitch State δp < −Φv /2: Similarly, when the vehicle’s downward pitch exceeds half the vertical FOV, the earliest return is assumed to originate from the upper boundary of the sonar frustum. Substituting the upper frustum boundary angle into the spherical-coordinate expres-sion yields the estimated echo-point coordinates in the sonar frame: 
+
+Ps =
+
+
+
+l cos   Φv
+
+> 2
+
+ cos θl cos   Φv
+
+> 2
+
+ sin θl sin   Φv
+
+> 2
+
+ , (17) The coordinate transformation employs the true sonar atti-tude Rws :
+
+Rws = R(δy, δp, δr ), (18) In conclusion, the proposed method effectively addresses the sonar’s lack of elevation resolution, significantly sup-pressing 3D point cloud distortion during severe maneuvers. Admittedly, this model relies on a Structured Environment Assumption (assuming flat seabeds or regular walls) and may introduce local elevation errors in highly complex terrains. However, compared to the global distortion of traditional 2D assumptions, our method drastically improves geometric consistency with minimal computational overhead. 
+
+C. Incremental Log-Odds Occupancy Mapping 
+
+To suppress sporadic sonar noise, we maintain a prob-abilistic voxel map through multi-frame hit accumulation, using spatial hashing to allocate memory only for voxels containing valid echo endpoints. Let Lt(n) denote the oc-cupancy log-odds of voxel n at time t. Following Bayesian odds updating, hit evidence is accumulated additively via a log-likelihood ratio with a fixed factor λhit = phit /(1 −phit ),where phit is a prescribed weighting parameter rather than a calibrated detection probability. The update rule is defined as: 
+
+Lt(n) = 
+
+(min[ Lt−1(n) + ln λhit , L max ] , n ∈ H t,Lt−1(n), n / ∈ H t. (19) where Ht is the set of voxels with valid echo endpoints in frame t. Newly allocated voxels are initialized to L0 =logit( pmin ), where logit( p) = ln[ p/ (1 − p)] . To prevent confidence inflation, each voxel is updated at most once per frame, treating hit evidence across frames as approximately independent. Voxels without hits retain their prior occupancy estimates. Only voxels satisfying Lt(n) > L occ are extracted, where Locc = logit( pocc ). Requiring hits across multiple frames effectively suppresses sporadic noise, while the upper bound Lmax = logit( pmax ) caps accumulated confidence. Map extraction traverses only allocated voxels, avoiding a full volume scan. IV. EXPERIMENTS 
+
+A. Hardware Overview 
+
+The experimental platform is an ROV equipped with an SV1210 FLS (1.8 MHz, 80 ◦ horizontal and 20 ◦ vertical FOV). External pose estimates may be provided by navi-gation systems incorporating DVL, inertial, or acoustic mea-surements, or by LiDAR-based odometry when above-water mounting is feasible. In this work, a Livox Mid-360 LiDAR is mounted above the water on a custom support, and the sonar attitude and depth are derived from LiDAR odometry through extrinsic calibration. A separate scan of the drained pool is used as the reference map for evaluation. Onboard synchronization and algorithm execution are performed on a Holybro Pixhawk Jetson Baseboard [31]. Multiple sequences were collected in the pool to evaluate mapping accuracy and runtime performance. 
+
+B. Performance of sonar image processing 
+
+Fig. 5 illustrates the proposed FLS image processing pipeline. First, an FFT filter suppresses inherent transverse wave artifacts in the raw Cartesian image (Fig. 5a, b). Next, the proposed Fast MCFAR algorithm and connected-component removal extract a clean binary target mask (Fig. 5c), while the 2D gradient field is computed concur-rently (Fig. 5e). Finally, guided by the gradient field, an Adaptive Connection (AC) algorithm bridges edge gaps from the initial front echo to extract a continuous and complete physical contour (Fig. 5f). Table I evaluates the pipeline’s real-time performance. Note that the total ”Sonar Process” time exceeds the sum of its core sub-steps due to additional processing steps, such as polar-to-Cartesian coordinate transformations and morphological filtering. 
+
+C. Evaluation of Mapping Metrics 
+
+Fig. 6 presents the experimental setup and the correspond-ing 3D mapping results. As shown in Fig. 6(d), experiments were conducted in a 3 m × 5 m experimental pool contain-ing two triangular obstacles with distinctive sonar features. Multiple trials were performed to evaluate system robustness. Fig. 6(e) compares the sonar map (green) with the LiDAR-derived reference map (red).                     
+
+> TABLE I PERFORMANCE METRICS
+> Mean time (ms) STD (ms)
+> Sonar Process 41.86 4.92
+> 1) FFT 10.94 1.63 2) MCFAR †74.53 1.47 2) MCFAR Fast 2.83 0.52 3) AC †24.16 1.90 3) AC Fast 17.38 2.41 Mapping 165.02 4.88
+> Mapping Fast 0.54 0.25 Total Time 42.4 5.03
+
+1) Accuracy Analysis: Table II compares the sonar map-ping accuracy across different test sequences. During un-derwater navigation, the ROV inevitably experiences pitch fluctuations, preventing a strictly stable attitude. The recon-structed points span approximately 0.2–0.4 m along the Z-axis under the adopted projection model. Consequently, we evaluate both 2D and 3D mapping errors. The 2D error is calculated by projecting the point cloud onto the XY plane and computing the absolute planar distance to the ground truth, while the 3D error is determined by the nearest-neighbor distance in 3D space. Multiple sequences were collected to evaluate the pro-posed mapping method. Due to the sonar’s narrow vertical FOV, pitch oscillations in structured environments can shift target echoes outside the effective detection range, causing ghosting artifacts without correction. As demonstrated by the quantitative results in Fig. 7 and Table II, the proposed pitch compensation mechanism effectively suppresses ghosting interference and improves mapping accuracy, achieving a 2D RMSE below 3 cm.                                   
+
+> TABLE II MAPPING ERRORS WITH AND WITHOUT PITCH CORRECTION .
+> Dataset Dim Type AVE (cm) RMSE (cm)
+> 10 35 2D Uncorrected 3.14 4.92 Corrected 1.36 2.94 3D Uncorrected 7.19 8.69 Corrected 4.13 5.67 14 24 2D Uncorrected 1.75 3.13 Corrected 0.62 1.79 3D Uncorrected 3.36 4.71 Corrected 2.10 3.78 15 09 2D Uncorrected 2.09 4.23 Corrected 0.77 2.83 3D Uncorrected 5.49 7.17 Corrected 2.06 4.04
+
+2) Runtime Analysis: Algorithm runtime was evaluated on an NVIDIA Jetson Orin NX (16GB) using data collected from the 3m ×5m pool experiments. By updating only voxels affected by the current frame, incremental mapping reduces the per-frame map update time from 165 ms for the tested dense grid implementation to under 1 ms. With optimized sonar image processing, the pipeline averages 42.4 ms per frame (approximately 24 Hz), supporting real-time local mapping. These timings reflect only algorithm execution on the NX, excluding inter-module communication and other system-level delays. 
+
+D. Comparison with Existing Methods 
+
+We summarize published results from related FLS map-ping studies for comparison. Since their implementations remain unavailable, including Ref [30], whose code was described as open source but remained unavailable at the time of our submission, we use the experimental setups and results reported in the original papers. Ref. [27] constructed an FLS grid map of lake bridge piers using direct thresholding for outlier rejection, reporting mapping errors of 0.139 m for 2-m spacing and 0.122 m / 0.203 m for 6-m spacing. Ref. [30] performed FLS mapping on a Kingfisher USV using above-water LiDAR odometry. With relatively stable platform pitch, no attitude correction was applied. The reported RMSEs ranged from 2 to 15 m in Fig. 6. Experimental results. (a) Real-time mapping in test 1 (14 24 dataset). (b) Real-time mapping in test 2 (10 35 dataset). (c) ROV equipped with both an underwater sonar and a surface LiDAR, (d) A 3m x 5m indoor testing tank with obstacles. (e) Mapping results of the 10 35 dataset. The red point cloud is the LiDAR ground truth captured in the drained pool, while the green point cloud is the underwater sonar map.  
+
+> Fig. 7. Sonar mapping comparison with and without pitch rectification in 10 35 dataset.
+
+bridge and harbor environments spanning 20–200 m, mainly due to accumulated odometry drift. In a different application setting, our method targets short-range obstacle avoidance and navigation for small underwater robots. It uses pitch compensation to suppress map ghosting caused by ROV attitude variations, achieving a planar mapping RMSE below 3 cm in a 3 m × 5 m pool and demonstrating its local mapping capability in confined environments.                        
+
+> TABLE III COMPARISON WITH EXISTING METHODS
+> Dimension (m) RMSE (m) Runtime (ms) Ref [27] 1×20.139 –1×60.203 –Ref [30] 20 ×50 3.37 887.8
+> Proposed 3×50.025 42.4
+
+Regarding computational cost, the mean runtimes reported in Ref. [30] for point cloud registration, rectangle compres-sion, and outlier rejection sum to 887.8 ms, whereas our 42.4 ms covers sonar image processing and incremental mapping. Although the timing scopes differ, our processing rate of approximately 24 Hz supports real-time local mapping for small underwater robots. V. C ONCLUSIONS AND DISCUSSION 
+
+This paper presented a high-precision, real-time incremen-tal mapping system for FLS. By accounting for projection ambiguity associated with pitch variations, the proposed frustum-edge model reduces ghosting artifacts and improves geometric consistency during dynamic maneuvers. Experi-ments demonstrate a planar mapping RMSE below 3 cm across three sequences, with an average processing time of 42.4 ms per frame (approximately 24 Hz). The current method has three limitations: (1) The cor-rection model assumes structured environments, such as flat seabeds or vertical walls, and may introduce local elevation errors in highly irregular terrain. Nevertheless, this assump-tion is suited to typical 2.5D underwater operations, where depth regulation allows navigation and obstacle avoidance to focus primarily on the horizontal plane. (2) Multi-sensor data are aligned using timestamps without explicit compensation for communication delays between sensors and processing modules. (3) The map accumulates only hit evidence and lacks a mechanism to clear outdated occupancy, limiting its adaptability to dynamic environments. Future work will focus on two directions: (1) Integrate the mapping framework with trajectory generation and incor-porate communication latency compensation to support au-tonomous underwater navigation and obstacle avoidance; (2) Investigate visibility-aware free-space updates and temporal decay to clear outdated occupancy and improve adaptation to dynamic environments. REFERENCES [1] S. McCammon and G. A. Hollinger, “Planning and executing optimal non-entangling paths for tethered underwater vehicles,” in 2017 IEEE International Conference on Robotics and Automation (ICRA) . IEEE, 2017, pp. 3040–3046. [2] M. J. Islam, Y. Xia, and J. Sattar, “Fast underwater image enhancement for improved visual perception,” IEEE robotics and automation letters ,vol. 5, no. 2, pp. 3227–3234, 2020. [3] F. F. Sørensen, C. Mai, O. M. Olsen, J. Liniger, and S. Pedersen, “Commercial optical and acoustic sensor performances under varying turbidity, illumination, and target distances,” Sensors , vol. 23, no. 14, p. 6575, 2023. [4] Z. Sun and X. Li, “Water-related optical imaging: From algorithm to hardware,” Science China Technological Sciences , vol. 68, no. 1, p. 1100401, 2025. [5] X. Li, H. An, H. Zhao, G. Li, B. Liu, X. Wang, G. Cheng, G. Wu, and Z. Sun, “Streaknet-arch: An anti-scattering network-based architecture for underwater carrier lidar-radar imaging,” IEEE Transactions on Image Processing , vol. 34, pp. 4357–4370, 2025. [6] E. Hern´ andez, P. Ridao, D. Ribas, and A. Mallios, “Probabilistic sonar scan matching for an auv,” in 2009 IEEE/RSJ International Conference on Intelligent Robots and Systems . IEEE, 2009, pp. 255–260. [7] L. Yan, J. Yang, F. Xu, and S. Piao, “Low-sidelobe imaging method utilizing improved spatially variant apodization for forward-looking sonar,” Remote Sensing , vol. 16, no. 12, p. 2100, 2024. [8] N. Hurt´ os, N. Palomeras, A. Carrera, and M. Carreras, “Adaptive frequency filtering for forward-looking sonar imagery spectral regis-tration,” in 2015 IEEE Sensors Applications Symposium (SAS) . IEEE, 2015, pp. 1–6. [9] F. Huang, Y. Cui, W. Zhang, and J. Xu, “Deep-reinforcement-learning-based reactive collision avoidance controller for an underactuated auv using multibeam forward-looking sonar,” IEEE Internet of Things Journal , vol. 12, no. 17, pp. 36 604–36 616, 2025. [10] X. Cao, L. Ren, and C. Sun, “Research on obstacle detection and avoidance of autonomous underwater vehicle based on forward-looking sonar,” IEEE Transactions on Neural Networks and Learning Systems , vol. 34, no. 11, pp. 9198–9208, 2022. [11] X. Zhou, Z. Wang, H. Ye, C. Xu, and F. Gao, “Ego-planner: An esdf-free gradient-based local planner for quadrotors,” IEEE Robotics and Automation Letters , vol. 6, no. 2, pp. 478–485, 2020. [12] D. Ribas, P. Ridao, J. Neira, and J. D. Tardos, “Slam using an imaging sonar for partially structured underwater environments,” in 
+
+2006 IEEE/RSJ international conference on intelligent robots and systems . IEEE, 2006, pp. 5040–5045. [13] A. Mallios, P. Ridao, D. Ribas, and E. Hern´ andez, “Scan matching slam in underwater environments,” Autonomous Robots , vol. 36, no. 3, pp. 181–198, 2014. [14] D. Ribas, P. Ridao, J. D. Tard´ os, and J. Neira, “Underwater slam in man-made structured environments,” Journal of Field Robotics ,vol. 25, no. 11-12, pp. 898–921, 2008. [15] J. Kim, M. Lee, S. Song, B. Kim, and S.-C. Yu, “3-d reconstruction of underwater objects using image sequences from optical camera and imaging sonar,” in OCEANS 2019 MTS/IEEE SEATTLE . IEEE, 2019, pp. 1–6. [16] S. Rahman, A. Quattrini Li, and I. Rekleitis, “Svin2: A multi-sensor fusion-based underwater slam system,” The International Journal of Robotics Research , vol. 41, no. 11-12, pp. 1022–1042, 2022. [17] A. Cardaillac and M. Ludvigsen, “Camera-sonar combination for improved underwater localization and mapping,” IEEE Access , vol. 11, pp. 123 070–123 079, 2023. [18] W. Wang, B. Joshi, N. Burgdorfer, K. Batsosc, A. Q. Lid, P. Mordo-haia, and I. Rekleitisb, “Real-time dense 3d mapping of underwater environments,” in 2023 IEEE international conference on robotics and automation (ICRA) . IEEE, 2023, pp. 5184–5191. [19] I. Collado-Gonzalez, J. McConnell, P. Szenher, and B. Englot, “Opti-acoustic scene reconstruction in highly turbid underwater environ-ments,” in 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) . IEEE, 2025, pp. 1282–1289. [20] L. Chen, J. Tang, A. P.-Y. Chui, Z. Hong, and J. Wu, “Sonarsweep: Fusing sonar and vision for robust 3d reconstruction via plane sweep-ing,” arXiv preprint arXiv:2511.00392 , 2025. [21] Y. Cao, X. Bai, H. Chu, S. Wang, M. Tan, and Y. Wang, “Oa-stereo: Self-supervised opti-acoustic stereo for robust 3d perception of underwater vehicles,” IEEE Robotics and Automation Letters , 2025. [22] Y. Gutnik, I. Fabian, N. Zagdanski, O. Gal, T. Treibitz, and M. Groper, “Enhancing auv 3d obstacle avoidance: A novel approach with self-supervised network for fusion of forward-looking camera and sonar data,” in OCEANS 2024-Halifax . IEEE, 2024, pp. 1–6. [23] F. Hidalgo and T. Br¨ aunl, “Review of underwater slam techniques,” in 2015 6th International Conference on Automation, Robotics and Applications (ICARA) . IEEE, 2015, pp. 306–311. [24] J. Wang, F. Chen, Y. Huang, J. McConnell, T. Shan, and B. Englot, “Virtual maps for autonomous exploration of cluttered underwater environments,” IEEE Journal of Oceanic Engineering , vol. 47, no. 4, pp. 916–935, 2022. [25] T. Guerneve, K. Subr, and Y. Petillot, “Three-dimensional reconstruc-tion of underwater objects using wide-aperture imaging sonar,” Journal of Field Robotics , vol. 35, no. 6, pp. 890–905, 2018. [26] J.-Y. Park, H. Baek, B.-H. Jun, and P.-M. Lee, “3d reconstruction using multiple acoustic images under roll motion based on backprojection techniques,” in OCEANS 2023-MTS/IEEE US Gulf Coast . IEEE, 2023, pp. 1–4. [27] H. Zhi, Z. Zhou, H. Wu, Z. Chen, S. Tian, Y. Zhang, and Y. Ruan, “Oscillatory forward-looking sonar based 3d reconstruction method for autonomous underwater vehicle obstacle avoidance,” Journal of Marine Science and Engineering , vol. 13, no. 5, p. 943, 2025. [28] E. Westman, I. Gkioulekas, and M. Kaess, “A volumetric albedo framework for 3d imaging sonar reconstruction,” in 2020 IEEE In-ternational Conference on Robotics and Automation (ICRA) . IEEE, 2020, pp. 9645–9651. [29] C. Cheng, C. Wang, D. Yang, W. Liu, and F. Zhang, “Underwater localization and mapping based on multi-beam forward looking sonar,” 
+
+Frontiers in Neurorobotics , vol. 15, p. 801956, 2022. [30] J. McConnell, A. Shariati, P. Szenher, and Y. Li, “Above and below: Heterogeneous multi-robot slam across surface and underwater do-mains,” IEEE Robotics and Automation Letters , vol. 11, no. 1, pp. 129–136, 2025. [31] Holybro Robotics, Holybro Pixhawk Jetson Baseboard Product Manual and Specifications , 2024, accessed: 2026-04-17. [Online]. Available: https://docs.holybro.com/
