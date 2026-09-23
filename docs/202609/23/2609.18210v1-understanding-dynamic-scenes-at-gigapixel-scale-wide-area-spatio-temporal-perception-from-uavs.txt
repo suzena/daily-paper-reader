@@ -1,0 +1,362 @@
+Title: Understanding Dynamic Scenes at Gigapixel Scale: Wide-Area Spatio-Temporal Perception from UAVs
+
+URL Source: https://arxiv.org/pdf/2609.18210v1
+
+Published Time: Thu, 17 Sep 2026 00:42:02 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Understanding Dynamic Scenes at Gigapixel Scale: Wide-Area Spatio-Temporal Perception from UAVs 
+
+Yuhang Zhu ∗, Meiyi Zhu ∗, Yunkai Dang, Zhangnan Li, Yuxuan Wang, Wenbin Li, Hongbing Pan 
+
+Nanjing University mf21320239@smail.nju.edu.cn 
+
+Abstract 
+
+UAV-borne imaging has advanced from megapixel to gi-gapixel sensors, shifting aerial perception from recognizing individual targets to understanding entire dynamic scenes. We characterize this demand as Wide-area Spatio-temporal Scene Understanding (WSTU) , which requires wide-area cov-erage, per-target resolution, and temporal continuity at once, a combination existing datasets lack. To fill this gap, we introduce an ultra-High-resolution ( 12768 ×9564 ) Airborne 
+
+Remote-sensing Dataset(HARD) annotated at three levels for object detection, multi-object tracking, and scene-level vi-sual question answering. Ultra-high-resolution imagery raises per-frame processing time to seconds. At that scale latency can no longer be ignored in evaluation. Thus, we pro-pose a latency-aware metric for multi-object tracking called streaming-HOTA (s-HOTA). Extensive baseline experiments show how ultra-high-resolution processing reshapes each task. For detection, the end-to-end pipeline affects accuracy and speed as much as the detector itself does. For tracking, high latency charges the association axis far more unevenly than the detection axis, and association is where pipelines diverge. As a result, the pipeline that performs best offline can lose its lead under s-HOTA. For VQA, vision-language models re-main weak at cross-frame identity binding and cannot transfer their single-frame gains to it. Together these findings show that the baselines we evaluate fall short of WSTU. HARD provides the data and the systematic baselines to advance it. 
+
+1 Introduction 
+
+Remote sensing (Li et al. 2023; Ding et al. 2021; Nie et al. 2025; Ahmad et al. 2026) has long been the primary means of observing ground scenes at scale, with satellite and aerial imagery supporting applications from urban management and traffic monitoring to disaster response. Among remote-sensing platforms, UAVs stand out for flexible low-altitude on-demand observation. Recent advances (Wang et al. 2020) in imaging technology have raised sensor resolution from the megapixel to the gigapixel class, so a single aerial frame can now cover a wide region while preserving per-object detail. This shift has driven UAV vision from early object detection toward higher-level scene understanding. The de-mand is no longer to localize isolated targets but to describe how the whole scene evolves. We characterize this emerging 
+
+> ∗
+
+These authors contributed equally. 0.1 0.3 1 3 10 30 100 300 500                           
+
+> Average Resolution (MP)
+> Natural Mixed Ground Satellite UAV
+> Platform
+> 122 MP + UAV multi-class + tracking + temporal + VQA
+> Highest resolution, but ground-based, human-centric, and without VQA.
+> ●UAVDT ●VisDrone
+> ●HARD
+> ●PANDA
+> ●MME-RealWorld
+> ●XLRS-Bench
+> ●SAT-MTB
+> ●VISO
+> ●FAIR1M ●DOTA-v2.0
+> ●VRSBench
+> ●RSIEval
+> ●RSIVQA
+> ●VisIT-Bench
+> ●Seed-Bench
+> ●CV-Bench
+> ●MME
+> ●MM-Vet
+> ●MMT-Bench
+> ●TouchStone
+> ●MMStar
+> ●ScienceQA
+> Temporal continuity (shape)
+> No temporal Temporal
+> Tracking / VQA profile (color)
+> None Tracking VQA HARD
+
+Figure 1: The dataset landscape. Average frame resolution is plotted against acquisition platform. Marker shape indicates temporal continuity and colour indicates whether tracking or VQA annotation is provided. HARD is the only benchmark that combines a UAV platform, 122 MP frames, temporal continuity, multi-class tracking and scene-level VQA. demand as Wide-area Spatio-temporal Scene Understanding (WSTU). WSTU requires a perception system to reason over wide regions spanning hundreds of meters and to track the objects within them continuously over time. Beyond this, the system should interpret the state of the scene as a whole rather than only its individual objects. We therefore charac-terize WSTU by two properties that the data should provide. A single frame should be large enough to cover the entire scene. And consecutive frames should be close enough in time to reveal how those targets move. Figure 1 compares representative existing datasets on the properties that WSTU requires. UAV benchmarks (Du et al. 2018; Zhu et al. 2021) offer wide views but too little reso-lution to keep targets identifiable. Gigapixel datasets (Wang et al. 2020) reach high resolution only from fixed ground vantage points and lack a UAV’s downward geometry. Satel-lite datasets (Yin et al. 2021; Li et al. 2023; Ding et al. 2021; Sun et al. 2022) provide spatial coverage but lack the resolution and temporal continuity that dynamic scene un-derstanding needs. More fundamentally, these benchmarks are built around individual objects. They ask where each box is and how each trajectory continues but say almost noth-arXiv:2609.18210v1 [cs.CV] 16 Sep 2026 ing about the region as a whole. Even recent remote-sensing VQA benchmarks (Li, Ding, and Elhoseiny 2024; Hu et al. 2025; Zheng et al. 2021; Wang et al. 2025) work on sin-gle still images rather than on wide areas that change over time. For ultra-high-resolution images, the tiling and fusion pipeline around a detector pushes per-frame latency from milliseconds into seconds. Standard tracking metrics score every prediction against its own frame. The staleness that la-tency induces is therefore never charged. They reward offline accuracy and ignore whether a tracker can keep pace with the stream. To close these gaps, we introduce the ultra-High-resolution 
+
+Airborne Remote-sensing Dataset (HARD). It is a UAV benchmark that pairs gigapixel-class frames with continu-ous temporal annotation for wide-area spatio-temporal scene understanding. HARD comprises 3,549 frames at a unified 122 MP resolution ( 12768 ×9564 ), flight altitudes from 50 to 355 m, and four flight modes. HARD provides annotations for three tasks that progress from static individual objects to the dynamic scene. Object detection (Level 1) builds on 138,830 expert-audited bounding boxes over four categories. Multi-object tracking (Level 2) extends every box with a cross-frame instance identity. Scene-level VQA (Level 3) rests on 1,565 manually verified question–answer pairs span-ning eight question types. In addition to the dataset, we de-sign a latency-aware tracking metric called s-HOTA that evaluates each tracking pipeline online. This fills a gap left by offline metrics when assessing methods on ultra-high-resolution image sequences. Based on this benchmark and metric, we conduct extensive experiments across all three levels, establishing a suite of baselines and laying a founda-tion for future WSTU research. Extensive experiments across the three levels lead to four findings. (F1) Wide-area detection at full resolution is shaped as much by the tiling pipeline as by the detector. (F2) Stream-ing latency charges the association axis far more unevenly than the detection axis. (F3) Which tracking pipeline per-forms best under streaming is governed by the load ratio 
+
+ρ = ∆ t/P . A pipeline that ranks first under offline evalu-ation can see its lead weaken or even disappear once it is measured by s-HOTA. (F4) Zero-shot VLM failures sepa-rate into two axes, single-frame perception and cross-frame identity binding, and progress on one does not transfer to the other. Models spread over a 37-point range on the first, while eleven of twelve stay within a 13-point band near chance on the second. Our main contributions are as follows: 
+
+• We construct a temporal UAV benchmark (HARD), which is the first to jointly provide wide-area coverage, ultra-high resolution, and temporal continuity. It contains 3,549 frames at a unified 122 MP resolution, 138,830 boxes with cross-frame identities, and 1,565 scene-level QA pairs. 
+
+• We propose streaming-HOTA, a latency-aware extension of HOTA that charges each tracking pipeline for its end-to-end latency, remedying the zero-latency assumption of offline tracking metrics. 
+
+• We evaluate twenty detectors, four trackers, and twelve vision-language models across the three levels. These ex-periments establish a suite of baselines on HARD and provide reference points for future WSTU research. 
+
+• Our analysis traces how ultra-high-resolution processing shifts the bottleneck of each task. It identifies the factors that govern pipeline performance and turns them into concrete targets for future work on HARD. 
+
+2 Related Work 
+
+Object Detection and Multi-object Tracking Datasets. 
+
+Datasets for aerial object detection and tracking have grown substantially over the past decade. Figure 1 places them against HARD in resolution, platform, temporal continu-ity and annotation coverage. On the UAV platform, Vis-Drone (Zhu et al. 2021) and UAVDT (Du et al. 2018) provide rich object annotations and video streams covering diverse urban targets. Their frame resolutions of about 3 MP and 0.55 MP, however, are far too small to expose the challenges of ultra-high-resolution perception. On the satellite platform, VISO (Yin et al. 2021) and SAT-MTB (Li et al. 2023) are likewise limited by small image sizes. DOTA (Ding et al. 2021) and FAIR1M (Sun et al. 2022) contain some large images but offer no temporal data. In fact, 88% of DOTA-v2.0 images are 1024 ×1024 patches and 45.6% of FAIR1M images are only 800 ×600 . PANDA (Wang et al. 2020) does offer gigapixel resolution and temporal sequences. But its cameras sit on the ground and look outward at a slanted an-gle, so the same type of target appears much larger up close than far away. This differs from the near-vertical view that remote sensing works with. Unlike these datasets (Li et al. 2023; Ding et al. 2021; Wang et al. 2020), HARD unifies a UAV platform, 122 MP resolution, temporal sequences, and multi-class tracking in a single corpus, and further adds scene-level VQA annotations. 
+
+Remote Sensing Visual Question Answering. In recent years, the visual question answering task has been ex-tended to remote sensing. RSVQA (Lobry et al. 2020) pi-oneered auto-generated QA from OpenStreetMap annota-tions, and later work scaled this approach to large satel-lite corpora such as RSVQAxBEN (Lobry, Demir, and Tuia 2021) and RSIVQA (Zheng et al. 2021). The same approach has also been adapted to narrower settings including bi-temporal change reasoning (CDVQA (Yuan et al. 2022)) and urban-planning relational reasoning (EarthVQA (Wang et al. 2024)). Aerial and UAV-oriented benchmarks have followed, yet none targets wide-area dynamic traffic reasoning at ultra-high resolution. HRVQA (Li, Vosselman, and Yang 2024) offers over a million QA pairs but on static 1024 ×1024 scene semantics. Traffic-VQA (Zhang et al. 2026) addresses traf-fic cognition but relies on paired optical-thermal inputs and regulation-centric knowledge. UAVReason (Sun et al. 2026) evaluates broad UAV multimodal capability rather than urban situational awareness. Existing remote-sensing VQA bench-marks ask questions about small static images and cannot support dynamic perception over wide areas. HARD covers wide areas at ultra-high resolution and provides cross-frame question-answer pairs. It moves remote-sensing VQA from single small still images to cross-frame questions asked over 122 MP wide-area frames. Ultra-high-resolution Frames and Annotation UAV Data Acquisition   
+
+> 50-355m
+> Gaze Push-in Orbit
+
+Dataset Construction Benchmark and Evaluation Framework  
+
+> Input Frame(122MP) Tiling/Slicing
+
+Latency-aware Streaming-HOTA                                           
+
+> Frame arrivals
+> （P=2s) Simulated availiblility times
+> process t1 process t4
+> ... t1 t2 t3 t4 t5 tk-1 tk
+> Annotation Raw frames ID detecting ID tracking
+> Tracker(Plug-and-Play)
+> ID:2 ID:15
+> ID:8 ID:3
+> VQA generation + human check
+> HARD dataset Preview
+> •3549 Frames
+> •High Resolution ：
+> 12768x9564
+> •138,830 object boxes
+> •4 categories
+> •1565 QA pairs
+> •8 categories
+> •all human check
+> Detector(Plug-and-Play)
+> Image Tensor (B x 3 x H x W) ️
+> Detector
+> 3）Detections (Boxes x Scores) ️VQA Module(Plug-and-Play)
+> Example:findit Q:The reference car in Image 1 is the object within bounding box [10478, 9477, 10614, 9563]. Where is the same target in Image 2? A:[10421, 9501, 10561, 9563]
+> Example:spatial_relation Q:Where is the group of trees on the left side of the road located relative to the nearest U-shaped bushes? A: below Example:relocate Q:The reference car in Image 1 is the object within bounding box [6247, 6339, 6344, 6496]. Does this target disappear in Image 2 and reappear in Image 3? A: yes
+> Input:
+> •single/multiple frames
+> •bounding box
+> •QA
+> I/O & decode
+> •Read streams
+> •Decode
+> •Color convert
+> •Normalization
+> Tensorize
+> 1）Detector
+> （Backbone+Head ）2）Fusion
+> 1）Detection Stream 2）Association+State update
+> 3）Track Management
+> initiate confirm terminate timeout
+> 4）Tracks (ID x Box x Trajectory)
+> YOLOv8-N,122MP
+> Input Processing
+> s-HOTA scoring
+> Association Accuracy Detection Accuracy
+> IoU multi-id track
+> Composition VQA Annotation
+> 103,361 3,725
+> 4,033 27,711
+> Object -Level (45.1%) Regional-Level (9.6%) Temporal -Level (45.2%)
+> VQA dataset distribution
+> ... a1 a2 a3 a4 a5 ak-1 ak
+> (order may differ)
+> Query time
+> ... a1 a3 a2 a4 a5 ak-1 ak
+> availible but older
+> selected freshest output
+> not yet avalible
+> Measure latency per frame
+> Simulate output availibility
+> (P=2s)
+
+Figure 2: Overview of the HARD benchmark. Left: dataset construction, covering 122 MP data collection over 21 sequences, 50–355 m altitudes, and four flight modes, the three-level annotation hierarchy (detection, tracking, scene-level VQA). Middle: the benchmark and evaluation framework, in which detectors, trackers, and vision-language models are evaluated on the three-level tasks. Right: the definition and computation of the latency-aware streaming-HOTA metric. 
+
+Evaluation Metrics for Detection and Tracking. De-tection is measured by average precision (Lin et al. 2014), while tracking must also credit identity consistency. MOTA (Bernardin and Stiefelhagen 2008) and IDF1 (Ristani et al. 2016) are each dominated by a single aspect of tracking performance. HOTA (Luiten et al. 2021) balances detection and association accuracy in one score, and we adopt it as our base metric. All of these metrics are offline and do not model latency, scoring each prediction against its frame regardless of when it could be produced. Li, Wang, and Ramanan (2020) showed that this assumption breaks for real-time systems and proposed streaming perception (sAP). Sela et al. (2022) op-timize a streaming variant of MOTA called S-MOTA when scheduling pipeline configurations for autonomous driving and Peng et al. (2025a) extend the streaming setting to 3D perception. Different from all of them, our s-HOTA is an on-line, system-level metric for the end-to-end tracking pipeline. Offline tracking evaluation rests on a zero-latency assump-tion that breaks down once one frame takes seconds to pro-cess. s-HOTA corrects for this by scoring each frame against the latest prediction available at that time. 
+
+3 The HARD Benchmark 
+
+HARD is designed not merely as a collection of images but as a research platform for wide-area aerial scene understanding. It jointly provides the wide field of view, per-target resolution, and temporal continuity that WSTU requires (Figure 1). This section describes how the data is collected, annotated and turned into QA pairs, and reports the statistics of the dataset. 
+
+Data Collection. To keep every ground target identifiable across a wide field of view, we capture the imagery with a Phase One iXM-GS120, an ultra-high-resolution cam-era. A UAV carrying this camera captures every frame at a unified 12768 ×9564 (122 MP) resolution over two ge-ographically distinct sites. The flights span altitudes from 50 m to 355 m in more than ten steps. They also fol-low four flight modes, including linear-nadir, linear-oblique, stationary-gaze, and orbit-gaze (Figure 2, left). These modes together produce background translation, rotation, parallax, and static-background conditions. We detail the viewing ge-ometry of each mode in the supplementary material. The captured frames are then organized into 21 sequences, each a single continuous flight and thus one temporally ordered image sequence, with 169 frames per sequence on average. This protocol yields a wide spread of object scales, viewing perspectives, and motion conditions within a single dataset. 
+
+Detection and Tracking Annotation. Annotation follows a two-tier protocol. Firstly, five annotators in related fields holding master’s degrees label every visible target with a tight box over its extent. Each box follows a YOLO-normalized format extended with a per-instance identity field 
+
+(Cid , I id , c x, c y , w, h ). The boxes span four categories, in-cluding pedestrian, car, bus, and truck. Secondly, a more senior researcher audits each batch, correcting misclassifi-cations, refining imprecise boxes, and returning substandard batches for re-annotation before acceptance. Level 2 (track-ing) uses the full annotation, whereas Level 1 (detection) reuses the same per-frame boxes without the cross-frame identity Iid . This process yields 138,830 annotations across 3,549 frames, with each annotator spending more than 100 hours on average and the full campaign costing over 600 hours of manual annotation and review. VQA Generation. Beyond object detection and multi-object tracking, HARD further provides a VQA benchmark to evaluate whether vision–language models can progress from recognizing isolated targets to understanding wide-area dynamic scenes. The benchmark is organized into three capability levels of increasing spatio-temporal complex-ity: single-frame perception, region-level understanding, and temporal target reasoning. These levels respectively assess localized object recognition, evidence aggregation across an entire 122 MP frame, and cross-frame reasoning over object identity and motion. The benchmark construction combines annotation-derived supervision with assistance from GPT-5.5 (OpenAI 2026). Bounding boxes and instance id tra-jectories are used to deterministically derive or ground ques-tions and answers whenever possible, while the model assists in formulating natural-language questions and constructing plausible distractors. All generated samples are subsequently reviewed by four experts in remote-sensing and UAV im-age interpretation, who verify visual answerability, option distinguishability, and annotation–answer consistency. The final benchmark contains 1,565 manually verified question– answer pairs spanning eight question types. Detailed task definitions, generation procedures, and type-wise statistics are provided in the supplementary material. 
+
+Dataset Statistics. HARD comprises 3,549 frames and 138,830 object annotations across the 21 sequences, an av-erage of 39.1 objects per frame. Of the 21 sequences, five are held out as the test set for all benchmarks, while the remaining sequences are used for training and validation. The class distribution is car-dominant (74.4%, 103,361 in-stances), followed by pedestrian (20.0%, 27,711), bus (2.9%, 4,033), and truck (2.7%, 3,725). This long-tailed distribution is consistent with the composition of everyday traffic scenes and poses a realistic class-imbalance challenge for detection and tracking. A defining characteristic of HARD is its scale distribution, in which tiny and small targets together account for 98.7% of all annotations (24.6% tiny + 74.1% small), each occupying between 0.001% and 0.25% of the frame. Yet the 122 MP resolution preserves enough pixels per tar-get to keep individual instances distinguishable, a property lower-resolution UAV datasets cannot offer. 
+
+Ethics and privacy. All flights were conducted under the applicable local UAV regulations. The acquisition geometry does not preserve resolvable facial or license-plate infor-mation, and the released annotations contain no biometric, demographic, or cross-scene identity labels. Further details are provided in the supplementary material. 
+
+4 Evaluation Metrics 
+
+Standard Metrics. We evaluate detection under the COCO protocol (Lin et al. 2014) and report AP 50 and AP 50:95 , both per-category and mean. For tracking we adopt HOTA (Luiten et al. 2021), which scores a tracker as the geometric mean of a detection-accuracy component (DetA) and an association-accuracy component (AssA), integrated over localization thresholds. We prefer HOTA to MOTA (Bernardin and Stiefelhagen 2008) and IDF1 (Ristani et al. 2016) because each of the latter is dominated by a single aspect, whereas HOTA weighs detection and identity association evenly, and its two components can be inspected separately. Scene-level VQA is scored by multiple-choice accuracy, reported per question type and overall. 
+
+Streaming-HOTA. Offline tracking evaluation assumes zero processing latency, treating the output computed from a frame as if it were available at that same frame. This as-sumption fails on ultra-high-resolution streams. A ultra-high-resolution frame must pass through loading, tiling, per-tile detection, cross-tile fusion, and association, so the end-to-end latency ∆tt = tload  
+
+> t
+
++ ttile  
+
+> t
+
++ tdet  
+
+> t
+
++ tnms  
+
+> t
+
++ tassoc  
+
+> t
+
+reaches seconds per frame, and by the time a result is available the scene has moved on. We therefore propose streaming-HOTA (s-HOTA). Given a per-frame latency profile and an avail-ability policy, s-HOTA pairs each ground-truth instant with the most recent output available at that instant and evaluates the pairing with HOTA. The policy is an explicit input rather than a fixed assumption. We define P as the interval between consecutive frames, which is determined by the imaging time of the camera. For our camera P = 2 s . The lateness of the output computed from frame t is 
+
+kt = max  1, ⌈∆tt/P ⌉, (1) so that this output becomes available at frame t + kt.Eq. (1) states our default policy, under which every frame starts processing on arrival. It is realized by K work-ers, each a full replica of the benchmarked machine, with 
+
+K ≥ ⌈ max t ∆tt/P ⌉ so that no frame ever queues. Each worker runs one frame in isolation, so the latencies mea-sured on a single device transfer to this deployment with-out contention. s-HOTA charges a pipeline for the staleness. Evaluation instant t coincides with the capture time of frame 
+
+t, so an output can never serve the frame it is computed from. At every evaluation instant τ , let φ(τ ) denote the most recent output whose availability index does not exceed τ . s-HOTA is standard HOTA computed over the latency-adjusted pairing 
+
+S =   yτ , ˆyφ(τ )
+
+ 
+
+> τ∈T act
+
+, (2) s-HOTA =
+
+Z 10
+
+pDetA α(S) · AssA α(S) d α, (3) where Tact excludes the warm-up instants before the first output is available. s-HOTA attains its upper limit when ev-ery output is ready within one frame interval, in which case it reduces to offline HOTA evaluated with a one-frame lag. As latency grows beyond P , the score degrades in frame-quantized steps governed by Eq. (1). The complete protocol and full deployment parameters are given in the supplemen-tary material. 
+
+5 Experiments 
+
+We evaluate HARD across three levels of increasing cogni-tive complexity (Figure 2, middle). For each level, we first describe its experimental setup and then distill the results into its central findings. Detector Backbone Params Total Infer Pedestrian Car Bus Truck mAP 
+
+AP 50 AP 50:95 AP 50 AP 50:95 AP 50 AP 50:95 AP 50 AP 50:95 AP 50 AP 50:95 
+
+Two-stage detectors 
+
+Faster R-CNN ResNet-50 41.8M 14.39 10.97 0.287 0.101 0.913 0.406 0.222 0.110 0.780 0.466 0.551 0.271 
+
+Cascade R-CNN ResNet-50 69.2M 16.89 13.47 0.299 0.098 0.910 0.423 0.524 0.260 0.866 0.440 0.650 0.305 
+
+One-stage detectors 
+
+RetinaNet ResNet-50 37.7M 15.07 11.65 0.313 0.113 0.915 0.426 0.267 0.146 0.144 0.072 0.410 0.189 CenterNet ResNet-18 14.2M 8.85 5.43 0.384 0.135 0.801 0.367 0.125 0.064 0.004 0.001 0.329 0.142 YOLOv5s CSPDarknet-S 7.2M 5.41 1.99 0.211 0.061 0.809 0.378 0.376 0.186 0.417 0.139 0.453 0.191 YOLOv5m CSPDarknet-M 21.2M 5.52 2.10 0.214 0.054 0.813 0.383 0.473 0.256 0.354 0.121 0.464 0.203 YOLOv5l CSPDarknet-L 46.5M 6.16 2.74 0.326 0.091 0.824 0.386 0.519 0.270 0.141 0.060 0.453 0.202 YOLOv8n CSPNet-N 3.2M 4.87 1.45 0.223 0.066 0.827 0.390 0.422 0.214 0.313 0.105 0.446 0.194 YOLOv8m CSPNet-M 25.9M 5.94 2.52 0.202 0.059 0.816 0.380 0.462 0.223 0.207 0.058 0.422 0.180 YOLOv8l CSPNet-L 43.7M 6.50 3.08 0.222 0.050 0.805 0.380 0.389 0.210 0.660 0.220 0.519 0.215 YOLO11n C3k2-N 2.6M 4.96 1.53 0.133 0.027 0.826 0.386 0.356 0.187 0.313 0.105 0.407 0.176 YOLO11m C3k2-M 20.1M 5.59 2.17 0.102 0.018 0.819 0.379 0.486 0.284 0.650 0.221 0.514 0.226 YOLO11l C3k2-L 25.3M 5.94 2.52 0.071 0.014 0.760 0.349 0.451 0.226 0.729 0.240 0.503 0.207 YOLO26n CSPDarknet 2.4M 4.97 1.55 0.189 0.046 0.779 0.379 0.048 0.023 0.000 0.000 0.254 0.112 YOLO26m CSPDarknet 20.4M 5.85 2.43 0.109 0.020 0.814 0.382 0.407 0.207 0.676 0.210 0.501 0.205 YOLO26l CSPDarknet 24.8M 5.92 2.50 0.175 0.039 0.860 0.415 0.411 0.207 0.490 0.176 0.484 0.209 
+
+Transformer-based detectors 
+
+DINO ResNet-50 47.0M 26.41 22.99 0.334 0.124 0.894 0.432 0.342 0.197 0.288 0.146 0.465 0.225 RT-DETR ResNet-50 32.0M 6.83 3.40 0.263 0.074 0.836 0.364 0.614 0.267 0.568 0.195 0.570 0.225 D-FINE-N HGNetv2 3.8M 6.39 2.97 0.247 0.094 0.835 0.406 0.056 0.021 0.154 0.080 0.323 0.150 D-FINE-L HGNetv2 31.2M 7.22 3.80 0.365 0.145 0.836 0.408 0.308 0.162 0.425 0.293 0.484 0.252 
+
+Table 1: Detection performance of baseline detectors on HARD. Both AP 50 and AP 50:95 are reported per category and as mean AP (mAP) over all four categories. Light-red, light-orange, and light-yellow cells indicate the first-, second-, and third-ranked results in each numeric column. For Params, Total, and Infer, lower is better; for all AP metrics, higher is better. “Total” and “Infer” are in seconds. “Infer” denotes net model forward-pass time; “Total” denotes end-to-end per-frame latency. 0.00 0.15 0.30 
+
+> mAP (AP 50 : 95 )
+> Y26-N Center DF-N Y11-N Yv8-M Retina Yv5-S Yv8-N Yv5-L Yv5-M Y26-M Y11-L Y26-L Yv8-L DINO RT-DETR Y11-M DF-L Faster Cascade
+> 0.112 0.142 0.150 0.176 0.180 0.189 0.191 0.194 0.202 0.203 0.205 0.207 0.209 0.215 0.225 0.225 0.226 0.252 0.271 0.305
+> 2-stage 1-stage Transf.
+
+(a) Detection ranking. 10 1  
+
+> Latency / frame (s)
+> 0.1 0.2 0.3
+> mAP (AP 50 : 95 )
+> Cascade Yv8-N Y11-M DINO RT-DETR
+> 2-stage 1-stage Transf.
+
+(b) Accuracy–latency. Ped. Car Bus Truck 0.0 0.1 0.2 0.3 0.4 0.5  
+
+> AP 50 : 95
+> Detector family 2-stage 1-stage Transf.
+
+(c) Class-wise landscape. 10 0 10 1 
+
+> Inference time (s)
+> 0.15 0.20 0.25 0.30
+> mAP (AP 50 : 95 )
+> Cascade YOLOv8-N RT-DETR DINO
+> overlap
+> 0px 50px 100px 150px
+
+(d) Overlap sensitivity. 
+
+Figure 3: Level-1 detection results: (a) AP 50:95 ranking of the twenty detectors; (b) accuracy–latency trade-off with Pareto frontier; (c) per-class AP 50:95 by architectural family. For each object class, the three adjacent bars correspond, from left to right, to two-stage, one-stage, and transformer detectors. Bar heights give the mean AP of all detectors within each family, while the overlaid dots give the individual detector scores. The dots are slightly offset horizontally only to avoid visual overlap; (d) effect of tile overlap on accuracy and inference time. 
+
+Level 1: Object Detection 
+
+Setup. We benchmark twenty detectors spanning two-stage (Ren et al. 2015; Cai and Vasconcelos 2018), one-stage (Lin et al. 2017; Zhou, Wang, and Krähenbühl 2019; Jocher et al. 2022; Varghese and Sambath 2024; Khanam and Hussain 2024; Sapkota et al. 2025), and Transformer-based (Zhang et al. 2022a; Zhao et al. 2024; Peng et al. 2025b) families, all trained on 640 ×640 tiles with COCO-pretrained weights and evaluated under the COCO protocol with 100 px inference overlap. Table 1 reports the full results, Figure 3 visualizes them. 
+
+Finding 1: wide-area detection is shaped as much by the Overlap Tiles Obj./tile Empty tiles mAP Infer 
+
+0 px 300 0.130 ≥87.0% 0.166 3.31 s 50 px 374 0.105 ≥89.5% 0.178 4.32 s 100 px 432 0.091 ≥90.9% 0.204 5.25 s 150 px 520 0.075 ≥92.5% 0.213 5.90 s 
+
+Table 2: Spatial sparsity of the HARD tiling pipeline under different overlaps, including tile density, empty-tile ratio, ac-curacy averaged over all twenty detectors, and inference time averaged over the eighteen detectors with directly measured per-overlap timings. −30 −20 −10 0 10 20 30          
+
+> −Δ ←0→s-HOTA
+> Cascade R-CNN CenterNet RetinaNet YOLO26-N YOLOv5-M YOLO11-N YOLOv8-N Faster R-CNN DINO RT-DETR
+> -32.6 -28.5 -30.6 -25.3 -25.1 -24.8 -23.9 -22.9 -22.9 -20.0
+> -21.2 -8.9 -20.7 -12.7 -14.5 -13.9 -12.3 -17.7 -23.6 -14.4
+> 21.9 25.6 21.7 26.3 24.7 24.7 23.9 17.7 13.4 17.9
+> 21.5 10.5 20.2 22.1 22.1 23.0 24.4 19.4 16.7 19.3
+> SS −Δ BT −Δ SS s-H BT s-H
+
+(a) Score and latency penalty. 2.5 5 10 20       
+
+> Load ratio, ρ= Latency/2 s
+> 510 15 20 25
+> Streaming HOTA (s-HOTA)
+> StrongSORT ByteTrack DeepSORT Deep-OC-SORT
+> Center + SS 25.6 @ 4.93 DINO + BT 16.7 @ 13.43 DF-N + DeepSORT 6.6 @ 5.70 Y26-N + Deep-OC 17.1 @ 3.41
+
+(b) Load ratio vs. s-HOTA. 
+
+Figure 4: Level-2 streaming-tracking results: (a) s-HOTA and streaming penalty −∆ of StrongSORT vs. ByteTrack across representative detectors; (b) s-HOTA against the load ratio 
+
+ρ = ∆ t/P over all 80 detector–tracker pipelines. 
+
+end-to-end tiling pipeline as by the detector, a joint conse-quence of extreme image size and target sparsity. Table 2 quantifies a property that aggregate mAP hides. At the main configuration, a frame is split into 432 tiles yet contains only 39.1 objects on average, so most tiles are pure background. Widening the tile overlap from 0 to 150 px raises mean mAP from 0.166 to 0.213 by recovering targets fragmented at tile borders. The cost is that the tile count grows from 300 to 520 and the mean forward pass grows from 3.3 s to 5.9 s (Figure 3d). The accuracy–latency landscape in Figure 3b is thus a property of complete pipelines rather than of detectors alone. The detector fixes the accuracy attainable on each tile, while the tiling and fusion stages decide how much of it sur-vives at frame scale and at what latency. Wide-area detection must therefore be designed as a joint system. Treating either component as fixed forfeits accuracy or latency that the other cannot recover. Per-class results also diverge far more than aggregate mAP suggests (Figure 3c). Detectors agree closely on Car but spread from 0.000 to 0.466 AP 50:95 on Truck. 
+
+Level 2: Multi-Object Tracking 
+
+Setup. We pair every detector with four tracking methods, namely DeepSORT (Wojke, Bewley, and Paulus 2017), Byte-Track (Zhang et al. 2022b), Deep-OC-SORT (Maggiolino et al. 2023), and StrongSORT (Du et al. 2023), all under their official default hyperparameters. StrongSORT therefore keeps its default sparse-optical-flow camera-motion compen-sation while the other three run without external compensa-tion. The supplementary material isolates the effect of this component. This gives 80 pipelines, which we evaluate with s-HOTA at P = 2 s on the Car category (Figure 4a). We choose this category because its dense and long trajecto-ries make it the most statistically reliable one for streaming comparison. Table 3 reports HOTA, s-HOTA, the streaming penalty ∆ and end-to-end latency. 
+
+Finding 2: streaming latency charges the association axis far more unevenly than the detection axis, so identity association is where tracking pipelines diverge under la-tency. Decomposing every score into HOTA’s detection and association components shows that streaming charges both. The two axes differ, however, in how much they separate the trackers. Averaged over the twenty detector blocks, the fraction of offline DetA that survives streaming spans only 39–50% across the four trackers. The surviving fraction of AssA spans 53–88%. Association retention therefore varies about three times as widely as detection retention. Strong-SORT and Deep-OC-SORT, which maintain appearance fea-ture banks, retain roughly half of their offline AssA (55% and 53%). ByteTrack, which associates on motion and detection confidence alone, retains 65%. DeepSORT retains 88%, but from a much lower offline base of 24–28 AssA against 53–66 for StrongSORT. Its retention does not measure robustness of a comparable quantity. Separating the contributions of ap-pearance embeddings, camera-motion compensation and the motion model would require varying each in isolation. On ultra-high-resolution sequences the practical lever is there-fore sustaining identity across a stale gap rather than improv-ing box quality. 
+
+Finding 3: which tracking pipeline performs best un-der streaming is governed by the load ratio ρ = ∆ t/P .
+
+The net value of appearance cues shrinks as ρ grows, so the best pipeline depends on the deployment budget rather than on the tracker alone. An inter-frame-interval sweep isolates this effect. Tightening the frame budget from P = 2 .5 to 
+
+1 s with all predictions held fixed flips the s-HOTA winner from StrongSORT to ByteTrack on the high-latency two-stage and Transformer detectors. StrongSORT keeps its lead when ρ stays small. At P = 2 s, offline leads of up to 16.8 points compress to near-ties or reversals (Table 3). The best pipeline (StrongSORT on YOLO26-N) sits at low ρ rather than at the offline optimum. The association-insensitive S-MOTA cannot expose the differential at all. The choice of tracking pipeline should therefore follow the deployment load ratio. Appearance-based association pays off only when la-tency room remains within the frame interval. 
+
+Level 3: Scene-Level VQA 
+
+Setup. We evaluate twelve vision-language models zero-shot on the 1,565 Level-3 questions, comprising one remote-sensing-specialized model (Soni et al. 2025), six open-source general-purpose models (Chen et al. 2024; Zhu et al. 2025; Yao et al. 2024; Abdin et al. 2024; Bai et al. 2025b,a), and five closed-source API models (OpenAI 2024, 2026; An-thropic 2025; xAI 2025; Google 2026). Per-type accuracy is visualized in Figure 5. 
+
+Finding 4: VLM failures separate into two axes, resolution-limited perception and near-chance identity binding, and progress on one does not transfer to the other. Averaging the per-type accuracies into a single-frame Detector StrongSORT ByteTrack DeepSORT Deep-OC-SORT HOTA ↑ s-HOTA ↑ Lat. ↓ HOTA ↑ s-HOTA ↑ Lat. ↓ HOTA ↑ s-HOTA ↑ Lat. ↓ HOTA ↑ s-HOTA ↑ Lat. ↓
+
+Two-stage detectors 
+
+Faster R-CNN 40.6 17.7 ↓22.9 15.85 37.1 19.4 ↓17.7 14.36 11.7 7.0 ↓4.7 21.79 29.5 13.3 ↓16.2 15.80 Cascade R-CNN 54.5 21.9 ↓32.6 18.22 42.7 21.5 ↓21.2 17.01 20.3 10.9 ↓9.4 22.10 36.8 15.3 ↓21.4 18.39 
+
+One-stage detectors 
+
+RetinaNet 52.3 21.7 ↓30.6 16.45 40.9 20.2 ↓20.7 15.10 18.2 10.8 ↓7.5 20.46 37.5 15.5 ↓22.0 16.46 CenterNet 54.0 25.6 ↓28.5 9.86 19.4 10.5 ↓8.9 9.09 24.9 16.4 ↓8.5 10.40 24.4 11.6 ↓12.8 10.41 YOLOv5-S 48.6 24.4 ↓24.2 7.24 37.8 23.2 ↓14.7 5.95 17.4 12.1 ↓5.4 6.62 36.1 17.5 ↓18.6 7.34 YOLOv5-M 49.8 24.7 ↓25.1 8.32 36.7 22.1 ↓14.5 7.04 18.2 12.6 ↓5.6 7.41 36.1 17.5 ↓18.5 8.41 YOLOv5-L 48.4 21.9 ↓26.4 11.00 36.6 20.5 ↓16.2 9.64 16.5 10.8 ↓5.6 10.11 35.4 15.8 ↓19.6 11.00 YOLOv8-N 47.8 23.9 ↓23.9 6.72 36.7 24.4 ↓12.3 5.37 17.0 12.0 ↓5.0 6.04 35.8 19.4 ↓16.4 6.69 
+
+YOLOv8-M 48.3 23.7 ↓24.6 7.55 36.6 21.8 ↓14.9 6.25 17.4 12.0 ↓5.4 6.64 35.4 16.9 ↓18.5 7.63 YOLOv8-L 48.8 22.5 ↓26.3 11.22 36.9 20.7 ↓16.2 10.04 17.5 11.7 ↓5.8 10.46 35.3 15.5 ↓19.8 11.39 YOLO11-N 49.5 24.7 ↓24.8 6.69 36.9 23.0 ↓13.9 5.13 17.6 12.3 ↓5.3 5.68 36.3 16.9 ↓19.4 6.94 
+
+YOLO11-M 48.4 23.3 ↓25.2 7.19 36.8 22.3 ↓14.5 5.74 17.5 12.0 ↓5.5 6.20 35.4 16.5 ↓18.9 7.63 YOLO11-L 48.2 22.8 ↓25.4 10.38 36.9 20.8 ↓16.0 9.39 18.2 12.3 ↓5.9 9.90 36.1 16.8 ↓19.3 10.72 YOLO26-N 51.6 26.3 ↓25.3 6.06 34.8 22.1 ↓12.7 5.14 20.3 14.1 ↓6.2 5.56 36.0 17.1 ↓18.8 6.82 
+
+YOLO26-M 50.9 24.8 ↓26.0 6.90 37.9 22.9 ↓15.0 6.02 19.7 13.3 ↓6.3 6.47 36.5 17.1 ↓19.4 7.43 YOLO26-L 51.7 24.1 ↓27.5 10.36 38.4 21.7 ↓16.7 9.38 19.5 13.0 ↓6.4 9.88 37.4 17.2 ↓20.1 10.69 
+
+Transformer-based detectors 
+
+DINO 36.3 13.4 ↓22.9 28.62 40.3 16.7 ↓23.6 26.85 11.5 5.6 ↓5.9 35.01 34.1 12.3 ↓21.8 28.32 RT-DETR 37.9 17.9 ↓20.0 13.15 33.7 19.3 ↓14.4 11.41 10.9 7.4 ↓3.5 12.44 30.3 14.2 ↓16.1 12.92 D-FINE-N 32.6 15.3 ↓17.3 12.10 37.6 21.3 ↓16.3 9.55 9.7 6.6 ↓3.1 11.40 31.1 14.7 ↓16.5 11.84 D-FINE-L 26.7 12.4 ↓14.3 14.11 33.0 18.5 ↓14.5 10.09 6.1 3.8 ↓2.2 21.55 25.8 11.6 ↓14.1 12.55 
+
+Table 3: Streaming-HOTA on HARD (Car, P = 2 s), aggregated over all sequences using TrackEval combined. For each detector–tracker pipeline, we report offline HOTA, streaming s-HOTA ↑, and end-to-end latency Lat.(s) ↓. The red downward value beside each s-HOTA score denotes its degradation relative to the corresponding offline HOTA. Light-red, light-orange, and light-yellow boxes respectively indicate the first-, second-, and third-ranked results in each metric column. 20 40 60   
+
+> Overall accuracy (%)
+> GPT-4o Phi-3.5-Vision MiniCPM-V-2.6 Claude S4.5 InternVL3-8B EarthDial InternVL2.5-4B Qwen2.5-VL-7B Qwen3-VL-8B Grok-4 GPT-5.5 Gemini 3.1 Pro
+> 39.5 43.6 46.1 47.7 49.5 49.5 50.4 51.6 54.5 54.5 55.6 58.3
+> RS-spec. Open Closed/API
+
+(a) Overall ranking. Classif. Count Spatial SpecDet Region FindIt Relocate      
+
+> 20 40 60 80 100
+> Prop.
+> Earth IVL2.5 IVL3 MiniCPM Phi3.5 Qwen2.5 Qwen3 Claude GPT5.5 GPT4o Grok4 Gemini
+
+(b) Per-task profiles. 
+
+Figure 5: Level-3 scene-level VQA results: (a) overall accu-racy ranking of the twelve vision-language models; (b) per-task profiles across the eight question types. axis (classification, counting, property, spatial relation) and a temporal axis (special detection, FindIt, Relocate) reveals two very different failure modes. On the single-frame axis, models spread over a 37-point range (29.2% for GPT-4o to 66.5% for Gemini 3.1 Pro). This axis rewards general per-ception ability, and stronger models are clearly better despite the heavy downsampling that a 122 MP input undergoes. On the temporal axis, the same twelve models collapse into a 13-point band (35.6–49.0%) hovering near the per-type chance levels, with eleven of twelve at 49–52% on Relocate. Only GPT-5.5 rises meaningfully above chance, reaching 66.3% on Relocate and 47.0% on special detection. We report these as observations consistent with, rather than proof of, the two mechanisms. The implication is that scaling general capa-bility mainly moves the first axis, while closing the second likely requires explicit object memory or track-conditioned inputs, which is where Level-1 and Level-2 supervision in HARD becomes directly useful. 
+
+6 Conclusion 
+
+We introduced HARD, an ultra-high-resolution temporal UAV benchmark. Its three-level annotations span object per-ception to scene cognition. We also proposed s-HOTA to evaluate tracking under the second-scale latency such im-agery induces. Extensive baseline experiments surface two open problems that we believe warrant deeper study. The first is how to lower the end-to-end latency of ultra-large images. The second is how to give models persistent cross-frame identity. We frame this line of work as Wide-area Spatio-temporal Scene Understanding. We hope HARD can anchor future research toward real UAV deployment. References 
+
+Abdin, M.; et al. 2024. Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone. arXiv preprint arXiv:2404.14219 .Ahmad, I.; Fengjun, S.; Bibi, K.; and Pathan, M. S. 2026. UAV-OBB: An aerial urban vehicle dataset with oriented bounding boxes for remote sensing object detection in smart cities. Data in Brief , 112710. Anthropic. 2025. Claude Sonnet 4.5 System Card. https: //www.anthropic.com/claude-sonnet-4-5-system-card. Bai, S.; Cai, Y.; Chen, R.; Chen, K.; Chen, X.; Cheng, Z.; Deng, L.; Ding, W.; Gao, C.; Ge, C.; et al. 2025a. Qwen3-vl technical report. Bai, S.; Chen, K.; Liu, X.; Wang, J.; Ge, W.; Song, S.; Dang, K.; Wang, P.; Wang, S.; Tang, J.; Zhong, H.; Zhu, Y.; Yang, M.; Li, Z.; Wan, J.; Wang, P.; Ding, W.; Fu, Z.; Xu, Y.; Ye, J.; Zhang, X.; Xie, T.; Cheng, Z.; Zhang, H.; Yang, Z.; Xu, H.; and Lin, J. 2025b. Qwen2.5-VL Technical Report. Bernardin, K.; and Stiefelhagen, R. 2008. Evaluating mul-tiple object tracking performance: the clear mot metrics. 
+
+EURASIP Journal on Image and Video Processing , 2008(1): 246309. Cai, Z.; and Vasconcelos, N. 2018. Cascade r-cnn: Delving into high quality object detection. In Proceedings of the IEEE conference on computer vision and pattern recognition ,6154–6162. Chen, Z.; Wang, W.; Cao, Y.; Liu, Y.; Gao, Z.; Cui, E.; Zhu, J.; Ye, S.; Tian, H.; Liu, Z.; et al. 2024. Expanding performance boundaries of open-source multimodal models with model, data, and test-time scaling. arXiv preprint arXiv:2412.05271 .Ding, J.; Xue, N.; Xia, G.-S.; Bai, X.; Yang, W.; Yang, M. Y.; Belongie, S.; Luo, J.; Datcu, M.; Pelillo, M.; et al. 2021. Object detection in aerial images: A large-scale benchmark and challenges. IEEE transactions on pattern analysis and machine intelligence , 44(11): 7778–7796. Du, D.; Qi, Y.; Yu, H.; Yang, Y.; Duan, K.; Li, G.; Zhang, W.; Huang, Q.; and Tian, Q. 2018. The unmanned aerial vehicle benchmark: Object detection and tracking. In Proceedings of the European conference on computer vision (ECCV) , 370– 386. Du, Y.; Zhao, Z.; Song, Y.; Zhao, Y.; Su, F.; Gong, T.; and Meng, H. 2023. Strongsort: Make deepsort great again. IEEE Transactions on Multimedia , 25: 8725–8737. Google. 2026. Gemini 3.1 Pro: A Smarter Model for Your Most Complex Tasks. https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/. Hu, Y.; Yuan, J.; Wen, C.; Lu, X.; Liu, Y.; and Li, X. 2025. Rsgpt: A remote sensing vision language model and bench-mark. ISPRS Journal of Photogrammetry and Remote Sens-ing , 224: 272–286. Jocher, G.; Chaurasia, A.; Stoken, A.; Borovec, J.; Kwon, Y.; Michael, K.; Fang, J.; Wong, C.; Yifu, Z.; Montes, D.; et al. 2022. ultralytics/yolov5: v6. 2-yolov5 classification models, apple m1, reproducibility, clearml and deci. ai integrations. Khanam, R.; and Hussain, M. 2024. Yolov11: An overview of the key architectural enhancements. arXiv preprint arXiv:2410.17725 .Li, K.; Vosselman, G.; and Yang, M. Y. 2024. HRVQA: A Visual Question Answering benchmark for high-resolution aerial images. ISPRS Journal of Photogrammetry and Re-mote Sensing , 214: 65–81. Li, M.; Wang, Y.-X.; and Ramanan, D. 2020. Towards streaming perception. In European conference on computer vision , 473–488. Springer. Li, S.; Zhou, Z.; Zhao, M.; Yang, J.; Guo, W.; Lv, Y.; Kou, L.; Wang, H.; and Gu, Y. 2023. A multitask benchmark dataset for satellite video: Object detection, tracking, and segmentation. IEEE transactions on geoscience and remote sensing , 61: 1–21. Li, X.; Ding, J.; and Elhoseiny, M. 2024. Vrsbench: A ver-satile vision-language benchmark dataset for remote sensing image understanding. Advances in Neural Information Pro-cessing Systems , 37: 3229–3242. Lin, T.-Y.; Goyal, P.; Girshick, R.; He, K.; and Dollár, P. 2017. Focal loss for dense object detection. In Proceedings of the IEEE international conference on computer vision ,2980–2988. Lin, T.-Y.; Maire, M.; Belongie, S.; Hays, J.; Perona, P.; Ramanan, D.; Dollár, P.; and Zitnick, C. L. 2014. Microsoft coco: Common objects in context. In European conference on computer vision , 740–755. Springer. Lobry, S.; Demir, B.; and Tuia, D. 2021. RSVQA meets BigEarthNet: a new, large-scale, visual question answering dataset for remote sensing. In 2021 IEEE International Geoscience and Remote Sensing Symposium IGARSS , 1218– 1221. IEEE. Lobry, S.; Marcos, D.; Murray, J.; and Tuia, D. 2020. RSVQA: Visual question answering for remote sensing data. 
+
+IEEE Transactions on Geoscience and Remote Sensing ,58(12): 8555–8566. Luiten, J.; Osep, A.; Dendorfer, P.; Torr, P.; Geiger, A.; Leal-Taixé, L.; and Leibe, B. 2021. Hota: A higher order metric for evaluating multi-object tracking. International journal of computer vision , 129(2): 548–578. Maggiolino, G.; Ahmad, A.; Cao, J.; and Kitani, K. 2023. Deep oc-sort: Multi-pedestrian tracking by adaptive re-identification. In 2023 IEEE International conference on image processing (ICIP) , 3025–3029. IEEE. Nie, Z.; Xue, L.; Fang, Z.; Ren, J.; Wei, Y.; and Zheng, J. 2025. M3OT: A Multi-Drone Multi-Modality dataset for Multi-Object Tracking. Scientific data , 12(1): 1927. OpenAI. 2024. GPT-4o System Card. https://openai.com/ index/gpt-4o-system-card/. OpenAI. 2026. GPT-5.5 System Card. https://openai.com/ index/gpt-5-5-system-card/. Peng, J.; Wang, T.; Pang, J.; and Shen, Y. 2025a. Towards Latency-Aware 3D Streaming Perception for Autonomous Driving. In 2025 IEEE International Conference on Robotics and Automation (ICRA) , 3727–3733. IEEE. Peng, Y.; Li, H.; Wu, P.; Zhang, Y.; Sun, X.; and Wu, F. 2025b. D-FINE: Redefine regression task of DETRs as fine-grained distribution refinement. In International Conference on Learning Representations , volume 2025, 44015–44031. Ren, S.; He, K.; Girshick, R.; and Sun, J. 2015. Faster r-cnn: Towards real-time object detection with region proposal net-works. Advances in neural information processing systems ,28. Ristani, E.; Solera, F.; Zou, R.; Cucchiara, R.; and Tomasi, C. 2016. Performance measures and a data set for multi-target, multi-camera tracking. In European conference on computer vision , 17–35. Springer. Sapkota, R.; Cheppally, R. H.; Sharda, A.; and Karkee, M. 2025. YOLO26: key architectural enhancements and perfor-mance benchmarking for real-time object detection. arXiv preprint arXiv:2509.25164 .Sela, G.-E.; Gog, I.; Wong, J.; Agrawal, K. K.; Mo, X.; Kalra, S.; Schafhalter, P.; Leong, E.; Wang, X.; Balaji, B.; et al. 2022. Context-aware streaming perception in dynamic environments. In European Conference on Computer Vision ,621–638. Springer. Soni, S.; Dudhane, A.; Debary, H.; Fiaz, M.; Munir, M. A.; Danish, M. S.; Fraccaro, P.; Watson, C. D.; Klein, L. J.; Khan, F. S.; et al. 2025. Earthdial: Turning multi-sensory earth observations to interactive dialogues. In Proceedings of the Computer Vision and Pattern Recognition Conference ,14303–14313. Sun, J.; Ding, G.; Di, D.; Zhang, H.; and Zheng, Z. 2026. Can Vision-Language Models Think from the Sky? Uni-fying UAV Reasoning and Generation. arXiv preprint arXiv:2604.05377 .Sun, X.; Wang, P.; Yan, Z.; Xu, F.; Wang, R.; Diao, W.; Chen, J.; Li, J.; Feng, Y.; Xu, T.; et al. 2022. FAIR1M: A benchmark dataset for fine-grained object recognition in high-resolution remote sensing imagery. ISPRS Journal of Photogrammetry and Remote Sensing , 184: 116–130. Varghese, R.; and Sambath, M. 2024. Yolov8: A novel object detection algorithm with enhanced performance and robust-ness. Wang, F.; Wang, H.; Guo, Z.; Wang, D.; Wang, Y.; Chen, M.; Ma, Q.; Lan, L.; Yang, W.; Zhang, J.; et al. 2025. Xlrs-bench: Could your multimodal llms understand extremely large ultra-high-resolution remote sensing imagery? In Pro-ceedings of the Computer Vision and Pattern Recognition Conference , 14325–14336. Wang, J.; Zheng, Z.; Chen, Z.; Ma, A.; and Zhong, Y. 2024. Earthvqa: Towards queryable earth via relational reasoning-based remote sensing visual question answering. In Pro-ceedings of the AAAI conference on artificial intelligence ,volume 38, 5481–5489. Wang, X.; Zhang, X.; Zhu, Y.; Guo, Y.; Yuan, X.; Xiang, L.; Wang, Z.; Ding, G.; Brady, D.; Dai, Q.; et al. 2020. Panda: A gigapixel-level human-centric video dataset. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 3268–3278. Wojke, N.; Bewley, A.; and Paulus, D. 2017. Simple online and realtime tracking with a deep association metric. In 2017 IEEE international conference on image processing (ICIP) ,3645–3649. IEEE. xAI. 2025. Grok 4 Model Card. https://data.x.ai/2025-08-20-grok-4-model-card.pdf. Yao, Y.; Yu, T.; Zhang, A.; Wang, C.; Cui, J.; Zhu, H.; Cai, T.; Li, H.; Zhao, W.; He, Z.; et al. 2024. Minicpm-v: A gpt-4v level mllm on your phone. arXiv preprint arXiv:2408.01800 .Yin, Q.; Hu, Q.; Liu, H.; Zhang, F.; Wang, Y.; Lin, Z.; An, W.; and Guo, Y. 2021. Detecting and tracking small and dense moving objects in satellite videos: A benchmark. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–18. Yuan, Z.; Mou, L.; Xiong, Z.; and Zhu, X. X. 2022. Change detection meets visual question answering. IEEE Transac-tions on Geoscience and Remote Sensing , 60: 1–13. Zhang, H.; Li, F.; Liu, S.; Zhang, L.; Su, H.; Zhu, J.; Ni, L. M.; and Shum, H.-Y. 2022a. Dino: Detr with improved denoising anchor boxes for end-to-end object detection. arXiv preprint arXiv:2203.03605 .Zhang, Y.; Sun, P.; Jiang, Y.; Yu, D.; Weng, F.; Yuan, Z.; Luo, P.; Liu, W.; and Wang, X. 2022b. Bytetrack: Multi-object tracking by associating every detection box. In European conference on computer vision , 1–21. Springer. Zhang, Y.; Zhao, Z.; Luo, Z.; Li, C.; and Tang, J. 2026. UAV traffic scene understanding: A regulation embedded multi-modal network and a unified benchmark. arXiv preprint arXiv:2603.10722 .Zhao, Y.; Lv, W.; Xu, S.; Wei, J.; Wang, G.; Dang, Q.; Liu, Y.; and Chen, J. 2024. Detrs beat yolos on real-time object detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 16965–16974. Zheng, X.; Wang, B.; Du, X.; and Lu, X. 2021. Mutual at-tention inception network for remote sensing visual question answering. IEEE Transactions on Geoscience and Remote Sensing , 60: 1–14. Zhou, X.; Wang, D.; and Krähenbühl, P. 2019. Objects as points. arXiv preprint arXiv:1904.07850 .Zhu, J.; Wang, W.; Chen, Z.; Liu, Z.; Ye, S.; Gu, L.; Tian, H.; Duan, Y.; Su, W.; Shao, J.; et al. 2025. Internvl3: Explor-ing advanced training and test-time recipes for open-source multimodal models. arXiv preprint arXiv:2504.10479 .Zhu, P.; Wen, L.; Du, D.; Bian, X.; Fan, H.; Hu, Q.; and Ling, H. 2021. Detection and tracking meet drones challenge. IEEE transactions on pattern analysis and machine intelligence ,44(11): 7380–7399.

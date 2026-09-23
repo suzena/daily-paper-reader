@@ -1,0 +1,405 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-23T22:34:41.623411+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.22834v1",
+      "source": "arxiv",
+      "title": "SatOV: Restoring Spatial Priors for Training-Free Open-Vocabulary Segmentation in Remote Sensing Imagery",
+      "abstract": "Open-vocabulary semantic segmentation (OVS) of remote sensing imagery is a challenging pixel-level task requiring strong generalization and adaptation to the spatial characteristics of remote sensing data. Although existing vision-language foundation models perform well in general domains, their image-level classification design weakens the spatial priors needed for high-resolution remote sensing segmentation: structural spatial relations are degraded during deep feature transformation, and fine-grained spatial details are lost during downsampling. To address these complementary deficiencies, we propose SatOV, a training-free framework for open-vocabulary remote sensing segmentation that restores spatial priors at two stages of the representation pipeline. Specifically, Residual QQ Attention (ResQQ) extracts Query-Key self-attention from an intermediate CLIP layer and fuses it with final-layer Query-Query attention via a residual combination, restoring structural spatial priors suppressed by the final-layer representation. Spatially Modulated Upsampling (SatUp) uses the original high-resolution RGB image as spatial guidance, combining spatial feature modulation with guided cross-attention to reconstruct pixel-level textures and boundaries. Extensive experiments on DOTA, UDD, LoveDA, and Vaihingen show that SatOV consistently improves training-free OVS and achieves competitive quantitative and qualitative results against state-of-the-art methods. These results validate the effectiveness of restoring spatial priors at both the representation and spatial-resolution stages for remote sensing open-vocabulary segmentation.",
+      "authors": [
+        "Changhao Zhao",
+        "Linglin Zeng",
+        "Hai Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-19T07:12:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.22834v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "training-free open-vocabulary segmentation for remote sensing imagery",
+      "llm_evidence_cn": "面向遥感影像的免训练开放词汇分割",
+      "llm_evidence": "面向遥感影像的免训练开放词汇分割",
+      "canonical_evidence": "面向遥感影像的免训练开放词汇分割",
+      "llm_tldr_en": "SatOV is a training-free framework that restores spatial priors at feature transformation and downsampling stages, improving open-vocabulary semantic segmentation of remote sensing imagery.",
+      "llm_tldr_cn": "针对现有视觉语言基础模型的图像级分类设计削弱高分辨率遥感分割所需空间先验的问题，本文提出免训练框架 SatOV，在深度特征变换与下采样两个环节恢复结构空间关系与细粒度空间细节。实验表明该框架在开放词汇遥感语义分割上提升泛化能力与像素级分割质量，无需额外训练，为海洋与珊瑚礁等生境的遥感制图提供了可迁移的分割方法。",
+      "llm_tldr": "针对现有视觉语言基础模型的图像级分类设计削弱高分辨率遥感分割所需空间先验的问题，本文提出免训练框架 SatOV，在深度特征变换与下采样两个环节恢复结构空间关系与细粒度空间细节。实验表明该框架在开放词汇遥感语义分割上提升泛化能力与像素级分割质量，无需额外训练，为海洋与珊瑚礁等生境的遥感制图提供了可迁移的分割方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.16795v1",
+      "source": "arxiv",
+      "title": "Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models",
+      "abstract": "Multimodal large language models (MLLMs) can answer knowledge-intensive visual questions by combining visual evidence from images with facts retrieved from external sources. However, MLLMs may overlook relevant evidence in both modalities, attending weakly to the textual sentences or visual regions needed for the correct answer. Recent efforts address this by highlighting retrieved text and marking visual regions before generation, but apply a fixed, one-shot policy that cannot adapt to three sources of variation: whether highlighting is necessary, how much evidence different examples require, and when different textual evidence becomes relevant as the answer unfolds. We introduce Adaptive Relevance-guided Evidence Allocation (AREA), a training-free inference-time method that formulates evidence highlighting as adaptive allocation. AREA generates a single probe token to read visual and textual relevance from fixed backbone layers, then makes three decisions: i) whether to intervene (controlled by natural attention coverage and visual sink contamination), ii) how much evidence to expose (determined by relevance entropy), and iii) when to refresh text during generation (triggered by causal context-attention peaks). Across four KB-VQA and seven standard multimodal benchmarks with nine frozen MLLM checkpoints, establishes the best performance among training-free highlighting methods.",
+      "authors": [
+        "Zhenbin Wang",
+        "Lei Zhang",
+        "Lituan Wang",
+        "Wei Huang",
+        "Yan Wang",
+        "Zhenwei Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-15T08:02:52+00:00",
+      "link": "https://arxiv.org/pdf/2609.16795v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adaptive evidence selection fusing visual and textual evidence in MLLMs",
+      "llm_evidence_cn": "多模态大模型中视觉与文本证据的自适应选择",
+      "llm_evidence": "多模态大模型中视觉与文本证据的自适应选择",
+      "canonical_evidence": "多模态大模型中视觉与文本证据的自适应选择",
+      "llm_tldr_en": "This paper addresses MLLMs overlooking relevant visual and textual evidence by proposing Adaptive Relevance-guided Evidence Allocation, which adaptively decides when and how much evidence to highlight during generation.",
+      "llm_tldr_cn": "针对多模态大模型在知识密集型视觉问答中常忽视图像区域或文本证据、而现有高亮方法采用固定一次性策略的问题，本文提出自适应相关性引导证据分配方法。该方法能根据样本是否需要高亮、需要多少证据以及答案展开时文本证据的相关性动态调整证据利用。工作提升了图文融合推理中证据选择的自适应性与准确性，对遥感图文融合分析具有方法借鉴价值。",
+      "llm_tldr": "针对多模态大模型在知识密集型视觉问答中常忽视图像区域或文本证据、而现有高亮方法采用固定一次性策略的问题，本文提出自适应相关性引导证据分配方法。该方法能根据样本是否需要高亮、需要多少证据以及答案展开时文本证据的相关性动态调整证据利用。工作提升了图文融合推理中证据选择的自适应性与准确性，对遥感图文融合分析具有方法借鉴价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.17479v1",
+      "source": "arxiv",
+      "title": "Det-LIME: Detector-Aware, Multi-Instance Local Interpretable Model-Agnostic Explanations for Automated Marine Mammal Detection",
+      "abstract": "Despite the rapid uptake of black-box object detectors in marine mammal research and monitoring, explainability techniques are rarely integrated into conservation workflows. Furthermore, most classification-oriented explainability tools are ill-suited to detection tasks involving imagery of social organisms or those with colonial life histories, as they ignore multiple detections within a scene and produce single-instance outputs that blur evidence across individuals. These methods also generate low-resolution, often biologically irrelevant visuals, limiting their utility for debugging, targeted data augmentation, and refined data collection.   We proposed Det-LIME, a detector-aware, multi-instance adaptation of Local Interpretable Model-Agnostic Explanations (LIME) that produced instance-specific, box-aligned explanations by combining per-detection weighting, a proximity kernel that emphasizes regions near each box, and Intersection-over-Union-based matching to track the same instance across perturbations. We evaluated Det-LIME on aerial drone imagery for harbor seal detection, with an additional seabird case study to assess generality, and compared it with vanilla LIME, Stabilized LIME, Deterministic LIME, and gradient-based attribution methods.   Using the Attribution Ratio and Max Saliency Hit Rate metrics, we showed that Det-LIME consistently improved multi-instance attribution. In practice, these higher-resolution, instance-aware explanations provide insight into model outputs and support post-processing, debugging, and actionable improvements in modeling and data collection or augmentation.",
+      "authors": [
+        "Jiayi Zhou",
+        "David W. Johnston",
+        "Brinnae Bent"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-15T17:20:16+00:00",
+      "link": "https://arxiv.org/pdf/2609.17479v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "explainable detector for automated marine mammal detection in imagery",
+      "llm_evidence_cn": "面向图像自动海洋哺乳动物检测的可解释检测器",
+      "llm_evidence": "面向图像自动海洋哺乳动物检测的可解释检测器",
+      "canonical_evidence": "面向图像自动海洋哺乳动物检测的可解释检测器",
+      "llm_tldr_en": "Det-LIME is a detector-aware, multi-instance local explanation method for automated marine mammal detection, producing biologically meaningful visuals for debugging, augmentation and data collection in marine monitoring.",
+      "llm_tldr_cn": "针对黑箱目标检测器在海洋哺乳动物监测中缺乏可解释性、且现有分类导向解释工具不适配多目标检测场景的问题，本文提出Det-LIME。该方法为检测器感知的多实例局部可解释框架，能同时解释场景中多个个体检测而非模糊单实例输出，并生成分辨率更高、具生物学意义的可视化。工作提升了海洋影像检测的可信度，支持调试、定向数据增强与数据采集优化。",
+      "llm_tldr": "针对黑箱目标检测器在海洋哺乳动物监测中缺乏可解释性、且现有分类导向解释工具不适配多目标检测场景的问题，本文提出Det-LIME。该方法为检测器感知的多实例局部可解释框架，能同时解释场景中多个个体检测而非模糊单实例输出，并生成分辨率更高、具生物学意义的可视化。工作提升了海洋影像检测的可信度，支持调试、定向数据增强与数据采集优化。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18073v1",
+      "source": "arxiv",
+      "title": "Characterizing Refraction-Induced Ranging Bias in Underwater Collaborative Localization",
+      "abstract": "This work studies how refraction-induced bias on acoustic ranging affects multi-agent collaborative localization in a range of oceanographic conditions and spatial scales. While multi-agent range-aided navigation, which uses range measurements to either fixed infrastructure or other agents, is a promising solution to the challenges of large-scale underwater localization, its accuracy depends strongly on the quality of range measurements. Sound speed variability induces refraction (bending) of acoustic rays, yet, for algorithmic tractability, standard sensor fusion pipelines assume straight-line propagation. This refraction systematically biases range measurements to be longer than the straight-line assumption predicts. However, the effects of this bias on multi-agent collaborative localization on kilometer scales remains unexplored. We present a series of simulated experiments with several agents operating over kilometer scales. The simulation uses HYCOM reanalysis data to recreate realistic oceanographic conditions, ray tracing to generate refraction-informed ranges, and a centralized multi-agent factor graph estimator to quantify the resulting measurement bias on estimated trajectories. Preliminary results indicate that refraction-induced bias can induce significant degradation of estimated trajectories, particularly in regions with sharp sound-speed gradients. We also share the simulation environment to support further studies https://github.com/UMich-RobotExploration/manta-ray.",
+      "authors": [
+        "Timothy Kogucki",
+        "Alan Papalia"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-16T03:19:51+00:00",
+      "link": "https://arxiv.org/pdf/2609.18073v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent collaborative localization for underwater ocean operations",
+      "llm_evidence_cn": "面向水下作业的多智能体协同定位",
+      "llm_evidence": "面向水下作业的多智能体协同定位",
+      "canonical_evidence": "面向水下作业的多智能体协同定位",
+      "llm_tldr_en": "This paper studies how refraction-induced acoustic ranging bias degrades multi-agent collaborative underwater localization, modeling the effect across oceanographic conditions and spatial scales to improve range-aided navigation accuracy.",
+      "llm_tldr_cn": "水下大规模定位依赖多智能体距离辅助导航，但标准传感器融合假设声波直线传播，忽略了声速变化引起的折射偏差。本文系统分析折射导致的测距偏差如何随海洋环境与空间尺度变化，并量化其对多智能体协同定位精度的影响。研究揭示直线传播假设会系统性高估距离，为更稳健的水下多智能体导航与传感器融合算法提供了建模依据。",
+      "llm_tldr": "水下大规模定位依赖多智能体距离辅助导航，但标准传感器融合假设声波直线传播，忽略了声速变化引起的折射偏差。本文系统分析折射导致的测距偏差如何随海洋环境与空间尺度变化，并量化其对多智能体协同定位精度的影响。研究揭示直线传播假设会系统性高估距离，为更稳健的水下多智能体导航与传感器融合算法提供了建模依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.18210v1",
+      "source": "arxiv",
+      "title": "Understanding Dynamic Scenes at Gigapixel Scale: Wide-Area Spatio-Temporal Perception from UAVs",
+      "abstract": "UAV-borne imaging has advanced from megapixel to gigapixel sensors, shifting aerial perception from recognizing individual targets to understanding entire dynamic scenes. We characterize this demand as Wide-area Spatio-temporal Scene Understanding (WSTU), which requires wide-area coverage, per-target resolution, and temporal continuity at once, a combination existing datasets lack. To fill this gap, we introduce an ultra-High-resolution (12768x9564) Airborne Remote-sensing Dataset (HARD) annotated at three levels for object detection, multi-object tracking, and scene-level visual question answering. Ultra-high-resolution imagery raises per-frame processing time to seconds. At that scale latency can no longer be ignored in evaluation. Thus, we propose a latency-aware metric for multi-object tracking called streaming-HOTA (s-HOTA). Extensive baseline experiments show how ultra-high-resolution processing reshapes each task. For detection, the end-to-end pipeline affects accuracy and speed as much as the detector itself does. For tracking, high latency charges the association axis far more unevenly than the detection axis, and association is where pipelines diverge. As a result, the pipeline that performs best offline can lose its lead under s-HOTA. For VQA, vision-language models remain weak at cross-frame identity binding and cannot transfer their single-frame gains to it. Together these findings show that the baselines we evaluate fall short of WSTU. HARD provides the data and the systematic baselines to advance it.",
+      "authors": [
+        "Yuhang Zhu",
+        "Meiyi Zhu",
+        "Yunkai Dang",
+        "Zhangnan Li",
+        "Yuxuan Wang",
+        "Wenbin Li",
+        "Hongbing Pan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-16T06:41:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.18210v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "UAV remote sensing with scene-level visual question answering",
+      "llm_evidence_cn": "无人机遥感与场景级视觉问答",
+      "llm_evidence": "无人机遥感与场景级视觉问答",
+      "canonical_evidence": "无人机遥感与场景级视觉问答",
+      "llm_tldr_en": "UAV imaging at gigapixel scale demands wide-area coverage, per-target resolution and temporal continuity. The paper defines Wide-area Spatio-temporal Scene Understanding and introduces the HARD dataset with detection, tracking and VQA annotations, revealing second-level latency.",
+      "llm_tldr_cn": "无人机成像已从兆像素迈向吉像素，感知任务需要同时满足广域覆盖、单目标分辨率与时间连续性，现有数据集难以兼顾。论文将这一需求定义为广域时空场景理解（WSTU），并构建了分辨率达12768×9564的机载遥感数据集HARD，提供目标检测、多目标跟踪与场景级视觉问答三层标注。实验表明超高分辨率影像使单帧处理时间升至秒级，延迟在该尺度下不可忽略。该工作为广域高分辨率遥感场景理解提供了数据集与评测基准。",
+      "llm_tldr": "无人机成像已从兆像素迈向吉像素，感知任务需要同时满足广域覆盖、单目标分辨率与时间连续性，现有数据集难以兼顾。论文将这一需求定义为广域时空场景理解（WSTU），并构建了分辨率达12768×9564的机载遥感数据集HARD，提供目标检测、多目标跟踪与场景级视觉问答三层标注。实验表明超高分辨率影像使单帧处理时间升至秒级，延迟在该尺度下不可忽略。该工作为广域高分辨率遥感场景理解提供了数据集与评测基准。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.21015v1",
+      "source": "arxiv",
+      "title": "Towards Effective Visual-Inertial SLAM with Passive-Only Sensors for Low-Cost Autonomous Underwater Vehicles",
+      "abstract": "Improvements to Visual-Inertial Simultaneous Localization and Mapping (VI-SLAM) for low-cost autonomous underwater vehicles (AUVs) are critical for transitioning advanced marine robotics from specialized labs to broader research and hobbyist applications. While high-end AUVs typically rely on expensive sensor suites - such as Doppler Velocity Logs (DVLs) and Ultra-Short Baseline (USBL) systems - this work demonstrates that robust, high-quality navigation is achievable using a sub-$10, 000(USD) platform equipped only with inexpensive consumer-grade sensors. By leveraging a similarly priced, open-source AUV, we evaluate the performance of stereo cameras, Micro-electromechanical System (MEMS)-based IMUs, and depth sensors in a fully unconstrained 6-degree-of-freedom (6-DOF) underwater environment. We analyze the efficacy of off-the-shelf SLAM packages and propose optimizations for sensor fusion to mitigate the visual and physical challenges of untethered underwater operation. Our results prove that a usable SLAM solution can be accessible to the masses, providing a benchmark for expectations in demanding, real-time maritime missions without the financial barrier of industrial-grade hardware.",
+      "authors": [
+        "Grant Schwidder",
+        "David Widhalm",
+        "Junaed Sattar"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-17T19:09:06+00:00",
+      "link": "https://arxiv.org/pdf/2609.21015v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Autonomous underwater vehicle navigation for marine robotics",
+      "llm_evidence_cn": "面向海洋机器人的自主水下航行器导航",
+      "llm_evidence": "面向海洋机器人的自主水下航行器导航",
+      "canonical_evidence": "面向海洋机器人的自主水下航行器导航",
+      "llm_tldr_en": "This work shows robust visual-inertial SLAM for low-cost autonomous underwater vehicles using only passive consumer sensors, enabling affordable marine robotics; relevant to intelligent agent marine applications.",
+      "llm_tldr_cn": "高端自主水下航行器通常依赖多普勒测速仪与超短基线等昂贵传感器，使先进海洋机器人难以普及。本文在低于一万美元的开源AUV平台上，仅使用立体相机、MEMS惯性单元与深度传感器评估视觉惯性SLAM性能。实验表明消费级被动传感器即可实现稳健且高质量的水下导航与建图。该结果为低成本海洋自主平台提供可行方案，对智能体海洋应用具有参考价值。",
+      "llm_tldr": "高端自主水下航行器通常依赖多普勒测速仪与超短基线等昂贵传感器，使先进海洋机器人难以普及。本文在低于一万美元的开源AUV平台上，仅使用立体相机、MEMS惯性单元与深度传感器评估视觉惯性SLAM性能。实验表明消费级被动传感器即可实现稳健且高质量的水下导航与建图。该结果为低成本海洋自主平台提供可行方案，对智能体海洋应用具有参考价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.21123v1",
+      "source": "arxiv",
+      "title": "Signal-Centric Remote Sensing via Alternative Preprocessing and Acoustic Processing for ML-Driven Applications",
+      "abstract": "The dominant method of processing sonar data is using image-based representations, requiring the preprocessing of image data on autonomous systems. We propose an alternative data processing method for remote sensing applications via the use of data in Comma-Seperated Value format. Experimentation on our alternative approach shows a reduction of processing time by 91.18%, an improvement in accurate object detection by Machine Learning, and an increase in SNR (Signal-to-noise ratio), PSNR (Peak signal-to-noise ratio), and other evaluation metrics.",
+      "authors": [
+        "Logan Luna",
+        "Sirio Jansen-Sánchez",
+        "Ilteris Demirkiran",
+        "Leo Ghelarducci"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-09-17T22:16:47+00:00",
+      "link": "https://arxiv.org/pdf/2609.21123v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "sonar remote sensing data processing for ML on autonomous systems",
+      "llm_evidence_cn": "面向自主系统的声呐遥感数据处理",
+      "llm_evidence": "面向自主系统的声呐遥感数据处理",
+      "canonical_evidence": "面向自主系统的声呐遥感数据处理",
+      "llm_tldr_en": "A signal-centric sonar remote sensing pipeline using CSV-format data instead of image representations cuts processing time by 91.18% and improves ML detection accuracy and SNR metrics.",
+      "llm_tldr_cn": "针对声呐遥感数据依赖图像化表示、在自主系统上预处理开销大的问题，本文提出以 CSV 信号格式直接处理的替代流程，结合声学信号处理供机器学习使用。实验表明该方案将处理时间减少 91.18%，同时提升目标检测精度与信噪比、峰值信噪比等指标，为海洋遥感与自主平台上的实时机器学习应用提供了高效的数据处理路径。",
+      "llm_tldr": "针对声呐遥感数据依赖图像化表示、在自主系统上预处理开销大的问题，本文提出以 CSV 信号格式直接处理的替代流程，结合声学信号处理供机器学习使用。实验表明该方案将处理时间减少 91.18%，同时提升目标检测精度与信噪比、峰值信噪比等指标，为海洋遥感与自主平台上的实时机器学习应用提供了高效的数据处理路径。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.22670v1",
+      "source": "arxiv",
+      "title": "AquaWorld: Structure-Consistent Underwater World Generation for Robot Simulation",
+      "abstract": "Underwater robot simulation requires diverse environments in which terrain, scene composition, tasks, and currents remain mutually consistent. We present AquaWorld, a world-generation framework that preserves these relationships through shared terrain structure. A language-conditioned plan generates 3D terrain and shared structural references that guide asset placement, task definition, and inflow specification under stochastic variation. The framework incorporates over 10,000 underwater-compatible assets, predicts reusable terrain-conditioned mean-flow fields through a CFD-supervised residual model, and supports conventional underwater vehicles and bio-inspired robotic fish. On 24 paired terrains, structure-consistent randomization produces substantially better cross-factor consistency than independent randomization. In a matched-budget policy-training comparison, structurally coherent randomization achieves a validation success rate 21% higher than independent randomization. In separate physical experiments, a simulation-trained visual navigation policy succeeds in 95% of physical tank trials without updating its perception or control modules. Overall, AquaWorld provides a practical way to generate varied underwater environments while retaining the structural relationships needed for flow simulation and robot learning.",
+      "authors": [
+        "Bin Peng",
+        "Tiandong Zhang",
+        "Ruidong Wang",
+        "Min Luo",
+        "Shuo Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-19T00:58:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.22670v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater robot simulation and marine world generation",
+      "llm_evidence_cn": "水下机器人仿真与海洋世界生成",
+      "llm_evidence": "水下机器人仿真与海洋世界生成",
+      "canonical_evidence": "水下机器人仿真与海洋世界生成",
+      "llm_tldr_en": "Underwater robot simulation needs mutually consistent terrain, tasks and currents. AquaWorld uses a shared terrain structure and language-conditioned planning to generate consistent 3D terrain, assets and CFD-supervised flow fields, supporting conventional and bio-inspired underwater robots.",
+      "llm_tldr_cn": "水下机器人仿真需要地形、场景、任务与水流相互一致的环境，而现有方法难以保持这种结构关系。论文提出AquaWorld框架，以共享地形结构为纽带，用语言条件规划生成三维地形与结构参考，指导资产放置、任务定义与水流设定，并通过CFD监督的残差模型预测可复用的流场。框架整合超过一万个水下资产，在24个配对地形上验证了结构一致随机化，支持常规水下航行器与仿生机器鱼。该工作为海洋机器人仿真提供了可控且多样的环境生成能力。",
+      "llm_tldr": "水下机器人仿真需要地形、场景、任务与水流相互一致的环境，而现有方法难以保持这种结构关系。论文提出AquaWorld框架，以共享地形结构为纽带，用语言条件规划生成三维地形与结构参考，指导资产放置、任务定义与水流设定，并通过CFD监督的残差模型预测可复用的流场。框架整合超过一万个水下资产，在24个配对地形上验证了结构一致随机化，支持常规水下航行器与仿生机器鱼。该工作为海洋机器人仿真提供了可控且多样的环境生成能力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.22967v1",
+      "source": "arxiv",
+      "title": "General Collaborative Intelligence: Architecting Cognition for Resilient Multi-Agent Ecosystems",
+      "abstract": "Multi-agent unmanned systems are moving from isolated, ego-centric sensing toward collaborative intelligence, in which distributed agents exchange compact features to overcome a local observation trap that no single agent can escape: occlusions, finite sensor range, and environmental degradation. The field has matured across architectural, communication, embodied, resilience, and trust dimensions, yet existing surveys examine these dimensions in isolation and rarely expose their dependencies. This review offers a unified synthesis through two complementary lenses. The first is a five-dimensional taxonomy spanning collaboration stage, communication paradigm, fusion architecture, learning strategy, and application domain. The second is three cognitive synergy conditions, Semantic Disambiguation, Pragmatic Information Exchange, and Proactive Informational Foraging, that turn cognitive synergy into operational criteria. Across these lenses we survey collaboration architectures and topologies, neural-communication co-design that treats the channel as a differentiable pipeline component, embodied action-perception loops via multi-agent reinforcement learning, and resilience mechanisms for synchronization, uncertainty quantification, and label-efficient learning. We then map these advances onto four operational domains, V2X, unmanned aerial, industrial logistics, and smart cities, and onto the safety-privacy-utility triad. To counter benchmark saturation and evaluation fragmentation, we propose GCI-Bench, a five-pillar scoring protocol with a maturity model that makes the trade-offs of collaborative methods comparable across studies. A critical reflection on reproducibility, the sim-to-real gulf, and conditions under which collaboration degrades performance identifies open challenges and charts directions toward general collaborative intelligence under real-world uncertainty.",
+      "authors": [
+        "Lei Zhang",
+        "Chun Ye",
+        "Le Yang",
+        "Zhaozhong Wang",
+        "Deng-Ping Fan",
+        "Hang Dai",
+        "Binglu Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-09-19T11:38:04+00:00",
+      "link": "https://arxiv.org/pdf/2609.22967v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-agent collaborative intelligence architecture taxonomy",
+      "llm_evidence_cn": "多智能体协同智能架构分类体系",
+      "llm_evidence": "多智能体协同智能架构分类体系",
+      "canonical_evidence": "多智能体协同智能架构分类体系",
+      "llm_tldr_en": "A unified review of collaborative multi-agent intelligence across architecture, communication, fusion, learning and resilience dimensions, offering an architectural taxonomy relevant to intelligent agent marine and autonomous ocean monitoring systems.",
+      "llm_tldr_cn": "多智能体无人系统正从孤立的自中心感知转向协同智能，通过分布式智能体交换紧凑特征以克服遮挡、传感器范围有限等局部观测困境。现有综述往往孤立考察架构、通信、具身、韧性与信任等维度，作者提出统一的五维分类框架进行综合梳理。该综述揭示了各维度间的依赖关系，为多智能体协同架构设计提供参考，对智能体海洋应用与自主海洋监测有方法层面价值。",
+      "llm_tldr": "多智能体无人系统正从孤立的自中心感知转向协同智能，通过分布式智能体交换紧凑特征以克服遮挡、传感器范围有限等局部观测困境。现有综述往往孤立考察架构、通信、具身、韧性与信任等维度，作者提出统一的五维分类框架进行综合梳理。该综述揭示了各维度间的依赖关系，为多智能体协同架构设计提供参考，对智能体海洋应用与自主海洋监测有方法层面价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.25500v1",
+      "source": "arxiv",
+      "title": "mbariml: a curation pipeline for turning deep-sea imagery and video into object-detection training data",
+      "abstract": "Training data quantity and quality greatly affect object detection model performance, regardless of model architecture. When using object detection models on video and images from the deep sea, in which the objects of interest, primarily organisms, are sparse, faint, and hard to identify, incremental improvements to object detector performance may require an iterative approach to data labeling and management. This paper presents mbariml, a python-based video and image analysis pipeline built around the data labeling management process. mbariml uses an Ultralytics YOLO detection model, runs it over still images or video, stores every detection as a reviewable region of interest, groups those regions by visual similarity so that a human can accept or reject them in bulk, and exports the result as training data, statistics, image sidecars, and additional metadata. The human review stage is the centre of the design: an annotator can validate, relabel, resize, delete, and draw entirely new localizations, and every one of those edits is written back to the same database the detector wrote to. Video receives particular attention: the software treats each tracker-produced track as a provisional observation and selects one representative frame instead of retaining every detection in the track. We describe the pipeline stage by stage, including the operational middle-third heuristic used for track observation selection.",
+      "authors": [
+        "Lonny Lundsten",
+        "Kevin Barnard",
+        "Dave Caress"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-21T23:57:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.25500v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep-sea imagery and video pipeline for object-detection training data",
+      "llm_evidence_cn": "面向深海图像视频的目标检测训练数据流水线",
+      "llm_evidence": "面向深海图像视频的目标检测训练数据流水线",
+      "canonical_evidence": "面向深海图像视频的目标检测训练数据流水线",
+      "llm_tldr_en": "mbariml is a Python pipeline that turns sparse, faint deep-sea imagery and video into object-detection training data via iterative YOLO-based labeling, ROI review and similarity grouping.",
+      "llm_tldr_cn": "深海图像与视频中目标稀疏、暗淡且难以识别，训练数据的数量与质量直接影响目标检测性能。本文提出mbariml，一个围绕数据标注管理构建的Python视频与图像分析流水线，使用Ultralytics YOLO模型检测目标，将结果保存为可复核的感兴趣区域并按视觉相似度分组。该工作为海洋生物等目标的检测模型训练提供了高效的迭代式数据整理方案。",
+      "llm_tldr": "深海图像与视频中目标稀疏、暗淡且难以识别，训练数据的数量与质量直接影响目标检测性能。本文提出mbariml，一个围绕数据标注管理构建的Python视频与图像分析流水线，使用Ultralytics YOLO模型检测目标，将结果保存为可复核的感兴趣区域并按视觉相似度分组。该工作为海洋生物等目标的检测模型训练提供了高效的迭代式数据整理方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

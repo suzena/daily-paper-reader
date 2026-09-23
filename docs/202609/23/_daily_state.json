@@ -1,0 +1,169 @@
+{
+  "date": "20260923",
+  "date_label": "",
+  "generated_at": "2026-09-23 22:38:20 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.22834v1",
+      "route": "202609/23/2609.22834v1-satov-restoring-spatial-priors-for-training-free-open-vocabulary-segmentation-in-remote-sensing-imagery",
+      "title": "SatOV: Restoring Spatial Priors for Training-Free Open-Vocabulary Segmentation in Remote Sensing Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感影像的免训练开放词汇分割",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.16795v1",
+      "route": "202609/23/2609.16795v1-layers-sinks-and-scaling-adaptive-evidence-selection-for-multimodal-large-language-models",
+      "title": "Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态大模型中视觉与文本证据的自适应选择",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.17479v1",
+      "route": "202609/23/2609.17479v1-det-lime-detector-aware-multi-instance-local-interpretable-model-agnostic-explanations-for-automated-marine-mammal-detection",
+      "title": "Det-LIME: Detector-Aware, Multi-Instance Local Interpretable Model-Agnostic Explanations for Automated Marine Mammal Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向图像自动海洋哺乳动物检测的可解释检测器",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.18073v1",
+      "route": "202609/23/2609.18073v1-characterizing-refraction-induced-ranging-bias-in-underwater-collaborative-localization",
+      "title": "Characterizing Refraction-Induced Ranging Bias in Underwater Collaborative Localization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向水下作业的多智能体协同定位",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.18210v1",
+      "route": "202609/23/2609.18210v1-understanding-dynamic-scenes-at-gigapixel-scale-wide-area-spatio-temporal-perception-from-uavs",
+      "title": "Understanding Dynamic Scenes at Gigapixel Scale: Wide-Area Spatio-Temporal Perception from UAVs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "无人机遥感与场景级视觉问答",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.21015v1",
+      "route": "202609/23/2609.21015v1-towards-effective-visual-inertial-slam-with-passive-only-sensors-for-low-cost-autonomous-underwater-vehicles",
+      "title": "Towards Effective Visual-Inertial SLAM with Passive-Only Sensors for Low-Cost Autonomous Underwater Vehicles",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋机器人的自主水下航行器导航",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.21123v1",
+      "route": "202609/23/2609.21123v1-signal-centric-remote-sensing-via-alternative-preprocessing-and-acoustic-processing-for-ml-driven-applications",
+      "title": "Signal-Centric Remote Sensing via Alternative Preprocessing and Acoustic Processing for ML-Driven Applications",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主系统的声呐遥感数据处理",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.22670v1",
+      "route": "202609/23/2609.22670v1-aquaworld-structure-consistent-underwater-world-generation-for-robot-simulation",
+      "title": "AquaWorld: Structure-Consistent Underwater World Generation for Robot Simulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下机器人仿真与海洋世界生成",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.22967v1",
+      "route": "202609/23/2609.22967v1-general-collaborative-intelligence-architecting-cognition-for-resilient-multi-agent-ecosystems",
+      "title": "General Collaborative Intelligence: Architecting Cognition for Resilient Multi-Agent Ecosystems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多智能体协同智能架构分类体系",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    },
+    {
+      "paper_id": "2609.25500v1",
+      "route": "202609/23/2609.25500v1-mbariml-a-curation-pipeline-for-turning-deep-sea-imagery-and-video-into-object-detection-training-data",
+      "title": "mbariml: a curation pipeline for turning deep-sea imagery and video into object-detection training data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向深海图像视频的目标检测训练数据流水线",
+      "first_seen_at": "2026-09-23 22:38:20 UTC",
+      "updated_at": "2026-09-23 22:38:20 UTC"
+    }
+  ]
+}
