@@ -1,0 +1,73 @@
+{
+  "date": "20260924",
+  "date_label": "",
+  "generated_at": "2026-09-24 22:09:16 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.25584v1",
+      "route": "202609/24/2609.25584v1-hi-opd-hierarchy-aware-open-prompt-detection-for-remote-sensing-images",
+      "title": "Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遥感图像开放提示检测",
+      "first_seen_at": "2026-09-24 22:09:16 UTC",
+      "updated_at": "2026-09-24 22:09:16 UTC"
+    },
+    {
+      "paper_id": "2609.27854v1",
+      "route": "202609/24/2609.27854v1-semantic-guided-fusion-network-for-multi-source-remote-sensing-image-classification",
+      "title": "Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向多源遥感图像分类的语义引导融合网络",
+      "first_seen_at": "2026-09-24 22:09:16 UTC",
+      "updated_at": "2026-09-24 22:09:16 UTC"
+    },
+    {
+      "paper_id": "2609.28192v1",
+      "route": "202609/24/2609.28192v1-from-change-captions-to-change-detection-semantic-appearance-agreement-framework-for-remote-sensing-change-detection",
+      "title": "From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "以文本变化描述引导的遥感变化检测",
+      "first_seen_at": "2026-09-24 22:09:16 UTC",
+      "updated_at": "2026-09-24 22:09:16 UTC"
+    },
+    {
+      "paper_id": "2609.28230v1",
+      "route": "202609/24/2609.28230v1-a-unified-framework-and-dataset-for-oriented-object-visual-grounding-in-remote-sensing",
+      "title": "A Unified Framework and Dataset for Oriented Object Visual Grounding in Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "文本表达与遥感图像的跨模态视觉定位",
+      "first_seen_at": "2026-09-24 22:09:16 UTC",
+      "updated_at": "2026-09-24 22:09:16 UTC"
+    }
+  ]
+}

@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-23</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-24</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-23 22:38:20 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-24 22:09:16 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>2026-09-23 日报：速读 10 篇、精读 0 篇，重点覆盖遥感开放词汇分割、多模态大模型证据选择与海洋哺乳动物检测解释。</p>
-<p>最值得看的是《SatOV》用空间先验实现免训练遥感开放词汇分割（7.0/10），以及多模态大模型的自适应证据选择思路（6.0/10）。</p>
-<p>普通读者可先浏览 SatOV 的免训练思路，再按兴趣了解模型解释与证据筛选方法。</p>
+<p>今日筛出4篇遥感图像论文，精读0篇、速读4篇，整体以快速扫描为主。</p>
+<p>值得关注的是3篇6分速读：Hi-OPD开放提示检测、语义引导多源分类、以及变化检测中的语义-外观一致性框架。</p>
+<p>普通读者可优先从多源融合分类和变化检测入门，再按兴趣跟进开放提示检测方向。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -93,12 +93,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">10 篇</strong>
+    <strong class="dpr-home-dashboard-count">4 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SatOV: Restoring Spatial Priors for Training-Free Open-Vocabulary Segmentation in Remote Sensing Imagery">SatOV: Restoring Spatial Priors for Training-Free Open-Vocabulary Segmentation in Remote Sensing Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models">Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="Det-LIME: Detector-Aware, Multi-Instance Local Interpretable Model-Agnostic Explanations for Automated Marine Mammal Detection">Det-LIME: Detector-Aware, Multi-Instance Local Interpretable Model-Agnostic Explanations for Automated Marine Mammal Detection</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images">Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images</span></li><li><span class="dpr-home-dashboard-paper-title" title="Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification">Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection">From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
 </section>
 </div>
 

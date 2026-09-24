@@ -1,0 +1,69 @@
+{
+  "label": "2026-09-24",
+  "date": "2026-09-24",
+  "generated_at": "2026-09-24T22:09:19",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202609/24/2609.25584v1-hi-opd-hierarchy-aware-open-prompt-detection-for-remote-sensing-images",
+      "section": "quick",
+      "title_en": "Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images",
+      "authors": "Jinlong Hu, Yi Zhang, Zhiqi Xia, Yikang Zhou, Shunping Ji",
+      "date": "2026-09-22",
+      "pdf": "https://arxiv.org/pdf/2609.25584v1",
+      "score": "6.0",
+      "evidence": "遥感图像开放提示检测",
+      "tldr": "遥感开放提示检测在平面训练下存在层级不一致：祖先提示查询时未必能召回后代实例，且多源遥感标注粒度不一、标签缺失，平面AP无法暴露该跨层级问题。Hi-OPD构建RS153-HierOPD，通过层级安全负采样、路径多正监督和单向向上一致性学习祖先检索，并用ConvVPE支持K-shot。在DIOR/DOTA-v2.0上取得79.7/72.3 AP50，层级训练将DOTA-v2.0父类AP50从7.2提至71.5，文本路径CAR50达99.7%。该工作修复跨层级失败模式，同时保持原子检测与提示迁移能力。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Hi-OPD addresses a failure mode left uncontrolled by flat open-prompt training: descendant retrieval need not persist under ancestor queries when multi-source remote sensing annotations exhibit inconsistent granularity and missing labels. A detector may localize \\textit{car} and \\textit{van} under atomic prompts yet miss the same instances under \\textit{vehicle}; flat AP does not expose this cross-level inconsistency.   We propose Hi-OPD, a hierarchy-aware open-prompt detector, and construct RS153-HierOPD from 175,644 retained training image/tile records and 3.48M boxes mapped to 153 atomic categories with sparse hierarchy and alias relations. Hi-OPD learns ancestor retrieval through hierarchy-safe negative sampling, path multi-positive supervision, and one-way upward consistency, while per-source risk exclusion handles potentially missing labels. ConvVPE converts K-shot support boxes into text-compatible embeddings using detector-native features and the shared contrastive head.   On Track A, Hi-OPD obtains 79.7/72.3 AP50 on DIOR/DOTA-v2.0, above the literature-reported OpenRSD results of 76.7/71.8. Under controlled training on the original converted annotations, the full hierarchy recipe raises DOTA-v2.0 parent AP50 from 7.2 to 71.5 and FAIR1M grandparent AP50 from 31.6 to 71.4, while DOTA-v2.0 atomic AP50 changes from 71.4 to 72.3. The text path reaches 99.7% CAR50 (0.3% violation) across the three common sources and 99.9%/0.1% on FAIR1M grandparent relations. On held-out VEDAI, text AP50 is 75.9, 6.2 points above OpenRSD. Joint AP and CAR show that explicit hierarchy training repairs this failure mode while retaining atomic detection and prompt transfer.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/24/2609.27854v1-semantic-guided-fusion-network-for-multi-source-remote-sensing-image-classification",
+      "section": "quick",
+      "title_en": "Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification",
+      "authors": "Yuwei Zhao, Chuanzheng Gong, Baogui Huan, Feng Gao, Junyu Dong, Qian Du",
+      "date": "2026-09-16",
+      "pdf": "https://arxiv.org/pdf/2609.27854v1",
+      "score": "6.0",
+      "evidence": "面向多源遥感图像分类的语义引导融合网络",
+      "tldr": "多源遥感图像分类因光谱、结构与几何信息互补而受关注，但现有方法存在语义上下文建模不足和轻微空间错位导致融合不可靠的问题。为此，本文提出语义引导融合网络SGFNet：用语义混合卷积块动态生成语义感知卷积核，并用频率调制融合块在频域进行跨模态交互。在Augsburg和Houston 2018数据集上，SGFNet持续优于多种先进方法。该工作提升了多源遥感分类的语义建模与鲁棒融合能力。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Multi-source remote sensing image classification has attracted increasing attention due to the complementary spectral, structural, and geometric information. However, existing methods still suffer from two limitations: insufficient semantic contextual modeling and unreliable feature fusion caused by slight spatial misalignment. To address these issues, we propose a Semantic-Guided Fusion Network (SGFNet) for multi-source remote sensing image classification. Specifically, the Semantic Mixing Convolution Block (SMCB) is designed to dynamically generate semantic-aware convolution kernels according to contextual relationships among feature representations. In addition, the Frequency Modulated Fusion Block (FMFB) is introduced to perform cross-modal interaction in the frequency domain, which effectively alleviates the influence of slight spatial misalignment and improves complementary information fusion. Extensive experiments conducted on the Augsburg and Houston 2018 datasets demonstrate that the proposed SGFNet consistently outperforms several state-of-the-art methods. The codes are publicly available at https://github.com/oucailab/SGFNet .",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/24/2609.28192v1-from-change-captions-to-change-detection-semantic-appearance-agreement-framework-for-remote-sensing-change-detection",
+      "section": "quick",
+      "title_en": "From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection",
+      "authors": "Yuan Qian, Jie Ma",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.28192v1",
+      "score": "6.0",
+      "evidence": "以文本变化描述引导的遥感变化检测",
+      "tldr": "遥感变化检测通常依赖昂贵的像素级变化掩码，弱监督仅用图像级标签又缺失变化位置与语义。本文提出变化描述引导的RSCD，仅用变化描述作为任务特定监督，学习变化掩码。方法包含描述驱动的双时相图像对生成流程，以及由描述转换语义引导的检测器，其语义-外观一致性框架SAAF融合描述语义响应与RGB差异进行定位，并用文本条件指导密集预测。在Flair-RSGen与WHU-CDC上，SAAF在宏平均IoU和F1上优于最接近的复现有限监督基线，代码已开源。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Remote sensing change detection (RSCD) is essential for monitoring land-cover changes and urban development. However, most methods demand pixel-level change masks, which are costly and time-consuming to annotate. Weakly supervised methods reduce this cost by using image-level change labels. Yet these labels indicate only whether a change occurs, leaving models to recover the location of the change and semantic meaning through additional and complex mechanisms. This missing information can be supplied directly by change captions, which describe what changes, what it becomes, and where it occurs. Therefore, we introduce change-caption-guided RSCD, using change captions as the sole task-specific supervision to learn change masks without manually annotated change masks. Our framework has two components: a caption-driven generation pipeline that produces bi-temporal remote sensing image pairs at scale with controlled changes matching each caption, and a change detector guided by the caption's transition semantics. The detector uses our Semantic-Appearance Agreement Framework (SAAF) to combine caption-grounded semantic responses with RGB differences for change localization, while text conditioning guides dense prediction. Experiments on our newly constructed Flair-RSGen dataset and WHU-CDC show that SAAF outperforms the closest reproduced limited-supervision baselines in macro-averaged IoU and F1 under the evaluated protocols. Code is publicly available at https://github.com/qianyuancs/SAAF.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202609/24/2609.28230v1-a-unified-framework-and-dataset-for-oriented-object-visual-grounding-in-remote-sensing",
+      "section": "quick",
+      "title_en": "A Unified Framework and Dataset for Oriented Object Visual Grounding in Remote Sensing",
+      "authors": "Zeyu Ding, Yong Zhou, Jiaqi Zhao, Wen-Liang Du, Xixi Li, Hancheng Zhu, Rui Yao, Abdulmotaleb El Saddik",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.28230v1",
+      "score": "6.0",
+      "evidence": "文本表达与遥感图像的跨模态视觉定位",
+      "tldr": "遥感视觉定位多预测水平框，对任意朝向目标常不准确。本文提出 O²-VG 统一框架：O²-VG-Trans 建立跨模态判别基础，O²-VG-Uni 无文本提示预测通用有向提议并支持缓存检索，O²-VG-VLM 以多 token 预测并行生成有向框。作者还构建 DIOR-R-RSVG 图像、表达、有向框三元组数据集，并在多个基准上取得领先性能。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Visual grounding in remote sensing images aims to locate objects described by referring expressions. Most existing methods predict horizontal bounding boxes, which are often inaccurate for objects with arbitrary orientations. To address this limitation, we introduce O$^2$-VG, a family of models for oriented object visual grounding with three complementary designs. Specifically, O$^2$-VG-Trans is a cross-modality transformer for oriented object visual grounding. It establishes a strong discriminative foundation for the model family. Building upon it, O$^2$-VG-Uni predicts universal oriented proposals for possible foreground objects without specific text prompts. It also supports object retrieval through cached proposal embeddings. Using these universal oriented proposals as input prompts, O$^2$-VG-VLM is an autoregressive vision-language model. It generates oriented box token blocks in parallel through multi-token prediction. In addition, we construct DIOR-R-RSVG, a dataset for oriented object visual grounding in remote sensing images. It provides image, expression, and oriented box triplets for training and evaluation. Together, the O$^2$-VG family provides a flexible framework that spans discriminative transformers and generative vision-language models. It achieves superior performance across multiple benchmarks. Code is available at https://github.com/wokaikaixinxin/ai4rs.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

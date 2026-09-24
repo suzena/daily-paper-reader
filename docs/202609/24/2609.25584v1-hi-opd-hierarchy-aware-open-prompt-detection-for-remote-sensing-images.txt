@@ -1,0 +1,624 @@
+Title: Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images
+
+URL Source: https://arxiv.org/pdf/2609.25584v1
+
+Published Time: Wed, 23 Sep 2026 00:32:55 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images 
+
+## Jinlong Hu 1, Yi Zhang 2, Zhiqi Xia 1, Yikang Zhou 1, Shunping Ji 1
+
+> 1
+
+Wuhan University 
+
+> 2
+
+Institute of Seismology, China Earthquake Administration 
+
+Abstract 
+
+Hi-OPD addresses a failure mode left uncontrolled by flat open-prompt training: descendant retrieval need not persist under ancestor queries when multi-source remote sensing an-notations exhibit inconsistent granularity and missing labels. A detector may localize car and van under atomic prompts yet miss the same instances under vehicle ; flat AP does not expose this cross-level inconsistency. We propose Hi-OPD, a hierarchy-aware open-prompt detec-tor, and construct RS153-HierOPD from 175,644 retained training image/tile records and 3.48M boxes mapped to 153 atomic categories with sparse hierarchy and alias relations. Hi-OPD learns ancestor retrieval through hierarchy-safe neg-ative sampling, path multi-positive supervision, and one-way upward consistency, while per-source risk exclusion handles potentially missing labels. ConvVPE converts K-shot support boxes into text-compatible embeddings using detector-native features and the shared contrastive head. On Track A, Hi-OPD obtains 79.7/72.3 AP50 on DIOR/DOTA-v2.0, above the literature-reported OpenRSD results of 76.7/71.8. Under controlled training on the orig-inal converted annotations, the full hierarchy recipe raises DOTA-v2.0 parent AP50 from 7.2 to 71.5 and FAIR1M grand-parent AP50 from 31.6 to 71.4, while DOTA-v2.0 atomic AP50 changes from 71.4 to 72.3. The text path reaches 99.7% CAR50 (0.3% violation) across the three common sources and 99.9%/0.1% on FAIR1M grandparent relations. On held-out VEDAI, text AP50 is 75.9, 6.2 points above OpenRSD. Joint AP and CAR show that explicit hierarchy training repairs this failure mode while retaining atomic detection and prompt transfer. 
+
+## Introduction 
+
+Object detection in remote sensing images underpins appli-cations such as urban monitoring, traffic analysis, disaster response, and land-use management. Most remote sensing benchmarks assume a fixed category set shared by training and testing, an assumption strained by new areas, sensors, tasks, and annotation policies. Open-prompt detection relaxes this assumption by ac-cepting category prompts at inference time. Recent remote sensing systems such as OpenRSD (Huang et al. 2025) and LAE-DINO (Pan et al. 2025) extend this paradigm with vi-sual prompting and domain-specific training, demonstrating strong atomic-category detection and cross-dataset transfer. DIOR -DOTA  mAP50 (%) 
+
+## FPS on RTX 309 0 50 40 30 20 10 
+
+> 64
+> 66
+> 68
+> 70
+> 72
+> 74
+> 76
+> 78
+> Grounding
+> DINO-T
+> YOLO-World-L
+> WeDetect-tiny
+> OpenRSD
+> Hi-OPD text
+> Hi-OPD visual
+> Bubble Radius
+> ∝
+> Online Params(M)
+> 40
+> 100
+> 170
+> 40 100 170
+
+Figure 1: Accuracy–efficiency–size trade-off. The axes report mean DIOR/DOTA-v2.0 AP50 and FP32 FPS on an RTX 3090; bubble radius is proportional to online/evaluation pa-rameters. Stars denote Hi-OPD variants. LAE-DINO is omit-ted because DOTA AP50 is not reported. Despite this progress, existing remote sensing open-prompt systems largely organize prompts as flat category labels : query a class name, detect that class, and report aver-age precision over a flat category set. Strong atomic detection therefore does not guarantee that the same objects remain re-trievable when a user issues a coarser ancestor prompt. Semantic hierarchies have been explored in general-domain open-vocabulary detection. SHiNe (Liu et al. 2024a) constructs training-free hierarchy-aware classifiers from super- and sub-category descriptions; LHST (Huang et al. 2024) introduces language hierarchies into weakly super-vised self-training and prompt generation; and HCC (Lee et al. 2026) uses consistency across class, super-category, and sub-category predictions to calibrate pseudo-label con-fidence. These studies establish that vocabulary granular-ity matters, but focus on classifier construction, image-level weak supervision, or pseudo-label calibration. They do not study direct ancestor-query retrieval under heterogeneous re-mote sensing annotations, where category granularity and missing-box patterns vary by source. Remote sensing couples two challenges that flat prompting arXiv:2609.25584v1 [cs.CV] 22 Sep 2026 leaves unresolved: hierarchy-dependent queries and source-dependent partial labels. 
+
+Missing hierarchical recall. Operational search is often coarse-to-fine, yet flat AP does not test whether objects de-tected under fine-grained labels remain retrievable from a parent prompt. Track B directly measures this capability. 
+
+Multi-source granularity conflicts. Sources differ in an-notation granularity, and single- or few-class datasets leave co-visible objects outside their target taxonomies unlabeled. Treating those categories as negatives suppresses true ob-jects, whereas merging parent and child labels erases fine-grained distinctions. We therefore ask how the same object instances can be retrieved consistently across semantic granularities without introducing false negatives from heterogeneous annotations. Hi-OPD addresses this question with a unified 153-class atomic vocabulary, a sparse explicit hierarchy over seman-tically meaningful subsets, hierarchy-safe text training, and detector-native visual prompting. The hierarchy is intention-ally not exhaustive: only atomic categories with operationally meaningful ancestor queries participate in the corresponding hierarchy evaluations. Our contributions are fourfold: 
+
+• We introduce RS153-HierOPD, which unifies multi-source remote sensing data into 153 atomic categories and records explicit parent–child and alias relations over hierarchy-enabled subsets. It supports atomic detection, direct hierarchy-query evaluation with both absolute AP and conditional ancestor recall, and cross-dataset prompt generalization. 
+
+• We formulate direct ancestor-query detection under het-erogeneous annotation granularity. Hi-OPD prevents se-mantically valid prompts from becoming false negatives through hierarchy-safe negative sampling, path multi-positive supervision, and one-way upward consistency. 
+
+• To enable lightweight, detector-native visual prompting, we propose ConvVPE, which encodes K-shot support re-gions directly from the detector’s own multi-scale features into visual prompt embeddings compatible with the text-prompt space, thereby reusing the same detection head without introducing an external visual encoder. 
+
+• We provide controlled evaluation across atomic detec-tion, direct parent and grandparent queries, and held-out cross-dataset transfer. Within the same detector archi-tecture and training protocol, hierarchy-aware training repairs the ancestor-query failure mode of flat training while preserving atomic detection. 
+
+## Related Work 
+
+Open-prompt detection. Open-prompt detection casts cat-egory recognition as matching between region features and category embeddings. CLIP (Radford et al. 2021) provides transferable vision-language representations; GLIP (Li et al. 2022) and Grounding DINO (Liu et al. 2024b) introduce phrase grounding into detection pretraining; other repre-sentative systems (Minderer et al. 2022; Gu et al. 2022; Zhong et al. 2022; Zhou et al. 2022; Kamath et al. 2021; Yao et al. 2022; Cheng et al. 2024) span vision-transformer open-vocabulary detection, region–language distillation and pretraining, text-conditioned detection, image-level supervi-sion, and efficient deployment. WeDetect (Fu et al. 2026) re-formulates open-category detection as retrieval and provides a fast YOLO-World-style detector; we use WeDetect-tiny as the base detector and build both text and visual prompt paths on top of it. 
+
+Remote sensing detection and open-prompt detec-tion. Remote sensing detection differs from natural im-age detection due to overhead viewpoints, dense small objects, large scale variation, and specialized category names. DOTA (Ding et al. 2022), DIOR (Li et al. 2020), FAIR1M (Sun et al. 2022), HRSC2016 (Liu et al. 2017), ShipRSImageNet (Zhang et al. 2021), and SODA-A (Cheng et al. 2023) have advanced horizontal, oriented, and fine-grained aerial object detection. OpenRSD (Huang et al. 2025) systematically introduces text- and image-prompt de-tection in remote sensing, while LAE-DINO (Pan et al. 2025) builds a large remote sensing corpus and dynamic category set to reduce domain mismatch. Their reported protocols pri-marily evaluate flat category vocabularies. Hi-OPD retains atomic and cross-dataset evaluation while adding direct an-cestor queries and explicit treatment of multi-source granu-larity conflicts. 
+
+Hierarchy-aware open-vocabulary detection. Earlier work uses WordNet (Miller 1995), WordTree detec-tors (Redmon and Farhadi 2017), and hierarchy-aware ob-jectives (Bertinetto et al. 2020; Deng et al. 2012) to organize labels or trade accuracy against semantic specificity. More recently, SHiNe (Liu et al. 2024a) exposes the instability of open-vocabulary detectors across vocabulary granulari-ties and builds a training-free nexus classifier by integrating super- and sub-category descriptions. LHST (Huang et al. 2024) expands image-level labels through a language hi-erarchy and co-regularizes weakly supervised self-training, whereas HCC (Lee et al. 2026) calibrates pseudo-label con-fidence from class/super-category/sub-category consistency. These general-domain methods use hierarchy for classifier construction, weak image-level supervision, or pseudo-label selection. In contrast, Hi-OPD directly supervises ancestor prompts for descendant boxes and prevents ancestor, descen-dant, alias, and source-risk prompts from becoming false negatives under heterogeneous remote sensing annotations. 
+
+Multi-dataset taxonomies and incomplete labels. 
+
+Unified-label detectors (Zhao et al. 2020), Simple Multi-Dataset Detection (Zhou, Koltun, and Krähenbühl 2022), Detection Hub (Meng et al. 2023), and ScaleDet (Chen et al. 2023) address heterogeneous label spaces, seman-tic alignment, and domain variation. LVIS (Gupta, Dollár, and Girshick 2019), Detic (Zhou et al. 2022), and long-tail losses (Tan et al. 2020; Wang et al. 2021) address vocab-ulary scale, weak supervision, or class imbalance. These approaches do not directly resolve the coupled case in which one source uses a coarse parent label, another uses its fine-grained descendants, and non-target objects remain unanno-tated. Hi-OPD uses explicit hierarchy, alias, and source-risk relations to determine which prompts are valid positives, unsafe negatives, or masked categories. 
+
+Visual prompting. Visual prompts specify categories through examples rather than names. T-Rex2 (Jiang et al. 2024) supports box- or point-conditioned prompts, while OpenRSD (Huang et al. 2025) extracts remote sensing im-age prompts with an external DINOv2 encoder (Oquab et al. 2024). ConvVPE instead pools support regions from the de-tector’s own multi-scale features and maps them into the shared contrastive prompt space, providing a lightweight vi-sual extension without a separate visual encoder. 
+
+## RS153-HierOPD Benchmark 
+
+RS153-HierOPD maps twelve heterogeneous sources into 153 atomic categories. Its submitted manifests contain 175,644 training image/tile records with 3,477,064 boxes and 56,695 validation records with 1,297,548 boxes. The hierarchy is sparse rather than exhaustive: 108 atomic cate-gories participate in 108 direct and 70 grandparent relations, using 11 parent and two grandparent nodes. Eleven atomic classes also serve as ancestors, and three alias groups provide 11 protected links. Construction retains visually decidable atomic categories, uses strict is-a relations for hierarchy edges, and reserves alias links for naming equivalence or protocol-level ambigu-ity. Part-of relations, co-occurrence, and appearance similar-ity alone are excluded. Table 1 makes the evaluation-bearing structure explicit. The code-and-data appendix includes the complete taxonomy, all hierarchy and alias edges, all 246 source-label mappings, effective per-source Risk sets, split provenance, relation-level evaluation metadata, audit bound-aries, and validation scripts.            
+
+> Benchmark item Count Atomic / hierarchy-enabled atomic classes 153 / 108 Parent / grandparent nodes 11 / 2 Direct / grandparent relations 108 / 70 Alias groups / protected links 3 / 11 Atomic classes also serving as ancestors 11 Train records / boxes 175,644 / 3,477,064 Validation records / boxes 56,695 / 1,297,548 Risk-covered sources (global / source-specific) 12 / 3 Track-B relations (common / standalone GP) 36 / 9 Track-B GT (common / standalone GP) 782,132 / 290,906
+
+Table 1: Review-time RS153-HierOPD statistics. Track-B counts use source-specific relation entries; the FAIR1M depth-2 diagnostic is separate. RS153-HierOPD defines three tasks. Track A measures atomic detection over the 153-class vocabulary. Track B rolls ground truth to the requested level and provides only the cor-responding coarse prompts; its common direct/mixed pro-tocol contains 36 source-specific relations and 782,132 GT instances, while nine FAIR1M depth-2 relations (290,906 GT) form a separate grandparent diagnostic. Track C evalu-ates zero-shot text and K-shot visual prompt generalization on datasets excluded from training. A visual summary of the three evaluation tasks is provided in the technical appendix. 
+
+## Method 
+
+Overview 
+
+Hi-OPD addresses two coupled problems in multi-source remote sensing open-prompt detection: category hierarchy and source-dependent partial labels. Given an image I and a prompt category set C, the detector extracts region features 
+
+ri and matches each region to a prompt embedding zc:
+
+sic = γ r ⊤ 
+
+> i
+
+zc + bc, (1) where γ is a learnable logit scale and bc is a category bias. Unlike flat prompt training, Hi-OPD decides which classes can safely serve as negatives using parent, descendant, alias, and source-risk relations. Figure 2 illustrates the framework. Hi-OPD has two prompt paths. The text path performs prompt-based inference from category names without requiring support examples, whereas the visual path uses ConvVPE to construct category prompts from K-shot support boxes. Both paths produce 768-dimensional prompt embeddings compatible with the same batch-normalized (BN) contrastive detection head: 
+
+zc =
+
+Normalize( T (c)) , text ,
+
+Normalize(ConvVPE( Sc; ϕ)) , visual .
+
+Here T (·) is the cached text encoder, Sc is the support set of class c, and ϕ denotes ConvVPE parameters. 
+
+Hierarchy-Safe Prompt Construction 
+
+Flat negative sampling can generate false-negative supervi-sion. For a region of class y, its parent prompt should also be able to recall this region. If the parent, a descendant, an alias, or a source-risk class is sampled as a negative, train-ing explicitly suppresses a semantically valid prompt. Let 
+
+H(Y ) = Anc( Y ) ∪ Desc( Y ) ∪ Alias( Y ) denote the hier-archy/alias neighborhood of observed classes. We define the potential false-negative pool as 
+
+F (Y, s ) =  H(Y ) ∪ Risk( s) \ Y, (2) where Y is the set of observed positive classes in a source-s
+
+image, and Anc , Desc , and Alias denote ancestor, descen-dant, and alias sets. Risk( s) is an unsafe-negative set rather than an additional positive-label set: it contains categories that are plausible in source s but are not exhaustively anno-tated under that source’s labeling policy. The executable pol-icy contains one global protection rule applied to all twelve sources and additional source-specific rules for three sources. It has two uses. First, during headline Hi-OPD training, its members are excluded from the sampled negative prompt pool so that potentially unlabeled instances are not explic-itly suppressed. Second, in a separate auxiliary experiment, the responses preserved for Risk( s) categories are used to mine candidates for supplemental annotation. The supple-mental annotations are not used to train the headline models; this second use evaluates data-curation potential rather than a separate final-AP module. The technical appendix reports the candidate-mining analysis, and the code-and-data appendix includes the complete effective set for every source. The hierarchy-safe negative set is 
+
+Nsafe = C \  Y ∪ H (Y ) ∪ Risk( s). (3) text-semantic alignment 
+
+Multi-scale 
+
+ROIAlign 
+
+ConvNeXt backbone 
+
+ConvNeXt backbone 
+
+ConvNeXt backbone 
+
+input input  output output 
+
+CSPRepBiFPAN 
+
+> P5 P5 P5
+> P4 P4 P4
+> P3 P3 P3
+> P5 P5 P4 P4 P3 P3
+> P5 P5 P4 P4 P3 P3
+
+CSPRepBiFPAN 
+
+> P5 P5 P4 P4 P3 P3
+
+hierarchical supervision 
+
+> ship
+> airplane
+> storage tank
+> bridge
+> baseball field
+> helicopter
+> tennis court
+> basketball court
+> fishing vessel
+> container ship
+> ground track field
+> ship
+> motorboat
+> oil tanker
+> ferry
+> building
+> yacht
+> barge
+> large vehicle
+> small
+> car
+> pickup
+> truck
+> vehicle vehicle
+> samll vehicle
+> samll vehicle
+> van van
+> truck
+> tower
+> shed
+> boat
+> ship
+> airplane storage tank bridge baseball field helicopter tennis court basketball court fishing vessel container ship ground track field
+> ship
+> motorboat oil tanker ferry building yacht barge large vehicle
+> small
+> car
+> pickup
+> truck
+> vehicle samll vehicle
+> van
+> truck
+> tower
+> shed boat
+
+Conv 
+
+VPE 
+
+Conv 
+
+VPE 
+
+Conv 
+
+VPE 
+
+text-semantic alignment 
+
+hierarchical supervision 
+
+Text 
+
+Enc 
+
+Text 
+
+Enc 
+
+frozen 
+
+text 
+
+anchors 
+
+visual prompt 
+
+embeddings 
+
+shared BN contrastive detection  head 
+
+shared BN contrastive detection  head   
+
+> atomic category
+> direct parent
+> grandparent
+> safe negatives
+> atomic category
+> direct parent
+> grandparent
+> safe negatives
+> hierarchy-safe prompt construction
+> path multi-positive supervision
+> one-way upward consistency
+> hierarchy-safe prompt construction path multi-positive supervision one-way upward consistency
+> ...
+
+... 
+
+... 
+
+... 
+
+... 
+
+... 
+
+... ... ... 
+
+> ...
+
+... ... ... 
+
+... 
+
+... 
+
+... ... ... 
+
+K-shot visval prompts 
+
+K-shot visval prompts 
+
+text prompts 
+
+vehicle, small vehicle, van, . . . 
+
+vehicle, small vehicle, van, . . . 
+
+text prompts 
+
+vehicle, small vehicle, van, . . . Figure 2: Overview of Hi-OPD. RS153-HierOPD provides multi-source data and hierarchy/alias metadata. The text detector is trained through staged hierarchy-aware continuation with path multi-positive supervision and one-way upward consistency. ConvVPE is trained separately as a frozen-body visual prompt branch. Text and visual prompts share the same BN contrastive detection head. The training prompt pool contains observed positive classes, ancestor prompts along the semantic path, and sampled safe negatives: 
+
+Ptrain = Y ∪ Anc ≤2(Y ) ∪ Sample( Nsafe ). (4) For a region whose atomic category is yi, we supervise the whole valid hierarchy path rather than only the leaf. Let 
+
+Πi = {yi}∪ Anc ≤2(yi) be the path from the atomic category to its direct parent and grandparent. The path multi-positive target is 
+
+tic =
+
+
+
+1, c = yi,βd, c ∈ Anc d(yi), d ≤ 2,
+
+0, c ∈ Nsafe ,
+
+(5) where βd is an ancestor-positive weight. We set β1 = β2 =0.8, m = 0 , and λup = 0 .05 in the final recipe. Thus, both direct parents and selected grandparents receive the same path-positive weight. This differs from post-hoc label roll-up: the detector learns to score each hierarchy prompt directly, matching the hierarchy-query protocol used at evaluation time. Path supervision alone does not explicitly order logits along the hierarchy. We therefore add a one-way upward consistency term: 
+
+Lup = 1
+
+|P| 
+
+X
+
+(i,a )∈P 
+
+[sg( siy i ) − sia + m]+ , (6) where a ∈ Anc ≤2(yi), sg( ·) stops gradients through the child logit ( detach_child=True ), and m is a margin. Because m = 0 , this is a zero-margin one-way ordering constraint: each ancestor logit is required to be no lower than the detached child logit. The loss can only pull ancestor logits upward when they fall below the atomic evidence; it does not push down fine-grained atomic logits. This one-way design is important for improving parent and grandparent recall while preserving Track-A atomic detection. Classes not covered by the target or safe negatives are masked from the classification loss. The final text-path detection objective is 
+
+Ldet = Lcls (sic , t ic ) + λbox Lbox + λdfl Ldfl + λup Lup . (7) 
+
+Detector-Native Visual Prompt Encoder 
+
+Existing image-prompt methods often rely on an external vi-sual encoder to extract support features. ConvVPE instead runs on the detector’s own multi-scale features. Given class 
+
+c and support set Sc = {(Im, b m)}Mm=1 , ConvVPE applies multi-scale ROI alignment on detector feature maps and aug-ments the crop with box-coordinate encoding: 
+
+um = ROIAlign  {P3, P 4, P 5}, b m
+
+ ⊕ e(bm). (8) A lightweight convolutional encoder and projection layer map each support sample to a visual anchor: 
+
+ˆzm = Proj  ConvEncoder( um). (9) For multiple support samples of the same class, a gating branch estimates normalized support weights: 
+
+am = exp( g(ˆ zm)) 
+
+PMj=1 exp( g(ˆ zj )) ,zvis 
+
+c = Normalize 
+
+ MX
+
+m=1 
+
+am ˆzm
+
+
+
+.
+
+(10) ConvVPE only aggregates support samples within a class; it does not perform text-visual fusion. The resulting visual em-bedding has the same dimensionality as the text embedding and is directly consumed by the shared detection head. Training and Inference 
+
+Text detector training stages. Stage 1 learns the multi-source text detector, and Stage 2 continues it with the hierarchy-aware objective above. The resulting checkpoint is used for text-prompt inference and initializes the frozen-body ConvVPE branch. 
+
+Frozen-body visual prompt learning. ConvVPE is ini-tialized from the Stage-2 hierarchy-aware text checkpoint and trained as an independent visual-prompt branch. Dur-ing this step, the detector body—including the backbone, neck, non-BN detection-head parameters, and cached text embeddings—is frozen, and only ConvVPE parameters are updated. For K-shot support boxes, ConvVPE maps support samples to 768-dimensional prompt embeddings, which are normalized and fed into the same BN contrastive head as text embeddings. The training objective is 
+
+Lvis = Lvis cls + λalign Lalign , (11) where Lvis cls uses the same hierarchy-safe classification loss through the shared head, and Lalign aligns visual prompt embeddings with their corresponding text anchors. We set 
+
+λalign = 1 .0. During training, the number of supports is sampled from M ∈ { 1, 2, 3, 5} with support dropout; evalu-ation uses M = 5 .
+
+## Experiments 
+
+Experimental Setup 
+
+Data. The RS153-HierOPD training set comprises twelve sources: DIOR (Li et al. 2020), DOTA-v2.0 (Ding et al. 2022), FAIR1M (Sun et al. 2022), GLH Bridge (Li et al. 2024), HRSC2016 (Liu et al. 2017), LEVIR (Zou and Shi 2018), NWPU-VHR-10 (Cheng et al. 2014), SIMD (Haroon, Shahzad, and Fraz 2020), SODA-A (Cheng et al. 2023), ShipRSImageNet (Zhang et al. 2021), WHU Buildings (Ji, Wei, and Lu 2019), and xView (Lam et al. 2018). The con-verted files contain 175,644 training records / 3,477,064 boxes and 56,695 validation records / 1,297,548 boxes; the reported Stage-2 model uses only these original annota-tions, without supplemental or relabel-assisted boxes. Track A evaluates DIOR and DOTA-v2.0. Track B uses the six-source common direct/mixed ancestor protocol (36 relations, 782,132 GT) plus the separate FAIR1M grandparent diag-nostic (nine relations, 290,906 GT). HRRSD (Zhang et al. 2019), RSOD (Long et al. 2017), UCAS-AOD (Zhu et al. 2015), and VEDAI (Razakarivony and Jurie 2016) are ex-cluded from training and used for Track-C prompt general-ization; detailed splits and source roles are provided in the technical appendix. 
+
+Base detector and baselines. We use WeDetect-tiny (Fu et al. 2026) as the base detector. Its image backbone is ConvNeXt-tiny (Liu et al. 2022), its head follows a YOLO-World-style BN contrastive head, and the prompt dimen-sion is 768. We compare against two WeDetect baselines: an official LVIS-weight zero-shot transfer baseline and a per-source flat fine-tuning baseline initialized from the official WeDetect-tiny weights. We also compare with remote sens-ing open-prompt or open-set baselines OpenRSD (Huang et al. 2025) and LAE-DINO (Pan et al. 2025). 
+
+External-result provenance. Track-A values for YOLO-World-L, Grounding DINO-T, and OpenRSD (text prompt) are taken from the OpenRSD paper’s HBB AP50 table for DIOR-R and DOTA-v2.0, whereas those for LAE-DINO are taken from its original paper. OpenRSD does not re-port DOTA-v2.0 mAP for the first three rows; LAE-DINO reports DOTA-v2.0 mAP but not AP50, and unavailable en-tries are shown as dashes. For Track B, YOLO-World-L and Grounding DINO-T are flat-fine-tuned separately on each source’s original categories for 10 epochs; OpenRSD and LAE-DINO are re-evaluated from released weights. All use method-native category prompts under shared images, labels, COCO AP implementation, and detection budget; we do not substitute Hi-OPD prompts. The OpenRSD Track-C score is literature-reported. LAE-DINO Track-C results are measured in this work using the official LAE-1M pretrained check-point and native dataset category prompts, without target-set fine-tuning. The official LAE-DINO data catalog lists RSOD under LAE-FOD/LAE-1M pretraining but does not list HRRSD, UCAS-AOD, or VEDAI; we therefore exclude RSOD only when calculating the three-source held-out com-parison stated in the text. All Hi-OPD results and Panel A baselines are measured in this work. 
+
+Efficiency protocol. FPS is measured on an RTX 3090 with batch size 1 in FP32. The two WeDetect-tiny base-lines and Hi-OPD text use the same cached RS153 text em-beddings at inference; YOLO-World-L is likewise reparam-eterized with cached text. Parameter counts exclude prompt caches (the WeDetect-tiny/Hi-OPD text cache is 2.5 MB); full precision, latency, memory, and cache accounting is pro-vided in the technical appendix. 
+
+Training and metrics. Stage 1 trains the text path at 832 resolution, with its epoch-25 checkpoint initializing Stage 2. Stage 2 continues at 896 resolution for 15 epochs. ConvVPE is subsequently trained for 8 epochs as a frozen-body visual-prompt branch initialized from the Stage-2 hierarchy-aware text checkpoint. Track A reports COCO-style mAP, AP50, and AP75; Tracks B and C report AP50 for hierarchy queries and cross-dataset prompt transfer, respectively. Track B addi-tionally reports conditional ancestor recall. For each ground-truth hierarchy relation r = ( i, y, a ), let Ar indicate that instance i is recalled under its atomic query y, and let Hr in-dicate that the same instance is recalled under ancestor query 
+
+a. Then 
+
+CAR 50 =
+
+P 
+
+> r
+
+Ar Hr
+
+P 
+
+> r
+
+Ar
+
+, Violation 50 = 1 − CAR 50 . (12) CAR50 uses class-aware, score-ordered one-to-one match-ing at IoU 0.50 , method-native NMS, score ≥ 0.05 , and at most 600 detections per image and query branch. We report each source, a relation-level micro aggregation, and an equal-weight source macro over DOTA-v2.0, FAIR1M, and HRSC2016; the latter two summaries expose the influ-ence of FAIR1M’s much larger relation count. Because CAR conditions on atomic success, it measures cross-granularity preservation rather than absolute coverage. Moreover, broad prompts can obtain high CAR at this permissive operating point despite false positives, so CAR is always interpreted jointly with ancestor AP50. Method Prompt Track A: atomic Track B: hierarchy Efficiency DIOR AP50 DOTA mAP DOTA AP50 Parent-child AP50 Grandparent-child AP50 FPS Params (M)                                                                 
+
+> Panel A: RS153-HierOPD evaluations in this work
+> WeDetect-tiny (zero-shot) text 6.2 2.3 4.9 9.3 / 11.5 13.0 37.1 38.1 WeDetect-tiny (per-source ft) text 76.5 42.6 65.6 50.5 / 50.2 30.5 37.1 38.1
+> Hi-OPD text hier. text 79.7 48.2 72.3 81.1 / 76.0 71.4 37.9 38.1
+> Hi-OPD visual visual 5-shot 75.2 46.1 69.5 61.9 / 59.7 57.2 36.4 41.5
+> Panel B: external methods (method-native training and prompts)
+> YOLO-World-L (Cheng et al. 2024) ⋆text 73.2 –58.0 35.5 / 36.5 22.5 48.5 110.3 Grounding DINO-T (Liu et al. 2024b) ⋆text 78.7 –71.8 35.6 / 38.3 53.2 9.7 173.0 OpenRSD (Huang et al. 2025) text 76.7 –71.8 57.0 / 50.5 60.8 29.6 67.2 LAE-DINO (Pan et al. 2025) text 85.5 ‡46.8 –33.6 / 27.5 20.9 7.9 181.6
+
+Table 2: Main Track-A and Track-B results. Panel A reports evaluations in this work. Panel B combines literature-reported Track-A values with Track-B evaluations in this work; sources and protocols are detailed in the setup. ⋆For Track B, YOLO-World-L and Grounding DINO-T are flat-fine-tuned separately on each source for 10 epochs. Parent-child AP50 is shown as common/all-source macro, and grandparent-child AP50 is the FAIR1M ship /vehicle diagnostic. ‡LAE-DINO DIOR follows the broader seen-data protocol in its original paper. 
+
+Track A: Atomic Category Detection 
+
+Track A evaluates atomic detection over each evaluated source’s mapped subset of the 153-class vocabulary. Ta-ble 2 reports DIOR and DOTA-v2.0, the two shared anchors used by most external open-prompt baselines; except for the DOTA mAP column, the dataset columns report AP50. Hi-OPD obtains 79.7 AP50 on DIOR and 48.2 mAP / 72.3 AP50 on DOTA-v2.0. Complete eight-source text-path results are provided in the technical appendix. 
+
+Efficiency. Under like-for-like FP32 inference, Hi-OPD is faster and lighter than OpenRSD, Grounding DINO-T, and LAE-DINO while remaining close to cached YOLO-World-L (Table 2). ConvVPE requires no external visual encoder. 
+
+Track B: Hierarchy-Query Recall 
+
+Track B tests whether a detector can directly use coarse prompts to recall descendant objects. It differs from merging child APs because inference neither expands child prompts nor rolls predictions up to parent labels. Table 2 summa-rizes absolute ancestor AP, and Table 3 reports conditional cross-granularity preservation; the complete source-wise AP breakdown is provided in the technical appendix. The DOTA-v2.0/FAIR1M/HRSC2016 common macro is the primary cross-model subset; we additionally report the six-source AP mean for every re-evaluated public checkpoint.                                              
+
+> Model DOTA FAIR HRSC Common micro / src. FAIR GP WeDetect-tiny (zero-shot) 23.6 39.6 95.5 40.1 / 52.9 26.7 WeDetect-tiny (per-source ft) 12.4 77.9 94.8 62.4 / 61.7 2.0
+> Hi-OPD text 99.5 99.8 99.5 99.7 / 99.6 99.9
+> Hi-OPD visual 97.3 98.1 99.5 97.9 / 98.3 99.0 YOLO-World-L 9.3 54.8 4.0 41.4 / 22.7 1.6 Grounding DINO-T 93.9 87.3 94.4 88.8 / 91.9 97.4 OpenRSD 94.2 99.2 99.4 98.0 / 97.6 99.6 LAE-DINO 15.7 94.4 98.4 75.3 / 69.5 7.1
+
+Table 3: Track-B CAR50 (%, higher is better). Common reports relation-level micro / equal-weight source macro over DOTA-v2.0, FAIR1M, and HRSC2016; FAIR GP uses depth-2 ship /vehicle relations. Violation is 100 − CAR50 .Ancestor AP50 is reported in Table 2. On the common three-source subset and across all six parent-query sources, Hi-OPD obtains 81.1 and 76.0 an-cestor AP50, compared with 57.0/50.5 for OpenRSD and 33.6/27.5 for LAE-DINO. Its parent/grandparent CAR50 reaches 99.7%/99.9%, versus 62.4%/2.0% for the controlled flat WeDetect baseline. High CAR is not unique: OpenRSD reaches 98.0%/99.6% CAR50 but only 57.0/60.8 ancestor AP50. Thus, CAR measures conditional cross-granularity preservation, whereas AP50 measures detection accuracy; both are required. Figure 3 provides qualitative examples. 
+
+Track C: Cross-Dataset Prompt Generalization 
+
+Track C measures dataset-level open-prompt transfer rather than base/novel-category OvOD: target categories may over-lap the training vocabulary, but target images are excluded from detector optimization. Text prompts are evaluated zero-shot; visual prompts use K-shot boxes from the target training split, with no target-set parameter updates or query-GT-based support selection. 
+
+Dataset Hi-OPD text Hi-OPD visual LAE-DINO OpenRSD HRRSD 44.2 42.9 43.9 ∗
+
+RSOD 63.4 64.7 UCAS-AOD 69.3 72.8 83.3 ∗
+
+VEDAI 75.9 75.1 62.0 ∗ 69.7 Macro 63.1 63.6 63.1 ∗
+
+Table 4: Track-C AP50. ∗The LAE-DINO target is absent from the official LAE-1M source catalog; RSOD is omitted because it appears in LAE-FOD pretraining. Macro uses HRRSD/UCAS-AOD/VEDAI. The OpenRSD VEDAI value is literature-reported; blanks are unavailable results. On the three targets absent from LAE-1M, Hi-OPD text, Hi-OPD visual, and LAE-DINO obtain 63.1, 63.6, and 63.1 macro AP50, respectively. LAE-DINO leads on UCAS-AOD, the methods are close on HRRSD, and both Hi-OPD paths lead on VEDAI. On VEDAI, Hi-OPD text exceeds the published OpenRSD result by 6.2 points (75.9 vs. 69.7 AP50). 
+
+Ablation Studies 
+
+Hierarchy-safe components. Table 5 reports a cumula-tive four-group ablation on the original-annotation RS153-Ground truth  LAE-DINO  OpenRSD  Hi-OPD (ours)    
+
+> DOTA-v2.0 FAIR1M
+> vehicle 26 GT
+> vehicles 47 GT
+> 0/26 recalled 6/26 recalled 24/26 recalled
+> 19/47 recalled 37/47 recalled 0/47 recalled
+
+Figure 3: Track-B parent-query qualitative comparison using parent prompts only, without child-prompt expansion. HierOPD data using epoch-15 checkpoints, 896 input, and maxDets 600; hierarchy queries use no child-prompt expan-sion or output roll-up. The depth-2 FAIR1M diagnostic is retained because the effect of one-way upward consistency is concentrated at the grandparent level.                   
+
+> Setting DOTA atomic DOTA parent FAIR1M grandparent mAP / AP50 mAP / AP50 mAP / AP50 C0 Flat 47.6 / 71.4 3.8 / 7.2 15.1 / 31.6 C1 + Safe negatives 47.6 / 71.6 17.3 / 35.7 16.8 / 34.9 C2 + PathMP 47.6 / 71.4 33.1 / 71.3 38.6 / 66.6 C3 + Upward consistency 48.2 / 72.3 33.1 / 71.5 45.1 / 71.4
+
+Table 5: Cumulative hierarchy-component ablation. Safe negatives improve parent AP50 by 28.5 points but grand-parent AP50 by only 3.3. Adding PathMP supplies the largest gains: +35.6 parent AP50 and +31.7 grandparent AP50. Up-ward consistency is a terminal correction for direct parents (+0.2 AP50), but remains important at depth 2, adding 4.8 grandparent AP50 while also increasing atomic AP50 by 0.9. 
+
+## Conclusion 
+
+We presented Hi-OPD, a hierarchy-aware open-prompt de-tector for remote sensing images, together with RS153-HierOPD for atomic detection, hierarchy-query recall, and cross-dataset prompt generalization. Hierarchy-safe nega-tives, path multi-positive supervision, and upward con-sistency address multi-source granularity conflicts, while ConvVPE provides a lightweight detector-native visual prompt path. Joint ancestor AP and CAR evaluation shows that explicit hierarchy supervision improves both absolute coarse-query retrieval and cross-granularity preservation while retaining atomic detection. 
+
+## References 
+
+Bertinetto, L.; Mueller, R.; Tertikas, K.; Samangooei, S.; and Lord, N. A. 2020. Making Better Mistakes: Leveraging Class Hierarchies With Deep Networks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 12506–12515. Chen, Y.; Wang, M.; Mittal, A.; Xu, Z.; Favaro, P.; Tighe, J.; and Modolo, D. 2023. ScaleDet: A Scalable Multi-Dataset Object Detector. In Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,7288–7297. Cheng, G.; Han, J.; Zhou, P.; and Guo, L. 2014. Multi-Class Geospatial Object Detection and Geographic Image Classification Based on Collection of Part Detectors. ISPRS Journal of Photogrammetry and Remote Sensing , 98: 119– 132. Cheng, G.; Yuan, X.; Yao, X.; Yan, K.; Zeng, Q.; Xie, X.; and Han, J. 2023. Towards Large-Scale Small Object Detec-tion: Survey and Benchmarks. IEEE Transactions on Pattern Analysis and Machine Intelligence , 45(11): 13467–13488. Cheng, T.; Song, L.; Ge, Y.; Liu, W.; Wang, X.; and Shan, Y. 2024. YOLO-World: Real-Time Open-Vocabulary Object Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 16901– 16911. Deng, J.; Krause, J.; Berg, A. C.; and Li, F.-F. 2012. Hedging Your Bets: Optimizing Accuracy-Specificity Trade-Offs in Large Scale Visual Recognition. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 3450–3457. Ding, J.; Xue, N.; Xia, G.-S.; Bai, X.; Yang, W.; Yang, M. Y.; Belongie, S.; Luo, J.; Datcu, M.; Pelillo, M.; and Zhang, L. 2022. Object Detection in Aerial Images: A Large-Scale Benchmark and Challenges. IEEE Transactions on Pattern Analysis and Machine Intelligence , 44(11): 7778–7796. Fu, S.; Su, Y.; Rao, F.; Lyu, J.; Xie, X.; and Zheng, W.-S. 2026. WeDetect: Fast Open-Vocabulary Object Detection as Retrieval. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 20377– 20387. Gu, X.; Lin, T.-Y.; Kuo, W.; and Cui, Y. 2022. Open-Vocabulary Object Detection via Vision and Language Knowledge Distillation. In International Conference on Learning Representations (ICLR) .Gupta, A.; Dollár, P.; and Girshick, R. 2019. LVIS: A Dataset for Large Vocabulary Instance Segmentation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pat-tern Recognition (CVPR) , 5356–5364. Haroon, M.; Shahzad, M.; and Fraz, M. M. 2020. Multisized Object Detection Using Spaceborne Optical Imagery. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 13: 3032–3046. Huang, J.; Zhang, J.; Jiang, K.; and Lu, S. 2024. Open-Vocabulary Object Detection via Language Hierarchy. In 
+
+Advances in Neural Information Processing Systems , vol-ume 37. Huang, Z.; Feng, Y.; Liu, Z.; Yang, S.; Liu, Q.; and Wang, Y. 2025. OpenRSD: Towards Open-prompts for Object De-tection in Remote Sensing Images. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 8384–8394. Ji, S.; Wei, S.; and Lu, M. 2019. Fully Convolutional Net-works for Multisource Building Extraction From an Open Aerial and Satellite Imagery Data Set. IEEE Transactions on Geoscience and Remote Sensing , 57(1): 574–586. Jiang, Q.; Li, F.; Zeng, Z.; Ren, T.; Liu, S.; and Zhang, L. 2024. T-Rex2: Towards Generic Object Detection via Text-Visual Prompt Synergy. In Computer Vision – ECCV 2024 ,volume 15091 of Lecture Notes in Computer Science , 38–57. Springer. Kamath, A.; Singh, M.; LeCun, Y.; Synnaeve, G.; Misra, I.; and Carion, N. 2021. MDETR—Modulated Detection for End-to-End Multi-Modal Understanding. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 1780–1790. Lam, D.; Kuzma, R.; McGee, K.; Dooley, S.; Laielli, M.; Klaric, M.; Bulatov, Y.; and McCord, B. 2018. xView: Ob-jects in Context in Overhead Imagery. arXiv:1802.07856. Lee, S.; Lee, G.; Park, H.; and Ham, B. 2026. Explor-ing Hierarchical Consistency and Unbiased Objectness for Open-Vocabulary Object Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Findings , 6819–6828. Li, K.; Wan, G.; Cheng, G.; Meng, L.; and Han, J. 2020. Ob-ject Detection in Optical Remote Sensing Images: A Survey and a New Benchmark. ISPRS Journal of Photogrammetry and Remote Sensing , 159: 296–307. Li, L. H.; Zhang, P.; Zhang, H.; Yang, J.; Li, C.; Zhong, Y.; Wang, L.; Yuan, L.; Zhang, L.; Hwang, J.-N.; Chang, K.-W.; and Gao, J. 2022. Grounded Language-Image Pre-Training. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 10965–10975. Li, Y.; Luo, J.; Zhang, Y.; Tan, Y.; Yu, J.-G.; and Bai, S. 2024. Learning to Holistically Detect Bridges From Large-Size VHR Remote Sensing Imagery. IEEE Transactions on Pattern Analysis and Machine Intelligence , 46(12): 11507– 11523. Liu, M.; Hayes, T. L.; Ricci, E.; Csurka, G.; and Volpi, R. 2024a. SHiNe: Semantic Hierarchy Nexus for Open-Vocabulary Object Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 16634–16644. Liu, S.; Zeng, Z.; Ren, T.; Li, F.; Zhang, H.; Yang, J.; Jiang, Q.; Li, C.; Yang, J.; Su, H.; Zhu, J.; and Zhang, L. 2024b. Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection. In Computer Vision – ECCV 2024 , volume 15105 of Lecture Notes in Computer Science , 38–55. Springer. Liu, Z.; Mao, H.; Wu, C.-Y.; Feichtenhofer, C.; Darrell, T.; and Xie, S. 2022. A ConvNet for the 2020s. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 11976–11986. Liu, Z.; Yuan, L.; Weng, L.; and Yang, Y. 2017. A High Res-olution Optical Satellite Image Dataset for Ship Recognition and Some New Baselines. In Proceedings of the 6th Interna-tional Conference on Pattern Recognition Applications and Methods (ICPRAM) , 324–331. Long, Y.; Gong, Y.; Xiao, Z.; and Liu, Q. 2017. Accu-rate Object Localization in Remote Sensing Images Based on Convolutional Neural Networks. IEEE Transactions on Geoscience and Remote Sensing , 55(5): 2486–2498. Meng, L.; Dai, X.; Chen, Y.; Zhang, P.; Chen, D.; Liu, M.; Wang, J.; Wu, Z.; Yuan, L.; and Jiang, Y.-G. 2023. Detec-tion Hub: Unifying Object Detection Datasets via Query Adaptation on Language Embedding. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 11402–11411. Miller, G. A. 1995. WordNet: A Lexical Database for En-glish. Communications of the ACM , 38(11): 39–41. Minderer, M.; Gritsenko, A.; Stone, A.; Neumann, M.; Weis-senborn, D.; Dosovitskiy, A.; Mahendran, A.; Arnab, A.; Dehghani, M.; Shen, Z.; Wang, X.; Zhai, X.; Kipf, T.; and Houlsby, N. 2022. Simple Open-Vocabulary Object Detec-tion with Vision Transformers. In Computer Vision – ECCV 2022 , 728–755. Oquab, M.; Darcet, T.; Moutakanni, T.; Vo, H. V.; Szafraniec, M.; Khalidov, V.; Fernandez, P.; Haziza, D.; Massa, F.; El-Nouby, A.; Assran, M.; Ballas, N.; Galuba, W.; Howes, R.; Huang, P.-Y.; Li, S.-W.; Misra, I.; Rabbat, M.; Sharma, V.; Synnaeve, G.; Xu, H.; Jégou, H.; Mairal, J.; Labatut, P.; Joulin, A.; and Bojanowski, P. 2024. DINOv2: Learning Robust Visual Features without Supervision. Transactions on Machine Learning Research .Pan, J.; Liu, Y.; Fu, Y.; Ma, M.; Li, J.; Paudel, D. P.; Van Gool, L.; and Huang, X. 2025. Locate Anything on Earth: Advancing Open-Vocabulary Object Detection for Remote Sensing Community. Proceedings of the AAAI Conference on Artificial Intelligence , 39(6): 6281–6289. Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.; Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.; Krueger, G.; and Sutskever, I. 2021. Learning Transferable Visual Models From Natural Language Supervision. In Pro-ceedings of the 38th International Conference on Machine Learning (ICML) , volume 139 of Proceedings of Machine Learning Research , 8748–8763. Razakarivony, S.; and Jurie, F. 2016. Vehicle Detection in Aerial Imagery: A Small Target Detection Benchmark. Jour-nal of Visual Communication and Image Representation , 34: 187–203. Redmon, J.; and Farhadi, A. 2017. YOLO9000: Better, Faster, Stronger. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 7263– 7271. Sun, X.; Wang, P.; Yan, Z.; Xu, F.; Wang, R.; Diao, W.; Chen, J.; Li, J.; Feng, Y.; Xu, T.; Weinmann, M.; Hinz, S.; Wang, C.; and Fu, K. 2022. FAIR1M: A Benchmark Dataset for Fine-Grained Object Recognition in High-Resolution Re-mote Sensing Imagery. ISPRS Journal of Photogrammetry and Remote Sensing , 184: 116–130. Tan, J.; Wang, C.; Li, B.; Li, Q.; Ouyang, W.; Yin, C.; and Yan, J. 2020. Equalization Loss for Long-Tailed Ob-ject Recognition. In Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,11662–11671. Wang, J.; Zhang, W.; Zang, Y.; Cao, Y.; Pang, J.; Gong, T.; Chen, K.; Liu, Z.; Loy, C. C.; and Lin, D. 2021. Seesaw Loss for Long-Tailed Instance Segmentation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 9695–9704. Yao, L.; Han, J.; Wen, Y.; Liang, X.; Xu, D.; Zhang, W.; Li, Z.; Xu, C.; and Xu, H. 2022. DetCLIP: Dictionary-Enriched Visual-Concept Paralleled Pre-Training for Open-World De-tection. In Advances in Neural Information Processing Sys-tems , volume 35, 9125–9138. Zhang, Y.; Yuan, Y.; Feng, Y.; and Lu, X. 2019. Hierarchical and Robust Convolutional Neural Network for Very High-Resolution Remote Sensing Object Detection. IEEE Trans-actions on Geoscience and Remote Sensing , 57(8): 5535– 5548. Zhang, Z.; Zhang, L.; Wang, Y.; Feng, P.; and He, R. 2021. ShipRSImageNet: A Large-Scale Fine-Grained Dataset for Ship Detection in High-Resolution Optical Remote Sensing Images. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 14: 8458–8472. Zhao, X.; Schulter, S.; Sharma, G.; Tsai, Y.-H.; Chandraker, M.; and Wu, Y. 2020. Object Detection with a Unified Label Space from Multiple Datasets. In Computer Vision – ECCV 2020 , 178–193. Zhong, Y.; Yang, J.; Zhang, P.; Li, C.; Codella, N.; Li, L. H.; Zhou, L.; Dai, X.; Yuan, L.; Li, Y.; and Gao, J. 2022. Re-gionCLIP: Region-Based Language-Image Pretraining. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , 16793–16803. Zhou, X.; Girdhar, R.; Joulin, A.; Krähenbühl, P.; and Misra, I. 2022. Detecting Twenty-Thousand Classes Using Image-Level Supervision. In Computer Vision – ECCV 2022 , 350– 368. Zhou, X.; Koltun, V.; and Krähenbühl, P. 2022. Simple Multi-Dataset Detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 7571–7580. Zhu, H.; Chen, X.; Dai, W.; Fu, K.; Ye, Q.; and Jiao, J. 2015. Orientation Robust Object Detection in Aerial Images Using Deep Convolutional Neural Network. In Proceedings of the IEEE International Conference on Image Processing (ICIP) ,3735–3739. Zou, Z.; and Shi, Z. 2018. Random Access Memories: A New Paradigm for Target Detection in High Resolution Aerial Re-mote Sensing Images. IEEE Transactions on Image Process-ing , 27(3): 1100–1111. Technical Appendix 
+
+This appendix records the benchmark definition and the implementation and evaluation details that are useful for reproducibility but too detailed for the main text: taxonomy and relation coverage, source inventories, bounded leakage and license audits, auxiliary supplemental annotation details, external-baseline coverage, training hyperparameters, Track-B diagnostics, visual-prompt results, and additional qualitative examples. 
+
+Review-Time Benchmark Definition 
+
+RS153-HierOPD retains 153 source-observed categories as its atomic vocabulary. Atomic classes must be visually decidable at the available remote-sensing resolution, and each hierarchy edge must express a strict is-a relation. Part-of relations, scene co-occurrence, shared function, and appearance similarity alone are excluded. Alias links encode naming equivalence or protocol-level ambiguity and do not create ancestor supervision. The hierarchy is intentionally sparse: only operationally meaningful ancestor queries are retained. Table 6 summarizes its complete scale. 
+
+Item Statistics Atomic / hierarchy-enabled atomic classes 153 / 108 Unique parent / grandparent nodes 11 / 2 Direct / grandparent relations 108 / 70 Alias groups / protected links 3 / 11 Atomic classes also serving as ancestors 11 Training records / GT boxes 175,644 / 3,477,064 Validation records / GT boxes 56,695 / 1,297,548 Effective Risk coverage (global / source-specific) 12 / 3 sources Track-B relations (common / standalone GP) 36 / 9 Track-B GT (common / standalone GP) 782,132 / 290,906 
+
+Table 6: Complete benchmark scale. Track-B counts use source-specific relation entries. Figure 4 summarizes the benchmark’s three open-prompt evaluation tasks and their prompt and metric conventions. Atomic Detection  Atomic text prompts  Detect concrete RS categories 
+
+Parent-Query Recall  Parent text prompts  Recall descendants using only parent prompts 
+
+Cross-Dataset Generalization  Text or visual prompts  Transfer prompts to held-out datasets 
+
+T A S K T A S K  P R O M P T P R O M P T  G O A L G O A L  M E T R I C M E T R I C         
+
+> mAP mAP AP50 AP50 AP75 AP75 mAP AP50 AP75
+> zero-shot zero-shot K-shot AP50 K-shot AP50 zero-shot K-shot AP50
+> AP50 AP50 family AP50 family AP50 AP50 family AP50
+
+Figure 4: Three open-prompt evaluation tasks in RS153-HierOPD. Track A evaluates atomic-category detection; Track B evaluates absolute and atomic-conditioned descendant recall using only hierarchy-level prompts, without child-prompt expansion or post-hoc label roll-up; and Track C evaluates text- or visual-prompt generalization on held-out datasets. The code-and-data appendix makes the complete definition inspectable. It contains the 153-row class table, machine-readable taxonomy, 108 direct and 70 grandparent edges, alias groups, all 246 verified source-label mappings, the effective Risk set for every source, split and tile provenance, and the exact 45 Track-B relation entries with their GT counts. Automated validation confirms unique IDs and normalized names, resolvable parent chains, no hierarchy cycles, and semantic agreement of all 45 released Track-B relations with the taxonomy. The full relation provenance check traces 1,073,038 hierarchy annotations back to their source annotation IDs, image IDs, categories, and boxes. Source Protocol role Relations GT relations DOTA-v2.0 common 2 105,591 SODA-A common 2 373,905 FAIR1M common 9 290,906 HRSC2016 common 4 218 ShipRSImageNet common 1 65 SIMD common 18 11,447 Common subtotal 36 782,132 FAIR1M standalone grandparent 9 290,906 
+
+Table 7: Track-B relation coverage. The FAIR1M depth-2 diagnostic is kept separate from the common direct/mixed protocol. 
+
+Audit and release boundaries. The code-and-data appendix includes raw-image-independent metadata and validation scripts, not raw source images. All 10,838 pre-identified same-source/same-filename train/validation pairs in FAIR1M were checked at byte level; none is byte-identical. This bounded check does not establish an all-pairs perceptual near-duplicate audit or geographic isolation, which cannot be claimed for sources lacking stable geographic identity. The taxonomy has passed structural and Track-B semantic validation, but no independent second-person agreement statistic is claimed. License status is reported per source; redistribution of raw assets remains gated by the original terms, while mappings, logical split IDs, checksums, and deterministic standardized-COCO merge code are provided. 
+
+Reproducibility Checklist Clarifications 
+
+The novel benchmark definition is included in the code-and-data appendix: complete taxonomy, hierarchy and alias metadata, source mappings, effective Risk sets, Track-A/B/C protocol files, split provenance, bounded audits, and validation/standardized-COCO merge scripts. All source datasets are publicly available and are cited in the main paper. Upon publication, the benchmark metadata, mappings, protocols, and code will be released under a license allowing free research use. Raw source images are not redistributed; users obtain them from their official public sources and remain subject to the corresponding original terms. Thus public availability of the benchmark does not assert a new redistribution license over third-party raw imagery. Preprocessing and experiment-code availability are also distinguished. The code-and-data appendix contains deterministic standardized-COCO merging and all benchmark validation scripts, but not every source-native download/conversion adapter or the complete training/evaluation repository; the latter is committed for public release upon publication. Random-seed documentation remains partial because the final Track-C support-bank image/box manifest and its selection seed have not yet been recovered, although the support-origin and no-query-GT selection policy are documented. The duplicate audit is limited to exact-byte comparison of pre-identified same-source/same-filename train/validation pairs and is not claimed as an all-pairs perceptual or geographic audit. 
+
+Data Sources and Auxiliary Supplemental Annotations 
+
+Table 8 lists the datasets used to construct RS153-HierOPD and clarifies each source’s role in training or evaluation. Table 9 records the separate supplemental annotation resource for partial-label sources; it is not a main-method contribution and is not used to train the headline RS153-HierOPD models. Following the dataset-inventory style of LAE-DINO, Table 11 documents which Track-B sources have training-coverage evidence for the external baselines used in the main-paper Track-B comparison. The external numerical rows themselves use the shared Track-B evaluation protocol; this table only records differences in the reported training-source coverage. The counts in Table 8 are retained image/tile and box records in our converted JSON files after source-specific splitting, tiling, filtering, and label normalization; they are not native dataset totals. The mapped-label counts likewise describe labels retained after conversion into RS153-HierOPD, rather than the size of each source’s original taxonomy. FAIR1M results use the validation split with available annotations rather than the official test server. Source Train records / boxes Val/test records / boxes Mapped labels Role DIOR 11,725 / 68,070 11,738 / 124,441 20 training; Track A validation DOTA-v2.0 22,021 / 534,788 6,612 / 159,539 18 training; Track A/B validation FAIR1M 40,701 / 795,351 18,528 / 369,556 37 training; Track B validation only SODA-A 36,128 / 1,126,316 16,576 / 583,636 9 training; Track B validation only HRSC2016 617 / 1,748 438 / 1,228 22/23 † training; Track B ship validation only ShipRSImageNet 2,748 / 13,963 687 / 3,610 50 training; Track B fine-grained ship validation only SIMD 3,999 / 34,923 1,000 / 9,595 14 training; Track B airport validation only WHU Buildings 3,094 / 159,178 1,116 / 45,943 9 main training; supplemental variant analyzed GLH Bridge 41,601 / 83,473 train-only 6 main training; supplemental variant analyzed LEVIR 3,791 / 11,028 train-only 6 main training; supplemental variant analyzed NWPU-VHR-10 650 / 3,896 train-only 10 training only xView 8,569 / 644,330 train-only 60 training only                     
+
+> RS153-HierOPD total 175,644 / 3,477,064 56,695 / 1,297,548 153 12-source train/validation manifests HRRSD –10,943 / 30,043 13 Track C validation RSOD –976 / 7,400 4Track C validation UCAS-AOD –1,510 / 14,597 2Track C validation VEDAI –938 / 3,001 3Track C validation
+
+Table 8: Dataset inventory and source roles in RS153-HierOPD. Counts report retained records after conversion, not native dataset sizes.  
+
+> †
+
+For HRSC2016, 22/23 denotes the numbers of distinct mapped labels observed in its training/validation splits, respectively. The additional validation label is Commander , which has one HRSC2016 validation instance. It is absent only from the HRSC2016 training split: the multi-source training set contains 120 Commander boxes from ShipRSImageNet, so this is not an unseen category for the trained detector.              
+
+> Source Images / boxes after supplementation Pseudo boxes Main relabeled classes Exclusion / retention rule WHU Buildings 3,094 / 436,455 277,277 vehicle 146,354; small-vehicle 125,931; large-vehicle 4,908; a few bridge/tower/facility candidates Keep original building GT; relabel mainly vehicle family; exclude source-implausible or overly broad categories GLH Bridge 41,601 / 441,074 357,601 small-vehicle 296,347; large-vehicle 50,066; swimming-pool 6,571; shipping-container 2,834; roundabout 1,783 Keep original bridge GT; exclude 1,170,341 building pseudo boxes to avoid dominating training LEVIR 3,791 / 40,894 29,866 small-vehicle 21,233; building 8,581; large-vehicle 52 Keep original airplane/ship/storage-tank labels; add building and vehicle-family pseudo boxes
+
+Table 9: Auxiliary supplemental annotation details for partial-label sources. These data-curation details are not a main-method contribution. 
+
+Exploratory reliable-annotation continuation. We additionally explored reliability-filtered supplemental annotations gen-erated with SAM 3 and the final text detector, then continued training from the final Stage-2 RS153-HierOPD text checkpoint trained without supplemental annotations. This exploratory continuation is not a third method stage: it uses the same hierarchy-aware objective and serves only as a data-quality check. Under the same evaluation protocol, it did not yield consistent gains on the main DIOR and DOTA-v2.0 anchors. We therefore report all headline text-path results from that Stage-2 epoch-15 checkpoint and treat the supplemental annotations only as an auxiliary analysis rather than a method contribution. 
+
+Two roles of Risk( s). Risk( s) is an unsafe-negative set with a primary training role and an auxiliary data-curation role. The policy used by the original-annotation models applies one global building protection to all twelve sources and adds source-specific sets for GLH Bridge, WHU Buildings, and LEVIR. During headline hierarchy-aware training, effective Risk members are removed from the negative prompt pool for source s because they may occur in its images but are not exhaustively annotated. This exclusion does not assign positive labels to unannotated objects; it only prevents those categories from being optimized as negatives. The code-and-data appendix includes the complete effective set for all twelve sources, its scope, and its action. In the auxiliary supplemental-annotation analysis, we use the responses preserved for Risk( s) categories to mine potential missing boxes. Table 10 compares candidates mined on WHU with and without source-risk exclusion: vehicle and small-vehicle candidates increase substantially at low detector-score thresholds when the exclusion is enabled. Because WHU has no vehicle ground truth, these counts are a candidate-recall proxy rather than Recall@IoU or final AP. The resulting supplemental annotations are not used by the headline models, and candidate-count growth is not claimed as final-AP improvement; the exploratory continuation above did not yield consistent gains on the main anchors. 
+
+Score threshold Category No-risk With-risk ∆
+
+0.005 vehicle 276 1,489 +1,213 0.005 small-vehicle 105 738 +633 0.01 vehicle 48 437 +389 0.01 small-vehicle 31 230 +199 0.03 vehicle 3 54 +51 0.05 vehicle 1 25 +24 
+
+Table 10: Comparison of supplementary-annotation candidates mined on WHU with and without Risk( s). Scores are detector ranking scores, not calibrated probabilities. 
+
+Track-B source Hi-OPD OpenRSD LAE-DINO Evidence summary DOTA-v2.0 seen seen seen OpenRSD reports DOTA-v2.0 in its source inventory; LAE-DINO reports DOTAv2.0 benchmark/fine-tuning. SODA-A seen not evidenced not evidenced OpenRSD reports SODA-A only in cross-dataset evaluation; LAE-DINO does not list SODA/SODA-A in its source inventory. FAIR1M seen seen seen OpenRSD includes FAIR1M-2.0; LAE-DINO lists FAIR1M in its LAE-1M source tables. HRSC2016 seen seen seen Both OpenRSD and LAE-DINO include HRSC2016 in their source inventories. ShipRSImageNet seen seen not evidenced OpenRSD includes ShipRSImageNet; LAE-DINO does not list ShipRSImageNet in its source inventory. SIMD seen not evidenced not evidenced Neither OpenRSD nor LAE-DINO lists SIMD as a training source. 
+
+Table 11: Training-source coverage evidence for Track-B external diagnostics, based on the source inventories and evaluation descriptions in OpenRSD and LAE-DINO; full citations are provided in the main paper. This table concerns training-source coverage only: all numerical comparisons in the main paper use the shared Track-B evaluation images, labels, splits, COCO AP implementation, and detection budget, while each method retains its native published prompts. “Not evidenced” means that we did not find training-source evidence in the corresponding paper; those sources are excluded from the three-method common macro. 
+
+Training Hyperparameters 
+
+Table 12 summarizes the training recipe. Following the main-text convention, Stage 1 pretrains the multi-source text detector, Stage 2 continues it with hierarchy-aware supervision, and the ConvVPE visual branch is trained separately with a frozen detector body. 
+
+Parameter Stage 1 text pretraining Stage 2 hierarchy-aware text ConvVPE visual branch Training recipe multi-source cached text hierarchy-safe continuation frozen-body visual prompt learning Initialization public WeDetect weights Stage 1 epoch 25 Stage 2 epoch 15 Input size 832 896 896 Training epochs 36 (select epoch 25) 15 8Frozen modules – – backbone / neck / non-BN head / text cache Learning rate 2e-5 5e-6 2.5e-5 Weight decay 0.025 0.025 0.05 loss bbox / dfl / cls 7.5 / 0.375 / 0.5 same as Stage 1 same as Stage 1 Support samples M – – train: {1,2,3,5}; eval: 5 Support dropout – – 0.10 
+
+λalign – – 1.0 Ancestor weights β1/β 2 – 0.8 / 0.8 through shared head Upward margin m / λup – 0.0 / 0.05 through shared head Detach child logit – true through shared head Hierarchy supervision – path multi-positive, depth ≤ 2;zero-margin one-way ordering through shared head Training prompt classes 80 per image 80 per image 80 per image Table 12: Stage-wise training hyperparameters. 
+
+Compute environment. All training and evaluation experiments were conducted on a server with two AMD EPYC 7302 CPUs (32 physical cores and 64 threads), 256 GB of system memory, and eight NVIDIA GeForce RTX 3090 GPUs with 24 GB memory each, running Ubuntu 24.04.1 LTS. Hi-OPD and the controlled MMDetection-based baselines used Python 3.10.20, PyTorch 2.5.1+cu124 with CUDA 12.4 and cuDNN 9.1, TorchVision 0.20.1, MMEngine 0.10.7, MMCV 2.1.0, MMDetection 3.3.0, OpenCV 4.13.0, Transformers 4.57.1, and timm 1.0.27. YOLO-World-L used its released environment with Python 3.9.25, PyTorch 1.13.1+cu117, MMEngine 0.10.3, MMCV 2.0.0, MMDetection 3.0.0, MMYOLO 0.6.0, and YOLO-World 0.1.0. Distributed training used eight GPUs, whereas all efficiency measurements used one RTX 3090 with batch size 1. Stage-1 validation uses the eight source-specific splits with available in-domain validation annotations—DIOR, DOTA-v2.0, SODA-A, WHU Buildings, FAIR1M, HRSC2016, ShipRSImageNet, and SIMD—comprising 56,695 records and 1,297,548 boxes in total. Validation is scheduled every five epochs. The configured automatic save_best rule monitors the equal-weight mean of DIOR and DOTA-v2.0 Track-A AP50, the two shared main-table anchors, and selects epoch 25: it reaches 72.6, compared with 67.1, 71.6, 71.6, 71.9, 71.5, and 71.9 at epochs 10, 15, 20, 30, 35, and the final epoch 36, respectively. The corresponding equal-weight anchor mAP also peaks at epoch 25 (50.0). 
+
+Controlled Hierarchy-Component Ablation 
+
+The four cumulative groups in Table 13 use the same original-annotation RS153-HierOPD training and validation data, epoch-15 checkpoints, 896 input, maxDets 600, nms_pre=30000 , and cached-text evaluation implementation. C0 uses flat training; C1 adds hierarchy-safe negatives; C2 additionally adds path multi-positive supervision (PathMP); and C3 adds detached one-way upward consistency.                   
+
+> Setting DOTA atomic DOTA parent FAIR1M grandparent mAP / AP50 mAP / AP50 mAP / AP50 C0 Flat 47.6 / 71.4 3.8 / 7.2 15.1 / 31.6 C1 + Safe negatives 47.6 / 71.6 17.3 / 35.7 16.8 / 34.9 C2 + PathMP 47.6 / 71.4 33.1 / 71.3 38.6 / 66.6 C3 + Upward consistency 48.2 / 72.3 33.1 / 71.5 45.1 / 71.4
+
+Table 13: Original-annotation hierarchy-component ablation under the unified epoch-15 protocol. Safe negatives contribute +28.5 parent AP50 but only +3.3 grandparent AP50. PathMP is the main source of hierarchy-query improvement, adding +35.6 parent and +31.7 grandparent AP50 over C1. The final upward-consistency term changes direct-parent AP50 by only +0.2 but adds +4.8 grandparent AP50 and +0.9 atomic AP50. This supports its role as a zero-margin terminal ordering correction whose clearest effect appears on depth-2 retrieval. 
+
+Unsafe-Negative Exposure and Additional Track-B Results 
+
+We report the unsafe-negative exposure rate of flat sampling: the fraction of sampled flat negatives that fall into the policy-defined ancestor, descendant, alias, or source-risk sets. This is not a GT-verified false-negative rate. Table 14 reports the auxiliary diagnostic on ten of the twelve training sources (166,425 images); xView and NWPU-VHR-10 remain part of RS153-HierOPD training but are not included. Within each source, the listed value is constant by construction because the protected vocabulary and prompt budget are source-level, which explains why the previous mean/median/max summaries were identical. The diagnostic-subset value is image-weighted across sources. Table 15 further breaks down text-path Track-B performance by direct parent source, and Table 16 gives the corresponding cross-model AP50 comparison. Table 17 reports the FAIR1M grandparent diagnostic, and Table 18 gives the text zero-shot Track-C source-wise results. Tables 21, 22, 23, and 24 report the complete final ConvVPE evaluation on Track A, direct-parent Track B, the standalone Track-B grandparent diagnostic, and Track C, respectively. Source Images Exposure Single-class sources 48,486 1.00 DIOR 11,725 0.81 DOTA-v2.0 22,021 0.73 FAIR1M 40,701 0.72 SODA-A 36,128 0.67 HRSC2016 617 0.26 SIMD 3,999 0.10 ShipRSImageNet 2,748 0.08   
+
+> Diagnostic subset 166,425 0.74
+
+Table 14: Policy-derived unsafe-negative exposure under flat sampling on the ten-source diagnostic subset.                        
+
+> Source Parent prompt GT AP50 DOTA-v2.0 vehicle 105,591 71.5 SODA-A vehicle 373,905 79.2 FAIR1M parent classes 290,906 74.6 HRSC2016 parent classes 218 97.2 ShipRSImageNet Passenger Ship 65 42.5 SIMD parent classes (depth-1) 11,447 91.2 Macro all sources –76.0
+
+Table 15: Track-B direct-parent diagnostics for the epoch-15 Stage-2 RS153-HierOPD text model trained without supple-mental annotations. The standalone FAIR1M grandparent di-agnostic is reported in Table 17.                                         
+
+> Source Ancestor prompt Hi-OPD text OpenRSD LAE-DINO DOTA-v2.0 vehicle 71.5 61.0 11.6 SODA-A vehicle 79.2 67.4 ∗1.6 ∗
+> FAIR1M cargo/vehicle 74.6 64.0 59.2 HRSC2016 ship family 97.2 46.1 30.1 ShipRSImageNet Passenger Ship 42.5 14.2 ∗1.2 ∗
+> SIMD direct parents 91.2 50.4 ∗61.4 ∗
+> Common macro DOTA/FAIR1M/HRSC2016 81.1 57.0 33.6 All-source macro six sources 76.0 50.5 27.5 FAIR1M grandparent ship/vehicle 71.4 60.8 20.9
+
+Table 16: Complete Track-B hierarchy-query AP50 comparison. ∗The corresponding released OpenRSD or LAE-DINO model has no evidenced training coverage for that source and is evaluated directly from its public checkpoint. The common macro uses the three sources with evidenced coverage for all three methods. For CAR50, DOTA-v2.0, FAIR1M, and HRSC2016 contain 105,591, 290,906, and 218 direct-parent ground-truth relations, respectively; the FAIR1M grandparent diagnostic contains 290,906 depth-2 relations. The CAR denominator is the model-dependent subset of these relations recalled under atomic queries. Consequently, the relation-micro summary is strongly influenced by FAIR1M, while the equal-source macro in the main paper weights the three sources equally. Both summaries and all three source-wise CAR50 values are therefore reported.             
+
+> Grandparent prompt GT mAP AP50 ship 16,820 38.1 50.4 vehicle 274,086 52.0 92.3 Overall 290,906 45.1 71.4
+
+Table 17: FAIR1M grandparent diagnostic for text prompts under maxDets 600. Overall is the equal-weight macro over the ship and vehicle prompts; it is not part of the six-source direct-parent macro.                        
+
+> Source Classes mAP AP50 AP75 HRRSD 13 30.5 44.2 35.5 RSOD 435.8 63.4 34.1 UCAS-AOD 229.7 69.3 21.4 VEDAI 354.6 75.9 64.3 4-source macro 37.7 63.2 38.8
+
+Table 18: Track-C text zero-shot source-wise results for the epoch-15 Stage-2 RS153-HierOPD model trained without sup-plemental annotations. The LAE-1M coverage designation follows the official LAE-DINO data catalog (https://github.com/jaychempan/LAE-DINO# dataset), which lists RSOD under LAE-FOD but does not list HRRSD, UCAS-AOD, or VEDAI.                
+
+> Source LAE-DINO mAP AP50 AP75 HRRSD ∗29.5 43.9 33.8 RSOD UCAS-AOD ∗40.0 83.3 37.0 VEDAI ∗38.7 62.0 42.7 Macro ∗36.1 63.1 37.8
+
+Table 19: LAE-DINO Track-C evaluation using the official LAE-1M pretrained checkpoint, native category prompts, and no target-set fine-tuning. ∗The target is absent from the official LAE-1M source catalog. The RSOD row is intentionally left blank because RSOD appears in LAE-FOD pretraining and is excluded from comparison. Macro is computed over HRRSD, UCAS-AOD, and VEDAI. 
+
+Complete Text-Path Track-A Results 
+
+Table 20 reports the final Stage-2 epoch-15 text checkpoint under the full Track-A protocol (896 input, COCO bbox evaluation, and maxDets 600). Each source is evaluated on its mapped subset of the 153-class vocabulary. The DIOR and DOTA-v2.0 AP50 values match the main-paper headline results; validation-set sizes are listed in Table 8. A dash indicates that the source contains no valid COCO ground truth at that object scale.                                                                       
+
+> Source Cats. mAP AP50 AP75 APs APm APl DIOR 20 57.2 79.7 62.5 19.2 45.3 77.0 DOTA-v2.0 18 48.2 72.3 54.2 27.0 50.3 59.4 SODA-A 939.7 81.7 44.8 39.6 52.8 –WHU Buildings 178.3 96.1 90.5 52.8 84.8 91.5 FAIR1M 37 28.8 41.3 32.1 12.3 25.9 39.0 HRSC2016 23 70.0 77.2 76.3 –51.3 70.8 ShipRSImageNet 50 49.9 63.6 55.5 15.8 32.3 54.2 SIMD 14 69.1 85.3 80.2 26.6 56.0 74.8
+> 8-source macro –55.2 74.7 62.0 27.6 ∗49.8 66.7 ∗
+
+Table 20: Complete Track-A results for the final text path. Source macros weight the eight sources equally. ∗APs excludes HRSC2016 and APl excludes SODA-A because the corresponding COCO scale metric is undefined. 
+
+Final ConvVPE Results 
+
+All visual results below use the final ConvVPE checkpoint trained for eight epochs with a frozen detector body, initialized from the final Stage-2 epoch-15 text checkpoint, trained only on the original converted RS153-HierOPD annotations without supplemental or relabel-assisted boxes, and evaluated with M = 5 . It obtains 75.2 AP50 on DIOR and 46.1 mAP / 69.5 AP50 on DOTA-v2.0, giving a 72.4 two-source AP50 average. Earlier internal component and support-number studies came from a relabel-assisted branch initialized from its epoch-10 text checkpoint and also used a different ConvVPE checkpoint and support bank. The DIOR/DOTA validation annotations and evaluation protocol were byte-identical, so the discrepancy was not caused by evaluation data; nevertheless, those results do not constitute ablations of the final original-annotation model and are excluded from this paper. Because the component and M -sweep analyses have not yet been repeated with the final original-annotation checkpoint, we omit the older numbers rather than mix training branches. Every numerical result measured in this work is a single evaluation of a fixed checkpoint; no repeated-seed mean or variance is claimed.                     
+
+> Source mAP AP50 DIOR 53.9 75.2 DOTA-v2.0 46.1 69.5 SODA-A 35.7 75.9 WHU Buildings 78.0 96.0 FAIR1M 25.3 35.5 HRSC2016 54.8 60.3 ShipRSImageNet 30.2 38.5 SIMD 57.7 70.9
+> 8-source macro 47.7 65.2
+
+Table 21: Complete Track-A visual K-shot results for the final ConvVPE branch (epoch 8, 896 input, M = 5 ).                   
+
+> Source / query mAP AP50 DOTA-v2.0 / vehicle 31.3 69.8 SODA-A / vehicle 20.9 78.2 FAIR1M / parent classes 40.3 66.7 HRSC2016 / parent classes 45.6 49.3 ShipRSImageNet / Passenger Ship 4.5 6.6 SIMD / parent classes (depth-1) 71.9 87.8 Common macro (DOTA/FAIR1M/HRSC) 39.1 61.9
+> All-source macro 35.8 59.7
+
+Table 22: Complete Track-B direct-parent results for the final ConvVPE branch (epoch 8, 896 input, M = 5 ). The common macro matches the DOTA-v2.0, FAIR1M, and HRSC2016 coverage used for external-method comparison. Grandparent query mAP AP50 ship 20.0 28.4 vehicle 45.0 86.0 Overall 32.5 57.2 
+
+Table 23: FAIR1M grandparent visual K-shot diagnostic for the final ConvVPE branch (epoch 8, 896 input, M = 5 ,maxDets 600). Overall is the equal-weight macro over the 
+
+ship and vehicle prompts and is separate from the six-source direct-parent macro. 
+
+Source mAP AP50 AP75 HRRSD 29.2 42.9 33.9 RSOD 36.9 64.7 35.8 UCAS-AOD 31.2 72.8 22.4 VEDAI 54.2 75.1 64.1 
+
+4-source macro 37.9 63.9 39.1 
+
+Table 24: Complete Track-C visual K-shot results for the final ConvVPE branch (epoch 8, 896 input, M = 5 ). 
+
+Text and Visual Prompt Paths 
+
+Table 25 compares the final text and visual prompt paths on the two Track-A sources reported in the main table. The visual path uses only detector-native support features. 
+
+Path Prompt source DIOR mAP / AP50 DOTA mAP / AP50 Final text path (Stage 2) XLM-R text embedding 57.2 / 79.7 48.2 / 72.3 Final ConvVPE visual 5-shot support bank 53.9 / 75.2 46.1 / 69.5 
+
+Table 25: Text path versus final ConvVPE visual prompt path on the main Track-A sources (epoch 8, 896 input, M = 5 ). 
+
+Deployment Parameter and Cache Accounting 
+
+Table 26 reports the full inference speed and memory measurements behind the FPS column of the main results table. Table 27 separates non-cache online evaluation parameters from offline prompt encoders, and Table 28 reports prompt/support cache footprint. 
+
+Model Mode FPS ms/img Memory YOLO-World-L cached FP32 48.539 20.602 687.7 MB Hi-OPD text AMP-safe 44.107 22.672 294.2 MB 
+
+Hi-OPD visual M=5 AMP-safe 42.299 23.641 382.0 MB Hi-OPD text FP32 37.914 26.376 354.4 MB Hi-OPD visual M=5 FP32 36.369 27.496 442.1 MB WeDetect-tiny online XLM-R FP32 30.589 32.692 1416.9 MB OpenRSD FP32 29.603 33.781 517.8 MB Grounding DINO-T FP32 9.7 103.1 1030 MB LAE-DINO FP32 7.9 126.6 1057 MB 
+
+Table 26: Inference speed and memory on RTX 3090, batch size 1. FP32 rows provide the like-for-like comparison used in the main results table; AMP-safe rows are the Hi-OPD deployment mode. 
+
+Model Online / eval parameters Text or language path Visual / prompt path Hi-OPD text cached 38.078M 0 online; offline XLM-R 278.634M ConvNeXt 28.589M Hi-OPD visual + ConvVPE 41.510M 0 online ConvNeXt 28.589M + ConvVPE 3.432M WeDetect-tiny online 316.712M XLM-R 278.634M online ConvNeXt 28.589M YOLO-World-L 110.312M before reparameterization CLIP text 63.428M YOLO backbone 19.832M OpenRSD 67.227M eval / 76.752M checkpoint support text cached DINOv2 offline only Grounding DINO-T 173.007M BERT 108.892M Swin-T + fusion ≈64.115M LAE-DINO 181.567M BERT 108.892M Swin-T + fusion ≈72.675M 
+
+Table 27: Non-cache parameter accounting for online evaluation. Cached prompt or support embeddings are excluded here and summarized separately in Table 28. Cache Content Size Hi-OPD text cache 831 prompts × 768 float32 2.5 MB Hi-OPD visual support cache 153 classes, at most 200 supports per class, 768 float32 71 MB YOLO-World one-class cache 1 × 512 2 KB YOLO-World RS153 cache 153 × 512 0.30 MiB OpenRSD DOTA2 support cache 18 classes with 16 text prompts × 768 and 50 visual prompts × 1024 4.0 MB OpenRSD negative support cache 237 negative support classes 59 MB 
+
+Table 28: Prompt and support cache footprint used by cached-inference variants. 
+
+Additional Qualitative Examples 
+
+Figure 5 complements the parent-query qualitative comparison in the main paper with atomic Track-A examples on DIOR and DOTA-v2.0. We keep this larger visual comparison in the appendix so that the main text can foreground the primary quantitative tables and the hierarchy-specific Track-B examples. Ground truth  OpenRSD  LAE-DINO  Hi-OPD (ours)              
+
+> DIOR DOTA-v2.0
+> 5 classes 37 GT
+> 3 classes 26 GT 19/26 recalled ꞏ1 FP
+> 34/37 recalled ꞏ3 FP
+> 24/26 recalled ꞏ2 FP
+> 32/37 recalled ꞏ4 FP
+> 26/26 recalled ꞏ1 FP
+> 35/37 recalled ꞏ4 FP
+
+Figure 5: Track-A atomic detection qualitative comparison. Green boxes denote detections and red boxes denote missed ground-truth objects in method panels.
