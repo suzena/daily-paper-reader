@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-24</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-25</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 4 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 10 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>4</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>9</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-24 22:09:16 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-25 22:06:20 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日筛出4篇遥感图像论文，精读0篇、速读4篇，整体以快速扫描为主。</p>
-<p>值得关注的是3篇6分速读：Hi-OPD开放提示检测、语义引导多源分类、以及变化检测中的语义-外观一致性框架。</p>
-<p>普通读者可优先从多源融合分类和变化检测入门，再按兴趣跟进开放提示检测方向。</p>
+<p>今日精读1篇、速读9篇，重点聚焦卫星影像与多模态智能体的交叉应用。最值得看的是《GeoNLI》用自然语言解读卫星影像（8.0分），以及多无人机异构任务分配《AgenticSwarm》和边缘端VLM推理优化（均7.0分）。普通读者可优先了解卫星影像如何被“翻译”成日常语言，再关注这类技术如何落地到无人机与边缘设备。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -80,12 +78,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="GeoNLI - A Natural Language Interpreter for Satellite Imagery">GeoNLI - A Natural Language Interpreter for Satellite Imagery</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -93,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">4 篇</strong>
+    <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images">Hi-OPD: Hierarchy-Aware Open-Prompt Detection for Remote Sensing Images</span></li><li><span class="dpr-home-dashboard-paper-title" title="Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification">Semantic-Guided Fusion Network for Multi-Source Remote Sensing Image Classification</span></li><li><span class="dpr-home-dashboard-paper-title" title="From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection">From Change Captions to Change Detection: Semantic-Appearance Agreement Framework for Remote Sensing Change Detection</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AgenticSwarm: Semantic Perception and Adaptive Task Allocation for Heterogeneous Multi-UAV Missions">AgenticSwarm: Semantic Perception and Adaptive Task Allocation for Heterogeneous Multi-UAV Missions</span></li><li><span class="dpr-home-dashboard-paper-title" title="Exploiting answer-invariant redundancies in satellite imagery for efficient VLM inference on edge">Exploiting answer-invariant redundancies in satellite imagery for efficient VLM inference on edge</span></li><li><span class="dpr-home-dashboard-paper-title" title="Scientific Image Quality Assessment via Multi-modal Retrieval-Augmented Generation">Scientific Image Quality Assessment via Multi-modal Retrieval-Augmented Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>4</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>9</strong></span></div>
 </section>
 </div>
 

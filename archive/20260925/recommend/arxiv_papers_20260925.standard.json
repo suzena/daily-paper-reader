@@ -1,0 +1,413 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-25T22:01:14.114317+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2609.28741v1",
+      "source": "arxiv",
+      "title": "GeoNLI - A Natural Language Interpreter for Satellite Imagery",
+      "abstract": "Multi-modal multitasking models have shown strong performance on remote sensing datasets. However, because these models are trained on heterogeneous data and vary across tasks, designing a unified model that performs well in captioning, visual question answering (VQA), and visual grounding remains challenging.   In this work, we evaluate several models on the VRS Bench and NWPU-VHR-10 datasets. The EarthMind model demonstrates strong results in both captioning and VQA. For grounding, we propose multiple pipelines - RemoteSAM-SAM-v1, RemoteSAM-SAM-v2, and DiffuSAM - and ultimately adopt a majority-voting ensemble across EarthMind, RemoteSAM, SAM3, Falcon, RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2, and DiffuSAM predictions.   Our unified, modular pipeline integrates advanced SAM variants with multimodal LLMs to jointly perform captioning, VQA, and grounding. It achieves 82% accuracy on captioning and 83.32% on VQA, with 90.94%, 52.04%, and 92.06% for binary, numeric, and semantic question types respectively. For grounding, it attains 64.94% accuracy. By combining diverse VLMs with our custom RemoteSAM-SAM3 models through ensemble majority voting, the system delivers more accurate and consistent remote-sensing understanding than task-specific approaches.",
+      "authors": [
+        "Ashutosh Gandhe",
+        "Anupam Rawat",
+        "Geet Sethi",
+        "Kabir Nasiruddin",
+        "Madhav Kotecha",
+        "Panav Shah",
+        "Rakshit Sawarn",
+        "Soumitra Nayak"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-23T19:31:23+00:00",
+      "link": "https://arxiv.org/pdf/2609.28741v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal models for satellite imagery captioning, VQA and grounding",
+      "llm_evidence_cn": "面向卫星影像的图文多模态模型，涵盖描述、视觉问答与定位",
+      "llm_evidence": "面向卫星影像的图文多模态模型，涵盖描述、视觉问答与定位",
+      "canonical_evidence": "面向卫星影像的图文多模态模型，涵盖描述、视觉问答与定位",
+      "llm_tldr_en": "GeoNLI tackles unified multimodal understanding of satellite imagery, where captioning, VQA and grounding are hard to combine. It evaluates models on VRS Bench and NWPU-VHR-10 and ensembles grounding pipelines, showing EarthMind strong in captioning/VQA.",
+      "llm_tldr_cn": "针对多模态多任务模型在遥感数据上难以统一胜任图像描述、视觉问答与视觉定位的问题，本文构建GeoNLI统一管线。作者在VRS Bench与NWPU-VHR-10上评测多个模型，发现EarthMind在描述与视觉问答上表现突出，并提出RemoteSAM-SAM与DiffuSAM等定位流程，最终以多数投票集成多模型预测。该工作为遥感图文联合理解提供了模块化可复用的方案。",
+      "llm_tldr": "针对多模态多任务模型在遥感数据上难以统一胜任图像描述、视觉问答与视觉定位的问题，本文构建GeoNLI统一管线。作者在VRS Bench与NWPU-VHR-10上评测多个模型，发现EarthMind在描述与视觉问答上表现突出，并提出RemoteSAM-SAM与DiffuSAM等定位流程，最终以多数投票集成多模型预测。该工作为遥感图文联合理解提供了模块化可复用的方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.21716v1",
+      "source": "arxiv",
+      "title": "AgenticSwarm: Semantic Perception and Adaptive Task Allocation for Heterogeneous Multi-UAV Missions",
+      "abstract": "Multi UAV missions in complex environments require the system to understand both the surrounding scene and the intent of a human operator while maintaining feasible task allocation as mission conditions change. This paper presents AgenticSwarm, an agentic framework for semantic perception and adaptive task allocation in heterogeneous multi UAV missions. An agent interprets aerial imagery and natural language instructions to construct a grounded mission representation that links perceived objects and regions with task requirements, capability constraints, and mission dependencies. This information augments a constrained task allocation process in which obstacle aware path feasibility, energy consumption, and protected return home requirements are incorporated before assignment. During execution, changes such as UAV failure, battery degradation, or task modification trigger residual mission reconstruction from the current system state, while completed work and reconnaissance progress are retained. AgenticSwarm is evaluated across five diverse Gazebo environments and an indoor real test environment, demonstrating its ability to connect semantic reasoning with constrained allocation and adaptive multi UAV mission execution. Compared with a Grounding DINO+SAM~2.1 perception baseline, the SAM3-based pipeline improves class-aware recall by 25.2 percentage points (pp) and semantic label accuracy by 29.5 pp. Ablating residual mission replanning increases mean repeated work from 0% to 61.7% and post-event recovery time by 58.6%, highlighting the contribution of adaptive replanning to mission execution.",
+      "authors": [
+        "Muhammad Ahsan Mustafa",
+        "Yasheerah Yaqoot",
+        "Faryal Batool",
+        "Roohan Ahmed Khan",
+        "Valerii Serpiva",
+        "Dzmitry Tsetserukou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-18T12:51:57+00:00",
+      "link": "https://arxiv.org/pdf/2609.21716v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agent interprets aerial imagery and natural language instructions for grounded mission representation",
+      "llm_evidence_cn": "智能体融合航空影像与自然语言指令构建任务表征",
+      "llm_evidence": "智能体融合航空影像与自然语言指令构建任务表征",
+      "canonical_evidence": "智能体融合航空影像与自然语言指令构建任务表征",
+      "llm_tldr_en": "AgenticSwarm is an agentic framework for heterogeneous multi-UAV missions that fuses aerial imagery with natural-language instructions into a grounded mission representation, then feeds it into constrained task allocation. It links perceived objects to task requirements and capability constraints.",
+      "llm_tldr_cn": "针对多无人机任务中场景理解、操作员意图解析与动态任务分配的难题，本文提出AgenticSwarm智能体框架。该框架让智能体同时解读航空影像与自然语言指令，构建将感知对象、区域与任务需求、能力约束和依赖关系相连接的任务表征。这些信息进一步驱动带约束的任务分配，纳入避障路径可行性、能耗与安全返航等因素。工作展示了影像-文本多模态融合在自主任务规划中的价值。",
+      "llm_tldr": "针对多无人机任务中场景理解、操作员意图解析与动态任务分配的难题，本文提出AgenticSwarm智能体框架。该框架让智能体同时解读航空影像与自然语言指令，构建将感知对象、区域与任务需求、能力约束和依赖关系相连接的任务表征。这些信息进一步驱动带约束的任务分配，纳入避障路径可行性、能耗与安全返航等因素。工作展示了影像-文本多模态融合在自主任务规划中的价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.19634v1",
+      "source": "arxiv",
+      "title": "Scientific Image Quality Assessment via Multi-modal Retrieval-Augmented Generation",
+      "abstract": "This paper proposes a Retrieval-Augmented Generation (RAG) framework for scientific image quality assessment, designed to simultaneously address both the understanding track (SIQA-U) and the scoring track (SIQA-S) of the SIQA challenge. We construct a multimodal index that integrates textual semantics with fine-grained visual features, and develop a multi-route retrieval and fusion mechanism to provide large language models with highly relevant reference cases, thereby enhancing their capability to evaluate complex scientific images. Experimental results demonstrate that the proposed framework effectively aligns with the judgment criteria of human experts. Ultimately, our method achieves 1st place in the SIQA-U track of the SIQA challenge at the ICME 2026 Grand Challenges.",
+      "authors": [
+        "Yinuo Zhang",
+        "Bingshuo Liu",
+        "Zhiying Tu",
+        "Dianhui Chu",
+        "Qingbin Liu",
+        "Xi Chen",
+        "Jiang Bian",
+        "Xiaoyan Yu",
+        "Dianbo Sui"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-09-17T03:27:17+00:00",
+      "link": "https://arxiv.org/pdf/2609.19634v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal index fusing text and visual features with LLM",
+      "llm_evidence_cn": "融合文本与视觉特征的多模态索引与LLM",
+      "llm_evidence": "融合文本与视觉特征的多模态索引与LLM",
+      "canonical_evidence": "融合文本与视觉特征的多模态索引与LLM",
+      "llm_tldr_en": "Proposes a retrieval-augmented generation framework for scientific image quality assessment that builds a multimodal index combining textual semantics with fine-grained visual features and uses multi-route retrieval and fusion to supply LLMs with relevant reference cases.",
+      "llm_tldr_cn": "科学图像质量评估任务中，仅靠单模态信息难以对齐专家判断标准。本文提出面向科学图像质量评估的检索增强生成框架，构建融合文本语义与细粒度视觉特征的多模态索引，并设计多路径检索与融合机制为大型语言模型提供高度相关的参考案例。实验表明该方法与人类专家评判标准有效对齐，并在SIQA理解赛道取得第一名，展示了图文融合多模态方法的有效性。",
+      "llm_tldr": "科学图像质量评估任务中，仅靠单模态信息难以对齐专家判断标准。本文提出面向科学图像质量评估的检索增强生成框架，构建融合文本语义与细粒度视觉特征的多模态索引，并设计多路径检索与融合机制为大型语言模型提供高度相关的参考案例。实验表明该方法与人类专家评判标准有效对齐，并在SIQA理解赛道取得第一名，展示了图文融合多模态方法的有效性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.29029v1",
+      "source": "arxiv",
+      "title": "Exploiting answer-invariant redundancies in satellite imagery for efficient VLM inference on edge",
+      "abstract": "Onboard vision-language models could enable satellites to answer queries directly, but exhaustive tiled inference over high-resolution imagery is slow and energy-intensive. We identify answer-invariant token redundancy (AITR): image tiles and vision tokens that can be removed without changing the final answer. We present Rift, a two-stage system that performs query-conditioned tile pruning followed by elastic prefill to reduce token budget. We evaluate it on LLaVA-1.5 7B running on Jetson AGX Orin. Compared with exhaustive tiled inference, Rift reduces energy by 78% and latency by 69%, while increasing accuracy from 45% to 73%.",
+      "authors": [
+        "Ishani Janveja",
+        "Davis Zhang",
+        "Seoyul Oh",
+        "Deepak Vasisht"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-24T04:58:07+00:00",
+      "link": "https://arxiv.org/pdf/2609.29029v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vision-language model inference over satellite imagery with text queries",
+      "llm_evidence_cn": "卫星影像与文本查询的视觉语言模型推理",
+      "llm_evidence": "卫星影像与文本查询的视觉语言模型推理",
+      "canonical_evidence": "卫星影像与文本查询的视觉语言模型推理",
+      "llm_tldr_en": "Onboard vision-language models can answer satellite image queries but exhaustive tiled inference is slow and energy-hungry; Rift prunes answer-invariant tiles and tokens, cutting energy 78% and latency 69% while raising accuracy from 45% to 73% on Jetson AGX Orin.",
+      "llm_tldr_cn": "星载视觉语言模型能让卫星直接回答关于遥感图像的查询，但对高分辨率图像进行穷举分块推理既慢又耗能。本文识别出答案不变冗余，即删除后不改变最终答案的图像图块与视觉token，并提出Rift两阶段系统，通过查询条件化的图块剪枝和弹性预填充压缩token预算。在Jetson AGX Orin上运行LLaVA-1.5 7B时，能耗降低78%、延迟降低69%，准确率反从45%提升到73%。该工作为遥感图像与文本结合的多模态大模型边缘部署提供了高效方案。",
+      "llm_tldr": "星载视觉语言模型能让卫星直接回答关于遥感图像的查询，但对高分辨率图像进行穷举分块推理既慢又耗能。本文识别出答案不变冗余，即删除后不改变最终答案的图像图块与视觉token，并提出Rift两阶段系统，通过查询条件化的图块剪枝和弹性预填充压缩token预算。在Jetson AGX Orin上运行LLaVA-1.5 7B时，能耗降低78%、延迟降低69%，准确率反从45%提升到73%。该工作为遥感图像与文本结合的多模态大模型边缘部署提供了高效方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.22897v1",
+      "source": "arxiv",
+      "title": "Scout: Open-World Species Recognition on the Edge",
+      "abstract": "Large vision-language models (VLMs) enable recognition beyond a fixed class set, but their computational demands prevent them from running on many edge devices. Cloud offload makes this capability accessible, but sending every image consumes scarce bandwidth and communication energy. We ask how to bring the open-world recognition capability of VLMs to the edge while operating within tight compute, energy, and bandwidth budgets. Wildlife monitoring provides a natural setting for exploring this question because camera traps encounter species not known at deployment. We present Scout, an autonomous open-world recognition system that invokes a cloud VLM intermittently to teach new classes to a compact edge model. Given only the deployment location and empty site frames, Scout autonomously turns each species identified by the VLM into persistent, site-conditioned recognition capability in a resource-efficient edge model, without a predefined species list, human labeling, or manual tuning. Across 30 camera-trap deployments in three regions on an NVIDIA Jetson Orin Nano, the accuracy of Scout remains within 0.1-2.5% of a model given a predefined species list. On species outside its initial class set, Scout achieves 53.7-59.1% accuracy, compared with 56.5-65.1% for full cloud offload, while using 59-71% less deployment energy.",
+      "authors": [
+        "Mohammad Mehdi Rastikerdar",
+        "Hui Guan",
+        "Deepak Ganesan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.DC",
+        "cs.LG"
+      ],
+      "published": "2026-09-19T09:08:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.22897v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous open-world recognition system for ecological monitoring using VLM",
+      "llm_evidence_cn": "面向生态监测的自主开放世界识别系统，使用视觉语言模型",
+      "llm_evidence": "面向生态监测的自主开放世界识别系统，使用视觉语言模型",
+      "canonical_evidence": "面向生态监测的自主开放世界识别系统，使用视觉语言模型",
+      "llm_tldr_en": "Scout is an autonomous open-world recognition system that intermittently invokes a cloud VLM to teach new classes to a compact edge model under tight compute, energy and bandwidth budgets.",
+      "llm_tldr_cn": "该文针对大型视觉语言模型具备开放世界识别能力却难以在边缘设备运行、而云端卸载又消耗带宽与通信能量的问题，提出Scout自主开放世界识别系统。系统间歇调用云端视觉语言模型，将新类别知识教授给紧凑的边缘模型，仅需部署地点与空场景帧即可运行。以野生动物监测为场景验证其可在严格算力、能量与带宽预算下实现开放世界识别，其自主监测与多模态识别思路可迁移至海洋生态监测。",
+      "llm_tldr": "该文针对大型视觉语言模型具备开放世界识别能力却难以在边缘设备运行、而云端卸载又消耗带宽与通信能量的问题，提出Scout自主开放世界识别系统。系统间歇调用云端视觉语言模型，将新类别知识教授给紧凑的边缘模型，仅需部署地点与空场景帧即可运行。以野生动物监测为场景验证其可在严格算力、能量与带宽预算下实现开放世界识别，其自主监测与多模态识别思路可迁移至海洋生态监测。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.23427v1",
+      "source": "arxiv",
+      "title": "RSPDBench: Benchmarking Vision Foundation Models on Earth Observation Tasks Under Physically Grounded Remote-Sensing Product Degradations",
+      "abstract": "Vision foundation models targeting Earth observation (EO) tasks are commonly evaluated on clean downstream benchmarks, but operational EO products can already contain spatial, radiometric, alignment, noise, and harmonization defects before reaching the model. Existing robustness evaluations often use generic image corruptions or broad domain shifts, which do not isolate these product-level failure modes. We introduce \\textbf{RSPDBench}, a physically grounded \\textbf{r}emote-\\textbf{s}ensing-\\textbf{p}roduct \\textbf{d}egradation \\textbf{b}enchmark for vision foundation models. RSPDBench evaluates five EO datasets, seven foundation-model entries, and two supervised baselines under audited primitive degradations and compound product chains. Each model is evaluated under its clean-selected native protocol, with robustness measured as the drop from its own clean baseline. Our analysis reveals that degradation sensitivity is strongly structured: resolution-conditioned and channel-grouped encoders protect different failure axes, and the same physical defect can hurt one model while helping another. Compound chains expose failures that isolated degradations do not predict, with model-dependent amplification, saturation, or component dominance, and excess drops up to $38$ percentage points beyond the strongest component. These results show that EO robustness cannot be characterized by clean accuracy or generic perturbation tests alone; it must also be measured against the structured defects that remote-sensing products carry into deployment.",
+      "authors": [
+        "Tanjim Bin Faruk",
+        "Khondaker Masfiq Reza",
+        "Shrideep Pallickara",
+        "Sangmi Lee Pallickara"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-20T07:44:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.23427v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark of vision foundation models on Earth observation remote sensing tasks",
+      "llm_evidence_cn": "对地观测遥感任务中视觉基础模型的基准评测",
+      "llm_evidence": "对地观测遥感任务中视觉基础模型的基准评测",
+      "canonical_evidence": "对地观测遥感任务中视觉基础模型的基准评测",
+      "llm_tldr_en": "RSPDBench benchmarks vision foundation models on Earth observation tasks under physically grounded remote-sensing product degradations, isolating spatial, radiometric, noise and alignment defects that generic corruption tests miss.",
+      "llm_tldr_cn": "面向对地观测的视觉基础模型通常在干净基准上评测，但实际遥感产品在进入模型前已含空间、辐射、配准与噪声等缺陷，通用图像损坏测试难以刻画这些产品级失效模式。本文提出RSPDBench，基于物理建模构建遥感产品退化基准，覆盖五个遥感数据集、七个基础模型与两个监督基线。该基准揭示了模型在真实退化下的鲁棒性差异，为遥感数据挖掘与海洋遥感分析提供评测工具。",
+      "llm_tldr": "面向对地观测的视觉基础模型通常在干净基准上评测，但实际遥感产品在进入模型前已含空间、辐射、配准与噪声等缺陷，通用图像损坏测试难以刻画这些产品级失效模式。本文提出RSPDBench，基于物理建模构建遥感产品退化基准，覆盖五个遥感数据集、七个基础模型与两个监督基线。该基准揭示了模型在真实退化下的鲁棒性差异，为遥感数据挖掘与海洋遥感分析提供评测工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.23695v1",
+      "source": "arxiv",
+      "title": "PhysAI-Bench: A Benchmark for LLM-Based Agentic Decision-Making in Autonomous UAV-Centric Physical AI",
+      "abstract": "Recent advances in Physical AI have accelerated the use of foundation models in autonomous systems such as unmanned aerial vehicles (UAVs), which must perceive, reason, plan, and act in dynamic environments. Existing benchmarks assess physical perception, intuitive physics, embodied navigation, and collaborative reasoning, but rarely evaluate the agentic decision-making required for reliable autonomy. We introduce \\textit{PhysAI-Bench}, a benchmark for evaluating this capability. It contains 10,178 standardized decision instances automatically extracted from conversational traces of autonomous UAV missions. Each instance preserves mission context, temporal dependencies, physical constraints, Model Context Protocol (MCP) tool calls, Agent-to-Agent (A2A) interactions, sensor observations, and AI-native 6G network conditions, including latency, packet loss, throughput, edge load, and network slicing. We expose only information preceding each decision, preventing future-event leakage and approximating online decision-making. We evaluate 29 foundation models using a two-stage protocol. We select model-specific configurations from 12 combinations of zero-, three-, and five-shot prompting and four temperatures, tested in three runs on a 35-instance, human-verified development set. We then freeze each selected configuration and evaluate it in three runs on a fixed, episode-disjoint set of 500 instances. GPT-5.3 achieves the highest accuracy (52.00%), followed by GPT-5.2 (49.40%) and Grok~4.5 (49.07%). Few-shot prompting generally improves performance, while temperature has limited influence. The results demonstrate that reliable agentic decision-making in Physical AI remains an open challenge. The dataset is available at https://github.com/maferrag/physai-bench",
+      "authors": [
+        "Mohamed Amine Ferrag",
+        "Merouane Debbah",
+        "Abderrahmane Lakas",
+        "Manu Perumkunnil",
+        "Norbert Tihanyi"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-20T15:14:45+00:00",
+      "link": "https://arxiv.org/pdf/2609.23695v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark for LLM-based agentic decision-making in autonomous systems",
+      "llm_evidence_cn": "面向自主系统的LLM智能体决策基准",
+      "llm_evidence": "面向自主系统的LLM智能体决策基准",
+      "canonical_evidence": "面向自主系统的LLM智能体决策基准",
+      "llm_tldr_en": "PhysAI-Bench is a benchmark of 10,178 standardized decision instances extracted from autonomous UAV mission traces, designed to evaluate the agentic decision-making of LLM-based foundation models that must perceive, reason, plan, and act in dynamic environments.",
+      "llm_tldr_cn": "现有基准多评估物理感知、直觉物理与具身导航，却很少衡量自主系统可靠运行所需的智能体决策能力。本文提出PhysAI-Bench，从自主无人机任务的对话轨迹中自动抽取10178个标准化决策实例，并保留任务上下文、时序依赖与物理约束。该基准为评测大模型驱动的具身智能体决策提供了统一标准，可推广到自主海洋监测等自主系统评估。",
+      "llm_tldr": "现有基准多评估物理感知、直觉物理与具身导航，却很少衡量自主系统可靠运行所需的智能体决策能力。本文提出PhysAI-Bench，从自主无人机任务的对话轨迹中自动抽取10178个标准化决策实例，并保留任务上下文、时序依赖与物理约束。该基准为评测大模型驱动的具身智能体决策提供了统一标准，可推广到自主海洋监测等自主系统评估。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.25917v1",
+      "source": "arxiv",
+      "title": "Vision-based Underwater Formation Control With Input Saturations via Barrier Lyapunov Functions",
+      "abstract": "In this work, we propose a communication-free framework for vision-based formation control of fully actuated underwater robots subject to sensing constraints, collision-avoidance requirements, and input saturations. Recentered barrier Lyapunov functions encode sensing and collision-avoidance constraints, while command-filtered backstepping extends the design to the second-order vehicle dynamics. The resulting control objective is enforced through a quadratic program that explicitly accounts for actuator limits. Conservative sensing domains provide margins from the physical limits and are adaptively relaxed when necessary, allowing temporary violation of the conservative bounds. The proposed approach is validated through realistic Software-in-the-Loop (SITL) simulations in Gazebo.",
+      "authors": [
+        "Nicola De Carli",
+        "João Zenário",
+        "Victor Nan Fernandez-Ayala",
+        "Dimos V. Dimarogonas"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-09-22T09:24:05+00:00",
+      "link": "https://arxiv.org/pdf/2609.25917v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "vision-based formation control for underwater robots",
+      "llm_evidence_cn": "水下机器人视觉编队控制",
+      "llm_evidence": "水下机器人视觉编队控制",
+      "canonical_evidence": "水下机器人视觉编队控制",
+      "llm_tldr_en": "Proposes a communication-free vision-based formation control framework for fully actuated underwater robots subject to sensing and collision-avoidance constraints and input saturation, using recentered barrier Lyapunov functions and command-filtered backstepping.",
+      "llm_tldr_cn": "全驱动水下机器人在编队控制中需同时满足感知约束、避碰要求与执行器饱和，传统方法难以兼顾。本文提出无通信的视觉编队控制框架，用重新中心化障碍李雅普诺夫函数编码感知与避碰约束，并以指令滤波反步法扩展到二阶动力学，最终通过二次规划处理执行器限制。方法在真实场景中得到验证，为水下多机器人协同作业提供了控制基础。",
+      "llm_tldr": "全驱动水下机器人在编队控制中需同时满足感知约束、避碰要求与执行器饱和，传统方法难以兼顾。本文提出无通信的视觉编队控制框架，用重新中心化障碍李雅普诺夫函数编码感知与避碰约束，并以指令滤波反步法扩展到二阶动力学，最终通过二次规划处理执行器限制。方法在真实场景中得到验证，为水下多机器人协同作业提供了控制基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.28222v1",
+      "source": "arxiv",
+      "title": "From Alignment to Fusion in 3D Vision-Language",
+      "abstract": "Unified 3D vision-language systems must combine complementary geometry, scale, and appearance cues while supporting tasks from instance segmentation to language-guided reasoning. Existing methods often process point clouds, voxel grids, and multi-view images independently; directly combining these heterogeneous representations may leave substantial feature discrepancy unresolved, while subsequent unconstrained adaptation may distort their internal geometry. We propose an align-then-fuse framework that first applies triple pairwise cosine alignment to establish segment-level correspondence across the three representations and then retrieves task-conditioned features with a prompt-guided query decoder. Before fusion, representation-specific query features are transformed by learnable mappings constrained to the special orthogonal group. These mappings preserve inner products and Euclidean distances within each representation, permitting controlled representation-specific re-parameterisation without arbitrarily distorting its internal geometry. The transformed features are subsequently combined through Adaptive Fusion under downstream task supervision. Experiments cover eight datasets for instance segmentation, visual grounding, question answering, and dense captioning. Compared with PQ3D, the model improves average precision by 3.2 points on ScanNet200 and grounding accuracy by 2.9, 10.6, 4.6, and 4.1 points on ScanRefer, Nr3D, Sr3D, and Multi3DRefer, respectively, while also improving performance on ScanQA, SQA3D, and Scan2Cap. Ablations further support the complementary roles of alignment and orthogonal re-parameterisation and the effectiveness of Adaptive Fusion.",
+      "authors": [
+        "Xueqi Qiu",
+        "Xingyu Miao",
+        "Jingjing Deng",
+        "Haoran Duan",
+        "Yang Long",
+        "Ling Shao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-23T14:52:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.28222v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "align-then-fuse multimodal vision-language representation fusion",
+      "llm_evidence_cn": "对齐后融合的多模态视觉语言表征融合",
+      "llm_evidence": "对齐后融合的多模态视觉语言表征融合",
+      "canonical_evidence": "对齐后融合的多模态视觉语言表征融合",
+      "llm_tldr_en": "This work proposes an align-then-fuse framework that aligns point clouds, voxels, and multi-view images via triple pairwise cosine alignment before task-conditioned fusion with a prompt-guided query decoder.",
+      "llm_tldr_cn": "针对三维视觉-语言系统需融合几何、尺度与外观等多源异构表征的问题，本文提出先对齐后融合的框架。方法先通过三重成对余弦对齐建立点云、体素与多视图图像间的片段级对应，再用提示引导的查询解码器检索任务条件特征。该设计缓解了特征差异与几何失真问题，为跨模态表征融合提供了可迁移思路，对遥感多模态融合亦有借鉴意义。",
+      "llm_tldr": "针对三维视觉-语言系统需融合几何、尺度与外观等多源异构表征的问题，本文提出先对齐后融合的框架。方法先通过三重成对余弦对齐建立点云、体素与多视图图像间的片段级对应，再用提示引导的查询解码器检索任务条件特征。该设计缓解了特征差异与几何失真问题，为跨模态表征融合提供了可迁移思路，对遥感多模态融合亦有借鉴意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.29367v1",
+      "source": "arxiv",
+      "title": "Graph-Based Semi-Supervised Hyperspectral Image Classification with Distance-Aware Spatial Measure",
+      "abstract": "The classification of hyperspectral images (HIs) still presents several challenges. One of them is the difficulty to obtain a large set of labeled samples to train the classifier. Semi-supervised learning methods have received much attention recently, as they require the initial labeling of a reduced number of image pixels and lead to very good results for practical application. One of the open problems in graph-based semi-supervised HI classification is the need to consider relative spatial relationship between pixels in the image to improve the smoothness of the solution. Kernel-based approaches using composite kernels have led to very good results, in which one kernel addresses the spectral properties of the pixels while a second kernel addresses some spatial properties. Most available solutions employ a spectral-spatial kernel which considers the spectral properties of a spatial region about each pixel. This work proposes a composite kernel approach that includes a third kernel dealing exclusively with the relative spatial position of the pixels. Experiments with real HI images show that the use of the new spatial kernel has led to improved classification results when compared to those previously reported in the literature. These results also shed some light on the relative contributions of the spectral and spectral-spatial kernels in semi-supervised HI classification.",
+      "authors": [
+        "Sérgio J. M. Almeida",
+        "José C. M. Bermudez"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "eess.SP"
+      ],
+      "published": "2026-09-24T10:46:49+00:00",
+      "link": "https://arxiv.org/pdf/2609.29367v1",
+      "tags": [
+        "keyword:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "graph-based semi-supervised hyperspectral remote sensing classification",
+      "llm_evidence_cn": "基于图的半监督高光谱遥感分类",
+      "llm_evidence": "基于图的半监督高光谱遥感分类",
+      "canonical_evidence": "基于图的半监督高光谱遥感分类",
+      "llm_tldr_en": "Hyperspectral image classification is limited by scarce labeled samples; a graph-based semi-supervised method with a distance-aware spatial measure improves smoothness and classification accuracy with few labels, transferable to ocean remote sensing.",
+      "llm_tldr_cn": "高光谱遥感图像分类常因标注样本不足而受限，图半监督方法虽能利用少量标记像素，却难以充分建模像素间的空间关系。本文提出距离感知的空间度量，将其融入基于图的半监督分类框架以提升解的平滑性。实验显示该方法在少量标注下取得较好分类效果。该思路可迁移到珊瑚礁等海洋遥感地物分类任务。",
+      "llm_tldr": "高光谱遥感图像分类常因标注样本不足而受限，图半监督方法虽能利用少量标记像素，却难以充分建模像素间的空间关系。本文提出距离感知的空间度量，将其融入基于图的半监督分类框架以提升解的平滑性。实验显示该方法在少量标注下取得较好分类效果。该思路可迁移到珊瑚礁等海洋遥感地物分类任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

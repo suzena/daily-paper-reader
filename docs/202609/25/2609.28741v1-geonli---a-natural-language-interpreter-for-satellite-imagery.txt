@@ -1,0 +1,625 @@
+Title: GeoNLI - A Natural Language Interpreter for Satellite Imagery
+
+URL Source: https://arxiv.org/pdf/2609.28741v1
+
+Published Time: Fri, 25 Sep 2026 00:20:47 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# GeoNLI - A Natural Language Interpreter for Satellite Imagery 
+
+Ashutosh Gandhe 1, Anupam Rawat 1, Geet Sethi 1, Kabir Nasiruddin 1,Madhav Kotecha 1, Panav Shah 1, Rakshit Sawarn 1, Soumitra Nayak 11Indian Institute of Technology, Bombay 
+
+Abstract —Multi-modal multitasking models have shown strong performance on remote sensing datasets. However, because these models are trained on heterogeneous data and vary across tasks, designing a unified model that performs well in captioning, visual question answering (VQA), and visual grounding remains challenging. In this work, we evaluate several models on the VRS Bench and NWPU-VHR-10 datasets. The EarthMind model demonstrates strong results in both captioning and VQA. For grounding, we propose multiple pipelines— RemoteSAM-SAM-v1 , RemoteSAM-SAM-v2 , and DiffuSAM —and ultimately adopt a majority-voting ensemble across EarthMind , RemoteSAM , SAM3 , Fal-con , RemoteSAM-SAM3-v1 , RemoteSAM-SAM3-v2 , and DiffuSAM 
+
+predictions. Our unified, modular pipeline integrates advanced SAM variants with multimodal LLMs to jointly perform captioning, VQA, and grounding. It achieves 82% accuracy on captioning and 83.32% on VQA, with 90.94%, 52.04%, and 92.06% for binary, numeric, and semantic question types respectively. For grounding, it attains 64.94% accuracy. By combining diverse VLMs with our custom RemoteSAM– SAM3 models through ensemble majority voting, the system delivers more accurate and consistent remote-sensing under-standing than task-specific approaches. 
+
+Index Terms —Remote sensing, Vision-Language models, Cap-tioning, VQA, Visual Grounding 
+
+I. INTRODUCTION 
+
+Remote sensing (RS) imagery plays a crucial role in applications such as urban planning, national security, and environmental monitoring. With the rapid growth of satellite data, deep learning–based methods have become essential for automating RS tasks. Advances in sensor technology have further enhanced data quality, enabling increasingly capable models. Multitask VLMs generally adopt either (1) shared encoders with task-specific heads or (2) prompt-based unification, where the model interprets natural-language instructions (e.g., “De-scribe the image” or “Locate the object referred to as . . . ”). Modern VLMs typically follow the second paradigm due to reduced parameter overhead and greater flexibility across tasks. Multitask learning offers substantial benefits: shared repre-sentations allow tasks to reinforce one another—segmentation aids grounding, detection supports VQA, and language guid-ance improves spatial reasoning. A unified system also simpli-fies deployment in real-world geospatial applications requiring comprehensive scene understanding. Although many VLMs exist, they are trained on heteroge-neous datasets and evaluated under inconsistent settings. To establish a standardized and effective pipeline, we evaluate several models and propose a unified framework. We use the EarthMind model for captioning and VQA, as both tasks rely on text generation from images. EarthMind excels here due to its RoI-based summarization and self-instruct VQA training, but it performs poorly on grounding. 
+
+Fig. 1: Scores of several foundational models for grounding II. INNOVATION & N OVELTY  
+
+> •
+
+We have designed three grounding pipelines, RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2 and DiffuSAM, for grounding task. We report the performance of both the individual components of each model and their majority-voting ensembles.  
+
+> •
+
+We propose an unified pipeline for captioning, visual question answer, and visual grounding. For captioning and VQA, we use the EarthMind model, running it in inference mode for captioning, and finetuning it on an augmented dataset for VQA. For the grounding task, we have employed a combination of EarthMind, RemoteSAM, SAM3 and Falcon. We have also developed three new model pipelines RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2 and DiffuSAM.  
+
+> •
+
+We have done a thorough experimentation on two datasets, VRS Bench and NWPU-VHR-10 on the unified pipeline as well as the individual and existing models. The results show that the unified pipeline produces the best outputs compared to the existing models.  
+
+> •
+
+Our model’s USP lies in its unified and modular design that brings together advanced SAM variants, and multi-arXiv:2609.28741v1 [cs.CV] 23 Sep 2026 Fig. 2: Outputs of various models modal LLMs to handle captioning, VQA, and ground-ing within a single coherent pipeline. By combining EarthMind with other VLMs, our custom RemoteSAM-SAM3 models and using ensemble majority voting, the system achieves more accurate, consistent, and reliable remote-sensing understanding than existing task-specific approaches. The structure of this manuscript is as follows: Section III shows the detailed problem statement, IV presents the literature survey, V presents the proposed method. Sections VI and VII depict the implementation details and results. Section VIII presents the challenges and future works and finally section IX concludes this work. III. DETAILED PROBLEM DESCRIPTION 
+
+The aim of this work is to implement a multimodal multitask model for remote sensing data. The tasks are as follows:  
+
+> •
+
+Captioning: For each image, the model generates acaption that summarizes the key elements of the satellite scene. The input for this task is an image, and the output is a text description.  
+
+> •
+
+Visual Question Answering (VQA): VQA involves answering a question based on the given image. Questions may require geometric or semantic understanding, and the answers may be binary (“yes”/“no”), numeric, or semantic (string). The inputs are an image and a text question, and the output is a textual answer.  
+
+> •
+
+Visual Grounding: Visual grounding refers to localizing objects in an image based on a language query. The inputs are an image and a text phrase referring to the target object, and the output is an image with bounding box coordinates. Depending on the model design, the system may alternatively return only the bounding box coordinates instead of a grounded image. IV. RELATED WORKS 
+
+Research in multimodal remote sensing has been enabled primarily by the emergence of large-scale image–text datasets that support captioning, VQA, grounding, and high-resolution semantic understanding etc. Early collections such as RSICD [1], UCM-Captions [2], and Sydney-Captions [3] introduced paired aerial imagery and natural-language descriptions, while BigEarthNet [4] and RSVG [5] expanded the scope toward grounding and fine-grained semantics. More recent bench-marks, including RS5M [6] for CLIP-style pretraining, VRS-Bench [7] for multitask evaluation, XLRS-Bench [8] for extremely high-resolution imagery, and multiple instruction datasets provide the scale and diversity needed for developing modern vision–language models in the remote sensing domain. General task-specific models such as SAM [9], SAM2 [10], SAM3 [11], GroundingDINO [12], BLIP [13], and GLIP [14] have served as foundational architectures for seg-mentation, grounding, and captioning across a broad range of imagery. These models, although not RS-specific, are frequently adapted as backbones or initialization points for remote sensing applications. Correspondingly, RS-specific task models, such as RemoteSAM [15], RSVG [5] etc. incorporate multi-scale feature extractors and remote sensing specific data prior to address challenges unique to aerial and satel-lite imagery, including dense object distributions, ultra-high resolution, multispectral variation, and fine-grained land-use semantics. Building on this foundation, multitask VLMs such as LLaVA [16], Qwen-VL [17], BLIP-2 [18], Flamingo [19], and MiniGPT-4 [20] provide unified pipelines for captioning, VQA, grounding, and instruction following, and have inspired a new generation of remote sensing–oriented multitask models. RS-specific systems like Falcon [21], EarthMind [22], RSGPT [23], GeoGPT [24], GeoChat [25], EarthGPT [26] extend these architectures with geospatial pretraining, RS instruction tuning, multi-scale processing for large images, and sensor-aware visual encoders. These models, trained on datasets like RS5M and VRSBench, act as general-purpose multimodal VLMs capable of supporting captioning, spatial reasoning, grounding, and high-resolution scene interpretation within a single integrated framework. V. METHODOLOGY 
+
+Since existing models are trained and evaluated on different datasets, comparing their performance fairly is challenging. To address this, we evaluate all models on a common benchmark. Because model performance also varies significantly across tasks, we assess captioning, VQA, and grounding separately. Our results show that EarthMind performs strongly on cap-tioning and VQA. Its RoI-based summarization and few-shot self-instruction prompting contribute substantially to this performance. However, EarthMind struggles with grounding, Fig. 3: Image generated by DiffuSAM (Red box - generated by Qwen-Image-Edit, Green box - Final bounding box) which is more challenging and fundamentally different from the other two tasks. To improve grounding performance, we employ multi-ple pipelines—including EarthMind, RemoteSAM, SAM3, Falcon, RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2, and DiffuSAM—and apply a majority voting strategy. Details of the proposed models are provided below, while descriptions of existing models are included in the Appendix.A. 
+
+A. RemoteSAM-SAM3 
+
+We propose a combined pipeline that integrates Remote-SAM and SAM3. Since SAM3 is capable of general-purpose grounding and RemoteSAM is specifically trained on remote sensing data, the two models complement each other, moti-vating the design of a unified framework that leverages the strengths of both. 1) RemoteSAM-SAM3-v1 : In this version, the input image and text prompt are passed to both the RemoteSAM model and a large language model (Qwen). RemoteSAM produces an initial grounded output, while Qwen identi-fies the target object for grounding. The detected object and the grounded output from RemoteSAM are then provided to SAM3 as a text prompt and a box prompt, respectively, to generate the final grounding result. How-ever, because the grounding output from RemoteSAM is often fragmented and not spatially continuous, SAM3 may still struggle with accurate grounding in this setting. 2) RemoteSAM-SAM3-v2: To address the limitations of the previous model, we design an improved version that combines RemoteSAM and SAM3 to produce more reliable grounded object segmentation. The image and text prompt are first passed through RemoteSAM to obtain a logit mask. Since these masks often contain fragmented regions, we apply DBSCAN clustering to group them into coherent object clusters, resulting in more spatially continuous grounding candidates. Next, we extract object names from the prompt using a large language model (Qwen). The image, object name, and cluster mask are then jointly provided to SAM3. Because an image may contain multiple objects, SAM3 is executed separately for each cluster, producing sev-eral candidate grounded outputs. These candidates are evaluated by computing their IoU with the associated DBSCAN cluster. The candidate with the highest IoU is selected as the final grounding result for that object. Repeating this process across all clusters yields a final output in which each object is grounded accurately, combining the semantic correctness of the LLM with the spatial precision of clustering. Figure 4a and 4b show the two versions of this architecture. 
+
+B. DiffuSAM 
+
+The core idea of this model is to use a diffusion-based ap-proach (Qwen-Image-Edit) that, given a modified text prompt, generates an image containing a red bounding box around the region of interest. This annotated image is then passed to the SAM3 model, which produces a mask within the red box; the mask is used to compute an approximate bounding box. The cropped image corresponding to this box is subsequently forwarded to either RemoteSAM or SAM3. Our experiments show that RemoteSAM performs better than SAM3 when there are mutliple objects to find the target object from, likely because RemoteSAM is trained specifically on visual grounding. For small cropped areas, however, SAM3 achieves superior performance, likely because the smaller cropped regions are more likely to only contain the required (a) RemoteSAM-SAM3-v1 (b) RemoteSAM-SAM3-v2  
+
+> (c) DiffuSAM
+
+Fig. 4: The architectures of the components of the unified pipeline (proposed). a) RemoteSAM-SAM3-v1 Architecture, b) RemoteSAM-SAM3-v2 Architecture, c) DiffuSAM Architecture. object (i.e. the inital approximate bounding box was fairly accurate). Therefore, if the cropped region covers more than 10% of the image, we use RemoteSAM; otherwise, we use SAM3. Directional keywords such as “left” or “right” are removed from the prompt at this stage, since the spatial information is already encoded in the cropped image and retaining these words can introduce confusion. The final mask obtained from RemoteSAM or SAM3 is then used to compute the final bounding box. Figure 4c illustrates the architecture of this model. 
+
+C. Overall Architecture 
+
+Since EarthMind performs well on VQA and captioning tasks, we use it for both. For captioning, inference is performed directly using the pre-trained model. Initial results reveal a weakness in numeric VQA, indicating that greater empha-sis is needed on object-counting accuracy during supervised fine-tuning (SFT). To address this, the final SFT dataset is reweighted with 65% numeric, 20% semantic, and 15% binary questions. Additionally, to preserve EarthMind’s ability to perform all tasks it was originally trained on and to prevent catastrophic forgetting, we include a subset of datapoints from its original training dataset when constructing the final SFT dataset. For the grounding task, we use the following models: Earth-Mind, RemoteSAM, SAM3, Falcon, RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2, and DiffuSAM. We generate ground-ing outputs from all models and apply a majority voting strategy to select the best prediction. This ensures robust performance across tasks within a unified pipeline. Equation 1 presents the majority voting formulation, where score [i] de-notes the overlap between the prediction of model i and those of the remaining models. The prediction with the highest agreement is selected as the final output. Figure 5 illustrates the overall pipeline. score [i] = X 
+
+> j̸=i
+
+exp( − 0.5|boxes (i) − boxes (j)|) · mIoU (i, j ),i∗ = arg max  
+
+> i
+
+score [i]
+
+(1) The exponential term serves as a penalty applied when the number of predicted outputs differs across models. Fig. 5: The overall architecture of the proposed pipeline is illustrated here. For captioning and VQA tasks, we use the EarthMind model, whereas for the grounding task, we use a majority-voting ensemble of EarthMind, RemoteSAM, SAM3, Falcon, RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2, and DiffuSAM. 
+
+D. SAR-to-Optical Image translation 
+
+To improve the interpretability of Synthetic Aperture Radar (SAR) data within our unified remote sensing pipeline, we used a conditional diffusion model that translates SAR images into corresponding optical imagery. The details of the model is provided in Appendix A-E. In order to detect if the image is SAR or optical image, we have used the following conditions. First, we calculated mean absolute difference between Blue, Green, and Red channels. If the difference is less than 2, we use tag it as SAR. Next, we checked ‘Speckle-Denoising’ Ratio, where, the presence of granular speckle noise is checked using Ratio = σorig  
+
+> σblur
+
+. If the ratio is greater than 1.15, it is SAR image. Next, we checked the cofficient of variation by computing CV = σμ . If it is greater than 0.45, it is SAR image. Then, Effective Number of Looks (ENL) is computed using ENL = μ2 
+
+> σ2
+
+. If it is less than 8, the image is SAR. Then, the skewness and kurtosis of the histogram is checked. If skewness is greater than 1 and kurtosis is greater than 2, it is denoted as SAR image. If all the conditions fail, it is considered as optical image. Since we apply multiple conditions, there is very low probability that a optical image is considered as SAR image. VI. IMPLEMENTATION DETAILS 
+
+A. Experimental Setup 
+
+Two NVIDIA A100 GPUs with 80 GB of memory each are used for all experiments, and all scripts are implemented using the PyTorch framework. We perform evaluation in inference mode for both captioning and grounding tasks. For the VQA task, however, we observe a clear performance gain after fine-tuning the EarthMind model; therefore, EarthMind is fine-tuned specifically for VQA. 
+
+B. Dataset Details  
+
+> •
+
+VRS Bench [7]: VRS Bench is a large-scale, multi-task vision–language benchmark for remote sensing which can support captioning, VQA and visual grounding tasks. It contains 29614 images, 29614 human-verified captions, 52472 referring-expression annotations, and 123221 VQA pairs. Each image has resolution 512 ×512 .It is built through a semi-automatic pipeline combining object-level metadata extraction, LLM-based annotation generation, and human verification, resulting in high-quality, fine-grained annotations.  
+
+> •
+
+NWPU-VHR-10 [27]: NWPU-VHR-10 is a very-high-resolution remote sensing object-detection dataset de-signed for evaluating detection algorithms in complex urban and industrial scenes. It contains 800 images, in-cluding 650 positive images with 3651 annotated objects and 150 negative images. The dataset covers 10 categories - airplane, ship, storage tank, baseball diamond, tennis court, basketball court, ground track field, harbor, bridge, and vehicle. Images have spatial resolutions ranging from 0.2 m to 1.0 m, with varying image sizes. All instances are annotated using axis-aligned bounding boxes, pro-viding high-quality labels for benchmarking small-object detection and multi-scale recognition in VHR remote sensing imagery. 
+
+C. Evaluation Details 
+
+To comprehensively assess captioning, question answering, and grounding performance, we use task-specific metrics. For captioning, we use the BERT-BLEU 4 score ( Scaptioning ). For VQA, we evaluate binary attribute accuracy ( Sbinary ), numeric attribute score ( Snumeric ), and semantic attribute score Metric Pretrained Version Finetuned Version                 
+
+> Total QA Pairs 2020 2020 Binary Samples 541 541 Numeric Samples 426 426 Semantic Samples 1053 1053
+> Sbinary 0.9094 0.9094
+> Snumeric 0.4753 0.5204
+> Ssemantic 0.9015 0.9206 Overall Accuracy 0.8137 0.8332
+
+TABLE I: Comparison of pre-trained and finetuned versions (EarthMind model) on the VRS Bench Dataset for VQA task.             
+
+> Metric Pretrained Version Finetuned Version
+> Sbinary 0.7482 0.9326
+> Snumeric 0.1994 0.7239
+> Ssemantic 0.6110 0.9746 Overall Accuracy 0.4527 0.8605 Final Score @50 23.69 43.30
+
+TABLE II: Comparison of pre-trained and finetuned versions (EarthMind model) on the RSVQA Dataset for VQA task. (Ssemantic ). For grounding, we compute the mIoU with a count penalty ( Sgrounding ). Detailed definitions of these metrics are provided in Appendix B. For the final evaluation of the overall pipeline, we use the following weighted score: Final Score = 0 .20 Scaptioning + 0 .30 Sgrounding 
+
++ 0 .10 Sbinary + 0 .20 Snumeric + 0 .20 Ssemantic .
+
+(2) 
+
+D. Front-End 
+
+The frontend of the application is built in React and serves as the primary interface for authentication, image uploads, and analysis workflows. It communicates with the FastAPI backend through REST endpoints. The backend requests are proxied to enable smooth full-stack integration. For production deployment, the frontend is compiled into optimized static assets and served via Nginx. VII. RESULTS ANALYSIS 
+
+A. Quantitative Results 
+
+For the captioning task, the pre-trained EarthMind model achieves an accuracy of 82% . Tables I and II present the results for the VQA task, where EarthMind is evaluated both as a pre-trained model and as a fine-tuned model. While the per-formance on binary questions remains nearly unchanged, the accuracy on numeric and semantic questions improves notably, especially in the case of the RSVQA dataset. Tables III and IV report the visual grounding results of our model compared with existing approaches. 
+
+B. Qualitative Results 
+
+Figure 6 shows some sample outputs. From the results, we can see that the EarthMind generated captions are very good. Figure 7 shows the input images, pre-trained and finetuned EarthMind model outputs for VQA task on VRS Bench dataset. For Binary task, we see that the outputs for both mod-els are correct, but the finetuned model produces shorter output due to instruction tuning. Similarly, for semantic questions, the output is shortened. For counting and semantic questions, we see that finetuned model gives the correct numerical value, which is given incorrect in pretrained model. Figure 8 presents qualitative results from different ground-ing pipelines. SAM3 alone performs poorly, often not be-ing able to detect any relevant objects in the image. The RemoteSAM-SAM3-v1 and RemoteSAM-SAM3-v2 pipelines provide noticeably improved outputs, while EarthMind per-forms moderately well. Subfigure 8c illustrates diffusion-induced hallucination, where the model generates an object based on textual cues rather than the image itself when it is unable to find the requested object in the image. In contrast, the proposed majority-voting framework effectively suppresses such errors, producing the most reliable grounding predictions. VIII. CHALLENGES AND FUTURE WORK 
+
+Results indicate that numeric VQA remains difficult, consis-tent with limitations observed in prior models. For grounding, several fixed hyperparameters—such as the 99% DBSCAN threshold and the 10% cropping threshold in DiffuSAM—may not generalize well across all scenarios. Future work includes developing adaptive thresholding strategies that dynamically select optimal parameters based on model confidence or image characteristics. IX. CONCLUSION 
+
+We introduce three new grounding pipelines—RemoteSAM-SAM3-v1, RemoteSAM-SAM3-v2, and DiffuSAM—for visual grounding in remote sensing imagery. Majority voting across existing and proposed models yields improved grounding performance. Fine-tuning the EarthMind model further enhances VQA accuracy, particularly for numeric questions. By integrating these components, we develop a unified multimodal pipeline capable of captioning, VQA, and grounding within a single framework, with optional SAR-to-optical translation. Overall, the proposed modular system provides an effective and comprehensive solution for remote-sensing scene understanding. API S AND LICENSING 
+
+This implementation doesn’t use any third-party APIs. The off the shelf open-source models used are licensed under permissive licenses such as the MIT License, SAM License and Apache-2.0 License. REFERENCES [1] X. Lu, B. Wang, X. Zheng, and X. Li, “Exploring models and data for remote sensing image caption generation,” IEEE Transactions on Geoscience and Remote Sensing , vol. 56, no. 4, pp. 2183–2195. [2] N. Ali and B. Zafar, “UCM image dataset,” 8 2018. [Online]. Available: https://figshare.com/articles/dataset/UCM image dataset/6085976 [3] B. Qu, X. Li, D. Tao, and X. Lu, “Deep semantic understanding of high resolution remote sensing image,” in 2016 International conference on computer, information and telecommunication systems (Cits) . IEEE, 2016, pp. 1–5. [4] K. N. Clasen, L. Hackel, T. Burgert, G. Sumbul, B. Demir, and V. Markl, “reben: Refined bigearthnet dataset for remote sensing image analysis,” 
+
+> arXiv preprint arXiv:2407.03653 , 2024.
+
+Model mIoU Sgrounding Acc@0.5 Acc@0.7 Avg Count Diff 
+
+RemoteSAM 0.6283 0.5902 0.7812 0.3931 −0.0803 
+
+SAM3 0.1635 0.0739 0.2051 0.0887 0.3060 RemoteSAM-SAM3-v1 0.5671 0.5166 0.6827 0.3303 −0.1118 
+
+RemoteSAM-SAM3-v2 0.6215 0.5389 0.7707 0.3909 −0.2454 
+
+EarthMind 0.5961 0.5626 0.7414 0.3732 −0.0879 
+
+Falcon 0.5802 0.2319 0.7221 0.4709 −1.3629 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 0.6325 0.5507 0.7871 0.3936 −0.2277 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v2 0.6318 0.5389 0.7870 0.3948 −0.2715 
+
+RemoteSAM + SAM3 + EarthMind 0.5431 0.4754 0.6713 0.3519 −0.2091 
+
+RemoteSAM + RemoteSAM-SAM3-v1 + EarthMind 0.6359 0.5784 0.7958 0.4047 −0.1683 
+
+RemoteSAM + RemoteSAM-SAM3-v1 + Falcon 0.6430 0.5647 0.7978 0.4217 −0.2380 
+
+RemoteSAM + SAM3 + Falcon 0.6352 0.5309 0.7899 0.4042 −0.3636 
+
+RemoteSAM + RemoteSAM-SAM3-v2 + EarthMind 0.6297 0.5868 0.7823 0.4080 −0.0958 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 + EarthMind 0.6377 0.5489 0.7988 0.4049 −0.0958 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v2 + EarthMind 0.6282 0.5433 0.7826 0.3988 −0.2522 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 + RemoteSAM-SAM3-v2 + Earth-Mind + Falcon + DiffuSAM 0.6494 0.6101 0.7928 0.4121 0.1408 
+
+TABLE III: Evaluation of different model combinations (VRS Bench dataset). Here, ‘+’ denotes the majority voting of the models. 
+
+Model mIoU Sgrounding Acc@0.5 Acc@0.7 Avg Cnt Diff 
+
+RemoteSAM 0.5662 0.3735 0.6624 0.2484 −1.4825 
+
+SAM3 0.5009 0.1938 0.6352 0.1683 −1.2361 
+
+RemoteSAM-SAM3-v1 0.5719 0.3121 0.6953 0.2686 −1.4253 
+
+RemoteSAM-SAM3-v2 0.5098 0.1810 0.6057 0.1972 3.2265 EarthMind 0.5256 0.1367 0.6088 0.1844 −1.1916 
+
+Falcon 0.5415 0.2470 0.6271 0.3051 1.0584 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 0.5755 0.3394 0.6851 0.2844 −0.5895 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v2 0.6318 0.5389 0.7870 0.3948 −0.2715 
+
+RemoteSAM + SAM3 + EarthMind 0.5908 0.3316 0.7426 0.2416 −0.2882 
+
+RemoteSAM + RemoteSAM-SAM3-v1 + EarthMind 0.5711 0.3114 0.6859 0.2634 −0.7101 
+
+RemoteSAM + RemoteSAM-SAM3-v1 + Falcon 0.5755 0.3394 0.6851 0.2844 −0.5895 
+
+RemoteSAM + SAM3 + Falcon 0.5909 0.3519 0.7335 0.2485 −0.4109 
+
+RemoteSAM + RemoteSAM-SAM3-v2 + EarthMind 0.6297 0.5868 0.7823 0.4080 −0.0958 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 + EarthMind 0.5928 0.3263 0.7471 0.2468 −1.1917 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v2 + EarthMind 0.5924 0.2630 0.7467 0.2572 0.6744 
+
+RemoteSAM + SAM3 + RemoteSAM-SAM3-v1 + RemoteSAM-SAM3-v2 + Earth-Mind + Falcon + DiffuSAM 0.6031 0.4109 0.7293 0.3329 0.9842 
+
+TABLE IV: Evaluation of different model combinations (VHR dataset). Here, ‘+’ denotes the majority voting of the models 
+
+Fig. 6: Qualitative results of the captioning task of EarthMind model on VRS Bench dataset. 
+
+[5] Y. Zhan, Z. Xiong, and Y. Yuan, “Rsvg: Exploring data and models for visual grounding on remote sensing data,” IEEE Transactions on Geoscience and Remote Sensing , vol. 61, pp. 1–13, 2023. [6] Z. Zhang, T. Zhao, Y. Guo, and J. Yin, “Rs5m and georsclip: A large scale vision-language dataset and a large vision-language model for remote sensing,” IEEE Transactions on Geoscience and Remote Sensing ,(a) Binary VQA 
+
+> (b) Numeric VQA
+> (c) Semantic VQA
+
+Fig. 7: Qualitative results of the VQA task using the pre-trained and fine-tuned EarthMind models on the VRS Bench dataset. (a) Binary VQA, (b) Numeric VQA, and (c) Semantic VQA. In Binary and Semantic VQA, some answers appear shortened due to instruction tuning. For Numeric and Semantic VQA, the fine-tuned model produces correct answers, whereas the pre-trained model does not. 
+
+> (a) Qualitative results
+> (b) Proper diffusion output
+> (c) Diffusion halluci-nation
+
+Fig. 8: Qualitative grounding results on the VRS Bench dataset. Ground-truth and predicted bounding boxes are shown in blue and green, respectively. (a) Outputs from multiple models, (b) correct diffusion-based generation, and (c) an example of diffusion hallucination caused by strong textual priors. pp. 1–1, 2024. [7] X. Li, J. Ding, and M. Elhoseiny, “Vrsbench: A versatile vision-language benchmark dataset for remote sensing image understanding,” Advances in Neural Information Processing Systems , vol. 37, pp. 3229–3242, 2024. [8] F. Wang, H. Wang, Z. Guo, D. Wang, Y. Wang, M. Chen, Q. Ma, L. Lan, W. Yang, J. Zhang et al. , “Xlrs-bench: Could your multimodal llms understand extremely large ultra-high-resolution remote sensing im-agery?” in Proceedings of the Computer Vision and Pattern Recognition Conference , 2025, pp. 14 325–14 336. [9] A. Kirillov, E. Mintun, N. Ravi, H. Mao, C. Rolland, L. Gustafson, T. Xiao, S. Whitehead, A. C. Berg, W.-Y. Lo, P. Doll´ ar, and R. Girshick, “Segment anything,” arXiv:2304.02643 , 2023. [10] N. Ravi, V. Gabeur, Y.-T. Hu, R. Hu, C. Ryali, T. Ma, H. Khedr, R. R¨ adle, C. Rolland, L. Gustafson, E. Mintun, J. Pan, K. V. Alwala, N. Carion, C.-Y. Wu, R. Girshick, P. Doll´ ar, and C. Feichtenhofer, “Sam 2: Segment anything in images and videos,” arXiv preprint arXiv:2408.00714 , 2024. [Online]. Available: https://arxiv.org/abs/2408. 00714 [11] N. Carion, L. Gustafson, Y.-T. Hu, S. Debnath, R. Hu, D. Suris, C. Ryali, K. V. Alwala, H. Khedr, A. Huang et al. , “Sam 3: Segment anything with concepts,” arXiv preprint arXiv:2511.16719 , 2025. [12] S. Liu, Z. Zeng, T. Ren, F. Li, H. Zhang, J. Yang, C. Li, J. Yang, H. Su, J. Zhu et al. , “Grounding dino: Marrying dino with grounded pre-training for open-set object detection,” arXiv preprint arXiv:2303.05499 ,2023. [13] J. Li, D. Li, C. Xiong, and S. Hoi, “Blip: Bootstrapping language-image pre-training for unified vision-language understanding and generation,” in International conference on machine learning . PMLR, 2022, pp. 12 888–12 900. [14] L. H. Li*, P. Zhang*, H. Zhang*, J. Yang, C. Li, Y. Zhong, L. Wang, L. Yuan, L. Zhang, J.-N. Hwang, K.-W. Chang, and J. Gao, “Grounded language-image pre-training,” in CVPR , 2022. [15] L. Yao, F. Liu, D. Chen, C. Zhang, Y. Wang, Z. Chen, W. Xu, S. Di, and Y. Zheng, “Remotesam: Towards segment anything for earth observation,” in Proceedings of the 33rd ACM International Conference on Multimedia , 2025, pp. 3027–3036. [16] H. Liu, C. Li, Q. Wu, and Y. J. Lee, “Visual instruction tuning,” 2023. [17] J. Bai, S. Bai, S. Yang, S. Wang, S. Tan, P. Wang, J. Lin, C. Zhou, and J. Zhou, “Qwen-vl: A versatile vision-language model for un-derstanding, localization, text reading, and beyond,” arXiv preprint arXiv:2308.12966 , 2023. [18] J. Li, D. Li, S. Savarese, and S. Hoi, “Blip-2: Bootstrapping language-image pre-training with frozen image encoders and large language models,” in International conference on machine learning . PMLR, 2023, pp. 19 730–19 742. [19] J.-B. Alayrac, J. Donahue, P. Luc, A. Miech, I. Barr, Y. Hasson, K. Lenc, A. Mensch, K. Millican, M. Reynolds et al. , “Flamingo: a visual language model for few-shot learning,” Advances in neural information processing systems , vol. 35, pp. 23 716–23 736, 2022. [20] D. Zhu, J. Chen, X. Shen, X. Li, and M. Elhoseiny, “Minigpt-4: Enhancing vision-language understanding with advanced large language models,” arXiv preprint arXiv:2304.10592 , 2023. [21] K. Yao, N. Xu, R. Yang, Y. Xu, Z. Gao, T. Kitrungrotsakul, Y. Ren, P. Zhang, J. Wang, N. Wei et al. , “Falcon: A remote sensing vision-language foundation model,” arXiv preprint arXiv:2503.11070 , 2025. [22] Y. Shu, B. Ren, Z. Xiong, D. P. Paudel, L. V. Gool, B. Demir, N. Sebe, and P. Rota, “Earthmind: Leveraging cross-sensor data for advanced earth observation interpretation with a unified multimodal llm,” 2025. [Online]. Available: https://arxiv.org/abs/2506.01667 [23] Y. Hu, J. Yuan, C. Wen, X. Lu, Y. Liu, and X. Li, “Rsgpt: A remote sensing vision language model and benchmark,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 224, pp. 272–286, 2025. [24] Y. Zhang, C. Wei, Z. He, and W. Yu, “Geogpt: An assistant for understanding and processing geospatial tasks,” International Journal of Applied Earth Observation and Geoinformation , vol. 131, p. 103976, 2024. [25] K. Kuckreja, M. S. Danish, M. Naseer, A. Das, S. Khan, and F. S. Khan, “Geochat: Grounded large vision-language model for remote sensing,” The IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024. [26] W. Zhang, M. Cai, T. Zhang, Y. Zhuang, and X. Mao, “Earthgpt: A universal multi-modal large language model for multi-sensor image comprehension in remote sensing domain,” IEEE Transactions on Geo-science and Remote Sensing , 2024. [27] H. Su, S. Wei, M. Yan, C. Wang, J. Shi, and X. Zhang, “Object detection and instance segmentation in remote sensing imagery based on precise mask r-cnn,” in IGARSS 2019-2019 IEEE International Geoscience and Remote Sensing Symposium . IEEE, 2019, pp. 1454–1457. [28] Z. Chen, W. Wang, Y. Cao, Y. Liu, Z. Gao, E. Cui, J. Zhu, S. Ye, H. Tian, Z. Liu et al. , “Expanding performance boundaries of open-source multimodal models with model, data, and test-time scaling,” 
+
+arXiv preprint arXiv:2412.05271 , 2024. [29] S. Liu, Y. Ma, X. Zhang, H. Wang, J. Ji, X. Sun, and R. Ji, “Rotated multi-scale interaction network for referring remote sensing image seg-mentation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 26 658–26 668. [30] N. Carion, F. Massa, G. Synnaeve, N. Usunier, A. Kirillov, and S. Zagoruyko, “End-to-end object detection with transformers,” in 
+
+European conference on computer vision . Springer, 2020, pp. 213– 229. [31] B. Xiao, H. Wu, W. Xu, X. Dai, H. Hu, Y. Lu, M. Zeng, C. Liu, and L. Yuan, “Florence-2: Advancing a unified representation for a variety of vision tasks,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 4818–4829. [32] X. Bai and F. Xu, “Accelerating diffusion for sar-to-optical im-age translation via adversarial consistency distillation,” arXiv preprint arXiv:2407.06095 , 2024. 
+
+APPENDIX AEXISTING MODEL ARCHITECTURES 
+
+A. EarthMind [22] 
+
+EarthMind employs two visual encoders: a global semantic encoder Ev and a grounding encoder Eg , whose outputs are projected by a vision–language projector (VLP) into a sequence of visual tokens XV aligned with the LLM embed-ding space. These tokens, combined with text tokens, support both generative and dense prediction tasks by means of a segmentation-guidance token. To handle heterogeneous modalities, EarthMind formats all inputs as multi-frame sequences. Single- and dual-channel SAR data are padded into pseudo-RGB frames, while multi-spectral bands are grouped into triplets. This unified represen-tation promotes temporal modeling, spectral complementarity, and efficient shared-encoder processing. EarthMind uses a hierarchical cross-modal attention which uses has two stages: a) cross-sensor attention between optical and SAR images and b) text guided attention to visual features. 
+
+1) Cross-Sensor Attention: To align modalities with dif-fering resolutions, adaptive pooling of optical image yields 
+
+ˆXVo ∈ RN ×D . Then, Bidirectional cross-modal attention is computed as: 
+
+Ao2s = Softmax ˆXVo (XVs )T
+
+√D
+
+!
+
+,As2o = Softmax XVs ( ˆXVo )T
+
+√D
+
+!
+
+.
+
+(3) Where, Ao2sij and As2oij depict the attention from optical token i to SAR token j and SAR token i to optical token j respectively. (a) EarthMind architecture. 
+
+(b) RemoteSAM architecture. 
+
+(c) Falcon Architecture. (d) SAR-to-Optical Architecture. 
+
+Fig. 9: The architectures of the components of the unified model. a) EarthMind Architecture, b) RemoteSAM Architecture, c) Falcon Architecture, d) SAR-to-Optical image translation. EarthMind is the backbone for captioning and VQA tasks, whereas majority voting output of EarthMind, RemoteSAM, SAM3, Falcon serves for the ground model. Modality-specific importance scores are obtained via spatial aggregation: 
+
+αoi = 1
+
+N
+
+> N
+
+X
+
+> j=1
+
+Ao2sij , αsi = 1
+
+N
+
+> N
+
+X
+
+> j=1
+
+As2oij . (4) 
+
+2) Text-Guided Attention: Task relevance is incorporated through cross-attention between visual tokens and text em-beddings. The task embeddings XT ∈ RL×D is aligned with visual tokens using a projector: 
+
+Ao2t = Softmax ˆXVo (XT )T
+
+√D
+
+!
+
+,As2t 
+
+> 2
+
+= Softmax 
+
+ XVs (XT )T
+
+√D
+
+
+
+.
+
+(5) Text-relevance weights are computed as: 
+
+βoi = 1
+
+L
+
+> L
+
+X
+
+> j=1
+
+Ao2tij , βsi = 1
+
+L
+
+> L
+
+X
+
+> j=1
+
+As2tij . (6) 
+
+3) Adaptive Fusion: The final fusion weights combine cross-modal complementarity and text relevance using a learn-able balance parameter λ:
+
+γoi = λα oi + (1 − λ)βoi , γsi = λα si + (1 − λ)βsi . (7) Normalized fusion weights are obtained via 
+
+[wo, w s] = Softmax([ γo, γ s]) ,
+
+and the fused token representation is: 
+
+XV 
+
+> fused ,i
+
+= woi ˆXVo,i + wsi XVs,i . (8) This produces compact multimodal tokens XV 
+
+> fused
+
+∈ RN ×D ,preserving cross-sensor information while maintaining effi-ciency for LLM processing. Figure 9a presents the overall architecture of EarthMind model. 
+
+4) Improvement of Captioning and VQA tasks: The seg-mentation masks are used to highlight key regions or objects, and these mask-rendered images together with the initial cap-tions are provided to GPT-4o to generate grounded and more detailed descriptions (RoI based summarization). This leads to improved captioning performance. The enhanced captions are expanded into diverse question–answer pairs through a few-shot self-instruct prompting strategy, producing varied and semantically rich VQA samples, thus, improving VQA performance. This is why EarthMind performs very well in captioning and VQA tasks, but can still struggle in grounding task. 
+
+B. RemoteSAM [15] 
+
+RemoteSAM is composed of three primary modules: a Visual Encoder EV , a Text Encoder ET , and a Mask Decoder 
+
+DM . The model is defined by the unified mapping from the input image I ∈ RH×W ×3 and the text prompt T ∈ RLT to the binary segmentation mask ˆM ∈ { 0, 1}H×W :RemoteSAM : ( I, T ) → ˆM
+
+The visual features XV ∈ RN ×D and text features XT ∈
+
+RLT ×D are extracted: 
+
+XV = EV (I) XT = ET (T ). (9) The Mask Decoder DM fuses XV and XT to produce a score map S ∈ RH×W , which is then thresholded (using threshold 
+
+τ ) to yield the binary mask ˆM .For object detection, the mask ˆM is converted to a set of bounding boxes B = {bk} using the Mask-to-BBox (M2B) transformation, where k is the index of the connected compo-nent Ck:
+
+B = [
+
+> k
+
+BoundingBox( Ck( ˆM )) 
+
+This is refined by the Enhanced Processing of Object Contours (EPOC) strategy to resolve limitations in processing adjacent targets: 
+
+Brefined = Refine EPOC (B) (10) For counting objects, the count is the cardinality of the set of distinct connected components ( C) within the mask ˆM :Count = |C ( ˆM )| (11) 
+
+C. SAM3 [11] 
+
+SAM3 consists of three main components: an image en-coder, a prompt encoder, and a unified detector–decoder mod-ule for producing segmentation masks. First, a high-capacity transformer-based image encoder extracts dense spatial fea-tures from the input image. The encoder is prompt-agnostic and produces a single feature map used by all downstream components. In the prompt encoder, point, box, mask, or text prompts are embedded into a set of prompt tokens. These tokens condition the segmentation process and allow flexible and user-driven control. SAM3 introduces a unified detector that operates directly on image features and optional prompt tokens. It produces instance-aware tokens representing mask proposals. These tokens remove the need for external proposal mechanisms and support class-agnostic or text-guided detection. Then, a lightweight transformer head fuses image features, prompt tokens, and detector tokens to produce final segmentation masks in a single forward pass. Although, SAM3 is trained on a massive, concept-rich dataset containing mixed images, videos, synthetic or external, but not trained specific to remote sensing dataset, it can perform worse than the other remote sensing specific models. 
+
+D. Falcon [21] 
+
+Falcon architecture is a sequence-to-sequence framework which can utilize all the task in a generalized format. It uses a generalized dynamic prompt training strategy to avoid task specific reliance on the model. If I is an remote sensing image and T is a given prompt, it modifies T to a predefined phrased version T ′. For example, caption of a region can be given as ‘Describe the < region > in the image, where < region > 
+
+is < box >< x 1 >< y 1 >< x 2 >< y 2 >< /box > repre-senting location tokens. It can handle simultaneous multiple (M ) instructions denoted by {T ′ 
+
+> i
+
+}Mi=1 .Next the input image I and the modified prompt T ′ are processed through image ( EI ) and text ( ET ) encoders to produce EI (I) and ET (T ′). The image features are then pro-cessed through visual adapter to produce V and the combined embeddings X = {V, E T (T ′)} is fed to a transformer based encoder-decoder model ( F ) to produce the final output. Figure 9c shows the overall architecture of Falcon model. The overall details of the existing models such as pre-training data, model backbone, loss function and number of parameters have been summarized in table V. The existing models were trained on different datasets, which can provide significant different data prior. The number of parameters also vary significantly. EarthMind also has a higher number of parameters, which can suggest the better performance compared to other models. 
+
+E. SAR-to-Optical Image Translation [32] 
+
+This model uses a conditional diffusion process to convert SAR image to optical image. Moreover, to achieve the gen-eration in few steps, this model uses consistency distillation training. In training, a forward diffusion process is used to add noise in the target image. The SAR image is added with Models Training datasets Model backbone Loss function Parameters (B)                    
+
+> EarthMind EarthMind-Bench InternVL2 [28], SAM2 [10] CE loss (text), CE + Dice loss (image) 4RemoteSAM RRSISD, RisBench RMSIN [29] CE + Dice loss 0.18 SAM3 SA-Co (HQ, SYN, EXT, VIDEO) SAM1,2 [9], [10], DETR [30] CE loss (segmentation), L1 and gIoU loss (bounding box) 0.85 Falcon Falcon SFT Florence-2 [31] CE loss (both text and image) 0.7
+
+TABLE V: Model details of EarthMind, RemoteSAM, SAM3, and Falcon. the noised image as conditioning input and fed to a U-net. To utilize the distillation training, in the reverse process, a teacher U-net is used to predict the optical image. Noise is added with the predicted image using forward diffusion process. The input SAR image added with this noised input and a student U-net network is used to predict the student prediction. A consistency loss is used to align the teacher and student output. An adversarial loss is used to align the student prediction with the ground truth. Equation 12 shows the loss function of this model. Figure 9d shows the overall architecture of this model. 
+
+Lconsistency = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+
+
+pred (i) 
+
+> T
+
+− pred (i)
+
+> S
+
+2
+
+,
+
+Ladv  
+
+> G
+
+= −Ex0,c s
+
+Dψ2
+
+ fθ (x′
+
+> t
+
+, c s), c s
+
+ ,
+
+Ladv  
+
+> D
+
+= Ex0
+
+max  0, 1 − Dψ2
+
+ fθ (x0, c s), c s
+
+ 
+
++ Ext
+
+max  0, 1 + Dψ2
+
+ fθ (x′
+
+> t
+
+, c s), c s
+
+ ,
+
+Ltotal = Lconsistency + λadv Ladv  
+
+> G
+
+.
+
+(12) Where x0 is the optical image, cs is the input SAR image, 
+
+G is the generator model, fθ is the student model, and Dψ2
+
+is the discriminator. APPENDIX BDETAILS OF EVALUATION METRICS 
+
+A. Captioning Metric  
+
+> •
+
+BERT-BLEU 4: Caption quality is measured using BERT-BLEU, which combines semantic similarity from BERT embeddings with BLEU-n structure. For each n-gram level: 
+
+Pn = 1
+
+|Rn|
+
+X
+
+> r∈Rn
+
+max 
+
+> c∈Cn
+
+cos( E(c), E (r)) , (13) where E(·) denotes BERT embeddings. A length penalty is also applied: 
+
+LP = exp 
+
+
+
+−α |LC − LR|
+
+LR
+
+
+
+, α = 0 .5. (14) The final caption similarity score is: 
+
+Scaptioning = BERT-BLEU 4 = LP · max  
+
+> 1≤n≤4
+
+Pn. (15) 
+
+B. VQA Metrics  
+
+> •
+
+Binary Attribute Accuracy: For yes/no questions, we use exact match: 
+
+Sbinary =
+
+(
+
+1, ypred = ygt ,
+
+0, otherwise . (16)  
+
+> •
+
+Numeric Attribute Score: For numeric predictions, we evaluate using a relative error penalty: 
+
+Snumeric = exp 
+
+
+
+−α |xpred − xgt |
+
+xgt 
+
+
+
+, α = 23 .
+
+(17)  
+
+> •
+
+Semantic Attribute Score: For descriptive answers, we employ the same BERT-BLEU formulation used for cap-tioning: 
+
+Ssemantic = BERT-BLEU 4. (18) 
+
+C. Grounding Metrics  
+
+> •
+
+Mean Intersection over Union (mIoU): Given a pre-dicted bounding box Bp and ground-truth box Bg , the Intersection over Union (IoU) is defined as: IoU (Bp, B g ) = |Bp ∩ Bg ||Bp ∪ Bg | . (19) For K matched instances, the mean IoU is computed as: mIoU = 1
+
+K
+
+> K
+
+X
+
+> i=1
+
+IoU  B(i) 
+
+> p
+
+, B (i)
+
+> g
+
+. (20)  
+
+> •
+
+Accuracy@IoU Threshold: A prediction is considered correct if its IoU exceeds a threshold τ :
+
+Ci =
+
+(
+
+1, if IoU i ≥ τ, 
+
+0, otherwise . (21) Thus, accuracy at threshold τ is: Acc@ τ = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Ci. (22)  
+
+> •
+
+Average Count Difference: To measure count accuracy, we compute the average absolute deviation between pre-dicted and ground-truth object counts: ACD = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+N (i)pred − N (i)ref . (23)  
+
+> •
+
+mIoU with Count Penalty. To jointly evaluate localiza-tion quality and instance count correctness, we apply an exponential penalty to the mIoU: 
+
+Sgrounding = CP × mIoU , (24) where the count penalty term is: 
+
+CP = exp ( −α |Npred − Nref |) , α = 2 .5. (25)

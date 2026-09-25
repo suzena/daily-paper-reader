@@ -1,0 +1,684 @@
+Title: Graph-Based Semi-Supervised Hyperspectral Image Classification with Distance-Aware Spatial Measure
+
+URL Source: https://arxiv.org/pdf/2609.29367v1
+
+Published Time: Fri, 25 Sep 2026 01:11:25 GMT
+
+Number of Pages: 32
+
+Markdown Content:
+# Graph-Based Semi-Supervised Hyperspectral Image Classification with Distance-Aware Spatial Measure 
+
+Sérgio J. M. Almeida a , José C. M. Bermudez b,*,1   
+
+> aCatholic University of Pelotas, Center for Social and Technological Sciences, Pelotas, RS, Brazil
+> bFederal University of Santa Catarina, Department of Electrical and Electronic Engineering, Florianópolis, SC, Brazil
+
+Abstract 
+
+The classification of hyperspectral images (HIs) still presents several challenges. One of them is the difficulty to obtain a large set of labeled samples to train the classifier. Semi-supervised learning methods have received much attention recently, as they require the initial labeling of a reduced number of image pixels and lead to very good results for practical application. One of the open problems in graph-based semi-supervised HI classification is the need to consider relative spatial relationship between pixels in the image to improve the smoothness of the solution. Kernel-based approaches using composite kernels have led to very good results, in which one kernel addresses the spectral properties of the pixels while a second kernel addresses some spatial properties. Most available solutions employ a spectral-spatial kernel which considers the spectral properties of a spatial region about each pixel. This work proposes a composite kernel approach that includes a third kernel dealing exclusively with the relative spatial position of the pixels. Experiments with real HI images show that the use of the new spatial kernel has led to improved classification results when compared to those previously reported in the literature. These results also shed some light on the relative contributions of the spectral and spectral-spatial kernels in semi-supervised HI classification. 
+
+Keywords: hyperspectral images, graph-based classification, semi-supervised learning, composite kernels    
+
+> Email addresses: sergio.almeida@ucpel.edu.br (Sérgio J. M. Almeida a),
+> jose.bermudez@ufsc.br (José C. M. Bermudez b,*,1 )arXiv:2609.29367v1 [eess.IV] 24 Sep 2026
+
+# Graph-Based Semi-Supervised Hyperspectral Image Classification with Distance-Aware Spatial Measure 
+
+Sérgio J. M. Almeida a , José C. M. Bermudez b,*,1   
+
+> aCatholic University of Pelotas, Center for Social and Technological Sciences, Pelotas, RS, Brazil
+> bFederal University of Santa Catarina, Department of Electrical and Electronic Engineering, Florianópolis, SC, Brazil
+
+1. Introduction 
+
+Hyperspectral image (HI) processing has been widely employed in several areas, such as land-cover classification, mineral identification, precision agriculture, medical image analysis, biometric identification, and drug discovery among others. Never-theless, classification tasks employing HIs still present significant challenges [1], [2], [3]. The classification task becomes even more difficult when small groups of labeled pixels are available. This information-poor scenario makes capturing the underlying probability distribution function of the image a complex task. HIs contain a large amount of information, which leads to greater accuracy. In this sense, many machine learning methods have been explored for HI classification, such as, unsupervised clustering [4], and supervised classification [5], [6]. However, this large amount of information is also accompanied by a large number of spectral channels, which results in a higher computational cost to obtain the correct labels. The availability of few samples for training, associated with a high number of spectral channels, can result in the much feared curse of dimensionality, leading to overfitting the model to the training data. One factor that complicates HI classification is the intrinsic spectral variability of the materials in the scene. The spectrum of a given material (and thus its HI pixel    
+
+> Email addresses: sergio.almeida@ucpel.edu.br (Sérgio J. M. Almeida a),
+> jose.bermudez@ufsc.br (José C. M. Bermudez b,*,1 )
+
+representation) can be significantly affected by variations in atmospheric, illumination, and environmental conditions that typically occur within an image [7]. Due to spectral variability, even pixels located in small regions containing the same physical material (hence belonging to the same class) may have reasonably distinct spectral representa-tions. Another important factor that may arise is a spatial variability of the spectral signatures [8, 9, 10, 6]. Depending on the configuration of an area being classified, pixels of the same class may be located in distant regions of the image. Such situation is not uncommon and represents an additional challenge for the classification algorithms. The main difficulty with all supervised methods in the learning process is the need for a good quality training data set, as labeled samples are usually not available in sufficient quantity due to the high cost of labeling. Unsupervised methods may yield satisfactory results in some classification problems because they are not sensitive to the number of labeled samples. However, the relationship between clusters and classes is not assured [8]. In a realistic scenario, where the data volume is increasingly larger and, at the same time, the available labeled data is scarce, mainly due to labelling costs, the development of semi-supervised learning (SSL) methods has become a natural trend in the search for better classifier performances. SSL is halfway between unsupervised and fully supervised learning. In SSL, the algorithm is provided with the labeled data information (data and labels), the unlabeled data, and some supervision information [11, Ch. 1]. SSL algorithms allow the use of unlabeled data to complement the information provided by the small amount of labeled data to improve classifier performance. SSL methods consider a data set of n samples xi of an input space X, composed of a labeled data set Dl = {xi, yi}| i=1,..., nl , where xi are the labeled samples, and yi are their corresponding labels in Y, and an unlabeled data set Du = {xi}| i=nl+1,..., n with nu
+
+samples for which the labels are unknown, such that n = nl + nu. Mathematically, SSL is useful when the knowledge gained on the probability density function p(x) by using the unlabeled data information can be of help in the inference of the conditional density 
+
+p(y|x).SSL algorithms may be based on generative or discriminative models. The gen-erative approach estimates the posterior class distribution by modeling the conditional 3class distributions explicitly [12]. The discriminative approach estimates the posterior class distribution directly, without the need to specify the conditional class distributions explicitly [10]. At a high level, SSL algorithms can also be classified as employing inductive or transductive methods [13, 14, 11, 15]. Inductive methods attempt to find a classification model that can be used later on to classify new data. Transductive methods obtain label prediction for the given unlabeled data without building a classification model. Within the latter methods we can highlight two subgroups of SSL algorithms: 1) transductive SVM (TSVM) [16, 17, 18, 19], and graph-based methods [11, Part III][20, 21, 22, 23, 24, 25]. Graph-based SSL transductive methods [14] have gained special attention due to their ability to extract characteristics existing in the graph nodes and to establish re-lationships between these characteristics in order to facilitate the classification task. This ability has led to their application in several fields [11]. Each node in the graph corresponds to data, and the edges are defined by weights that measure the similarity between the data in each node pair. This ability of graphs to explore the correlations between nodes has led to the development of semi-supervised learning techniques that address the challenge of having a small set of labeled data. Due to its relevance for the classification performance, the graph construction has a key role in graph-based transductive SSL methods. Several graph-based SSL algorithms have been proposed for HI classification. For instance, in [26], a sparse set of graph weights are obtained by solving an L1 optimization problem. Then, the SSL classification method proposed in [27] is applied. The method proposed in [28] combines both L1-graph and partial labeled information to construct a discriminant sparse representation (DSR) graph. In such a graph structure, each pairwise nodes are treated differently according to the probability that they belong to the same class. The class-probability of unlabeled samples is estimated using sparse representation based classification, in which each unlabeled sample is encoded as a sparse combination of labeled samples, and the obtained coefficients are interpreted as the similarity between the unlabeled sample and each labeled sample. In this work we are interested in those methods that address both the spectral and spatial variability 4problems. In supervised methods, several works have proposed different strategies to combine spectral and spatial information to improve HI classification. One of the most pop-ular approaches is to obtain an initial coarse classification based only on the spectral information, and then refine the pixel labeling using conditional random fields (CRF) defined over pixels or image regions. The work in [29] addresses the design of CRFs defined over pixels or image regions for the multi-class supervised image segmentation and labeling. The paper proposes an approximate inference algorithm for fully connected CRF models that establishes pairwise potentials on all pairs of pixels in the image using a linear combination of Gaussian kernels. The proposed fully connected pairwise CRF model is characterized by a Gibbs distribution with Gibbs energy composed by a unary potential computed independently for each pixel by a classifier that produces a distribution over the label assignment given image features, and by pairwise potentials defined by a weighted sum of Gaussian kernels. For multi-class image segmentation and labeling the authors propose contrast-sensitive two-kernel potentials defined in terms of the color vectors and positions of each pair of pixels. These composite kernels include contributions determined by the Gaussian kernel applied to the difference of the pixel positions. In hyperspectral supervised image classification, CRF is traditionally used to per-form image segmentation after an initial coarse pixel-level class label has been gener-ated. The CRF is designed so that pixels in a local neighborhood tend to have the same class label. Then, the outcome of CRF can be considered as an improved classification map. Several recent methods integrate convolutional neural networks (CNNs) and CRF methods [30, 31, 32, 33]. In these methods, the pixel positions are used in the defini-tion of pairwise potentials as a weighted sum of the appearance and smooth Gaussian kernels associated to each pair of pixels. The pairwise potentials are then combined with the unary potentials (resulting from the initial CNN classifications) to build the energy function of the CRF. More recently, [34] proposed to further employ a specific deconvolutional network to produce the final classifications. All these works consider supervised classification. Also, the implementation of these methods can become quite complex and require a significant computational effort. 5Most SSL methods that address spectral-spatial classification do it by employing composite kernels to measure the similarity of graph nodes as an efficient way to circumvent the curse of dimensionality [8]. The work [35] proposed a framework of composite kernel machines for enhanced classification of hyperspectral images. The proposed method exploits the properties of Mercer’s kernels to construct a family of composite kernels that combine spatial and spectral information. The composite kernels are built as a weighted sum of kernels specialized on spatial or spectral features. Every pixel xi in the HI is redefined in the spectral and in the spatial domain. The spectral content is represented by a vector xω
+
+> i
+
+∈ RNω , which is usually the HI pixel itself. The spatial content is obtained through some type of transformation of the HI pixels in the spatial neighborhood of xi, which yields vectors xsi ∈ RNs . In [35] it was proposed that xsi be evaluated as the average of the reflectance values in a given window around pixel xi for each band. Then, the similarity between two graph signals (nodes) xi and x j is determined by a composite kernel that combines the contributions of the two representations of each pixel. The work in [8] proposed a method based on the transductive SSL algorithm introduced in [27], but applied in the context of HI. The employed measures of similarity between the graph nodes were kernel-based to alleviate the problems inherent to the high dimensionality of HI data, and used the composite kernels proposed in [35]. Different composite kernels were employed to account for spectral and spatial variability. More recent works have suggested alternative methods for determining the spatial information relative to pixel xi, most of them building upon the same idea proposed in [8]. In [36], after preprocessing through nonlinear diffusion partial differential equations (PDEs) and through wavelet shrinkage, the spatial components xsi were selected from the smoothed image. The weighted summation kernel originally proposed in [35] was then employed. The graph weighted adjacent matrix, however, would have nonzero elements only if the pixel j belonged to the k-nearest neighbors of the pixel i. The classification accuracy results reported in [36] are comparable to those obtained using the simpler method of [35], despite the extra complexity required by the preprocessing step. In [37], a graph-based method was proposed in which two graphs are constructed to 6independently represent the spatial and spectral information. The spectral graph is built by connecting each pixel to its K nearest neighbors in spectral space. The spatial-based graph is built by computing the spectral distance between each pixel and a set of its spatial neighbors. The Laplacians of the two graphs are then combined in a weighted summation and the classification problem is solved as in [27]. In [38], a sum of minimum distance (SMD) was proposed to measure the distance between two sets of points defined in a square window around each HI pixel. These dis-tances are then used to build a kNN sparse graph. Next, local manifold learning (LML) is employed as a measure of similarity between two finite sets of points to determine the weights associated with the graph edges. The classification is implemented using the Gaussian fields and harmonic functions (GFHF) method [39]. Most existing graph-based SSL approaches for HI classification using spectral-spatial information employ basically the composite kernel-based similarity measure proposed in [35]. The spatial representation xsi ∈ RNs , is generated through a feature extraction method that combines contributions of spectral representations of pixels in the area surrounding xi in the HI. Hence, the spatial information embedded in xsi
+
+refers to the surroundings of xi in the spectral feature space. This approach has the property that xsi will differ from xi if the pixels close to it in the HI have significantly different spectra, compared to xi. We note that this approach does not address one important aspect in classification of HIs, in which pixels belonging to a given class may be located in spatially distinct regions of the HI. This is a very common situation in, for instance, classifications of land-covers in remote-sensing applications. In such application, the physical distance between two pixels of which one wants to evaluate the similarity can be leveraged to compensate, for instance, for a lack of similarity of two spatially closed pixels of the same class whose representations differ due to spectral variability. It can also help when pixels from different classes have spectra relatively close in the spectral feature space but are located at very distinct regions of the HI. The work in [40] considered for the first time a multiple kernel learning framework that combined different types of data for integrating heterogeneous descriptions of the same set of genes. Inspired by [40], by the successful use of the pixel positions in supervised learning [30, 31, 32, 33] and by the considerations above about the importance to include 7the physical distance between pixels in measuring their similarity, we propose the use of a new spatial term in composite kernels for classification of HIs. Our consideration of the spatial information is based on the coordinates of the pixels within the image. However, differently from the supervised methods described above, we insert the spatial information directly in the definition of a composite spectral-spatial kernel, leading to an SSL algorithm that is simple to apply and leads to very good classification results. This paper is organized as follows. Section 2 describes the proposed composite kernel structure, which combines the spectral and spatial-spectral kernels with the newly proposed spatial-2D kernel. A relationships among the three kernel bandwidths is also proposed. Section 3 describes the solution of the classification problem using the composite kernel. A step-by-step description of the proposed algorithm is described. Section 4 describes five experiments which compare the results obtained using the proposed method with results reported in the literature. The conclusions of the work are presented in Section 5. 
+
+2. Graph-Based Method Proposed 
+
+2.1. Construction of the spatial-spectral kernel 
+
+Composite kernels were proposed in [35] and employed in [8] to consider a spatial contribution in the definition of similarity of two vertices of the graph in graph-based HI classification. These composite kernels included, in fact, two contributions deter-mined in the spectral domain of the pixels. The spectral component was the pixel representation itself, which is a vector whose components are the contributions of the different frequency bands to the spectral representation of the HI pixel. The spatial component of a pixel xi was constructed by averaging the spectral representations of the pixels in a window surrounding xi. In these papers it was proposed to take the average of these pixels as the spatial contribution xsi . More recent works proposed different (and more complex) transformations of the pixels surrounding xi to obtain xsi .Such transformations, however, were also built in the spectral domain. Inspired by the work in [40] and by the successful use of pixel positions in Gaussian kernels in the realm of CRF-based supervised HI classification [30, 31, 32, 33], we propose to construct the kernel-based similarity measure using heterogeneous data. 8Without disregarding the previous contributions, we propose to add a new term to the composite kernel which affects the similarity of two HI pixels by considering the actual physical distance between these pixels. To this end, we employ an additional spatial pixel representation termed xdi ∈ R2 whose components are the spatial coordinates of the pixel xi in the HI. In this paper we concentrate on a weighted-summation composite kernel for sim-plicity. Extension to other types of compositions should be straightforward. Consider an HI with an N-dimensional input spectral space, X = {x1, · · · , xnl , xnl+1,
+
+· · · , xn} ⊂ RN . The first nl pixels xi (i ≤ nl) are labeled with corresponding labels yi,
+
+i = 1, . . . , nl, and the nu pixels xi (nl+1 ≤ i ≤ n) are unlabeled. The proposed composite kernel is built from three distinct pixel representations of a HI pixel xi:a) Pixel definitions 
+
+As in [8], the spectral pixel entity xω 
+
+> i
+
+∈ RNω is defined as the HI pixel itself, whose components are the contributions of each frequency band to the pixel value. Thus, 
+
+Nω = N. The spatial-spectral pixel entity xsi ∈ RNs is defined using a feature ex-traction method to the area surrounding xi. In this work we consider the average of the pixels in a window of size w × w around xi, which corresponds to evaluate the average per spectral band [35]. Hence, Ns = Nω = N. Finally, we define a new spatial-2D pixel entity xdi ∈ R2 given by the coordinate vector of xi in the HI. b) Kernel computation 
+
+Given the three entities defined in (a) above, the corresponding kernels can be computed using any suitable kernel function that fulfills Mercer’s conditions. In this work we consider the RBF kernel for the three components, with individual bandwidths determined to equalize the dynamic range of all kernels. Each component leads to a specific weighted adjacent matrix whose element (i, j)
+
+represents the similarity between nodes i and j according to the corresponding measure, namely, spectral, spatial-spectral and spatial-2D. The spectral adjacent 9matrix is defined as [8] 
+
+
+
+Wω 
+
+> i j
+
+= exp( −∥ xω 
+
+> i
+
+− xω 
+
+> j
+
+∥2/2σ2
+
+> ω
+
+), for i , jWω 
+
+> ii
+
+= 0.
+
+(1) where xω 
+
+> i
+
+is the spectral representation of pixel xi (node of the graph). The spatial-spectral adjacent matrix is defined as [8] 
+
+
+
+W si j = exp( −∥ xsi − xsj∥2/2σ2 
+
+> s
+
+), for i , jW sii = 0.
+
+(2) where xsi is a feature extracted from the spectra of the HI pixels in the area surrounding xi.Finally, the proposed new spatial-2D adjacent matrix is defined as 
+
+
+
+Wdi j = exp( −∥ xdi − xdj ∥2/2σ2
+
+> d
+
+), for i , jWdii = 0.
+
+(3) where xdi is the 2-D vector with the coordinates of xi in the HI. 
+
+2.2. The weighted-summation composite kernel 
+
+A weighted-summation composite kernel considering the three pixel entities defined above can be constructed through a linear combination of the three weighted adjacent matrices defined in (1), (2) and (3), yielding a composite weight matrix W as follows: 
+
+Wi j (xi, x j) =βWω 
+
+> i j
+
+(xω 
+
+> i
+
+, xω 
+
+> j
+
+) + λWdi j (xdi , xdj ) + γW si j (xsi , xsj). (4) The values of σω, σd and σs are adjusted so that all elements of the three matrices 
+
+Wω, Ws and Wd have the same value range. This can be accomplished by choosing these parameters such that 
+
+max ∥xω 
+
+> i
+
+− xω 
+
+> j
+
+∥2
+
+2σ2
+
+> ω
+
+= max ∥xdi − xdj ∥2
+
+2σ2
+
+> d
+
+= max ∥xsi − xsj∥2
+
+2σ2
+
+> s
+
+. (5) Hence, the design of the proposed weighted-summation composite kernel according to (4) requires the choice of the three weights β, λ and γ (two weights for a convex sum), 10 as well as one kernel bandwidth among σω, σd and σs.
+
+3. Problem Solution 
+
+The objective of a classification process using semi-supervised learning is to satisfy the so-called consistency assumption. As defined in [27], consistency assumes that nearby points tend to belong to the same class, and that points on the same cluster or manifold belong to the same class. Hence, one needs an algorithm whose classification function is sufficiently smooth with respect to the inherent structure between a graph’s labeled and unlabeled points. To employ the algorithm proposed in [27] to the composite kernel approach, we assign the weight matrix W defined in (4) to the required affinity matrix. Consider a classification problem with m classes and an HI with n pixels xi in the input space X, nl of which are labeled with labels yi, i = 1, . . . , nl, while the remaining 
+
+nu pixels are unlabeled. For a graph-based approach, we define a graph G = (V, E)
+
+on X where the vertex set V is just X and the edges in set E are weighted by W. The edge-connecting nodes i and j has an associated weight Wi j which represent the weights of the edges in the data adjacency graph, connecting all labeled and unlabeled nodes. Let F be the set of n × m matrices with non-negative entries. By labeling each point xi
+
+as yi = arg max j≤m Fi j , a matrix F = [ f T 
+
+> 1
+
+, · · · , f Tn ]T ∈ F provides a classification that maps each input pixel xi in the dataset X to a vector f i ∈ Rm. Define also an n × m
+
+matrix Y ∈ F with Yi j = 1 if xi is labeled as yi = j and Yi j = 0 otherwise. Notice that 
+
+Y aligns with the initial labels assigned to the labeled pixels. The semi-supervised learning algorithm proposed in [27] with the affinity matrix (4) is then as follows: Step 1: Define xω 
+
+> i
+
+, i = 1, . . . , n as the spectra of the n HI pixels. Step 2: Determine the spatial-spectral pixel entities xsi ∈ RNs , i = 1, . . . , n, as the averages of the HI pixels in a window of size w × w around xi.Step 3: Determine the spatial-2D pixel entities xdi ∈ R2, i = 1, . . . , n, given by the coordinate vector of xi in the HI. 11 Step 4: Choose a kernel bandwidth σd to be used in (3) to determine Wd.Step 5: Determine kernel bandwidths σs and σω to satisfy (5). Step 6: Construct the n × n matrices Ws and Wω in (2) and (3). Step 7: Choose the linear combination weights β, λ and γ to be used in (4). Step 8: Form the n × n affinity matrix W such that Wi j (xi, x j) = βWω 
+
+> i j
+
+(xω 
+
+> i
+
+, xω 
+
+> j
+
+) +
+
+λWdi j (xdi , xdj ) + γW si j (xsi , xsj).Step 9: Construct the matrix S = D−1/2W D −1/2 in which D is a diagonal matrix with elements Dii = P j Wi j .Step 10: Construct the n × m matrix Y with Yi j = 1 if xi is labeled as yi = j and 
+
+Yi j = 0 otherwise. Step 11: Iterate F(k + 1) = αSF (k) + (1 − α)Y until convergence, where α is a param-eter in (0 , 1) .It is straightforward to show that F(k) in Step 11 converges to 
+
+F∗ = lim  
+
+> k→∞
+
+F(k) = (1 − α)( I − αS)−1Y (6) for α in (0 , 1) .A pseudocode for the proposed classification method is presented in Algorithm 1. 
+
+4. Experimental Results and Discussions 
+
+To evaluate the performance of the proposed composite kernel approach, we applied Algorithm 1 to semi-supervised classification of HIs. Simulation experiments have been realized using two well known real HIs, namely, the AVIRIS Indian Pines and the ROSIS Pavia University datasets to allow for comparison with results previously published without available software. The AVIRIS dataset, comprising 224 spectral bands with spatial dimensions of 
+
+145 × 145 pixels, was acquired over the Indian Pines site in 1992. The data have a 12 Algorithm 1: Semi-supervised HI classification 
+
+Input: hyperspectral image pixels xω 
+
+> i
+
+, i = 1, . . . , n, parameters β, λ, γ, σd, α. 
+
+> 1
+
+Determine xsi ∈ RNs , i = 1, . . . , n. 
+
+> 2
+
+Determine xdi ∈ R2, i = 1, . . . , n 
+
+> 3
+
+σ2 
+
+> s
+
+= σ2     
+
+> d
+> max ∥xsi−xsj∥2
+> max ∥xdi−xdj∥2
+> 4
+
+σ2 
+
+> ω
+
+= σ2     
+
+> d
+> max ∥xω
+> i−xω
+> j∥2
+> max ∥xdi−xdj∥2
+> 5
+
+Wω ← Eq. (1)  
+
+> 6
+
+Ws ← Eq. (2)  
+
+> 7
+
+Wd ← Eq. (3)  
+
+> 8
+
+W = βWω + λWd + γWs 
+
+> 9
+
+S = D−1/2W D −1/2, Dii = P j Wi j  
+
+> 10
+
+Y ← Yi j = 1 if yi = j and Yi j = 0 otherwise.  
+
+> 11
+
+F∗ = (1 − α)( I − αS)−1Y 
+
+> 12
+
+for i = nl + 1, . . . , n do  
+
+> 13
+
+yi = arg max j≤m F∗
+
+> i j
+
+. 
+
+> 14
+
+end  
+
+> 15
+
+return Classes yi for each xi, i > nl;spatial resolution of 20 m and a spectral resolution of 10 nm, spanning the 400 –2500 nm wavelength range. After discarding noisy and water absorption bands, 200 effective bands were retained. Figure 1 depicts the scene, which is predominantly composed of agricultural areas encompassing 16 land-cover classes. Notably, corn and soybean fields display differences related to soil tillage practices. 
+
+Figure 1: Indian Pines scene displayed in false color using the red, green, and blue bands, together with the ground reference map and class legend. 
+
+13 The ROSIS (Reflective Optics System Imaging Spectrometer) dataset, with high spatial resolution and comprising 115 spectral bands, was acquired over Pavia University (PU) in Italy in 2002. The scene has spatial dimensions of 610 × 340 pixels, a spatial resolution of 1.3 m, and spectral coverage ranging from 430 nm to 860 nm. After removing noisy bands, 103 bands were retained for the experiments. Figure 2 illustrates the scene, which contains diverse urban and vegetation classes, providing a challenging benchmark for hyperspectral classification algorithms. The images illustrate a false-color composition generated from three bands, along with ground reference information and the associated class legend.  
+
+> Figure 2: Pavia University (PU) image. (a) False-color composition of three bands (b) Ground reference information and the corresponding class legend.
+
+The following experiments illustrate the benefits of integrating the spectral graph-based method with an auxiliary graph that incorporates the two-dimensional spatial distances between pixels in the image. The different experiments have been tailored so that the results can be directly compared to results previously reported in the literature. 
+
+4.1. First Experiment 
+
+In this experiment, we employed a subset of Indian Pines comprising pixels [27–94] 
+
+× [31–116], resulting in a 68 × 86 scene containing four labeled classes (background pixels were excluded from classification): “corn-no till” (1008), “Grass/Trees” (732), “Soybeans-no till” (727), and “Soybeans-min” (1926). This scenario is particularly 14 challenging for land-cover classification, as the main crops in the – primarily corn and soybeans – were at early growth stages, especially given the moderate spatial resolution of 20 m. The subset is used to evaluate the performance of the proposed kernel composition method in comparison with the results presented in [8]. The parameters of the algorithm were adjusted based on a grid search with α values in [0.1, 0.9], σ2 
+
+> d
+
+values in the the interval [10, 200], β and λ in [0.1, 0.9] and γ = 1 − λ − β.For each combination of α and σ2 
+
+> d
+
+values, parameters σ2 
+
+> s
+
+= 7.57 and σ2 
+
+> ω
+
+= 8.36 were determined from (5). The following parameters were used in the simulations: α = 0.5,
+
+σ2 
+
+> d
+
+= 110 , σ2 
+
+> s
+
+= 7.57 and σ2 
+
+> ω
+
+= 8.36 . The reported accuracy results were obtained by averaging over 50 independent runs. The spatio-spectral samples xsi were computed as the average over a 3 × 3 window surrounding each pixel xi for each band, thereby defining W si j as specified in equation (2). Table 1 presents the accuracy results for different amounts of initially known labels and combinations of spectral, spatial-spectral and 2D-spatial kernels. The challenge of balancing the weights β, λ and γ can lead to one type of information being favored over the others. It is worth noting that the results reported in [8], also included in Table 1, correspond to the best-performing kernel compositions among the various configurations tested by the authors in [8]. Parameter variations in Equation (4) were examined to assess the effectiveness of the method, as well as the corresponding value when one of these weights was omitted in the context of composite kernel-based image classification. To derive a consistent framework for analyzing possible relationships, a careful adjustment of the parameters allows us to better understand how changes in λ, β, and γ
+
+influence the method’s accuracy when using the spatial-spectral kernel or not. To this end we started with a convex combination such that λ+β+γ = 1. We recall from (4) that 
+
+λ is the weight associated with the contribution of the newly proposed spatial-2D kernel to the weight matrix W. Then, to compare the results obtained using the 3-component convex combination with a 2-component combination including only one spectral and one spatial-2D term we eliminate one of the spectral terms while keeping the ratio of the weights of the remaining terms unaltered. For instance, to remove the term Ws we determine the ratio k = λ/β of the original combination. Then, the weights λe and βe
+
+15 of the “equivalent” 2-component combination are determined so that λe + βe = 1 and 
+
+λe/β e = k. This result is obtained making λe = k/(k + 1) and βe = 1/(k + 1) . Likewise, when eliminating the term Wω from the original combination, we define k = λ/γ ,leading to λe = k/(k + 1) and γe = 1/(k + 1) .Table 1 shows different results obtained using the described methodology. Different combinations of coefficient values β, λ, and γ, as well different amounts of initially labeled pixels were considered. The labeled pixels initially selected for each class were chosen randomly for each simulation run. In Case 1, Wd had the same weight as the two spectral terms combined. The obtained classification accuracies for all four classes were better than the best results reported in [8] for all kernel composition used. In Case 2, the spectral-spatial component Ws was removed while maintaining the relative weights of Wω and Wd as explained above. An accuracy improvement was verified, indicating that the proposed spatial-2D kernel provided better spatial information than the spectral-spatial kernel. In Case 3 we removed the contribution of the pure spectral component Wω, while again keeping the ratio of the other two contributions unaltered. Comparison of the accuracies obtained for these three cases and the results reported in [8] indicates that the proposed spatial-2D component provided important spatial information. They also indicate that the simple spectral component Wω should be preferred over the spatial-spectral component Ws if only one of them is to be employed. Differently from Case 1, Case 4 considered a situation in which the contribution of the spatial-2D component Wd was much smaller than the combined contributions of the two spectral-based components Wω and Ws. The accuracy results obtained were clearly inferior to those obtained in Case 1, Case 2, Case 3 and those reported in [8]. Case 5, derived form Case 4 by eliminating the spectral-spatial component 
+
+Ws while maintaining the ratio λ/β , led to a significant improvement in classification accuracy, supporting the previous indication that the use of Wω and Wd provided a better combination of spectral and spatial information for classification purposes than the combination of Wω with Ws. Comparison of all cases and the results from [8] clearly indicate the relevance of the proposed spatial-2D to the classification accuracy, with the parameters in Case 2 leading to the overall best results for all classes. Finally, a comparison of the results in Case 2 and Case 5 showed a small sensitivity 16 of the accuracy results to a significant variation of the relative weights applied to Wω
+
+and Wd, as well as the importance of employing the proposed spatial-2D component.  
+
+> Table 1: Classification accuracy ( %) for different numbers of labeled samples per class - Indian Pines Image
+
+Number of labeled points per class 
+
+3 5 15 30 
+
+Composite Kernel Accuracy (%) 
+
+Case 1 
+
+λ = 0.50 
+
+β = 0.25 71 .10 75 .88 82 .33 85 .40 
+
+γ = 0.25 
+
+Case 2 
+
+λe = 0.67 73 .46 79 .14 85 .27 87 .00 
+
+βe = 0.33 
+
+Case 3 
+
+λe = 0.67 69 .20 77 .34 83 .33 84 .68 
+
+γe = 0.33 
+
+Case 4 
+
+λ = 0.10 
+
+β = 0.45 52 .60 57 .91 65 .34 66 .71 
+
+γ = 0.45 
+
+Case 5 
+
+λe = 0.18 71 .54 77 .42 84 .83 85 .80 
+
+βe = 0.82 
+
+Ref. [8] 66 .73 67 .13 79 .49 84 .99 
+
+The results in Table 1 show that, regardless of how small the value of λ associ-ated with the 2D-spatial kernel was chosen, there was no strong dependency on the combination of the spectral kernels Wω and Ws for the Indian Pines dataset. This outcome suggests a reduction in computational complexity, as the contribution of the spatial–spectral kernel Ws can be reasonably disregarded. Specifically for the Indian Pines image, this behavior can be attributed to the averaging process used in the con-struction of the matrix Ws from the original image cube, which does not substantially modify the mean spectral characteristics evaluated in a window about most of the pixels 17 in the image due to the occurrence of large areas with pixels of the same class. 
+
+4.2. Second Experiment 
+
+We used the Pavia University (PU) image for this experiment. To ensure a balanced assessment, five classes (Gravel (2099), Trees (3064), Painted metal sheets (1345), Bitumen (1330) and Shadows (947)) with a moderate amount of labeled data were selected for the evaluation of the method. It should be emphasized that simulations conducted with alternative class combinations did not result in statistically significant differences in accuracy. As in the first example, the spatio-spectral samples xsi were computed as the average over a 3 × 3 window surrounding each pixel xi for each band. The reported accuracies are the result of an average over 50 independent runs. Also, the algorithm parameters were adjusted based on a grid search with the same parameter intervals employed in Experiment 1. For each combination of α and σ2
+
+> d
+
+values, parameters σ2 
+
+> s
+
+and σ2 
+
+> ω
+
+were determined from (5). The parameters used in the simulations were α = 0.5, σ2 
+
+> d
+
+= 10 , σ2 
+
+> s
+
+= 0.51 and σ2 
+
+> ω
+
+= 0.63 .Table 2 presents accuracy results obtained for different choices of the linear combi-nation coefficients β, λ and γ, and for different amounts of initially labeled pixels. The pixels initially labeled for each class were chosen randomly for each simulation run. We proceeded as in the first example in that the parameters of the 2-coefficient linear combinations were obtained from a previously tested 3-coefficient combination by maintaining the ratio of the coefficients of the preserved terms and keeping the convex nature of the sum. An analysis of Table 2 reveals, unlike the results obtained for the Indian Pines image, a reduced sensitivity of the classification performance to the choice of weights chosen for Wd, Ws and Wω. Overall, the results exhibited only small variations across the evaluated cases. Notably, Case 3, in which the composite kernel did not include a contribution of Wω, has yielded the best classification accuracies for most of the tested cases. This shows that the spectral-spatial pixel representation provided important spectral information. It is noteworthy that this trend is also reflected in the class-wise accuracy, as can be verified in Table 3, which presents accuracy results obtained per class for selected combinations of the parameters λ, β, and γ. Notice that a comparison 18 Table 2: Classification accuracy (%) to different numbers of labeled samples per class - PU Image 
+
+Number of labeled points per class 
+
+3 5 15 30 
+
+Composite Kernel Accuracy (%) 
+
+Case1 
+
+λ = 0.50 
+
+β = 0.25 97 , 16 97 .75 97 .93 98 .03 
+
+γ = 0.25 
+
+Case2 
+
+λe = 0.67 90 .50 92 .13 94 .26 94 .79 
+
+βe = 0.33 
+
+Case3 
+
+λe = 0.67 98 .13 98 .47 98 .64 98 .72 
+
+γe = 0.33 
+
+Case4 
+
+λ = 0.10 
+
+β = 0.45 97 .26 97 .44 97 .74 97 .90 
+
+γ = 0.45 
+
+Case5 
+
+λe = 0.18 89 .60 92 .26 92 .21 92 .71 
+
+βe = 0.82 
+
+Case6 
+
+λ = 0.25 
+
+β = 0.50 95 .77 96 .14 97 .06 97 .38 
+
+γ = 0.25 
+
+Case7 
+
+λ = 0.50 
+
+β = 0.0 98 .18 98 .30 98 .56 98 .59 
+
+γ = 0.50 
+
+Case8 
+
+λ = 0.50 
+
+β = 0.50 90 .50 92 .30 93 .23 93 .27 
+
+γ = 0.0
+
+of cases 2 and 3 in Table 3 indicates that for this image the spatial-spectral contributions 
+
+xs provided a spectral information that is more relevant than the information provided by the pixels xω. Also, comparison of the results obtained for cases 1 and 4 indicates that employing the newly proposed pixel entity xd can lead to an improvement in 19 classification accuracy even for this image.  
+
+> Table 3: Classification accuracy for the different classes - PU Image.
+
+Accuracies (%) for 5 labeled points per class 
+
+Case 1 Gravel = 97.48 
+
+λ = 0.50 Trees= 99.74 
+
+β = 0.25 Painted metal sheeets= 99.48 
+
+γ = 0.25 Bitumen = 94.64 Shadows = 97.38 
+
+Case 2 Gravel = 83.24 
+
+λ = 0.50 Trees= 99.74 
+
+β = 0.50 Painted metal sheeets= 99.44 
+
+γ = 0.0 Bitumen = 86.03 Shadows = 87.57 
+
+Case 3 Gravel = 97.11 
+
+λ = 0.50 Trees= 99.62 
+
+β = 0.0 Painted metal sheeets= 99.96 
+
+γ = 0.50 Bitumen = 94.63 Shadows = 99.66 
+
+Case 4 Gravel = 95.80 
+
+λ = 0.0 Trees= 99.74 
+
+β = 0.50 Painted metal sheeets= 99.44 
+
+γ = 0.50 Bitumen = 93.72 Shadows = 96.50 
+
+4.3. Third Experiment 
+
+This experiment compared the performances of the proposed method and the method of [41]. To this end we considered Class 3 (Corn-Min) and Class 12 (Soybeans-clean) of the Indian Pines image. Moreover, since only a subset of the pixels belonging to each class in the original image was considered in the experiment described in [41], we employed the same number of pixels for each of the two classes to enable a fair comparison. As a result, 270 pixels were selected at random from Class 3, out of a total of 830 pixels, and 261 pixels were chosen (also randomly) from Class 12, which contained 593 pixels. We performed a grid search as in the previous experiments to determine the param-eters of the proposed algorithm. After several trials, we verified that excellent classi-fication results were obtained applying only the spectral kernel Wω 
+
+> i j
+
+and the 2D-spatial 20 kernel Wdi j . Moreover, this choice reduced the computational complexity required when compared to a solution including the spectral–spatial kernel W si j . The overall (OA) re-sults shown in Table 4 for different amounts of initially labeled samples were obtained using the following set of parameters: α = 0.5, σ2 
+
+> d
+
+= 50 , σ2 
+
+> ω
+
+= 1.34 , λ = 0.55 and 
+
+β = 1 − λ.We observe that our approach provided more accurate results than those reported in [41] in all cases. 
+
+> Table 4: Classification accuracy for the Indian-Pines Image. Results for the proposed method and for [41].
+
+Classes 3 e 12 - OA( %)Number of labeled points Reference [41] Proposed Method 3 95 .50 97.23 
+
+5 97 .00 98.41 
+
+10 98 .00 98.74 
+
+15 98 .20 99.13 
+
+Table 5 reports the accuracy results obtained for each individual class. Excellent results were observed for both classes regardless of the number of samples initially labeled per class. Class-wise accuracy results are not presented in [41].  
+
+> Table 5: Third Experiment. Results of acccuracy per class.
+
+Number of labeled points Classes 3 5 10 15 
+
+3 98 .4 99 .79 100 100 
+
+12 96 .06 97 .03 97 .45 98 .23 
+
+4.4. Fourth Experiment 
+
+In this experiment, we compared our proposed method with that of [41] when all 16 classes present in the Indian Pines image were considered. In [41], the amounts of 21 pixels used to represent each class were as follows: class 1 = 46 , class 2 = 100 , class 3 = 270 , class 4 = 234 , class 5 = 63 , class 6 = 101 , class 7 = 28 , class 8 = 478 , class 9 = 20 , class 10 = 66 , class 11 = 122 , class 12 = 261 , class 13 = 205 , class 14 = 117 ,class 15 = 291 and class 16 = 93 . For a fair comparison, we used the same scenario for the proposed method. After a grid search as described in the previous experiments, the following parameters were used in the simulations: α = 0.5, λ = 0.55 , β = 0.45 , γ = 0,
+
+σ2 
+
+> d
+
+= 20 and σ2 
+
+> ω
+
+= 0.74 .Table 6 presents comparative results for accuracy by class and overall accuracy (OA) obtained using the proposed method and the results reported in [41]. The experiment considered 15 available labeled samples per class, and the reported results correspond to the average of 20 runs. We can observe that the proposed method was superior in classification accuracy for all classes but for class 13 when compared to the method in [41]. The overall average was significantly superior. Figure 3 shows the overall accuracy results obtained with the proposed method for different values of λ in equation (4), with β = 1 − λ, and γ = 0. The graph shows curves related to the use of 5 (blue curve) and 15 (orange curve) initially labeled samples per class. These results indicate a strong robustness to variations in λ in both scenarios.  
+
+> Figure 3: Fourth experiment. Overall accuracy (OA) for different values of λ. Indian-Pines image. Blue curve: 5 labeled samples per class. Orange curve: 15 labeled samples per class.
+
+22 Table 6: Comparison between the proposed method and [41] for the Indian-Pines Image. 
+
+Classes [41]- DSR -Graph Proposed Method 1 87 .3 100 
+
+2 84 .52 100 
+
+3 88 .5 91.14 
+
+4 76 .62 96.18 
+
+5 90.93 100 
+
+6 99 .53 100 
+
+7 91 .36 100 
+
+8 73 .16 99.88 
+
+9 100 100 
+
+10 69 .11 95.73 
+
+11 61 .44 100 
+
+12 65 .60 90.10 
+
+13 99.11 92.65 14 87 .79 100 
+
+15 43 .67 99.44 
+
+16 99 .31 100 
+
+OA 79 .63 96.74 (0.77) 23 4.5. Fifth Experiment 
+
+In this experiment, we compared the performance of the proposed method with the method presented in [38]. To this end we used the same scenario described in [38], choosing the same nine classes from the Indian-Pines image, namely, classes 2, 3, 5, 6,
+
+8, 10 , 11 , 12 and 14 . As in [38], we randomly selected 40% of the 9234 pixels available in the nine classes, that is, a total of 3738 pixels. After a grid search as done for the previous experiments, the parameters used in the simulations were λ = 0.45 , β = 1 − λ,
+
+γ = 0, α = 0.5, σ2 
+
+> d
+
+= 20 , and σ2 
+
+> ω
+
+= 0.924 . Twenty labeled samples per class were used and we calculated the average of 20 runs to obtain the accuracy results. Table 7 compares the results obtained using the proposed method with the best results reported in [38]. Except for a small difference in the result for Class 3, the proposed method has led to superior accuracies for all other classes. 
+
+4.6. Discussion 
+
+An interesting aspect of the results obtained in the experiments is the relative importance of the two spectrally based similarity measures employed in the spectral and in the spectral-spatial components of the composite kernel. The experiments have evidenced that the relative effectiveness of each similarity measure depends on characteristics of the HI being classified. Fig. 4 shows the spectral curves corresponding to the 103 bands of the pixel classes in the Pavia hyperspectral image. An inspection of these curves indicates that, for most wavelengths, the spectral magnitudes exhibit substantial separation. This property supports the simulation results, wherein the exploitation of local neighborhoods through spatial windowing has the potential to yield a meaningful improvement in classification accuracy when combined with the adopted 2D spatial distance. Conversely, this behavior is not observed in the Indian Pines dataset. As illustrated in Fig. 5, the spectral signatures across its 200 bands remain tightly clustered, with minimal inter-class separation. This observation is consistent with the simulation outcomes, which show that window-based nearest-neighbor exploration provides limited gains in accuracy for the kernel formulation employed in this study. 24 Table 7: Comparison between the proposed method and the reference [38] for the Indian-Pines Image. 
+
+Classes Reference [38] Proposed Method 2 93.16 98.92 
+
+3 98.48 97.16 5 95.38 97.03 
+
+6 100 100 
+
+8 100 100 
+
+10 93.99 97.12 
+
+11 91.76 99.81 
+
+12 92.56 100 
+
+14 100 100 OA % 95.28 98.92 (0.64) 
+
+Figure 4: Mean value of the spectra of each class of the Pavia HI. 
+
+25 Figure 5: Mean value of the spectra of each class of the Indian Pines HI. 
+
+5. Conclusions 
+
+This work has proposed an alternative solution leveraging spatial information in graph-based semi-supervised (SS) transductive hyperspectral image classification. The consideration of pixel spatial properties in SS classification of hyperspectral images has been a subject of many studies with the objective of performance improvement. However, most existing solutions obtain the spatial properties as a function of the spectra of pixels in a spatial region about each HI pixel. While this approach adds some spatial information to the learning process, such information is still spectral in nature. One motivation for using such spectral-based spatial information was the use of cross-information kernels which required that spectral and spatial representations had the same dimension. Inspired by works in genomic data fusion which employed a kernel learning framework combining different types of data descriptions, as well as by works on conditional random fields (CRF) defined over pixels or image regions to refine pixel labeling, we proposed the addition of a new term to the typical composite kernel which considers exclusively spatial properties of the pixels. Our approach is simple to apply, as it does not require spectral operations about each pixel of the image, and can be directly applied to one of the simplest and most effective graph-based learning ap-proaches. Experimental results using real images showed that the proposed composite 26 kernel adds significant information to the learning process, yielding better classifica-tion results when compared to results previously reported in the literature. The new results also help in understanding the relative contributions of the two spectral-based contributions to the composite kernel, which depend on the properties of the HI being classified. It is our conjecture that the proposed approach can also be applied to generate new directed-graph-based classification methods which emphasize the influence of the labeled samples in classifying the unlabeled ones. This is a possible direction for future work. 
+
+References 
+
+[1] F. Luo, B. Du, L. Zhang, L. Zhang, D. Tao, Feature learning using spatial-spectral hypergraph discriminant analysis for hyperspectral image, IEEE Transactions on Cybernetics 49 (7) (2019) 2406–2419. doi:10.1109/TCYB.2018.2810806 .[2] L. Zhang, L. Zhang, D. Tao, X. Huang, On combining multiple features for hy-perspectral remote sensing image classification, IEEE T. Geoscience and Remote Sensing 50 (2012) 879–893. doi:10.1109/TGRS.2011.2162339 .[3] Y. Tarabalka, J. Chanussot, J. A. Benediktsson, Segmentation and classification of hyperspectral images using minimum spanning forest grown from automatically selected markers, IEEE Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics) 40 (5) (2010) 1267–1279. doi:10.1109/TSMCB.2009.2037132 .[4] C.-C. Hung, S. Kulkarni, B.-C. Kuo, A new weighted fuzzy c-means clustering algorithm for remotely sensed image classification, IEEE Journal of Selected Topics in Signal Processing 5 (3) (2011) 543–553. doi:10.1109/JSTSP.2010. 2096797 .[5] A. Villa, J. A. Benediktsson, J. Chanussot, C. Jutten, Hyperspectral image classification with independent component discriminant analysis, IEEE Trans-actions on Geoscience and Remote Sensing 49 (12) (2011) 4865–4876. doi: 10.1109/TGRS.2011.2153861 .27 [6] L. Yang, S. Yang, P. Jin, R. Zhang, Semi-supervised hyperspectral image classifi-cation using spatio-spectral laplacian support vector machine, IEEE Geoscience and Remote Sensing Letters 11 (3) (2014) 651–655. doi:10.1109/LGRS.2013. 2273792 .[7] R. A. Borsoi, T. Imbiriba, J. C. M. Bermudez, C. Richard, J. Chanussot, L. Drumetz, J.-Y. Tourneret, A. Zare, C. Jutten, Spectral variability in hyper-spectral data unmixing: A comprehensive review, IEEE Geoscience and Remote Sensing Magazine 9 (4) (2021) 223–270. doi:10.1109/MGRS.2021.3071158 .[8] G. Camps-Valls, T. V. Bandos Marsheva, D. Zhou, Semi-supervised graph-based hyperspectral image classification, IEEE Transactions on Geoscience and Remote Sensing 45 (10) (2007) 3044–3054. doi:10.1109/TGRS.2007.895416 .[9] K. Tan, J. Hu, J. Li, P. Du, A novel semi-supervised hyperspectral image classifica-tion approach based on spatial neighborhood information and classifier combina-tion, ISPRS Journal of Photogrammetry and Remote Sensing 105 (2015) 19–29. 
+
+doi:https://doi.org/10.1016/j.isprsjprs.2015.03.006 .[10] L. Gomez-Chova, G. Camps-Valls, J. Munoz-Mari, J. Calpe, Semisupervised image classification with laplacian support vector machines, IEEE Geoscience and Remote Sensing Letters 5 (3) (2008) 336–340. doi:10.1109/LGRS.2008. 916070 .[11] B. S. O. Chapelle, A. Zien (Eds.), Semi-Supervised Learning, MIT Press, 2006. [12] A. P. Dempster, N. M. Laird, D. B. Rubin, Maximum likelihood from incom-plete data via the em algorithm, Journal of the Royal Statistical Society: Series B (Methodological) 39 (1) (2018) 1–22. doi:10.1111/j.2517-6161.1977. tb01600.x .[13] Q. Liu, X. Liao, H. Li, J. R. Stack, L. Carin, Semisupervised multitask learning, IEEE Transactions on Pattern Analysis and Machine Intelligence 31 (6) (2009) 1074–1086. doi:10.1109/TPAMI.2008.296 .28 [14] J. E. V. Engelen, H. Hoos, A survey on semi-supervised learning, Springer Nature B.V. 109 (2020) 373–440. doi:10.1007/s10994-019-05855-6 .[15] X. Zhu, Semi-supervised learning literature survey, Tech. rep., University of Wisconsin-madison (2008). [16] M. C. L. Bruzzone, M. Marconcini, A novel transductive svms for semi-supervised classification of remote-sensing images, in: IEEE Trans. Geosci. Remote Sens., Vol. 44, 2006, p. 3363–3373. [17] B. Zhou, C. Hu, B. Chen, J. Hu, A transductive support vector machine with adjustable quasi-linear kernel for semi-supervised data classification, in: 2014 International Joint Conference on Neural Networks (IJCNN), 2014, pp. 1409– 1415. doi:10.1109/IJCNN.2014.6889703 .[18] G. D. Singla M., S. K.K, pin-tsvm: A robust transductive support vector machine and its application to the detection of covid-19 infected patients, in: Neural Processing Letters (2021), Vol. 53, 2021, pp. 3981–4010. doi: 10.1007/s11063-021-10578-8 .[19] X. Geng, B. Gu, X. Li, W. Shi, G. Zheng, H. Huang, Scalable semi-supervised SVM via triply stochastic gradients, CoRR abs/1907.11584 (2019). [20] F. Chung, Spectral Graph Theory, no. N º 92 in CBMS Regional Conference Series, Conference Board of the Mathematical Sciences, 1997. [21] M. I. Jordan, Learning in Graphical Models, 1st ed. Cambridge, MA: MIT Press, 1999. [22] Z. Song, X. Yang, Z. Xu, I. King, Graph-based semi-supervised learning: Acomprehensive review, IEEE Transactions on Neural Networks and Learning Systems 34 (11) (2023) 8174–8194. doi:10.1109/TNNLS.2022.3155478 .[23] K. F. Tanni, T. S. Promi, M. J. A. Patwary, Fuzzygssl: An improved graph-based semi-supervised learning through fuzzy label propagation, in: Proceedings of the 3rd International Conference on Computing Advancements, ICCA ’24, 29 Association for Computing Machinery, New York, NY, USA, 2025, p. 527–533. 
+
+doi:10.1145/3723178.3723248 .URL https://doi.org/10.1145/3723178.3723248 
+
+[24] L. Freire, J. Oliva, V. Santos, V. Freitas, J. C. Gertrudes, On the evaluation of graph construction methods for semi-supervised transductive classification, in: Anais do XIII Symposium on Knowledge Discovery, Mining and Learning, SBC, Porto Alegre, RS, Brasil, 2025, pp. 33–40. doi:10.5753/kdmile.2025.247713 .URL https://sol.sbc.org.br/index.php/kdmile/article/view/ 37206 
+
+[25] M. Culp, G. Michailidis, Graph-based semisupervised learning, IEEE Trans-actions on Pattern Analysis and Machine Intelligence 30 (1) (2008) 174–179. 
+
+doi:10.1109/TPAMI.2007.70765 .[26] Y. Gu, K. Feng, L1-graph semisupervised learning for hyperspectral image classifi-cation, in: 2012 IEEE International Geoscience and Remote Sensing Symposium, 2012, pp. 1401–1404. doi:10.1109/IGARSS.2012.6351274 .[27] D. Zhou, O. Bousquet, T. Lal, J. Weston, B. Olkopf, Learning with local and global consistency, Advances in Neural Information Processing Systems 16 16 (03 2004). [28] Y. Shao, C. Gao, N. Sang, A discriminant sparse representation graph-based semi-supervised learning for hyperspectral image classification, Multimedia Tools and Applications 76 (8) (2017) 10959–10971. [29] P. Krähenbühl, V. Koltun, Efficient inference in fully connected crfs with gaussian edge potentials, Advances in neural information processing systems 24 (2011). [30] C. Liang-Chieh, G. Papandreou, I. Kokkinos, K. Murphy, A. Yuille, Semantic image segmentation with deep convolutional nets and fully connected crfs, in: Proc. International Conference on Learning Representations. Available online: https://arxiv.org/abs/1412.7062., 2015, pp. 1–14. 30 [31] X. Pan, J. Zhao, High-resolution remote sensing image classification method based on convolutional neural network and restricted conditional random field, Remote Sensing 10 (6) (2018) 920. [32] F. I. Alam, J. Zhou, A. W.-C. Liew, X. Jia, Crf learning with CNN features for hyperspectral image segmentation, in: 2016 IEEE international geoscience and remote sensing symposium (IGARSS), IEEE, 2016, pp. 6890–6893. [33] Y. Liang, X. Zhao, A. J. Guo, F. Zhu, Hyperspectral image classification with deep metric learning and conditional random field, IEEE Geoscience and Remote Sensing Letters 17 (6) (2019) 1042–1046. [34] F. I. Alam, J. Zhou, A. W.-C. Liew, X. Jia, J. Chanussot, Y. Gao, Conditional random field and deep feature learning for hyperspectral image classification, IEEE Transactions on Geoscience and Remote Sensing 57 (3) (2018) 1612–1628. [35] G. Camps-Valls, L. Gomez-Chova, J. Munoz-Mari, J. Vila-Frances, J. Calpe-Maravilla, Composite kernels for hyperspectral image classification, IEEE Geo-science and Remote Sensing Letters 3 (1) (2006) 93–97. doi:10.1109/LGRS. 2005.857031 .[36] S. Velasco-Forero, V. Manian, Improving hyperspectral image classification using spatial preprocessing, IEEE Geoscience and Remote Sensing Letters 6 (2) (2009) 297–301. doi:10.1109/LGRS.2009.2012443 .[37] N. Jamshidpour, S. Homayouni, A. Safari, Graph-based semi-supervised hyper-spectral image classification using spatial information, in: 2016 8th Workshop on Hyperspectral Image and Signal Processing: Evolution in Remote Sensing (WHISPERS), 2016, pp. 1–4. doi:10.1109/WHISPERS.2016.8071798 .[38] L. Ma, A. Ma, C. Ju, X. Li, Graph-based semi-supervised learning for spectral-spatial hyperspectral image classification, Pattern Recognition Letters 83 (2016) 133–142, advances in Pattern Recognition in Remote Sensing. doi:https: //doi.org/10.1016/j.patrec.2016.01.022 .31 [39] X. Zhu, Z. Ghahramani, J. D. Lafferty, Semi-supervised learning using gaussian fields and harmonic functions, in: Proceedings of the 20th International conference on Machine learning (ICML-03), 2003, pp. 912–919. [40] G. R. Lanckriet, T. De Bie, N. Cristianini, M. I. Jordan, W. S. Noble, A statistical framework for genomic data fusion, Bioinformatics 20 (16) (2004) 2626–2635. [41] Y. Shao, C. Gao, N. Sang, A discriminant sparse representation graph-based semi-supervised learning for hyperspectral image classification, Multimed Tools Appl 76 (2017) 10959–10971. doi:10.1007/s11042-016-3371-9 .32

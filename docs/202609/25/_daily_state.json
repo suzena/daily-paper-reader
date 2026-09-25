@@ -1,0 +1,169 @@
+{
+  "date": "20260925",
+  "date_label": "",
+  "generated_at": "2026-09-25 22:06:20 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.28741v1",
+      "route": "202609/25/2609.28741v1-geonli---a-natural-language-interpreter-for-satellite-imagery",
+      "title": "GeoNLI - A Natural Language Interpreter for Satellite Imagery",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向卫星影像的图文多模态模型，涵盖描述、视觉问答与定位",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.21716v1",
+      "route": "202609/25/2609.21716v1-agenticswarm-semantic-perception-and-adaptive-task-allocation-for-heterogeneous-multi-uav-missions",
+      "title": "AgenticSwarm: Semantic Perception and Adaptive Task Allocation for Heterogeneous Multi-UAV Missions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "智能体融合航空影像与自然语言指令构建任务表征",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.29029v1",
+      "route": "202609/25/2609.29029v1-exploiting-answer-invariant-redundancies-in-satellite-imagery-for-efficient-vlm-inference-on-edge",
+      "title": "Exploiting answer-invariant redundancies in satellite imagery for efficient VLM inference on edge",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "卫星影像与文本查询的视觉语言模型推理",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.19634v1",
+      "route": "202609/25/2609.19634v1-scientific-image-quality-assessment-via-multi-modal-retrieval-augmented-generation",
+      "title": "Scientific Image Quality Assessment via Multi-modal Retrieval-Augmented Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合文本与视觉特征的多模态索引与LLM",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.22897v1",
+      "route": "202609/25/2609.22897v1-scout-open-world-species-recognition-on-the-edge",
+      "title": "Scout: Open-World Species Recognition on the Edge",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向生态监测的自主开放世界识别系统，使用视觉语言模型",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.23427v1",
+      "route": "202609/25/2609.23427v1-rspdbench-benchmarking-vision-foundation-models-on-earth-observation-tasks-under-physically-grounded-remote-sensing-product-degradations",
+      "title": "RSPDBench: Benchmarking Vision Foundation Models on Earth Observation Tasks Under Physically Grounded Remote-Sensing Product Degradations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "对地观测遥感任务中视觉基础模型的基准评测",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.23695v1",
+      "route": "202609/25/2609.23695v1-physai-bench-a-benchmark-for-llm-based-agentic-decision-making-in-autonomous-uav-centric-physical-ai",
+      "title": "PhysAI-Bench: A Benchmark for LLM-Based Agentic Decision-Making in Autonomous UAV-Centric Physical AI",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向自主系统的LLM智能体决策基准",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.25917v1",
+      "route": "202609/25/2609.25917v1-vision-based-underwater-formation-control-with-input-saturations-via-barrier-lyapunov-functions",
+      "title": "Vision-based Underwater Formation Control With Input Saturations via Barrier Lyapunov Functions",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下机器人视觉编队控制",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.28222v1",
+      "route": "202609/25/2609.28222v1-from-alignment-to-fusion-in-3d-vision-language",
+      "title": "From Alignment to Fusion in 3D Vision-Language",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "对齐后融合的多模态视觉语言表征融合",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    },
+    {
+      "paper_id": "2609.29367v1",
+      "route": "202609/25/2609.29367v1-graph-based-semi-supervised-hyperspectral-image-classification-with-distance-aware-spatial-measure",
+      "title": "Graph-Based Semi-Supervised Hyperspectral Image Classification with Distance-Aware Spatial Measure",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于图的半监督高光谱遥感分类",
+      "first_seen_at": "2026-09-25 22:06:20 UTC",
+      "updated_at": "2026-09-25 22:06:20 UTC"
+    }
+  ]
+}

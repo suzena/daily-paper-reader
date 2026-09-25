@@ -1,0 +1,364 @@
+Title: Scout: Open-World Species Recognition on the Edge
+
+URL Source: https://arxiv.org/pdf/2609.22897v1
+
+Published Time: Tue, 22 Sep 2026 00:45:21 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# Scout: Open-World Species Recognition on the Edge 
+
+## Mohammad Mehdi Rastikerdar, Hui Guan, Deepak Ganesan University of Massachusetts Amherst, Amherst, MA 01003, USA   
+
+> {mrastikerdar, huiguan, dganesan }@cs.umass.edu
+
+## Abstract 
+
+Large vision-language models (VLMs) enable recognition beyond a fixed class set, but their computational demands prevent them from running on many edge devices. Cloud offload makes this capability accessible, but sending every image consumes scarce bandwidth and communication en-ergy. We ask how to bring the open-world recognition ca-pability of VLMs to the edge while operating within tight compute, energy, and bandwidth budgets. Wildlife moni-toring provides a natural setting for exploring this ques-tion because camera traps encounter species not known at deployment. We present Scout, an autonomous open-world recognition system that invokes a cloud VLM inter-mittently to teach new classes to a compact edge model. Given only the deployment location and empty site frames, Scout autonomously turns each species identified by the VLM into persistent, site-conditioned recognition capabil-ity in a resource-efficient edge model, without a predefined species list, human labeling, or manual tuning. Across 30 camera-trap deployments in three regions on an NVIDIA Jetson Orin Nano, the accuracy of Scout remains within 0.1–2.5% of a model given a predefined species list. On species outside its initial class set, Scout achieves 53.7– 59.1% accuracy, compared with 56.5–65.1% for full cloud offload, while using 59–71% less deployment energy. 
+
+## 1. Introduction 
+
+Visual recognition is moving from a closed set, where all categories are fixed during training, toward an open world in which new categories can appear after deployment. Large vision-language models (VLMs) make this possible by recognizing categories not enumerated for a particular task [14, 17, 39, 40, 45]. However, their computational de-mands prevent them from running on many edge devices. Cloud offload makes this capability accessible, but send-ing every image is costly when bandwidth and device en-ergy are limited. Compact models can run locally, but recognize only classes seen during training. This creates a central question for edge vision: how can we bring the open-world capability of VLMs to the edge while operating within tight compute, energy, and bandwidth budgets? Wildlife monitoring provides a natural setting for this question. Camera traps operate unattended for months in remote habitats to measure species presence and behav-ior [1, 16]. Limited connectivity and human access make cloud communication and intervention expensive, while both the species and visual conditions vary across sites. A camera should therefore be deployable without a prede-fined species list or labeled animal images from the site and should learn new species as they appear. 
+
+Open-world Recognition on the Edge. Rather than choos-ing between a fixed edge model and full cloud offload, the edge and cloud should play complementary roles. A com-pact model should handle familiar classes locally, while a cloud VLM should be consulted only when the edge en-counters something it cannot recognize. Crucially, each cloud response should do more than answer the current query: it should teach the edge model the new class so that later observations can be processed locally. The VLM thereby becomes an intermittent teacher rather than a per-manent inference engine. We call this problem open-world recognition on the edge .To realize this vision, a system must meet three require-ments. First, it must detect and name an unfamiliar class. Second, it must obtain site-appropriate labeled data with which to learn the class. Third, it must update the on-device model under resource constraints. Existing work addresses only pieces of this problem: open-set recognition detects inputs outside the known classes but does not name or learn them [7, 11, 18, 41]; class-incremental learning assumes labeled examples of each new class; and edge–cloud and context-aware systems assume that the class set and train-ing data are fixed before deployment [24, 35, 38]. What is needed instead is an end-to-end system that uses the cloud to identify new classes, constructs the data needed to learn them, and updates the edge model. Open-world recognition alone is not sufficient because species recognition is highly sensitive to the deployment site. SpeciesNet [15], for example, achieves 93.7% accu-racy at the Serengeti sites represented in its training data, 1arXiv:2609.22897v1 [cs.CV] 19 Sep 2026 Edge Class Context:      
+
+> Impala Plains Zebra Common Wildebeest
+> Config:
+> 330 px pruning 0.25
+> Cloud
+> iNaturalist
+> Class Context:
+> Common Wildebeest Spotted Hyena
+> Config:
+> 215 px pruning 0.20
+> Synthesized
+> VLM
+> “spotted hyena” “laughing hyena”
+> Crocuta crocuta
+> iNaturalist
+> ID 41886
+> Spotted Hyena
+
+Edge   
+
+> 6h later in the same night’s stream
+> 123
+
+Figure 1. Scout constructs site-conditioned training data and selects a resource-efficient model for the edge device. When the device encounters a species outside its current class set (1), a cloud VLM names the species and Scout automatically constructs new training data, retrains the classifier, and deploys the update (2). The on-device classifier recognizes the same species six hours later in the same deployment stream (3). Config lists the input image resolution and the model pruning ratio for the on-device classifier. 
+
+but only 69.2% at the unseen Nkhotakota sites, even though every evaluated species is in its label set. Resource con-straints make this sensitivity more acute: large models can represent variation across many species and sites, while compact edge models must focus their limited capacity on the species and visual conditions relevant to one deploy-ment. WildFiT [36] shows that site-conditioned training data can improve compact camera-trap classifiers, but as-sumes a predefined species list and labeled animal exam-ples. An open-world edge system must construct such data without knowing in advance which species it will encounter. 
+
+Our Approach. We present Scout, which uses a cloud VLM as an intermittent teacher to build and maintain a compact edge classifier. Given only the deployment loca-tion and empty site frames, Scout combines public animal images with site backgrounds to construct site-conditioned training data. An LLM planner selects the class context, in-put resolution, and pruning ratio for the device. During de-ployment, the edge model handles its current context locally and uploads only out-of-context frames. A cloud response can trigger a different context or identify a new species; in the latter case, Scout constructs new training data, retrains the classifier, and deploys the update. The VLM identifi-cation thereby becomes persistent edge capability, without human labeling, species curation, or model tuning. Figure 1 summarizes the workflow. Our work makes four major contributions: • We formulate open-world recognition on the edge , which couples new-class discovery, autonomous training-data construction, and on-device model updates with the costs of local inference and cloud communication. • We develop an autonomous, site-conditioned training-data pipeline that turns a VLM-provided species name into labeled training and validation images using pub-lic animal images and backgrounds from the deployment site. The same pipeline supports initialization and learn-ing new species during deployment. • We develop an LLM-guided planner that jointly selects the class context, input resolution, and pruning ratio us-ing visual similarity and measured feedback from trained candidates. • We build and evaluate the complete system across 30 camera locations in three geographic regions on a Jet-son Orin Nano. Scout improves accuracy by 5.6–7.6% at matched energy or reduces deployment energy by 35.8– 63.2% at matched accuracy, while achieving 53.7–59.1% accuracy on species that fixed-label edge models cannot predict. 
+
+## 2. Related Work 
+
+Camera-trap Species Recognition. Camera-trap species recognition has traditionally relied on supervised models trained with labeled images from one or more deployment sites [4, 22, 46, 50]. SpeciesNet [15] scales this to over 2,000 labels, but such classifiers often lose accuracy at lo-cations absent from their training data [4, 29]. Vision-language models broaden coverage: BioCLIP and Bio-CLIP 2 learn taxonomy-aware representations from large biological image collections [17, 45], and TaxaBind extends this representation to location, satellite imagery, and au-dio [40]. Two models target camera traps directly: Wild-CLIP retrieves images by natural-language description of 2the scene and the animal [14], and CATALOG improves recognition when training and test images come from dif-ferent species or different sites [39]. These methods still require a provided label set for classification and do not ad-dress how a resource-constrained classifier is prepared and maintained for an individual deployment. 
+
+Site Adaptation and Data Synthesis. Domain adapta-tion and generalization address accuracy loss when training and deployment images are collected under different condi-tions [8, 30, 33]. This matters for camera traps because veg-etation, illumination, weather, and camera placement vary between sites [4] and drift over time [21, 36]. Data synthe-sis reduces the domain gap by placing foreground objects in target-domain backgrounds [12, 43, 51]. WildFiT [36] applies this to camera traps, compositing labeled animal cutouts onto empty frames from the deployment site and retraining when conditions change. Scout uses this compo-sition procedure, but obtains the species list and reference images from the deployment location and iNaturalist rather than requiring them as inputs. 
+
+Open-Set and Continual Learning. Open-set recognition detects images outside the training classes using signals such as softmax confidence, energy, or learned reciprocal points [7, 11, 18, 28, 41]. Open-world recognition [6] adds a loop that flags novel classes and extends the classifier once they are labeled, and class-incremental methods add classes while reducing forgetting of earlier ones [26, 37, 52]. These methods typically assume labeled examples of each new class are available. Our setting additionally requires nam-ing a novel species and obtaining its training images without human annotation. 
+
+Edge Inference and Model Selection. Model compres-sion and hardware-aware optimization reduce the cost of on-device inference [9, 19, 20, 27, 48]. Edge–cloud systems cut communication by sending only low-confidence or diffi-cult inputs to a cloud model [24, 38], and context-aware sys-tems such as CACTUS and Palleon switch between models specialized for different class sets [13, 35]. All of these fix the classes and training data before deployment. LLMs have also been used as optimizers, proposing candidates from a record of previously evaluated ones [10, 49]. Scout lets the class set grow during deployment and uses an LLM to guide the search over class contexts and model configurations, training and evaluating every candidate before deploying it. 
+
+## 3. Method 
+
+Scout uses a cloud VLM to autonomously build and main-tain a compact classifier for an edge deployment. The user provides a location string ℓ, a set of empty frames B cap-tured at the site, and optionally a target accuracy α. No species list or labeled animal images from the site are re-quired. The cloud maintains a species pool It, containing species that are expected at the site or have been identified during deployment, together with their training assets. At initialization, the location-conditioned VLM defines I0 by proposing species likely to appear at the site. The pool grows whenever the cloud VLM identifies a new species. The planner selects a smaller class context Ct ⊆ I t for the model currently deployed on the device. Figure 2 summa-rizes the complete workflow. 
+
+3.1. Site-Conditioned Training Data Construction 
+
+Scout uses the same data-construction pipeline to build the initial classifier and to teach it each new species. At initial-ization, the VLM uses location ℓ to return scientific names of species likely to appear at the site. We request scientific names because common names can refer to different species in different regions. Each name is resolved to an iNaturalist species ID. If a name is missing or ambiguous, the VLM proposes an alternative and the lookup is repeated. A name that cannot be resolved is excluded. For each resolved species, Scout downloads research-grade images from iNaturalist. MegaDetector [5], a camera-trap animal detector, localizes the animal in each image, and SAM [25] uses the detected bounding box to extract its fore-ground mask. The resulting foregrounds retain the species ID of the source image, which provides their label. Scout places these foregrounds on the provided empty frames from the deployment site using the composition pro-cedure from WildFiT [36]. Time matching pairs a fore-ground with a background captured at a similar time of day, herd-aware composition preserves groups of animals, and spatial preservation maintains the approximate position and scale of the animal in its source image. The resulting im-ages combine species examples from iNaturalist with the background, illumination, and camera viewpoint of the de-ployment site. Because Scout records which species foreground it places in each image, the labels of the composed images are known rather than inferred. The same procedure there-fore produces labeled training and validation images with-out labeled animal images from the deployment site. The downloaded images and extracted foregrounds are retained so that Scout can train a different class context without re-peating data acquisition. 
+
+3.2. Cloud Teaching and Model Updates 
+
+The on-device model contains a classification head and an out-of-context (OoC) head that share the same backbone. The classification head predicts among the species in the current context Ct. Following CACTUS [35], the OoC head is a regression head trained with label 0 using images of species in Ct and label 1 using images of expected or pre-viously identified species in It \ C t. Thus, OoC denotes a species outside the current deployed context, not neces-3Cloud VLM 
+
+> Species Recognition
+> New Class
+
+Retrieve & Segment 
+
+> Download images from DB Segmentation
+
+Image Synthesis    
+
+> (Site-conditioned) Animal foregrounds ×Empty frames 𝔅
+
+LLM planner  
+
+> Propose ( 𝒞, 𝑟, 𝑝 )Train Validate and Score on a Trace
+> Upload Frame ↑ 𝑒 up
+> Frames Stream
+
+Initialization    
+
+> Location string ℓ
+> +Empty frames 𝔅
+> Animal foregrounds
+> In-Context Out-of-Context Deploy new model ↓ 𝑒 dl
+> Local Prediction
+> Override Local Prediction Known class, Out of context, Replan without retrieval
+
+Cloud Edge 
+
+> Prediction
+> Records
+
+Figure 2. Scout system overview. At initialization, Scout identifies species likely to appear at the deployment location and constructs site-conditioned training data by combining animal foregrounds from iNaturalist with backgrounds from the deployment site. The LLM planner trains and evaluates candidate class contexts and model configurations before deploying a compact edge model. During deployment, the edge model handles familiar species locally and uploads only out-of-context (OoC) frames to the cloud VLM. A cloud response may correct an edge prediction, trigger a different class context, or identify a new species. For a new species, Scout constructs additional training data and updates the edge model so that future observations can be processed locally. 
+
+sarily outside the larger species pool. Both heads run in a single forward pass. An OoC score below 0.5 returns the classification result locally, while a score of at least 0.5 up-loads the frame to the cloud VLM. An OoC false positive uploads an in-context frame and consumes unnecessary communication energy. An OoC false negative classifies an unfamiliar species as one of the in-context species and prevents the VLM from teaching that species to the edge model. The OoC head therefore affects both recognition accuracy and the energy used for cloud consultation. For an uploaded frame, the cloud VLM receives the im-age, deployment location, timestamp, and species pool. It is instructed to return a species ID from the pool when the animal matches a known species, or a scientific name when the species is absent from the pool. The response produces three cases. (1) In context. The returned species belongs to Ct. The cloud prediction replaces the on-device predic-tion, but the model is not updated. This case corresponds to an OoC false positive. (2) Outside context. The returned species belongs to It but not to Ct. The planner selects a new class context and model configuration using the train-ing assets already stored for that species. (3) New species. 
+
+The returned name does not correspond to a species in It.Scout resolves the name to an iNaturalist species ID and ap-plies the data-construction pipeline from Section 3.1. The new species and its training assets are added to the species pool, after which the planner trains and selects an updated edge model. If the returned species cannot be resolved in iNaturalist, Scout cannot construct training data and there-fore does not update the edge model. 
+
+3.3. LLM-Guided Model Optimization 
+
+After initialization or a change in the species pool, Scout must decide which recognition capability to place on the resource-constrained device. The planner jointly selects a class context C and model configuration (r, p ), where r is the input resolution and p is the structural pruning ratio. A larger class context handles more species locally and can reduce uploads, but may require greater model capacity to meet the target accuracy. Lower resolution and more prun-ing reduce inference energy, but may reduce classification accuracy or increase OoC errors and cloud communication. The LLM serves as a proposal mechanism rather than an unverified decision maker. It proposes class contexts and model configurations using inter-species visual similar-ity and a planning record of previous measurements. Scout trains and evaluates every proposed candidate; only a can-didate with measured accuracy and an energy estimate can be selected for deployment. 
+
+Device Calibration. At installation, the device creates vari-ants of a profiling model using different pruning ratios and input resolutions. It measures their energy using on-device power sensors and fits a linear model relating model FLOPs to inference energy. The planner uses this relation to esti-mate the inference energy of candidates that have not yet been deployed. The device also measures the energy required to upload the initial empty frames and download the profiling model. Dividing these measurements by the transferred data sizes 4gives the uplink and downlink energy per MB, denoted by 
+
+eup and edl . These estimates are updated using later frame uploads and model downloads. 
+
+Candidate Class Contexts. Because the edge model may not have sufficient capacity to cover the entire species pool, the planner considers class contexts of different sizes. It orders species by how recently they were observed and constructs nested candidates: a smaller context focuses the model on the most recently observed species, while larger contexts progressively include species observed earlier at the site. These candidates expose the trade-off between covering more species locally and concentrating the limited model capacity on fewer species. To estimate how difficult each context will be for a com-pact model, the LLM uses a pairwise visual-similarity ma-trix over the species pool. Each entry is the cosine simi-larity between image embeddings from two species. Con-texts containing visually similar species may require greater model capacity to distinguish them. The LLM combines this signal with the measured outcomes in the planning record to select a small set of contexts for evaluation. When a new species is added, its similarity values are initially un-available. The LLM selects a visually related species in the pool as a proxy and temporarily uses its similarity profile. 
+
+Candidate Training and Evaluation. For each selected context, the LLM proposes a model configuration, i.e., an input resolution and pruning ratio, using the visual-similarity matrix and the measured outcomes in the plan-ning record. Scout trains the corresponding classifier and OoC head using the synthesized images, then returns the candidate’s measured accuracy and estimated energy to the LLM. If the candidate does not meet the target accuracy, the LLM proposes a configuration with greater capacity. Once the target is met, it searches for a lower-energy configura-tion that maintains the target. In this way, measured out-comes guide the search toward a model that provides suf-ficient accuracy without unnecessarily increasing resource use. Each candidate is evaluated on a synthesized valida-tion trace. During deployment, Scout constructs the trace from the sequence of species predictions collected so far. For each entry, it creates an image using foregrounds of the corresponding species and backgrounds from the site. The trace therefore follows the estimated ordering and frequency of species at the deployment while providing recorded labels for candidate evaluation. Candidate accu-racy uses the candidate prediction for frames handled lo-cally and the cloud VLM prediction for frames triggered by the OoC head. For a candidate model m = ( C, r, p ) and a validation trace of Tv images, the estimated deployment energy per image is 
+
+ˆE(m) = ˆEinf (m) + 1
+
+Tv
+
+h
+
+eup 
+
+X
+
+> j
+
+oj Sframe ,j 
+
++ edl 
+
+ ¯S X
+
+> j
+
+uj + S(m)
+
+ i
+
+,
+
+(1) where ˆEinf (m) is estimated from model FLOPs, oj indi-cates that candidate m uploads validation frame j, and uj
+
+indicates that the cloud response would trigger a later plan-ning event and model update. Sframe ,j is the uploaded frame size, and S(m) is the size of the current candidate. Because the planner does not know which model a future update will select, ¯S, the average size of previously downloaded mod-els, approximates the size of each future update. The term 
+
+edl S(m) includes the one-time cost of downloading the cur-rent candidate. Candidate energy is estimated because the model has not yet been deployed on the device. 
+
+Planning Record and Final Selection. After every eval-uation, Scout stores the candidate context, input resolu-tion, pruning ratio, measured accuracy, and estimated in-ference, upload, download, and total energy. Previously trained checkpoints are re-evaluated on the current valida-tion trace using the latest communication costs, without re-training. The LLM receives this accumulated record when proposing candidates during later planning events. When the user provides a target accuracy α, Scout se-lects the lowest-energy evaluated candidate that meets α.If none reaches the target, it selects the candidate with the highest measured accuracy. Without a target accuracy, the LLM selects among the evaluated candidates according to the requested accuracy–energy trade-off. 
+
+## 4. Experiments 
+
+4.1. Experimental Setup 
+
+Datasets. We evaluate 30 deployments from three camera-trap datasets: Snapshot Serengeti S04 [42], Nkhotakota [3], and New Hampshire Fish and Game Volume 1 [2, 23]. From each dataset, we select 10 camera locations containing at least 15 species after removing unlabeled, non-species, and domestic-animal labels. We reserve 250 empty frames from each location as the background pool B and process the re-maining images in timestamp order without using future ob-servations. 
+
+Evaluation setting. We consider two initialization set-tings. In the controlled setting, all methods receive the 10 most frequent species in each dataset, while the remaining species are not revealed. In the cold-start setting, Scout-CS receives only the deployment location and B, and the VLM selects 10 initial species. We report overall accuracy and, in the controlled setting, accuracy on species inside and out-5side the fixed initial class set. For Scout-CS, we report only overall accuracy because its initial set is selected differently. 
+
+Models and Training. We use GPT-5 [31] as the cloud VLM and LLM planner. For each species, we retrieve up to 250 iNaturalist images and use an 80/20 training-validation split to construct the corresponding site-synthesized images. The on-device models are structurally pruned, ImageNet-initialized EfficientNet-B0 models [47]; the planner selects an input resolution in [100 , 800] pixels and a pruning ratio in [0 , 1) . Scout and the edge baselines use the same synthesized data and configuration ranges whenever applicable. 
+
+Deployment Energy. We report the average deployment energy consumed on the edge device per image: 
+
+Edep = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+Einf (mt) + otEup ,t + utEdl (m+ 
+
+> t
+
+) , (2) where mt is the model used for image t, and ot and ut indi-cate an image upload and model update, respectively. The three terms account for on-device inference, uploading im-age t, and downloading the updated model m+ 
+
+> t
+
+.We measure inference energy on a Jetson Orin Nano Su-per in 15 W mode using jtop , after subtracting idle power. Reported inference energy is measured for each deployed configuration; the FLOPs-based model is used only to esti-mate candidate energy during planning. The datasets were collected at sites where we cannot directly measure the communication link. We therefore estimate communication energy using the transmit and receive power of a Quectel EG25-G cellular module [34] and regional throughput esti-mates from SpeedChecker [44] and Opensignal [32]. Exact communication values and additional implementation de-tails are provided in the supplementary material (Section A and Table A1), and Section 4.5 evaluates sensitivity to these estimates. 
+
+Baselines. We compare with three full-offload meth-ods and six edge and edge–cloud configurations. Full-Offload (GPT-5) sends every image to the same VLM used by Scout. SpeciesNet [15] uses MegaDetector [5] fol-lowed by EfficientNetV2-M, while BioCLIP 2 [17] per-forms zero-shot classification over all labels in its released TreeOfLife-200M species vocabulary using the highest-confidence MegaDetector crop. On-Device-Only runs an EfficientNet-B4 on the device. EdgeBoost [38] runs an EfficientNet-B0 on the device and a B5 in the cloud. It ac-cepts high-confidence local predictions and offloads the re-maining images using a threshold on the calibrated softmax margin. EfficientEdge [24] jointly trains an edge classifier, a routing model, and an EfficientNet-B5 cloud classifier. We evaluate it using B0 or B3 on the edge. CACTUS [35] uses a rule-based policy to switch among pruned B0 mod-els trained for small class contexts, with a B5 model in the 
+
+Table 1. End-to-end performance averaged over 10 camera lo-cations from each dataset. Accuracy is reported overall and for known (K.) and novel (N.) species using the partition of Sec-tion 4.1. Full-offload models do not use the initial class set; but for comparison, K./N. reports their accuracy on the correspond-ing image subsets. Scout-CS selects its own initial set, so only its overall accuracy is comparable. Energy gain is Full-Offload de-ployment energy divided by the method’s, so higher is better                                                                           
+
+> Method Serengeti Nkhotakota New Hampshire Acc. (K./N.) E. Gain Acc. (K./N.) E. Gain Acc. (K./N.) E. Gain GPT-5 87.4 (89.0/65.1) 1.00 ×85.4 (87.8/63.8) 1.00 ×87.3 (88.0/56.5) 1.00 ×
+> BioCLIP 2 72.7 (74.5/47.8) 1.00 ×64.4 (67.3/36.0) 1.00 ×84.7 (85.2/60.1) 1.00 ×
+> SpeciesNet 93.7 (94.4/84.2) 1.00 ×69.2 (71.8/44.0) 1.00 ×91.6 (91.9/78.2) 1.00 ×
+> On-Device 70.1 (75.1/0.0) 2.68 ×73.8 (81.4/0.0) 1.48 ×78.2 (80.3/0.0) 1.18 ×
+> CACTUS 66.5 (71.4/0.0) 2.54 ×74.0 (81.5/0.0) 2.34 ×78.4 (80.1/0.0) 3.04 ×
+> Palleon 69.1 (74.0/0.0) 2.89 ×73.2 (80.7/0.0) 1.94 ×76.8 (78.5/0.0) 1.49 ×
+> EdgeBoost 69.0 (74.1/0.0) 2.33 ×74.3 (81.9/0.0) 1.33 ×78.2 (80.0/0.0) 1.27 ×
+> EffEdge-B0 69.5 (74.5/0.0) 4.30 ×75.1 (82.8/0.0) 1.70 ×79.7 (81.4/0.0) 2.91 ×
+> EffEdge-B3 70.4 (75.4/0.0) 2.78 ×76.3 (84.1/0.0) 1.62 ×80.7 (82.5/0.0) 1.32 ×
+> Scout 76.6 (78.1/55.5) 2.62 ×81.5 (84.0/59.1) 2.43 ×81.6 (82.2/53.7) 3.44 ×
+> Scout-CS 75.9 2.49 ×79.0 2.47 ×81.5 3.16 ×
+
+cloud. Palleon [13] estimates the current class distribution and switches among pruned B4 models. All edge configu-rations retain their initial class set throughout deployment. 
+
+4.2. End-to-End Performance 
+
+Table 1 reports accuracy and energy gain averaged over the 10 camera locations from each dataset. The three full-offload methods share the same gain because each uploads every image and our deployment metric excludes cloud in-ference energy. Computed deployment energy appears in Figure 3 and its breakdown into inference, upload, and download in the supplementary material (Table A2). 
+
+Overall Performance. Scout obtains 76.6%, 81.5%, and 81.6% overall accuracy on Serengeti, Nkhotakota, and New Hampshire, improving over the most accurate edge baseline by 6.2, 5.2, and 0.9%. On Nkhotakota and New Hampshire it also achieves a higher energy gain than every edge base-line; on Serengeti four baselines have higher energy gains, but each is at least 6.2% less accurate. On known species Scout differs from the best edge baseline by only +2 .7,
+
+−0.1, and −0.3 points, so pruning B0 largely preserves ac-curacy on the initial class set while cutting per-frame infer-ence energy by 1.9×, 4.8×, and 4.1×. The remaining accu-racy gains come from species outside that set (Section 4.3). 
+
+Accuracy–Energy Trade-off. Figure 3 compares the meth-ods in the accuracy–energy space. Relative to the baseline envelope, which includes the six edge baselines plus Full-Offload GPT-5 and BioCLIP 2, Scout improves accuracy by 5.6, 7.6, and 6.4% at matched energy, or reduces de-ployment energy by 35.8%, 50.8%, and 63.2% at matched accuracy. We exclude SpeciesNet from the Pareto envelope because Snapshot Serengeti is included in its training data 61 2 3 4     
+
+> Energy consumption (J)
+> 65 70 75 80 85
+> Accuracy (%)
+> Serengeti
+> +5.6% Acc. @ same E −35.8% E @ same Acc.
+> 123
+> Energy consumption (J)
+> 60 65 70 75 80 85
+> Accuracy (%)
+> Nkhotakota
+> +7.6% Acc. @ same E −50.8% E @ same Acc.
+> 1234
+> Energy consumption (J)
+> 70 75 80 85 90
+> Accuracy (%)
+> New Hampshire
+> +6.4% Acc. @ same E −63.2% E @ same Acc. 1: Full-Offload (GPT-5) 2: Full-Offload (BioCLIP2) 3: On-Device-Only (B4) 4: CACTUS (B0) 5: EdgeBoost (B0) 6: EfficientEdge (B0) 7: Palleon (B4) 8: EfficientEdge (B3) 9: Scout (ours) 10: Scout - Cold Start (ours)
+> Dominated baseline Baseline Pareto envelope Scout Scout - Cold Start Dominated baseline Baseline Pareto envelope Scout Scout - Cold Start
+
+Figure 3. Accuracy–energy trade-off. The dashed line in each plot shows the Pareto envelope formed by the baselines. Both Scout and Scout-CS are above the baseline envelope on all three datasets. 
+
+and potential overlap with New Hampshire is unknown. For Nkhotakota, which is outside its training distribution, SpeciesNet falls below the envelope and does not affect the comparison. 
+
+Cold Start. Initialized from only the deployment loca-tion and background pool, Scout-CS reaches 75.9%, 79.0%, and 81.5% accuracy, within 0.7, 2.5, and 0.1% of Scout in the controlled setting. It remains more accurate than ev-ery controlled-setting edge baseline on all three datasets and stays above the baseline envelope, so location-based initial-ization is a practical substitute for a predefined species list. 
+
+Global and Open-Vocabulary Models. Full-Offload (GPT-5) is the most accurate overall, but uploads every image and therefore spends 2.62 –3.44 × Scout’s deploy-ment energy. Scout outperforms BioCLIP 2 by 3.9 and 17.1 points on Serengeti and Nkhotakota; on New Hamp-shire, BioCLIP 2 is 3.1% more accurate at 3.44 × the en-ergy. SpeciesNet reaches 93.7% on Serengeti, which is in its training data, but drops to 69.2% at Nkhotakota, which is not, putting it 12.3 points below Scout at 2.43 × the energy even though all evaluated species are in its label set. 
+
+4.3. Performance on Novel Species 
+
+We evaluate how well Scout recognizes species outside the initial class set using the novel-species results in Table 1. The full-offload models do not use this set, so we compute their accuracy on the same image subset only for compari-son. All six edge baselines obtain 0% novel-species accuracy because their output layers include only the initial class set. Selective offloading and context switching can change which model processes an image, but they do not expand the class set. In comparison, Scout obtains 55.5%, 59.1%, and 53.7% accuracy on novel species on Serengeti, Nkhotakota, and New Hampshire, respectively. Full-Offload (GPT-5), which sends every image to the same VLM and is not lim-ited by OoC detection, obtains 65.1%, 63.8%, and 56.5%. We use these results as the upper bound for Scout. Across the three datasets, Scout comes within 2.8–9.6% of Full-Offload (GPT-5) while consuming 59–71% less deployment energy. Scout outperforms BioCLIP 2 by 7.7 and 23.1% on Serengeti and Nkhotakota. On New Hampshire, Bio-CLIP 2 is 6.4% more accurate but consumes 3.44 × Scout’s deployment energy. On Nkhotakota, which is absent from SpeciesNet’s training sites, Scout is 15.1% more accurate while consuming 58.8% less deployment energy. All eval-uated species are present in the SpeciesNet label set, so this difference does not result from missing species. An analysis of the New Hampshire dataset suggests that much of the gap to Full-Offload (GPT-5) comes from rare species that are not triggered by the OoC head. Species discovered by Scout occur 20 times on average, compared with 3 for missed species. Rare species therefore provide fewer opportunities for the OoC head to upload a frame and for the cloud to identify the species and update the classifier. 
+
+4.4. LLM Planner 
+
+In this section, we evaluate the performance of Scout’s LLM planner by isolating the context and model selection part for Scout and baselines. We compare its selections with those of rule-based methods and equal-budget random search. We make two changes from the end-to-end evaluation. First, every method is given all species that occur at that loca-tion before processing the stream, removing the advantage Scout has from covering novel species. Second, when a method’s OoC or switching mechanism triggers its more powerful classifier, we assume that this classifier returns the correct prediction, removing the effect of classifier choice from the comparison. Each method still runs its selected edge model and OoC head and pays for inference, image uploads, and model downloads. The comparison therefore reflects the class context and model configuration selected by each method. All methods use the same synthesized data and input-resolution and pruning ranges. Random Search randomly samples the class context, input resolution, and pruning ratio, evaluates the same number of candidates as Scout on average, and uses the same validation trace and accuracy–energy objective to select the deployed model. Table 2 shows that the LLM planner achieves higher ac-curacy than the rule-based methods and Random Search while maintaining competitive energy efficiency. Com-pared with CACTUS, it improves accuracy by 2.9% and 2.2% and reduces deployment energy by 12.5% and 8.8% on Serengeti and Nkhotakota, respectively. Compared with 7Table 2. Accuracy and energy gain for different context and model selection methods. Random search uses the same candidate-evaluation budget per event as the LLM planner. Energy gain is relative to Full-Offload in Table 1. 
+
+Selection Method Serengeti Nkhotakota Acc. (%) E. Gain Acc. (%) E. Gain Palleon (B4) [13] 74.2 2.77 × 75.8 1.70 ×
+
+CACTUS (B0) [35] 81.8 2.72 × 82.8 2.49 ×
+
+Random Search 81.5 2.97 × 82.2 2.75 ×
+
+Scout LLM Planner (B0) 84.7 3.11 × 85.0 2.73 ×1.5 3.0 4.5 66 72 78 84 
+
+7 classes    
+
+> 12345678
+> 9
+> 1.5 3.0 4.5
+
+15 classes   
+
+> 1234 5678
+> 9
+> Accuracy (%)
+
+Energy consumption (J)    
+
+> 1: Full-Offload (GPT 5) 2: Full-Offload (BioCLIP2) 3: On-Device Only (B4) 4: CACTUS (B0) 5: EdgeBoost (B0) 6: EfficientEdge (B0) 7: Palleon (B4) 8: EfficientEdge (B3) 9: Scout
+> Dominated baseline Baseline Pareto envelope Scout
+
+Figure 4. Initial class-set size. Accuracy and deployment energy on Serengeti when the initial class-set size is 7 or 15 species in controlled evaluation. The dashed line shows the baseline Pareto envelope. 
+
+Random Search, it improves accuracy by 3.2 and 2.8%, with lower energy on Serengeti and similar energy on Nkho-takota. Both use the same average candidate budget, val-idation trace, and selection objective, but the LLM planner uses results from earlier searches and candidates evaluated during the current search to guide new proposals. These re-sults show that this feedback helps the planner use its lim-ited search budget more effectively. 
+
+4.5. Sensitivity Analysis 
+
+We test sensitivity to the initial class-set size and communi-cation bandwidth on the Serengeti deployments, following the end-to-end setup in all other respects. 
+
+Initial Class-Set Size. We repeat the controlled evalua-tion with 7 and 15 initial species instead of 10, giving ev-ery method the same initial set. Scout remains above the baseline Pareto envelope in both cases (Figure 4). The mar-gin narrows as the initial set grows, because the fixed-label baselines then cover a larger fraction of the stream. 
+
+Communication Bandwidth. Actual bandwidth varies across camera locations and over time, so we scale the Serengeti uplink and downlink throughputs by 0.2× to 5×
+
+and repeat the evaluation at each setting. Scout remains above the baseline envelope from 0.2× through 2× (Fig-0 8 16 24 65 70 75 80 85                        
+
+> 0.2 × bandwidth
+> 12345687
+> 9
+> 2.5 5.0 7.5 10.0 65 70 75 80 85
+> 0.5 × bandwidth
+> 12345687
+> 9
+> 1.5 3.0 4.5 65 70 75 80 85
+> 1 × bandwidth
+> 12345687
+> 9
+> 1.0 1.5 2.0 2.5 65 70 75 80 85
+> 2 × bandwidth
+> 12345687
+> 9
+> 0.8 1.2 1.6 65 70 75 80 85
+> 5 × bandwidth
+> 12345687
+> 9
+> Method IDs 1: Full-Offload (GPT 5) 2: Full-Offload (BioCLIP2) 3: On-Device Only (B4) 4: CACTUS (B0) 5: EdgeBoost (B0) 6: EfficientEdge (B0) 7: Palleon (B4) 8: EfficientEdge (B3) 9: Scout
+> Energy consumption (J) Accuracy (%)
+> Dominated baseline Baseline Pareto envelope Scout
+
+Figure 5. Bandwidth sweep. Accuracy and deployment energy on Serengeti for regional throughput scaled by 0.2, 0.5, 1, 2, and 
+
+5. The dashed line shows the baseline Pareto envelope at each bandwidth. 
+
+ure 5). At 5×, uploading becomes cheap enough that Full-Offload (GPT-5) gives a slightly better accuracy–energy trade-off. Scout therefore provides its largest benefit when communication is limited. 
+
+## 5. Limitations 
+
+We evaluate Scout by replaying camera-trap streams and measuring inference energy on edge hardware, not in a long-term field deployment, so connectivity interruptions, hardware failures, and environmental effects are not cap-tured. Without connectivity, Scout continues using its cur-rent model but cannot update it. Finally, the current im-plementation uses GPT-5 for both species identification and planning, and the API cost of frontier models may limit the scale of long-term deployments. 
+
+## 6. Conclusion 
+
+We presented Scout, which builds and maintains an on-device camera-trap classifier from only the deployment lo-cation and empty frames from the site. Scout constructs site-conditioned training data, updates the classifier when the cloud VLM identifies a new species, and uses an LLM planner to jointly select the class context and model con-figuration. Across 30 camera locations, Scout improves ac-curacy by 5.6–7.6% at matched energy or reduces deploy-ment energy by 35.8–63.2% at matched accuracy, and ob-tains 53.7–59.1% accuracy on species that fixed-label edge models cannot predict. Initialized from the location alone, it stays within 0.1–2.5% of these results. 8References 
+
+[1] Jorge A Ahumada, Eric Fegraus, Tanya Birch, Nicole Flo-res, Roland Kays, Timothy G O’Brien, Jonathan Palmer, Stephanie Schuttler, Jennifer Y Zhao, Walter Jetz, et al. Wildlife insights: A platform to maximize the potential of camera trap and other passive sensor wildlife data for the planet. Environmental Conservation , 47(1):1–6, 2020. 1 [2] AMMonitor Camera Traps. Ammonitor camera traps dataset. https : / / lila . science / datasets / ammonitor-camera-traps/ , 2019. 5 [3] Cara L. Appel, Ashwin Subramanian, Jonathan S. Koning, Marnet Ngosi, Christopher M. Sullivan, Taal Levi, and Da-mon B. Lesmeister. Developing custom computer vision models with njobvu-ai: A collaborative, user-friendly plat-form for ecological research. Ecological Applications , 35 (6):e70096, 2025. 5 [4] Sara Beery, Grant Van Horn, and Pietro Perona. Recognition in terra incognita. In Proceedings of the European confer-ence on computer vision (ECCV) , pages 456–473, 2018. 2, 3[5] Sara Beery, Dan Morris, and Siyu Yang. Efficient pipeline for camera trap image review. arXiv preprint arXiv:1907.06772 , 2019. 3, 6 [6] Abhijit Bendale and Terrance Boult. Towards open world recognition. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , pages 1893–1902, 2015. 3 [7] Abhijit Bendale and Terrance E. Boult. Towards open set deep networks. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2016. 1, 3 [8] Gilles Blanchard, Gyemin Lee, and Clayton Scott. Gener-alizing from several related classification tasks to a new un-labeled sample. Advances in neural information processing systems , 24, 2011. 3 [9] Han Cai, Chuang Gan, Tianzhe Wang, Zhekai Zhang, and Song Han. Once-for-all: Train one network and specialize it for efficient deployment. In International Conference on Learning Representations (ICLR) , 2020. 3 [10] Angelica Chen, David M. Dohan, and David So. Evo-Prompting: Language models for code-level neural architec-ture search. In Advances in Neural Information Processing Systems (NeurIPS) , 2023. 3 [11] Guangyao Chen, Peixi Peng, Xiangqian Wang, and Yonghong Tian. Adversarial reciprocal points learning for open set recognition. CoRR , abs/2103.00953, 2021. 1, 3 [12] Xi Chen, Lianghua Huang, Yu Liu, Yujun Shen, Deli Zhao, and Hengshuang Zhao. Anydoor: Zero-shot object-level im-age customization, 2024. 3 [13] Boyuan Feng, Yuke Wang, Gushu Li, Yuan Xie, and Yufei Ding. Palleon: A runtime system for efficient video process-ing toward dynamic class skew. In 2021 USENIX Annual Technical Conference (USENIX ATC 21) , pages 427–441. USENIX Association, 2021. 3, 6, 8 [14] Valentin Gabeff, Marc Rußwurm, Devis Tuia, and Alexander Mathis. Wildclip: Scene and animal attribute retrieval from camera trap data with domain-adapted vision-language mod-els. International Journal of Computer Vision , 132:3770– 3786, 2024. 1, 3 [15] Tomer Gadot, S , tefan Istrate, Hyungwon Kim, Dan Morris, Sara Beery, Tanya Birch, and Jorge Ahumada. To crop or not to crop: Comparing whole-image and cropped classifica-tion on a large dataset of camera trap images. IET Computer Vision , 2024. 1, 2, 6 [16] Paul Glover-Kapfer, Carolina A Soto-Navarro, and Oliver R Wearn. Camera-trapping version 3.0: current constraints and future priorities for development. Remote Sensing in Ecology and Conservation , 5(3):209–223, 2019. 1 [17] Jianyang Gu, Samuel Stevens, Elizabeth G. Campolongo, Matthew J. Thompson, Net Zhang, Jiaman Wu, Andrei Kopanev, Zheda Mai, Alexander E. White, James Balhoff, Wasila Dahdul, Daniel Rubenstein, Hilmar Lapp, Tanya Berger-Wolf, Wei-Lun Chao, and Yu Su. Bioclip 2: Emer-gent properties from scaling hierarchical contrastive learn-ing. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. 1, 2, 6 [18] Dan Hendrycks and Kevin Gimpel. A baseline for detect-ing misclassified and out-of-distribution examples in neural networks. International Conference on Learning Represen-tations (ICLR) , 2016. 1, 3 [19] Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. Distill-ing the knowledge in a neural network. arXiv preprint arXiv:1503.02531 , 2015. 3 [20] Benoit Jacob, Skirmantas Kligys, Bo Chen, Menglong Zhu, Matthew Tang, Andrew Howard, Hartwig Adam, and Dmitry Kalenichenko. Quantization and training of neural networks for efficient integer-arithmetic-only inference. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2018. 3 [21] Sooyoung Jeon, Hongjie Tian, Lemeng Wang, Zheda Mai, Vidhi Bakshi, Jiacheng Hou, Ping Zhang, Arpita Chowd-hury, Jianyang Gu, and Wei-Lun Chao. Lessons and open questions from a unified study of camera-trap species recog-nition over time. arXiv preprint arXiv:2603.20509 , 2026. 3 [22] JohnBeuving and Phil Culliton and Sara Beery and S ¸ tefan Istrate. iwildcam 2022 - fgvc9, 2022. 2 [23] H. Jones, A. P. K. Sir´ en, C. B. Callahan, H. Holman, M. N. Marchand, J. R. Kilborn, T. L. Wilson, T. L. Morelli, L. A. Clarfeld, K. E. Huber, and T. M. Donovan. New Hampshire Fish and Game Department Volume 1 (2014–2024), 2024. 5 [24] Anil Kag, Igor Fedorov, Aditya Gangrade, Paul Whatmough, and Venkatesh Saligrama. Efficient edge inference by se-lective query. In The Eleventh International Conference on Learning Representations , 2023. 1, 3, 6 [25] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura Gustafson, Tete Xiao, Spencer White-head, Alexander C Berg, Wan-Yen Lo, et al. Segment any-thing. In Proceedings of the IEEE/CVF International Con-ference on Computer Vision , pages 4015–4026, 2023. 3 [26] James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume Desjardins, Andrei A. Rusu, Kieran Milan, John Quan, Tiago Ramalho, Agnieszka Grabska-Barwinska, Demis Hassabis, Claudia Clopath, Dharshan Ku-maran, and Raia Hadsell. Overcoming catastrophic for-getting in neural networks. Proceedings of the National Academy of Sciences , 114(13):3521–3526, 2017. 3 
+
+9[27] Hao Li, Asim Kadav, Igor Durdanovic, Hanan Samet, and Hans Peter Graf. Pruning filters for efficient convnets. In In-ternational Conference on Learning Representations (ICLR) ,2017. 3 [28] Weitang Liu, Xiaoyun Wang, John D. Owens, and Yixuan Li. Energy-based out-of-distribution detection. In Advances in Neural Information Processing Systems (NeurIPS) , 2020. 3[29] Mohamed Khalil Meliane, Joseph M. Guthrie, and E. Hance Ellington. Are we there yet? reliable occupancy modeling from ai-labeled trail camera data. Conservation Science and Practice , 8(8):e70367, 2026. 2 [30] Saeid Motiian, Marco Piccirilli, Donald A Adjeroh, and Gi-anfranco Doretto. Unified deep supervised domain adapta-tion and generalization. In Proceedings of the IEEE inter-national conference on computer vision , pages 5715–5725, 2017. 3 [31] OpenAI. GPT-5 System Card. Technical report, OpenAI, 2025. 6 [32] Opensignal. Opensignal: Insights that connect you to suc-cess. https://www.opensignal.com/ , 2026. Ac-cessed: 2026-08-17. 6 [33] Kuan-Chuan Peng, Ziyan Wu, and Jan Ernst. Zero-shot deep domain adaptation. In Proceedings of the European Con-ference on Computer Vision (ECCV) , pages 764–781, 2018. 3[34] Quectel Wireless Solutions Co., Ltd. Quectel EG25-G Hard-ware Design . Quectel Wireless Solutions Co., Ltd., version 1.5 edition, 2024. LTE Cat 4 Module Hardware Design. 6 [35] Mohammad Mehdi Rastikerdar, Jin Huang, Shiwei Fang, Hui Guan, and Deepak Ganesan. Cactus: Dynamically switchable context-aware micro-classifiers for efficient iot inference. In Proceedings of the 22nd Annual International Conference on Mobile Systems, Applications and Services ,pages 505–518, 2024. 1, 3, 6, 8 [36] Mohammad Mehdi Rastikerdar, Jin Huang, Hui Guan, and Deepak Ganesan. Wildfit: Autonomous in-situ model adap-tation for resource-constrained iot systems. In Proceed-ings of the 2026 ACM/IEEE International Conference on Embedded Artificial Intelligence and Sensing Systems , page 517–530, New York, NY, USA, 2026. Association for Com-puting Machinery. 2, 3 [37] Sylvestre-Alvise Rebuffi, Alexander Kolesnikov, Georg Sperl, and Christoph H. Lampert. icarl: Incremental clas-sifier and representation learning. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2017. 3 [38] Naina Said and Olaf Landsiedel. Edgeboost: Confidence boosting for resource constrained inference via selective of-floading. In 2024 20th International Conference on Dis-tributed Computing in Smart Systems and the Internet of Things (DCOSS-IoT) , pages 11–18, 2024. 1, 3, 6 [39] Julian D. Santamaria, Claudia Isaza, and Jhony H. Giraldo. Catalog: A camera trap language-guided contrastive learning model. In IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) , pages 1197–1206, 2025. 1, 3 [40] Srikumar Sastry, Subash Khanal, Aayush Dhakal, Adeel Ah-mad, and Nathan Jacobs. Taxabind: A unified embedding space for ecological applications. In IEEE/CVF Winter Con-ference on Applications of Computer Vision (WACV) , pages 1765–1774, 2025. 1, 2 [41] Walter J. Scheirer, Anderson de Rezende Rocha, Archana Sapkota, and Terrance E. Boult. Toward open set recogni-tion. IEEE Transactions on Pattern Analysis and Machine Intelligence , 35(7):1757–1772, 2013. 1, 3 [42] Snapshot Serengeti. Snapshot serengeti dataset. 
+
+https://lila.science/datasets/snapshot-serengeti , 2019. Accessed: 2024-08-28. 5 [43] Yizhi Song, Zhifei Zhang, Zhe Lin, Scott Cohen, Brian Price, Jianming Zhang, Soo Ye Kim, and Daniel Aliaga. Object-stitch: Object compositing with diffusion model. In Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 18310–18319, 2023. 3 [44] SpeedChecker. Speedchecker: Crowdsourcing for telecoms and regulators. https://www.speedchecker.com/ ,2026. Accessed: 2026-08-17. 6 [45] Samuel Stevens, Jiaman Wu, Matthew J. Thompson, Eliza-beth G. Campolongo, Chan Hee Song, David Edward Car-lyn, Li Dong, Wasila M. Dahdul, Charles Stewart, Tanya Berger-Wolf, Wei-Lun Chao, and Yu Su. Bioclip: A vision foundation model for the tree of life. In IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR) ,2024. 1, 2 [46] Michael A Tabak, Mohammad S Norouzzadeh, David W Wolfson, Steven J Sweeney, Kurt C VerCauteren, Nathan P Snow, Joseph M Halseth, Paul A Di Salvo, Jesse S Lewis, Michael D White, et al. Machine learning to classify ani-mal species in camera trap images: Applications in ecology. 
+
+Methods in Ecology and Evolution , 10(4):585–590, 2019. 2 [47] Mingxing Tan and Quoc Le. EfficientNet: Rethinking model scaling for convolutional neural networks. In Proceedings of the 36th International Conference on Machine Learning ,pages 6105–6114. PMLR, 2019. 6 [48] Mingxing Tan, Bo Chen, Ruoming Pang, Vijay Vasudevan, Mark Sandler, Andrew Howard, and Quoc V. Le. Mnas-net: Platform-aware neural architecture search for mobile. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2019. 3 [49] Chengrun Yang, Xuezhi Wang, Yifeng Lu, Hanxiao Liu, Quoc V. Le, Denny Zhou, and Xinyun Chen. Large language models as optimizers. In International Conference on Learn-ing Representations (ICLR) , 2024. 3 [50] Hayder Yousif, Jianhe Yuan, Roland Kays, and Zhihai He. Animal scanner: Software for classifying humans, animals, and empty frames in camera trap images. Ecology and evo-lution , 9(4):1578–1589, 2019. 2 [51] Bo Zhang, Yuxuan Duan, Jun Lan, Yan Hong, Huijia Zhu, Weiqiang Wang, and Li Niu. Controlcom: Controllable image composition using diffusion model. arXiv preprint arXiv:2308.10040 , 2023. 3 [52] Haowei Zhu, Ye Tian, and Junguo Zhang. Class incremental learning for wildlife biodiversity monitoring in camera trap images. Ecological Informatics , 71:101760, 2022. 3 
+
+10 Supplementary Material A. Additional Evaluation Details 
+
+Planner search budget. At each planning event, the LLM selects up to N candidate class contexts and performs up to K rounds of model-configuration search for each con-text. We use N = 4 and K = 3 by default. 
+
+Communication parameters. As described in the main paper, we ob-tain regional throughput estimates from the crowdsourced Opensignal and SpeedChecker measurement platforms. Table A1 reports the resulting throughput and transfer-energy values used in our evaluation. 
+
+Table A1. Regional communication throughput and corresponding transfer energy per MB used in our evaluation. Uplink Downlink Dataset Mbps J/MB Mbps J/MB Serengeti 5.1 4.7 7.8 3.1 Nkhotakota 9.0 2.7 17.5 1.4 New Hampshire 11.9 2.0 46.5 0.5 
+
+End-to-end energy breakdown. Table A2 adds total deployment energy and its breakdown to Table 1 in the main paper. 
+
+Table A2. Complete end-to-end results averaged over 10 camera locations per dataset. Accuracy is reported overall and, in parentheses, for known/novel species; Scout-CS reports overall accuracy only. Total deployment energy is in J/frame, while its inference (Inf.), upload (Up.), and download (Dl.) components are in mJ/frame. Energy Gain is relative to Full-Offload. The full-offload classifiers share an energy breakdown because each uploads every frame and cloud compute energy is excluded. Components may not sum exactly to the displayed total because of rounding. 
+
+Method Acc. (Known/Novel) Total (J/frame) Energy Gain Breakdown (mJ/frame) Inf. Up. Dl. 
+
+Serengeti 
+
+Full-Offload (GPT-5) 87.4 (89.0/65.1) 4.70 1.00 × 0 4700 0Full-Offload (BioCLIP 2) 72.7 (74.5/47.8) 4.70 1.00 × 0 4700 0Full-Offload (SpeciesNet) 93.7 (94.4/84.2) 4.70 1.00 × 0 4700 0On-Device-Only (B4) 70.1 (75.1/0.0) 1.76 2.68 × 1755 0 0CACTUS (B0) 66.5 (71.4/0.0) 1.84 2.54 × 405 360 1080 Palleon (B4) 69.1 (74.0/0.0) 1.63 2.89 × 1627 0 0EdgeBoost (B0) 69.0 (74.1/0.0) 2.02 2.33 × 437 1581 0EfficientEdge (B0) 69.5 (74.5/0.0) 1.09 4.30 × 448 644 0EfficientEdge (B3) 70.4 (75.4/0.0) 1.69 2.78 × 1162 529 0Scout (B0) 76.6 (78.1/55.5) 1.79 2.62 × 608 557 625 Scout-CS (B0) 75.9 1.89 2.49 × 659 532 698 
+
+Nkhotakota 
+
+Full-Offload (GPT-5) 85.4 (87.8/63.8) 2.76 1.00 × 0 2764 0Full-Offload (BioCLIP 2) 64.4 (67.3/36.0) 2.76 1.00 × 0 2764 0Full-Offload (SpeciesNet) 69.2 (71.8/44.0) 2.76 1.00 × 0 2764 0On-Device-Only (B4) 73.8 (81.4/0.0) 1.87 1.48 × 1872 0 0CACTUS (B0) 74.0 (81.5/0.0) 1.18 2.34 × 433 230 516 Palleon (B4) 73.2 (80.7/0.0) 1.42 1.94 × 1425 0 0EdgeBoost (B0) 74.3 (81.9/0.0) 2.08 1.33 × 460 1617 0EfficientEdge (B0) 75.1 (82.8/0.0) 1.63 1.70 × 471 1154 0EfficientEdge (B3) 76.3 (84.1/0.0) 1.71 1.62 × 1236 473 0Scout (B0) 81.5 (84.0/59.1) 1.14 2.43 × 260 450 427 Scout-CS (B0) 79.0 1.12 2.47 × 415 504 198 
+
+New Hampshire 
+
+Full-Offload (GPT-5) 87.3 (88.0/56.5) 4.08 1.00 × 0 4080 0Full-Offload (BioCLIP 2) 84.7 (85.2/60.1) 4.08 1.00 × 0 4080 0Full-Offload (SpeciesNet) 91.6 (91.9/78.2) 4.08 1.00 × 0 4080 0On-Device-Only (B4) 78.2 (80.3/0.0) 3.46 1.18 × 3462 0 0CACTUS (B0) 78.4 (80.1/0.0) 1.34 3.04 × 841 313 185 Palleon (B4) 76.8 (78.5/0.0) 2.73 1.49 × 2730 0 0EdgeBoost (B0) 78.2 (80.0/0.0) 3.20 1.27 × 853 2343 0EfficientEdge (B0) 79.7 (81.4/0.0) 1.40 2.91 × 887 514 0EfficientEdge (B3) 80.7 (82.5/0.0) 3.09 1.32 × 2192 894 0Scout (B0) 81.6 (82.2/53.7) 1.19 3.44 × 537 587 62 Scout-CS (B0) 81.5 1.29 3.16 × 603 604 82 
+
+11
