@@ -1,0 +1,24 @@
+{
+  "label": "2026-09-26",
+  "date": "2026-09-26",
+  "generated_at": "2026-09-26T21:53:23",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202609/26/2609.28580v1-token-clustering-and-semantic-sequence-mamba-for-hyperspectral-image-classification",
+      "section": "quick",
+      "title_en": "Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification",
+      "authors": "Yimin Zhu, Mahmood Elahi, Lincoln Linlin Xu",
+      "date": "2026-09-23",
+      "pdf": "https://arxiv.org/pdf/2609.28580v1",
+      "score": "6.0",
+      "evidence": "基于Mamba的高光谱遥感影像深度学习分类方法",
+      "tldr": "高光谱图像分类因光谱-空间异质性和复杂空间结构而困难，现有视觉Mamba多按预定义空间邻域构建序列，未显式考虑语义相似性与空间非平稳性。为此，本文提出STMamba，在宏层面用Token聚类模块逐级选择语义token，并以无参跨尺度邻域注意力上采样恢复稠密特征；在微层面通过密度感知聚类、软隶属度与四叉树动态选择，将稀疏token组织成语义一致序列；再用并行空间与光谱语义序列Mamba捕获长程依赖。在三个大规模基准数据集上，STMamba的定量与定性结果均超越SOTA，为HSI分类提供语义驱动的新方案。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Although hyperspectral images (HSIs) provide rich spectral-spatial information, accurate pixel-level classification remains challenging because of spectral-spatial heterogeneity and complex spatial structures. Existing vision state space models (Mamba) typically construct sequences according to predefined spatial neighborhoods, without explicitly accounting for semantic similarity or spatial non-stationarity. To address this limitation, we propose Token Clustering and Semantic Sequence Mamba (STMamba), which organizes sparse tokens into semantically coherent sequences for hyperspectral image classification with the following features. First, at the macro level, a hierarchical encoder decoder progressively selects semantic tokens with the Token Clustering Module (TCM) and restores dense features using a parameter-free Cross-scale Neighborhood Attention (CNA) Upsampler. Second, at the micro level, TCM first identifies representative cluster centers through density-aware clustering and estimates soft memberships based on feature similarity. A quadtree-based dynamic selection strategy then retains sparse and spatially distributed tokens from each semantic cluster, forming coherent semantic-token sequences while reducing redundant pixel-wise representations. Third, parallel Spatial and Spectral Semantic-wise Sequencing Mamba (SWSM) modules capture complementary long-range spatial and spectral dependencies within homogeneous semantic token sequences while suppressing irrelevant interactions across heterogeneous regions. Experimental results on three large-scale benchmark datasets demonstrate that STMamba outperforms the SOTA methods with respect to quantitative and qualitative results.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

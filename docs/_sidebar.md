@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-09-26 <!--dpr-date:20260926-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202609/26/2609.28580v1-token-clustering-and-semantic-sequence-mamba-for-hyperspectral-image-classification" data-sidebar-item="{&quot;title&quot;: &quot;Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2609.28580v1-token-clustering-and-semantic-sequence-mamba-for-hyperspectral-image-classification&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;ocean-ai&quot;}], &quot;evidence&quot;: &quot;基于Mamba的高光谱遥感影像深度学习分类方法&quot;}">Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification</a>
   * 2026-09-25 <!--dpr-date:20260925-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202609/25/2609.28741v1-geonli---a-natural-language-interpreter-for-satellite-imagery" data-sidebar-item="{&quot;title&quot;: &quot;GeoNLI - A Natural Language Interpreter for Satellite Imagery&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2609.28741v1-geonli---a-natural-language-interpreter-for-satellite-imagery&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;ocean-ai&quot;}], &quot;evidence&quot;: &quot;面向卫星影像的图文多模态模型，涵盖描述、视觉问答与定位&quot;}">GeoNLI - A Natural Language Interpreter for Satellite Imagery</a>
