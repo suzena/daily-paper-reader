@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-26</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-27</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 1 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-26 21:53:21 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-27 22:22:47 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日速读1篇高光谱图像分类论文，聚焦Token聚类与语义序列Mamba的结合，未安排精读。</p>
-<p>唯一值得看的是《Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification》（6.0/10），可从&quot;Token聚类降冗余+Mamba建模语义序列&quot;这一思路切入。</p>
-<p>普通读者若时间有限，可先看该文的聚类与序列建模如何配合，再决定是否深入高光谱分类细节。</p>
+<p>2026-09-27 日报速览：3 篇速读、0 篇精读，聚焦高光谱基础模型、SAGSIN 分层边缘计算与水下 3D 高斯泼溅三大方向。最值得看的是《Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing》对高光谱解混基础模型的基准评测，以及《OceanXL》用块划分与自适应剪枝实现大规模水下 3D 高斯泼溅。普通读者可先从这两篇的摘要与方法图入手，若关注网络架构再看 SAGSIN 分层边缘计算那篇。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -93,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification">Token Clustering and Semantic Sequence Mamba for Hyperspectral Image Classification</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing">Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing</span></li><li><span class="dpr-home-dashboard-paper-title" title="Hierarchical Edge Computing in SAGSIN: Multi-Layer Network Architecture and Multi-Level Information Processing">Hierarchical Edge Computing in SAGSIN: Multi-Layer Network Architecture and Multi-Level Information Processing</span></li><li><span class="dpr-home-dashboard-paper-title" title="OceanXL: Large-scale Underwater 3D Gaussian Splatting via Block Partitioning and Adaptive Pruning">OceanXL: Large-scale Underwater 3D Gaussian Splatting via Block Partitioning and Adaptive Pruning</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 </div>
 

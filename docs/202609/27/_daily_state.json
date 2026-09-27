@@ -1,0 +1,57 @@
+{
+  "date": "20260927",
+  "date_label": "",
+  "generated_at": "2026-09-27 22:22:47 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.28283v1",
+      "route": "202609/27/2609.28283v1-benchmarking-hyperspectral-foundation-models-for-hyperspectral-unmixing",
+      "title": "Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感高光谱解混的基座模型基准评测",
+      "first_seen_at": "2026-09-27 22:22:47 UTC",
+      "updated_at": "2026-09-27 22:22:47 UTC"
+    },
+    {
+      "paper_id": "2609.29467v1",
+      "route": "202609/27/2609.29467v1-hierarchical-edge-computing-in-sagsin-multi-layer-network-architecture-and-multi-level-information-processing",
+      "title": "Hierarchical Edge Computing in SAGSIN: Multi-Layer Network Architecture and Multi-Level Information Processing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋感知网络的海事物联网边缘计算架构",
+      "first_seen_at": "2026-09-27 22:22:47 UTC",
+      "updated_at": "2026-09-27 22:22:47 UTC"
+    },
+    {
+      "paper_id": "2609.29985v1",
+      "route": "202609/27/2609.29985v1-oceanxl-large-scale-underwater-3d-gaussian-splatting-via-block-partitioning-and-adaptive-pruning",
+      "title": "OceanXL: Large-scale Underwater 3D Gaussian Splatting via Block Partitioning and Adaptive Pruning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋监测的大规模水下三维重建",
+      "first_seen_at": "2026-09-27 22:22:47 UTC",
+      "updated_at": "2026-09-27 22:22:47 UTC"
+    }
+  ]
+}
