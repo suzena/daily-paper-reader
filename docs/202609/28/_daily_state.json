@@ -1,0 +1,137 @@
+{
+  "date": "20260928",
+  "date_label": "",
+  "generated_at": "2026-09-28 23:40:52 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.31211v1",
+      "route": "202609/28/2609.31211v1-coralplan-observation-skill-selection-and-execution-for-underwater-robotic-inspection",
+      "title": "CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向水下珊瑚巡检的视觉语言观测技能选择",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.30836v1",
+      "route": "202609/28/2609.30836v1-ptc-decoder-towards-intelligent-slms-on-offline-resource-constrained-edge-devices",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感卫星上基于语言模型的智能体任务编排",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.31234v1",
+      "route": "202609/28/2609.31234v1-weaveagent-a-two-stage-tool-routing-agent-for-ultra-high-resolution-remote-sensing-imagery",
+      "title": "WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向超高分辨率遥感影像的两阶段工具路由智能体",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.24846v1",
+      "route": "202609/28/2609.24846v1-range-aided-slam-initialization-exploiting-accurate-heading-information",
+      "title": "Range-Aided SLAM Initialization Exploiting Accurate Heading Information",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主水下航行器导航与SLAM",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.27149v1",
+      "route": "202609/28/2609.27149v1-temporally-ordered-region-token-mamba-with-logit-space-diffusion-for-remote-sensing-change-detection",
+      "title": "Temporally Ordered Region-Token Mamba with Logit-Space Diffusion for Remote Sensing Change Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感变化检测的Mamba与扩散模型方法",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.28949v1",
+      "route": "202609/28/2609.28949v1-exploiting-target-knowledge-from-mllms-for-robust-few-shot-segmentation",
+      "title": "Exploiting Target Knowledge from MLLMs for Robust Few-Shot Segmentation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用多模态大模型知识辅助影像分割",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.30214v1",
+      "route": "202609/28/2609.30214v1-underwater-c3-jepa-an-object-centric-cross-view-world-model-for-rov-salvage",
+      "title": "Underwater C3-JEPA: An Object-Centric Cross-View World Model for ROV Salvage",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向水下ROV的海洋自主世界模型",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    },
+    {
+      "paper_id": "2609.31199v1",
+      "route": "202609/28/2609.31199v1-enhancing-photogrammetric-digital-surface-models-with-pretrained-diffusion-models-and-multimodal-conditioning",
+      "title": "Enhancing Photogrammetric Digital Surface Models with Pretrained Diffusion Models and Multimodal Conditioning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态条件扩散模型用于卫星高程精化",
+      "first_seen_at": "2026-09-28 23:40:52 UTC",
+      "updated_at": "2026-09-28 23:40:52 UTC"
+    }
+  ]
+}

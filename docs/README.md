@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-27</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-28</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 8 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-27 22:22:47 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-28 23:40:52 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>2026-09-27 日报速览：3 篇速读、0 篇精读，聚焦高光谱基础模型、SAGSIN 分层边缘计算与水下 3D 高斯泼溅三大方向。最值得看的是《Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing》对高光谱解混基础模型的基准评测，以及《OceanXL》用块划分与自适应剪枝实现大规模水下 3D 高斯泼溅。普通读者可先从这两篇的摘要与方法图入手，若关注网络架构再看 SAGSIN 分层边缘计算那篇。</p>
+<p>今天筛完8篇论文，精读1篇、速读7篇，重点集中在水下机器人巡检、边缘小模型与遥感智能体。</p>
+<p>最值得先看8.0分的《CoralPlan》，它聚焦水下机器人巡检中的观测技能选择与执行；速读可关注《PTC-Decoder》的离线边缘SLM和《WeaveAgent》的超高分辨率遥感工具路由。</p>
+<p>普通读者可优先读《CoralPlan》的摘要与实验，再按兴趣跟进边缘部署或遥感Agent的落地场景。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -78,12 +80,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">0 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection">CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection</span></li></ul>
   </div>
-
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -91,12 +93,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">3 篇</strong>
+    <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing">Benchmarking Hyperspectral Foundation Models for Hyperspectral Unmixing</span></li><li><span class="dpr-home-dashboard-paper-title" title="Hierarchical Edge Computing in SAGSIN: Multi-Layer Network Architecture and Multi-Level Information Processing">Hierarchical Edge Computing in SAGSIN: Multi-Layer Network Architecture and Multi-Level Information Processing</span></li><li><span class="dpr-home-dashboard-paper-title" title="OceanXL: Large-scale Underwater 3D Gaussian Splatting via Block Partitioning and Adaptive Pruning">OceanXL: Large-scale Underwater 3D Gaussian Splatting via Block Partitioning and Adaptive Pruning</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices">PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices</span></li><li><span class="dpr-home-dashboard-paper-title" title="WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery">WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="Range-Aided SLAM Initialization Exploiting Accurate Heading Information">Range-Aided SLAM Initialization Exploiting Accurate Heading Information</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>7</strong></span></div>
 </section>
 </div>
 

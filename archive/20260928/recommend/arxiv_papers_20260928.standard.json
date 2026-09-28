@@ -1,0 +1,321 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-28T23:36:37.957618+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 7,
+    "quick_skim_target": 11,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2609.31211v1",
+      "source": "arxiv",
+      "title": "CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection",
+      "abstract": "Underwater robotic inspection depends on acquiring views that reveal task-relevant structure. For a structurally complex coral colony, recognising the target is only the starting point: the robot must select and execute a viewing motion suited to the inspection task. We present CoralPlan, a vision-language system that selects an observation skill from a current camera image and task text supplied by an episode manifest. A shared motion interface executes orbit, patch, or survey as target-relative trajectories; the remaining plan fields provide operator guidance. Observation completion requires target keeping and primitive-specific coverage, while joint success also requires selection to match the recorded reference. We evaluate this interface in 144 simulated episodes and 36 matched simulation-hardware pairs. In a clear-water pool with external target-reference poses, hardware observation completion reaches 77.8% and joint success reaches 63.9%. The experiments identify both reference-mismatched completions and incomplete observations after a matching skill selection. These results connect observation-skill choice to measurable underwater execution outcomes and identify where task-directed acquisition succeeds or fails.",
+      "authors": [
+        "Yuer Gao",
+        "Yu Zhao",
+        "Yi Cai"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-25T12:53:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.31211v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Vision-language system selecting observation skills for underwater coral inspection",
+      "llm_evidence_cn": "面向水下珊瑚巡检的视觉语言观测技能选择",
+      "llm_evidence": "面向水下珊瑚巡检的视觉语言观测技能选择",
+      "canonical_evidence": "面向水下珊瑚巡检的视觉语言观测技能选择",
+      "llm_tldr_en": "CoralPlan is a vision-language system for underwater robotic inspection that selects and executes observation skills such as orbit, patch and survey from a camera image and task text on coral colonies.",
+      "llm_tldr_cn": "水下机器人巡检复杂珊瑚群落时，识别目标只是起点，还需选择并执行合适的观测运动。本文提出CoralPlan视觉语言系统，依据当前相机图像与任务文本从轨道、贴片、普查等观测技能中选择，并通过统一运动接口执行目标相对轨迹。评测要求目标保持与技能覆盖，且技能选择需与参考一致。该工作把大模型驱动的视觉语言决策与自主水下机器人结合，直接服务于珊瑚巡检等海洋智能体应用。",
+      "llm_tldr": "水下机器人巡检复杂珊瑚群落时，识别目标只是起点，还需选择并执行合适的观测运动。本文提出CoralPlan视觉语言系统，依据当前相机图像与任务文本从轨道、贴片、普查等观测技能中选择，并通过统一运动接口执行目标相对轨迹。评测要求目标保持与技能覆盖，且技能选择需与参考一致。该工作把大模型驱动的视觉语言决策与自主水下机器人结合，直接服务于珊瑚巡检等海洋智能体应用。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.30836v1",
+      "source": "arxiv",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "abstract": "Deploying small language models (SLMs) on offline, resource-constrained edge devices such as remote sensing satellites presents a fundamental challenge: their limited reasoning capacity hinders reliable execution of multi-step agent tasks requiring complex tool orchestration. Existing plan-solve paradigms rely on prompt-based enforcement, which our experiments show SLMs almost entirely disregard: weak models fail to invoke the plan. We propose PTC-Decoder (Plan-Tool Constrained Decoder), a training-free, plug-and-play decoder framework that combines (1) a Plan-to-Act paradigm, which elevates planning to an atomic tool and forces its invocation at the first inference step, and (2) TC-Decoder, a deterministic finite automaton that imposes token-level hard constraints on tool names while preserving freedom over parameter generation, thereby retaining SLM reasoning capability. Evaluated on 200 real remote-sensing satellite tasks across 7 SLMs, PTC-Decoder yields a statistically significant mean overall score gain of +1.21 (p<0.01), 95% CI [+1.13, +1.29]), with consistent improvements across models and other datasets. An ablation study that removes TC-Decoder causes substantial performance degradation across all quality metrics without reducing computational cost, confirming TC-Decoder as the primary driver. PTC-Decoder thus offers a lightweight yet effective solution for improving step-level reliability, with final-answer accuracy remaining an open challenge. In essence, we enforce plan adherence by constraining the permissible output vocabulary during inference, without requiring retraining.",
+      "authors": [
+        "Minghui Yu",
+        "Ke Mu",
+        "Gang Wu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-25T05:30:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.30836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agent task orchestration on remote sensing satellites with language models",
+      "llm_evidence_cn": "遥感卫星上基于语言模型的智能体任务编排",
+      "llm_evidence": "遥感卫星上基于语言模型的智能体任务编排",
+      "canonical_evidence": "遥感卫星上基于语言模型的智能体任务编排",
+      "llm_tldr_en": "Deploying small language models on offline, resource-constrained edge devices such as remote sensing satellites is hard because weak reasoning breaks multi-step agent tasks. PTC-Decoder is a training-free decoder framework with a Plan-to-Act paradigm and a finite automaton that forces plan invocation and constrains tool orchestration.",
+      "llm_tldr_cn": "在遥感卫星等离线、资源受限边缘设备部署小语言模型时，其推理能力弱，难以可靠执行需要复杂工具编排的多步智能体任务。论文提出免训练、即插即用的PTC-Decoder解码框架，含Plan-to-Act范式与确定性有限自动机约束。实验显示弱模型几乎完全忽略基于提示的计划，该框架强制首步调用规划并约束工具编排。该工作契合大模型与智能体在遥感场景的应用主题。",
+      "llm_tldr": "在遥感卫星等离线、资源受限边缘设备部署小语言模型时，其推理能力弱，难以可靠执行需要复杂工具编排的多步智能体任务。论文提出免训练、即插即用的PTC-Decoder解码框架，含Plan-to-Act范式与确定性有限自动机约束。实验显示弱模型几乎完全忽略基于提示的计划，该框架强制首步调用规划并约束工具编排。该工作契合大模型与智能体在遥感场景的应用主题。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.24846v1",
+      "source": "arxiv",
+      "title": "Range-Aided SLAM Initialization Exploiting Accurate Heading Information",
+      "abstract": "This paper presents a novel initialization method for range-aided simultaneous localization and mapping (RA-SLAM). The general SLAM problem has a well-known separable structure where landmark and robot positions can be solved for in a linear fashion given known robot headings. This paper considers the case where highly accurate heading information is available, which is typical of autonomous underwater vehicle (AUV) navigation, to solve for the range transponder and robot positions. The proposed approach consists of two steps. First, using a generalized trust region subproblem (GTRS), the positions of the transponders relative to the AUV are solved for given the nonlinear range measurements. Second, the relative transponder positions and the known heading of the AUV are used to estimate the transponder and AUV positions by solving a linear least-squares problem. These transponder and AUV position estimates, combined with the highly accurate heading information, provide a reliable initialization method for the general nonlinear RA-SLAM problem. The effectiveness of the proposed approach is tested on a real-world AUV dataset where long baseline (LBL) range measurements are provided in concert with highly accurate heading information provided by an inertial navigation system (INS).",
+      "authors": [
+        "Isabel Lougheed",
+        "James Richard Forbes"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-21T16:24:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.24846v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous underwater vehicle navigation and SLAM",
+      "llm_evidence_cn": "自主水下航行器导航与SLAM",
+      "llm_evidence": "自主水下航行器导航与SLAM",
+      "canonical_evidence": "自主水下航行器导航与SLAM",
+      "llm_tldr_en": "Initialization is critical for range-aided SLAM, and AUV navigation often provides accurate heading. This paper proposes a two-step initialization: solving transponder positions relative to the AUV via a generalized trust region subproblem, then combining known headings to estimate transponder and robot positions, improving robustness for AUV localization.",
+      "llm_tldr_cn": "测距辅助SLAM的初始化对整体精度至关重要，而AUV导航中通常可获得高精度航向信息。论文提出两步初始化方法：先用广义信赖域子问题求解应答器相对AUV的位置，再结合已知航向估计应答器与机器人位置。在AUV典型场景下验证了该方法的可行性，提升初始化鲁棒性。该工作为自主水下航行器定位与海洋自主监测提供支撑。",
+      "llm_tldr": "测距辅助SLAM的初始化对整体精度至关重要，而AUV导航中通常可获得高精度航向信息。论文提出两步初始化方法：先用广义信赖域子问题求解应答器相对AUV的位置，再结合已知航向估计应答器与机器人位置。在AUV典型场景下验证了该方法的可行性，提升初始化鲁棒性。该工作为自主水下航行器定位与海洋自主监测提供支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.31234v1",
+      "source": "arxiv",
+      "title": "WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery",
+      "abstract": "Problem. Ultra-high-resolution (UHR) remote sensing with vague user intents has two bottlenecks: visual tokens are expensive, and tool calling must be format-reliable (pretrained models emit zero tool calls zero-shot). Method. WeaveAgent, a two-stage tool-routing agent, decouples routing from visual perception. Stage A is routing-first: emission is trained, not elicited. Stage B executes conditionally: intrinsic queries enter visual answering (full-scene thumbnail; a WeaveEarth-style evidence board as an optional fixed-budget, approx. 5k-token compression interface); extrinsic queries execute tool call on original full-resolution imagery, answering from tool observations in a second, observation-masked round. Training: alignment SFT, then GRPO under reward R_WA2. Results. Alignment SFT lifts extrinsic routing from 0% to 80.75% (323/400); GRPO suppresses 9 intrinsic mis-emissions while tool selection is unchanged. The trained 2B system does not beat the zero-shot 8B baseline overall (0.263 vs. 0.250), a diagnostic contribution. Oracle attribution separates two repair ingredients: loading the observation into context lifts extrinsic answer accuracy from 0.025 to 0.425 under marker-free cross-mode returns, and the two-turn SFT stage adds a further +9.3 points to 0.518 at a small routing cost. A +/- image ablation shows emission suppression is visually grounded, and a query-register matrix shows LLM-rewritten queries cost trained checkpoints 2-11 points. Scope. All training and evaluation use the 5,000 / 3,273 / 1,000-record VagueUHR corpus (600 intrinsic + 400 tool-requiring; the base seeds synthesis and is not used for optimization). Single-pass evidence construction runs at 7.31 s per image on an RTX 4090. Code, data, and evaluation protocols will be released.",
+      "authors": [
+        "Zhongyu Pang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-25T13:13:11+00:00",
+      "link": "https://arxiv.org/pdf/2609.31234v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "two-stage tool-routing agent for ultra-high-resolution remote sensing imagery",
+      "llm_evidence_cn": "面向超高分辨率遥感影像的两阶段工具路由智能体",
+      "llm_evidence": "面向超高分辨率遥感影像的两阶段工具路由智能体",
+      "canonical_evidence": "面向超高分辨率遥感影像的两阶段工具路由智能体",
+      "llm_tldr_en": "WeaveAgent decouples tool routing from visual perception for ultra-high-resolution remote sensing, training reliable tool emission and conditionally executing visual answering or tool calls to cut visual token cost.",
+      "llm_tldr_cn": "超高分辨率遥感在用户意图模糊时面临视觉token开销大、预训练模型零样本无法可靠调用工具两大瓶颈。本文提出WeaveAgent两阶段工具路由智能体，将路由与视觉感知解耦：第一阶段以训练而非提示方式产生工具调用，第二阶段按查询类型条件执行，内在查询走缩略图视觉问答，外在查询在全分辨率影像上调用工具并基于观测作答。该设计提升了工具调用的格式可靠性并压缩视觉开销，对遥感智能体研究具有直接价值。",
+      "llm_tldr": "超高分辨率遥感在用户意图模糊时面临视觉token开销大、预训练模型零样本无法可靠调用工具两大瓶颈。本文提出WeaveAgent两阶段工具路由智能体，将路由与视觉感知解耦：第一阶段以训练而非提示方式产生工具调用，第二阶段按查询类型条件执行，内在查询走缩略图视觉问答，外在查询在全分辨率影像上调用工具并基于观测作答。该设计提升了工具调用的格式可靠性并压缩视觉开销，对遥感智能体研究具有直接价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.27149v1",
+      "source": "arxiv",
+      "title": "Temporally Ordered Region-Token Mamba with Logit-Space Diffusion for Remote Sensing Change Detection",
+      "abstract": "Remote sensing change detection requires both global reasoning across bitemporal images and precise localization of changed regions. However, dense attention is computationally expensive for high-resolution imagery, while conventional feature fusion and coarse decoding may inadequately separate genuine changes from appearance variations or preserve object boundaries. We present Bitemporal Mamba-Diffusion for Change Detection (BMD-CD), which combines temporally structured state-space modeling with logit-space diffusion refinement. BMD-CD converts deep bitemporal features into region tokens and arranges them in explicit temporal partitions before bidirectional state-space propagation. Its Bitemporal Ordered Mamba Operator enables long-range cross-temporal interaction with linear sequence complexity, while Orthogonal Feature Disentanglement forms a change-oriented output and a complementary rotated output using learned pairwise rotations and unchanged-region consistency. Multiscale decoding then produces coarse change logits, which are refined through a five-step Conditional Diffusion Decoder operating directly in logit space. Experiments on LEVIR-CD, WHU-CD, DSIFN-CD, CDD, and S2Looking demonstrate strong performance across diverse change-detection settings. BMD-CD achieves F1 scores of 93.7%, 96.0%, 97.8%, and 99.0% on the four standard benchmarks and improves 3-pixel Boundary-F1 to 87.7% and 91.4% on LEVIR-CD and WHU-CD, respectively. The full model requires 32.09 GFLOPs and 47 ms per 256 x 256 image pair, while also showing zero-shot transfer to ValaisCD and B-FLAIR-test. Our code is available at https://github.com/Aparup2139/Public_WACV/",
+      "authors": [
+        "Anuvab Sen",
+        "Maneet Chatterjee",
+        "Aparup Ghosh",
+        "Udayon Sen",
+        "Arnav Aditya",
+        "Yixin Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-22T23:25:12+00:00",
+      "link": "https://arxiv.org/pdf/2609.27149v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Mamba and diffusion model for remote sensing change detection",
+      "llm_evidence_cn": "面向遥感变化检测的Mamba与扩散模型方法",
+      "llm_evidence": "面向遥感变化检测的Mamba与扩散模型方法",
+      "canonical_evidence": "面向遥感变化检测的Mamba与扩散模型方法",
+      "llm_tldr_en": "Remote sensing change detection needs global reasoning and precise localization, but dense attention is costly. This paper proposes BMD-CD, combining temporally ordered region-token Mamba with logit-space diffusion refinement.",
+      "llm_tldr_cn": "遥感变化检测既要跨时相全局推理，又要精确定位变化区域，但密集注意力在高分辨率影像上代价高昂。本文提出BMD-CD，将双时相特征转为区域令牌并按时间划分，采用双向状态空间传播，再以logit空间扩散细化结果。该方法在分离真实变化与外观差异、保持目标边界方面表现更好，为海洋与珊瑚礁遥感影像的深度学习分析提供可迁移技术。",
+      "llm_tldr": "遥感变化检测既要跨时相全局推理，又要精确定位变化区域，但密集注意力在高分辨率影像上代价高昂。本文提出BMD-CD，将双时相特征转为区域令牌并按时间划分，采用双向状态空间传播，再以logit空间扩散细化结果。该方法在分离真实变化与外观差异、保持目标边界方面表现更好，为海洋与珊瑚礁遥感影像的深度学习分析提供可迁移技术。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.28949v1",
+      "source": "arxiv",
+      "title": "Exploiting Target Knowledge from MLLMs for Robust Few-Shot Segmentation",
+      "abstract": "Few-shot segmentation (FSS) aims to segment unseen object categories with a few (e.g., one or five) labeled examples, enabling efficient adaptation to novel classes. Conventional models typically rely on appearance-based visual matching between support and query images for segmentation. While straightforward, these methods often struggle to handle significant appearance discrepancies and occlusions in the query image due to insufficient target knowledge. To mitigate this, we introduce a novel framework that mines target knowledge using the strong reasoning capacity of Multimodal Large Language Models (MLLMs) and employs it to enhance FSS. Specifically, building on SAM 2, our method, named MK-FSS, exploits two forms of complementary knowledge derived from a query image by an MLLM for FSS, including spatial knowledge, which provides a spatial prior indicating the potential target location, and semantic knowledge, which describes the target using text. The spatial knowledge is first encoded into a memory representation, and then resulting memory is integrated with the support-guided memory feature from query image through a carefully designed dual-memory debate-fusion (DMDF) module, yielding a more robust target memory feature. In parallel, the semantic knowledge is encoded into the textual feature, which is fused with multi-scale query features via a progressive cross-modal prompt generator (PCPG), producing a target-aware multimodal prompt for segmentation. Working together, the dual-memory feature and the multimodal prompt provide a comprehensive representation of the target, enabling more robust segmentation. In our extensive experiments, MK-FSS shows promising results and largely surpasses existing methods. Code will be released.",
+      "authors": [
+        "Yijun Hu",
+        "Heng Fan",
+        "Libo Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-24T03:00:22+00:00",
+      "link": "https://arxiv.org/pdf/2609.28949v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "MLLM knowledge to aid segmentation of habitat imagery",
+      "llm_evidence_cn": "利用多模态大模型知识辅助影像分割",
+      "llm_evidence": "利用多模态大模型知识辅助影像分割",
+      "canonical_evidence": "利用多模态大模型知识辅助影像分割",
+      "llm_tldr_en": "Few-shot segmentation relies on appearance matching and fails under large appearance gaps or occlusion due to insufficient target knowledge. MK-FSS mines target knowledge using MLLM reasoning and builds on SAM 2 to fuse complementary knowledge, improving robustness and suggesting transfer to coral reef habitat mapping.",
+      "llm_tldr_cn": "小样本分割通常依赖支撑与查询图像的外观匹配，面对显著外观差异与遮挡时因目标知识不足而失效。论文提出MK-FSS框架，利用多模态大模型的强推理能力挖掘目标知识，并基于SAM 2融合两类互补知识。方法提升了困难场景下小样本分割的鲁棒性。该工作展示MLLM辅助分割的潜力，可迁移到珊瑚礁栖息地制图等遥感任务。",
+      "llm_tldr": "小样本分割通常依赖支撑与查询图像的外观匹配，面对显著外观差异与遮挡时因目标知识不足而失效。论文提出MK-FSS框架，利用多模态大模型的强推理能力挖掘目标知识，并基于SAM 2融合两类互补知识。方法提升了困难场景下小样本分割的鲁棒性。该工作展示MLLM辅助分割的潜力，可迁移到珊瑚礁栖息地制图等遥感任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.30214v1",
+      "source": "arxiv",
+      "title": "Underwater C3-JEPA: An Object-Centric Cross-View World Model for ROV Salvage",
+      "abstract": "We present Underwater C$^{3}$-JEPA (cross-view, control-conditioned, context-extended), an object-centric multi-view predictive world model for near-field heavy-load underwater ROV salvage. Without contact sensors, it predicts in latent space how the task-object state evolves through contact interaction and under the hydrodynamic lag of the vehicle, from synchronized multi-view RGB observations and vehicle control signals. C$^{3}$-JEPA encodes multi-camera observations into task-object and context tokens, fuses cross-camera evidence through held-out-view attention, and directly predicts future states conditioned on control. Weak binding anchors the target and gripper at low annotation cost, while SIGReg sharpens the geometric representation. Experiments show that the learned representation transfers substantially more task-relevant information to downstream probes than a reconstruction-free latent baseline, while keeping the predictor lightweight. The resulting predictive interface supports model-predictive-control (MPC) candidate evaluation and imagined-rollout behavior-agent training. Validation on real underwater video shows the same architecture recovering a withheld camera's object state and staying ahead of persistence, so the recipe transfers beyond simulation.",
+      "authors": [
+        "Yuncong Yang",
+        "Jinlong Li",
+        "Yulong Xue",
+        "Feng Wu",
+        "Chunwen Zhang",
+        "Lei Qiao",
+        "Xuyang Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-24T17:45:42+00:00",
+      "link": "https://arxiv.org/pdf/2609.30214v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater ROV world model for marine autonomous tasks",
+      "llm_evidence_cn": "面向水下ROV的海洋自主世界模型",
+      "llm_evidence": "面向水下ROV的海洋自主世界模型",
+      "canonical_evidence": "面向水下ROV的海洋自主世界模型",
+      "llm_tldr_en": "Underwater ROV salvage lacks contact sensing to predict object state. The paper presents Underwater C3-JEPA, an object-centric cross-view, control-conditioned world model that fuses multi-camera RGB and control signals to predict future states for marine autonomous agents.",
+      "llm_tldr_cn": "水下重载ROV打捞在无接触传感器时难以预测目标状态演化。本文提出Underwater C³-JEPA，一种以对象为中心的跨视角、控制条件化世界模型，将多相机RGB观测与车辆控制信号编码为对象与上下文token，通过留出视角注意力融合并预测未来状态。实验表明其能刻画接触交互与水下滞后，为海洋自主作业智能体提供可迁移的世界模型范式。",
+      "llm_tldr": "水下重载ROV打捞在无接触传感器时难以预测目标状态演化。本文提出Underwater C³-JEPA，一种以对象为中心的跨视角、控制条件化世界模型，将多相机RGB观测与车辆控制信号编码为对象与上下文token，通过留出视角注意力融合并预测未来状态。实验表明其能刻画接触交互与水下滞后，为海洋自主作业智能体提供可迁移的世界模型范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.31199v1",
+      "source": "arxiv",
+      "title": "Enhancing Photogrammetric Digital Surface Models with Pretrained Diffusion Models and Multimodal Conditioning",
+      "abstract": "Large-scale Digital Surface Models (DSMs) can be produced cost-effectively from satellite images via stereo-photogrammetry. However, the resulting 3D maps are often contaminated by noise, outliers, and voids. On the other hand, aerial LiDAR provides high-accuracy elevation measurements at a substantially higher cost. In this work, we study diffusion models conditioned both on photogrammetric DSMs and Pléiades imagery to refine vertically co-registered DSMs. We introduce a modified Stable Diffusion 3 architecture with a pruned text stream and a patch-wise normalization strategy, enabling stable training on LiDAR data and transfer from natural images to elevation maps. Experiments in French cities demonstrate that multimodal conditioning improves elevation accuracy, reducing Dense Urban RMSE from 6.00 to 3.45 m in the in-context cities and from 4.16 to 2.77 m in the held-out city of Bordeaux.",
+      "authors": [
+        "Antoine Lorentz",
+        "Stéphane May",
+        "Valentine Bellet",
+        "Dawa Derksen",
+        "Bastien Nespoulous"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV"
+      ],
+      "published": "2026-09-25T12:35:01+00:00",
+      "link": "https://arxiv.org/pdf/2609.31199v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "diffusion model with multimodal conditioning for satellite-derived elevation",
+      "llm_evidence_cn": "多模态条件扩散模型用于卫星高程精化",
+      "llm_evidence": "多模态条件扩散模型用于卫星高程精化",
+      "canonical_evidence": "多模态条件扩散模型用于卫星高程精化",
+      "llm_tldr_en": "A modified Stable Diffusion 3 conditioned on photogrammetric DSMs and Pleiades imagery refines noisy satellite-derived surface models, using a pruned text stream and patch-wise normalization.",
+      "llm_tldr_cn": "针对卫星立体摄影测量生成的数字表面模型常含噪声、异常值与空洞，而LiDAR成本高昂的问题，本文提出改进的Stable Diffusion 3架构，同时以摄影测量DSM与Pleiades影像为条件，并采用剪枝文本流与分块归一化实现从自然图像到高程图的稳定迁移。法国城市实验表明该方法能有效精化DSM，展示多模态遥感条件生成模型在环境测绘中的潜力。",
+      "llm_tldr": "针对卫星立体摄影测量生成的数字表面模型常含噪声、异常值与空洞，而LiDAR成本高昂的问题，本文提出改进的Stable Diffusion 3架构，同时以摄影测量DSM与Pleiades影像为条件，并采用剪枝文本流与分块归一化实现从自然图像到高程图的稳定迁移。法国城市实验表明该方法能有效精化DSM，展示多模态遥感条件生成模型在环境测绘中的潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

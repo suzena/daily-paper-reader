@@ -1,0 +1,528 @@
+Title: Temporally Ordered Region-Token Mamba with Logit-Space Diffusion for Remote Sensing Change Detection
+
+URL Source: https://arxiv.org/pdf/2609.27149v1
+
+Published Time: Thu, 24 Sep 2026 00:21:49 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# Temporally Ordered Region-Token Mamba with Logit-Space Diffusion for Remote Sensing Change Detection 
+
+## Anuvab Sen 1† Maneet Chatterjee 2* Aparup Ghosh 2* Udayon Sen 3 Arnav Aditya 4 Yixin Zhang 5†
+
+> 1
+
+## Georgia Institute of Technology 
+
+> 2
+
+## Indian Institute of Engineering Science and Technology (IIEST), Shibpur 
+
+> 3
+
+## Nanyang Technological University 
+
+> 4
+
+## Indian Institute of Technology, Delhi, 5Duke University 
+
+## Abstract 
+
+Remote sensing change detection requires both global rea-soning across bitemporal images and precise localization of changed regions. However, dense attention is computa-tionally expensive for high-resolution imagery, while con-ventional feature fusion and coarse decoding may inade-quately separate genuine changes from appearance vari-ations or preserve object boundaries. We present Bitem-poral Mamba-Diffusion for Change Detection (BMD-CD), which combines temporally structured state-space model-ing with logit-space diffusion refinement. BMD-CD con-verts deep bitemporal features into region tokens and ar-ranges them in explicit temporal partitions before bidirec-tional state-space propagation. Its Bitemporal Ordered Mamba Operator enables long-range cross-temporal inter-action with linear sequence complexity, while Orthogonal Feature Disentanglement forms a change-oriented output and a complementary rotated output using learned pair-wise rotations and unchanged-region consistency. Multi-scale decoding then produces coarse change logits, which are refined through a five-step Conditional Diffusion De-coder operating directly in logit space. Experiments on LEVIR-CD, WHU-CD, DSIFN-CD, CDD, and S2Looking demonstrate strong performance across diverse change-detection settings. BMD-CD achieves F1 scores of 93.7%, 96.0%, 97.8%, and 99.0% on the four standard benchmarks and improves 3-pixel Boundary-F1 to 87.7% and 91.4% on LEVIR-CD and WHU-CD, respectively. The full model re-quires 32.09 GFLOPs and 47 ms per 256 × 256 image pair, while also showing zero-shot transfer to ValaisCD and B-FLAIR-test. Our code is available at https://github. com/Aparup2139/Public_WACV/ 
+
+> *Equal contribution.
+> †Corresponding authors: asen74@gatech.edu and yz696@duke.edu
+
+Figure 1. Accuracy–efficiency trade-off on LEVIR-CD. Baseline complexity values are taken from the respective papers and are not re-measured under a common setup; we therefore base efficiency conclusions primarily on GFLOPs and parameter counts. 
+
+## 1. Introduction 
+
+Change detection (CD) aims to identify meaningful changes between remote-sensing images of the same geographical area acquired at different times. It supports a wide range of applications, including tracking urban expansion [6], assessing disaster damage [19], and monitoring changes in natural ecosystems. Despite significant advances, reli-able change detection remains challenging in three respects. First, differences in illumination, seasonal conditions, and sensor characteristics can create pseudo-changes : substan-tial appearance differences between bitemporal images that do not correspond to meaningful changes on the ground. Second, repeated downsampling during feature extraction can remove fine spatial details, resulting in boundary degradation , particularly for thin and irregularly shaped regions. Third, high-resolution image pairs require mod-els to capture both local details and global cross-temporal arXiv:2609.27149v1 [cs.CV] 22 Sep 2026 dependencies, making efficient feature interaction diffi-cult. An effective change detector must therefore suppress non-target variations, preserve fine boundaries, and model global cross-temporal context without excessive computa-tional cost. Existing methods have improved bitemporal feature comparison, multiscale decoding, and global-context mod-eling, but these capabilities are often developed sepa-rately. Consequently, jointly achieving robustness to pseudo-changes, accurate boundary localization, and ef-ficient structured cross-temporal reasoning remains diffi-cult. To address these limitations, we propose Bitemporal Mamba-Diffusion for Change Detection (BMD-CD) , a unified framework that combines structured temporal inter-action, feature disentanglement, and targeted prediction re-finement. BMD-CD comprises three complementary com-ponents: 1. The Bitemporal Ordered Mamba Operator (BOMO) 
+
+organizes region tokens into explicit temporal partitions, with all t1 tokens preceding all t2 tokens, and performs bidirectional state-space propagation for global cross-temporal interaction with linear complexity. 2. The Orthogonal Feature Disentanglement (OFD) 
+
+module applies learned pairwise rotations to form shared- and change-oriented features, together with unchanged-region consistency for suppressing pseudo-change responses. 3. The Conditional Diffusion Decoder (CDD) performs a small number of conditional residual-refinement steps directly in logit space, improving the delineation of thin and irregularly shaped regions around ambiguous boundaries. Each of the three complementary components targets a dis-tinct limitation of existing methods. We evaluate the ca-pability of BMD-CD on four standard change-detection benchmarks, the challenging S2Looking [32] benchmark, and additional zero-shot transfer to ValaisCD [3] and B-FLAIR-test [4] and compare its detection accuracy and in-ference time with those of the existing state-of-the-art meth-ods. The results demonstrate that our BMD-CD frame-work offers competitive accuracy with a favorable accu-racy–efficiency trade-off as shown in Fig. 1. 
+
+## 2. Related Work 
+
+2.1. Robust Bitemporal Representation 
+
+Early Siamese CNN-based change detection networks com-monly extract features from the two temporal images us-ing shared encoders; change representations are then con-structed through feature differencing, concatenation, or fu-sion [5]. DDPM-CD [2] explores diffusion-based represen-tation learning to improve robustness. It processes each temporal image at multiple selected diffusion timesteps and extracts intermediate representations from several post-bottleneck decoder levels at each timestep. These multi-level, multi-timestep features are then aggregated and sup-plied to a lightweight change classifier. While the resulting representations exhibit robustness to environmental pertur-bations, change-sensitive and change-invariant information are not explicitly organized into separate branches.Our OFD module instead explicitly separates shared- and change-oriented outputs through learned pairwise rotations and unchanged-region consistency. 
+
+2.2. Boundary Preservation and Prediction Refine-ment 
+
+Accurate boundary localization requires high-level seman-tic information while retaining fine spatial details. CNN-based encoder-decoder methods employ skip connections, dense connections, and multiscale feature fusion to recover information lost during downsampling [17]. More recent approaches strengthen dense representations using larger pretrained backbones [34] or foundation segmentation mod-els such as SAM2-CD [31]. Generative-model approaches provide an alternative to conventional deterministic prediction. For example, RemoteVAR [22] formulates change-map prediction as coarse-to-fine autoregressive generation. Despite integrat-ing a DDPM, the diffusion steps were primarily for fea-ture extraction; the final change maps were produced by a lightweight classification head. Our CDD instead applies conditional diffusion directly to coarse change logits, using a small number of DDIM sampling [33] steps for computa-tionally efficient refinement of ambiguous boundaries. 
+
+2.3. Efficient Global and Cross-Temporal Modeling 
+
+Although CNN-based methods efficiently extract local and multiscale features, their reliance on local operations lim-its their ability to directly model long-range dependen-cies. [5, 17, 39]. Transformer-based methods, including BIT [7] and ChangeFormer [1], improve global and cross-temporal interaction through attention mechanisms. How-ever, the cost of global self-attention grows quadratically with the number of tokens, making high-resolution process-ing computationally demanding. Selective state-space models, particularly Mamba [18], offer linear sequence complexity while supporting long-range information propagation. Vision adaptations serialize two-dimensional feature maps into one-dimensional scan sequences [42], while RSMamba [11] demonstrates the po-tential of state-space modeling for remote-sensing represen-tation learning. ChangeMamba [9] and CDMamba [38] fur-ther adapt state-space models to change detection through dedicated spatial and bitemporal interaction mechanisms. Rather than characterizing these methods as lacking tempo-ral modeling, our work investigates a complementary for-mulation in which region tokens are explicitly separated into deterministic temporal partitions before bidirectional state-space propagation. This formulation makes the tem-poral organization of the sequence explicit while retaining linear computational complexity. 
+
+## 3. Method 
+
+3.1. Overall Architecture 
+
+As shown in Fig. 2, BMD-CD contains four stages: 1. A shared Swin-T [27] backbone extracts four-level fea-tures from both images. 2. LightMerge processes the two shallow levels, while the BOMO–OFD branch models the two deep levels. 3. A top-down decoder fuses the hierarchy and produces coarse logits h and diffusion condition features C.4. A conditional decoder applies five-index DDIM sched-ule to refine h in logit space. 
+
+3.2. Multi-hierarchy Patch Encoding and Shallow Interaction 
+
+Given a bitemporal pair (Ia, I b), the shared Swin-T back-bone produces {f al , f bl }4 
+
+> l=1
+
+at progressively larger recep-tive fields but coarser resolutions. Shallow features retain local detail and are processed by LightMerge at l ∈ { 1, 2};the deeper levels l ∈ { 3, 4} are passed to the BOMO–OFD branch described next. 
+
+3.2.1. LightMerge for Shallow Feature Interaction 
+
+At levels l ∈ {1, 2}, LightMerge combines absolute-difference and element-wise co-activation cues [5, 17]. Consecutive 1 × 1 and 3 × 3 Conv–BN–ReLU blocks fuse these cues, after which an SE block reweights the channels: 
+
+xl = SE  CBR 3×3
+
+ CBR 1×1
+
+  |f al − f bl |; f al ⊙ f bl
+
+ .
+
+(1) A mean–max spatial attention map [35] then suppresses background responses and produces the shallow output 
+
+Pl = xl ⊙ σ(BN(Conv 7×7([Mean c(xl); Max c(xl)]))) .
+
+(2) Here, CBR denotes convolution, batch normalization, and ReLU. The resulting features retain the local and boundary information used by the top-down decoder. 
+
+3.3. BOMO–OFD Branch for Deep Feature Inter-action 
+
+Deep features encode larger structures and therefore bene-fit from broader cross-temporal context than the pointwise operations used by LightMerge. Although Mamba has lin-ear sequence complexity [18], scanning both feature maps directly would still require 2HlWl state updates. BOMO in-stead pools each map into K = 64 region tokens, performs 
+
+Algorithm 1 BOMO and Temporal Refinement at Deep Hi-erarchy Level l
+
+Input: f al , f bl ∈ RB×Cl×Hl×Wl , l ∈ { 3, 4}
+
+Output: Tl ∈ RB×C′ 
+
+> l×Hl×Wl
+
+▷ Region-token construction  
+
+> 1:
+
+qal ← W al f al , qbl ← W bl f bl 
+
+> 2:
+
+Nal ← P K (qal ), Nbl ← P K (qbl ) 
+
+> 3:
+
+Sl ← Cat tok (Nal , Nbl )
+
+▷ Bidirectional state-space propagation  
+
+> 4:
+
+(Xl, Gl) ← Split C (Win Sl) 
+
+> 5:
+
+bXl ← SiLU( Xl) 
+
+> 6:
+
+∆l ← Clamp(Softplus( Wδ bXl), 10 −4, 1)  
+
+> 7:
+
+H→ 
+
+> l
+
+← SSM( bXl, ∆l) 
+
+> 8:
+
+H← 
+
+> l
+
+← Rev 
+
+
+
+SSM(Rev( bXl), Rev(∆ l)) 
+
+ 
+
+> 9:
+
+Zl ← (H→ 
+
+> l
+
++ H← 
+
+> l
+
+) ⊙ SiLU( Gl) 
+
+> 10:
+
+Yl ← LN( Sl + Wout Zl)
+
+▷ Spatial and temporal reconstruction  
+
+> 11:
+
+Ybl ← Yl[: , K : 2 K, :]  
+
+> 12:
+
+Ul ← SE  CBR 3×3
+
+ Up(Reshape( Ybl ))   
+
+> 13:
+
+Dl ← | qal − qbl |, Ml ← Dl + γl(Ul − Dl) 
+
+> 14:
+
+eDl ← | Vlf al − Vlf bl | 
+
+> 15:
+
+Al ← σ
+
+
+
+BN 
+
+
+
+Conv 1×1(Cat C (Ml, eDl)) 
+
+  
+
+> 16:
+
+Tl ← Al ⊙ Ml + (1 − Al) ⊙ eDl
+
+bidirectional propagation over the resulting 2K-token se-quence, and reconstructs a spatial feature. Temporal refine-ment and OFD then form the change-oriented representa-tion supplied to the decoder. 
+
+3.3.1. Ordered Region Tokens and State Propagation 
+
+As summarized in Alg. 1, the independent projections in line 1 map both observations to C′ 
+
+> l
+
+channels. The opera-tor PK then adaptively averages each map to an 8 × 8 grid and flattens it in raster order, yielding Nal , Nbl ∈ RB×K×C′
+
+> l
+
+with K = 64 . Corresponding token indices summarize the same spatial regions. Line 3 concatenates all Ia tokens be-fore all Ib tokens to form Sl ∈ RB×2K×C′ 
+
+> l
+
+; this fixed tem-poral arrangement gives BOMO its ordered designation and replaces 2HlWl spatial states with 128 region states. The state-space block splits Sl into content and gating branches and predicts bounded, input-dependent transition steps. The same selective SSM scans the fixed sequence for-ward and backward, after which its gated outputs are com-bined with the input through a normalized residual connec-tion (line 10). Because the Ib partition follows all Ia tokens, its forward states contain context propagated from the first observation; the reverse scan supplies complementary con-text from the opposite direction. Both scans remain linear in the compact sequence length. 
+
+3.3.2. Spatial Reconstruction and Temporal Refinement 
+
+The final K positions of Yl correspond to Ib and con-tain context propagated over the ordered sequence. BOMO Figure 2. Overview of the proposed BMD-CD framework. Bi-temporal images are encoded into multi-scale features, followed by tem-porally ordered cross-temporal modeling using the Bi-temporal Ordered Mamba Operator (BOMO). The resulting representations are disentangled into change and invariant components via OFD and fused to produce coarse logits. A conditional diffusion decoder then refines the logits in logit space, improving boundary quality and reducing false detections. 
+
+reshapes this partition to an 8 × 8 grid, upsamples it to 
+
+Hl ×Wl, and applies local convolution and SE calibration to obtain Ul. Because region pooling can weaken precise spa-tial cues, line 13 combines this context with the projected difference Dl = |qal − qbl |. The scalar γl, initialized to zero, makes BOMO begin from the direct difference and learn a contextual correction Ml.A spatially and channel-wise adaptive gate then balances 
+
+Ml against a second localized difference eDl = |Vlf al −
+
+Vlf bl |. As shown in line 16, larger values of Al favor the reconstructed BOMO context, whereas smaller values favor the direct difference. The resulting Tl is passed to OFD. 
+
+3.3.3. Orthogonal Feature Disentanglement 
+
+The refined feature may still contain both persistent ap-pearance and temporal-change information. To address this, OFD first applies two independent Conv–BN–ReLU blocks, Esh  
+
+> l
+
+= ϕsh  
+
+> l
+
+(Tl) and Echg  
+
+> l
+
+= ϕchg  
+
+> l
+
+(Tl), and groups their channels into Jl = C′ 
+
+> l
+
+/2 adjacent pairs. For each pair 
+
+j and within-pair channel r ∈ { 0, 1}, a learned angle θl,j 
+
+rotates the two candidate branches: 
+
+"Fsh 
+
+> l,j,r
+
+Fchg 
+
+> l,j,r
+
+#
+
+=
+
+cos θl,j − sin θl,j 
+
+sin θl,j cos θl,j 
+
+ "Esh 
+
+> l,j,r
+
+Echg 
+
+> l,j,r
+
+#
+
+. (3) The orthogonal rotation preserves the combined magnitude of the two candidate responses while learning their contri-butions to the two outputs. Only Fchg  
+
+> l
+
+is passed to the de-coder, whereas Fsh  
+
+> l
+
+is not used by the current prediction path. At each level l, we collect the pairwise rotation angles as θl = [ θl, 1, . . . , θ l,J l ], where Jl = C′ 
+
+> l
+
+/2. These angles are global trainable parameters shared across samples and spatial locations. During training, we encourage different channel pairs to learn diverse rotations and additionally im-pose consistency between shallow bitemporal features over unchanged pixels: 
+
+Lorth = X
+
+> l∈{ 3,4}
+
+1Var( θl) + 0 .1+ 0 .1 L1
+
+ f a 
+
+> 1
+
+⊙ Uunch , f b 
+
+> 1
+
+⊙ Uunch 
+
+ .
+
+(4) where Uunch is the resized complement of the ground-truth change mask and L1 denotes mean absolute error. The full term enters the training objective with weight 0.1. The rota-tion is orthogonal by construction; the loss promotes diverse rotations rather than directly enforcing zero correlation be-tween the two output features. 
+
+3.4. Hierarchical Fusion and Coarse Logit Projec-tion 
+
+The decoder receives the LightMerge outputs P1, P2 and the change-oriented OFD outputs P3 = Fchg 3 , P4 = Fchg 4 .Level-specific 1×1 projections map them to D = 128 chan-nels. Global descriptors of the resolution-aligned features determine sample-dependent scale weights: 
+
+ePl = ϕlat  
+
+> l
+
+(Pl), al = GAP 
+
+
+
+R( ePl)
+
+
+
+,
+
+α = Softmax(MLP([ a1; · · · ; a4])) , Pl = αl ePl,
+
+(5) where GAP denotes global average pooling. Inspired by feature pyramids [25], fusion proceeds from the deepest Figure 3. Architecture of Conditional Diffusion Decoding. 
+
+level upward by concatenating each weighted lateral feature with the upsampled decoder state: 
+
+X4 = P4,
+
+Xl = Φ l
+
+ [Up l(Xl+1 ); Pl] , l ∈ { 3, 2, 1},
+
+Fdec = ϕhead (Up( X1)) ,
+
+h = Wlogit Fdec , C = Wcond Fdec .
+
+(6) Each Φl contains two Conv–BN–ReLU blocks, and ϕhead 
+
+produces a 64-channel full-resolution feature. The 1 × 1
+
+output projections yield raw coarse logits h ∈ RB×1×H×W
+
+and an eight-channel condition map C for diffusion. 
+
+3.5. Conditional Diffusion Decoder in Logit Space 
+
+As shown in Fig. 3, the coarse logit map L0 provides an ini-tial change prediction, while the hierarchical context map 
+
+C supplies multi-scale decoder information. We denote the coarse logit from Eq. (6) by L0 ≡ h and the eight-channel diffusion condition by Scond ≡ C ∈ RB×8×H×W .The decoder is therefore a conditional logit-space refiner: it learns a residual correction around the coarse prediction rather than generating a change map from scratch. During training, the binary mask Y is converted into a bounded clean logit target Y ℓ. The forward process corrupts Y ℓ,and the denoiser predicts the injected noise conditioned on (xt, t, L 0, S cond ). The recovered clean-logit estimate is fused with L0 through a learned residual gate to produce the final refined logit Lref . BCE and Dice losses are applied to 
+
+Lref , while the diffusion branch is additionally trained with a noise-regression loss. This ensures that segmentation gra-dients supervise the final refinement path rather than only the coarse prediction. Full equations and gradient-flow de-tails are provided in Supp. S3.2–S3.5. At inference, Y ℓ is unavailable, so the deterministic DDIM trajectory is initialized from L0. The five-index DDIM schedule uses indices {50 , 38 , 25 , 12 , 0} and four re-verse transitions. The reported implementation evaluates the denoiser at each scheduled index, including the termi-nal index t = 0 , and the reported FLOPs/latency count these five U-Net evaluations. Since ¯α0 = 1 , the termi-nal evaluation is output-neutral under the clean-logit recov-ery equation; retaining it makes the reported cost conser-vative relative to an equivalent four-call implementation. The final estimate is fused with L0 using the same learned residual gate, converted to probabilities, and thresholded us-ing the validation-selected τbin . No morphological post-processing is used. Additional inference details are given in Supp. S3.5. 
+
+## 4. Experiments 
+
+4.1. Datasets 
+
+We evaluate BMD-CD on four standard change-detection benchmarks: LEVIR-CD [6], DSIFN-CD [37], WHU-CD [21], and CDD [23]. We further evaluate on S2Looking, which contains pronounced viewpoint and appearance vari-ations, and assess cross-dataset generalization by train-ing only on S2Looking [32] and evaluating zero-shot on ValaisCD [3]and B-FLAIR-test [4]. Detailed dataset splits, preprocessing, and transfer protocols are provided in Supp. Sec. S7 and Supp. Tab. S12. 
+
+4.2. Implementation Details 
+
+We use a Swin Transformer-Tiny (Swin-T) back-bone [27], pretrained on ImageNet-1K, as the shared multi-scale encoder. Optimization is performed with 
+
+AdamW [28] using (β1, β 2) = (0 .9, 0.999) and weight de-cay 10 −4. A OneCycleLR schedule is used with maximum learning rate 3 × 10 −4, 10% warmup, and cosine annealing. Models are trained for 125 epochs with batch size 8 using 
+
+automatic mixed precision (FP16) . The overall objective is 
+
+L = LBCE + LDice + 0 .1Lorth + 0 .5Ldiff (7) The number of bitemporal region tokens K = 64 is em-pirically selected through the validation split and applied to the test set. For the diffusion decoder, we use 100 forward steps with a cosine noise schedule following DDPM [20]; inference follows the warm-started five-index DDIM sched-ule described in Sec. 3.5. All BMD-CD experiments are conducted on a single NVIDIA RTX 4090 GPU (24GB) .Table 1. Quantitative comparison on WHU-CD, DSIFN-CD, LEVIR-CD and CDD datasets. F1 and IoU are reported as ratios, while OA is reported in percentage. Best results in bold , second-best underlined. “–” indicates unavailable comparable prior results or artifacts, with retraining being computationally infeasible. 
+
+WHU-CD DSIFN-CD LEVIR-CD CDD Method Extra data F1 IoU OA F1 IoU OA F1 IoU OA F1 IoU OA 
+
+CNN-based Methods 
+
+FC-Siam-conc [5] None 0.798 0.665 98.5 0.597 0.426 87.6 0.837 0.720 98.5 0.751 0.601 94.9 SNUNet [17] None 0.835 0.717 98.7 0.662 0.495 87.3 0.882 0.788 98.8 0.839 0.721 96.2 IFNet [37] IN1k 0.834 0.715 98.8 0.601 0.430 87.8 0.881 0.788 98.9 0.840 0.719 96.03 
+
+CNN + Attention Methods 
+
+DT-SCN [26] IN1k 0.914 0.842 99.3 0.706 0.545 82.9 0.877 0.781 98.8 0.921 0.853 98.2 STANet [6] IN1k 0.823 0.700 98.5 0.645 0.478 88.5 0.873 0.774 98.7 0.841 0.722 96.1 
+
+Transformer-based Methods 
+
+BIT [7] IN1k 0.905 0.834 99.3 0.876 0.780 92.3 0.893 0.807 98.92 0.889 0.800 97.5 ChangeFormer [1] None 0.886 0.795 99.12 0.947 0.887 93.2 0.904 0.825 99.0 0.946 0.898 98.7 SAM2-CD [31] SAM-pretrained 0.926 0.889 99.77 – – – 0.919 0.855 99.19 – – –PeftCD [16] IN1k 0.959 0.9205 99.6 – – – 0.923 0.856 99.2 0.985 0.970 99.63 
+
+Self-supervised Pretraining 
+
+SimSiam [12] IN1k, IBSD, GoogleEarth 0.847 0.734 – – – – 0.880 0.786 – – – –MoCo-v2 [13] IN1k, IBSD, GoogleEarth 0.882 0.789 – – – – 0.879 0.784 – – – –SeCo [36] IN1k, IBSD, GoogleEarth 0.883 0.790 – – – – 0.881 0.787 – – – –SaDL-CD [8] IN1k, IBSD, GoogleEarth 0.909 0.833 – – – – 0.899 0.818 – – – –
+
+Diffusion-based Methods 
+
+DDPM-CD [2] GoogleEarth 0.927 0.863 99.4 0.967 0.913 97.1 0.909 0.833 99.1 0.956 0.916 99.0 DiffRegCD [29] GoogleEarth 0.934 0.883 99.0 0.940 0.890 96.7 0.929 0.881 98.7 – – –
+
+Mamba-based Methods 
+
+RSMamba [11] IN1k 0.927 0.865 99.4 0.965 0.913 97.0 0.897 0.814 98.9 0.943 0.902 98.8 ChangeMamba [9] IN1k 0.925 0.861 99.4 0.875 0.778 95.8 0.902 0.821 99.0 0.944 0.920 99.0 CDMamba [38] IN1k 0.937 0.882 99.5 0.966 0.914 97.0 0.907 0.831 99.0 0.960 0.919 99.1 M-CD [30] IN1k 0.953 0.911 99.6 0.970 0.935 98.9 0.921 0.850 99.2 0.982 0.963 99.5 
+
+Boundary-focused Methods 
+
+LRNet [40] IN1k 0.925 0.861 99.47 – – – 0.911 0.836 99.10 – – –
+
+Ours 
+
+BMD-CD IN1k 0.960 0.923 99.78 0.978 0.957 99.12 0.937 0.882 99.35 0.990 0.979 99.64 
+
+Table 2. 3-px Boundary-F1 on LEVIR-CD (L) and WHU-CD (W) is reported as a percentage for methods with publicly available baseline change maps or official checkpoints. Baseline F1 scores are taken from the corresponding papers, while BMD-CD results are averaged over three seeds. 
+
+Method F1 L B-F1 L F1 W B-F1 W
+
+DDPM-CD [2] 90.9 84.8 92.7 88.7 M-CD [30] 92.1 85.5 95.3 90.0 LRNet [40] 91.1 86.8 92.5 90.5 
+
+BMD-CD 93.7 87.7 96.0 91.4 
+
+We report F1-score, Intersection-over-Union (IoU), Over-all Accuracy (OA), and Boundary F1 (B-F1) with a 3-pixel tolerance following [14]. 
+
+4.3. Comparison with State-of-the-Art 
+
+Tab. 1 reports quantitative comparisons across four bench-marks. Prior methods span CNNs [5, 17], attention mod-els [1, 6, 7], pretrained/foundation and adaptation meth-ods [16, 31], state-space models [9, 11, 30, 38], and 
+
+Table 3. Cross-dataset evaluation. BMD-CD is trained and tested on S2Looking [32], also evaluated on ValaisCD and b-flair-test datasets without target-domain training, fine-tuning, adaptation, validation, or threshold selection. ValaisCD baselines are included as protocol context and are not directly comparable. Metrics are in %; – denotes not reported.                                                              
+
+> Dataset Method Setting F1 Prec. Rec. IoU
+> S2Looking SChanger-base [41] Supervised 68.95 70.94 67.09 –ChangeStar2 [10] Supervised 67.80 69.2 66.50 51.3 LSKNet-S [24] Supervised 67.52 71.90 63.64 50.96
+> BMD-CD (ours) Supervised 69.23 71.23 67.32 52.94
+> ValaisCD 2Player (BIT) [3] Unsupervised 19.00 11.00 73.00 –FC-Siam-Diff [15] Supervised, in-domain 46.00 41.00 52.00 –
+> BMD-CD (ours) Zero-shot 49.40 50.20 48.63 32.80
+> B-FLAIR-test [4] Dual UNet (STAR) [4] Zero-shot 75.90 ––61.10 Dual UNet (b-FLAIR) [4] Zero-shot 79.00 ––65.30 Dual UNet (FSC-180k) [4] Zero-shot 83.10 ––71.10 BMD-CD (ours) Zero-shot 76.30 75.10 77.54 61.68
+
+diffusion- or boundary-oriented designs [2, 29, 40]. In contrast, BMD-CD jointly models cross-temporal interac-tion with diffusion-style logit-space residual refinement. The BOMO module performs temporally ordered cross-temporal propagation with linear complexity, while the dif-Figure 4. Change map comparison. The six columns show: Time 1 image, Time 2 image, Ground Truth, DDPM-CD, M-CD, and BMD-CD (Ours). In the error overlay, white denotes true positives (TP), black denotes true negatives (TN), red denotes false positives (FP), and blue denotes false negatives (FN). 
+
+fusion decoder performs logit-space correction guided by global context. This combination improves region-level ac-curacy in the main comparison and boundary quality in the B-F1 evaluation. As shown in Tab. 1, BMD-CD achieves competitive or best performance among entries with avail-able comparable results, improving F1 and IoU over most CNN, transformer, state-space, and diffusion-based base-lines under the reported protocols. We emphasize F1 and IoU over OA, which is dominated by the unchanged class under the strong class imbalance of CD masks. On WHU-CD and CDD the strongest baselines (M-CD, PeftCD) lie within ≤ 0.005 F1 of BMD-CD, so we regard these re-sults as on par rather than strictly superior; the clearest region-level gains appear on LEVIR-CD (e.g., +1 .4 F1 over PeftCD) and DSIFN-CD, alongside consistent boundary-F1 improvements in Tab. 2, suggesting that ordered cross-temporal propagation and logit-space refinement provide complementary benefits. Qualitative results in Fig. 4 further support these findings: compared to M-CD and DDPM-CD, BMD-CD produces coherent change regions with fewer vis-ible false detections in densely structured scenes. Table 3 reports the challenging in-domain S2Looking evaluation, where BMD-CD obtains 69.23 F1 and 52.94 IoU. It also reports cross-dataset transfer from S2Looking to ValaisCD and B-FLAIR-test without target-domain train-ing, fine-tuning, adaptation, validation, or threshold selec-tion. The threshold is selected on S2Looking validation and 
+
+Table 4. Component-wise ablation on LEVIR-CD and WHU-CD.                                                                                                     
+
+> Mamba BOMO Diff OFD LEVIR-CD WHU-CD Prec. Rec. F1 B-F1 Prec. Rec. F1 B-F1
+> ✓×××88.50 88.10 88.30 66.50 94.20 93.50 93.85 80.10
+> ✓✓××89.15 90.95 90.04 69.10 95.10 95.80 95.45 82.30
+> ✓××✓89.10 89.40 89.25 72.80 94.60 94.20 94.40 84.00
+> ✓×✓×90.50 90.10 90.30 84.10 95.80 94.70 95.25 88.60
+> ✓✓×✓91.20 91.80 91.50 74.50 95.55 95.85 95.70 85.60
+> ✓×✓✓91.45 91.10 91.27 86.20 95.75 95.15 95.45 90.10
+> ✓✓✓×90.98 93.75 92.34 85.90 94.10 94.70 94.40 89.40
+> ✓✓✓✓93.41 94.04 93.72 87.70 95.80 96.17 95.98 91.40
+
+then fixed, as detailed in the supplementary material. 
+
+4.4. Ablation and Analysis 
+
+Table 4 reports a component-wise analysis on LEVIR-CD and WHU-CD. The Mamba-only baseline replaces BOMO with a single bidirectional scan over the flattened, concate-nated bi-temporal features (no ordering, OFD, or diffusion); it captures global context but has weak boundaries. Adding BOMO improves recall and region-level F1, indicating that preserving temporal-partition identity in the ordering im-proves coverage of spatially distributed changes. OFD im-proves the stability of the state representation, while diffu-sion provides the largest single-component boundary gain (e.g., +8 .5 B-F1 on WHU-CD), confirming that boundary quality is primarily attributable to the logit-space decoder rather than to region-token propagation. The full model achieves the best overall result among the evaluated vari-Table 5. BOMO sensitivity analysis on LEVIR-CD. Default: 
+
+K = 64 , average pooling, [a; b] ordering, bidirectional scan, and five-index DDIM. The 10-index schedule gives no measurable im-provement after rounding.                                   
+
+> Configuration F1 ∆F1
+> Number of bitemporal region nodes KK= 16 92.35 −1.37
+> K= 64 [default] 93.72 —
+> K= 256 92.88 −0.84
+> Sequence ordering
+> Interleaved 92.45 −1.27
+> [a;b][default] 93.72 —Random 91.80 −1.92
+> Scan direction
+> Forward 92.30 −1.42 Bidirectional [default] 93.72 —
+> DDIM schedule / denoiser evaluations
+> 1 denoiser evaluation 92.62 −1.10 3-index schedule 92.95 −0.77 5-index schedule [default] 93.72 —10-index schedule 93.72 <+0 .01
+
+ants, indicating that BOMO, OFD, and logit-space refine-ment are most effective when combined. The interaction between ordering and diffusion is not strictly monotonic: on WHU-CD, adding diffusion to the ordered Mamba vari-ant improves B-F1 but reduces region-level F1 when OFD is absent. We attribute this to the logit-space decoder ampli-fying high-frequency structure: without OFD, Scond is con-structed from less selectively organized deep features, so boundary sharpening can also perturb region interiors and reduce region-level F1. 
+
+4.5. Ordering & Diffusion Analysis 
+
+Table 5 isolates token count, ordering, scan direction, and DDIM depth. The default K = 64 , grouped [a; b] or-der, and bidirectional scan perform best, and five-index DDIM steps saturate the refinement gain. Since random ordering perturbs both spatial and temporal structure, the cleaner comparison is grouped [a; b] vs. interleaving— which preserves within-view content and token count yet still loses 1.27 F1—so the interleaved and random rows act as unstructured-sequence controls that isolate ordering from token count. We attribute the grouped advantage to the sequential scan: processing all t1 tokens before all t2
+
+lets the forward pass consolidate a pre-event context against which post-event tokens are compared, whereas interleav-ing makes the latent state alternate temporal context at ev-ery step. These results support the ordering effect and the five-step accuracy–cost choice. 
+
+4.6. Efficiency Analysis 
+
+Table 6 reports parameters, GFLOPs, and inference latency. For methods with executable implementations, latency is remeasured under a unified NVIDIA RTX 4090 protocol 
+
+Table 6. Computational complexity comparison on LEVIR-CD and WHU-CD. Accuracy values for external methods follow their published reports. Methods without executable implementations are reported without latency.                                                                     
+
+> Method Input Params(M) GFLOPs Inf. Time F1 LF1 W
+> Ours (w/o Diff) 256 30.70 13.20 22 †ms 0.915 0.957
+> Ours (full) 256 33.55 32.09 47 †ms 0.937 0.960
+> CDMamba [38] 256 11.90 10.40 15 †ms 0.907 0.937 PeftCD [16] 256 10.15 22.00 25 †ms 0.923 0.959 M-CD [30] 256 69.80 29.58 160 †ms 0.921 0.953 LRNet [40] 256 48.71 92.23 60 †ms 0.911 0.925 ChangeFormer [1] 256 41.02 254.80 85 †ms 0.904 0.886 DDPM-CD [2] 256 46.41 2175.46 –0.909 0.927 SAM2-CD [31] 1024 2.59 1193.83 –0.919 0.926
+> †Latency is measured from executable implementations under a unified NVIDIA RTX 4090 protocol with batch size 1, FP16 inference, 256×256 image pairs, identical warmup, synchronized CUDA timing, and the same measurement procedure. Accuracy values for external methods are retained from their published papers. Methods without an executable implementation are reported without latency.
+
+with batch size 1, FP16 inference, synchronized CUDA timing, and 256 × 256 image pairs; methods without ex-ecutable implementations are reported without latency. The no-diffusion BMD-CD variant requires 13.20 GFLOPs and 22 ms, while the full model requires 32.09 GFLOPs and 47 ms due to the five-index DDIM refinement. This additional cost raises LEVIR-CD F1 from 0.915 to 0.937 and WHU-CD F1 from 0.957 to 0.960. Its main benefit is boundary refinement, as reflected by the diffusion ablations in Ta-ble 4 and the B-F1 comparison in Table 2. Compared with transformer and diffusion-feature baselines, BMD-CD pro-vides competitive accuracy at moderate cost, but PeftCD attains nearly identical WHU-CD F1 with fewer parame-ters, so the trade-off is dataset-dependent rather than uni-versally Pareto-dominant. Once diffusion is enabled, BMD-CD is also not lower-cost than the lightest Mamba base-lines, such as CDMamba at 10.40 GFLOPs; its value is im-proved accuracy and boundary quality at substantially lower GFLOPs than multi-timestep diffusion-feature extraction, e.g., DDPM-CD at 2175.46 GFLOPs. 
+
+## 5. Conclusion 
+
+We presented BMD-CD, which combines temporally or-dered region-token state-space modeling with logit-space diffusion refinement for remote sensing change detection. BOMO enables efficient long-range cross-temporal inter-action, OFD improves change-oriented feature represen-tation, and the diffusion decoder refines coarse predic-tions for better boundary localization. Experiments across standard benchmarks, S2Looking, and cross-dataset eval-uations demonstrate competitive accuracy and a favorable accuracy–efficiency trade-off. Ablation results further con-firm the complementary contributions of temporal ordering, OFD, and logit-space refinement. References 
+
+[1] Wele Gedara Chaminda Bandara and Vishal M Patel. Atransformer-based siamese network for change detection. In 
+
+IEEE International Geoscience and Remote Sensing Sympo-sium , 2022. 2, 6, 8 [2] Wele Gedara Chaminda Bandara, Nithin Gopalakrishnan Nair, and Vishal M. Patel. Ddpm-cd: Denoising diffusion probabilistic models as feature extractors for change detec-tion. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision , 2025. 2, 6, 8 [3] Manon B´ echaz, Emanuele Dalsasso, Ciprian Tomoiag˘ a, Marcin Detyniecki, and Devis Tuia. 2Player: A general framework for self-supervised change detection via coopera-tive learning. ISPRS Journal of Photogrammetry and Remote Sensing , 232:34–47, 2026. 2, 5, 6 [4] Xavier Bou, Elliot Vincent, Gabriele Facciolo, Rafael Grompone von Gioi, Jean-Michel Morel, and Thibaud Ehret. Remote sensing change detection via weak temporal super-vision. arXiv preprint , 2026. 2, 5, 6 [5] Rodrigo Caye Daudt, Bertr Le Saux, and Alexandre Boulch. Fully convolutional siamese networks for change detection. In IEEE International Conference on Image Processing ,2018. 2, 3, 6 [6] Hao Chen and Zhenwei Shi. A spatial-temporal attention-based method and a new dataset for remote sensing image change detection. In Remote Sensing , 2020. 1, 5, 6 [7] Hao Chen, Zipeng Qi, and Zhenwei Shi. Remote sensing image change detection with transformers. In IEEE Trans-actions on Geoscience and Remote Sensing , 2021. 2, 6 [8] Hao Chen, Wenyuan Li, Song Chen, and Zhenwei Shi. Semantic-aware dense representation learning for remote sensing image change detection. In IEEE Transactions on Geoscience and Remote Sensing , 2022. 6 [9] Hongruixuan Chen, Jian Song, Chengxi Han, Junshi Xia, and Naoto Yokoya. Changemamba: Remote sensing change detection with spatiotemporal state space model. In IEEE Transactions on Geoscience and Remote Sensing , 2024. 2, 6 [10] Hao Chen et al. Scalable multi-temporal remote sensing change data generation via simulating stochastic change pro-cess. 2023. 6 [11] Keyan Chen, Bowen Chen, Chenyang Liu, Wenyuan Li, Zhengxia Zou, and Zhenwei Shi. Rsmamba: Remote sens-ing image classification with state space model. In IEEE Geoscience and Remote Sensing Letters , 2024. 2, 6 [12] Xinlei Chen and Kaiming He. Exploring simple siamese rep-resentation learning. In arXiv preprint , 2020. 6 [13] Xinlei Chen, Haoqi Fan, Ross Girshick, and Kaiming He. Improved baselines with momentum contrastive learning. In 
+
+arXiv preprint , 2020. 6 [14] Gabriela Csurka, Diane Larlus, and Florent Perronnin. What is a good evaluation measure for semantic segmentation? In 
+
+British Machine Vision Conference , 2013. 6 [15] Rodrigo Caye Daudt, Bertrand Le Saux, and Alexandre Boulch. Fully convolutional siamese networks for change detection. In 2018 IEEE International Conference on Image Processing , pages 4063–4067, 2018. 6 [16] Sijun Dong, Yuxuan Hu, Libo Wang, Geng Chen, and Xi-aoliang Meng. Peftcd: Leveraging vision foundation mod-els with parameter-efficient fine-tuning for remote sensing change detection. IEEE Journal of Selected Topics in Ap-plied Earth Observations and Remote Sensing , 2026. 6, 8 [17] Shuai Fang, Kaiyu Li, Jinyuan Shao, and Zhe Li. Snunet-cd: A densely connected siamese network for change detection. 
+
+IEEE Geoscience and Remote Sensing Letters , 2022. 2, 3, 6 [18] Albert Gu and Tri Dao. Mamba: Linear-time sequence mod-eling with selective state spaces. In arXiv preprint , 2024. 2, 3[19] Ritwik Gupta, Bryce Goodman, Nirav Patel, Ricky Hosfelt, Sandra Sajeev, Eric Heim, Jigar Doshi, Keane Lucas, Howie Choset, and Matthew Gaston. Creating xbd: A dataset for assessing building damage from satellite imagery. Proceed-ings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2019. 1 [20] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising dif-fusion probabilistic models. In Advances in Neural Informa-tion Processing Systems , 2020. 5 [21] Shunping Ji, Shiqing Wei, and Meng Lu. Fully convolutional networks for multisource building extraction from an open aerial and satellite imagery data set. IEEE Transactions on Geoscience and Remote Sensing , 2018. 5 [22] Yilmaz Korkmaz and Vishal M Patel. Remotevar: Autore-gressive visual modeling for remote sensing change detec-tion. In arXiv preprint , 2026. 2 [23] M. A. Lebedev, Y. V. Vizilter, O. V. Vygolov, V. A. Knyaz, and A. Y. Rubis. Change detection in remote sensing images using conditional adversarial networks. ISPRS Journal of Photogrammetry and Remote Sensing , 2018. 5 [24] Yuxuan Li, Xiang Li, Yimian Dai, Qibin Hou, Li Liu, Yongx-iang Liu, Ming-Ming Cheng, and Jian Yang. Lsknet: A foun-dation lightweight backbone for remote sensing. Interna-tional Journal of Computer Vision , 133(3):1410–1431, 2025. 6[25] Tsung-Yi Lin, Piotr Dollar, Ross Girshick, Kaiming He, Bharath Hariharan, and Serge Belongie. Feature pyra-mid networks for object detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2017. 4 [26] Yi Liu, Chao Pang, Zongqian Zhan, Xiaomeng Zhang, and Xue Yang. Building change detection for remote sensing images using a dual-task constrained deep siamese convo-lutional network model. In IEEE Geoscience and Remote Sensing Letters , 2019. 6 [27] Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and Baining Guo. Swin transformer: Hierarchical vision transformer using shifted windows. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 2021. 3, 5 [28] Ilya Loshchilov and Frank Hutter. Decoupled weight de-cay regularization. In International Conference on Learning Representations , 2019. 5 [29] Seyedehanita Madani, Rama Chellappa, and Vishal M Patel. Diffregcd: Integrated registration and change detection with diffusion features. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision , 2026. 6 [30] Jay N Paranjape, Celso De Melo, and Vishal M Patel. Amamba-based siamese network for remote sensing change detection. In Proceedings of the IEEE/CVF Winter Confer-ence on Applications of Computer Vision , 2025. 6, 8 [31] Yuan Qin, Chaoting Wang, Yuanyuan Fan, and Chanling Pan. Sam2-cd: Remote sensing image change detection with sam2. IEEE Journal of Selected Topics in Applied Earth Ob-servations and Remote Sensing , 2025. 2, 6, 8 [32] Li Shen, Yao Lu, Hao Chen, Hao Wei, Donghai Xie, Jiabao Yue, Rui Chen, Shouye Lv, and Bitao Jiang. S2looking: A satellite side-looking dataset for building change detection. 
+
+Remote Sensing , 13(24), 2021. 2, 5, 6 [33] Jiaming Song, Chenlin Meng, and Stefano Ermon. Denois-ing diffusion implicit models. In International Conference on Learning Representations , 2021. 2 [34] Yufan Wang, Sokratis Makrogiannis, and Chandra Kamb-hamettu. Next2former-cd: Efficient remote sensing change detection with modern vision architectures. In arXiv preprint , 2026. 2 [35] Sanghyun Woo, Jongchan Park, Joon-Young Lee, and In So Kweon. Cbam: Convolutional block attention module. In 
+
+Proceedings of the European Conference on Computer Vi-sion , 2018. 3 [36] Ting Yao, Yiheng Zhang, Zhaofan Qiu, Yingwei Pan, and Tao Mei. Seco: Exploring sequence supervision for unsu-pervised representation learning. In AAAI Conference on Ar-tificial Intelligence , 2021. 6 [37] Chenxiao Zhang, Peng Yue, Deodato Tapete, Liangcun Jiang, Boyi Shangguan, Li Huang, and Guangchao Liu. A deeply supervised image fusion network for change de-tection in high resolution bi-temporal remote sensing im-ages. ISPRS Journal of Photogrammetry and Remote Sens-ing , 2020. 5, 6 [38] Haotian Zhang, Keyan Chen, Chenyang Liu, Hao Chen, Zhengxia Zou, and Zhenwei Shi. Cdmamba: Incorporat-ing local clues into mamba for remote sensing image binary change detection. In IEEE Transactions on Geoscience and Remote Sensing , 2025. 2, 6, 8 [39] Yixin Zhang and Maciej A Mazurowski. Convolutional neu-ral networks rarely learn shape for semantic segmentation. 
+
+Pattern Recognition , 146:110018, 2024. 2 [40] Huan Zhong, Chen Wu, and Ziqi Xiao. Lrnet: Change detection in high-resolution remote sensing imagery via a localization-then-refinement strategy. In Remote Sensing ,2023. 6, 8 [41] Ziyu Zhou, Keyan Hu, Yutian Fang, and Xiaoping Rui. Schanger: Change detection from a semantic change and spatial consistency perspective. arXiv preprint arXiv:2503.20734 , 2025. 6 [42] Lianghui Zhu, Bencheng Liao, Qian Zhang, Xinlong Wang, Wenyu Liu, and Xinggang Wang. Vision mamba: Efficient visual representation learning with bidirectional state space model. In International Conference on Machine Learning ,2024. 2

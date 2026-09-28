@@ -1,0 +1,778 @@
+Title: WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery
+
+URL Source: https://arxiv.org/pdf/2609.31234v1
+
+Published Time: Mon, 28 Sep 2026 01:04:49 GMT
+
+Number of Pages: 38
+
+Markdown Content:
+# WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery 
+
+Zhongyu Pang 
+
+Department of Electronics, National University of Defense Technology, Changsha, China 
+
+pangzhongyu@nudt.edu.cn 
+
+September 2026 
+
+Abstract Problem. Ultra-high-resolution (UHR) remote sensing with vague user intents poses two bottlenecks: visual tokens are expensive , and tool calling must be format-reliable (pretrained models emit zero tool calls zero-shot). Method. WeaveAgent, a two-stage tool-routing agent, decouples routing decisions from visual perception. Stage A is routing-first: emission is trained, not elicited. Stage B executes conditionally: intrinsic queries enter visual answering (full-scene thumbnail; the WeaveEarth-style evidence board as an optional fixed-budget, ≈5k-token com-pression interface with a reported 1.31 × detail ceiling and negative paired deltas); extrinsic queries execute T_call on the original full-resolution imagery, answering from tool observa-tions in a second, observation-masked round (two-turn trajectories). Training: alignment SFT, then GRPO under the routing-first reward RWA2 . Results. Alignment SFT lifts extrinsic routing from 0% to 80.75% (323/400); GRPO suppresses 9 intrinsic mis-emissions while tool selection is unchanged. The trained 2B system does not beat the zero-shot 8B baseline overall (0.263 vs. 0.250 ) — a diagnostic, not leaderboard, contribution. Oracle attribution separates the two ingredients of the repair: loading the observation into context already lifts extrinsic answer accuracy from 0.025 to 0.425 under marker-free cross-mode returns, and the two-turn SFT stage adds a further significant +9 .3 points to 0.518 (0.965 under training-distribution returns; all oracle/annotation-grounded) at a small routing cost. A ±-image ablation shows emission suppression is visually grounded, and a query-register matrix shows LLM-rewritten queries cost the trained checkpoints 2–11 points. Scope. All training and evaluation use the 5,000 / 3,273 / 1,000-record VagueUHR corpus (600 intrinsic + 400 tool-requiring; the 5,000-record base seeds the synthesis pipeline and is not itself used for optimization). Single-pass evi-dence construction runs at 7.31 s per image on an RTX 4090 — faster than reported multi-round search (cross-hardware reference). Code, data, and all evaluation protocols will be released. 
+
+# 1 Introduction 
+
+Ultra-high-resolution (UHR) remote sensing (RS) images — sub-meter scenes that routinely exceed 4,000–10,000 pixels per side — stress vision-language models (VLMs) in a specific way: resizing the scene to the model’s native input discards exactly the dense small objects that make UHR imagery informative, while pushing the original resolution through the visual encoder makes the token cost grow out of control (the images evaluated in this work measure 6,044 px per side at the median and 27,328 px at the maximum; Figure 1 shows both difficulties on one real record). On top of the visual difficulty, RS queries are frequently vague in the sense of RemoteAgent [2]: “count the berthed vessels”, “outline the burned area” — requests that require precise measurement no single 1arXiv:2609.31234v1 [cs.CV] 25 Sep 2026 5{,}000 × 5{,}000 px (target = 0.14% of image)    
+
+> query + tool catalog (text only) Stage A router 80.75%
+> extrinsic routing (0% zero-shot) intrinsic: answer from thumbnail extrinsic: T_call tool answer
+> in a 2nd round
+> no tool tool needed
+> answers on tool-bearing rows: 0.025 0.518 0.965 (single-turn / cross-mode / upper bound)
+> two-stage tool routing for vague UHR intents
+> hey, what is the activity of the top-most plane?
+
+Figure 1: The problem and the answer at a glance. Left: a real test record — a vague query about a target that covers 0.14% of a 5,000 × 5,000 -px image (magnified inset); no thumbnail a VLM accepts resolves it. Right: WeaveAgent routes the query first (Stage A, a routing-first decision stage) and executes conditionally (Stage B): direct visual answering, or a T_call that is answered from its observation in a second round. Headline numbers: extrinsic routing 0% → 80 .75% after alignment training; answers on tool-bearing rows 0.025 → 0.425 → 0.518 → 0.965 across the loading and repair stages (Section 5.7). forward pass can deliver, but rather the invocation of expert tools (detectors, segmenters, counters) on the right image region. The two bottlenecks point to two capabilities of a different nature. Perception is expensive : every visual token costs, and should be spent only after the decision “what needs to be seen” has been made. 
+
+Decision is cheap : the information needed to judge “does this query need a tool, and which one” lives almost entirely in the query text and the tool catalog. This is not speculation but a literature-backed design basis: Toolformer [3] showed that a language model can learn when to call, what to call, and with which arguments from purely textual self-supervision, and RouteLLM [4] showed that a router looking only at the query text can halve cost without quality loss and generalizes across models. When these findings are transported to UHR remote sensing, the natural architecture is to decouple routing decisions from visual perception : a text-first decision stage decides before any visual token is spent on answering; visual tokens enter the context only afterwards, on the path the decision selects. Our own ±-image ablation then shows the strong form of this design basis is only partially attained: the trained router’s emission suppression is visually grounded (Section 5.6) — a boundary we measure and report rather than assume away. 
+
+The WeaveAgent two-stage architecture. Stage A (Section 3.2) is a routing-first decision stage : its decision interface is built around the query q and the tool catalog C (a text-first decision interface), delegates intrinsic queries to answering, and for extrinsic queries selects a tool and emits 
+
+T_call (ek, p ). Stage B (Section 3.3–Section 3.4) executes conditionally: the intrinsic path feeds the visual input (full-scene thumbnail, optionally the evidence board) to the model to generate the answer; the extrinsic path executes the T_call — tools always operate on the original full-resolution imagery — backfills the tool observation (boxes, masks, counts) into the context, and generates the final answer in a second round (two-turn trajectories with observation masking [25]). Decoupling yields three direct benefits: (i) the decision stage is a single cheap text-first step (Section 5.6 2quantifies how far a fully text-only router remains from the trained policy); (ii) the T_call output is a purely textual decision that alignment training can make reliably parseable; and (iii) the tool path suffers no visual-compression loss, because tools see the original image. 
+
+Repositioning the evidence board. We adopt the WeaveEarth [1] structured evidence pipeline (GCC scoring, MSES compression, TPEB/SEM assembly) as an optional compression interface of the Stage-B intrinsic path, and recalibrate its position honestly: it is not an accuracy booster — on three static VQA benchmarks its paired deltas against the 2048-px thumbnail baseline are −1.0
+
+(LRS-VQA), −3.4 (MME-RS) and −2.9 (XLRS) points, and its components show no positive con-tribution in ablations (Section 5.3); it is a fixed-budget compressed visual interface — any UHR image is compressed into two structured views of ≈5k tokens with constant token cost regardless of source size, trading a 1.31 × detail ceiling (Section 6.3) for determinism and local-structure preser-vation on fine-grained task types. We report all of its properties under this “compression interface, not booster” positioning. 
+
+Training recipe: alignment SFT → RWA2 GRPO, a positive gain per component. Tool routing does not appear for free: the zero-shot model emits zero T_call calls, and GRPO from the base model cannot explore the behavior spontaneously (85–90% of rollout groups have zero reward variance). Our recipe has two steps. Alignment SFT seeds the emission behavior with prompts and image formats strictly identical to evaluation, lifting extrinsic routing from 0% to 80.75% (323/400, tool selection 0.905). GRPO with the routing-first reward RWA2 then stabilizes on top: suppressing 9 intrinsic mis-emissions (classification 0.435 → 0.460 , reasoning 0.435 → 0.450 ) while extrinsic tool selection is unchanged (323/400), with healthy training dynamics (zero-variance groups an order of magnitude below the unaligned arms, sequence lengths stable at 165–180 tokens). Under this recipe a third gap surfaced and was addressed: with routing at 80.75%, extrinsic answer accuracy stayed near zero — an observation →answer conversion gap . An oracle attribution study (Section 5.7) localizes the break to the conversion of marker-free tool text (argument values are ≈96% correct while final answers score 0.045 ), and extrinsic answer accuracy rises from 0.025 to 0.425 by loading the observation alone, and to 0.518 with the two-turn SFT stage (McNemar p = 3 .8 × 10 −5), under marker-free cross-mode returns (0.965 under training-distribution returns), at a small routing cost. Query wording is not a hidden confound: on 992 paired records the zero-shot floor is robust to LLM-rewritten natural phrasing ( +3 .1 points, McNemar p = 0 .043 ; Section 5.5), and the trained checkpoints degrade gracefully but measurably on the rewritten register (Section 5.5). 
+
+Contributions. 
+
+1. C1 — A two-stage tool-routing agent architecture. To our knowledge, the first agent ar-chitecture for UHR remote sensing that explicitly decouples a routing-first decision stage whose emission behavior is trained before execution is ever attempted from conditional visual/tool ex-ecution : Stage A performs intrinsic/extrinsic discrimination and tool selection from the query text and the catalog; Stage B answers intrinsic queries visually and executes tools on the orig-inal full-resolution imagery along two-turn trajectories with observation masking. A ±-image ablation shows the stage’s emission suppression is visually grounded: removing image tokens preserves extrinsic routing but collapses intrinsic routing to near zero (Section 5.6). The imple-mentation spans six subsystems ( evidence , skills , agents , mcp , training , data_synthesis ), twelve built-in tools behind a declarative MCP registry [16] with automatic discovery, and a publish/subscribe multi-agent layer. 32. C2 — A fixed-budget compressed visual interface (repositioned). The TPEB +SEM ev-idence board as a compression interface for fine-grained task types: any-size UHR image → fixed token budget (two views, ≈5k tokens), detail ceiling 1.31 × reported honestly; three-benchmark paired characterization ( −1.0/ − 3.4/ − 2.9 points) and component ablations (Section 5.3) jointly support “compression interface, not accuracy booster”. 3. C3 — The VagueUHR dual-split corpus. A vague-query trajectory corpus synthesized over UHR imagery: 5,000 template training (synthesis base; not used for optimization) / 3,273 routing-training (870 tool-call demonstrations) / 1,000 test records (600 intrinsic + 400 tool-requiring; five of ten task shapes unseen in training; tool pool includes the training-unseen tool sm3det with 62 records); plus an LLM-visually-rewritten test split (992 kept + 8 removed; 100% unique queries, 143 sentence-initial word types, zero template phrasing, character-level zero drift of ground truth under independent audit) (Section 4). 4. C4 — A training recipe with design-rationale experiments. The alignment-SFT →
+
+RWA2 GRPO recipe, whose checkable gain is concentrated in alignment SFT (extrinsic rout-ing 0 →80.75%, 323/400) plus a measured, statistically modest GRPO effect (9 intrinsic mis-emissions suppressed, calls 398 → 384 ; extrinsic tool selection unchanged at 323/400; Mean 
+
++0 .7pt, n.s.), plus the design-rationale experiments of Section 6 — why alignment is necessary, why the incentive must be routing-first, the boundary of the compression interface, and an oracle attribution + two-turn repair of the observation →answer conversion gap — each backed by data and transferable to other tool-routing tasks. 
+
+Paper organization. Section 2 reviews related work, including text-only routing and cascades. Section 3 presents the two-stage architecture (Stage A, the Stage-B intrinsic and extrinsic paths, the training recipe, and the two-turn repair). Section 4 describes VagueUHR. Section 5 reports experiments (the routing table, compression-interface characterization and ablations, efficiency, the query-register gradient, the Stage-A ±-image ablation, and tool-execution conversion). Section 6 gives the design-rationale analyses. Section 7 lists limitations and Section 8 concludes. Supplemen-tary tables, figures, and the experiment register are collected in Sections A to C. 
+
+# 2 Related Work 
+
+UHR remote sensing understanding: passive vs. active perception. Passive methods push more pixels or tokens through the model: GeoLLaVA-8K [19] extends the visual context to 8K, and token-pruning pipelines compress gigapixel inputs at inference time [6]. Active methods let the model zoom and search: ZoomEye [20], ZoomEarth [21] and ZoomSearch [22] perform multi-round visual exploration driven by the language model, at multi-round latency cost (Section 5.4). WeaveEarth [1] reframes the problem as evidence organization : candidate patches scored by a cross-modal encoder (SigLIP2 [10]), greedily compressed into a minimal support set, and arranged on a topology-preserving board with structured metadata; it reports 33.38/47.38/47.14% on LRS-VQA / MME-RealWorld-RS / XLRS-Bench with a frozen Qwen3-VL-8B [8]. All of these are tool-free :whatever they cannot resolve from pixels and prompts, they cannot answer. WeaveAgent adopts the evidence pipeline as Stage-B’s optional compression interface (Section 3.3) and adds full tool-routing capability on top. 
+
+RS vision-language models and instruction tuning. A parallel line trains RS-specialized MLLMs by instruction tuning: GeoChat [31] grounds conversations in RS imagery, EarthGPT [32] 4and its spatial successor EarthGPT-X [33] unify multisensor, multitask interpretation under one MLLM, RSGPT [34] and LHRS-Bot-Nova [35] pair large instruction corpora with dedicated bench-marks, RS-LLaVA [36] couples captioning with VQA, VHM [38] adds explicit anti-hallucination training, SkySenseGPT [37] builds a 1.8M-sample instruction corpus on a multiscale RS foundation model, and RS5M/GeoRSCLIP [39] scale vision-language pretraining for RS retrieval. These mod-els broaden what can be answered from pixels, but answer every query through the same monolithic generate-from-pixels interface: none decides whether external capabilities are needed, nor routes to tool backends — the axis our two-stage router addresses. WeaveAgent is complementary rather than competing: its Stage-B intrinsic path is exactly such a VLM, and the trained router sits in front of it. 
+
+Agentic remote sensing and RL for tool use. RS-Agent [23], EarthAgent [24] and Open-EarthAgent [25] orchestrate expert models for earth observation. Two OpenEarthAgent designs are adopted directly by our Stage-B extrinsic path: two-turn trajectories with observation masking 
+
+(tool-observation tokens are excluded from the training loss, so the policy learns to use observations rather than recite them) and schema-registration-as-integration (tools enter the catalog as declar-ative schemas, no code changes). RemoteAgent [2] is closest to ours: it defines the vague-intent routing problem, the T_call action space and the VagueEO protocol (10 task shapes, 5 unseen in training), reporting 95.0% intent-recognition accuracy with Qwen2.5-VL-7B [9], but its router consumes a downscaled image and its GRPO stage covers intrinsic shapes only, leaving tool routing a zero-shot capability. Vague queries as such are not unique to remote sensing: ambiguous and underspecified visual questions have a longer history in VQA, both as datasets that ground what an ambiguous question could refer to [26] and as models that learn to ask clarifying follow-ups [27]; RemoteAgent is the work that carried this axis into EO agents, and VagueUHR extends it to UHR imagery with tool trajectories. Our VagueUHR corpus, explicit tool-selection reward, and two-stage training recipe are direct responses; we additionally provide both a TRL-based path [15] and an ms-swift configuration mirroring the paper’s stack (Section 3.5). GRPO [11] group-normalizes sequence-level rewards and underpins verifiable-reward (RLVR) training [12]; RemoteAgent applies answer-verifiable rewards (Hungarian-matched IoU, relative-error decay, label coverage). Also di-rectly relevant to our cold-start strategy are ToRL’s tool-integrated RL (forced tool calls to seed exploration) [28], ToolRL’s decomposition of tool rewards into format and selection terms [29], and DAPO’s treatment of zero-variance groups [30] — together supporting “SFT seeds the behavior, RL amplifies it” pipelines (Sections 3.5, 6.1 and 6.2). 
+
+Text-only routing and cascades. Stage-A’s design builds on a line of text-only routing work. Toolformer [3] samples call sites from plain text corpora under self-supervision, letting a model learn when to call, which API, and with which arguments — evidence that tool-calling decisions are essentially text-decidable. RouteLLM [4] trains routers that see only the query text to dispatch between strong and weak models, roughly halving cost without quality loss on several benchmarks and generalizing across models — evidence that query text carries sufficient routing signal. Earlier cascading and query-complexity routing practice is consistent with both. WeaveAgent transfers this conclusion to extrinsic/intrinsic discrimination and tool selection in UHR remote sensing with a text-first decision interface (Section 3.2); our own ±-image ablation then shows the transfer is only partial — the trained policy’s emission suppression is visually grounded (Section 5.6). 
+
+Benchmarks and tool backends. LRS-VQA [6], the remote-sensing subset of MME-RealWorld [7] and XLRS-Bench [5] are the standard UHR RS evaluation suites (Section 5.1 details our stratified-5sampling protocol). For dense prediction we rely on segmentation backends in the Segment Anything family [17, 18], exposed through MCP. 
+
+Differences from the closest systems. Relative to WeaveEarth [1]: we add two-stage tool routing and training; its evidence pipeline is adopted as Stage-B’s optional compression interface, with the recalibrated positioning of Section 3.3. Relative to RemoteAgent [2]: we add an explicit training signal for the routing decision stage (alignment SFT + RWA2 ), a two-turn tool-execution path with an oracle attribution and repair of the conversion gap, a runnable training stack, and a public corpus. Relative to zoom-and-search methods [20, 22]: single-pass text-first routing plus single-pass evidence construction replaces multi-round visual exploration (efficiency comparison in Section 5.4). 
+
+# 3 The WeaveAgent Two-Stage Architecture 
+
+WeaveAgent is implemented as the weaveagent package with six subsystems — evidence , skills ,
+
+agents , mcp , training , data_synthesis — twelve built-in tools behind a declarative MCP registry with automatic discovery, and a publish/subscribe multi-agent layer. The skills subsystem wraps every callable capability behind a uniform interface (five built-in skill families — evidence retrieval, detection, segmentation, counting, temporal comparison — front the twelve built-in tools, and any MCP-registered tool can be exposed as a skill without code changes); the agents subsystem provides typed-event orchestration, and for all evaluations below the router runs as one agent over this layer, keeping framework overhead out of the reported latencies. 
+
+3.1 Overview 
+
+Figure 2 gives an overview. Formally, given a query q and a tool catalog C (text), Stage A produces the routing decision 
+
+aroute = πroute (q, C ) = 
+
+(ANSWER , intrinsic query: delegate to Stage-B visual answering ,
+
+T_call (ek, p ), extrinsic query: tool ek applied to region p, 
+
+(1) and Stage B executes conditionally on aroute : the intrinsic path generates <answer> spans from the visual input; the extrinsic path executes the T_call , backfills the tool observation o into the context, and generates the final <answer> in a second round. The whole system is driven by the same backbone (Qwen3-VL-2B [8]) trained with the recipe of Section 3.5; Stage-A’s decision interface is designed to require only text (query + catalog). In the unified prompt used for all reported training and evaluation runs, the thumbnail and evidence board are also present (matching the answering-path format), so that trained behavior transfers unchanged to evaluation; whether the routing decision itself depends on those visual tokens is exactly what the ±-image ablation isolates — it does: emission suppression is visually grounded (Section 5.6). 
+
+Why decouple. (i) Token economics : the decision stage is text-first by design; UHR visual tokens should be spent only after the decision, and only on the selected path — how far the trained policy attains the text-only ideal is measured in Section 5.6. (ii) Format reliability : the T_call is a textual decision that alignment training can make reliably parseable (Section 6.1); a decision interface mixed with visual tokens inherits both visual and format fragility. (iii) A loss-free tool path : tools act on the original full-resolution imagery, so extrinsic queries are never bounded by visual compression — the compression interface serves the intrinsic path only (Section 3.3). 6Stage A · routing decision (text-only) Stage B · conditional execution     
+
+> UHR remote sensing image (>6k px)
+> + vague query
+> Evidence construction (fixed budget k = 6): global thumb + TPEB
+> Stage A: text-only router
+> (query + tool catalog; T_call or direct answer)
+> tool catalog (registered schemas)
+> skysense_detection ref-seg sm3det
+> trained: aligned SFT + GRPO
+> intrinsic path (no tool needed)
+> read thumb + TPEB, direct <answer...> output
+> extrinsic path (tool required)
+> T_call tool execution result loaded
+> as turn-2 user message (RemoteAgent format) answer
+
+Figure 2: WeaveAgent overview. Stage A performs intrinsic/extrinsic discrimination and tool se-lection from the query and the catalog (a routing-first decision stage whose emission suppression the ±-image ablation shows to be visually grounded; Sections 3.2 and 5.6). Stage B executes con-ditionally: the intrinsic path answers from the thumbnail (optionally the TPEB/SEM compression interface); the extrinsic path executes the T_call on the original full-resolution imagery and an-swers from the tool observation in a second round. 
+
+3.2 Stage A: Text-Only Router 
+
+Input and output. Stage A reads two pieces of text: the query q and the tool catalog C, the latter rendered automatically from the declarative MCP registry [16] (tool names, functional descriptions, argument schemas). Its output is the routing decision of Eq. (1): intrinsic queries are delegated to answering; extrinsic queries select a tool ek and emit T_call (ek, p ), with p grounded in the catalog’s region syntax. Final answering after the tool observation returns belongs to Stage B (Section 3.4). 
+
+Design basis. Tool-routing decisions are largely determined by the query text: Toolformer [3] shows that pure-text self-supervision suffices to learn the three elements of tool calling (when, what, with which arguments); RouteLLM [4] shows that text-only routing halves cost without quality loss and generalizes across models. Stage-A’s decision interface is therefore designed to need no visual tokens: this would decouple routing cost from image size entirely (routing a 27,328-px image costs the same as routing a 4,096-px one), and would reduce “routing generalization to unseen tools” to a pure-text problem — adding one schema entry to the catalog; the sm3det measurement of Section 4.3 shows registration alone does not deliver this ( 0/62 on the unseen tool), so this remains design intent, not a demonstrated property. In the unified prompt of Section 3.1 the visual inputs are nonetheless present. Our own ±-image ablation (E19; Section 5.6) shows that the strong form of this design basis does not hold for the trained 2B policy: with image tokens removed (identical prompts and records), extrinsic routing is preserved ( 0.8375 vs. 0.8075 ) but intrinsic routing collapses ( 0.985 → 0.0217 )and the model emits a call on almost every record (987 of 1,000). The visual input is the signal that suppresses emission on intrinsic queries: knowing when not to call is visually grounded in UHR imagery. The 15 × latency gap ( 0.257 s vs. 3.85 s per record) makes a truly text-only router an attractive but unattained target; distilling one is future work (Section 7). 7Action space. Following RemoteAgent, extrinsic decisions emit the hybrid action T_call (ek, p )
+
+with ek chosen from the injected catalog. The behavior is strictly binary — emit a T_call or delegate to answering — with no degenerate output forms (smoke audit, E12). The direct ablation of zero-visual-token vs. image-conditioned routing has been run (E19, Section 5.6): removing image tokens keeps extrinsic routing but collapses intrinsic routing and re-opens emission on almost every record, so Stage A rests on the literature above, on the end-to-end routing measurements of Section 5.2, and on this measured boundary of the text-only design basis. 
+
+3.3 Stage B (Intrinsic Path): Visual Answering with an Optional Compression Interface 
+
+Default path. The answering input for an intrinsic query is the full-scene 2048-px thumbnail plus the query text — exactly the observation interface of the static VQA baseline. 
+
+Optional compression interface (TPEB + SEM). For fine-grained task types that need local detail, WeaveAgent offers an optional structured compression interface that compresses an arbitrary-size UHR image into a fixed token budget (thumbnail + evidence board, two views ≈5ktokens). Evidence construction adopts the WeaveEarth pipeline; our configuration is aligned with the authors’ released script item by item (encoder siglip2-so400m-patch16-naflex [10], grid 6×6
+
+with overlap 0.1, anchor top-8, evidence budget k=6 , 448-px evidence patches). Given image I and query q, candidate patches {pi} are sampled on the overlapping grid and encoded jointly with the query and the global thumbnail g; each candidate receives a Global Context Constraint (GCC) score 
+
+si = sim( pi, q ) + λ sim( pi, g ), λ = 0 .35 , (2) where both similarity terms are cosine similarities in the SigLIP2 embedding space. The top-a
+
+anchors ( a=8 ) feed a training-free greedy pass that selects the MSES under the budget k:
+
+S∗ = arg max   
+
+> S⊆C, |S|≤ k
+
+Rel( S, q ) + α Cov( S) − β Red( S), (3) trading off relevance, coverage and redundancy. Selected regions are expanded with their grid neighbors to avoid fragmentation and woven into the TPEB: a compact board in which each selected region occupies a cell while the relative spatial topology of the scene is preserved. Every board unit is described by a SEM tuple ei = ( pi, u i, b i, n i, r i, ℓ i) — patch identifier, role (anchor/support), grid position, bounding box, neighbor set, and scale — rendered into the prompt, e.g. 
+
+> [Patch R14 | role=support | grid=(2,1) | box=(0.250,0.417,0.200,0.200) | neighbors={R7,R8,R9,R13,R15,R19,R20,R21} | scale=grid_6x6]
+
+Coordinate semantics are (cx, cy, w, h ) normalized bounding boxes; evidence patches are resized, never upsampled. 
+
+Positioning: compression interface, not booster. The value proposition is token determin-ism , not accuracy: token cost is fixed (two views, ≈5k tokens) regardless of source size, whereas the naive detail-preserving alternative (high-resolution crop stitching) has a token cost that grows linearly with source size and detail demand, and the thumbnail baseline, though equally fixed-cost, abandons local detail entirely. The costs are reported just as honestly: a 1.31 × detail ceiling (Sec-tion 6.3), coverage of only 6 of 36 grid cells, and destroyed global spatial continuity; on three static VQA benchmarks the paired deltas against the thumbnail baseline are −1.0/ − 3.4/ − 2.9 points, and component ablations show no positive contribution (Section 5.3). We therefore position it as an optional compression interface for fine-grained task types , enabled per task type, and make no accuracy-improvement claim. 8Implementation faithfulness. We reimplement the MSES selection (Eq. (3)) per the paper’s algorithm : in the authors’ released code the candidate pool is truncated to the top-8 anchors before the budget-k greedy loop, so the loop never executes (a neutral implementation-difference record, Section 6.4); the paper-faithful reimplementation is therefore retained rather than aligned to the release. Shared components were audited item by item and agree: encoder and scoring formula, grid/overlap/anchor/board parameters, coordinate semantics, board labels (byte-identical), resize behavior, and answer-matching rules; the k pipeline was verified with a budget probe ( k=2 /4/6/8/10 
+
+yield 2/4/6/8/10 regions). 
+
+3.4 Stage B (Extrinsic Path): Tool Execution, Observation Backfill, and Two-Turn Trajectories 
+
+Execution. After Stage A emits T_call (ek, p ), the system executes the tool on the original full-resolution image — the extrinsic path passes through no visual compression, so detection, segmen-tation and counting precision are bounded only by the tool backend itself. Backends are pluggable with a three-tier fallback (native MCP stdio servers → released HTTP expert services → generic JSON endpoints), so the same router drives both real deployments (e.g., DirectSAM-class segmen-tation [18]) and annotation-grounded simulated backends; we disclose per experiment which tools are real. 
+
+Observation backfill and two-turn trajectories. Tool outputs (detection boxes, mask statis-tics, counts) are serialized into a structured observation o and backfilled into the context; the second round generates the final <answer> from (q, C, o ). Training follows OpenEarthAgent’s [25] two-turn trajectories with observation masking : observation tokens are excluded from the loss, so the policy learns to use observations rather than recite them. 
+
+Schema registration as integration. Because tools register by declarative schema and the catalog is text (Section 3.2), an unseen tool can be injected into the catalog after training to test routing generalization without retraining (Section 4.3). 
+
+Known gap, diagnosed and partially repaired. With extrinsic routing at 80.75%, final-answer accuracy on extrinsic tasks remained low (detection 0.035 –0.045 , segmentation 0.005 across E13/E15 under the single-turn protocol) — an observation →answer conversion gap . An oracle attribution study (Section 5.7) localizes the break to the conversion of marker-free tool text rather than to calling quality, and a two-turn trajectory SFT stage (Section 3.6, evaluated in Section 5.7) partially repairs it under protocol caveats disclosed there. 
+
+3.5 Training Recipe: Alignment SFT → RWA2 GRPO 
+
+Training has two steps, each addressing a failure mode that must be fixed separately (experimental rationale in Sections 6.1 and 6.2). 
+
+Step 1: alignment SFT (seeding + format alignment). The cold-start set is built from 870 ground-truth tool-trajectory demonstrations (syntax character-identical to the parser, argu-ments with all required keys; histogram ref-seg 579 / skysense-det 291 ) plus 870 intrinsic balancing demonstrations (to prevent indiscriminate calling), rebuilt with prompts and image formats strictly identical to evaluation — training and evaluation prompts are byte-identical at the non-image level 9(the difference list of Table 14 is, configuration by configuration, exactly the fix list). SFT config-uration: Qwen3-VL-2B [8], LoRA r=32 /α =64 [13] on all linear layers, 1,000 steps, effective batch 16, lr 10 −5 cosine with warmup; loss 2.085 → 0.19 , 85.5 min, peak 10.3 GB. The acceptance gate is an evaluation-path smoke test (threshold 0.80 ; passed). 
+
+Step 2: GRPO with the routing-first reward. We compare sequence-level rewards under GRPO [11] with group-normalized advantages ˆAi = ( ri−¯r) / std( r) over G rollouts per prompt: G=4 
+
+generations, rollout temperature 0.95 , learning rate 10 −6, 300 steps ( ≈3 epochs), generation batch 8 (effective optimization batch 32 under TRL 1.12.0; the small generation batch cuts generation memory to a quarter [15, 14]), fitting on a single 24-GB GPU (measured peak 13.8–15.8 GB). Training rows carry thumbnail paths (on disk, lazily decoded) and the tool-catalog text; the SEM block is disabled during training to match the evaluation-time observation interface. LoRA weights are merged before evaluation. RemoteAgent’s official stack is ms-swift with DeepSpeed ZeRO-2 and trains only on intrinsic tasks; we provide both a TRL-based path [15] and an ms-swift configuration mirroring the paper’s stack in the released code. The 8B backbone could not be GRPO-trained within 24 GB (Section 7). 
+
+Rewards. The paper-faithful answer-only reward RRA [2] scores only the <answer> field, dis-patched by ground-truth format: 
+
+RRA (apred , a gt ) = 
+
+
+
+Rcoord , coordinate gt (Hungarian-matched IoU) ,Rnum , scalar gt ( e−3 |p−g|/|g| with edge-case rules) ,Rtext , label gt (coverage |gt ∩ pred |/|gt | ),
+
+(4) matching RemoteAgent’s published reward. Our UnifiedMultimodalReward RWA adds two explicit terms: 
+
+RWA = Rans + wt ⊮[ˆ e = e∗] + wf ⊮[well-formed ], (5) where Rans is a format-aware answer match (normalized exact / integer / substring / token-F1 ≥ 0.8
+
+/ MCQ letter match), ˆe is the chosen tool, e∗ the trajectory tool; the measured configuration is 
+
+wa=1 .0, wt=0 .3, wf =0 .1, plus a 0.2 consolation score for extrinsic no-calls. The per-case scores are listed in Section B (Table 17). The tool-selection term is the key design divergence — RemoteAgent never trains tool routing, whereas Eq. (5) rewards choosing the right tool — but the structure has three economic defects: (i) the SFT-taught behavior (a bare T_call ) caps at 0.35 , only 0.24 above “no-call + wrong answer” ( 0.11 ); (ii) answering an extrinsic task correctly ( 1.11 ) is worth 3.2× acorrect call ( 0.35 ); (iii) intrinsic tasks are 73% of training data (2,400/3,273), and calling on them scores 0. The aggregate consequence (Table 1): with pans the policy’s answer accuracy on extrinsic tasks, the expected reward of always answering directly ( 0.11 + pans ) exceeds that of correct routing (0.35 ) once pans ≥ 0.24 — the RL-rational policy is “answer everything”. E12’s measured extrinsic direct-answer accuracy is pans = 0 .285 (it answers directly on 400/400 extrinsic rows), just above the 0.24 indifference threshold — “always answer directly” was indeed the empirically rational policy for the unaligned model, the equilibrium that RWA2 ’s incentive inversion is designed to move the policy away from. 
+
+The routing-first revision RWA2 . The revision is 
+
+RWA2 (response ) = 1 .0 rans + 1 .0 rtool + 0 .5 rfmt , (6) 10 Table 1: Per-case rewards on extrinsic tasks and the expectation algebra ( reward_wa2.py ; per-case values, no measured capability parameters). Weights: RWA = 1 .0 answer + 0 .3 tool + 0 .1 format with a 0.2 no-call consolation; RWA2 = 1 .0 answer + 1 .0 tool + 0 .5 format, no consolation, and a correct route is automatically credited with the answer term ( rans = max( rans , 1) ; Eq. (6)). With 
+
+pans the policy’s answer accuracy on extrinsic tasks, ERWA [always-answer ] = 0 .11 + pans exceeds 
+
+E[correct routing ] = 0 .35 once pans ≥ 0.24 : all-direct-answer is RL-rational. Under RWA2 the inversion ( 2.25 ≫ 0.25 + pans ) is parameter-free — it holds for any pans ≤ 1.            
+
+> Policy (on extrinsic tasks) RWA RWA2
+> Correct routing (right tool +call) 0.35 2.25
+> Wrong tool call 0.05 0.25 Silent skip (no call, no answer) 0.06 0.0
+> Always answer directly: correct / wrong 1.11 / 0.11 1.25 / 0.25
+
+with indicator rules transcribed from the released reward_wa2.py (RWA keeps the 1.0/0.3/0.1
+
+weights of Eq. (5) and the format rules below): rans = 1 iff the <answer> span matches the ground truth, and on extrinsic tasks a correct route is credited with the answer term automati-cally (rans = max( rans , 1) — the answer comes from the tool); rtool = 1 iff the emitted call matches the trajectory tool, and 0 for a wrong call or a silent skip — the 0.2 no-call consolation of RWA is deleted (silent skip = 0 ); on intrinsic tasks rtool = 1 for correctly not calling and 0 for a stray T_call ;the format term contributes up to 1.0 unweighted ( 0.5 per well-formed component: the answer span and the T_call ), weighted by wfmt = 0 .5; the canonical extrinsic emission — a bare, well-formed 
+
+T_call without an answer span — earns 0.25 , giving correct routing 2.25 = 1 .0 + 1 .0 + 0 .25 (Ta-ble 1). Three structural modifications follow — delete the no-call consolation score ( 0.2 → 0), raise the routing weight ( 0.3 → 1.0), and split the format term into two 0.5 components — correct direct answers actually rise ( 1.11 → 1.25 ), but correct routed calls rise more ( 0.35 → 2.25 ), inverting the incentive — and they invert the expectations (Table 1): correct routing 2.25 ≫ direct answering 
+
+0.25 –1.25 per case, and the inversion is parameter-free — it holds for any answer accuracy. Under 
+
+RWA the RL-rational policy is all-direct-answer (measured: mean completion length converges to 16–25 tokens, i.e. no calls); under RWA2 it is routing (training dynamics healthy, Table 5). 
+
+3.6 Two-Turn Trajectory SFT: Repairing the Observation →Answer Conversion 
+
+The oracle study of Section 5.7 motivated a third training stage on top of the alignment-SFT merged weights (the E13 base), as illustrated in Figure 3. The fine-tuning uses 1,740 rows: 870 two-turn tool demonstrations — turn 1 identical to the E13 prompt, image and T_call ; turn 2 a [Tool Call] 
+
++ [Execution Result] exchange followed by the RemoteAgent-style follow-up prompt, with the observation stuffed in the embedded format of Section 5.7 — plus 870 single-turn intrinsic demon-strations (anti-regression). Configuration: LoRA r=32 /α =64 on q/k/v/o with dropout 0.05 , lr 10 −5
+
+cosine with 3% warmup, batch 1× accumulation 16, 1,000 steps, bf16 with gradient checkpointing, max length 8,192; 276 min total, final loss 0.165 , peak 15.1 GB. The stuffing format replicates, verbatim, the [Tool Call] /[Execution Result] loop of RemoteAgent’s released inference script. All returns used in training are oracle/annotation-grounded; the evaluation protocols are disclosed in Section 5.7. E17 therefore shares the E13 base rather than inheriting the E15 GRPO check-point: E15 and E17 are two branches from E13 (a single-turn GRPO specialist and a two-turn SFT specialist), not sequential stages, and E15–E17 differences reflect the branch rather than a third stage. 11 E13 aligned SFT 
+
+> 1,740 eval-aligned demos (thumb+board, byte-identical prompt); emission unlocked 0% -> 80.75%
+
+E15 GRPO RWA 2
+
+> routing-first reward (correct route 2.25 >> direct 0.43); mis-emission suppressed, zero-variance groups -10x
+
+E17 two-turn SFT                  
+
+> 870 two-turn demos (observation->answer conversion) + 870 intrinsic guards; Summ 0.025 -> 0.518
+> training recipe (same 2B backbone, LoRA per stage)
+> E17 two-turn training demo (RemoteAgent inference format)
+> turn 1 user [thumbnail] [evidence board] query +tool catalog
+> turn 1 assistant T_call(tool, args)
+> turn 2 user
+> [Tool Call] tool(args) [Execution Result] {tool return} follow-up +answer format
+> turn 2 assistant <answer>gt</answer>
+> loss on both assistant turns only (completion-only; prompts masked)
+> loss mask
+
+Figure 3: The training recipe (left): alignment SFT and the E15 GRPO stage on the single-turn branch; right: the E17 two-turn stage, which branches from the E13 base. Turn 1 is byte-identical to the E13 aligned demonstrations; turn 2 loads the tool observation in the RemoteAgent inference format. The completion-only loss covers both assistant turns — emission (inherited) and observation →answer conversion (new in E17). 
+
+# 4 The VagueUHR Corpus 
+
+No public corpus links vague UHR intents to tool-call trajectories: VagueEO [2] ships an evaluation protocol but trains on intrinsic tasks only, and WeaveEarth-style benchmarks contain answers but no tool traces. VagueUHR fills the gap synthetically : trajectories are constructed on top of established UHR benchmarks so that every answer is derived from existing annotations and never model-generated. This section is kept deliberately brief; every disclosure in it is substantive. 
+
+4.1 Synthesis Pipeline 
+
+Records are bootstrapped from LRS-VQA, MME-RealWorld-RS and XLRS-Bench imagery and annotations. The pipeline has three stages: (i) a query generator maps each source record to one of ten task shapes and emits a deliberately vague query via type-preserving vagueness operators from a template bank; (ii) a trajectory synthesizer constructs the reference plan — an intrinsic answer, or T_call (tool , region ) steps grounded in the annotations — together with the assumed tool catalog; (iii) a rule-based validator checks query–annotation–trajectory consistency, schema compliance, and jargon leakage, rejecting any failing record; the shipped corpus passes validation at 100%. The LLM query-paraphrase channel is not enabled on the training side, reported as such; the test-side LLM-visual-rewrite split is described next. 12 Table 2: VagueUHR dual splits. Tool-trajectory records carry explicit T_call steps; all answers derive from source annotations. Five of the ten evaluation task shapes never appear in training; the test tool pool contains one training-unseen tool (sm3det, 62 records).                                           
+
+> Split Records Tool-traj. records Tool pool Task shapes Train (tem-plate) 5,000 — (all intrinsic) —5 (training-visible) Routing-train (train_tools )3,273 873 (870 rendered tool-call demos; 3 skipped: gt trajectory has no real tool step; 0 render failures) 2 visible: ref-seg 579 / skysense-det 291 2,400 intrinsic +873 tool Test (template) 1,000 400 3: skysense 138 +
+> sm3det 62 (unseen) +
+> ref-seg 200 10 (5 unseen in train-ing); 600 intrinsic +400 tool Test (LLM-rewritten) 992 kept +8removed (gt– image conflicts)
+> =1,000 593 intrinsic +399 ex-trinsic (8 removed) same same
+
+4.2 Dual Splits and Statistics 
+
+Table 2 summarizes the corpus. One documented deviation from the VagueEO protocol: absent bi-temporal imagery in the sources, the change-detection shape collapses to detection. The 873 tool-trajectory records in the routing split teach the syntax and mechanics of T_call over the training-visible tool categories; five of the ten evaluation shapes never appear in training, so routing 
+
+to those shapes measures generalization, not memorization. 
+
+Role of each split. The 5,000-record template split is the synthesis base : the 3,273-record routing-training split (with tool trajectories), both test splits, and the clear-register control of Section 5.5 are all derived from it. It is not itself used for optimization — the two training stages consume the 1,740 aligned demos and the 3,273 routing-training records respectively. A clear-register control split ( VagueUHR_test_clear.jsonl , 1,000 records) is additionally built for Section 5.5: the original benchmark questions are recovered by joining on image id and answer (276 ambiguous keys resolved by token overlap with the vague query; the instruction tail stripped), replacing only 
+
+query.text .
+
+LLM-visually-rewritten test split. An LLM (GLM-5.3-Flash) rewrote the template queries per image, looking at the image : 992 records kept, 8 skipped for ground-truth–image conflicts; 100% unique queries, 143 sentence-initial word types, zero template phrasing; ground truth, images and task types were audited independently with character-level zero drift . Diversity contrast (template 
+
+→ rewritten): distinct queries 92.6% → 100%; “What. . . ” openings 35.7% → 0.9%; sentence-initial word types 31 → 143. The two test splits coexist so that query surface wording can be treated as a controlled variable; the paired wording-sensitivity measurement is Section 5.5. 
+
+Clear-register split. A third, clear-register variant is shipped in the corpus directory datars/ 
+
+(VagueUHR_test_clear.jsonl ) and serves as the clear column of the register matrix (Table 10): unambiguous queries are reconstructed by joining each test record to its source-benchmark ques-tion via image id + answer, token-overlap disambiguation resolves all 276 ambiguous joins, and instruction tails are stripped. 13 4.3 Unseen-Tool and Unseen-Shape Design 
+
+The 400 test tool tasks use three tools: skysense_detection (detection/counting; 138 records), 
+
+referring_expression_ segmentation (segmentation; 200 records), and sm3det_oriented_detection (62 records) — the last entirely unseen in training . Because the catalog is text and registration is declarative (Sec-tion 3.2, Section 3.4), routing to sm3det tests generalization to a schema entry never seen in training. The result is negative, and we report it as a finding: registration makes the tool visible (its schema enters the catalog) but not usable — on the 62 unseen-tool queries all three trained checkpoints (E13/E15/E17) route 0/62 , with emissions collapsing onto the seen tools ( skysense_detection 48, 
+
+referring_expression_segmentation 3, no call 11). Tool generalization requires exposure, not registration. Only two tools are training-visible versus three at test time — an intentional asymme-try. Other catalog tools (e.g., change3d_bcd , region_contour_extraction ) remain available to the router at inference. The same logic applies to task shapes: five of the ten evaluation shapes never appear in training. The tool-selection metrics of Section 5.2 are computed over all 400 extrinsic records, including the 62 unseen-tool records. 
+
+4.4 Honest Labeling 
+
+Four disclosures: (i) all template-split records carry vague_level = 0 .5 and source = heuristic — vagueness is templated and narrower than open-ended user phrasing; (ii) 11% of test answers are unseen in training ; (iii) 34 loose-count queries carry hedge wording; (iv) the six test records drawn from the two 1213 source images (the cluster flagged by the annotation audit) were manually re-checked against the imagery: five labels were confirmed, and one was identified as a source-annotation misread (the “surrounding area” query labeled urban whose surroundings are rural); the record is flagged for correction in the next corpus revision and is retained here unchanged so that the test set remains byte-identical to the released version. The 8 removals in the rewritten split are precisely the output of the annotation–image consistency check. 
+
+# 5 Experiments 
+
+5.1 Setup and Stratified-Sampling Protocol 
+
+Benchmarks and stratified sampling. We evaluate on LRS-VQA (7,333 questions; 8 cat-egories), the remote-sensing subset of MME-RealWorld (3,738 multiple-choice questions; Color, Count, Position), and XLRS-Bench-lite (3,080). Because full-benchmark sweeps are prohibitive on our single-GPU budget, all our numbers are computed on category-proportional stratified samples: 1,500 records per benchmark for the compression-interface characterization (seed 0; all 8 LRS cat-egories covered with proportions matching the full set; MME position 33.6% / color 33.5% / count 32.9%), 500 per variant for the component ablations and the k-scan, and 300 for the official-script comparison. Stratified estimates are unbiased but carry sampling noise; we therefore report paired 
+
+evidence-on/off comparisons on identical samples and, where possible, McNemar tests. Our strat-ified estimates are not directly comparable to paper-reported full-benchmark numbers , and we never place them in the same row without saying so. On XLRS we can run 7 of the 8 subcategories (SR is unavailable to us; OP contributes 53.9% of our sample), so per-subcategory columns cannot be matched to the WeaveEarth paper’s Table 2; overall (weighted) accuracy remains comparable. 14 Backbone-to-claim map. Two backbones appear, each tied to specific claims: the trained 2B (Qwen3-VL-2B, all of E13/E15/E17) carries every routing, reward, and conversion result (Sec-tions 5.2 and 5.7); the zero-shot 8B (Qwen3-VL-8B, E3a and the E14 wording arms) is used only as the zero-shot floor and its wording-robustness check, plus the compression- and efficiency-interface characterizations (Sections 5.3 and 5.4), which involve no training. No table mixes backbones within a comparison; the 2B scale limitation is Section 7 item 1. 
+
+Decoding and matching. All evaluations use greedy decoding (temperature 0), matching the official scripts: paired comparisons are the measurements most sensitive to decoding noise, and a 
+
+±1–2-point sampling-noise floor swamps most claimed gains at these sample sizes — our earlier sampling-mode runs were an accident; those outputs are quarantined — the quarantine boundary is every sampling-mode output directory, and none of them enters any table — and no number in this paper comes from them. Answer matching follows WeaveEarth’s released rules (normalized exact / integer / substring / token-F1 ≥ 0.8) plus MCQ letter matching; MCQ option instructions must be ordered after the SEM region metadata (Section 6.4). 
+
+Backbones and hardware. Compression-interface and intrinsic-path evaluations use Qwen3-VL-8B (matching WeaveEarth) served by vLLM 0.27.1 [14] (FP8) on a single RTX 4090 (24 GB); routing training and all two-stage evaluations use Qwen3-VL-2B. RemoteAgent’s official numbers use Qwen2.5-VL-7B under its own protocol and are reported separately; we do not co-scale them with ours. 
+
+Positioning with respect to public benchmarks. All headline numbers are measured on VagueUHR-test rather than on public RS suites. This is deliberate: the quantities under study — whether to call, what to call, and whether a call converts into an executed observation — are properties of the query–tool interaction protocol, not of single-image perception, and public suites expose no executable tool backends, so none of our headline metrics is reproducible on them. Cross-model perception rankings on those suites [31, 32, 34, 35] answer a different question and are treated as related work, not baselines; the tool-execution ceiling is instead bounded from above by the oracle arms (Section 5.7). 
+
+5.2 Routing and Tool Metrics on VagueUHR-test 
+
+The pre-training floor is absolute — and protocol-bound. The zero-shot Qwen3-VL-8B router and GRPO directly from the 2B base (both reward arms) never emit a T_call : across all 1,000 test records, tool invocations are 0, consistent across three independent configurations; a loose substring re-scan finds 3 “T_call” occurrences — all from the loose substring scan of the training-set completions, where emitting a call is the taught behavior — while all 3,000 evaluation outputs give 0 under a permissive regex, excluding parser false negatives (E3a, E3b). Any post-training extrinsic competence must therefore be trained in, not elicited: zero-emission under the T_call protocol is a 
+
+format-compliance behavior (Section 6.1), not a capability ceiling. 
+
+Alignment SFT unlocks extrinsic routing (largest single gain). Alignment SFT lifts ex-trinsic routing from 0% to 80.75% (95% Wilson CI [0 .769 , 0.842] ) (323/400), with 398 emissions and tool selection 0.905 — an absolute gain of +80 .75 points. 15 Table 3: Routing and tool metrics on VagueUHR-test (1,000 records; 600 intrinsic + 400 tool-requiring; five task shapes unseen in training; all greedy). Intr. = intrinsic routing accuracy; Extr. = extrinsic routing accuracy; T-sel. = fraction of all records whose tool decision is correct (a correct no-call on an intrinsic record counts as correct, as does an emitted call matching the ground-truth tool on an extrinsic record; hence E13’s 0.905 = (0 .970 ×600+323) /1000 ); Calls = number of T_call 
+
+emissions; Mean = overall answer accuracy over all 1,000 records. Call accounting: E13’s 398 =
+
+380 extrinsic single-calls + 18 intrinsic mis-emissions; E15’s 384 = 375 + 9. The native-channel row emits through the official tools= channel rather than T_call ; its Mean is not measured. ∗With zero emissions the tool-selection aggregate is a bookkeeping artifact (nothing to judge), not a measured capability.                                             
+
+> Model / training stage Intr. Extr. T-sel. Calls Mean Qwen3-VL-8B zero-shot (E3a) 1.000 (600/600) 0.000 (0/400) 0.600 ∗00.2630 GRPO RRA from 2B base (E3b) 1.000 0.000 0.600 ∗00.2420 GRPO RWA from 2B base (E3b) 1.000 0.000 0.600 ∗00.2570 Base 2B, native tools= channel (zero-shot) 0.015 (9/600) 0.12 (48/400) 0.057 986 —Aligned SFT (E13, 2B) 0.970 0.8075 (323/400) 0.905 398 0.2430
+> +GRPO RWA2 (E15) 0.985 0.8075 (323/400) 0.914 384 0.2500
+
+RWA2 GRPO suppresses and stabilizes. On top of alignment SFT: extrinsic routing holds at 80.75%; intrinsic routing 0.970 → 0.985 (mis-emissions on intrinsic tasks reduced); emissions 398 →
+
+384 ; tool selection 0.905 → 0.914 (+0 .9 points on overall routing, i.e., the 9 suppressed intrinsic mis-emissions; extrinsic tool selection unchanged at 323/400); overall accuracy 0.2430 → 0.2500 
+
+(+0 .7 points). The suppression reaches answer quality: intrinsic answer accuracy rises (classification 
+
+0.435 → 0.460 , reasoning 0.435 → 0.450 ). 
+
+Statistical rigor: pairwise McNemar on the headline gains. All checkpoint comparisons are paired on the same 1,000 records, and we report exact pairwise McNemar tests. E13 →E15: extrinsic tool selection is identical at 323/400 ( p = 1 .0 by construction) and the Mean column moves 
+
+0.2430 → 0.2500 (exact McNemar p = 0 .35 ) — no significant gain : the GRPO stage’s contribution is behavioral stabilization and the suppression of 9 intrinsic mis-emissions (calls 398 → 384 ; intrinsic routing 0.970 → 0.985 ), not an accuracy gain (the remaining deltas lie within the noise band, and we report them as such). E15 →E17 (the two-turn model under its strict-return protocol, Section 5.7): overall p = 9 .5 × 10 −52 and extrinsic p = 2 .8 × 10 −54 (both on answer accuracy under the strict-return protocol) are highly significant gains, while intrinsic p = 5 .7 × 10 −6 quantifies the significant degradation of intrinsic routing ( 0.985 → 0.913 ) — the measured price of the repair. The emission unlock 0 → 323 /400 is significant against any zero-call baseline at p of order 2−323 (trivially so). The single-seed limitation is Section 7. Point estimates on the full n=1000 carry ±2.7pt 95% Wilson sampling noise. 
+
+Trivial routing baselines. On the same per-record routing aggregate (mean over 1,000 records), the trivial policies score: always-call 0.400, never-call 0.600, and the E19 text-only arm 0.348, against E15’s 0.914 — the trained router beats the best trivial policy (never-call) by 0.314 (trivial policies score identically under both calibers since they never choose a wrong tool; the E19 text-only arm’s 0.348 is tool-selection scored), and the text-only prompt variant is worse than always-calling, confirming the visual-grounding result (Section 5.6). 16 Inst. Tool. ArgN. ArgV. Summ. 0.0 0.2 0.4 0.6 0.8 1.0    
+
+> score (tool-bearing rows,  n = 400 ) 0.95 0.84 1.00 0.95 0.02 0.94 0.85 1.00 0.96 0.03 0.95 0.84 0.99 0.91 0.52
+> E13 aligned SFT E15 +GRPO (R WA2) E17 two-turn
+
+Figure 4: Five-fold decomposition of the extrinsic pipeline on the 400 tool-bearing records (Table 4). Argument folds are near-perfect while final answers stay broken for E13/E15 — the layer-4 break is in converting tool text into answers; the two-turn SFT (E17) repairs exactly that fold. 
+
+The native-channel zero-shot baseline brackets the problem. A full-registry zero-shot run through the official tools= channel (Hermes parser; base 2B, all 1,000 records, greedy) inverts the picture: the model emits on 395/400 extrinsic records (98.75%) but also on 591/600 intrinsic records (suppression 1.5%), with near-zero tool-name accuracy (intrinsic 0.015, extrinsic 0.12, mean routing 0.057; 986 calls) — emission without trained routing is worse than never calling. The two zero-shot rows bracket the problem: the T_call -protocol baseline shows zero emission, the native-channel baseline shows emission without discrimination; training supplies the missing discrimination (0.914). 
+
+An honest note on the Mean column. The zero-shot overall accuracy (0.2630) is higher than E15’s (0.2500): intrinsic templates are easy for the zero-shot model (600/600, see Section 7), while the E13/E15 extrinsic arm, though routing correctly 80.75% of the time, has final answers suppressed by the observation →answer conversion gap (detection 0.045 / segmentation 0.005; Section 3.4). The value of two-stage training is therefore measured by the routing metrics (Extr. / T-sel. / Calls); Mean is a full-set reference only. 
+
+Where the answers break: parameters are right, conversion is broken. Table 4 (Figure 4) decomposes the extrinsic pipeline into five folds — a parseable action is emitted (Inst), the tool is correct (Tool), required argument names are present (ArgN), argument values are correct (ArgV), the final answer is correct (Summ). For E13/E15 the picture is unambiguous: argument folds are near-perfect (ALL ArgV 0.951/0.963) while final answers are broken (detection 0.035/0.045, segmentation 0.005) — the break is in converting tool text into answers, not in the calling itself .The two-turn trajectory SFT of Section 3.6 flips the picture under the real (strict-return) protocol: tool-bearing Summ 0.020 → 0.518 (Section 5.7). 
+
+Training dynamics: each recipe step is visible on the curve. Table 5 and Figure 5 com-pare three training configurations. GRPO from the base model produces zero gradient on 85–90% 17 Table 4: Five-fold decomposition (Inst / Tool / ArgN / ArgV / Summ) of the extrinsic pipeline, computed on the needs-tool records: detection and segmentation rows on the 200 records of each family, ALL on the 400 tool-bearing records. Fold denominators: Inst/ArgN/ArgV/Summ over the 400 needs-tool records; Tool over the emitted-call records (denominators 380 / 375 / 381 for E13/E15/E17). (Overall test accuracy, a different quantity, appears in Table 3.) E17 is the two-turn model of Section 3.6 under the real (strict-return) protocol of Section 5.7. Answers produced without any tool call ( answer_wo_tool_call ): E13 = 20, E15 = 25, E17 = 19; E17’s 381 emitted-call records are exactly those with a single well-formed call ( single_call_ok ). Family rows are computed within the decomposition pipeline over n=200 per family; the ALL row is the routing-pipeline tool-selection score over 380 evaluated rows (20 execution-failure exclusions), so family and ALL rows use different denominators by construction.                                                
+
+> Model Family Inst Tool ArgN ArgV Summ Aligned SFT (E13) detection 0.905 0.685 0.994 0.909 0.035 segmentation 0.995 1.000 0.997 0.990 0.005 ALL 0.950 0.850 0.996 0.951 0.020
+> +GRPO RWA2 (E15) detection 0.880 0.705 0.994 0.932 0.045 segmentation 0.995 1.000 0.997 0.990 0.005 ALL 0.938 0.861 0.996 0.963 0.025 Two-turn SFT (E17, real) ALL 0.953 0.840 0.992 0.913 0.518
+
+Table 5: Training dynamics of three configurations. Zero-variance groups are rollout groups whose four rewards are identical (zero advantage, zero gradient); mean length is the token length of generated completions. Ranges are min–max over logged steps of the respective runs.                                
+
+> Metric GRPO from base (E7a) SFT cold start +GRPO
+> RWA (E12) Aligned SFT +GRPO
+> RWA2 (E15) Initial reward ≈0.058 ≈0.55 (first-6: 0.5455) 1.18
+> frac_reward_zero_std 0.85–0.9 0.43–0.78 0–0.1 early, ≤0.3for most of training (max 0.47)
+> Completions mean length (tokens) 59–69 11–27 (converges to direct answers; the RRA arm col-lapses to 8.5–9.7)
+> 165–180 (stable)
+
+of groups; an unaligned SFT cold start lowers zero-variance to ≈0.43 –0.78 (median ≈0.6), but com-pletion length converges to direct-answer length (the RWA reward economics, Section 6.2); aligned SFT + RWA2 starts at reward 1.18, keeps zero-variance groups at 0–0.1 early and at ≤0.3 for most of training (peak 0.47, median ≈0.15 ) — an order of magnitude below both unaligned arms — with sequence lengths stable at T_call -trajectory length: emission behavior is seeded, aligned, and locked in by the reward structure. 
+
+5.3 Compression-Interface Characterization and Component Ablations 
+
+Paired characterization on three benchmarks. Table 6 measures the compression interface against its 2048-px thumbnail baseline under matched greedy decoding on identical stratified samples (Qwen3-VL-8B). The paired accuracy deltas are −1.0 (LRS-VQA), −3.4 (MME-RS) and −2.9
+
+(XLRS-lite) points — all negative — while the board’s token cost is fixed and does not grow with source size (evaluation images: median side 6,044 px, maximum 27,328 px). This is precisely the 18 0 20 40 60 80 100        
+
+> training progress (%)
+> 0.2 0.4 0.6 0.8 1.0 1.2 1.4 1.6
+> mean reward
+> E12 cold-start SFT R RA
+> E13 aligned SFT R WA2
+> 020 40 60 80 100
+> training progress (%)
+> 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+> frac. zero-advantage groups
+
+Figure 5: GRPO training dynamics (per-log-interval values, x = training progress). From the base model (E7a/E12 lineage: gray; the curve shown is E12), the reward stays low and most rollout groups have zero advantage — no gradient signal for emission. After alignment SFT (E15, green), the reward starts high and zero-variance groups stay an order of magnitude lower: emission is seeded, and the reward can shape it. Table 6: Compression-interface paired characterization (Qwen3-VL-8B, greedy, identical 1,500-record stratified samples per benchmark; accuracy %). The evidence board’s token cost is fixed (thumbnail + board, two views ≈5k tokens) and does not grow with source size. 
+
+Benchmark Thumbnail 2048 (interface off) Thumbnail + board ( k=6 ) Paired ∆
+
+LRS-VQA (1,500 strat.) 33.20 32.20 −1.0
+
+MME-RealWorld-RS (1,500 strat.) 39.33 35.93 −3.4
+
+XLRS-Bench-lite (1,500 strat.) 41.47 38.60 −2.9
+
+positioning basis of Section 3.3: between “fixed cost, no local detail (thumbnail)” and “local detail at a cost growing with size (high-resolution crop stitching)”, the interface offers a type-adaptive middle ground at a fixed budget, with a 1.31 × detail ceiling (Section 6.3). WeaveEarth’s paper-reported full-set numbers (33.38/47.38/47.14) use a different protocol and are never placed in the same row. Per-benchmark note: MME-RS shows the largest drop ( −3.4), with the position subset at −10 .9
+
+points paired — consistent with the lost-global-continuity mechanism (Section 6.3). 
+
+Component ablations. Table 7 reports the five variants on the same n=500 stratified subset, greedy, k=6 , following the WeaveEarth protocol. As reported honestly: on static VQA the full sys-tem (0.2940) does not exceed any leave-one-component variant (0.3000–0.3140) — the components make no positive contribution on this task distribution. The total range is ≤ 2.0 points, within the 
+
+±1–2-point greedy noise band, and we make no significance claims about single-point orderings; the shape nonetheless agrees with Table 6, jointly supporting the compression-interface position-ing. Methodological note: a full-system row must come from the same subset as the ablated rows (mixing sample sizes, e.g. n=1500 vs. n=500 , folds sampling noise into every delta) — the E4_full same-subset control row exists precisely for this. 19 Table 7: Component ablations on LRS-VQA following the WeaveEarth protocol (accuracy; n=500 
+
+stratified, greedy, k=6 ; the full-system row is the E4_full same-subset control).                               
+
+> Variant GCC MSES SEM TPEB Accuracy w/o GCC –✓✓✓0.3040 w/o MSES ✓–✓✓0.3140
+> w/o SEM ✓✓–✓0.3080 w/o TPEB ✓✓✓–0.3000 WeaveAgent (full) ✓✓✓✓0.2940
+
+Table 8: Evidence-budget scan ( n=500 same-subset, greedy). ∗k=6 is the full-system same-subset control (E4_full).           
+
+> k246810 Accuracy 0.3080 0.3040 0.2940 ∗0.3100 0.3020
+
+Table 9: End-to-end latency. Hardware and protocol differ across rows and are stated per row; paper-anchored rows are quoted from the respective papers and serve as order-of-magnitude references only. Relative times are normalized to our single-pass pipeline.                             
+
+> Method Hardware / protocol s / sample Relative Thumbnail baseline 2048 (official script) 4090, n=300 , greedy 2.84 0.39 ×
+> Zoom baseline (ours, E6, multi-round) 4090, n=50 4.33 0.59 ×
+> Single-pass evidence construction (ours, E1a, greedy) 4090, n=1500 7.31 1×
+> WeaveAgent E15 single-pass (VagueUHR-test) 4090, n=1000 6.17 0.84 ×
+> WeaveEarth (paper-reported) A100 7.59 1.04 ×
+> ZoomSearch (paper-reported, multi-round search) —54.25 7.4 ×
+> RemoteAgent (paper-reported, non-UHR) 8×4090 1.18 —
+
+Evidence-budget scan. Table 8 scans k ∈ { 2, 4, 6, 8, 10 } on the same subset: the curve is flat — no rise-then-fall shape; maximum range 1.6 points, within the noise band — while the k pipeline itself is verified correct by the budget probe (Section 3.3). For the compression interface, the budget does not change static-VQA performance within 2 ≤ k ≤ 10 ; the choice of k should be driven by the target task type’s detail demand and the token budget, not by an accuracy curve. 
+
+5.4 Efficiency 
+
+Single-pass evidence construction costs 7.31 s per sample on a consumer RTX 4090 (2.57 s retrieval 
+
++ 4.74 s inference, greedy) — on par with WeaveEarth’s reported 7.59 s on an A100 and about 
+
+7.4× faster than reported multi-round visual search (ZoomSearch, 54.25 s per sample; vs. reported numbers, cross-protocol). The trained agent’s own single-pass cost on the VagueUHR-test split is 6.17 s per record (E15: 2.32 s retrieval + 3.85 s inference, n=1 ,000 , 4090); the two-turn extrinsic path adds one more generation round on top of this figure, which we did not time separately and note as such. The two-stage architecture’s efficiency follows from its design (Section 3.1): routing is a single text-first decision stage (the ±-image ablation quantifies the visual share of the unified-prompt routing cost at 0.257 s text-only vs. 3.85 s; Section 5.6), evidence construction is single-pass, and the tool path executes in a single round — there is no multi-round zoom-and-answer loop. For reference, the zoom baseline we implemented (E6, 4.33 s on its 50-record protocol) is cheaper per 20 clear template-vague LLM-rewritten 8B zero-shot E15 (aligned+GRPO) E17 (two-turn)        
+
+> 0.268
+> extr 0.000
+> 0.263
+> extr 0.000
+> 0.296
+> extr 0.003
+> 0.241
+> extr 0.800
+> 0.250
+> extr 0.807
+> 0.219
+> extr 0.667
+> 0.476
+> extr 0.787
+> 0.488
+> extr 0.800
+> 0.379
+> extr 0.659
+> llm clear +0.028
+> llm clear -0.022
+> llm clear -0.097
+> llm clear overall accuracy (extrinsic routing below)
+> 0.0 0.1 0.2 0.3 0.4 0.5
+> overall acc
+
+Figure 6: The query-register matrix: overall accuracy (large, shaded) and extrinsic routing (small) for three checkpoints under three query registers. The untrained row is flat — a zero-shot model cannot route, so register does not matter. Training creates a register gradient ( ∆ column, right): template-vague queries behave like clear ones ( ≤1.2 points), while LLM-rewritten queries cost the trained checkpoints 2–11 points — the vagueness axis is real, measured, and partially absorbed by the deeper recipe (E17 > E15 in every column). sample than the single-pass pipeline but operates in the zoom-and-answer regime whose reported analog costs an order of magnitude more, and it does not bound the tool path, which never pays the visual-compression cost at all. Latency rows are deliberately not paired with an accuracy comparison against zoom-and-search methods: they neither perform tool routing nor report results under the VagueUHR protocol, so no like-for-like accuracy row exists; the table serves as an order-of-magnitude cost reference only. 
+
+5.5 Query-Register Gradient: Clear, Template, and LLM-Rewritten 
+
+Because Stage-A’s decision interface is text-first by design — a premise the ±-image ablation of Section 5.6 tests directly — robustness to query surface wording is critical for the architecture. Table 10 arranges the wording evidence as a 3 × 3 register matrix and separates three gradients; Table 11 reports the untrained row’s underlying paired measurement. (1) The untrained row is register-blind. The zero-shot 8B model’s extrinsic emission stays at the floor in all three registers (0 / 0 / 0.25% ): the zero-shot register insensitivity is a routing-capability gap, not a wording effect — and the native-channel baseline shows it is not even an emission gap (Section 5.2) — so the register axis only becomes visible once alignment training makes emission possible at all. The paired measurement (E14) applies the E3a configuration to the 992 record-by-record paired template queries and the LLM-visual-rewrite split, zero-shot Qwen3-VL-8B on both arms: natural rewrites are, if anything, slightly easier (overall accuracy 0.2651 → 0.2964 , +3 .12 points, McNemar exact 
+
+p = 0 .0433 (95 vs. 126 discordant pairs); per-type movement a reshuffle, Figure 11), and the absolute floor survives rewriting (template arm: 0 tool calls; rewritten arm: 2 calls, 1 extrinsic routing hit among 399 extrinsic records) — the zero-emission baseline of Section 5.2 is a property of the model–protocol pair, not of template phrasing. 
+
+(2) Template vagueness is not a difficulty axis for the trained rows. Template-mode vagueness only adds tone words and never deletes task-defining words, and the trained checkpoints move accordingly little: E15 0.241 → 0.250 , E17 0.476 → 0.488 (clear →template; |∆| ≤ 1.2 points). 21 Table 10: Query-register gradient on VagueUHR-test: overall accuracy (primary) and extrinsic routing (secondary) for the untrained 8B row and the two aligned checkpoints under three query registers. The E17 row uses the two-turn protocol with Eval-A oracle-grounded tool returns (return quality is an upper bound; the strict cross-mode protocol itself is not the performance upper bound — that is Eval B, Section 5.7); all LLM-rewritten cells use the 992-record paired rewritten split, clear/template cells the full 1,000-record test set. Det./Seg. give per-type accuracy on the rewritten register (8B from the E14 arm of Table 11); the two-turn repair’s largest per-type gains are exactly in these columns.                                    
+
+> Clear Template-vague LLM-rewritten LLM per-type Checkpoint overall extr overall extr overall extr det seg 8B zero-shot 0.268 0.000 0.263 0.000 0.296 0.0025 0.231 0.405 E15 (aligned) 0.241 0.800 0.250 0.8075 0.219 0.667 0.085 0.005 E17 (two-turn) 0.476 0.7875 0.488 0.800 0.379 0.659 0.382 0.235
+
+Table 11: Query-wording sensitivity, paired across splits (992 records; Qwen3-VL-8B zero-shot, greedy). Per-type n: 197 / 199 / 199 / 197 / 200 (classifica-tion/counting/detection/reasoning/segmentation). The template arm reproduces the E3a configuration on the paired subset; the LLM arm uses the visually rewritten queries. ∆ = +3 .12 
+
+points, McNemar exact p = 0 .0433 . ∗With (near-)zero emissions the T-sel. aggregate reduces to counting correct no-calls on intrinsic records — a bookkeeping artifact, not a measured capability (Table 3).                
+
+> Split Overall acc. Intr. routing Extr. routing T-sel. Calls Template (992 paired) 0.2651 1.000 0.000 0.598 ∗0LLM-rewritten (992) 0.2964 0.998 (592/593) 0.0025 (1/399) 0.598 ∗2
+
+(3) The rewritten register is where wording bites, and the cost is now quantitative. On the LLM-rewritten column E15 loses 3.1 points overall ( 0.250 → 0.219 ) and 14 points of extrinsic routing ( 0.8075 → 0.667 ); E17 loses 10 .9 points overall ( 0.488 → 0.379 ) and again 14 points of extrinsic routing ( 0.800 → 0.659 ). The two-turn repair largely survives the colloquial register — E17 stays 16 points above E15 on the same column ( 0.219 → 0.379 ), with the largest per-type gains exactly where the repair targets them (detection 0.085 → 0.382 , segmentation 0.005 → 0.235 ) — but the routing give-back returns in sync: conversion robustness and wording robustness are in measurable tension, and we report both as measured. 
+
+5.6 The Stage-A ±-Image Ablation: Emission Suppression Is Visually Grounded 
+
+E19 measures the Stage-A design basis directly: the E15 checkpoint evaluates all 1,000 test records twice, with prompts and records identical and only the image tokens removed from the input (text-only arm vs. image-conditioned arm, the latter being the E15 main evaluation of Section 5.2); the description-block text is retained in the no-image arm. The contrast is one-sided. Extrinsic routing is preserved without images ( 0.8375 vs. 0.8075 , +3 .0 points), but intrinsic routing collapses 
+
+(0.985 → 0.0217 ): the text-only policy emits a T_call on 987 of 1,000 records (vs. 384), and tool selection degrades to 0.348 (vs. 0.914 ). Per-record routing latency drops 15 × (0.257 s vs. 3.85 s) — the visual context dominates the cost of the unified prompt, so a genuinely text-only router would be dramatically cheaper. The reading: the strong form of the text-only design basis (Section 3.2) does 22 extrinsic routing intrinsic routing 0.0 0.2 0.4 0.6 0.8 1.0    
+
+> routing accuracy  0.81 0.98 0.84 0.02
+> (a) emission control collapses
+> with images text-only
+> with images text-only 0200 400 600 800 1000
+> T_call emissions / 1,000 records
+> 384 987
+> (b) call-everything mode
+> with images text-only 01234
+> mean latency (s / record)  3.85s 0.26s
+> (c) the 15 ×temptation
+
+Figure 7: The ±-image ablation (E19, E15 checkpoint, 1,000 records, identical prompts). Removing image tokens keeps extrinsic routing (0.838 vs. 0.808) but collapses intrinsic routing to 0.022: the model emits a call on almost every record (987 vs. 384). Emission suppression — knowing when not 
+
+to call — is visually grounded. The 15 × latency gap makes a truly text-only router an attractive but unattained target. not hold for the trained policy. The visual input is the signal that suppresses emission on intrinsic queries — knowing when not to call is visually grounded in UHR imagery — while the emission format and extrinsic discrimination survive on text alone. A truly text-only router therefore remains an unattained target; distilling one from the image-conditioned policy is future work (Section 7). 
+
+5.7 Tool-Execution Conversion: Oracle Attribution and Two-Turn Repair 
+
+Section 5.2 localized the extrinsic bottleneck to the observation →answer conversion. This subsection (i) attributes it via an oracle experiment (E16) and (ii) repairs it with the two-turn SFT of Sec-tion 3.6 (E17). Protocol disclosure up front : all tool returns in this subsection are oracle/annotation-grounded, not live expert services; no number here is an end-to-end measurement against real de-ployed backends, and the two E17 protocol points below must be read as an upper bound and a cross-mode generalization point respectively. A deployment attempt of the real SkySense/RemoteSAM service stack on the single-GPU evaluation box was recorded (mmdet/mmcv and service weights absent; T1_live_backend_report.json ); live end-to-end evaluation remains future work, and the oracle-protocol qualification of every number in this subsection stands. 
+
+E16: oracle attribution. On the E15 checkpoint (aligned SFT + RWA2 GRPO), 100 routed-correct records stratified by task type (37–38 detection / 62 segmentation; two-round protocol, greedy), the strict arm strips answer markers from tool returns (N/A counts filled with ground-truth numbers so returns look like real detector output), while the embedded arm stuffs the RemoteAgent trajectory text with answers in place. Table 12 (Figure 8): converting marker-free tool text into answers is hard for a 2B model — overall 0.505 (n=100 , 95% Wilson CI [0 .41 , 0.60] ) strict vs. 0.840 
+
+embedded — and the gap concentrates in segmentation ( 0.339 vs. 0.758 ), whose mask-type returns are inherently uninformative as text; at n=100 the arm-level gap ( ≈0.34 ) dwarfs the ±0.1 binomial noise of either estimate. Routing itself is not the issue (no-call: 1/100 strict, 0/100 embedded). By the pre-registered gate (choose embedded iff strict accuracy falls more than 0.10 below embedded), embedded is selected as the E17 training-stuffing format. Both arms are oracle upper bounds, not 23 detection segmentation 0.0 0.2 0.4 0.6 0.8 1.0  
+
+> answer accuracy (oracle protocol)
+> 0.78 (29/37) 0.34 (21/62) 0.97 (37/38) 0.76 (47/62)
+> arm acc 0.51 arm acc 0.84
+> same 100 routed-correct records; greedy; upper bound, not natural behavior
+> oracle strict arm oracle embedded arm
+
+Figure 8: Oracle attribution on the 100 routed-correct records (Table 12): answer accuracy when the tool return is marker-free (strict) vs. answer-marked (embedded). The gap concentrates in segmentation, whose mask-type returns carry almost no textual information. Upper bound, not natural behavior. Table 12: E16 oracle attribution (100 routed-correct records stratified by task type: 37–38 detection / 62 segmentation; two-round protocol, greedy; oracle returns). “Strict” strips answer markers from tool returns; “embedded” stuffs RemoteAgent-style trajectory text with answers in place. The detection denominator under strict is 37 (one no-call record). 
+
+Arm Detection Segmentation Overall No-call Strict (marker-free) 0.784 (29/37) 0.339 (21/62) 0.505 1/100 Embedded (answer-bearing) 0.974 (37/38) 0.758 (47/62) 0.840 0/100 
+
+natural system performance. These 100 records are routed-correct records — a self-selected, easier population than the full 400 tool-bearing rows — so E16 is an attribution probe, not a protocol-matched baseline for Eval A. 
+
+E17: two-round evaluation under two protocols. The two-turn model is evaluated on the full 1,000-record test set under two protocols that must be read together (Table 13). Eval A (strict-fallback oracle protocol) : the tool service was unreachable, so every record fell back to strict marker-free returns — the fallback rate is 1.0, disclosed as such; because training used embedded returns, this is the cross-mode generalization point. Eval B (embedded protocol) : returns stuffed in the training-distribution embedded format — the training-distribution upper bound . Under Eval A, extrinsic answer accuracy reaches 0.635 (detection) and 0.400 (segmentation) despite the train/test return-format mismatch — the repair generalizes across return modes rather than memorizing a format; under Eval B, 0.960 /0.970 . The intrinsic task types and all routing metrics are identical across the two evals — exactly the protocol sanity check one wants, since intrinsic records involve no tool returns. The five-point ladder on extrinsic answer accuracy (needs-tool Summ; Figure 9): 0.025 
+
+(E15, single-turn, no result stuffing) → 0.4225 /0.4250 (E13/E15 + loaded strict returns, no two-turn training) → 0.518 (E17, cross-mode strict returns) → 0.965 (E17, training-distribution informative returns). Protocol-matched control arms separate the two ingredients: with the same strict returns 24 E15 single-turn (no result loading) E13 + loaded returns (no two-turn SFT) E15 + loaded returns (no two-turn SFT) E17 cross-mode (strict returns) E17 training-dist. (embedded returns) 0.0 0.2 0.4 0.6 0.8 1.0      
+
+> answer accuracy (tool-bearing rows,  n = 400 )
+> 0.045 0.510 0.510 0.635 0.960 0.005 0.335 0.340 0.400 0.970 0.025 0.422 0.425 0.517 0.965
+> detection segmentation tool-bearing overall
+
+Figure 9: The layer-4 repair, end to end: answer accuracy on the 400 tool-bearing records across the five-point ladder — E15 (single-turn, no result loading), the two protocol-matched control arms (E13/E15 with the same strict returns loaded but no two-turn training), E17 under marker-free cross-mode returns, and E17 under training-distribution (embedded) returns. The ladder branches at the last two points: one trained checkpoint, two return protocols (the intrinsic task types and routing metrics are identical across them). loaded but no two-turn training, E13 reaches 0.4225 and E15 0.4250 on the 400 tool-bearing rows — the observation loading accounts for the bulk of the jump ( 0.025 → 0.425 ) — and the two-turn SFT stage adds a further +9 .25 points to 0.5175 (McNemar b = 21 , c = 58 , p = 3 .8 × 10 −5; against the E13 base p = 3 .2 × 10 −5). The two controls are statistically indistinguishable from each other (p = 1 ): GRPO contributes nothing to conversion, by design. Detection improves 0.510 → 0.635 and segmentation 0.340 → 0.400 under the same pairing — no per-type regression against the matched controls. Costs, reported just as honestly: extrinsic routing gives back a little ( 0.8075 → 0.800 ), tool selection 0.914 → 0.868 , and calls rise to 433 (vs. 384 for E15; 398 for E13); intrinsic routing reads 0.913 . (Relative to the E15 single-turn specialist: since E17 branches from the E13 base, this delta reflects the two-turn branch’s training data and objective rather than the marginal effect of two-turn SFT on top of GRPO.) 
+
+5.8 Qualitative Analysis 
+
+Figure 10 walks through the two-stage pipeline on four selected records; the full case table with question IDs (Table 20) is provided in Section C for exact cross-checking. C1 and C2 show the extrinsic path end to end: Stage-A’s router emits a well-formed T_call , the observation is loaded as a second user message, and the answer follows. C3 shows the intrinsic path on a vagueness-marked query — the router correctly refrains from calling a tool and the model answers directly. C4 is the instructive failure: the return already contains the count (“10 objects localized”), yet the model answers 3 — a numeric-extraction failure, not a routing or tool failure; this is the residual mode behind the strict-protocol detection ceiling ( 0.635 , Section 5.7), while under the training-distribution returns of Eval B the same conversion is learned (detection 0.960 there). C2’s tool 25 Table 13: E17 two-round evaluation under two protocols (full 1,000-record test set, greedy; oracle returns in both — no live service). Eval A: oracle-grounded strict marker-free returns via per-record fallback (fallback rate 1.0, disclosed); cross-mode generalization point. Eval B: embedded returns, training distribution; upper bound. Intrinsic types and routing metrics are identical across evals (protocol sanity). Class./Count./Reas./Det./Seg. = answer accuracy per task family (200 records each); Extr./Intr. = routing accuracies; T-sel. = tool selection. Control arms: same strict-return protocol and oracle results, no two-turn training; E15 →E17 difference on the same 400 rows is 
+
++9 .25 pt (McNemar p = 3 .8 × 10 −5).                                                   
+
+> Protocol Overall Class. Count. Reas. Det. Seg. Extr. Intr. T-sel. Calls Eval A (strict fallback) 0.488 0.560 0.330 0.515 0.635 0.400 0.800 0.913 0.868 433 Eval B (embedded) 0.667 0.560 0.330 0.515 0.960 0.970 0.800 0.913 0.868 433 E13 +loaded strict returns (control) ————0.510 0.335 extr. ans. 0.4225
+> E15 +loaded strict returns (control) ————0.510 0.340 extr. ans. 0.4250
+
+return, moreover, carries no shape information at all (“Segmentation mask generated.”) — the correct answer can only come from the visual channel; this is exactly the return-informativeness gap that Section 5.7 measures with the E16 strict/embedded arms (segmentation 0.339 vs. 0.758 ), and it motivates reading mask-type returns through a visualized overlay rather than raw text in future work. Finally, the evaluation protocol skips records with retrieval errors rather than scoring them as wrong; the skip-on-retrieval-error clause never fired in any reported run (zero skips), and the E17 run contained no such record — so no retrieval-bottleneck case survives into the figure; that phenomenon is documented separately in the compression-interface analysis (Section 6.3). 
+
+# 6 Design Rationale and Analysis 
+
+The recipe of Section 3.5 raises two “why” questions that must be answered with data: why alignment SFT is necessary (Section 6.1) and why the incentive must be routing-first (Section 6.2). A third subsection characterizes the boundary of the compression interface (Section 6.3); a fourth records implementation differences and prompt-format sensitivity as neutral protocol-alignment notes (Sec-tion 6.4). Each item is one paragraph with data. All statements about WeaveEarth [1] are neutral records of protocol differences, not criticisms. 
+
+6.1 Why Alignment SFT Is Necessary: Two Mechanisms 
+
+Mechanism 1: the exploration deadlock — GRPO cannot create behavior from noth-ing. GRPO is group-relative: advantage A = ( r − ¯r)/(std + ϵ). When the policy never emits a tool call, all four rollouts in a group are direct answers, rewards are identical, std = 0 , all advan-tages are 0, and the gradient is zero. Measured GRPO from the 2B base: initial reward ≈0.058 ,
+
+frac_reward_zero_std = 0 .85 –0.9 — 85–90% of groups produce no learning signal. The zero-shot zero-emission floor (top rows of Table 3) is this mechanism’s direct projection: GRPO can only amplify variance in behavior that already exists. Competing hypotheses were excluded one by one: a loose regex re-scan of all raw evaluation outputs finds 0/4,000 containing T_call (not a parser false negative); the median tool-call completion is p50 = 193 characters ≈70 –80 tokens, below max_new_tokens = 128 (not truncation); the evaluation prompt is confirmed to contain the 15-line tool catalog (not a missing catalog). Corroborating evidence from the native channel: with the official tools= channel (Hermes parser), the base Qwen3-VL-2B-Instruct emits 20/20 calls on 26 Input (gt box) Query Stage-A decision Tool return (turn 2) Answer vs. GT 
+
+> E17 two-turn evaluation, greedy; Eval-A protocol (annotation-grounded marker-free returns). ref-seg = referring_expression_segmentation.
+
+C1 detection, success 
+
+What is the amount of boat in the 
+
+image? 
+
+> id 4498_detection
+
+extrinsic: skysense_detection    
+
+> T_call(skysense_detection, classes=[object], conf=0.5)
+> Detection finished; 3objects localized.
+
+3
+
+> vs. GT 3
+
+C2 segmentation, success 
+
+hey, what is the shape of the 
+
+top-most tank? 
+
+> id 0177_segmentation
+
+extrinsic: ref-seg    
+
+> T_call(ref-seg, prompt=<query>)
+> Segmentation mask generated.
+
+circular 
+
+> vs. GT circular
+
+C3 intrinsic, success 
+
+hey, what is the activity of the 
+
+top-most plane? 
+
+> id 983_classification
+
+intrinsic: no tool call        
+
+> (answers from thumbnail +evidence board)
+> ---(single turn)
+
+parked 
+
+> vs. GT parked
+
+C4 conversion failure 
+
+What is the amount of bridge in 
+
+the image, roughly? 
+
+> id 11069_detection
+
+extrinsic: skysense_detection    
+
+> T_call(skysense_detection, classes=[bridge], conf=0.5)
+> Detection finished; 10 objects localized.
+
+3
+
+> vs. GT 10
+
+Figure 10: Four qualitative cases from the E17 two-turn evaluation (Table 20; greedy, Eval-A protocol). Each band shows the input crop (ground-truth box in red where defined), the query, the Stage-A decision with the emitted T_call , the marker-free turn-2 tool return, and the final answer against the ground truth. C4 is the instructive conversion failure: the count is present in the return (“10 objects localized”) yet the model answers 3. a 20-task smoke set but hits the correct tool name in only 4/20 — zero emission under the custom 
+
+T_call protocol is a format mismatch , and tool selection is the skill that actually needs training. The full-set native-channel baseline confirms this at scale: 98.75% extrinsic emission (395/400) with mean routing 0.057 (Section 5.2). Seeding by SFT is therefore required, matching ToRL [28] (forced tool calls seed exploration), ToolRL [29], and DAPO [30] (zero-variance pathologies). Measured: an 27 SFT cold start lifts emission from 0 to 0.55 (500 steps) → 0.65 (1,000 steps) and the GRPO initial reward to ≈0.55 , with zero-variance groups dropping to 0.43–0.78 (Table 5). 
+
+Mechanism 2: format binding — emission is bound to the prompt distribution. The cleanest causal evidence comes from the unaligned SFT: with the same E12 merged weights and the same tool tasks, the training-format prompt elicits a 0.65 emission rate while the evaluation-format prompt elicits 0/400 (the evaluation path does inject the real evidence board, ruling out “evidence not given”). Byte-level comparison finds ≥10 non-image differences between the training and evaluation prompts (full listing: Section A, Table 14); the fatal one is the compound effect of the last-line format instruction — an evaluation prompt that moves the decision sentence to mid-prompt and appends a final line supporting only direct answers is, to a 2B model, a different task. The zero-shot model’s 0% emission is the prior version of the same mechanism. 
+
+Design conclusion. Alignment SFT — rebuilding the cold-start data with evaluation-identical prompts and image formats (E13) — is the only path from 0% to 80.75% extrinsic routing. Methodological moral: any “behavior disappeared after SFT” phenomenon should trigger a train-ing/evaluation prompt-distribution consistency audit before model capability is blamed. This is the entire meaning of “alignment” in the recipe’s first step. 
+
+6.2 Why the Incentive Must Be Routing-First: Reward Economics 
+
+RWA ’s structure makes direct answering expected-optimal. From Table 17 ( wt = 0 .3,no-call consolation 0.2): a correct call on an extrinsic task caps at 0.35 , a correct direct answer scores 1.11 , and calling on intrinsic tasks (73% of training data, 2,400/3,273) scores 0; aggregating (Table 1), always answering directly ( 0.11+ pans ) beats correct routing ( 0.35 ) once pans ≥ 0.24 — the RL-rational policy is “treat tool tasks as answer tasks”. Measurements agree: under E12-RWA mean completion length converges to 16–25 tokens (i.e. no calls), and under RRA RL actively removes 
+
+emission (a bare T_call has no <answer> span and scores a constant zero; mean length collapses to 8.5–9.7 tokens) — even SFT-seeded behavior is washed out by a wrongly structured reward. 
+
+RWA2 inverts the expectation. The three structural modifications (delete the no-call consolation score ( 0.2 → 0), raise the routing weight ( 0.3 → 1.0), and split the format term into two 0.5
+
+components — correct direct answers actually rise ( 1.11 → 1.25 ), but correct routed calls rise more (0.35 → 2.25 )) invert the expectations: correct routing 2.25 ≫ direct answering 0.25 –1.25 per case (a correct route is credited with the answer term automatically), and the inversion is parameter-free — it holds for any answer accuracy (Table 1). E15 measurements (Table 5): initial reward 1.18 , zero-variance groups an order of magnitude below the unaligned arms, mean length stable at 165–180 
+
+— emission locked in by the reward structure; on the evaluation side, tool selection 0.905 → 0.914 
+
+(+0 .9 points on overall routing, i.e., the 9 suppressed intrinsic mis-emissions; extrinsic tool selection unchanged at 323/400) and overall accuracy 0.2430 → 0.2500 (Section 5.2). 
+
+Design conclusion. RWA2 ’s value shape is “maintain and suppress” rather than “raise further”: under the single-turn evaluation protocol, most of the tool-selection gain is already claimed by align-ment SFT (80.75%); RWA2 stabilizes emission on the evaluation distribution, eliminates intrinsic mis-emissions, and squeezes out a further +0 .9 points of tool selection. Without alignment SFT the reward-design difference is invisible (the two E12 arms tie at evaluation) — alignment and incentive must be repaired together, which is why the recipe’s two steps are inseparable. 28 6.3 The Boundary of the Compression Interface: the 1.31 × Ceiling and Condi-tions of Applicability 
+
+The ceiling. The TPEB gives each evidence cell a fixed 448-px patch on a 6×6 grid; relative to the 2048-px full-scene thumbnail, the effective detail gain of a selected region is 448 × 6/2048 ≈ 1.31 ×
+
+— constant regardless of the source image’s resolution : a 27,328-px scene earns the same 31% as a 4,096-px one. The board also covers only 6 of 36 cells (a sixth of the field of view) and destroys global spatial continuity. Two mechanisms explain the full negative shape of Tables 6 and 7: (i) tasks that depend on whole-scene layout do not benefit — MME-RS position questions lose −10 .9
+
+points paired, because local detail cannot compensate for lost global geometry; (ii) retrieval is recall-bounded — if the GCC scorer (Eq. (2)) does not rank the relevant region into the top-8 anchors, the downstream VLM never sees it, and the budget-k selection (Eq. (3)) only compounds this by design. This mechanism is now a measurement, not an assertion: a retrieval audit over the 660 spatial-ground-truth test records (gt-box-center criterion) measures recall@8 anchors = 0 .291 and recall@6 final board = 0 .230 — 71% of queried targets are never reachable through the evidence board, and MSES compression discards a further 6 points; per task type the picture is uniform (0.20–0.32 across types, per-type detail in Section C; counting, n=2 , has no spatial ground truth and is excluded). Query–patch similarity retrieval is weakest exactly where UHR tasks are hardest (whole-scene counting, spatial relations, change detection). 
+
+Interventional repairs (harder boundary evidence than observation). After the three-benchmark paired negatives, we systematically tried four families of repairs, five configurations in total (paired, greedy, seed-0 stratified 300 records, baseline = interface off): routing spatial questions to the global view (MME +1 .35 , p = 0 .65 ; LRS −2.1, p = 0 .41 , with reasoning −9.3 from “where is” misrouting); removing the thumbnail for detail questions with k=4 large cells (MME 
+
+−4.7, p = 0 .08 , color −10 .1); keeping the thumbnail with k=4 native-resolution cells (MME +0 .34 
+
+/ LRS −1.7; shape +2 .8 but count −10 .3); and a four-quadrant coverage guarantee (neutral). None significantly beats the thumbnail baseline (all p ∈ [0 .08 , 1.0] ), and directions contradict each other. 
+
+The mechanism explanation is consistent: the board’s detail advantage is locked at ≈1.31 × by the 448-px budget; raising per-cell resolution necessarily reduces cell count, and the coverage loss cancels the gain; “spatial questions to the global view” is the only stably positive component ( ≈2
+
+points). 
+
+Design conclusion. No positive component contribution on static VQA (Table 7), a flat k
+
+curve (Table 8), and no significant repair — together these support the positioning of Section 3.3: 
+
+TPEB +SEM is a fixed-budget compression interface whose benefit lies in token determinism and local-structure preservation for fine-grained task types, not in average accuracy . Enable it per task type (fine-grained grounding), not by default. 
+
+6.4 Implementation Differences and Prompt Sensitivity (Neutral Records) 
+
+This subsection records differences between the WeaveEarth released implementation and the pa-per’s algorithm, and prompt-format sensitivity, as neutral protocol-alignment records; Table 18 (Section B) collects the measurements, and Figure 12 (Section C) plots the Category-line control. (i) Under the paired greedy protocol the released script’s own gain is +2 .67 points (29.67% →
+
+32.33%; 89 vs. 97 of 300 correct, 24 vs. 32 discordant pairs, McNemar exact p = 0 .350 ) versus the paper-reported +6 .70 (26.68% → 33.38%) on the full set; the paper’s baseline configuration (prompt, decoding) is not documented, so we record the protocol gap and treat the paper and the 29 release as two distinct objects. (ii) The released MSES selection truncates the candidate pool to the top-8 anchors before the budget greedy, so the greedy loop never executes; we reimplement per the paper’s algorithm (Section 3.3) and audited all shared components item by item. (iii) A Category task-type line present only in the treatment arm had been inferred, by cross-protocol inference, to contribute ≈3.7 points; the paired control on the same 300 samples (60 per task type, E15 check-point, greedy) gives 0.2667 vs. 0.2833 — ∆ = −1.7 points with the line, McNemar exact p = 0 .51 ,per-type movement a reshuffle — so the Category line does not leak answer information and the 
+
+≈3.7-point inference is refuted. (iv) The mere order of MCQ option instructions versus the SEM metadata block swings accuracy by ≈10 .5 points, silently (quarantined self-audit, indicative; 34% of outputs degrade to prose that fails every matching rule); we therefore adopt two rules through-out: byte-identical prompt templates across baseline and treatment arms except for the mechanism under test, and McNemar tests on paired binary outcomes rather than point deltas alone. 
+
+# 7 Limitations 
+
+1. Backbone scale. 8B GRPO does not fit a 24-GB GPU, so all two-stage training and evaluation use Qwen3-VL-2B (the zero-shot floor row of Table 3 is 8B). Scaling the alignment pipeline to 8B (alignment SFT → RWA2 GRPO re-run at 8B, requiring ≥48 GB) and re-measuring the routing table at that scale remains future work. 2. Emission suppression is visually grounded; a truly text-only router remains unattained. 
+
+The ±-image ablation (E19; Section 5.6) shows that removing image tokens keeps extrinsic rout-ing ( 0.8375 vs. 0.8075 ) but collapses intrinsic routing ( 0.985 → 0.022 ) and re-opens emission on almost every record (987/1,000) — at 15 × lower latency ( 0.257 s vs. 3.85 s per record). Knowing 
+
+when not to call is visually grounded in UHR imagery; distilling a genuinely text-only router is future work. 3. Wording robustness is now measured for the aligned checkpoints, but register cov-erage is partial. The register-gradient matrix (Table 10, Section 5.5) extends the paired E14 measurement from the 8B zero-shot floor to both aligned checkpoints across the template and LLM-rewritten registers; multi-turn, real-user phrasing remains unmeasured. 4. The conversion repair is not end-to-end on real services. E16/E17 use oracle/annotation-grounded returns; Eval A’s fallback rate is 1.0. End-to-end success against live expert backends is not yet measured, and the routing give-back (tool selection 0.914 → 0.868 ; calls 384 → 433 ) is the price of the repair. 5. RWA2 ’s routing-first shape carries a call-versus-answer tension. Calling correctness and answer correctness diverge in the data (Table 4: ArgV 0.951 /0.963 vs. Summ 0.020 /0.025 for E13/E15), and E17’s conversion repair buys answer accuracy at a routing give-back (tool selection 
+
+0.914 → 0.868 , intrinsic routing 0.985 → 0.913 ; Section 5.7) — a two-dimensional trade-off we disclose rather than resolve. 6. Unseen-tool generalization is negative: registration makes a tool visible, not usable. 
+
+All three trained checkpoints route 0/62 on the training-unseen sm3det records, with emissions collapsing onto the seen tools (48 / 3 / 11; Section 4.3). The test pool is three tools; routing generalization under a larger catalog is untested. 7. The region parameter p of T_call (ek, p ) is not evaluated. In the reported runs the tools consume the full image or the query text as the prompt; region grounding, the syntax of p, and a 30 region-correctness metric are unmeasured, although acting on the right image region is the core UHR difficulty (a target may cover 0.14% of the scene; Figure 1). 8. The tool pool is generic CV, not GIS. Detection, segmentation and counting backends only; no GIS operations (region statistics, overlay, buffering, area/distance measurement) and no use of CRS, GSD or georegistration — a geospatial workflow case is future work. 9. Intrinsic tasks are likely too easy. The zero-shot model answers essentially all intrinsic records (600/600), so intrinsic routing accuracy carries little signal; a harder intrinsic split is needed. 10. Training queries are templated. Template-mode vagueness is narrower than open-ended user phrasing ( vague_level all 0.5); the LLM rewrite channel exists but is not enabled for training. 11. Prompt fragility is a deployment risk. The E12 audit shows that one prompt-side edit can silently destroy trained routing: the same weights emit on 0.65 of tool tasks under the training-format prompt but 0/400 under the evaluation-format prompt (Section 6.1). 12. Change detection collapses to detection. Absent bi-temporal sources, the change-detection shape is collapsed to detection (Section 4.2), so temporal reasoning is outside the evaluated scope. 13. Benchmark contamination and geographic concentration. Test records derive from public benchmarks (LRS-VQA, MME-RealWorld-RS, XLRS-Bench), so pretraining exposure of the base VLM cannot be excluded, and the sources’ geographic coverage is limited (the flagged 1213 cluster; Section 4.4). 14. Stratified estimates, not full benchmarks. Except for the 300-record official comparison, all benchmark numbers are stratified estimates; sampling noise is quantified only through paired tests, and all runs use a single seed (seed 0). XLRS: 7 of 8 subcategories (SR unavailable; OP 53.9% of our sample). 15. Mixed tool backends. Tool experiments mix real deployments (DirectSAM-class) with annotation-grounded simulated backends, disclosed per table; a deployment attempt of the SkySense/ RemoteSAM service stack on the evaluation box is recorded (mmdet/mmcv and service weights absent; Section 5.7), and live end-to-end evaluation remains future work. 16. One retained annotation misread. Of the six audited records from the flagged 1213 cluster, five were confirmed and one source-annotation misread is retained unchanged to keep the released test set byte-identical; the correction is scheduled for the next corpus revision (Section 4.4). 
+
+# 8 Conclusion 
+
+WeaveAgent is a two-stage tool-routing agent for ultra-high-resolution remote sensing. Stage A is a routing-first decision stage: the ±-image ablation (E19) shows its emission suppression is visually grounded — removing image tokens keeps extrinsic routing but collapses intrinsic routing to 0.022 — and it performs intrinsic/extrinsic discrimination and tool selection from the query and the cat-alog, on the design basis established by the text-routing literature. Stage B executes conditionally: the intrinsic path answers from the thumbnail with an optional fixed-budget evidence-compression interface; the extrinsic path executes T_call on the original full-resolution imagery and answers from tool observations along two-turn trajectories with observation masking. On the VagueUHR dual-split corpus, the alignment-SFT → RWA2 GRPO recipe yields its checkable gain at the align-ment stage: alignment SFT lifts extrinsic routing from 0% (zero-shot: zero emissions) to 80.75% (323/400) with tool selection 0.905; the RWA2 GRPO stage leaves extrinsic tool selection unchanged 31 (323/400), suppresses 9 intrinsic mis-emissions (calls 398 → 384 , intrinsic routing 0.970 → 0.985 ;answer accuracy classification 0.435 → 0.460 , reasoning 0.435 → 0.450 ), and moves overall accuracy 
+
+0.2430 → 0.2500 (within the noise band) — with healthy training dynamics (zero-variance groups an order of magnitude below the unaligned arms). The evidence board is honestly positioned as a fixed-budget compression interface: two views of ≈5k tokens at constant cost regardless of source size, with a 1.31 × detail ceiling and three-benchmark paired deltas of up to −3.4 points reported as such; single-pass evidence construction runs at 7.31 s per sample on a consumer 4090 — on par with re-ported A100 numbers and faster than reported multi-round visual search (cross-hardware reference). Where the pipeline broke, we said so and repaired what could be repaired: an oracle study attributed the extrinsic answer gap to observation →answer conversion (argument values ≈96% correct, final answers 0.045), and extrinsic answer accuracy rose from 0.025 to 0.425 by loading the observation alone and 0.518 with the two-turn SFT stage ( p = 3 .8 × 10 −5), under marker-free cross-mode re-turns (0.965 under training-distribution returns), at a small routing cost. A query-register gradient measurement (Section 5.5) closes the wording question for the aligned checkpoints: template-level vagueness moves overall accuracy by at most 1.2 points, while LLM-rewritten phrasing costs 3.1
+
+(E15) and 10 .9 (E17) points overall with a ≈14 -point extrinsic-routing give-back — measured, not assumed. Open problems are equally explicit: 8B-scale alignment, end-to-end conversion repair against live tool services, register coverage beyond the two measured registers (multi-turn, real-user phrasing), and a truly text-only router — E19 shows emission suppression is visually grounded, so distilling one is future work. Code, data, and all evaluation protocols will be released. 
+
+Data and code availability. The VagueUHR corpus is derived from the imagery and annota-tions of LRS-VQA, MME-RealWorld-RS and XLRS-Bench and is distributed under the terms of those benchmarks’ licenses. Construction scripts, prompt templates, per-experiment configurations, reward code, and all evaluation protocols will be released at a public repository upon acceptance. 
+
+# A Training and Prompt Configuration 
+
+This appendix collects the byte-level prompt-format audit underlying Section 6.1 (Table 14) and a register of every experiment ID referenced in this paper, with its configuration and a pointer to the table or figure that reports it (Table 16). The register lists facts only; no new claims are introduced here. 
+
+SEM presence across prompt families. Table 15 consolidates, from the disclosures of Table 14, Section 3.5, Section 6.1, and Table 20, where the thumbnail, the TPEB board, and the SEM block are present in each prompt family used in this paper; no new measurements are introduced. 
+
+# B Reward Scores and Neutral Implementation Records 
+
+This appendix collects the full RWA per-case score table (Sections 3.5 and 6.2) and the neutral implementation-difference records of Section 6.4. 
+
+# C Supplementary Measurements and Qualitative Cases 
+
+This appendix collects supplementary figures and tables moved out of the main text: the E14 per-task-type wording figure (Section 5.5), the E20 Category-line control figure (Section 6.4), the 32 Table 14: Supplementary table (appendix A). Non-image differences between the unaligned training prompt and the evaluation prompt (byte-level audit; the evidence board is genuinely injected at evaluation time, ruling out “evidence not given”). 
+
+# Difference Training prompt Evaluation prompt 1 Opening sen-tence “You are WeaveAgent answering. . . ” “Answer the question about. . . ” 2 Dual-image de-scription block none thumbnail + evidence-board description 3 Category line none Category: <task_type> 
+
+4 Query prefix User query: Question: 
+
+5 Catalog position before the query after the query 6 Decision-instruction position last line, mentions both options mid-prompt, followed by 3 more blocks 7 Decision-instruction wording “Either answer directly. . . , or emit a tool call. . . ” (answer first) “If an external tool is required. . . instead of an answer” (call as a conditional branch) 8 Final format line none (the decision sentence is last) “Return only a short answer phrase: 
+
+<answer>...</answer> ” (no T_call at all) 9 Region metadata / SEM block none (sem_text presence 0/3,273) present 10 Block separator blank line single newline 
+
+Table 15: Supplementary table (appendix A). Presence of the thumbnail, the TPEB board, and the SEM block across prompt families (consolidated from Table 14, Section 3.5, Section 6.1, and Table 20; facts only, no new measurements). E17 turn-1 is byte-identical to the E13 aligned demon-strations, whose prompt and image formats are strictly identical to evaluation; turn-2 loads the stuffed tool observation in the RemoteAgent inference format. 
+
+Prompt family Thumbnail TPEB board SEM block Routing-train prompts (E13/E15) path (lazily de-coded) none none (sem_text 0/3,273) Main evaluation prompts present present (real injec-tion) present E19 text-only arm (E15 ckpt.) image removed; de-scription text re-tained image removed; de-scription text re-tained retained as text (byte-identical prompt) E17 turn-1 / turn-2 present (E13 demo images) present (evaluation-identical image format) none (training side); turn-2 adds the obser-vation text 
+
+33 Table 16: Supplementary table (appendix A). Experiment register: one row per experiment ID used in this paper — configuration and result pointer (facts only). “Official 300” is the released-script 300-record stratified paired replication. 
+
+ID Configuration Result E1a Single-pass evidence pipeline, interface on (thumb-nail + board, k=6 ); three benchmarks, stratified 1,500 each, 8B, greedy; timing anchor Table 6, Table 9 E1b Evidence interface off (2048 thumbnail), same sam-ples Table 6 E3a Zero-shot Qwen3-VL-8B routing evaluation Table 3 E3b GRPO from the 2B base, RRA / RWA arms (merged E7a/E7b weights) Table 3 E4 / E4_full Component ablations with the same-subset full-system control ( n=500 , greedy) Table 7 E5 Evidence-budget k ∈ { 2, . . . , 10 } scan Table 8 E6 Multi-round zoom baseline ( n=50 ) Table 9 E7a / E7b GRPO from base ( RRA / RWA ); training dynamics Table 5 E12 Unaligned SFT cold start + GRPO RWA ; source of the prompt audit Table 5, Table 14 E13 Alignment SFT Table 3, Table 4 E14 LLM-visual-rewrite wording arm (zero-shot 8B, 992 paired) Table 11, Figure 11 E15 Alignment SFT + GRPO RWA2 Table 3, Table 4, Table 5 E16 Oracle attribution, strict/embedded arms ( n=100 ) Table 12 E17 Two-turn SFT; Eval-A / Eval-B protocols Table 13, Table 4, Table 10 E18 Clear-register runs (E15 / E17 × clear) Table 10 E19 ±-image ablation (E15 checkpoint, 1,000 records) Figure 7 E20 Category-line paired control (300 records, 60 per task type) Table 18, Figure 12 Official 300 Released-script stratified paired replication Table 18 
+
+Table 17: Supplementary table (appendix B). RWA per-case scores (measured configuration: 
+
+wa=1 .0, wt=0 .3, wf =0 .1, no-call consolation 0.2). Total = 1 .0·answer + 0 .3·tool + 0 .1·format (RWA weights); the three columns are unweighted component scores: a binary indicator (answer), a routing/consolation term (0.2 under RWA , 0 under RWA2 ), and the format term (0.5 per well-formed component). On intrinsic tasks a no-call earns the full tool term (there is no ground-truth tool); the structure makes bare T_call behavior — exactly what SFT teaches — nearly worthless relative to direct answering.                                                   
+
+> Case Answer indicator Tool indicator Format indicator Total Intrinsic, direct answer correct 1.0 1.0 0.5 1.35
+> Intrinsic, direct answer wrong 01.0 0.5 0.35 Intrinsic, emits T_call 00.0 0.0 0.00
+> Extrinsic, correct T_call (=SFT behavior) 01.0 0.5 0.35
+> Extrinsic, wrong T_call 00.0 0.5 0.05 Extrinsic, no call +wrong answer 00.2 0.5 0.11 Extrinsic, no call +correct answer 1.0 0.2 0.5 1.11
+> Extrinsic, correct call +correct answer (both required) 1.0 1.0 1.0 1.40
+
+34 Table 18: Supplementary table (appendix B). Implementation differences and prompt sensitivity: neutral protocol-alignment records. The MCQ-order row comes from a quarantined self-audit run and is indicative only. 
+
+Measurement Numbers Source WeaveEarth paper-reported (LRS-VQA full set) 26.68 → 33.38 ( +6 .70 ) paper Released script, 300-record stratified paired, both arms greedy 29.67 → 32.33 ( +2 .67 , 24/32 dis-cordant, McNemar exact p =0.350 )this work, Sec-tion 5.1 Category task-type line asymmetry (released baseline lacks it, treatment arm has it) paired control (E20): ∆ = −1.7
+
+points, McNemar p = 0 .51 — no answer leakage; the earlier ≈3.7-point cross-protocol inference is re-futed this work (E20) MCQ option-instruction order (self-audit run, indicative) 25.47 → 35.93 ( ≈10 .5-point swing; 34% of outputs degrade to prose) quarantined audit 
+
+per-task-type GCC retrieval-recall detail (Section 6.3), and the qualitative case table of Section 5.8. classification counting detection reasoning segmentation 0.0 0.1 0.2 0.3 0.4 0.5    
+
+> answer accuracy
+> 0.44 0.11 0.11 0.28 0.39 0.35 0.20 0.23 0.29 0.41
+> overall 0.265 vs 0.296 ( +3.1 pt, McNemar p=0.043)
+> template phrasing (E3a arm) LLM visual rephrasing (992 pairs)
+
+Figure 11: Supplementary figure (appendix C). Query-wording sensitivity on the 992 paired records (zero-shot Qwen3-VL-8B, greedy; Table 11): per-task-type accuracy on the template split vs. the LLM-visual-rewrite split. The movement is a per-type reshuffle rather than systematic damage. 
+
+# References 
+
+[1] L. Ma et al. WeaveEarth: Structured evidence construction and reasoning for training-free ultra-high-resolution remote sensing understanding. In Proc. 34th ACM International Conference on Multimedia (MM) , 2026. [2] Y. Yao et al. RemoteAgent: Bridging vague human intents and earth observation with RL-based agentic MLLMs. arXiv preprint arXiv:2604.07765 , 2026. [3] T. Schick et al. Toolformer: Language models can teach themselves to use tools. arXiv preprint arXiv:2302.04761 , 2023. 
+
+35 classification counting detection reasoning segmentation 0.0 0.1 0.2 0.3 0.4 0.5 0.6    
+
+> answer accuracy (n=60 each)  0.52 0.37 0.05 0.40 0.00 0.38 0.37 0.13 0.32 0.22
+> paired -1.7 pt, McNemar p=0.51 (n=300) --- no significant leak
+> with Category line without Category line
+
+Figure 12: Supplementary figure (appendix C). Category-line paired control (300 records, 60 per task type, E15 checkpoint, greedy): per-type answer accuracy with vs. without the Category row (classification +13 .3, detection −8.3, reasoning +8 .3 points). The movement is a per-type reshuffle, not a systematic leak; the overall paired effect is −1.7 points ( p = 0 .51 ). Table 19: Supplementary table (appendix C). GCC retrieval recall per task type on the 660 spatial-ground-truth test records (gt-box-center criterion; Section 6.3). Counting has no spatial ground truth ( n=2 ) and is excluded from the uniformity statement. Classification and segmentation coincide exactly at this sample size (57/200 correct at both k=8 and k=6 ) — verified against the raw per-type output, not a transcription error. 
+
+Task type Recall@8 anchors Recall@6 final board n
+
+Classification 0.285 0.240 200 Counting 0.0 0.0 2Detection 0.323 0.258 62 Reasoning 0.296 0.204 196 Segmentation 0.285 0.240 200 All spatial records 0.291 0.230 660 
+
+[4] I. Ong et al. RouteLLM: Learning to route LLMs with preference data. arXiv preprint arXiv:2406.18665 , 2024. [5] W. Wang et al. XLRS-Bench: Could your multimodal LLM understand the massive remote sensing imagery? In Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [6] J. Luo et al. When large vision-language model meets large remote sensing imagery: Coarse-to-fine text-guided token pruning. Proc. ICCV , 2025. arXiv:2503.07588. [7] Y. Li et al. MME-RealWorld: Could your multimodal LLM challenge high-resolution real-world scenarios that are difficult for MLLMs? arXiv preprint arXiv:2407.12872 , 2024. [8] S. Bai et al. Qwen3-VL technical report. arXiv preprint arXiv:2511.21631 , 2025. [9] S. Bai et al. Qwen2.5-VL technical report. arXiv preprint arXiv:2502.13923 , 2025. [10] X. Zhai et al. SigLIP 2: Multilingual vision-language encoders with improved semantic understanding, dense, and instance-level losses. arXiv preprint arXiv:2502.14786 , 2025. [11] Z. Shao et al. DeepSeekMath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300 , 2024. 
+
+36 Table 20: Supplementary table (appendix C). Four qualitative cases from the E17 two-turn evaluation (greedy; Section 5.7, Eval A protocol — tool returns are annotation-grounded fallbacks, marker-free). Question IDs are given for reproducibility. ref-seg =
+
+referring_expression_segmentation .
+
+Case Query Stage-A decision and T_call Turn-2 tool return Output vs. GT C1 (det.) “What is the amount of boat in the image?” (4498 )extrinsic: 
+
+T_call(skysense_detection, classes=[object], confidence_threshold=0.5) 
+
+“Detection finished; 3 ob-jects localized.” 
+
+3 vs. 3 ✓
+
+C2 (seg.) “hey, what is the shape of the top-most tank?” (0177 )extrinsic: T_call(ref-seg, prompt= ⟨query ⟩)
+
+“Segmentation mask gen-erated.” 
+
+circular vs. circu-lar ✓
+
+C3 (intr.) “hey, what is the ac-tivity of the top-most plane?” ( 983 )intrinsic: no call; answers from thumbnail (+ evidence board) — (single turn) parked vs. parked ✓
+
+C4 (fail) “What is the amount of bridge in the image, roughly?” ( 11069 )extrinsic: 
+
+T_call(skysense_detection, classes=[bridge], confidence_threshold=0.5) 
+
+“Detection finished; 10 objects localized.” 3 vs. 10 ×
+
+[12] D. Guo et al. DeepSeek-R1: Incentivizing reasoning capability in LLMs via reinforcement learning. arXiv preprint arXiv:2501.12948 , 2025. [13] E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, and W. Chen. LoRA: Low-rank adaptation of large language models. In Proc. International Conference on Learning Representations (ICLR) , 2022. [14] W. Kwon, Z. Li, S. Zhuang, Y. Sheng, L. Zheng, C. H. Yu, J. Gonzalez, H. Zhang, and I. Stoica. Efficient memory management for large language model serving with PagedAttention. In Proc. 29th Symposium on Operating Systems Principles (SOSP) , 2023. [15] L. von Werra, Y. Belkada, L. Tunstall, E. Beeching, T. Thibon, M. Villa, Q. Chaptal, and K. McAleenan. TRL: Transformer reinforcement learning. https://github.com/huggingface/trl , 2020. [16] Anthropic. Model context protocol. https://modelcontextprotocol.io , 2024. [17] A. Kirillov, E. Mintun, N. Ravi, H. Mao, C. Rolland, L. Gustafson, T. Xiao, S. Whitehead, A. C. Berg, W.-Y. Lo, P. Dollár, and R. Girshick. Segment anything. In Proc. IEEE/CVF International Conference on Computer Vision (ICCV) , 2023. [18] D. Chen, S. Cahyawijaya, J. Liu, B. Wang, and P. Fung. Subobject-level image tokenization. In Proc. Interna-tional Conference on Machine Learning (ICML) , 2025. arXiv:2402.14327. [19] F. Wang et al. GeoLLaVA-8K: Scaling remote-sensing multimodal large language models to 8K resolution. 
+
+Proc. NeurIPS , 2025. arXiv:2505.21375. [20] H. Zhao et al. ZoomEye: Enhancing multimodal LLMs with human-like zooming capabilities through tree-based image exploration. arXiv preprint arXiv:2411.16044 , 2024. [21] R. Liu et al. ZoomEarth: Active perception for ultra-high-resolution geospatial vision-language tasks. arXiv preprint arXiv:2511.12267 , 2025. [22] Y. Zhou et al. Look where it matters: Training-free ultra-HR remote sensing VQA via adaptive zoom search. 
+
+arXiv preprint arXiv:2511.20460 , 2025. [23] W. Xu et al. RS-Agent: Automating remote sensing tasks through intelligent agent. Science China Information Sciences , 69(8):180302, 2026. arXiv:2406.07089. 
+
+37 [24] K. Li, J. Wang, et al. Designing domain-specific agents via hierarchical task abstraction mechanism. arXiv preprint arXiv:2511.17198 , 2025. [25] A. Shabbir et al. OpenEarthAgent: A unified framework for tool-augmented geospatial agents. Proc. ECCV ,2026. arXiv:2602.17665. [26] S. Inadumi, S. Kawano, and A. Yuguchi et al. A gaze-grounded visual question answering dataset for clarifying ambiguous Japanese questions. Proc. LREC-COLING , 2024. arXiv:2403.17545. [27] P. Jian et al. Teaching vision-language models to ask: Resolving ambiguity in visual questions. Proc. ACL ,2025. arXiv:2507.13773. [28] X. Li et al. ToRL: Scaling tool-integrated reinforcement learning. arXiv preprint arXiv:2503.23383 , 2025. [29] C. Qian et al. ToolRL: Reward is all tool learning needs. In Proc. Advances in Neural Information Processing Systems (NeurIPS) , 2025. [30] Q. Yu et al. DAPO: An open-source LLM reinforcement learning system at scale. arXiv preprint arXiv:2503.14476 , 2025. [31] K. Kuckreja, M. Danish, M. Naseer, A. Das, S. Khan, and F. Khan. GeoChat: Grounded large vision-language model for remote sensing. In Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. arXiv:2403.06476. [32] W. Zhang, M. Cai, T. Zhang, Y. Zhuang, and X. Mao. EarthGPT: A universal multimodal large language model for multisensor image comprehension in remote sensing domain. IEEE Transactions on Geoscience and Remote Sensing , 62, 2024. doi:10.1109/TGRS.2024.3409624. [33] W. Zhang, M. Cai, Y. Ning, T. Zhang, Y. Zhuang, S. Lu, H. Chen, J. Li, and X. Mao. EarthGPT-X: A spatial MLLM for multilevel multisource remote sensing imagery understanding with visual prompting. IEEE Transactions on Geoscience and Remote Sensing , 63, 2025. doi:10.1109/TGRS.2025.3626941. [34] Y. Hu, J. Yuan, C. Wen, X. Lu, Y. Liu, and X. Li. RSGPT: A remote sensing vision language model and benchmark. ISPRS Journal of Photogrammetry and Remote Sensing , 2025. doi:10.1016/j.isprsjprs.2025.03.028. [35] Z. Li, D. Muhtar, F. Gu, X. Zhang, P. Xiao, G. He, and X. Zhu. LHRS-Bot-Nova: Improved multimodal large language model for remote sensing vision-language interpretation. ISPRS Journal of Photogrammetry and Remote Sensing , 2025. doi:10.1016/j.isprsjprs.2025.06.003. arXiv:2411.09301. [36] Y. Bazi, L. Bashmal, M. M. Al Rahhal, and R. Ricci. RS-LLaVA: A large vision-language model for joint captioning and question answering in remote sensing imagery. Remote Sensing , 16(9):1477, 2024. doi:10.3390/rs16091477. [37] J. Luo et al. SkySenseGPT: A vision-language foundation model for remote sensing. arXiv:2406.10100, 2024. [38] C. Pang, X. Weng, J. Wu, J. Li, Y. Liu, J. Sun, W. Li, S. Wang, L. Feng, G.-S. Xia, and C. He. VHM: Versatile and honest vision language model for remote sensing image analysis. In Proc. AAAI Conference on Artificial Intelligence , 39(6), 2025. doi:10.1609/aaai.v39i6.32683. [39] Z. Zhang, T. Zhao, Y. Guo, and J. Yin. RS5M and GeoRSCLIP: A large-scale vision-language dataset and a large vision-language model for remote sensing. IEEE Transactions on Geoscience and Remote Sensing , 62, 2024. doi:10.1109/TGRS.2024.3449154. 
+
+38
