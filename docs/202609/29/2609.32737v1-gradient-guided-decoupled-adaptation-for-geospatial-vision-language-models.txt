@@ -1,0 +1,471 @@
+Title: Gradient-Guided Decoupled Adaptation for Geospatial Vision-Language Models
+
+URL Source: https://arxiv.org/pdf/2609.32737v1
+
+Published Time: Tue, 29 Sep 2026 01:13:18 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# Gradient-Guided Decoupled Adaptation for Geospatial Vision-Language Models 
+
+## Dongdong Wang 1∗, Deepak Balakrishnan 1, Ravi Srinivasan 1, Shenhao Wang 1∗
+
+> 1
+
+University of Florida Gainesville, FL, USA {dongdongwang, deepakbd, sravi, shenhaowang}@ufl.edu 
+
+Abstract 
+
+Existing geospatial vision-language models (Geo-VLMs) typ-ically optimize diverse geospatial tasks through a unified multi-task adaptation paradigm without explicitly accounting for the heterogeneous optimization characteristics. Our empir-ical observations reveal heterogeneous gradient characteris-tics across tasks, including vision-language differences, intra-branch gradient relationships, and task interference, which hinder effective multi-task optimization. Motivated by these observations, we propose Gradient-Guided Decoupled Adap-tation (G 2DA), a gradient-aware optimization framework for multi-task Geo-VLM learning. G 2DA first partitions tasks into vision- and language-centric groups through gradient-guided cross-modal decoupling. It then constructs modality-specific curricula based on task gradient similarity and employs bidi-rectional rehearsal to mitigate the recency effects introduced by sequential optimization. We evaluate G 2DA on three Geo-VLM benchmarks using six InternVL3 and Qwen3.5-VL vari-ants, along with GeoChat and GeoLLaVA. Across all 24 benchmark–model combinations, G 2DA consistently outper-forms representative baselines, improving over the strongest competitor by 3.08, 4.30, and 2.81 percentage points on UrBench-MCQ, XLRS-Bench-Lite, and VRS-Bench-VQA, respectively. These results demonstrate the effectiveness of gradient-guided task organization for Geo-VLM adaptation. 
+
+## Introduction 
+
+Recent vision-language models (VLMs) have achieved strong performance across a wide range of multimodal rea-soning tasks. Building on these advances, geospatial vision-language models (Geo-VLMs) have emerged as a powerful framework for geospatial intelligence by jointly modeling multi-view geospatial imagery and natural language (Mai et al. 2024). To support diverse reasoning capabilities within a single model, including visual perception, object ground-ing, spatial reasoning, retrieval, and quantitative analysis, existing approaches predominantly adopt unified multi-task learning, where tasks with substantially different objectives are jointly optimized using shared model parameters (Kuck-reja et al. 2024; Feng et al. 2025; Wang et al. 2026). While unified multi-task learning facilitates knowledge sharing across tasks, it jointly optimizes heterogeneous tasks using shared model parameters, implicitly assuming compat-
+
+> ∗
+
+Corresponding author. 
+
+ible optimization objectives. However, geospatial tasks ex-hibit substantially different optimization characteristics due to their varying reliance on visual perception and language reasoning (Zhou et al. 2025). Consequently, they generate heterogeneous optimization signals, and jointly optimizing them within a shared parameter space often introduces con-flicting gradients that hinder effective multi-task adaptation (Jeong and Yoon 2025). Existing multi-task optimization methods mitigate gradi-ent conflicts through projection (Yu et al. 2020), reweight-ing (Chen et al. 2018), or balancing (Liu et al. 2023a), yet still optimize all tasks within a unified parameter space. This assumption is particularly challenging for Geo-VLMs, where tasks exhibit heterogeneous optimization demands across vi-sion and language encoders due to their varying reliance on visual perception and language reasoning. Consequently, op-timization strategies designed for a unified parameter space may fail to fully exploit these cross-modal characteristics. Our empirical gradient analysis reveals substantial gradient conflicts across the task set, distinct optimization preferences between the vision and language components, and persistent intra-encoder interference within each component. Motivated by these observations, we propose G 2DA, a gradient-guided optimization framework for Geo-VLM adaptation. Unlike prior methods that optimize all tasks within a unified parameter space, G 2DA organizes multi-task optimization according to heterogeneous cross-modal gradient characteristics through gradient-guided decoupling, modality-specific curriculum learning, and bidirectional re-hearsal. Our contributions are summarized as follows: 
+
+• We present a gradient-centric analysis of multi-task opti-mization in Geo-VLMs. Our empirical study reveals hier-archical optimization heterogeneity, including cross-task gradient conflicts, distinct optimization preferences be-tween vision and language components, and persistent intra-component task interference. 
+
+• Given the empirical analyses, we design G 2DA, a unified gradient-guided optimization framework that integrates cross-modal optimization decoupling, modality-specific curriculum learning, and cross-task rehearsal to address optimization heterogeneity in Geo-VLM learning. 
+
+• Extensive experiments on multiple Geo-VLM bench-marks and diverse model families demonstrate that G 2DA arXiv:2609.32737v1 [cs.CV] 26 Sep 2026 consistently outperforms representative baselines, es-tablishing gradient-guided optimization as an effective paradigm for adapting Geo-VLMs. 
+
+## Related Work 
+
+Geospatial Vision-Language Models 
+
+Recent advances in VLMs (Bai et al. 2023; Chen et al. 2024) have enabled the adaptation of general-purpose VLMs to geospatial domains through instruction tuning (Liu et al. 2023b), leading to models such as GeoChat (Kuckreja et al. 2024) and GeoLLaVA (Wang et al. 2026). At the same time, geospatial benchmarks including UrBench (Zhou et al. 2025), XLRS-Bench (Wang et al. 2025), and VRS-Bench (Li, Ding, and Elhoseiny 2024) have accelerated Geo-VLM de-velopment by supporting unified training and evaluation across diverse reasoning tasks. Despite their architectural dif-ferences, existing Geo-VLMs are typically adapted through unified multi-task learning, jointly optimizing heterogeneous tasks under a shared objective without considering their op-timization compatibility (Kuckreja et al. 2024; Feng et al. 2025; Wang et al. 2026). As task diversity continues to in-crease, this unified optimization strategy can introduce gra-dient interference, limiting the efficiency and effectiveness of multi-task adaptation. 
+
+Gradient Conflict in Multi-task Learning 
+
+Multi-task learning improves generalization by jointly opti-mizing multiple tasks within a shared model. Existing opti-mization methods primarily mitigate task interference caused by conflicting gradients. PCGrad (Yu et al. 2020) alleviates conflicts through gradient projection, while CAGrad (Liu et al. 2021) computes conflict-aware gradient updates via adaptive gradient combination. GradNorm (Chen et al. 2018) and FAMO (Liu et al. 2023a) balance task optimization through adaptive gradient weighting. More recently, Selec-tive Group Update (STGU) (Jeong and Yoon 2025) shifts the focus from gradient modification to task scheduling, demon-strating improved optimization for heterogeneous multi-task learning. However, these methods, including STGU, still op-timize heterogeneous tasks within a unified parameter space, overlooking the distinct optimization characteristics of the vi-sion and language components in Geo-VLMs. Consequently, they are not designed to exploit task-specific cross-modal optimization preferences that naturally arise in Geo-VLM adaptation. 
+
+Curriculum and Rehearsal Learning 
+
+Curriculum learning improves optimization by organizing training samples or tasks into a structured learning se-quence rather than random presentation (Bengio et al. 2009), and has been extended to multi-task learning through task-level scheduling strategies that improve optimization effi-ciency (Wang, Chen, and Zhu 2021). However, sequential curricula may introduce optimization imbalance across tasks as training progresses and earlier tasks are no longer re-visited. Indeed, one-pass curriculum scheduling has been linked to continual learning, where stage-wise optimization may lead to catastrophic forgetting (Wang, Chen, and Zhu 2021). Rehearsal-based learning mitigates this issue by re-visiting previously learned samples or tasks during optimiza-tion, and has proven particularly effective for heterogeneous tasks with low similarity (Deng et al. 2025). Nevertheless, ex-isting rehearsal methods are primarily designed for continual learning, while their application to mitigating optimization imbalance in sequential curriculum learning for multi-task Geo-VLM adaptation remains unexplored. 
+
+## Method 
+
+Problem Formulation 
+
+Let T = {T1, T 2, . . . , T N } denote a set of Geo-VLM tasks. Each task Ti is associated with a dataset Di = {(x, q, y)},where x is an image, q is a language query, and y is the supervision. A unified Geo-VLM f (·; Θ) is optimized over all tasks with the objective 
+
+L(Θ) = 
+
+> N
+
+X
+
+> i=1
+
+λiLi(Θ) , (1) where Li is the task-specific loss and λi balances its contri-bution to the overall objective. Unlike conventional multi-task learning, which primarily aims to improve the converged solution, we study a fixed-budget optimization setting. Let B denote the total number of parameter updates available during training. Under the same initialization Θ0 and optimization budget B, the final optimization outcome depends on how heterogeneous task data are presented throughout training. We represent the en-tire training schedule as 
+
+Π = 
+
+n
+
+D(1) , D (2) , . . . , D (B)o
+
+, (2) where each mini-batch D(t) ∈ SNi=1 Di is sampled from one of the task datasets. Different schedules Π induce dif-ferent optimization trajectories and therefore different model parameters after exactly B updates, denoted by ΘΠ 
+
+> B
+
+.Our objective is to design an effective training schedule that improves the joint optimization objective under the same optimization budget: 
+
+L(Θ Π 
+
+> B
+
+) = 
+
+> N
+
+X
+
+> i=1
+
+λiLi(Θ Π 
+
+> B
+
+), s.t. |Π| = B. (3) This formulation raises a fundamental question: How should heterogeneous Geo-VLM tasks be organized under a fixed optimization budget? To answer this question, we analyze task gradients to characterize optimization hetero-geneity and use these observations to guide the design of G2DA. 
+
+Gradient Characterization 
+
+To better understand the optimization challenges under a fixed update budget, we characterize heterogeneous geospa-tial vision-language tasks through gradient analysis. Specifi-cally, for each task, we compute the gradient with respect to Figure 1: Task-gradient analysis on UrBench-MCQ. (a) Pair-wise task-gradient cosine similarity matrix. Positive (red) and negative (blue) values indicate aligned and conflicting optimization directions. (b) Normalized proportions of the total gradient norm contributed by the vision (green) and language (pink) encoders for each task. the trainable parameters and use the gradient cosine similar-ity as a proxy to quantify pairwise optimization alignment. 
+
+Sij = g⊤ 
+
+> i
+
+gj
+
+∥gi∥2∥gj ∥2
+
+, (4) where gi and gj denote the task gradients of tasks i and j,respectively. To characterize each task’s cross-modal optimization pref-erence, we further compute its vision gradient proportion as another proxy, 
+
+ri = ∥gvi ∥2
+
+∥gvi ∥2 + ∥gli∥2
+
+, (5) where gvi and gli represent the gradients on the vision and language encoders, respectively. With this proxy, a larger 
+
+ri indicates stronger optimization demand on the vision en-coder, while a smaller value indicates greater reliance on the language encoder. Together, the gradient cosine similarity and gradient proportion characterize inter-task optimization compatibility and cross-modal optimization preference, re-spectively. We first use UrBench (Zhou et al. 2025), where all ques-tions are reformulated into multiple-choice format (UrBench-MCQ), as a pilot benchmark to empirically analyze the gradient behavior of heterogeneous Geo-VLM tasks using Qwen3.5-VL-2B. The resulting analyses reveal three obser-vations that motivate the design of G 2DA. Corresponding results on additional benchmarks are included in the supple-mentary material. 
+
+Observation 1: Inter-task gradient conflict. Different Geo-VLM tasks often induce substantially different opti-mization directions. As shown by the pairwise gradient cosine similarity matrices, some task pairs exhibit highly aligned gradients, whereas others are nearly orthogonal or negatively correlated. A negative cosine similarity indicates that decreasing the loss of one task may increase the loss of another under the same parameter update. Therefore, uni-formly mixing heterogeneous tasks in conventional multi-task training introduces optimization interference and re-duces optimization efficiency. 
+
+Observation 2: Cross-modal optimization imbal-ance. Different tasks exhibit substantially different vi-sion–language gradient proportions: some are predominantly optimized through visual representations, whereas others rely primarily on language reasoning, with many requiring balanced optimization across both modalities. This heteroge-neous optimization demand suggests that applying identical parameter updates across both encoders is inefficient, moti-vating modality-aware optimization. 
+
+Observation 3: Intra-encoder gradient heterogeneity. 
+
+Even after separating tasks according to their cross-modal op-timization characteristics, substantial gradient heterogeneity remains within each encoder. Pairwise gradient cosine simi-larities reveal that tasks optimized on the same encoder still exhibit diverse optimization directions, indicating that en-coder decoupling alone cannot fully eliminate optimization interference. This observation motivates gradient-aware cur-riculum scheduling within each encoder. 
+
+Figure 2: Task-level gradient cosine similarity after cross-modal decoupling and curriculum ordering on UrBench-MCQ. 
+
+Optimization 
+
+Motivated by the observations above, we propose G 2DA, a unified optimization framework for fixed-budget Geo-VLM adaptation. Unlike conventional multi-task learning, Geo-VLM tasks exhibit heterogeneous optimization preferences across vision and language encoders due to their varying re-liance on visual perception and language reasoning. There-fore, rather than organizing tasks solely according to pairwise gradient similarity, G 2DA first decouples tasks based on their cross-modal optimization preferences and then models task compatibility within each modality through gradient-aware curriculum scheduling, followed by bidirectional rehearsal for knowledge preservation. The overall framework is illus-trated in Figure 3. 
+
+Gradient-guided cross-modal decoupling. Motivated by Observation 2, we use the vision gradient proportion ri in Eq. 5 as a proxy to characterize each task’s relative pref-erence for the vision and language encoders. Based on the estimated gradient proportion ri, tasks are divided into two groups: vision-centric and language-centric tasks. Grouping tasks with similar cross-modal preferences reduces interfer-ence caused by heterogeneous encoder demands and allows the optimization budget to be allocated more effectively. As Vision-centric     
+
+> Tasks
+> Language-centric
+> Tasks
+> Encoder
+> Language
+> Vision
+> Encoder
+> Vision
+> LoRA
+> Language
+> LoRA
+> Bidirectional Rehearsal
+> Bidirectional Rehearsal
+> Geospatial VQA Tasks
+> 𝑇 = {𝑡 1,𝑡 2,…, 𝑡 𝑁 }
+> ⋯
+> ⋯
+> Gradient Proportion
+> { ҧ𝑔 𝑡 }
+
+𝑇 𝑣 
+
+𝑇 𝑙  
+
+> Vision
+> Tasks
+
+𝑇 𝑣  
+
+> Language
+> Tasks
+
+𝑇 𝑙       
+
+> Stage 1 Gradient-guided
+> Cross-modal Decoupling
+> Inference
+> 𝑡 1𝑣 𝑡 2𝑣 𝑡 3𝑣 𝑡 4𝑣
+> 𝑡 1
+> 𝑙 𝑡 2𝑙 𝑡 3𝑙 𝑡 4𝑙
+> Per-Task
+> Average
+> Gradient
+> VLM
+> Decoder
+
+VLM 
+
+> Stage 2 Gradient-aware
+> Curriculum Scheduling
+> ⋯
+> 𝑡 1𝑣
+> 𝑡 2𝑣
+> 𝑡 3𝑣
+> Stage 3 Curriculum-guided
+> Bidirectional Rehearsal
+> ⋯
+> 𝑡 1𝑙
+> 𝑡 2𝑙
+> 𝑡 3𝑙
+> Task Similarity
+> Task Similarity
+> Curriculum Learning
+> Curriculum Learning
+> 1
+> 𝑇 − 1 ෍
+> 𝑗
+> 𝑆 𝑖𝑗
+> Ranking
+> Ranking
+> 1
+> 𝑇 − 1 ෍
+> 𝑗
+> 𝑆 𝑖𝑗
+
+Figure 3: Overview of the proposed G 2DA framework, consisting of gradient-guided cross-modal decoupling, gradient-aware curriculum scheduling, and bidirectional rehearsal. shown in Figure 2, cross-modal decoupling increases lo-cal gradient cosine similarity, indicating improved optimiza-tion compatibility within each branch. However, consider-able intra-branch gradient conflicts remain, motivating the branch-specific curriculum learning introduced in the next stage. 
+
+Gradient-aware curriculum scheduling. Motivated by Observation 3, we compute gradient cosine similarities within each modality-centric optimization group to charac-terize task compatibility. Specifically, for task ti, the curricu-lum score is defined as 
+
+ϕei = 1
+
+|T e| − 1
+
+X  
+
+> j∈T e
+> j̸=i
+
+(¯ g ei )⊤ ¯g ej
+
+∥¯g ei ∥2∥¯g ej ∥2
+
+, (6) where T e denotes one of the vision- or language-centric task groups. Tasks with higher average compatibility are op-timized earlier, yielding a curriculum that progresses from broadly aligned to relatively conflicting tasks. By construct-ing the curriculum within each modality-centric group, the proposed strategy replaces random shuffling with gradient-aware sequential training, improving optimization compat-ibility between consecutive tasks. However, this sequential optimization also introduces recency effects and catastrophic forgetting (Kemker et al. 2018), motivating the bidirectional rehearsal strategy described next. 
+
+Bidirectional rehearsal for knowledge preservation. 
+
+Once the curriculum is established, tasks are optimized se-quentially according to the curriculum order. Such sequential optimization inevitably introduces a recency effect, where knowledge acquired in earlier stages is gradually overwrit-ten by later stages. To alleviate this issue, we optimize each task group in both the ascending curriculum order and its re-verse, allowing every curriculum stage to be optimized once in descending compatibility order and once in the reverse or-der. Meanwhile, for each curriculum direction, the effective training set of stage k is defined as 
+
+˜Dk = Dk ∪ M k, (7) where Dk denotes the current curriculum stage and 
+
+Mk ∼ Uniform( Dck), |M k| = |D k|, (8) is a rehearsal set uniformly sampled from the complementary curriculum stages Dck such that the total number of rehearsal samples equals the size of the current stage. During optimiza-tion, mini-batches are uniformly sampled from the effective training set ˜Dk. By traversing the curriculum in both ascend-ing and descending similarity orders while jointly optimiz-ing the current-stage and rehearsal samples, the proposed bidirectional rehearsal preserves knowledge across the en-tire curriculum, mitigates optimization drift, and improves balanced performance across heterogeneous tasks. 
+
+G2DA Framework 
+
+Algorithm 1 summarizes the optimization procedure of G2DA. Given the task-level average gradients {¯gvt , ¯glt}Tt=1 ,G2DA first computes the gradient proportion rt for each task and partitions the task set into T v and T l. For each modal-ity e ∈ { v, l }, pairwise gradient cosine similarities Seij are computed to obtain the curriculum scores ϕei , from which the curriculum order Πe is constructed. Finally, for each curriculum order and its reverse, rehearsal samples Mk are uniformly drawn from the remaining datasets to form the augmented training set ˜Dk, which is used to optimize the corresponding parameters Θe.
+
+## Experiment 
+
+Experimental Setup 
+
+Benchmarks and evaluation. We evaluate G 2DA on three Geo-VLM benchmarks: UrBench-MCQ, XLRS-Bench-Lite, and the VQA subset of VRS-Bench (VRS-Bench-VQA). All VQA tasks are reformulated as multiple-choice questions with images resized to 1024 × 1024 . Performance is mea-sured by accuracy (%) averaged across all tasks. All exper-iments are repeated with three random seeds, and the mean and standard deviation are reported. Additional benchmark details are provided in the supplementary material. 
+
+Models and baselines. We evaluate G 2DA on two general-purpose VLM families, InternVL3 and Qwen3.5-VL, across multiple model scales, together with two representative Geo-VLMs, GeoChat and GeoLLaVA. We compare against rep-resentative multi-task optimization methods, including Joint training, GradNorm (Chen et al. 2018), PCGrad (Yu et al. Algorithm 1: G 2DA Optimization 
+
+Require: Task datasets {D t}Tt=1 , parameters Θ = {Θv , Θl}
+
+Ensure: Optimized parameters Θ 
+
+> 1:
+
+Compute task-level average gradients {¯gvt , ¯glt}Tt=1  
+
+> 2:
+
+Stage 1: Cross-modal decoupling  
+
+> 3:
+
+for t = 1 , . . . , T do  
+
+> 4:
+
+rt ← ∥¯gvt ∥2  
+
+> ∥¯gvt∥2+∥¯glt∥2
+> 5:
+
+end for  
+
+> 6:
+
+T v ← { t : rt > 0.5}, T l ← { t : rt ≤ 0.5} 
+
+> 7:
+
+Stage 2: Gradient-aware curriculum  
+
+> 8:
+
+for e ∈ { v, l } do  
+
+> 9:
+
+Seij ← cos(¯ gei , ¯gej ), i, j ∈ T e 
+
+> 10:
+
+ϕei ← 1 
+
+> |T e|− 1
+
+P  
+
+> j̸=i
+
+Seij  
+
+> 11:
+
+Πe ← Sort ↓({ϕei }i∈T e ) 
+
+> 12:
+
+end for  
+
+> 13:
+
+Stage 3: Bidirectional rehearsal  
+
+> 14:
+
+for e ∈ { v, l } do  
+
+> 15:
+
+for π ∈ { Πe, Reverse(Π e)} do  
+
+> 16:
+
+for Dk ∈ π do  
+
+> 17:
+
+Dck ← S 
+
+> Di∈π, i ̸=k
+
+Di 
+
+> 18:
+
+Mk ∼ Uniform( Dck), |M k| = |D k| 
+
+> 19:
+
+˜Dk ← D k ∪ M k 
+
+> 20:
+
+Optimize Θe on ˜Dk 
+
+> 21:
+
+end for  
+
+> 22:
+
+end for  
+
+> 23:
+
+end for  
+
+> 24:
+
+return Θ
+
+2020), CAGrad (Liu et al. 2021), FAMO (Liu et al. 2023a), and STGU (Jeong and Yoon 2025), covering gradient balanc-ing, conflict mitigation, adaptive multi-objective optimiza-tion, and task scheduling. All methods are evaluated under identical optimization budgets. 
+
+Implementation details. Experiments are conducted on four NVIDIA B200 GPUs (180 GB each) using bfloat16 
+
+precision and the AdamW optimizer. The batch size is 1 with gradient accumulation over 8 steps, and the generation tem-perature is fixed at 1. Baselines are trained for 8 epochs, while G2DA is trained for 2 epochs. Since each epoch of G 2DA per-forms both forward and reverse curricula with bidirectional rehearsal, the total number of optimization steps is compara-ble across methods. The learning rate and weight decay are 
+
+5×10 −6 and 1×10 −6, respectively. LoRA adapters use rank 
+
+r = 8 , scaling factor α = 16 , and dropout 0.1.
+
+Results 
+
+Table 1 summarizes the overall performance. G 2DA achieves the best results in all 24 benchmark-model combinations, in-dicating consistent performance across diverse architectures and model scales. Compared with the strongest competing baseline in each setting, G 2DA still improves performance. On UrBench-MCQ, G 2DA improves performance by 3.08 pp on average, with gains ranging from 1.0 to 7.0 pp. Existing gradient manipulation methods, such as PCGrad and CA-Grad, often perform comparably to or even worse than joint optimization, while STGU is generally the strongest baseline. On the more challenging XLRS-Bench-Lite, the advantage of G 2DA becomes more pronounced. G 2DA improves upon the strongest baseline by an average of 4.30 pp, with improve-ments reaching 8.0 pp on Qwen3.5-VL-27B and 7.0 pp on InternVL3-14B. On VRS-Bench-VQA, G 2DA achieves an average improvement of 2.81 pp over the strongest baseline, with gains of up to 5.0 pp. Table 1 also evaluates G 2DA on two representative Geo-VLMs, GeoChat and GeoLLaVA. Com-pared with the strongest competing baseline, G 2DA improves performance by 2-5 pp, demonstrating that the proposed opti-mization framework is not limited to general-purpose VLMs but also transfers effectively to domain-specific Geo-VLMs. 
+
+Analyses 
+
+Existing multi-task optimization methods show limited transferability to Geo-VLMs. From Table 1, none of the representative multi-task optimization methods consistently outperform joint training with random task shuffling. PC-Grad and CAGrad incur the largest performance degradation, while GradNorm and FAMO exhibit comparatively smaller drops, although neither surpasses the joint-training base-line. This suggests that optimization strategies developed for conventional multi-task learning do not readily transfer to Geo-VLMs. One possible explanation is that the substan-tially higher task heterogeneity limits the effectiveness of generic gradient-based optimization. In particular, explicitly modifying gradient directions, as in PCGrad and CAGrad, may become unreliable when tasks differ significantly, while gradient reweighting methods such as GradNorm and FAMO are less disruptive but remain insufficient. In contrast, STGU achieves more competitive performance by incorporating task scheduling rather than directly modify-ing gradient directions, suggesting that organizing heteroge-neous tasks may be a more effective alternative to explicit gra-dient manipulation. G 2DA further extends this optimization paradigm by first performing gradient-guided cross-modal task partitioning and then constructing modality-specific cur-ricula within each branch. This hierarchical organization re-duces both cross-modal interference and intra-branch task conflicts, consistently outperforming STGU across all bench-marks and model architectures. Together, these results sug-gest that modality-aware optimization better leverages task heterogeneity for Geo-VLM adaptation. 
+
+Compatibility across model architectures. G2DA con-sistently improves performance across both general-purpose and remote sensing-specific vision-language models, demon-strating good architectural compatibility. The gains are par-ticularly pronounced on InternVL3 and GeoLLaVA, both of which adopt relatively decoupled vision-language architec-tures that better align with the proposed cross-modal opti-mization strategy. In contrast, improvements on Qwen3.5-VL are generally smaller but remain consistent across all model scales, indicating that G 2DA does not depend on a specific backbone design. Furthermore, the consistent improvements observed on GeoChat and GeoLLaVA suggest that the pro-Table 1: Performance (%) over three independent runs. Best results are shown in bold , and second-best are underlined. 
+
+Benchmark Model Optimization Method Joint PCGrad GradNorm STGU CAGrad FAMO G2DA 
+
+UrBench-MCQ GeoChat-7B 51 .1±0.2 48 .5±0.2 49 .9±0.2 51 .2±0.3 48 .3±0.2 50 .2±0.3 54 .1±0.2
+
+GeoLLaVA-8B 51 .7±0.2 48 .5±0.2 50 .4±0.3 50 .3±0.2 48 .6±0.2 50 .3±0.2 54 .8±0.2
+
+InternVL3-2B 44 .2±0.2 39 .2±0.1 43 .4±0.3 45 .8±0.2 39 .9±0.2 43 .2±0.3 48 .8±0.3
+
+InternVL3-8B 51 .9±0.1 48 .1±0.4 51 .9±0.4 54 .9±0.3 48 .1±0.2 51 .8±0.2 57 .8±0.1
+
+InternVL3-14B 61 .1±0.2 53 .8±0.2 61 .1±0.2 63 .8±0.2 54 .1±0.1 61 .4±0.2 66 .8±0.2
+
+Qwen3.5-VL-2B 44 .8±0.1 40 .9±0.3 45 .0±0.3 46 .1±0.2 41 .1±0.3 46 .1±0.2 49 .0±0.3
+
+Qwen3.5-VL-8B 55 .0±0.3 52 .0±0.3 56 .0±0.3 56 .0±0.4 52 .0±0.3 55 .0±0.1 59 .0±0.3
+
+Qwen3.5-VL-27B 64 .8±0.3 64 .1±0.3 60 .2±0.3 65 .1±0.3 60 .9±0.3 64 .1±0.2 68 .7±0.2
+
+XLRS-Bench-Lite GeoChat-7B 38 .4±0.2 35 .3±0.2 37 .4±0.2 39 .0±0.2 35 .3±0.2 38 .5±0.2 41 .0±0.2
+
+GeoLLaVA-8B 43 .8±0.2 39 .9±0.2 42 .4±0.2 43 .0±0.2 39 .9±0.2 42 .7±0.2 47 .8±0.2
+
+InternVL3-2B 34 .8±0.2 31 .1±0.1 34 .1±0.2 35 .8±0.2 31 .1±0.2 32 .8±0.2 38 .1±0.2
+
+InternVL3-8B 38 .1±0.3 34 .5±0.4 36 .1±0.3 38 .6±0.4 34 .3±0.3 35 .9±0.2 42 .2±0.4
+
+InternVL3-14B 35 .8±0.2 32 .8±0.1 34 .8±0.2 38 .1±0.2 34 .1±0.2 34 .8±0.2 45 .1±0.2
+
+Qwen3.5-VL-2B 33 .2±0.2 31 .5±0.2 34 .1±0.2 35 .8±0.1 30 .9±0.2 33 .8±0.1 37 .0±0.2
+
+Qwen3.5-VL-8B 32 .9±0.1 30 .9±0.3 33 .8±0.2 36 .1±0.2 32 .1±0.2 33 .1±0.1 42 .1±0.2
+
+Qwen3.5-VL-27B 34 .1±0.2 31 .9±0.2 33 .8±0.2 35 .8±0.3 30 .8±0.1 33 .8±0.3 44 .1±0.2
+
+VRS-Bench-VQA GeoChat-7B 65 .3±0.2 61 .3±0.2 63 .5±0.2 65 .9±0.2 61 .3±0.2 64 .1±0.2 69 .9±0.2
+
+GeoLLaVA-8B 70 .8±0.2 65 .1±0.2 67 .8±0.2 70 .7±0.2 65 .1±0.2 66 .8±0.2 74 .9±0.2
+
+InternVL3-2B 65 .4±0.3 60 .9±0.4 65 .4±0.3 65 .1±0.4 61 .0±0.3 63 .0±0.4 68 .5±0.3
+
+InternVL3-8B 68 .3±0.4 65 .4±0.3 67 .4±0.1 70 .2±0.1 65 .8±0.3 63 .1±0.4 72 .8±0.2
+
+InternVL3-14B 70 .2±0.3 66 .1±0.4 65 .8±0.3 70 .9±0.3 65 .1±0.3 65 .2±0.3 75 .2±0.4
+
+Qwen3.5-VL-2B 64 .8±0.1 60 .2±0.2 64 .7±0.1 64 .7±0.2 61 .9±0.2 61 .1±0.2 66 .1±0.3
+
+Qwen3.5-VL-8B 67 .8±0.2 64 .8±0.1 67 .8±0.2 69 .9±0.2 62 .8±0.2 67 .1±0.2 73 .0±0.1
+
+Qwen3.5-VL-27B 69 .9±0.2 65 .8±0.2 67 .1±0.2 70 .9±0.1 65 .8±0.2 65 .8±0.1 74 .1±0.2
+
+posed optimization framework generalizes beyond general-purpose VLMs to models specifically designed for remote sensing applications. 
+
+Benchmark-dependent behavior. The performance gains of G 2DA vary across benchmarks, likely reflecting differ-ences in benchmark characteristics. The largest improve-ments are observed on XLRS-Bench-Lite, which contains higher-resolution imagery and more fine-grained reasoning tasks. By comparison, VRS-Bench shows more moderate gains, possibly because its lower-resolution imagery and recognition-oriented tasks present a comparatively simpler optimization problem. UrBench also exhibits substantial im-provements, likely due to the optimization heterogeneity aris-ing from diverse street-view, cross-view, and remote-sensing tasks. These observations suggest that G 2DA is more benefi-cial when visual representation learning or task heterogeneity becomes more challenging. 
+
+Task-aware analysis. We further examine per-task per-formance on UrBench-MCQ in Table 2 by grouping tasks according to the vision- and language-oriented partition. Compared with joint training, G 2DA consistently improves nearly all tasks, with only marginal performance drops on Qwen3.5-VL-27B for City Retrieval ( −0.2) and Image Re-trieval ( −0.3), possibly because these retrieval tasks are par-ticularly challenging under limited training data and rely more heavily on the pretrained language model’s seman-tic representations (Zhou et al. 2025). The improvements are well balanced across both modalities, with Qwen3.5-VL-27B achieving gains of +3.7 and +3.4 percentage points on vision-and language-oriented tasks, respectively, and GeoLLaVA-8B showing comparable improvements of +2.9 and +3.6 per-centage points. This balanced improvement suggests that G2DA effectively mitigates cross-modal optimization in-terference without introducing modality bias. Furthermore, the largest gains are consistently observed on reasoning-intensive tasks, including Scene Recognition, Road Under-standing, and Counting, which exhibit the strongest gradient conflicts before decoupling (Fig. 1) and remain among the most conflicting tasks even after decoupling (Fig. 2), indi-cating that G 2DA is particularly beneficial for tasks with persistent optimization conflicts. 
+
+Gradient interaction after training. We further evaluate gradient conflict alleviation after training. We measure the conflict rate as the proportion of task pairs with negative cosine similarity, 
+
+Rconflict = 2
+
+N (N − 1) 
+
+X
+
+> i<j
+
+I(Sij < 0) , (9) Table 2: Per-task accuracy ( %) on UrBench-MCQ with tasks grouped into vision and language branches.                                                                       
+
+> Model Vision-oriented (V) Tasks Language-oriented (L) Tasks Average
+> Cam. Traffic Road Ori. Match City Count Img. Attr. Ground Role Comp. Scene VPR VLAll Qwen3.5-VL-27B (Joint) 41.2 68.1 66.7 30.1 59.8 70.2 78.1 45.3 49.9 70.4 71.1 85.7 76.1 85.2 53.2 70.2 65.1 Qwen3.5-VL-27B (G 2DA) 45.0 72.0 72.5 32.5 62.6 70.0 83.8 45.0 52.5 72.5 75.0 90.0 85.0 88.9 56.9 73.6 68.7 GeoLLaVA-8B (Joint) 38.2 73.1 50.1 24.9 44.3 54.8 49.1 40.2 46.2 62.4 63.3 54.5 53.2 70.2 46.1 54.9 51.7 GeoLLaVA-8B (G 2DA) 40.0 75.0 56.7 25.0 48.2 55.0 54.1 41.0 49.0 65.0 67.5 58.7 62.5 74.0 49.0 58.5 54.8
+
+Table 3: Gradient interaction statistics after training. Higher cosine similarity and lower conflict rate ( %) indicate less gradient interference.                     
+
+> UrBench-MCQ XLRS-Bench-Lite VRS-Bench-VQA Method Cos. ↑Conf. ↓Cos. ↑Conf. ↓Cos. ↑Conf. ↓
+> Joint 0.0191 47.3 0.0221 43.0 0.0236 41.2 G2DA 0.0216 41.3 0.0240 41.1 0.0248 40.5
+
+where I(·) is the indicator function. A lower conflict rate indi-cates fewer conflicting optimization directions across tasks. The results are listed in Table 3. Across all benchmarks, G2DA consistently increases the average pairwise gradient cosine similarity while reducing the proportion of conflict-ing task pairs, although the degree of improvement varies. Compared with joint training, gradient conflicts are reduced by up to 6.0 percentage points, while gradient alignment increases by 5.1-13.1 %. The largest improvements are ob-served on UrBench-MCQ, likely due to its diverse cross-view and multi-view tasks with greater optimization hetero-geneity. In contrast, VRS-Bench-VQA shows lower gradi-ent conflicts and smaller gains, likely because its predom-inantly recognition-oriented tasks and lower-resolution im-agery yield a more compatible optimization landscape, leav-ing less room for improvement. 
+
+Ablation Study 
+
+We conduct an ablation study to evaluate the contribution of the three key components in G 2DA: gradient-guided cross-modal Decoupling (D), gradient-aware Curriculum (C), and bidirectional Rehearsal (R). Table 4 summarizes the results on two benchmarks using two representative model archi-tectures. Gradient-guided task decoupling consistently pro-vides the largest individual improvement over joint multi-task training, with gains of +4.1/+1.8 pp on InternVL3-8B and +2.6/+1.9 pp on GeoLLaVA-8B for UrBench/XLRS, respec-tively. This demonstrates that separating tasks according to their dominant optimization modality effectively alleviates cross-modal optimization interference. Building upon de-coupling, gradient-aware curriculum scheduling further im-proves performance on the more challenging XLRS bench-mark (+0.8 and +0.5 pp for InternVL3-8B and GeoLLaVA-8B, respectively), indicating that ordering tasks according to gradient compatibility is particularly beneficial under stronger optimization heterogeneity. On UrBench, however, curriculum scheduling yields a slight performance drop com-pared with decoupling alone (56.0 →54.9 and 53.3 →52.1), suggesting that the benefit of gradient-aware ordering may be partially offset by the recency effects associated with sequential training. Finally, incorporating bidirectional re-hearsal consistently recovers and further improves perfor-mance, achieving the best results across all benchmark– model combinations. These results demonstrate that the three components are complementary: decoupling mitigates cross-modal interference, curriculum exploits intra-modal gradient compatibility, and bidirectional rehearsal alleviates the re-cency effects introduced by sequential optimization. Table 4: Component ablation of G 2DA (accuracy, %).                          
+
+> Method Components InternVL3-8B GeoLLaVA-8B D C RUrBench XLRS UrBench XLRS Joint 51.9 38.1 50.7 43.8 + Decoupling ✓56.0 39.9 53.3 45.7 + Curriculum ✓ ✓ 54.9 40.7 52.1 46.2 G2DA ✓ ✓ ✓57.8 42.2 54.8 47.8
+
+## Conclusion 
+
+This paper investigated the optimization challenges of multi-task Geo-VLM learning from a gradient-centric perspective. Our empirical analysis revealed that heterogeneous geospa-tial tasks exhibit substantial optimization conflicts, includ-ing inter-task gradient interference, distinct cross-modal op-timization preferences, and persistent intra-encoder gradi-ent heterogeneity. To address these challenges, we proposed G2DA, which integrates gradient-guided cross-modal de-coupling, branch-specific curriculum scheduling, and bidi-rectional rehearsal into a unified optimization framework. Extensive experiments on three Geo-VLM benchmarks us-ing six general-purpose VLMs and two representative Geo-VLMs demonstrate that G 2DA consistently outperforms rep-resentative multi-task optimization baselines across all 24 benchmark–model settings under identical optimization bud-gets. These results indicate that explicitly organizing opti-mization according to task-level gradient characteristics ef-fectively alleviates optimization interference and provides an effective optimization paradigm for multi-task Geo-VLM learning. References 
+
+Bai, J.; Bai, S.; Chu, Y.; Cui, Z.; Dang, K.; Deng, X.; Fan, Y.; Ge, W.; Han, Y.; Huang, F.; et al. 2023. Qwen technical report. arXiv preprint arXiv:2309.16609 .Bengio, Y.; Louradour, J.; Collobert, R.; and Weston, J. 2009. Curriculum learning. In Proceedings of the 26th annual international conference on machine learning , 41–48. Chen, Z.; Badrinarayanan, V.; Lee, C.-Y.; and Rabinovich, A. 2018. Gradnorm: Gradient normalization for adaptive loss balancing in deep multitask networks. In International conference on machine learning , 794–803. PMLR. Chen, Z.; Wu, J.; Wang, W.; Su, W.; Chen, G.; Xing, S.; Zhong, M.; Zhang, Q.; Zhu, X.; Lu, L.; et al. 2024. Intern VL: Scaling up Vision Foundation Models and Aligning for Generic Visual-Linguistic Tasks. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 24185–24198. IEEE. Deng, J.; Wu, Q.; Ju, P.; Lin, S.; Liang, Y.; and Shroff, N. 2025. Unlocking the Power of Rehearsal in Continual Learn-ing: A Theoretical Perspective. In International Conference on Machine Learning , 13277–13326. PMLR. Feng, J.; Wang, S.; Liu, T.; Xi, Y.; and Li, Y. 2025. Urban-LLaVA: A Multi-modal Large Language Model for Urban Intelligence. In Proceedings of the IEEE/CVF International Conference on Computer Vision , 6209–6219. Jeong, W.; and Yoon, K. J. 2025. SELECTIVE TASK GROUP UPDATES FOR MULTI-TASK OPTIMIZATION. In 13th International Conference on Learning Representa-tions, ICLR 2025 , 31681–31714. International Conference on Learning Representations, ICLR. Kemker, R.; McClure, M.; Abitino, A.; Hayes, T.; and Kanan, C. 2018. Measuring catastrophic forgetting in neural net-works. In Proceedings of the AAAI conference on artificial intelligence , volume 32. Kuckreja, K.; Danish, M. S.; Naseer, M.; Das, A.; Khan, S.; and Khan, F. S. 2024. Geochat: Grounded large vision-language model for remote sensing. In Proceedings of the IEEE/CVF conference on computer vision and pattern recog-nition , 27831–27840. Li, X.; Ding, J.; and Elhoseiny, M. 2024. Vrsbench: A ver-satile vision-language benchmark dataset for remote sensing image understanding. Advances in Neural Information Pro-cessing Systems , 37: 3229–3242. Liu, B.; Feng, Y.; Stone, P.; and Liu, Q. 2023a. Famo: Fast adaptive multitask optimization. Advances in Neural Infor-mation Processing Systems , 36: 57226–57243. Liu, B.; Liu, X.; Jin, X.; Stone, P.; and Liu, Q. 2021. Conflict-Averse Gradient Descent for Multi-task learning. Advances in Neural Information Processing Systems , 34: 18878–18890. Liu, H.; Li, C.; Wu, Q.; and Lee, Y. J. 2023b. Visual in-struction tuning. Advances in neural information processing systems , 36: 34892–34916. Mai, G.; Huang, W.; Sun, J.; Song, S.; Mishra, D.; Liu, N.; Gao, S.; Liu, T.; Cong, G.; Hu, Y.; et al. 2024. On the opportunities and challenges of foundation models for geoai (vision paper). ACM Transactions on Spatial Algorithms and Systems , 10(2): 1–46. Wang, F.; Chen, M.; Li, Y.; Wang, D.; Wang, H.; Guo, Z.; Wang, Z.; Boqi, S.; Lan, L.; Wang, Y.; et al. 2026. Geollava-8k: Scaling remote-sensing multimodal large language mod-els to 8k resolution. Advances in Neural Information Pro-cessing Systems , 38: 159185–159218. Wang, F.; Wang, H.; Guo, Z.; Wang, D.; Wang, Y.; Chen, M.; Ma, Q.; Lan, L.; Yang, W.; Zhang, J.; et al. 2025. Xlrs-bench: Could your multimodal llms understand extremely large ultra-high-resolution remote sensing imagery? In Pro-ceedings of the Computer Vision and Pattern Recognition Conference , 14325–14336. Wang, X.; Chen, Y.; and Zhu, W. 2021. A survey on cur-riculum learning. IEEE transactions on pattern analysis and machine intelligence , 44(9): 4555–4576. Yu, T.; Kumar, S.; Gupta, A.; Levine, S.; Hausman, K.; and Finn, C. 2020. Gradient surgery for multi-task learning. Ad-vances in neural information processing systems , 33: 5824– 5836. Zhou, B.; Yang, H.; Chen, D.; Ye, J.; Bai, T.; Yu, J.; Zhang, S.; Lin, D.; He, C.; and Li, W. 2025. Urbench: A comprehensive benchmark for evaluating large multimodal models in multi-view urban scenarios. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 39, 10707–10715.

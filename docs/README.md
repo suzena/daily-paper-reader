@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-09-28</span>
+      <span class="dpr-home-dashboard-kicker">2026-09-29</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 8 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>8</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-09-28 23:40:52 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-09-29 22:53:26 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,10 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今天筛完8篇论文，精读1篇、速读7篇，重点集中在水下机器人巡检、边缘小模型与遥感智能体。</p>
-<p>最值得先看8.0分的《CoralPlan》，它聚焦水下机器人巡检中的观测技能选择与执行；速读可关注《PTC-Decoder》的离线边缘SLM和《WeaveAgent》的超高分辨率遥感工具路由。</p>
-<p>普通读者可优先读《CoralPlan》的摘要与实验，再按兴趣跟进边缘部署或遥感Agent的落地场景。</p>
+<p>今日共生成 9 篇推荐（精读 1 篇，速读 8 篇）</p>
+<p>精读：《AquaBEV-Nav: Learned BEV Occupancy for Underwater Navigation and Exploration》（8.0/10）</p>
+<p>速读：《PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices》（7.0/10）, 《The Earth in One Gaze: Training-Free Active Focus for UHR Remote Sensing Understanding》（7.0/10）, 《Wave-Robust Passive AUV Localization Using FP-MUSIC》（6.0/10）</p>
+<p>这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -83,7 +84,7 @@
     <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection">CoralPlan: Observation Skill Selection and Execution for Underwater Robotic Inspection</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="AquaBEV-Nav: Learned BEV Occupancy for Underwater Navigation and Exploration">AquaBEV-Nav: Learned BEV Occupancy for Underwater Navigation and Exploration</span></li></ul>
   </div>
   <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
@@ -93,12 +94,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">8 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices">PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices</span></li><li><span class="dpr-home-dashboard-paper-title" title="WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery">WeaveAgent: A Two-Stage Tool-Routing Agent for Ultra-High-Resolution Remote Sensing Imagery</span></li><li><span class="dpr-home-dashboard-paper-title" title="Range-Aided SLAM Initialization Exploiting Accurate Heading Information">Range-Aided SLAM Initialization Exploiting Accurate Heading Information</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices">PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices</span></li><li><span class="dpr-home-dashboard-paper-title" title="The Earth in One Gaze: Training-Free Active Focus for UHR Remote Sensing Understanding">The Earth in One Gaze: Training-Free Active Focus for UHR Remote Sensing Understanding</span></li><li><span class="dpr-home-dashboard-paper-title" title="Wave-Robust Passive AUV Localization Using FP-MUSIC">Wave-Robust Passive AUV Localization Using FP-MUSIC</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>7</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>8</strong></span></div>
 </section>
 </div>
 

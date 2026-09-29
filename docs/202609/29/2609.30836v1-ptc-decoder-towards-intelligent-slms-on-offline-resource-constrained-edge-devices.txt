@@ -1,0 +1,324 @@
+Title: PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices
+
+URL Source: https://arxiv.org/pdf/2609.30836v1
+
+Published Time: Mon, 28 Sep 2026 00:35:20 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices 
+
+## Minghui Yu 1, Ke Mu 2, Gang Wu 1∗
+
+> 1
+
+Shanghai Jiao Tong University, Computer Institute 
+
+> 2
+
+Shanghai Landfun Information Technology yminghui@sjtu.edu.cn, muke2433@gmail.com, dr.wugang@sjtu.edu.cn 
+
+Abstract 
+
+Deploying small language models (SLMs) on offline, resource-constrained edge devices such as remote sens-ing satellites presents a fundamental challenge: their lim-ited reasoning capacity hinders reliable execution of multi-step agent tasks requiring complex tool orchestration. Ex-isting plan-solve paradigms rely on prompt-based enforce-ment, which our experiments show SLMs almost entirely disregard: weak models fail to invoke the plan. We pro-pose PTC-Decoder (Plan-Tool Constrained Decoder), atraining-free, plug-and-play decoder framework that com-bines (1) a Plan-to-Act paradigm, which elevates planning to an atomic tool and forces its invocation at the first infer-ence step, and (2) TC-Decoder, a deterministic finite automa-ton that imposes token-level hard constraints on tool names while preserving freedom over parameter generation, thereby retaining SLM reasoning capability. Evaluated on 200 real remote-sensing satellite tasks across 7 SLMs, PTC-Decoder yields a statistically significant mean overall score gain of +1.21 ( p < 0.01 , 95% CI [+1.13, +1.29]), with consistent improvements across models and other datasets. An abla-tion study that removes TC-Decoder causes substantial perfor-mance degradation across all quality metrics without reducing computational cost, confirming TC-Decoder as the primary driver. PTC-Decoder thus offers a lightweight yet effective solution for improving step-level reliability, with final-answer accuracy remaining an open challenge. In essence, we en-force plan adherence by constraining the permissible output vocabulary during inference, without requiring retraining. 
+
+Code — https://github.com/yuminghui/llm-tool-constrained-decoder 
+
+## Introduction 
+
+Large language models (LLMs) have achieved remarkable success and continuous evolution across diverse scenarios, including software engineering (Yu et al. 2024), intelligent customer service (Hong et al. 2025), and enterprise knowl-edge retrieval (Mishra et al. 2026; Zhao et al. 2026). However, deploying LLMs on offline edge devices is challenging due to severe resource constraints (e.g., unified memory ≤ 16 GB) and competing resource-intensive applications. In our satellite Agent system (Figure 1) running on an NVIDIA Jetson Orin NX, high-resolution image recognition, remote 
+
+> ∗
+
+Corresponding author. Stage 1. Take photos 
+
+> MNDWI achieved the best performance (92.3% accuracy, F1=0.89), outperforming NDWI and AWEI, though all indices still showed notable false positives in shadowed and turbid water regions.
+> Stage final. AI Conclude
+
+.||  .||   
+
+> Stage N. Select Photo Stage N+1. DL Process
+> Other
+> Stages
+> Other
+> Stages
+> User
+> Query
+> Database
+> Satellite
+> with
+> AI Module
+> SLM
+> Neural Process
+
+Figure 1: Illustration of the in-orbit task processing flow for a satellite with an onboard agent. sensing index analysis, and change detection leave less than 4 GB of memory for SLM deployment. We address this by constraining the model’s output vocabulary during decoding, forcing tool adherence without training. Before presenting our method, we first examine why ex-isting studies fall short in this setting. They primarily pursue two approaches to enhance SLM-based agent capabilities: (1) end-to-end training (Erdogan et al. 2024) and knowledge distillation (Chen et al. 2025; Sharma and Mehta 2025), (2) plan-then-execute paradigm (Wang et al. 2023). However, the former relies on training data, which is extremely scarce in the remote sensing agent domain, rendering such methods inapplicable to our application domain. The latter, although significantly boosting LLM agent performance, is found by our experiments (Table 1) to be incapable of ensuring stable planning in SLMs through prompt constraints alone. In resource-constrained edge device scenarios, SLMs are typically adopted. Despite the rapid development of LLMs bringing training optimizations (e.g., GRPO (Shao et al. arXiv:2609.30836v1 [cs.AI] 25 Sep 2026 Baseline Prompt-Plan Model P.R. Suc. P.R. Suc. Qwen3-1.7B .10 1.00 .88 .71 Qwen3.5-2B .00 .79 .13 .86 Qwen3.5-0.8B .07 .92 .20 .99 Qwen3-0.6B .03 .99 .47 1.00 Gemma-4-2B(Q4) .00 1.00 .66 1.00 Gemma-3-1B .00 1.00 .00 1.00 DeepSeek-R1-1.5B .00 1.00 .00 1.00 Table 1: Prompt-Plan enforcement versus baseline. The for-mer adds MUST call plan first into system prompt instructing the model to call plan . P.R.: plan call rate; Suc.: success rate, higher the value, fewer times the agent crashes. Weaker mod-els completely ignore the prompt (P.R. =0), and even capable models show degraded performance. 2024)) and architectural improvements (e.g., sliding window attention (Yu et al. 2026; Team et al. 2025), gated linear atten-tion) that enhance SLMs’ reasoning capabilities and context length (Lu et al. 2025a), they still suffer from severe hallu-cinations, insufficient reasoning ability, and misuse of tools when handling complex agent tasks and long contexts (Sun et al. 2025), making it difficult to reliably execute. Furthermore, some studies adopt task decomposition and edge-cloud collaboration (Yi et al. 2026), where simple tasks are processed locally while complex ones are offloaded to the cloud (Hao et al. 2024; Li et al. 2025b), offering a new per-spective for enhancing edge intelligence. However, most re-mote sensing satellites operate as offline devices without In-ternet access (Wu, Tipper, and Zhou 2025) and rely solely on microwave or laser links for ground communication (Wang et al. 2024), making the powerful cloud-based LLMs inac-cessible to our Agent. Current SLM research still fails to address the instruction-following deficiency of SLMs in of-fline resource-constrained scenarios. To this end, we propose Plan-Tool Constrained Decoder 
+
+(PTC-Decoder ), a decoder framework that enforces plan-ning and tool invocation at the decoding level. The initial at-tempt—forcing the agent to generate a plan at the first step via prompting—proved ineffective (Table 1). Meanwhile, the ex-isting constrained decoders cannot be directly restricted from a specific tool level (Koo, Liu, and He 2024). We thus intro-duce TC-Decoder, which intervenes in the decoding process to deterministically enforce tool-name outputs at designated steps (while leaving parameters to the model). Integrating both—planning first, then constrained tool execution—yields PTC-Decoder. Although this may reduce model creativity, experiments show that appropriate constraints better utilize SLMs’ limited reasoning for complex tasks. The decoder is plug-and-play, requiring no training. Overall, our contributions are threefold: 1. We propose PTC-Decoder , a plug-and-play decoder with Plan-to-Act tailored for SLM Agents. This design miti-gates the reasoning bottleneck on offline edge devices and significantly improves performance on a satellite agent benchmark and other datasets. 2. We construct and open-source a compact yet high-quality on-board Agent operational benchmark, providing a foun-dational reference and starting point for the future con-struction of more comprehensive databases. 3. Across multiple benchmark metrics, PTC-Decoder sig-nificantly outperforms the baseline, achieving a mean overall gain of +1.21 across 7 SLMs, with the weakest model improving by 350% and capable models reaching an F1 of up to 0.359 against ground-truth tool sequences. Our SLM agent investigated in this study deploys on com-mercial satellites (16GB) to support ground control with remote sensing services. 
+
+## Related Work 
+
+Application of SLMs on Edge Devices 
+
+As large language model capabilities continue to advance (Vaswani et al. 2017; Brown et al. 2020; Wei et al. 2022), deploying them onto resource-constrained edge devices like smartphones and IoT terminals has become a key focus in both academia and industry. An empirical study covering over 60 SLMs for edge deployment reveals that (Lu et al. 2025b), despite growing intelligence across tasks, substan-tial room remains for optimizing in-context learning and op-erational efficiency (Ni et al. 2026). Hardware acceleration, edge-cloud collaboration (Li et al. 2026), model optimiza-tion, and deployment optimization constitute the main re-search thrusts for SLM edge adoption (Zheng et al. 2025). In addition, limited passive thermal dissipation capacity makes thermal throttling from continuous inference a major chal-lenge (Wang et al. 2025). 
+
+Lightweight Architectures and Model Quantization 
+
+The core challenge of deploying language models on edge devices lies in balancing model size, inference speed, and task performance. Lightweight Transformer architectures and model quantization are two primary approaches (Har-iharan Samson 2026; Zhou, Kurz, and Zhao 2025); quanti-zation can compress model size by 4–10 × while retaining 75%–96% accuracy (Zhou, Kurz, and Zhao 2025). Mean-while, algorithms such as MobiLoRA focus on optimizing LoRA-adapted LLM inference on mobile devices, particu-larly for KV Cache storage constraints (Li et al. 2025a). 
+
+Edge-Cloud Collaboration 
+
+Beyond on-device deployment, edge-cloud collaboration and multi-LLM cooperation have emerged as active research di-rections (Li et al. 2026; Zhu and Yang 2025; Li et al. 2023a; Hong et al. 2024; Qian et al. 2023). These architectures of-fload complex tasks to the cloud while keeping simple ones local, effectively alleviating compute bottlenecks, reducing on-device cost, and partially enhancing SLM intelligence on edge devices (Zhu and Yang 2025). However, such solutions are entirely inapplicable for offline devices without network access such as our remote-sensing satellite. How to com-pensate for SLM intelligence deficiencies on non-networked edge devices remains a largely unexplored pain point, and this work specifically targets this challenge. How are the plants growing in Shanghai recently?                                      
+
+> Expect of Complex Tasks Running on Jetson AstroBrain
+> I will call <tool> get_time </tool> firstly.
+> Today is 2026 -5-20
+> I will call <tool> search_tif </tool> using
+> the region and time info.
+> The tif data path is data/ tif /2026 -05 -20 -
+> shanghai.tif
+> I will call <tool> listing_index </tool> to
+> get indices that the tool can calculates.
+> Show indices... Vegatation index: ndvi ...
+> I will call <tool> calculate_index </tool>
+> to analyze plant growth status by using
+> ndvi index.
+> Show calculating results...
+> Continued from the left side figure
+> I will call <tool> task_summary </tool> to
+> summarize the results and generate the
+> report.
+> I have received your summarized report!
+> I will call <tool> task_done </tool> because
+> I think the task is completed.
+> Good Job!( ๑•̀ ㅂ•́ )و✧
+> Task Characteristics:
+> The LM must autonomously decompose vague natural-language requests (e.g., "plant growth
+> status") ,an abstract concept ,into concrete tool calls. Our satellite Agent provides a unified tool that computes all remote-sensing indices, requiring the model to interpret ambiguous intent and orchestrate a complete invocation chain without explicit step-by-step guidance.
+> Difficulties:
+> 1. Understanding vague semantics
+> 2. Identifying the correct tool -invocation steps
+> 3. Assembling the correct input parameters (e.g., imagery paths)
+
+Figure 2: Example of the Expected Complex Task Workflow in the Remote Sensing Satellite Agent System. 
+
+## Methodology 
+
+We aim to enhance SLM step-level tool-calling adherence for edge agent tasks. This is critical, as we need to perform highly complex remote-sensing tasks—such as “How are the plants growing in Shanghai recently?”—with the expected workflow shown in Figure 2 (Wang et al. 2021). However, models deployable on our satellite are typically quantized small models ( ≤2B), for which such complex tasks are ex-cessively difficult, rendering correct end-to-end agent execu-tion nearly infeasible. To overcome this challenge, we design 
+
+PTC-Decoder , as shown in Figure 3. This architecture prevents the model from invoking un-expected tools via step-by-step constraints, while still allow-ing autonomous parameter determination, keeping reasoning within a reasonable boundary, and preventing rapid context expansion that would otherwise cause the SLM to become lost. 
+
+Plan-to-Act 
+
+To prevent the SLM agent from becoming lost in tool-invocation contexts when facing ambiguous complex tasks, our PTC-Decoder adopts a "Plan-to-Act" decision paradigm (left part in Figure 3). Its core idea is that in each interac-tion round, the agent first generates a high level plan and then strictly follows this plan to invoke atomic tools step by step. This design is particularly well-suited for resource-constrained edge deployment scenarios. 
+
+Motivation: Resource Bottlenecks in Edge Computing. 
+
+Our SLM is deployed on a small remote-sensing satellite with only 16GB of unified memory, of which less than 4GB is available for model inference. Under such extreme constraints, directly confronting the agent with ambiguous, multi-step, context-dependent user requests leads to cogni-tive overload as the model attempts to simultaneously han-dle task decomposition, tool selection, parameter filling, and result interpretation, manifesting as invalid tool calls, miss-ing critical steps, repetitive loops, or unparseable outputs. LLM agent paradigms such as ReAct and Plan-and-Solve rely on hundred-billion-parameter models and multiple infer-ence passes for robust planning (Yao et al. 2023; Wang et al. 2023), which is infeasible on resource-constrained satellite platforms. 
+
+Implementation: Planning as a Tool. We define "plan" as a tool within the agent system: its input is a natural-language task description, and its output is a structured sequence of atomic tool names. The key design decision is that the first inference round must forcibly invoke the ‘plan‘ tool—rather than allowing free selection—which is achieved via the tool-constrained decoder detailed in the next section. After the plan returns a sequence, each subsequent agent loop invokes the corresponding atomic tools in order. Formally, letting the full toolset be T = {plan , t 2, t 3, . . . , t n} and the user task be P, C be the request initiated by the SLM, and S the corresponding tool call schema, the first-round output x(1) 
+
+must satisfy: 
+
+∀P , x (1) ∈ C plan 
+
+> △
+
+= {S | S .name == plan } (1) Inputs  
+
+> User Query
+> System Prompt
+> Context
+> Stage 1 Plan
+> Task Understanding Task Decomposition
+> Tools & Envs
+> plan
+> sensing
+> search
+> Image Recognition
+> Step 1 ...
+> Step 2 ...
+> Step 3 ...
+
+...   
+
+> ...
+> Stage 2 Act
+> Update memory
+> Context Execute tool Tool Call Recall plan
+> Task done?
+> NO
+> Summary and report
+> YES
+> User
+
+Good Job!  
+
+> Embedding
+> Add & Norm
+> Multi-Head Attention
+> Feed Forward Net
+> Add & Norm
+> +RoPE
+> .||
+> Decoder
+> Layer N×
+> Linear
+> Softmax
+> P
+> logits
+> Tool-Constrained Decoder(Ours)
+> logits'
+> ......
+> Vocab size
+> Initial
+> tokens logits
+> ......
+
+−∞  0 −∞  0 −∞      
+
+> Masked logits with
+> constraints
+> Only specific tool are permitted(e.g. plan)...
+> mask
+> Set logits of tokens that DONOT match expected tool at this step to -inf
+> Will tool-call
+> Inputs
+
+Figure 3: Our complete PTC-Decoder architecture 
+
+Tool-Constrained Decoder 
+
+Like LLMs, SLMs are modeled as causal language mod-els, performing autoregressive sampling by continuously predicting the next token (Vaswani et al. 2017). Modern decoder-only LLMs rely on autoregressive sampling from the model’s own probability distribution at each step, granting them strong open-domain text generation capabilities (Brown et al. 2020). However, for SLMs deployed on offline edge devices, this unconstrained mechanism often fails—weak models may disregard prompt instructions for tool invoca-tion, severely undermining their reliability and practicality in complex agent tasks. To address this, we propose the Tool-Constrained De-coder , which forcibly injects the desired tool during sam-pling, ensuring that the SLM generates exactly that tool in-vocation at the designated step. This module is lightweight and plug-and-play: it requires no changes to existing agent implementations, no modifications to stable prompts, and no additional training. Compared to SFT or RL approaches, our method is far less intrusive. Different from a general constraint decoder, this de-sign avoids over-constraint, preserving parameter gener-ation quality and reasoning capability. The module is plug-and-play: it can be disabled for unconstrained steps and enabled on demand. The right part in Figure 3 illustrates the decoder structure with the module activated. Let V denote the vocabulary, x<t the generated sequence up to step t − 1, lt ∈ R|V| the raw logits at step t, st the internal state of the constrained decoder at step t (a finite-state machine characterizing the preconditions satisfied by the current sequence) Let the original conditional distribution πt of the language model be: 
+
+πt(v) △
+
+= PLM (xt = v|x<t ) = softmax (lt)[ v], v ∈ V (2) A generic constrained decoder can be formally defined as applying a mask function Mt to the raw logits via Hadamard product to modify the distribution before output of the final logits at time step t (Koo, Liu, and He 2024): 
+
+ˆlt = lt ⊙ Mt (3) where ˆlt represents the logits modified by the mask, which corrects the raw scores of all tokens violating the rules to 
+
+−∞ so that their corresponding token probabilities approach 0 infinitely after the softmax operation; the final corrected token probability distribution ˆπt(v) is given by: 
+
+ˆπt(v) △
+
+= PLM (xt = v|x<t ) = softmax (ˆlt)[ v], v ∈ V (4) We design an agent-oriented constrained decoder (Tool-Constrained Decoder). Unlike approaches that constrain the entire output space, our decoder imposes token-level hard constraints only on tool invocation format and tool names, leaving parameter content entirely to the underlying SLM. This design aligns with the plan-to-act paradigm: we enforce the use of designated tools, but delegate the generation of action details to the model’s own knowledge and contextual reasoning. To implement this partial constraint, we construct a prefix-constrained automaton Atool (Q, Σ, δ, q 0, F ) based on a De-terministic Finite Automaton (DFA), where: 
+
+• Q = Qf ix ∪ { qf ree }, where Qf ix is the state sequence for the fixed prefixes, and qf ree is the state sequence for subsequent unconstrained tokens. 
+
+• Σ is the set of all tokens in the vocabulary V.
+
+• On Qf ix , the transition function δ forces the gen-eration of preset tokens according to specified rules, such as <|name>get_weather<name|> 
+
+among <|tool><|name>get_weather<name|> <|arguments>...<arguments|><tool|> ;once the fixed sequence generation is complete, the automaton transitions from Qf ix to the absorbing state 
+
+qf ree via any token, and qf ree has self-loop transitions for any token in Σ, i.e., ∀v ∈ V , δ (qf ree , v ) = qf ree .
+
+• F ∈ qf ree , where the terminal state is reached through the EOS token, i.e., δ(qf ree , v eos ) = F .Based on the aforementioned automaton Atool , we define the mask function M ′ 
+
+> t
+
+(v) at the time step t as: 
+
+M ′ 
+
+> t
+
+(v) = 
+
+0, if δ(qt, v ) is defined ,
+
+− sgn( lt[v]) · ∞ , otherwise . (5) where qt is the state of the automaton at time step t, and the modified logits and probability distribution formally still follow: ˆl′ 
+
+> t
+
+= lt ⊙ M ′ 
+
+> t
+
+(6) 
+
+ˆπ′
+
+> t
+
+(v) △
+
+= P′
+
+> LM
+
+(xt = v|x<t ) = softmax (ˆl′
+
+> t
+
+)[ v], v ∈ V (7) 
+
+## Experiments 
+
+Experimental Setup 
+
+Edge Device. All experiments are conducted on an NVIDIA Jetson Orin NX Developer Kit, which shares the same con-figuration as the control computer of a small offline remote-sensing satellite: an Orin GPU, 8-core Cortex-A78AE CPU, 16GB unified memory, 877GB storage, running Ubuntu 22.04 LTS with CUDA 12.2. To closely replicate the extreme resource constraints of actual satellite operations, we concur-rently run multiple remote-sensing algorithms and daemon processes alongside the Agent tasks on this device, thereby approximating real onboard resource-limited conditions. 
+
+Small Language Models and Setup. To demonstrate the generalizability of this study, we select mainstream SLMs from the open-source community, with memory limitation that the total effective parameter count does not exceed 2B, and that they are released by well-known model providers. Ultimately, we identified a total of 7 SLMs (Team et al. 2025, 2026; Yang et al. 2025; Guo et al. 2025). All models use temperature 0.2, top-p 0.95, and a maximum of 10 turns per task (overflowed as a failure), with up to 512 new tokens per free-generation step and 256 per constrained tool call. 
+
+Evaluation Datasets. To validate the optimization strategies for our remote-sensing satellite Agent system, we conducted on-board experimental evaluations. Given that spaceborne edge devices offer AI compute below 100 TOPS and suffer from thermal throttling under prolonged operation, we care-fully controlled the evaluation dataset scale to ensure smooth comparative experiments across 7 models. To address the absence of dedicated remote-sensing Agent benchmarks, we curated 200 real user tasks from on-board operations and had them cross-annotated by three remote-sensing and computer vision experts, producing a test suite with expected Agent execution trajectories and ground-truth results. This dataset will be released along with the code to facilitate future re-search in this domain. 
+
+Evaluation Methods and Metrics. Our evaluation combines LLM-judge scores (DeepSeek-V4-flash) (DeepSeek-AI et al. 2026) with rule-based metrics. LLM-judge includes Overall (Ov.), which integrates complete tracks and logs for scor-ing; Result Accuracy (R.A.); Flow Reasonableness (F.R.); and Robustness (Rb.), all rated on a [0 , 5] scale. Rule-based metrics include Recall (R.), Precision (P.), and F1-score, computed per task against benchmark ground-truth tool sets and averaged (excluded non-functional tools like task_done ). Due to thermal throttling from sustained inference on satellite onboard systems, each task is executed only once. Therefore, we group 200 tasks as paired units and employ the Wilcoxon signed-rank test p to assess the statistical significance of the observed improvements(Demšar 2006). For LLM-Judge, we will randomly pick 20 results to do a manually double-check for Ov., marked as (H.). All scores are reported as means across 200 benchmark tasks. 
+
+Overall Comparison 
+
+LLM-Judge Evaluation Baseline performance is limited: the strongest model (Qwen3-1.7B) achieves Ov. 1.98, while weaker models score below 0.75 across all dimensions. PTC-Decoder consistently improves all models (mean Ov. +1.21, p < 0.01 ), with gains inversely corre-lated to baseline capability—DeepSeek-R1-1.5B improves by 350% (0.40 →1.80), while Qwen3-1.7B gains 48% (1.98 →2.94). Flow reasonableness shows the largest aver-age gain (+1.35); Gemma-4-2B reaches the highest F.R. of 3.31, and Qwen3.5-2B gains +2.08 to 3.27. Result ac-curacy improves by a mean of +1.27, with Qwen3.5-2B achieving both the largest gain (+2.40, 0.41 →2.81) and the global best R.A. Robustness gains are moderate (mean +0.52), with Qwen3-1.7B attaining the best Rb. of 3.06 under PTC-Decoder. Qwen3.5-2B obtains the highest Ov. of 3.12. Plan w/o TC-Decoder yields marginal Ov. improvement (mean +0.22), with Gemma-4-2B (–0.35) degrading. R.A. and F.R. follow similarly, with mean R.A. declining by 0.15. Rb. increases by a mean of +0.23, though Qwen3-1.7B’s Rb. is slightly higher under PTC-Decoder (3.06 vs. 3.03), con-trasting with earlier observations where free execution gave the best Rb. Human double-check shows the same trends. 
+
+Rule-Based Evaluation Table 3 reports benchmark Re-call, Precision, and F1. Baseline performance is limited (mean Recall 0.115, F1 0.133), with Gemma-3-1B and DeepSeek-R1-1.5B scoring zero across all metrics. PTC-Decoder consistently improves all three metrics: mean Recall +0.126 (Qwen3.5-2B leading: 0.123 →0.388), Precision +0.058, and F1 +0.096 (Gemma-4-2B reaching Baseline PTC-Decoder (Ours) Plan w/o TC-Decoder Model H. Ov. R.A. F.R. Rb. H. Ov. R.A. F.R. Rb. H. Ov. R.A. F.R. Rb. Qwen3-1.7B 2.05 1.98 0.87 2.12 2.71 3.10 2.94 2.32 2.97 3.06 2.45 2.67 1.34 2.94 3.03 Qwen3.5-2B 1.70 1.28 0.41 1.19 2.25 3.35 3.12 2.81 3.27 2.73 1.50 1.34 0.30 1.41 2.22 Qwen3.5-0.8B 1.05 1.15 0.42 0.96 2.04 2.55 2.29 1.73 2.31 2.67 1.55 1.51 0.53 1.64 2.17 Qwen3-0.6B 0.95 1.27 0.74 1.15 2.02 2.40 2.23 1.60 2.23 2.44 1.10 1.27 0.23 1.05 2.63 Gemma-4-2B(Q4) 1.90 1.71 0.95 1.69 2.55 3.25 3.05 2.42 3.31 2.60 1.55 1.36 0.22 1.45 2.64 Gemma-3-1B 0.40 0.73 0.33 0.43 1.84 1.70 1.56 0.94 1.48 2.25 0.90 1.00 0.14 0.87 2.10 DeepSeek-R1-1.5B 0.20 0.40 0.20 0.12 1.40 1.75 1.80 0.97 1.56 2.73 0.85 0.93 0.11 0.74 2.08 Table 2: LLM-judge scores across experimental conditions, with a Human double-check (H.) for each group (20 randomly sampled tasks per group, rated on the same [0 , 5] by two annotators). The best LLM-judge value for each metric is bolded .Baseline PTC-Decoder (Ours) Plan w/o TC-Decoder Model R. P. F1 Tokens R. P. F1 Tokens R. P. F1 Tokens Qwen3-1.7B .187 .413 .249 3437+181 .305 .295 .292 7018+399 .252 .647 .355 7018+370 Qwen3.5-2B .123 .137 .123 3424+185 .388 .284 .318 7229+646 .147 .214 .162 7000+509 Qwen3.5-0.8B .104 .180 .125 3424+137 .229 .237 .227 7000+425 .171 .325 .212 7000+421 Qwen3-0.6B .148 .167 .155 3437+112 .250 .249 .246 7018+356 .000 .000 .000 7018+262 Gemma-4-2B(Q4) .246 .328 .279 3130+112 .379 .361 .359 6435+868 .097 .128 .109 6435+422 Gemma-3-1B .000 .000 .000 631+513 .063 .095 .076 1437+809 .000 .000 .000 1437+1103 DeepSeek-R1-1.5B .000 .000 .000 612+427 .074 .109 .088 1368+567 .000 .000 .000 1368+674 Table 3: Recall, Precision, F1 (per-task average), and average tokens (input + output). The best value for each metric is bolded .global best F1=0.359). Weak models recover from zero to 0.063 and 0.074 Recall. Absolute F1 remains modest across conditions, reflecting the difficulty of full tool coverage, but gains are consistent across all models. Plan w/o TC-Decoder yields mixed results: mean Re-call and F1 decline by 0.020 and 0.013, suggesting that unenforced planning may reduce ground-truth coverage. Qwen3-1.7B is the sole improver (F1 +0.106, Precision 0.647, global best), albeit with narrow Recall (0.252). Qwen3-0.6B collapses to zero on all metrics. We specifically examined this set of zero-score cases. Under the plan-only condition without TC-Decoder, Qwen3-0.6B simply treated the task as completed in all instances, which directly accounts for its zero scores across all metrics. As Gemma-3-1B and DeepSeek-R1-1.5B are not tool-invocation models, they cannot understand tools. Man-ual trace analysis confirms that, without TC-Decoder, their R., P., and F1 on remote-sensing tasks are zero (these metrics exclude non-functional tools like task_done ). 
+
+Performance on Other Datasets 
+
+To test cross-domain generalizability, we evaluate the same three experimental combinations on ToolAlpaca (Tang et al. 2023), Seal-Tools (Wu et al. 2025), and API-Bank (Li et al. 2023b), using the same 7 SLMs and experimental configs mentioned before. The overall results are shown in Figure 4. PTC-Decoder consistently improves over baseline across all datasets: ToolAlpaca F1 38% to 53% (Recall 54% to 60%, Precision 35% to 51%); Seal-Tools 33% to 68% (38% to 68%, 35% to 68%); API-Bank 31% to 50% (29% to 56%, 35% to 48%). The largest gain appears on Seal-Tools, where F1 more than doubles—driven by balanced improvements in both Recall and Precision, confirming that TC-Decoder enhances tool coverage while reducing off-target invocations. Plan w/o TC-Decoder yields weaker results: ToolAlpaca F1 stagnates at 39% (baseline 38%), Seal-Tools reaches 46% (well below 68%), and API-Bank only 37% (baseline 31%). These results reinforce that plan-level constraints alone are insufficient for most SLMs; execution-level enforcement is the primary driver of the observed gains. 
+
+Ablation Study 
+
+To isolate TC-Decoder’s contribution, we conduct an ab-lation study directly comparing PTC-Decoder against Plan w/o TC-Decoder, where the latter ablated TC-Decoder. Ta-bles 2 and 3 report the full results. 
+
+LLM-Judge metrics. Adding TC-Decoder improves Ov. by 0.99 on average across all 7 models ( p < 0.01 , bootstrap 95% CI [+0.91, +1.06]), with Qwen3.5-2B (+1.78) and Gemma-4-2B (+1.69) gaining the most. R.A. benefits substantially (mean +1.42): Qwen3.5-2B rises from 0.30 to 2.81 ( ∆ = +2 .51 ), and Gemma-4-2B from 0.22 to 2.42 ( ∆ = +2 .20 ). F.R. improves by 1.00 on average; Gemma-4-2B reaches 3.31 ( ∆ = +1 .86 ), and Qwen3.5-2B 3.27 ( ∆ = +1 .86 ). Rb. shows the smallest gain (mean +0.23), with Qwen3-1.7B’s Rb. nearly unchanged (3.06 vs. 3.03), suggesting that TC-Decoder neither improves nor harms recovery behavior. 
+
+Benchmark coverage. TC-Decoder consistently improves benchmark-aligned tool coverage. Mean Recall rises from 0.095 to 0.241 ( ∆ = +0 .146 ), led by Gemma-4-2B (+0.282) ToolAlpaca Seal-Tools API-Bank                  
+
+> RPF1 RPF1 RPF1
+> 010 20 30 40 50 60 70 80 90
+> Score (%)  54 35 38 38 35 33 29 35 31 60 51 53 68 68 68 56 48 50 42 39 39 45 50 46 39 38 37
+
+**  
+
+> Baseline PTC-Decoder Plan w/o TC
+
+Figure 4: Recall, Precision, and F1 across three external datasets (means over 7 SLMs). PTC-Decoder consistently improves all metrics. Plan w/o TC-Decoder shows inconsistent improvement, remaining close to baseline. Error bars omitted for clarity; within-group F1 SD ranges: ToolAlpaca 0.18–0.38, Seal-Tools 0.17–0.44, API-Bank 0.11–0.37. ∗p < 0.05 , †p = 0 .06 (Wilcoxon signed-rank test, n = 7 , PTC-Decoder vs. Baseline F1: ToolAlpaca p = 0 .03 , Seal-Tools p = 0 .03 , API-Bank p = 0 .06 ). and Qwen3.5-2B (+0.241, achieving the globally best Recall of 0.388). F1 increases by 0.110 on average; Gemma-4-2B reaches the globally best F1 of 0.359 (+0.250 over its Plan w/o TC-Decoder counterpart). The most pronounced effects are on models that collapse without TC-Decoder: Qwen3-0.6B’s, Gemma-3-1B’s, and DeepSeek-R1-1.5B’s benchmark met-rics all register zero under free execution, yet reach 0.246, 0.076, and 0.088 F1 with TC-Decoder. Qwen3-1.7B is an interesting exception: its F1 is higher without TC-Decoder (0.355 vs. 0.292), driven by Precision of 0.647 (globally best) under free execution, at the cost of Recall (0.252 vs. 0.305 with TC-Decoder). This precision-recall trade-off il-lustrates that TC-Decoder’s primary mechanism is enforcing broader tool coverage, which may modestly reduce precision for models already capable of focused execution. 
+
+Efficiency. Token overhead is nearly identical between the two variants (2.07 × vs. 2.08 × over baseline), confirming that TC-Decoder adds negligible computational cost. In summary, TC-Decoder is the decisive component of PTC-Decoder: it substantially improves LLM-judge scores and benchmark tool coverage across all models, transforms several SLMs from zero coverage to functional plan adher-ence, and does so without additional overhead. 
+
+## Conclusion 
+
+This paper designed PTC-Decoder, a training-free, plug-and-play decoder framework that addresses the intelligence defi-ciency of SLMs on offline resource-constrained edge devices. By coupling a Plan-to-Act paradigm with TC-Decoder, PTC-Decoder elevates 7 SLMs from weak baselines to functional agent performance, achieving a mean Ov. gain of +1.21 and peak F1 of 0.359. Ablation confirms TC-Decoder as the de-cisive component. Removing it reduces F1 by 0.110 on aver-age and degrades all quality metrics, yet offers no efficiency advantage. PTC-Decoder thus provides a lightweight and ef-fective solution for improving step-level reliability of SLM agents on offline edge devices. 
+
+Limitations 
+
+Despite improvements in all dimensions, R.A. remains the weakest dimension (best 2.81/5), and Rb. gains are mod-est (mean +0.52 vs. baseline). This suggests that TC-Decoder cannot guarantee correct answers or robust er-ror recovery, since it only constrains tool names. Extend-ing constraints to parameter schemas may help narrow this gap. PTC-Decoder incurs a 2.07 × token overhead. As a counterexample, Qwen3-1.7B achieves higher F1 without TC-Decoder, indicating that PTC-Decoder primarily benefits intelligence-deficient SLMs. As SLM capabilities advance, PTC-Decoder may become less necessary. For LLM, the creativity-restricting effect of TC-Decoder might outweigh its benefits. 
+
+## References 
+
+Brown, T. B.; Mann, B.; Ryder, N.; Subbiah, M.; Kaplan, J.; Dhariwal, P.; Neelakantan, A.; et al. 2020. Language models are few-shot learners. In Conference on Neural Information Processing Systems .Chen, J.; Myrzakhan, A.; Luo, Y.; Khan, H. M.; Bsharat, S. M.; and Shen, Z. 2025. DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucina-tion via Evidence and Graph-based Distillation. In Annual Meeting of the Association for Computational Linguistics ,7240–7260. DeepSeek-AI; Xu, A.; Lin, B.; Xue, B.; Wang, B.; Xu, B.; Wu, B.; et al. 2026. DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence. arXiv:2606.19348. Demšar, J. 2006. Statistical comparisons of classifiers over multiple data sets. Journal of Machine Learning Research ,7: 1–30. Erdogan, L. E.; Lee, N.; Jha, S.; Kim, S.; Tabrizi, R.; Moon, S.; Hooper, C. R. C.; Anumanchipalli, G.; Keutzer, K.; and Gholami, A. 2024. TinyAgent: Function Calling at the Edge. In Conference on Empirical Methods in Natural Language Processing , 80–88. Guo, D.; Yang, D.; Zhang, H.; Song, J.; Wang, P.; Zhu, Q.; et al. 2025. DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning. Nature , 645(8081): 633–638. Hao, Z.; Jiang, H.; Jiang, S.; Ren, J.; and Cao, T. 2024. Hybrid SLM and LLM for Edge-Cloud Collaborative Inference. In 
+
+Proc. Workshop Edge Mob. Found. Models , 36 – 41. Hariharan Samson, H. 2026. Lightweight Transformer Ar-chitectures for Edge Devices in Real-Time Applications. 
+
+arxiv:2601.03290 .Hong, M.; Zhang, C. J.; Jiang, D.; and He, Y. 2025. Aug-menting Compliance-Guaranteed Customer Service Chat-bots: Context-Aware Knowledge Expansion with Large Lan-guage Models. In Conference on Empirical Methods in Nat-ural Language Processing, Industry Track , 753–765. Hong, S.; Zhuge, M.; Chen, J.; Zheng, X.; Cheng, Y.; Wang, J.; Zhang, C.; Yau, S.; Lin, Z.; Zhou, L.; et al. 2024. MetaGPT: Meta programming for a multi-agent collabora-tive framework. In International Conference on Learning Representations , volume 2024, 23247–23275. Koo, T.; Liu, F.; and He, L. 2024. Automata-based constraints for language model decoding. In Conf. Lang. Model. 
+
+Li, B.; Wang, Y.; Ma, H.; Chen, L.; Xiao, J.; and Wang, S. 2025a. MobiLoRA: Accelerating LoRA-based LLM Infer-ence on Mobile Devices via Context-aware KV Cache Opti-mization. In Annual Meeting of the Association for Compu-tational Linguistics , 23400–23410. Li, G.; Hammoud, H.; Itani, H.; Khizbullin, D.; and Ghanem, B. 2023a. CAMEL: Communicative Agents for "Mind" Exploration of Large Language Model Society. In Confer-ence on Neural Information Processing Systems , volume 36, 51991–52008. Li, M.; Zhao, Y.; Yu, B.; Song, F.; Li, H.; Yu, H.; Li, Z.; Huang, F.; and Li, Y. 2023b. API-Bank: A Comprehensive Benchmark for Tool-Augmented LLMs. In Proceedings of the 2023 Conference on Empirical Methods in Natural Lan-guage Processing , 3102–3116. Li, S.; Wang, H.; Xu, W.; Zhang, R.; Guo, S.; Yuan, J.; Zhong, X.; Zhang, T.; and Li, R. 2025b. Collaborative Infer-ence and Learning between Edge SLMs and Cloud LLMs: A Survey of Algorithms, Execution, and Open Challenges. 
+
+arxiv:2507.16731 .Li, X.; Li, H.; Sun, C.; Fan, Q.; Han, Z.; and Leung, V. C. M. 2026. Edge-Enhanced Intelligence: A Comprehensive Sur-vey of Large Language Models and Edge-Cloud Computing Synergy. IEEE Communications Surveys and Tutorials , 28: 1248–1284. Lu, P.; Kobyzev, I.; Rezagholizadeh, M.; Chen, B.; and Langlais, P. 2025a. ReGLA: Refining Gated Linear At-tention. In Proc. Conf. Nations Americas Chapter Assoc. Comput. Linguist.: Hum. Lang. , 2884–2898. Lu, Z.; Li, X.; Cai, D.; Yi, R.; Liu, F.; Liu, W.; Luan, J.; Zhang, X.; Lane, N. D.; and Xu, M. 2025b. Demystifying Small Language Models for Edge Deployment. In Annual Meeting of the Association for Computational Linguistics ,14747–14764. Mishra, P. P.; Yeole, K. P.; Keshavamurthy, R.; Surana, M. B.; and Sarayloo, F. 2026. A Systematic Framework for En-terprise Knowledge Retrieval: Leveraging LLM-Generated Metadata to Enhance RAG Systems. In IEEE Conference on Artificial Intelligence, in press .Ni, X.; Wang, J.; Yang, L.; Lu, Y.; Chen, H.; Liu, R.; and Hao, J. 2026. Following the Navigation: Enhancing Small Lan-guage Models Contextual Reasoning with LLM Guidance. In 
+
+The Fourteenth International Conference on Learning Rep-resentations .Qian, C.; Liu, W.; Liu, H.; Chen, N.; Dang, Y.; Li, J.; Yang, C.; Chen, W.; Su, Y.; Cong, X.; Xu, J.; Li, D.; Liu, Z.; and Sun, M. 2023. ChatDev: Communicative Agents for Software Development. In Annual Meeting of the Association for Computational Linguistics .Shao, Z.; Wang, P.; Zhu, Q.; Xu, R.; Song, J.; Zhang, M.; Li, Y. K.; Wu, Y.; and Guo, D. 2024. DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models. arxiv:2402.03300 .Sharma, R.; and Mehta, M. 2025. Small Language Models for Agentic Systems: A Survey of Architectures, Capabilities, and Deployment Trade offs. arxiv:2510.03847 .Sun, C.; Li, Y.; Wu, D.; and Boulet, B. 2025. OnionEval: An Unified Evaluation of Fact-conflicting Hallucination for Small-Large Language Models. arxiv:2501.12975 .Tang, Q.; Deng, Z.; Lin, H.; Han, X.; Liang, Q.; and Sun, L. 2023. ToolAlpaca: Generalized Tool Learning for Language Models with 3000 Simulated Cases. arXiv:2306.05301. Team, G.; El Abd, S.; Aggarwal, V.; Algayres, R.; Andreev, A.; Bachem, O.; Ballantyne, I.; et al. 2026. Gemma 4 Tech-nical Report. arXiv:2607.02770. Team, G.; Kamath, A.; Ferret, J.; Pathak, S.; Vieillard, N.; Merhej, R.; Perrin, S.; Matejovicova, T.; Ramé, A.; Rivière, M.; et al. 2025. Gemma 3 Technical Report. 
+
+arxiv:2503.19786 .Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.; Gomez, A. N.; Kaiser, L.; and Polosukhin, I. 2017. At-tention is all you need. In Conference on Neural Information Processing Systems , 6000–6010. Wang, J.; Zheng, Z.; Ma, A.; Lu, X.; and Zhong, Y. 2021. LoveDA: A Remote Sensing Land-Cover Dataset for Domain Adaptive Semantic Segmentation. In Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks , volume 1. Wang, L.; Xu, W.; Lan, Y.; Hu, Z.; Lan, Y.; Lee, R. K.-W.; and Lim, E.-P. 2023. Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models. In Annual Meeting of the Association for Computa-tional Linguistics , 2609–2634. Wang, R.; Gao, Z.; Zhang, L.; Yue, S.; and Gao, Z. 2025. Empowering large language models to edge intelligence: A survey of edge efficient LLMs and techniques. Computer Science Review , 57: 100755. Wang, X.; Yu, R.; Yang, D.; and Xue, G. 2024. Infiltrating the Sky: Data Delay and Overflow Attacks in Earth Observation Constellations . In Proc. Int. Conf. Netw. Protoc. ICNP ,1–11. Wei, J.; Wang, X.; Schuurmans, D.; Bosma, M.; Ichter, B.; Xia, F.; Chi, E. H.; Le, Q. V.; and Zhou, D. 2022. Chain-of-thought prompting elicits reasoning in large language mod-els. In Conference on Neural Information Processing Sys-tems .Wu, B.; Tipper, D.; and Zhou, P. 2025. Near-realtime Earth Observation Via Starlink LEO Satellite Constellation. 
+
+arxiv:2508.10338 .Wu, M.; Zhu, T.; Han, H.; Tan, C.; Zhang, X.; and Chen, W. 2025. Seal-Tools: Self-instruct Tool Learning Dataset for Agent Tuning and Detailed Benchmark. In Natural Language Processing and Chinese Computing (NLPCC 2024) , volume 15360. Yang, A.; Li, A.; Yang, B.; Zhang, B.; Hui, B.; Zheng, B.; et al. 2025. Qwen3 Technical Report. arXiv:2505.09388. Yao, S.; Zhao, J.; Yu, D.; Du, N.; Shafran, I.; Narasimhan, K.; and Cao, Y. 2023. ReAct: Synergizing Reasoning and Acting in Language Models. In International Conference on Learning Representations (ICLR) .Yi, B.; Hu, X.; Chen, Y.; Zhang, S.; Yang, H.; and Wu, F. 2026. EcoAgent: An Efficient Device-Cloud Collaborative Multi-Agent Framework for Mobile Automation. AAAI Con-ference on Artificial Intelligence , 40(35): 29838–29846. Yu, Y.; Liu, J.; Wu, Q.; Wang, H.; and Pei, J. 2026. SWAA: Sliding Window Attention Adaptation for Efficient and Qual-ity Preserving Long Context Processing. arxiv:2512.10411 .Yu, Y.; Rong, G.; Shen, H.; Zhang, H.; Shao, D.; Wang, M.; Wei, Z.; Xu, Y.; and Wang, J. 2024. Fine-Tuning Large Lan-guage Models to Improve Accuracy and Comprehensibility of Automated Code Review. ACM Transactions on Software Engineering and Methodology , 34(1): 1–26. Zhao, W. X.; Zhou, K.; Li, J. Y.; Tang, T. Y.; Wang, X. L.; Hou, Y. P.; Min, Y. Q.; Zhang, B. C.; Zhang, J. J.; Dong, Z. C.; et al. 2026. A Survey of Large Language Models. 
+
+arXiv:2303.18223 .Zheng, Y.; Chen, Y.; Qian, B.; Shi, X.; Shu, Y.; and Chen, J. 2025. A Review on Edge Large Language Models: Design, Execution, and Applications. ACM Comput. Surv. , 57(8). Zhou, Z.; Kurz, S.; and Zhao, Z. 2025. Revisiting Pruning vs Quantization for Small Language Models. In Conference on Empirical Methods in Natural Language Processing , 12055– 12070. Zhu, P.; and Yang, T. 2025. CE-LSLM: Efficient Large-Small Language Model Inference and Communication via Cloud-Edge Collaboration. arxiv:2505.14085 .

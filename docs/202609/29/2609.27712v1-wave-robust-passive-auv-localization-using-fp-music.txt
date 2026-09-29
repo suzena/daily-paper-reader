@@ -1,0 +1,679 @@
+Title: Wave-Robust Passive AUV Localization Using FP-MUSIC
+
+URL Source: https://arxiv.org/pdf/2609.27712v1
+
+Published Time: Thu, 24 Sep 2026 00:58:04 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# Wave-Robust Passive AUV Localization Using FP-MUSIC 
+
+Usama Saqib 1, Ola Rønning 1, and Andrzej W ˛ asowski 1
+
+Abstract — Localizing an autonomous underwater vehicle without pre-deployed seabed transponders, or direct access to onboard vehicle sensors remains a core challenge. We present a receiver-passive 3-D localization and spatial mapping system utilizing a single floating surface buoy equipped with a hydrophone array and an inertial measurement unit (IMU). The central difficulty is that surface wave motion induces six-degree-of-freedom (6-DOF) perturbations that rotate the array between snapshots, degrading conventional subspace processing. We resolve this by introducing a fixed-point iterative MUltiple SIgnal Classification algorithm (FP-MUSIC) that uses IMU measurements to de-warp snapshot covariances prior to direction-of-arrival estimation. Furthermore, we employ a subspace-projected wideband matched filter to resolve beacon ranges and use power asymmetry for independent front-back identification. Evaluations across simulated sea states demon-strate that FP-MUSIC substantially reduces localization error relative to uncompensated methods and sustains robust 3-D tracking and vehicle orientation estimation under wave-induced motion. At moderate sea state, FP-MUSIC increases the 2-m beacon-separation accuracy from approximately 45% to 75% .
+
+I. I NTRODUCTION 
+
+Autonomous underwater vehicles (AUV) can be tracked with either optical or acoustic positioning systems. For optical systems, fiducial markers [1] are used to track AUVs. Un-fortunately, these markers are reliable only at short range, mostly in clean indoor pools, before the visibility degrades. Underwater, light attenuates faster than sound [2], which motivates interest in acoustic positioning. However, the exist-ing systems, such as long-baseline (LBL) configurations [3], demand pre-deployed seabed transponders, whose complex installation and calibration in offshore conditions quickly be-comes prohibitevely expensive. Ultra short-baseline (USBL) configuration is another method that utilizes a transceiver-responder setup [4]. The transceiver is placed under a deploy-ment ship or sub-sea station while the responder is mounted on an AUV. The USBL system relies on a two-way com-munication, which requires accurate clock-synchronization for acquiring trajectory data from the AUV. Moreover, the existing USBL systems cannot track multiple AUVs at the same time [5]. To eliminate these barriers, we present a receiver-passive system in which a single floating surface buoy with ahydrophone array and an IMU is placed. The array listens to multiple acoustic beacons attached to an AUV. This way we do not require any seabed infrastructure and physical cables. Unlike the current state-of-the-art that pings the receivers on the AUV for telemetry information, our method only  
+
+> 1Software Quality Research Group, IT University of Copenhagen, Den-mark.
+
+{usamas, oroe, wasowski}@itu.dk 
+
+uses one way communication, i.e., only receiving acoustic signals from the AUV. We use “passive” in this receiver-side sense to distinguish the proposed system from existing LBL/USBL operation. The central challenge is that surface wave motion continuously rotates the array, corrupting the parameter estimation required for high-resolution direction-of-arrival (DOA) estimation. We resolve this via an itera-tive fixed-point de-warping scheme that removes the wave-induced perturbation from the observation. This work makes three principal contributions:  
+
+> •
+
+We propose a receiver-passive system that reconstruct an AUV’s pose from received acoustic beacons operat-ing mounted on the robot.  
+
+> •
+
+We introduce an iterative fixed-point algorithm that jointly uses the IMU data to compensate the phase shift of the acoustic signals and estimate the DOA of the acoustic beacons for accurate pose of the AUV.  
+
+> •
+
+We further demonstrate analytically and empirically that rigid-body translation (heave, surge, sway) does not affect the DOA estimation and does not require DOA estimation under plane-wave assumptions, so only rotational degrees of freedom require compensation. Unlike the state-of-the-art, the proposed system would be easy to deploy at sea, require one-way communication, it compensates for ocean wave-motion and does not require on-side calibration. We have shared our code online for the community and for reproducibility. 1
+
+II. R ELATED WORK 
+
+Caiti et al. [6] use a field of surface-floating acoustic buoys to localize an AUV. Each buoy measures the one-way acoustic time-of-flight from the vehicle. Their algorithm combines the range measurements into a set of admissible 3-D positions. Their system recovers the AUV’s position, not its orientation, as a single range measurement carries no bearing data. Moreover, the influence of wave perturbation is not taken into account explicitly. To recover AUV’s orientation, a passive receiver must si-multaneously detect and resolve at least two distinct acoustic beacons mounted on the hull (e.g., front and back), and then assign each a persistent front/back identity. Conventional techniques, e.g., delay-and-sum (DAS) beamforming [7], is limited by the Rayleigh resolution bound set by the array aperture [8] and fails to resolve closely spaced co-channel sources. Adaptive spatial filtering, such as the Minimum Variance Distortionless Response (MVDR) [9], improves 
+
+> 1https://anonymous.4open.science/r/FP_MUSIC-A3A3/ arXiv:2609.27712v1 [cs.RO] 23 Sep 2026
+
+spatial resolution over DAS by minimizing interference and noise power while maintaining unity gain toward the direc-tion the signal is originating from. However, MVDR’s reso-lution remains bounded by sensor signal-to-noise ratio (SNR) and aperture constraints, and it exhibits severe degradation when covariance matrices are corrupted by array steering vector mismatches. To obtain high-resolution separation of two closely spaced acoustic beacons on a compact vehicle frame, subspace-based methods such as MUltiple SIgnal Classification (MUSIC) [10] are attractive. Conventional multi-beacon and USBL systems separate co-located sources by frequency- or time-division multiplexing [4], dedicating a distinct band or time slot to each, which consumes bandwidth and complicates the transmitter. Our formulation instead keeps both beacons in a shared frequency band. This avoids dedicating separate acoustic bands or time slots solely for source identity. In order to ensure that the DOA estimation is accurate when influenced by 6-DOF wave motion, IMU data could be used to account for the wave-perturbation on the array. Prior methods assume deliberate array rotation [11], small mooring oscillations [12], slow towed array shape deforma-tion [13], or active microphone ego-motion compensation [14]. Our framework eliminates all of these assumptions simultaneously. The surface buoy operates under fully un-constrained, stochastic 6-DOF wave motion, and the AUV beacons transmit purely passively without responding to buoy interrogations. Rather than compensating a single pre-estimated bearing as is the case in USBL systems, motion correction is applied directly to the covariance matrix itself in MUSIC prior to direction of arrival resolution. As stated earlier, as the sea state rises, roll and pitch swing the array, which both smears the covariance matrix and systematically biases the estimated bearing, and hence the recovered position, relative to the assumed flat array. This compensation is not found in marine or oceanic localization but similar approach can be found in other domains, e.g. image processing. This is directly analogous to motion blur in optical imaging, where camera ego-motion during exposure smears visual features and IMU-guided iterative deblurring restores sharpness in an alternating-optimization loop [15], [16]. To the best of our knowledge, no existing system passively localize the position of AUVs using floating arrays that compensates the 6-DOF wave motion. III. S YSTEM MODEL AND PROBLEM FORMULATION 
+
+A. Array and Target Geometry 
+
+A uniform rectangular array (URA) with M hydrophones floats on the water surface (Fig. 1). An underwater source is positioned at ps ∈ R3 at depth h > 0 in the array coordinate frame, whose origin pc = 0 in the array center. The spatial  
+
+> xyz
+> px2 + y2
+> hhr = ∥ps−pc∥
+> ps
+> θφ
+> pc
+> pm
+
+Fig. 1. A floating uniform rectangular array (URA) of hydrophones used for AUV localization. range r, the azimuth θ, and the elevation φ are: 
+
+r = ∥ps − pc∥ = ∥ps∥ (1) 
+
+θ = atan2( y, x ) (2) 
+
+φ = atan2 
+
+
+
+−h, px2 + y2
+
+
+
+, (3) where (x, y, −h) = ps − pc = ps, so the source’s vertical coordinate is z = −h; since the array floats above the submerged source, and φ ∈ [−90 ◦, 0◦].
+
+B. Transmitted Wideband LFM Chirp 
+
+We placed two acoustic beacons on the underwater AUV, one at the front and one at the back, transmitting at different power levels. Each beacon emits a linear frequency modu-lated (LFM) chirp. The windowed transmit pulse is: 
+
+s(t) = b(t) e  
+
+> 
+> j2π
+> 
+> flow t+B
+> 2Tsig t2
+
+, (4) where Tsig is the active signal duration with time t ∈ [0 , T sig ],
+
+flow is the lower sweep boundary, B = fhigh − flow is the operational bandwidth, and j is the imaginary unit. The Han-ning window b(t) tapers the pulse edges, keeping the trans-mitted signal within the intended band. The nominal center frequency of the chirp is defined as f0 = ( flow + fhigh )/2.
+
+C. Received Signal Representation 
+
+The waveform received at the m-th hydrophone (m =1,. . . ,M) from the D co-band acoustic beacons on the AUV (here D = 2, mounted front and back) is: 
+
+ym(t) = X
+
+> i=1 ,2
+
+(hm,i ∗ si)( t) + wm(t) + nm(t). (5) Here, si(t) is the waveform emitted by beacon i, hm,i (t)
+
+is the corresponding acoustic channel to hydrophone m,and wm, nm are sensor and ambient noise, respectively. The beacons transmit in a shared band. They are separated spatially, not by frequency allocation (unlike in USBL). Under the far-field assumption, the wavefront is planar across the array, so all hydrophones share a single arrival direction ˆu(θi, φ i). The plane-wave delay at hydrophone m
+
+is proportional to its offset dm = pm − pc projected onto that direction. Hydrophones displaced toward the source are reached earlier, so the delay τm,i is: 
+
+τm,i (θi, φ i) = − dm · ˆu(θi, φ i)
+
+c , (6) 
+
+ˆu(θi, φ i) = [cos φi cos θi; cos φi sin θi; sin φi]⊤, (7) where ˆu(θi, φ i) is the unit vector from the array center towards beacon i and c is the speed of sound in m/s.The general underwater channel contains direct and reflected arrivals; we model only the direct arrival, deferring multipath to future work. We work in the frequency domain, where convolution becomes multiplication, so the channel in Eq. (5) reduces to a per-hydrophone phase factor; MUSIC likewise operates in this domain. This formulation also leaves the operating band free, so the same method applies to ultrasonic or audible beacons. Under the direct-path model, the beacon-i transfer function at hydrophone m is: 
+
+Hm,i (f, θ i, φ i) = gi e(−j2πf τ m,i (θi,φ i)) , (8) where gi is the gain of beacon i, combining its transmit level and propagation attenuation. We apply the Fourier transform to Eq. (5), convolution becomes multiplication, and then substitute Eq. (8) into the result, obtaining: 
+
+Ym(f ) = X
+
+> i=1 ,2
+
+giSi(f )e(−j2πf τ m,i (θi,φ i)) 
+
++ Wm(f ) + Nm(f ), (9) where m = 1 , . . . , M , Si(f ) is the transmitted wideband signal, and Wm(f ) and Nm(f ) are the sensor and ambient noise, respectively; all frequency domain counterparts of the terms in Eq. (5). Given the received spectra Ym(f ), the task is to estimate the arrival directions (θi, φ i) for both beacons, which de-termine the delays τm,i via Eq. (6). Combined with the wideband ranging stage (Sect. V), these directions yield the ranges ri, and hence the AUV pose. IV. DOA VIA FIXED -P OINT MUSIC (FP-MUSIC) A frame is a complete recording window across all M hy-drophones (5 seconds in our experiments). The array records 
+
+F frames in sequence. To estimate the directions-of-arrival, we partition each recorded frame into L short-time snapshots long enough to observe the entire chirp. For each snapshot, we perform narrowband parameter estimation at frequency f0
+
+(see Sect. III). At snapshot ℓ, we stack the M per-hydrophone spectra Ym(f0) from Eq. (9) into the array snapshot vec-tor Yℓ(f0) = [ Y1(f0), . . . , Y M (f0)] ⊺ ∈ CM ×1. Similarly, we can rewrite the noise terms Wm(f0) and Nm(f0) as 
+
+Wℓ, Nℓ ∈ CM ×1, and then apply the standard MUSIC [10]: 
+
+Yℓ(f0) = X
+
+> i=1 ,2
+
+ai(f0)Si,ℓ (f0) + Wℓ + Nℓ, (10) where ℓ = 1 , . . . , L and ai(f0) ∈ CM ×1 is the steering vector for beacon i (see below). Since gi is common to all 
+
+M hydrophones, it factors out of the steering vector and does not affect DOA estimation; it is therefore absorbed into the source amplitude, Si,ℓ (f0) ≜ giSi(f0), beacon i’s 
+
+received amplitude at f0 in snapshot ℓ.Equation (6) gives the delay at hydrophone m for a wave arriving from direction (θ, φ ). Equation (8) turns it into a phase factor. Collecting the phases across all hydrophones in the array gives the steering vector for that direction: 
+
+[a(f, θ, φ )] m = e(−j2πf τ m(θ,φ )) = e( j 2πf c dm· ˆu(θ,φ )), (11) where τm(θ, φ ) is the delay of Eq. (6) evaluated at an arbitrary direction rather than at a beacon direction. The steering vector collects the phases that the M hydrophones would observe for a plane wave arriving from (θ, φ ). We write ai(f ) = a(f, θ i, φ i) for the steering vector at beacon 
+
+i’s direction, as used in Eq. (10). From the snapshot vectors Yℓ(f0), standard MUSIC forms the sample spatial covariance and applies power-normalized diagonal loading [17], [18] as: 
+
+Rraw = 1
+
+L
+
+> L
+
+X
+
+> ℓ=1
+
+Yℓ(f0) Y Hℓ (f0), (12) 
+
+R = Rraw + μ tr( Rraw ) 
+
+> M
+
+IM , (13) where μ is a regularization parameter and IM is the identity matrix. The loading term remedies the case L < M , ensuring 
+
+R is full rank and the noise subspace well defined. Eigen-decomposition then yields R = EsΛsEHs + EnΛnEHn ,partitioning the 2 signal eigenvectors Es (one per beacon) from the noise subspace En ∈ CM ×(M −2) . MUSIC locates each source by searching over (θ, φ ) for steering vectors 
+
+a(f0, θ, φ ) nearly orthogonal to En.
+
+A. IMU Kinematics and Translational Invariance 
+
+To account for the perturbation due to wave motion, we formulate the composite 3-D rotation matrix Qℓ ∈ SO (3) 
+
+mapping hydrophone positions from the nominal flat rest frame to the perturbed body frame at snapshot ℓ. This follows the intrinsic ZYX (yaw-pitch-roll) convention: 
+
+Qℓ = Qz (γℓ) Qy (βℓ) Qx(αℓ), (14) where Qx(αℓ), Qy (βℓ), and Qz (γℓ) are the canonical roll, pitch, and yaw rotations. Accounting for snapshot rotation Qℓ, element positions become Qℓdm, giving the motion-compensated steering vec-tor, written aℓ to distinguish it from the rest-frame a in Eq. (11): 
+
+[aℓ(f0, θ, φ )] m = e(+j 2πf 0  
+
+> c(Qℓdm)·ˆu(θ,φ )
+
+). (15) 
+
+Theorem 1 (Translational Invariance): Rigid-body array translation ∆p ∈ R3 does not alter array covariance matrix under far-field plane-wave assumptions. 
+
+Proof: A translation shifts hydrophone positions to p′ 
+
+> m
+
+=
+
+pm + ∆ p and p′ 
+
+> c
+
+= pc + ∆ p, leaving rigid body offsets invariant, d′ 
+
+> m
+
+= p′ 
+
+> m
+
+− p′ 
+
+> c
+
+= dm. The translation introduces an identical phase factor e−jφ c to every element, where φc = 
+
+> 2πf 0
+> c
+
+∆p · ˆu. In the covariance matrix calculation: 
+
+R′ 
+
+> raw
+
+= 1
+
+L
+
+> L
+
+X
+
+> ℓ=1
+
+ e−jφ c Yℓ
+
+   e−jφ c Yℓ
+
+H (16) 
+
+= e−jφ c  e−jφ c ∗ Rraw = Rraw . (17) Thus, heave, surge, and sway translations leave covariance-based estimators invariant. □
+
+From the theorem, we can see that only rotational motion requires compensation. This theorem also exhibits that the compensation could be achieved with only a gyroscope instead of an IMU which consists of gyroscope and ac-celerometer on a single chip. 
+
+B. Iterative Fixed-Point Motion Compensation Loop 
+
+Inspired by IMU-guided image deblurring, where frame motion is removed iteratively to sharpen distorted visual features, we formulate a fixed-point iteration for k =1, . . . , K max to unblur spatial snapshot covariance matrices. The proposed method alternates between two blocks. 
+
+Block 1 (Snapshot De-Warping): Given directional esti-mates { ˆu(k−1)  
+
+> i
+
+}i=1 ,2 from iteration k − 1, we de-warp each snapshot for source i by removing the rotational phase per-turbation relative to rest/flat geometry, i.e., no perturbation. At snapshot ℓ the array is rotated by Qℓ, so element m
+
+occupies the body offset Qℓdm from (15). Therefore, a plane wave from ˆu(k−1)  
+
+> i
+
+reaches it with the measured phase 
+
+φrot  
+
+> m,ℓ
+
+= 2πf 0 
+
+> c
+
+(Qℓdm)· ˆu(k−1)  
+
+> i
+
+, while the flat rest array would carry φrest  
+
+> m
+
+= 2πf 0 
+
+> c
+
+dm · ˆu(k−1)  
+
+> i
+
+. The perturbation to undo their phase is their difference, where the common dm leaves the residual displacement (Qℓ − I3)dm as: 
+
+∆φm,ℓ = φrot  
+
+> m,ℓ
+
+−φrest  
+
+> m
+
+= 2πf 0
+
+c (Qℓ −I3) dm · ˆu(k−1)  
+
+> i
+
+. (18) Multiplying each snapshot by e−j∆φm,ℓ then cancels the rotation while retaining the rest steering phase: 
+
+[ ˜Y (i) 
+
+> ℓ
+
+(f0)] m = [ Yℓ(f0)] me    
+
+> 
+> −j2πf 0
+> c(Qℓ−I3)dm·ˆu(k−1)
+> i
+> 
+
+(19) The correction leaves steering phase dm · ˆu intact, aligning all snapshots to a virtual stationary flat array. The phase align-ment observation are used to make the sample covariance matrix [17], [18]: 
+
+ˆR(k) 
+
+> i
+
+= 1
+
+L
+
+> L
+
+X
+
+> ℓ=1
+
+˜Y (i) 
+
+> ℓ
+
+(f0) ˜Y (i)Hℓ (f0), i = 1 , 2. (20) We average these covariances across both sources and apply diagonal loading: 
+
+¯R(k) = 12
+
+X
+
+> i=1 ,2
+
+ˆR(k) 
+
+> i
+
+, (21) 
+
+R(k) = ¯R(k) + μ tr( ¯R(k))
+
+M IM , (22) 
+
+Algorithm 1 FP-MUSIC 
+
+Require: For each of F recording frames n = 1 , . . . , F : per-frame snapshot spectra {Yℓ(f0)}Lℓ=1 , IMU rotations {Qℓ}Lℓ=1 , body offsets dm 
+
+> 1:
+
+P ← ∅ 
+
+> 2:
+
+for n = 1 to F do  
+
+> 3:
+
+Initialize R(0) from the raw snapshot covariance and 
+
+{ ˆu(0)  
+
+> i
+
+}i=1 ,2 via standard MUSIC [10]  
+
+> 4:
+
+for k = 1 to Kmax do  
+
+> 5:
+
+for i = 1 to 2 do  
+
+> 6:
+
+Compute de-warped snapshots ˜Y (i) 
+
+> ℓ
+
+(19) and covari-ance ˆR(k) 
+
+> i
+
+(20)  
+
+> 7:
+
+end for  
+
+> 8:
+
+Form composite covariance R(k) (21)  
+
+> 9:
+
+Update directions { ˆu(k) 
+
+> i
+
+}i=1 ,2 via Block 2 (23)  
+
+> 10:
+
+if (24) is satisfied then  
+
+> 11:
+
+break  
+
+> 12:
+
+end if  
+
+> 13:
+
+end for  
+
+> 14:
+
+for i = 1 to 2 do  
+
+> 15:
+
+Compute wideband matched filter envelope χenv ,i(t)
+
+(25)–(27) using the frame timing reference  
+
+> 16:
+
+Estimate range ˆri (28) and position ˆps,i (29)  
+
+> 17:
+
+Compute peak level Li (30)  
+
+> 18:
+
+end for  
+
+> 19:
+
+Tag argmax i Li as front , remaining as back  
+
+> 20:
+
+P ← P ∪ { ( ˆ ps,i , label i)}i=1 ,2 
+
+> 21:
+
+end for  
+
+> 22:
+
+return P
+
+Eigendecomposing R(k) exactly as in (12) yields the noise subspace E(k) 
+
+> n
+
+and signal-subspace projector P (k) 
+
+> s
+
+= IM −
+
+E(k) 
+
+> n
+
+(E(k) 
+
+> n
+
+)H . The proposed method resolves the beacons without requiring separate receivers or dedicated frequency bands. Although de-warping for source i leaves a direction-dependent residual phase in other signal components [19], [20], averaging the source-conditioned covariances in (21) prevents favouring single beacon. 
+
+Block 2 (MUSIC Update): Eigendecomposing R(k) yields the updated noise subspace E(k) 
+
+> n
+
+. Updated DOAs are ex-tracted by searching over the flat steering vector using the standard MUSIC pseudo-spectrum [10]: 
+
+(ˆθ(k) 
+
+> i
+
+, ˆφ(k) 
+
+> i
+
+) = (23) 
+
+argmax 
+
+> θ,φ
+
+1
+
+aH (f0, θ, φ ) E(k) 
+
+> n
+
+(E(k) 
+
+> n
+
+)H a(f0, θ, φ ) .
+
+The iteration terminates when the change in the estimated directions falls below a tolerance ε, expressed as an angle between successive unit vectors: 
+
+max  
+
+> i=1 ,2
+
+arccos   ˆu(k) 
+
+> i
+
+· ˆu(k−1) 
+
+> i
+
+ < ε. (24) FP-MUSIC adds at most Kmax covariance matrix updates costing O(LM 2) per iteration alongside standard MU-SIC operations. While this increases processing load, it achieves full motion compensation without requiring extra hydrophones, additional bandwidth, or a larger array aper-ture. V. S UBSPACE WIDEBAND RANGING AND SPATIAL 
+
+MAPPING 
+
+A. Subspace-Projected Wideband Filtering 
+
+The ranging stage uses the converged signal-subspace pro-jector Ps ≜ P (K) 
+
+> s
+
+from Sect. IV to filter noise from the wideband snapshot vector Y (f ) = [ Y1(f ), . . . , Y M (f )] ⊺ ∈
+
+CM ×1, the counterpart of Yℓ(f0) evaluated across the full band f ∈ [flow , f high ] [21]: 
+
+Zi(f ) = 1
+
+M
+
+> M
+
+X
+
+> m=1
+
+[Ps Y (f )] m e(+j 2πf τ m,i (ˆθi, ˆφi)). (25) Matched filtering with transmit template S(f ) followed by Hilbert envelope extraction produces the range decision profile: 
+
+χi(t) = F−1 {Zi(f ) · S∗(f )} (26) 
+
+χenv ,i(t) = |H{ χi(t)}| , (27) where H is the Hilbert operator and χenv ,i(t) is the enve-lope of the time-domain matched-filter output χi(t). Unlike matched field processing, which correlates the received field against modeled replica fields over a candidate search grid and therefore requires a known environmental model [22], (25)–(27) operate directly along the already resolved DOA 
+
+(ˆθi, ˆφi) and require no environmental replica. 
+
+B. Range Peak Extraction & Beacon Tagging 
+
+Evaluating χenv ,i(t) at resolved DOA ˆθi, ˆφi yields range and 3-D Cartesian coordinates: 
+
+ˆri = argmax 
+
+> r
+
+χ2env ,i (r/c ) (28) 
+
+ˆps,i = pc + ˆ ri ˆu(ˆθi, ˆφi). (29) Here, r/c maps the matched-filter delay to range using the sound known propagation speed, assuming a defined frame time reference to the beacon pulse, estimating an unknown transmitter-receiver clock offset is outside the scope of FP-MUSIC. Received levels are evaluated directly from peak envelope amplitudes: 
+
+Li = 20 log 10 χenv ,i (ˆ ri/c ), i = 1 , 2. (30) The beacon with larger Li is labeled front and the other back .This assigns identities independently per frame. The power offset is used only to resolve the permutation ambiguity after spatial separation, it does not create the MUSIC peaks. Front/back classification accuracy under our power-based tagging scheme is measured empirically in the trajectory-reconstruction experiment. With the two beacons tagged, the vehicle heading (yaw) and pitch are, respectively, the azimuth and elevation of the front-to-back baseline vector ˆb = ˆps, f − ˆps, b, where ˆps, f
+
+and ˆps, b are the tagged front and back positions from (29), obtained from the same atan2 relations (2)–(3) that define 
+
+θ and φ, applied to ˆb rather than to ps. Unlike the array-to-source elevation, the baseline elevation is unrestricted in sign, since the vehicle pitches both up and down. Roll is unobservable with two beacons because they form arotationally symmetric line. VI. E XPERIMENT RESULTS 
+
+Due to the lack of unified simulators combining surface wave hydrodynamics with multi-channel acoustic signal gen-eration, we evaluated our algorithm using Pyroomacoustics [23] configured for an underwater acoustic medium ( c =1500 m/s, sampling rate fs = 96 kHz). Pyroomacoustics was strictly used as a geometric and kinematic snapshot generator to isolate direct-path phase corrections. Unless otherwise stated, FP-MUSIC, MUSIC, MVDR, and DAS use the same array geometry, acoustic realizations, snapshot count, source locations, and noise realization for each Monte-Carlo trial, so the comparisons isolate the effect of spatial processing and wave-motion compensation. Although any combination of ar-ray configuration could be used but in this work, the receiver array was a 4×6 URA ( M = 24 ) with half-wavelength 5 cm element spacing matched to 15 kHz. The beacons emitted wideband LFM chirps ( Tsig = 0 .1 s, flow = 7 .5 kHz, fhigh =15 kHz). Each 5 s capture frame was partitioned into L = 16 
+
+snapshots, which is long enough to observe a full chirp in each snapshot. The two beacons share the same frequency band and are processed jointly by the array covariance. The 
+
+10 dB transmit power offset is retained for post-localization source labeling. The simulation capture the time reference needed by the matched filter to map each detected pulse to one-way propagation delay. 6-DOF buoy kinematics were generated using World Meteorological Organization (WMO) Sea State parameters [24], [25], with significant wave heights 
+
+Hs = {0.05 , 0.30 , 0.88 , 1.88 , 3.25 , 5.00 , 7.50 } m and peak periods Tp = {2.0, 3.5, 5.0, 6.5, 8.0, 9.5, 11 .0} s for Sea States 1–7, respectively. The front and back beacons are independent, free-running transmitters that are not phase-locked to one another, so each chirp repetition is emitted with an independent initial phase and the two sources decorrelate across the L snapshots. The source covariance is therefore full rank, as MUSIC requires, without spatial smoothing, and no aperture is sacrificed to restore rank. Roll, pitch, and yaw amplitudes were derived from the deep-water maximum wave slope ζmax :
+
+ζmax = πH s/Λw, (31) 
+
+Λw = g0T 2 
+
+> p
+
+/2π, (32) 
+
+ζmax = 2 π2Hs/(g0 T 2 
+
+> p
+
+), (33) where Λw is the deep-water wavelength, Hs the significant wave height, Tp the peak period, and g0 = 9 .81 m/s 2 the gravitational acceleration [26]. The IMU data sampled at 
+
+400 Hz was interpolated to snapshot midpoints. Fixed-point loop parameters were set to Kmax = 20 and ε = 10 −3
+
+degrees. All experiments undergoes 50 Monte-Carlos trials. In practical hardware deployments, modern 9-axis IMUs provide onboard orientation estimation via an Attitude and Heading Reference System (AHRS), outputting time-synchronized unit quaternions (a) (b) 
+
+Fig. 2. Performance of MUSIC and FP-MUSIC under 6-DOF wave motion at Sea State 1 using RSME over 50 trials. 
+
+q(t) = [ qw(t), q x(t), q y (t), q z (t)] T ∈ S3. At snapshot index 
+
+ℓ, the unit quaternion qℓ interpolated to snapshot midpoint timestamp tℓ is mapped directly to the 3 × 3 rotation matrix 
+
+Qℓ ∈ SO (3) via standard Euler-Rodrigues kinematics. The evaluation of IMU is not the scope of this paper, therefore we assume the AHRS supplies orientation at its nominal factory accuracy. We structure the evaluation around three research ques-tions. The first is whether IMU-guided snapshot de-warping reduces DOA estimation error under 6-DOF wave mo-tion and up to what sea-state severity. The second ques-tion is how two-beacon angular resolvability degrades with AUV depth, horizontal range, beacon separation, and am-bient noise against conventional baselines. Finally, whether the combined DOA estimation, wideband ranging, and power-asymmetry tagging pipeline reconstructs an end-to-end AUV’s trajectory. 
+
+A. Does FP-MUSIC compensate under all sea-state? 
+
+To address this, we evaluated FP-MUSIC against uncompen-sated MUSIC across Sea States 1–7 ( 2 beacons, depth 8 m). At Sea State 1 (Fig. 2), FP-MUSIC substantially reduced DOA RMSE to 0.25 ◦ azimuth and 0.02 ◦ elevation (compared to 0.61 ◦ and 0.57 ◦ for standard MUSIC). As summarized in Table I, FP-MUSIC maintains superior accuracy up to Sea State 4. At extreme severity (Sea States 5–7), elevation compensation continues to improve accuracy significantly, whereas azimuth shows minor crossover due to large initial-ization errors in severe motion. The bold values in Table I indicates best RMSE values (low errors) when compensation is applied to the proposed method compared to standard MUSIC which does not have compensation mechanism. 
+
+B. Can the two beacons setup be resolved by FP-MUSIC under varying geometry? 
+
+We evaluated the proposed FP-MUSIC algorithm against DAS beamforming, MVDR, and standard uncompensated MUSIC. The aim is to quantify the limits of multi-beacon resolvability as the AUV’s physical beacon separation varies, and as the AUV dives deeper or moves further away, which will shrink the relative angular separation at the receiver). In all three experiment, the ambient noise SNR was set to 10 dB while sensor noise was set to 30 dB. Resolution accuracy 
+
+ηres is defined as the percentage of successful trials out of total trials: 
+
+ηres = Nresolved 
+
+Ntrials 
+
+× 100% (34) where Ntrials is the total number of Monte-Carlo trials and 
+
+Nresolved is the number of trials in which both beacons produce distinct pseudo-spectrum peaks within half their true angular separation. The wave motion was set to Sea State 3. As shown in Fig. 3(a) at the depth of 7 m and horizontal range of 10 m, classical DAS fails completely at close beacon separations due to the Rayleigh resolution limit, requiring at least 8 m of separation to begin resolving the dual beacons. While MVDR narrows the spatial beamwidth, it fails below 4 m. Subspace methods bypass this limit, however, at a compact separation of 2 m, uncompensated MUSIC achieves only ≈ 45% accuracy. Under continuous 6-DOF wave motion, intra-frame phase smearing artificially widens the MUSIC pseudo-spectrum peaks, causing tightly spaced beacons to bleed together into a single unresolved peak. By removing this rotational blur, FP-MUSIC restores peak sharpness, boosting 2 m resolution accuracy to ≈ 75% .Increasing the beacons’ separation would potentially increase the accuracy range of the AUV. The Fig. 3(b) and (c) illustrate performance as the AUV dives to 25 m depth and moves to 25 m horizontal range with at a beacon separation of 3 m and depth as well as horizontal range of 7 m and 10 m, respectively. As range and depth increase, the effective angular separation between the front and back beacons relative to the surface buoy TABLE I AZIMUTH AND ELEVATION DOA RMSE ( ◦ ) BY SEA STATE .                                   
+
+> Azimuth RMSE ( ◦)Elevation RMSE ( ◦)Sea State MUSIC FP-MUSIC MUSIC FP-MUSIC 10.61 0.25 0.57 0.02
+> 21.21 0.39 1.17 0.31
+> 31.81 1.12 1.96 0.87
+> 44.43 3.32 4.20 2.37
+> 56.95 6.88 6.48 4.43
+> 610.16 10.49 8.66 7.35
+> 714.75 16.09 12.34 10.66 (a) (b) (c)
+
+Fig. 3. Evaluation of the method against (a) beacon separation (b) depth and (c) horizontal range.  
+
+> (a) (b)
+
+Fig. 4. (a) Resolvability under oceanic ambient noise and (b) end-to-end trajectory using Algorithm 1. shrinks drastically. Consequently, DAS and MVDR fails almost immediately. While both MUSIC variants eventually succumb to the diminishing angular separation, FP-MUSIC consistently extends the operational envelope, maintaining a 10–15% accuracy advantage over standard MUSIC in the critical transition regions (10–15 m) by preserving sub-space orthogonality under wave perturbation. Increasing the beacons’ separation would increasing the depth as well as horizontal range of the AUV detection. 
+
+C. Is Two-Beacon Resolvability Robust to Oceanic Ambient Noise? 
+
+To evaluate the robustness of the proposed framework against ambient sea noise, nm(t), we analyzed the multi-beacon resolution accuracy across a range of ambient SNR from 
+
+−10 to 30 dB. For each operating point, the ambient-noise variance is set to σ2 
+
+> n
+
+= Psig 10 −SNR dB /10 , where Psig is the noise-free received signal power. As illustrated in the results Fig. 4a, DAS beamforming fails to resolve the targets across all evaluated SNR levels, as the physical beacon separation remains fundamentally con-strained by the array’s Rayleigh limit. The adaptive MVDR beamformer shows high sensitivity to noise, only gradually improving and plateauing at approximately 90% accuracy even in high-SNR. In contrast, the subspace-based methods demonstrate strong resilience to ambient noise. Both standard MUSIC and the proposed FP-MUSIC algorithm exhibit a sharp performance improvement between −5 dB and 10 
+
+dB. This experiment demonstrates that iteratively removing wave-induced spatial blur helps preserve signal subspace orthogonality even when ambient noise power is high. 
+
+D. Can FP-MUSIC Reconstruct an End-to-End 3-D Trajec-tory and Pose? 
+
+To answer this, we run Algorithm 1 as the AUV executed a circular underwater trajectory under 6-DOF wave mo-tion, reconstructing both beacon positions and the vehicle orientation per frame from the full proposed pipeline and comparing against ground truth. Fig. 4b shows the result qualitatively: the FP-MUSIC pose estimates trace the true 3-D path, and the recovered front/back beacons stay aligned with the ground-truth orientation over the whole session. Using power-asymmetry tagging (30), the front and back beacons were classified correctly in 100% of the 50 resolved frames without relying on inter-frame history. Table II reports the per-frame RMSE against ground truth for the same session, recorded at Sea State 2 with the vehicle at 7 mdepth and 10 .2 m horizontal range. Compensation reduces the angular error by roughly a factor of around 2, i.e. azimuth falls from 0.78 ◦ to 0.25 ◦ at the front beacon and from 1.00 ◦
+
+to 0.36 ◦ at the back, and elevation from 1.02 ◦ to 0.38 ◦ and 
+
+1.04 ◦ to 0.37 ◦ respectively, halving the 3-D position error to 0.12 m and 0.14 m. Range is unchanged at 0.07 m and 
+
+0.10 m, as expected because the matched filter operates along TABLE II RMSE OF AUV TRAJECTORY RECONSTRUCTION UNDER 
+
+SEA STATE 2
+
+Quantity MUSIC FP-MUSIC Azimuth, ˆθf (◦) 0.78 0.25 
+
+Azimuth, ˆθb (◦) 1.00 0.36 
+
+Elevation, ˆφf (◦) 1.02 0.38 
+
+Elevation, ˆφb (◦) 1.04 0.37 
+
+Range, ˆrf (m) 0.07 0.07 Range, ˆrb (m) 0.10 0.10 
+
+Position, ˆps, f (m) 0.27 0.12 
+
+Position, ˆps, b (m) 0.30 0.14 
+
+Resolved frames ( N ) 50 50 
+
+the already-resolved DOA (25), so residual bearing error well below a degree cannot shift the envelope peak by a range bin. VII. C ONCLUSION AND FUTURE WORK 
+
+We presented FP-MUSIC, a receiver-passive, one-way 3-D localization and spatial mapping framework operating from a wave-driven surface buoy equipped with a hydrophone array and IMU. By proving translational invariance and employing an iterative fixed-point de-warping loop inspired by computational image unblurring, FP-MUSIC compensates for rotational perturbations and recovers the high-resolution DOA capability of MUSIC under wave-induced covariance distortion without increasing the physical aperture or requir-ing frequency-separated beacons. Combined with subspace wideband matched filtering and power-asymmetry tagging, the system achieves robust 3-D tracking and orientation estimation up to Sea State 4. Future work includes validating the system in field trials with a physical buoy array prototype, which will also quantify the effect of real AHRS orientation error, IMU–acoustic timing offset, and multipath propagation which are not captured by the present idealized direct-path channel. Moreover, multi-robot localization will also be investigated in the future iteration of this research. VIII. A CKNOWLEDGMENTS 
+
+This work was supported by a research grant (VIL77281) from Villum Fonden. A language model was used for gram-mar check, literature review, and code fix. The proposed method is built by the authors independently. REFERENCES [1] G. Tang, T. Yang, Y. Yang, Q. Zhao, M. Xu, and G. Xie, “Relative localization and dynamic tracking of underwater robots based on 3D-AprilTag,” Journal of Marine Science and Engineering , vol. 13, no. 5, p. 833, 2025. [2] J. Bosch, N. Gracias, P. Ridao, K. Isteniˇ c, and D. Ribas, “Close-range tracking of underwater vehicles using light beacons,” Sensors , vol. 16, no. 4, p. 429, 2016. [3] L. Paull, S. Saeedi, M. Seto, and H. Li, “AUV navigation and localization: A review,” IEEE Journal of Oceanic Engineering , vol. 39, no. 1, pp. 131–149, Jan. 2014. [4] F. Maurelli, S. Krupi´ nski, X. Xiang, and Y. Petillot, “AUV localisation: a review of passive and active techniques,” International Journal of Intelligent Robotics and Applications , vol. 6, no. 2, pp. 246–269, 2021. [5] J. Huang, Y. Wang, and Y. Chen, “Raspi 2USBL: An open-source Raspberry Pi-based passive inverted ultra-short baseline positioning system for underwater robotics,” arXiv preprint arXiv:2511.06998, 2025. [6] A. Caiti, A. Garulli, F. Livide, and D. Prattichizzo, “Localization of autonomous underwater vehicles by floating acoustic buoys: A set-membership approach,” IEEE Journal of Oceanic Engineering , vol. 30, no. 1, pp. 140–152, 2005. [7] T. Saito, A. Tsuchiya, T. Ebihara, N. Wakatsuki, and K. Zempo, “De-sign of underwater acoustic positioning system using delay-and-sum beamforming,” in 2024 IEEE 13th Global Conference on Consumer Electronics (GCCE) , 2024, pp. 438–441. [8] H. L. Van Trees, Optimum Array Processing: Part IV of Detection, Estimation, and Modulation Theory . New York: John Wiley & Sons, 2002. [9] J. Capon, “High-resolution frequency-wavenumber spectrum analysis,” 
+
+Proceedings of the IEEE , vol. 57, no. 8, pp. 1408–1418, 1969. [10] R. O. Schmidt, “Multiple emitter location and signal parameter esti-mation,” IEEE Transactions on Antennas and Propagation , vol. 34, no. 3, pp. 276–280, Mar. 1986. [11] Y. Hao, N. Zou, L. Qiu, C. Li, Y. Wang, and G. Liang, “Spatial rotation-based direction-of-arrival estimation for uniform circular hy-drophone array,” Applied Acoustics , vol. 178, p. 107945, 2021. [12] G. Liu, Y. Li, J. Wang, T. Lan, L. Qiu, and G. Liang, “Low-rank rotation matrices-based DOA estimation with a moored circular vector sensor array,” Measurement Science and Technology , vol. 36, no. 1, p. 016302, 2024. [13] N. L. Owsley, “Towed array shape estimation using acoustic and heading data,” in OCEANS 2021: San Diego – Porto . IEEE, 2021. [14] V. Tourbabin and B. Rafaely, “Direction of arrival estimation using microphone array processing for moving humanoid robots,” arXiv preprint arXiv:2401.02386 , 2024. [15] R. Fergus, B. Singh, A. Hertzmann, S. T. Roweis, and W. T. Freeman, “Removing camera shake from a single photograph,” ACM Transac-tions on Graphics (TOG) , vol. 25, no. 3, pp. 787–794, 2006. [16] N. Joshi, S. B. Kang, C. L. Zitnick, and R. Szeliski, “Image deblurring using inertial measurement sensors,” ACM Transactions on Graphics (TOG) , vol. 29, no. 4, pp. 1–9, 2010. [17] M. Hawes, L. Mihaylova, F. Septier, and S. Godsill, “A Bayesian compressed sensing Kalman filter for direction of arrival estimation,” arXiv preprint arXiv:1509.06290, 2015. [18] J. Benesty, J. Chen, Y. Huang, and I. Cohen, Noise reduction in speech processing . Springer Science & Business Media, 2009. [19] I. Ziskind and M. Wax, “Maximum likelihood localization of multiple sources by alternating projection,” IEEE Transactions on Acoustics, Speech, and Signal Processing , vol. 36, no. 10, pp. 1553–1560, 1988. [20] A. J. Weiss and B. Friedlander, “Eigenstructure methods for direction finding with sensor gain and phase uncertainties,” Circuits, Systems and Signal Processing , vol. 9, no. 3, pp. 271–300, 1990. [21] L. Jiang, Z. Zhang, R. Jin, X. Zhou, and P. Roux, “Subspace-based compressive sensing algorithm for raypath separation in a shallow-water waveguide,” arXiv preprint arXiv:2103.14236, 2021. [22] J. McEachern, E. Malekshahi, M. Mirzaei Hotkani, and J.-F. Bousquet, “Real-time passive underwater localization using a compact acoustic sensor array,” Computer Networks , vol. 251, p. 110621, 2024. [23] R. Scheibler, E. Bezzam, and I. Dokmani´ c, “Pyroomacoustics: A Python package for audio room simulation and array processing algorithms.” IEEE, 2018, pp. 351–355. [24] World Meteorological Organization, Manual on Codes (WMO-No. 306), Volume I.1 — International Codes , World Meteorological Orga-nization, Geneva, 2019, annex II to the WMO Technical Regulations, Part A — Alphanumeric Codes (Code Table 3700: Sea State). ISBN 978-92-63-10306-2. [25] M. Ait Habouche, M. Kerboeuf, G. Guillou, and J.-P. Babau, “Machine learning-based estimation of wave direction for unmanned surface vehicles,” arXiv preprint arXiv:2412.16205, 2024. [26] R. G. Dean and R. A. Dalrymple, Water Wave Mechanics for Engineers and Scientists , ser. Advanced Series on Ocean Engineering. World Scientific, 1991, vol. 2.

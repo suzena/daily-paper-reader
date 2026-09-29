@@ -1,0 +1,153 @@
+{
+  "date": "20260929",
+  "date_label": "",
+  "generated_at": "2026-09-29 22:53:26 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.32156v1",
+      "route": "202609/29/2609.32156v1-aquabev-nav-learned-bev-occupancy-for-underwater-navigation-and-exploration",
+      "title": "AquaBEV-Nav: Learned BEV Occupancy for Underwater Navigation and Exploration",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于鸟瞰图占据预测的水下机器人自主探索",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.30836v1",
+      "route": "202609/29/2609.30836v1-ptc-decoder-towards-intelligent-slms-on-offline-resource-constrained-edge-devices",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向遥感卫星的智能体式小模型框架",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.31747v1",
+      "route": "202609/29/2609.31747v1-the-earth-in-one-gaze-training-free-active-focus-for-uhr-remote-sensing-understanding",
+      "title": "The Earth in One Gaze: Training-Free Active Focus for UHR Remote Sensing Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向超高分辨率遥感理解的多模态大模型主动聚焦",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.27712v1",
+      "route": "202609/29/2609.27712v1-wave-robust-passive-auv-localization-using-fp-music",
+      "title": "Wave-Robust Passive AUV Localization Using FP-MUSIC",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主水下航行器定位与海洋感知",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.32529v1",
+      "route": "202609/29/2609.32529v1-setopd-from-few-visual-exemplars-to-multimodal-candidate-sets-for-remote-sensing-open-prompt-detection",
+      "title": "SetOPD: From Few Visual Exemplars to Multimodal Candidate Sets for Remote-Sensing Open-Prompt Detection",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合文本提示与视觉示例的遥感开放提示多模态检测",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.32737v1",
+      "route": "202609/29/2609.32737v1-gradient-guided-decoupled-adaptation-for-geospatial-vision-language-models",
+      "title": "Gradient-Guided Decoupled Adaptation for Geospatial Vision-Language Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向多任务地理空间视觉语言模型的梯度引导解耦适配",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.32813v1",
+      "route": "202609/29/2609.32813v1-usai-quant-a-quantitative-reasoning-benchmark-for-vision-language-models-in-built-environments",
+      "title": "USAI-Quant: A Quantitative Reasoning Benchmark for Vision-Language Models in Built Environments",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型在遥感影像上的定量推理与环境指标评估",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.34954v1",
+      "route": "202609/29/2609.34954v1-toward-enhanced-water-detection-in-swot-pixel-clouds-using-dynamic-graph-neural-networks",
+      "title": "Toward Enhanced Water Detection in SWOT Pixel Clouds using Dynamic Graph Neural Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于SWOT海洋遥感像素云的深度学习水体检测",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    },
+    {
+      "paper_id": "2609.35507v1",
+      "route": "202609/29/2609.35507v1-reva-a-scene-centric-dataset-beyond-repetition-for-remote-sensing-video-question-answering",
+      "title": "ReVA: A Scene-Centric Dataset Beyond Repetition for Remote Sensing Video Question Answering",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感视频问答的多模态大语言模型",
+      "first_seen_at": "2026-09-29 22:53:26 UTC",
+      "updated_at": "2026-09-29 22:53:26 UTC"
+    }
+  ]
+}
