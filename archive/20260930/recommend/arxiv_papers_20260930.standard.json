@@ -1,0 +1,210 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-09-30T23:20:04.553671+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2609.33299v1",
+      "source": "arxiv",
+      "title": "AquaWAM: A Dynamics-aware World Action Model for Underwater Embodied Agents",
+      "abstract": "World Action Models (WAMs) are becoming increasingly important and useful for embodied intelligence, as they enable robots to anticipate the consequences of candidate actions before interacting with the physical environment. However, underwater robots are usually subject to passive dynamics, such as inertia, buoyancy, hydrodynamic drag, and persistent drift, which can continue to affect the vehicle even after an action is completed. Existing WAMs, which primarily predict action-conditioned visual observations, are not explicitly designed to capture such passive motion dynamics. In this paper, we present AquaWAM, the first World Action Model designed for underwater embodied agents. Instead of predicting future images, AquaWAM models both action-conditioned and passive physical dynamics, including the thruster dead band, the inertial glide that outlasts each command, and ambient currents. Specifically, it senses through the DVL, IMU, pressure sensor and joint encoders, while cameras supply only semantics for understanding goals and target pose. By modeling compact navigation states rather than high-dimensional visual observations, AquaWAM substantially reduces the model size and computational cost compared with conventional WAMs. Experimentally, AquaWAM achieves a 72.6% task success rate across 20 underwater tasks on the USIM benchmark, outperforming existing methods while making action decisions 2.7x faster than U0 on an NVIDIA Jetson AGX Orin. Our model also remains effective when some onboard sensor measurements are unavailable. For example, without DVL velocity measurements, our method still achieves a 61.6% success rate, compared with 39.4% for U0.",
+      "authors": [
+        "Cunhao Zhu",
+        "Yifeng Wang",
+        "Dongliang Xu",
+        "Yunzhong Hou",
+        "Yue Yao",
+        "Chi Harold Liu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-09-27T07:09:26+00:00",
+      "link": "https://arxiv.org/pdf/2609.33299v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "world action model for underwater embodied agents",
+      "llm_evidence_cn": "面向水下具身智能体的世界动作模型",
+      "llm_evidence": "面向水下具身智能体的世界动作模型",
+      "canonical_evidence": "面向水下具身智能体的世界动作模型",
+      "llm_tldr_en": "AquaWAM is the first world action model for underwater embodied agents, jointly modeling action and passive dynamics like buoyancy and drift.",
+      "llm_tldr_cn": "水下机器人受惯性、浮力、水阻与持续漂移等被动动力学影响，现有世界动作模型多预测动作条件下的视觉观测，难以刻画此类被动运动。本文提出首个面向水下具身智能体的世界动作模型AquaWAM，联合建模动作与被动动力学。该模型使机器人能在交互前预判候选动作后果，为水下自主智能体的决策提供了动力学感知基础。",
+      "llm_tldr": "水下机器人受惯性、浮力、水阻与持续漂移等被动动力学影响，现有世界动作模型多预测动作条件下的视觉观测，难以刻画此类被动运动。本文提出首个面向水下具身智能体的世界动作模型AquaWAM，联合建模动作与被动动力学。该模型使机器人能在交互前预判候选动作后果，为水下自主智能体的决策提供了动力学感知基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.30836v1",
+      "source": "arxiv",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "abstract": "Deploying small language models (SLMs) on offline, resource-constrained edge devices such as remote sensing satellites presents a fundamental challenge: their limited reasoning capacity hinders reliable execution of multi-step agent tasks requiring complex tool orchestration. Existing plan-solve paradigms rely on prompt-based enforcement, which our experiments show SLMs almost entirely disregard: weak models fail to invoke the plan. We propose PTC-Decoder (Plan-Tool Constrained Decoder), a training-free, plug-and-play decoder framework that combines (1) a Plan-to-Act paradigm, which elevates planning to an atomic tool and forces its invocation at the first inference step, and (2) TC-Decoder, a deterministic finite automaton that imposes token-level hard constraints on tool names while preserving freedom over parameter generation, thereby retaining SLM reasoning capability. Evaluated on 200 real remote-sensing satellite tasks across 7 SLMs, PTC-Decoder yields a statistically significant mean overall score gain of +1.21 (p<0.01), 95% CI [+1.13, +1.29]), with consistent improvements across models and other datasets. An ablation study that removes TC-Decoder causes substantial performance degradation across all quality metrics without reducing computational cost, confirming TC-Decoder as the primary driver. PTC-Decoder thus offers a lightweight yet effective solution for improving step-level reliability, with final-answer accuracy remaining an open challenge. In essence, we enforce plan adherence by constraining the permissible output vocabulary during inference, without requiring retraining.",
+      "authors": [
+        "Minghui Yu",
+        "Ke Mu",
+        "Gang Wu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-25T05:30:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.30836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Intelligent SLM agents on remote sensing satellite edge devices",
+      "llm_evidence_cn": "遥感卫星边缘设备上的智能小模型智能体",
+      "llm_evidence": "遥感卫星边缘设备上的智能小模型智能体",
+      "canonical_evidence": "遥感卫星边缘设备上的智能小模型智能体",
+      "llm_tldr_en": "PTC-Decoder is a training-free decoder framework enabling small language models on resource-constrained edge devices such as remote sensing satellites to reliably execute multi-step agent tasks via plan-as-tool and constrained decoding.",
+      "llm_tldr_cn": "针对小语言模型部署于遥感卫星等离线资源受限边缘设备时推理能力弱、难以可靠执行需工具编排的多步智能体任务的问题，本文提出PTC-Decoder框架。该方法无需训练，结合将规划提升为原子工具并强制首次调用的Plan-to-Act范式，以及有限状态机式的TC-Decoder约束解码。实验表明其能强制规划调用与工具编排。该工作直接服务于大模型与智能体在遥感卫星上的落地，契合复合主题。",
+      "llm_tldr": "针对小语言模型部署于遥感卫星等离线资源受限边缘设备时推理能力弱、难以可靠执行需工具编排的多步智能体任务的问题，本文提出PTC-Decoder框架。该方法无需训练，结合将规划提升为原子工具并强制首次调用的Plan-to-Act范式，以及有限状态机式的TC-Decoder约束解码。实验表明其能强制规划调用与工具编排。该工作直接服务于大模型与智能体在遥感卫星上的落地，契合复合主题。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.32510v1",
+      "source": "arxiv",
+      "title": "GeoCR: Learning a Generalist Cloud Removal Prior from Heterogeneous Observations",
+      "abstract": "Cloud removal methods are typically specialized to individual datasets and input configurations, limiting reuse across sensors, spectral bands, and observation settings. We introduce GeoCR, a generalist model that unifies RGB-only-based CR and multispectral-based CR from single- or multi-temporal cloudy observations, with optional SAR guidance, within a single network. To accommodate different spectral and sensing domains, compact input and output stems extend a pretrained RGB autoencoder while keeping its encoder and decoder trunks frozen. This shared latent interface enables a single flow transformer to jointly model clean RGB and non-RGB latents, conditioned on separate cloudy-observation streams and optional SAR tokens. Through joint pretraining on the training splits of ten datasets comprising 883,331 cloud-free target images, GeoCR learns a shared cloud removal prior across these heterogeneous configurations. The same pretrained checkpoint supports direct inference without dataset-specific fine-tuning and efficient adaptation through low-rank adaptation (LoRA). We evaluate GeoCR against general image restoration and cloud removal methods on test splits of the contributing datasets under full-band and RGB-only settings. GeoCR achieves the best FID and DISTS on full-band SEN12MS-CR and Sen2_MTC_New and RGB-only CUHK-CR2, outperforming existing models and demonstrating the effectiveness of a reusable generative model across diverse settings.",
+      "authors": [
+        "Jeonghyeok Do",
+        "Munchurl Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-26T11:56:41+00:00",
+      "link": "https://arxiv.org/pdf/2609.32510v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Generalist cloud removal model for multispectral remote sensing",
+      "llm_evidence_cn": "面向多光谱遥感的多任务云去除通用模型",
+      "llm_evidence": "面向多光谱遥感的多任务云去除通用模型",
+      "canonical_evidence": "面向多光谱遥感的多任务云去除通用模型",
+      "llm_tldr_en": "Cloud removal models are usually dataset-specific, limiting reuse across sensors and bands. GeoCR is a generalist network unifying RGB and multispectral cloud removal with optional SAR guidance.",
+      "llm_tldr_cn": "云去除方法通常针对单一数据集和输入配置设计，难以跨传感器、光谱波段与观测设置复用。论文提出GeoCR通用模型，在单一网络中统一RGB与多光谱、单时相或多时相云去除，并可选融合SAR引导。该方法用紧凑输入输出端扩展预训练RGB自编码器并冻结主干，通过共享隐空间与流变换器联合建模。实验表明其具备跨域泛化能力，提升了云去除模型的通用性。",
+      "llm_tldr": "云去除方法通常针对单一数据集和输入配置设计，难以跨传感器、光谱波段与观测设置复用。论文提出GeoCR通用模型，在单一网络中统一RGB与多光谱、单时相或多时相云去除，并可选融合SAR引导。该方法用紧凑输入输出端扩展预训练RGB自编码器并冻结主干，通过共享隐空间与流变换器联合建模。实验表明其具备跨域泛化能力，提升了云去除模型的通用性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.33687v1",
+      "source": "arxiv",
+      "title": "Resource-Aware Parameter-Efficient Model Adaptation for Onboard High-Dimensional Data",
+      "abstract": "Onboard satellite models often require frequent updates, but the weights adapted to earlier data distributions can quickly become outdated. However, updating large-scale model parameters in orbit presents significant challenges due to the limited uplink bandwidth of Low Earth Orbit (LEO) satellite systems, particularly for hyperspectral satellite imagery, where high-dimensional spectral-spatial inputs lead to increased model size and update costs. Existing full fine-tuning methods are thus expensive to retrain and difficult to deploy under strict communication constraints. To address this challenge, we propose NE-LoRA, a parameter-efficient adaptation framework for bandwidth-constrained onboard hyperspectral model updates. NE-LoRA combines a primary low-rank branch with a nonlinear auxiliary branch to capture both global update trends and complex spectral-spatial variations. Additionally, we introduce a differentiated training strategy for multi-matrix adapters, motivated by the asymmetric initialization and gradient dynamics of different adapter matrices. Experiments on four hyperspectral datasets and three representative backbone models demonstrate that NE-LoRA consistently outperforms LoRA-based baselines and remains competitive with, and in several cases superior to, full fine-tuning. Across the evaluated settings, NE-LoRA updates only a small fraction of the total parameters on average while preserving low deployment overhead, offering a favorable accuracy-communication trade-off for onboard hyperspectral adaptation.",
+      "authors": [
+        "Qiyang Zhang",
+        "Xinhao Li",
+        "Lei Shi",
+        "Zheng Lin",
+        "Jinfeng Wen",
+        "Ao Zhou",
+        "Shangguang Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.DC",
+        "cs.NI"
+      ],
+      "published": "2026-09-27T15:49:55+00:00",
+      "link": "https://arxiv.org/pdf/2609.33687v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Parameter-efficient adaptation for onboard hyperspectral satellite models",
+      "llm_evidence_cn": "星载高光谱模型的参数高效自适应",
+      "llm_evidence": "星载高光谱模型的参数高效自适应",
+      "canonical_evidence": "星载高光谱模型的参数高效自适应",
+      "llm_tldr_en": "Onboard satellite models need frequent updates, yet LEO uplink bandwidth limits large parameter updates, especially for hyperspectral imagery. NE-LoRA is a parameter-efficient adaptation framework that cuts update cost under communication constraints.",
+      "llm_tldr_cn": "在轨卫星模型需频繁更新以适应数据分布变化，但低轨卫星上行带宽有限，高光谱影像的高维谱空输入更使模型体积与更新成本剧增。针对该问题，论文提出NE-LoRA参数高效自适应框架，以低秩方式降低在轨模型更新开销。实验表明，该方法在严格通信约束下仍能有效完成星载高光谱模型适配，为星上智能遥感模型的可持续部署提供了可行方案。",
+      "llm_tldr": "在轨卫星模型需频繁更新以适应数据分布变化，但低轨卫星上行带宽有限，高光谱影像的高维谱空输入更使模型体积与更新成本剧增。针对该问题，论文提出NE-LoRA参数高效自适应框架，以低秩方式降低在轨模型更新开销。实验表明，该方法在严格通信约束下仍能有效完成星载高光谱模型适配，为星上智能遥感模型的可持续部署提供了可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.35410v1",
+      "source": "arxiv",
+      "title": "Spectral Super-Resolution using Spatial-Spectral Residual Operator Networks",
+      "abstract": "Spectral super-resolution of multispectral satellite images can enable high temporal- and spatial-resolution hyperspectral satellite imagery at a modest cost, significantly increasing the applicability of hyperspectral remote sensing. This task is inherently ill-posed, making it well-suited for deep learning-based methods. In this study, the spectral super-resolution task is framed as an operator learning problem, and SSRON is proposed as a Deep Operator Network that effectively learns function-to-function mappings from downsampled spectra to continuous spectra. The model is trained to super-resolve Sentinel-2A-like multispectral imagery to EMIT images. Compared to baseline models, SSRON achieves superior performance across all metrics. The model also demonstrates zero-shot spectral super-resolution capability by predicting bands unseen during training. Furthermore, its continuous-output formulation suggests the potential to estimate spectra at finer wavelength intervals than the native sensor. These results suggest the potential of SSRON and establishes operator learning as a promising direction for spectral super-resolution.",
+      "authors": [
+        "Seokhyun Chin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-28T15:28:31+00:00",
+      "link": "https://arxiv.org/pdf/2609.35410v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep operator network for spectral super-resolution of satellite imagery",
+      "llm_evidence_cn": "面向卫星影像光谱超分辨的深度算子网络",
+      "llm_evidence": "面向卫星影像光谱超分辨的深度算子网络",
+      "canonical_evidence": "面向卫星影像光谱超分辨的深度算子网络",
+      "llm_tldr_en": "Spectral super-resolution of multispectral satellite images enables cheap hyperspectral data. SSRON frames it as operator learning, using a Deep Operator Network to map downsampled spectra to continuous spectra.",
+      "llm_tldr_cn": "多光谱卫星影像的光谱超分辨能以较低成本获得高时空分辨率的高光谱数据，从而拓展高光谱遥感的适用性，但该任务本质病态，适合用深度学习方法求解。论文将其建模为算子学习问题，提出SSRON深度算子网络，学习从降采样光谱到连续光谱的函数到函数映射，并在Sentinel-2A类影像到EMIT影像的任务上训练。实验显示SSRON在所有指标上优于基线，为高光谱遥感数据获取提供了经济高效的新途径。",
+      "llm_tldr": "多光谱卫星影像的光谱超分辨能以较低成本获得高时空分辨率的高光谱数据，从而拓展高光谱遥感的适用性，但该任务本质病态，适合用深度学习方法求解。论文将其建模为算子学习问题，提出SSRON深度算子网络，学习从降采样光谱到连续光谱的函数到函数映射，并在Sentinel-2A类影像到EMIT影像的任务上训练。实验显示SSRON在所有指标上优于基线，为高光谱遥感数据获取提供了经济高效的新途径。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

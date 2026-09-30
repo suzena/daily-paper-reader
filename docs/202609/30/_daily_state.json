@@ -1,0 +1,89 @@
+{
+  "date": "20260930",
+  "date_label": "",
+  "generated_at": "2026-09-30 23:23:55 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.33299v1",
+      "route": "202609/30/2609.33299v1-aquawam-a-dynamics-aware-world-action-model-for-underwater-embodied-agents",
+      "title": "AquaWAM: A Dynamics-aware World Action Model for Underwater Embodied Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向水下具身智能体的世界动作模型",
+      "first_seen_at": "2026-09-30 23:23:55 UTC",
+      "updated_at": "2026-09-30 23:23:55 UTC"
+    },
+    {
+      "paper_id": "2609.30836v1",
+      "route": "202609/30/2609.30836v1-ptc-decoder-towards-intelligent-slms-on-offline-resource-constrained-edge-devices",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感卫星边缘设备上的智能小模型智能体",
+      "first_seen_at": "2026-09-30 23:23:55 UTC",
+      "updated_at": "2026-09-30 23:23:55 UTC"
+    },
+    {
+      "paper_id": "2609.32510v1",
+      "route": "202609/30/2609.32510v1-geocr-learning-a-generalist-cloud-removal-prior-from-heterogeneous-observations",
+      "title": "GeoCR: Learning a Generalist Cloud Removal Prior from Heterogeneous Observations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向多光谱遥感的多任务云去除通用模型",
+      "first_seen_at": "2026-09-30 23:23:55 UTC",
+      "updated_at": "2026-09-30 23:23:55 UTC"
+    },
+    {
+      "paper_id": "2609.33687v1",
+      "route": "202609/30/2609.33687v1-resource-aware-parameter-efficient-model-adaptation-for-onboard-high-dimensional-data",
+      "title": "Resource-Aware Parameter-Efficient Model Adaptation for Onboard High-Dimensional Data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "星载高光谱模型的参数高效自适应",
+      "first_seen_at": "2026-09-30 23:23:55 UTC",
+      "updated_at": "2026-09-30 23:23:55 UTC"
+    },
+    {
+      "paper_id": "2609.35410v1",
+      "route": "202609/30/2609.35410v1-spectral-super-resolution-using-spatial-spectral-residual-operator-networks",
+      "title": "Spectral Super-Resolution using Spatial-Spectral Residual Operator Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向卫星影像光谱超分辨的深度算子网络",
+      "first_seen_at": "2026-09-30 23:23:55 UTC",
+      "updated_at": "2026-09-30 23:23:55 UTC"
+    }
+  ]
+}
