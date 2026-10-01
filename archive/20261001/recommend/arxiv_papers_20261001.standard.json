@@ -1,0 +1,250 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-01T23:45:06.230924+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.30836v1",
+      "source": "arxiv",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "abstract": "Deploying small language models (SLMs) on offline, resource-constrained edge devices such as remote sensing satellites presents a fundamental challenge: their limited reasoning capacity hinders reliable execution of multi-step agent tasks requiring complex tool orchestration. Existing plan-solve paradigms rely on prompt-based enforcement, which our experiments show SLMs almost entirely disregard: weak models fail to invoke the plan. We propose PTC-Decoder (Plan-Tool Constrained Decoder), a training-free, plug-and-play decoder framework that combines (1) a Plan-to-Act paradigm, which elevates planning to an atomic tool and forces its invocation at the first inference step, and (2) TC-Decoder, a deterministic finite automaton that imposes token-level hard constraints on tool names while preserving freedom over parameter generation, thereby retaining SLM reasoning capability. Evaluated on 200 real remote-sensing satellite tasks across 7 SLMs, PTC-Decoder yields a statistically significant mean overall score gain of +1.21 (p<0.01), 95% CI [+1.13, +1.29]), with consistent improvements across models and other datasets. An ablation study that removes TC-Decoder causes substantial performance degradation across all quality metrics without reducing computational cost, confirming TC-Decoder as the primary driver. PTC-Decoder thus offers a lightweight yet effective solution for improving step-level reliability, with final-answer accuracy remaining an open challenge. In essence, we enforce plan adherence by constraining the permissible output vocabulary during inference, without requiring retraining.",
+      "authors": [
+        "Minghui Yu",
+        "Ke Mu",
+        "Gang Wu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-09-25T05:30:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.30836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agent tool orchestration on remote sensing satellites edge devices",
+      "llm_evidence_cn": "遥感卫星边缘设备上的智能体工具编排",
+      "llm_evidence": "遥感卫星边缘设备上的智能体工具编排",
+      "canonical_evidence": "遥感卫星边缘设备上的智能体工具编排",
+      "llm_tldr_en": "PTC-Decoder is a training-free decoder framework for small language models on offline edge devices like remote sensing satellites, using Plan-to-Act and a finite-state token-constrained decoder to force planning in multi-step agent tasks.",
+      "llm_tldr_cn": "在遥感卫星等离线资源受限边缘设备上部署小语言模型时，其推理能力不足，难以可靠执行需要复杂工具编排的多步智能体任务，而现有提示式计划范式常被弱模型忽略。本文提出免训练、即插即用的PTC-Decoder框架，通过Plan-to-Act范式把规划提升为原子工具并强制在首步调用，并用有限状态机进行确定性令牌约束解码。实验显示弱模型几乎不执行提示计划，而该方法能有效强制调用规划并提升多步任务成功率，为边缘端遥感智能体部署提供支撑。",
+      "llm_tldr": "在遥感卫星等离线资源受限边缘设备上部署小语言模型时，其推理能力不足，难以可靠执行需要复杂工具编排的多步智能体任务，而现有提示式计划范式常被弱模型忽略。本文提出免训练、即插即用的PTC-Decoder框架，通过Plan-to-Act范式把规划提升为原子工具并强制在首步调用，并用有限状态机进行确定性令牌约束解码。实验显示弱模型几乎不执行提示计划，而该方法能有效强制调用规划并提升多步任务成功率，为边缘端遥感智能体部署提供支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.31932v1",
+      "source": "arxiv",
+      "title": "Resource-Aware Federated Mixture-of-Experts with Adaptive Pruning for Onboard Learning in LEO Satellite Constellations",
+      "abstract": "Low-Earth-orbit (LEO) satellites are increasingly expected to perform onboard learning for applications such as disaster response and environmental monitoring. However, conventional federated learning (FL) is ill-suited to onboard satellite learning, as it assumes computational, memory, and communication resources beyond the capabilities of resource-constrained LEO platforms, often necessitating the transmission of raw imagery to ground stations. We present COSMIC-FL, a resource-aware FL framework for efficient onboard learning in LEO satellite constellations. COSMIC-FL introduces two complementary Mixture-of-Experts (MoE) architectures: a Sliced design that shares backbone representations while activating task-specific channel subsets, and a Modular design that employs lightweight gating to route inputs to physically separated expert networks. A semantic class-to-expert mapping enables each satellite to train, update, and communicate only the expert paths relevant to its local data. To further improve efficiency, COSMIC-FL integrates staged optimization with three structured pruning strategies: server-side pruning, client-side fixed-ratio pruning with mean-vote aggregation, and adaptive client-side per-layer pruning based on aggregated importance and a MAD-based gap criterion. Combined with semantic expert routing, these techniques jointly adapt computation and model sparsity to both data semantics and layer importance, yielding a favourable accuracy--efficiency trade-off for heterogeneous space platforms. Experiments on six image classification benchmarks under highly non-i.i.d. settings show that COSMIC-FL maintains competitive accuracy while reducing communication, computation, and energy consumption by up to 80% over SOTA FL methods. We further validate COSMIC-FL on an NVIDIA Jetson AGX Orin, confirming its efficiency gains under realistic embedded deployment constraints.",
+      "authors": [
+        "Mohamed Shaaban",
+        "Mohamed Elmahallawy",
+        "Marius Bernahrndt",
+        "Tobias Hecking"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-09-25T19:24:19+00:00",
+      "link": "https://arxiv.org/pdf/2609.31932v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "federated learning for onboard satellite remote sensing data",
+      "llm_evidence_cn": "面向星上遥感数据的联邦学习",
+      "llm_evidence": "面向星上遥感数据的联邦学习",
+      "canonical_evidence": "面向星上遥感数据的联邦学习",
+      "llm_tldr_en": "Onboard learning on resource-constrained LEO satellites is hindered by federated learning assumptions and raw imagery downlink. This paper presents COSMIC-FL, a resource-aware federated Mixture-of-Experts framework with adaptive pruning, enabling efficient onboard learning for environmental monitoring and disaster response.",
+      "llm_tldr_cn": "低轨卫星日益需要在轨学习以支持灾害响应与环境监测，但传统联邦学习假设的算力、内存与通信资源超出星上平台能力，往往需将原始影像传回地面站。本文提出COSMIC-FL，一种资源感知的联邦混合专家框架，包含切片式与另一互补的MoE设计，并配合自适应剪枝以降低星上开销。该框架面向低轨星座的在轨学习，在受限资源下提升遥感数据处理的效率。其意义在于为星上遥感数据的分布式学习提供了可行的资源优化方案。",
+      "llm_tldr": "低轨卫星日益需要在轨学习以支持灾害响应与环境监测，但传统联邦学习假设的算力、内存与通信资源超出星上平台能力，往往需将原始影像传回地面站。本文提出COSMIC-FL，一种资源感知的联邦混合专家框架，包含切片式与另一互补的MoE设计，并配合自适应剪枝以降低星上开销。该框架面向低轨星座的在轨学习，在受限资源下提升遥感数据处理的效率。其意义在于为星上遥感数据的分布式学习提供了可行的资源优化方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.34577v1",
+      "source": "arxiv",
+      "title": "Calibrated Uncertainty for Informative Path Planning in Aquatic Environmental Monitoring",
+      "abstract": "Informative Path Planning for scalar field reconstruction uses predictive uncertainty to direct sensing vehicles toward maximally informative locations. Gaussian Processes provide this signal but their stationary isotropic kernels are misspecified for non-homogeneous phenomena such as oil spills, producing miscalibrated estimates that degrade planning. We investigate whether replacing the Gaussian Process with a well-calibrated Deep Ensemble improves path planning outcomes, and whether uncertainty quality interacts with the choice of planning algorithm. Five strategies ($ε$-Greedy, Value Greedy, Uncertainty Greedy, Monte Carlo Tree Search, and Receding Horizon Orienteering) share a common Deep Ensemble backbone trained on physics-based oil spill simulations. On held-out stochastic spill scenarios, the Deep Ensemble reduces normalised reconstruction error by $83\\%$ relative to the Gaussian Process baseline. Crucially, well-calibrated uncertainty amplifies the importance of the planning strategy: the performance gap between algorithms is negligible under miscalibrated models but becomes substantial under the ensemble, where multi-step lookahead planners outperform greedy selection by up to $32\\%$ in reconstruction error and achieve IoU above $0.85$. Monte Carlo Tree Search is the recommended planner, matching Orienteering in reconstruction quality at an order-of-magnitude lower computational cost.",
+      "authors": [
+        "Samuel Yanes Luis",
+        "Alejandro Casado Pérez",
+        "Alejandro Mendoza Barrionuevo",
+        "Dame Seck Diop",
+        "Sergio Toral Marín",
+        "Saniel Gutiérrez Reina"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.IR"
+      ],
+      "published": "2026-09-28T08:23:13+00:00",
+      "link": "https://arxiv.org/pdf/2609.34577v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "calibrated uncertainty for informative path planning in aquatic monitoring",
+      "llm_evidence_cn": "水生环境监测中基于校准不确定性的信息路径规划",
+      "llm_evidence": "水生环境监测中基于校准不确定性的信息路径规划",
+      "canonical_evidence": "水生环境监测中基于校准不确定性的信息路径规划",
+      "llm_tldr_en": "This work replaces Gaussian Processes with a calibrated Deep Ensemble to guide sensing vehicles in aquatic environmental monitoring, testing five planning strategies and showing uncertainty quality interacts with planning algorithm choice.",
+      "llm_tldr_cn": "针对水生环境监测中信息路径规划依赖高斯过程、其各向同性核难以刻画油污等非均匀现象而导致不确定性失准的问题，本文改用以深度集成模型提供校准后的预测不确定性，并比较五种规划策略。实验表明不确定性质量与规划算法选择存在相互作用，校准更好的不确定性可改善感知路径规划效果，为自主监测载具的智能决策提供依据。",
+      "llm_tldr": "针对水生环境监测中信息路径规划依赖高斯过程、其各向同性核难以刻画油污等非均匀现象而导致不确定性失准的问题，本文改用以深度集成模型提供校准后的预测不确定性，并比较五种规划策略。实验表明不确定性质量与规划算法选择存在相互作用，校准更好的不确定性可改善感知路径规划效果，为自主监测载具的智能决策提供依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.32756v1",
+      "source": "arxiv",
+      "title": "Reuse or Relearn? A Spectral View of Earth Observation Foundation Models",
+      "abstract": "Foundation models are rarely used as generic, frozen feature extractors; instead, they are fine-tuned for the target downstream application. This practice is particularly prevalent in Earth observation (EO), and it raises a question that downstream accuracy alone cannot answer: does fine-tuning reuse the pretrained representation, or does it relearn a new one? We study this with spectral diagnostics that compare a model before and after adaptation, quantifying how well its dominant singular subspaces are preserved, how broadly the weight update is distributed, and how large it is. Using natural image models such as CLIP and DINO as a reference, we find that, under the evaluated fine-tuning settings, EO models undergo far larger, higher-rank updates and retain much less of their pretrained structure, so their downstream performance is often obtained with substantial changes to the pretrained weight structure. The diagnostics further provide insight into how cheaply a model can be adapted: where the pretrained subspaces are preserved, adapting a small fraction of the parameters can match full fine-tuning, and where they are not, it can fall behind. More broadly, foundation models, and EO foundation models in particular, should be assessed not only by benchmark accuracy, but also by how reusable their pretrained representation is.",
+      "authors": [
+        "Mehmet Ozgur Turkoglu",
+        "Valerio Marsocci",
+        "Dominik J. Mühlematter",
+        "Dominik Senti",
+        "Konrad Schindler",
+        "Helge Aasen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-09-26T16:21:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.32756v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "earth observation foundation model adaptation analysis",
+      "llm_evidence_cn": "地球观测基础模型微调表征分析",
+      "llm_evidence": "地球观测基础模型微调表征分析",
+      "canonical_evidence": "地球观测基础模型微调表征分析",
+      "llm_tldr_en": "Fine-tuning is standard in Earth observation foundation models, but it is unclear whether it reuses or relearns representations. This paper uses spectral diagnostics comparing dominant singular subspaces before and after adaptation, finding EO models undergo far larger, higher-rank updates than natural image models like CLIP and DINO.",
+      "llm_tldr_cn": "地球观测领域普遍对基础模型进行微调，但下游精度无法回答微调究竟是复用还是重新学习预训练表征这一问题。本文提出谱诊断方法，通过比较微调前后模型的主导奇异子空间保持度、权重更新的分布广度与幅度来量化适配行为。以CLIP、DINO等自然图像模型为参照，发现在所评估的设置下，EO模型发生了幅度更大、秩更高的更新。该分析为遥感大模型的迁移与微调策略选择提供了新的诊断视角。",
+      "llm_tldr": "地球观测领域普遍对基础模型进行微调，但下游精度无法回答微调究竟是复用还是重新学习预训练表征这一问题。本文提出谱诊断方法，通过比较微调前后模型的主导奇异子空间保持度、权重更新的分布广度与幅度来量化适配行为。以CLIP、DINO等自然图像模型为参照，发现在所评估的设置下，EO模型发生了幅度更大、秩更高的更新。该分析为遥感大模型的迁移与微调策略选择提供了新的诊断视角。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.34196v1",
+      "source": "arxiv",
+      "title": "ConvCue: Complementary Visual Inductive Biases for Vision-Language Models",
+      "abstract": "Modern vision-language models (VLMs) achieve strong performance across a broad range of multimodal tasks, yet still struggle with visual questions that require fine-grained discrimination and spatial understanding. These limitations motivate investigating whether supplementary visual representations can improve existing VLMs without replacing their native visual encoders. Pretrained convolutional networks offer a candidate feature source, motivated by their local connectivity and spatial weight sharing. We introduce CONVCUE, which augments the native visual representations of a pretrained VLM with final-stage features from a parallel, frozen pretrained CNN. A learnable adapter maps convolutional features to the native visual feature dimension, while gated cross-attention allows the original visual tokens to retrieve information from the CNN features. The enhanced tokens are passed through the original visual-to-language projector, and the model is adapted through a two-stage training procedure. We evaluate CONVCUE on Qwen3-VL-2B, Qwen3-VL-4B, and LLaVA-OneVision-7B across 13 multimodal benchmarks covering visual question answering, document and chart understanding, and multimodal reasoning. CONVCUE improves average benchmark performance over both the original models and matched two-stage fine-tuning controls on all three backbones. On Qwen3-VL-4B, it improves over the original model on all 13 benchmarks and raises the average score from 75.00 to 78.82 relative to the matched fine-tuning control. These results show that pretrained convolutional representations, when integrated through learned adaptation and fusion, can improve the visual understanding of existing VLMs without replacing their original visual encoders.",
+      "authors": [
+        "Zixuan Lan",
+        "Shichu Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T03:09:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.34196v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "augments VLM visual representations with frozen CNN features for multimodal tasks",
+      "llm_evidence_cn": "以冻结CNN特征增强视觉语言模型的多模态视觉表征",
+      "llm_evidence": "以冻结CNN特征增强视觉语言模型的多模态视觉表征",
+      "canonical_evidence": "以冻结CNN特征增强视觉语言模型的多模态视觉表征",
+      "llm_tldr_en": "CONVCUE augments a pretrained VLM native visual features with frozen CNN final-stage features via a learnable adapter, improving fine-grained spatial visual question answering without replacing the original encoder.",
+      "llm_tldr_cn": "针对视觉语言模型在细粒度判别与空间理解上的不足，本文提出CONVCUE，在不替换原有视觉编码器的前提下，用并行冻结CNN的末层特征增强VLM原生视觉表征，并通过可学习适配器对齐特征维度。该方法为图像与文本的多模态融合提供即插即用的补充视觉线索，有助于提升联合推理在细粒度任务上的表现。",
+      "llm_tldr": "针对视觉语言模型在细粒度判别与空间理解上的不足，本文提出CONVCUE，在不替换原有视觉编码器的前提下，用并行冻结CNN的末层特征增强VLM原生视觉表征，并通过可学习适配器对齐特征维度。该方法为图像与文本的多模态融合提供即插即用的补充视觉线索，有助于提升联合推理在细粒度任务上的表现。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.34795v1",
+      "source": "arxiv",
+      "title": "Physics-Guided Spectral Distillation for Underwater Image Enhancement on Resource-Constrained Devices",
+      "abstract": "Underwater image enhancement is crucial for improving visual perception in marine applications. Existing underwater image enhancement studies mainly focus on enhancement quality and visual fidelity, while rarely considering real-time deployment capability, which is essential for resource-constrained underwater robots. To this end, we introduce a physics-guided spectral distillation (PSD) method, which reduces model capacity for real-time applications while maintaining the high performance of underwater image enhancement models. To decompose the outputs of teacher and student models, PSD adopts a multilevel Haar discrete wavelet transform. It transfers low-frequency color and illumination information as well as high-frequency structural details through band-specific objectives. Moreover, the distillation process of PSD is degradation-aware. We estimate degradation-aware weights through a physical head and combine them with ground-truth-guided reliability masks to selectively retain valuable teacher guidance. Experiments on the UIEB, LSUI, and EUVP datasets validate the effectiveness of the proposed method. Furthermore, we demonstrate the benefits of enhanced images for downstream perception tasks, including object detection. Deployment on a self-developed ROV further demonstrates its practical applicability in real-world underwater scenarios.",
+      "authors": [
+        "Yifan Chen",
+        "Kai He",
+        "Ye Zheng",
+        "Jijun Lu",
+        "Zhe Sun",
+        "Tao Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T10:01:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.34795v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater image enhancement for resource-constrained underwater robots",
+      "llm_evidence_cn": "面向资源受限水下机器人的水下图像增强",
+      "llm_evidence": "面向资源受限水下机器人的水下图像增强",
+      "canonical_evidence": "面向资源受限水下机器人的水下图像增强",
+      "llm_tldr_en": "For real-time underwater robot perception, this paper proposes physics-guided spectral distillation that uses multilevel Haar wavelet transforms to transfer color, illumination and high-frequency knowledge from a teacher to a compact student model.",
+      "llm_tldr_cn": "针对现有水下图像增强方法只关注增强质量、忽视资源受限水下机器人实时部署需求的问题，本文提出物理引导光谱蒸馏方法。该方法利用多级Haar离散小波变换分解教师与学生模型输出，迁移低频颜色与光照信息及高频细节，从而在压缩模型容量的同时保持增强性能，为水下机器人视觉感知的实时部署提供可行方案。",
+      "llm_tldr": "针对现有水下图像增强方法只关注增强质量、忽视资源受限水下机器人实时部署需求的问题，本文提出物理引导光谱蒸馏方法。该方法利用多级Haar离散小波变换分解教师与学生模型输出，迁移低频颜色与光照信息及高频细节，从而在压缩模型容量的同时保持增强性能，为水下机器人视觉感知的实时部署提供可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -1,0 +1,533 @@
+Title: Resource-Aware Federated Mixture-of-Experts with Adaptive Pruning for Onboard Learning in LEO Satellite Constellations
+
+URL Source: https://arxiv.org/pdf/2609.31932v1
+
+Published Time: Tue, 29 Sep 2026 00:23:21 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# Resource-Aware Federated Mixture-of-Experts with Adaptive Pruning for Onboard Learning in LEO Satellite Constellations 
+
+Mohamed Shaaban, Mohamed Elmahallawy, Marius Bernahrndt, Tobias Hecking 
+
+School of Engineering and Applied Science, Washington State University, Richland, WA 99354, USA Institute for Software Technology, German Aerospace Center (DLR), Porz, 51147 Cologne, Germany Email:{mohamed.shaaban, mohamed.elmahallawy}@wsu.edu, {marius.bernahrndt, tobias.hecking}@dlr.de 
+
+Abstract 
+
+Low-Earth-orbit (LEO) satellites are increasingly expected to perform onboard learning for applications such as disaster re-sponse and environmental monitoring. However, conventional federated learning (FL) is ill-suited to onboard satellite learn-ing, as it assumes computational, memory, and communica-tion resources beyond the capabilities of resource-constrained LEO platforms, often necessitating the transmission of raw imagery to ground stations. We present COSMIC-FL, a resource-aware FL framework for efficient onboard learn-ing in LEO satellite constellations. COSMIC-FL introduces two complementary Mixture-of-Experts (MoE) architectures: a Sliced design that shares backbone representations while ac-tivating task-specific channel subsets, and a Modular design that employs lightweight gating to route inputs to physically separated expert networks. A semantic class-to-expert map-ping enables each satellite to train, update, and communicate only the expert paths relevant to its local data. To further im-prove efficiency, COSMIC-FL integrates staged optimization with three structured pruning strategies: server-side pruning ,
+
+client-side fixed-ratio pruning with mean-vote aggregation, and adaptive client-side per-layer pruning based on aggre-gated importance and a MAD-based gap criterion. Combined with semantic expert routing, these techniques jointly adapt computation and model sparsity to both data semantics and layer importance, yielding a favourable accuracy–efficiency trade-off for heterogeneous space platforms. Extensive exper-iments on six image classification benchmarks under highly non-i.i.d. settings demonstrate that COSMIC-FL maintains competitive accuracy while reducing communication, com-putation, and energy consumption by up to 80% compared with SOTA FL methods. We further validate COSMIC-FL on an NVIDIA Jetson AGX Orin, where measurements of latency, throughput, GPU memory usage, power, and temper-ature confirm that the analytical efficiency gains translate to realistic embedded deployments. 
+
+Introduction 
+
+Recent years have witnessed rapid growth in low-Earth-orbit (LEO) satellite constellations (e.g., nanosatellites) for Earth observation and communication. These platforms capture massive volumes of high-resolution imagery (Wang and Li 2023) to be processed using machine learning (ML). How-ever, centralized learning is impractical: contact windows with ground stations (GSs) are brief, and downlink band-width is limited. In addition, satellite imagery often carries commercial or privacy restrictions that prevent unrestricted transmission (Elmahallawy, Luo, and Ibrahem 2023). Feder-ated learning (FL) (McMahan et al. 2017) offers a promising alternative, allowing each satellite to train locally on-board while sharing only model updates. In principle, FL enables satellites to collaboratively learn deep models without trans-mitting raw data to Earth, while preserving data privacy. Despite this potential, deploying FL for onboard learn-ing on small satellites remains challenging. CubeSats oper-ate under strict compute, memory, and power constraints, and flight-grade processors typically provide only a few GFLOPS within tight energy budgets. Network connectivity is intermittent and asymmetric, and contact windows with ground stations are short and unpredictable (Elmahallawy, Luo, and Ramadan 2024). These constraints make conven-tional deep-learning workloads difficult to execute in orbit. Moreover, standard FL algorithms such as FedAvg (Li et al. 2019) assume homogeneous devices, ample compute, and synchronous updates—assumptions that rarely hold in LEO constellations. Recent satellite-FL frameworks—FedSN (Lin et al. 2024), FedLEO (Elmahallawy and Luo 2023), and FedSat-LAM (Pasandi et al. 2025)—improve convergence under intermittent LEO links through pseudo-/hierarchical aggregation, intra-plane propagation, sink scheduling, and multi-hop offloading, but they still mostly rely on monolithic models rather than sparse or expert-based architectures. In response, we propose COSMIC-FL ( Co llaborative 
+
+Satellite MI xture-of-Experts Compression-FL ), a frame-work for onboard training of ML models in satellite con-stellations by combining sparse Mixture-of-Experts (MoE) architectures with multi-level model pruning. COSMIC-FL offers two MoE designs: Sliced-MoE , which partitions the model into channel slices across satellites, and Modular-MoE , where experts specialize in subtasks or regions. A se-mantic class-to-expert mapping assigns each training sample to its single responsible expert, so each satellite trains only one expert at a time; a lightweight gate, trained to mirror this mapping, weighs the expert outputs at inference. To further improve efficiency, we introduce three prun-ing strategies to remove entire filters or channels, producing compact subnetworks suitable for resource-constrained LEO hardware. (i) centralized weight-based pruning at the ground station using global importance scores; (ii) client-informed fixed-ratio pruning based on aggregated layer-wise impor-arXiv:2609.31932v1 [cs.LG] 25 Sep 2026 tance summaries; and (iii) client-informed adaptive pruning 
+
+that adjusts pruning strength per layer. Overall, our frame-work reduces computation, memory, and communication overhead while preserving the capacity of a larger expert model. Our main contributions are as follows: 
+
+• Resource-Aware Onboard Training: We propose COSMIC-FL, an efficient FL framework for resource-constrained LEO satellites that optimizes and communi-cates only phase-relevant parameters through staged ex-pert specialization, gate fine-tuning, and head fine-tuning. 
+
+• Complementary Expert Implementations: We design two MoE variants with different resource trade-offs: Sliced-MoE with shared tensors and channel-based ex-pert paths, and Modular-MoE with physically separated expert towers, enabling analysis of parameter efficiency versus runtime performance. 
+
+• Federated Structured Pruning: We develop three structured pruning strategies: centralized weight-based, satellite-informed fixed-ratio, and adaptive pruning ,where the latter uses a MAD-based gap criterion for data-driven, gap-constrained compression. 
+
+• Server-Side and Embedded Evaluation: We evaluate COSMIC-FL and the baselines on six datasets under i.i.d. and non-i.i.d. partitions. We further execute the proposed training pipeline on an NVIDIA Jetson AGX Orin as an embedded feasibility study and provide a separate in-ference characterization for FedAvg, FedProx, PM-MoE, and the proposed variants on the same device. 
+
+Related Work 
+
+Federated Learning for Satellite Networks. Recent works adapt FL to satellite environments with challenges such as intermittent connectivity and limited bandwidth. Matthiesen 
+
+et al. (Matthiesen et al. 2023) survey satellite FL chal-lenges, while FedLEO (Elmahallawy and Luo 2023), DEDFL (Zhang et al. 2025), and satellite adaptations of Fe-dAvg/FedProx (Kim, Svoboda, and Lane 2026) improve con-vergence through propagation, scheduling, and communica-tion optimization. However, these approaches mainly address connectivity and orchestration, assuming models remain fea-sible for resource-constrained satellites. 
+
+Mixture-of-Experts in Federated Learning. MoE-based FL methods improve personalization under non-i.i.d. data. PM-MoE (Feng et al. 2025), pFedMoE (Yi et al. 2026), dFLMoE (Xie et al. 2025), and ShiftEx (Bhope et al. 2025) leverage expert specialization and routing to handle hetero-geneity. However, they primarily optimize accuracy and per-sonalization, increasing model complexity and limiting ap-plicability to resource-constrained LEO platforms. 
+
+Model Pruning in Federated/Edge AI. Pruning has been explored to reduce FL communication and computation costs. Li et al. (Li et al. 2024), FedSpaLLM (Bai et al. 2025), AutoFLIP (Internò et al. 2024), and MP-FSL (Jia et al. 2024) investigate sparse aggregation, adaptive pruning, and chan-nel reduction. However, these methods target terrestrial edge settings and do not jointly optimize pruning with adaptive expert selection for satellite FL. 
+
+Unlike existing approaches, COSMIC-FL jointly enables sparse expert collaboration and structured compression for resource-constrained satellite constellations through feder-ated MoE training and adaptive pruning. 
+
+Methodology 
+
+This section presents COSMIC-FL, a framework for prac-tical onboard ML training in LEO satellite constellations. COSMIC-FL consists of four key components. First, it intro-duces two complementary MoE architectures: Sliced-MoE ,which shares convolutional representations across channel-based expert paths for parameter efficiency, and Modular-MoE , which uses physically separated expert towers for in-dependent specialization and efficient dense execution with structured pruning. Second, a lightweight gating module per-forms semantic class-to-expert routing, enabling each satel-lite to update only the expert associated with its local samples while combining expert outputs through softmax weighting during inference. Third, the federated training protocol is di-vided into communication-efficient stages to accommodate intermittent connectivity and limited bandwidth. Finally, we introduce three pruning strategies— server-side global prun-ing , fixed-ratio client-side pruning , and adaptive client-side pruning —that further reduce model size by adapting per-layer sparsity using aggregated client importance scores. The overall COSMIC-FL framework is illustrated in Fig. 1. 
+
+Mixture-of-Experts Architectures 
+
+We propose two complementary MoE architectures for FL in LEO satellite networks: Sliced-MoE for parameter-efficient collaboration and Modular-MoE for independent expert spe-cialization. Both use a lightweight gating mechanism for distributed expert routing. Each architecture consists of four core components: 1. Shared Backbone (Stem) : Initial convolutional layers that process raw inputs into a unified feature map z =
+
+h(x), providing consistent low-level representations ac-cessible to both the gating module and all experts. 2. Gating Module : A lightweight network g(·) that maps features z to expert logits. Routing weights are given by softmax as pe(x) = exp( ze)   
+
+> PEj=1 exp( zj)
+
+, e ∈ { 1, . . . , E },with E is the number of experts, ze is the e-th component of g(z) (the gate logit for expert e), and pe(x) is the routing weight of expert e.3. Experts: Specialized sub-networks (paths) that focus on particular subsets of classes or data patterns. During train-ing, each expert processes only the samples routed to it, allowing it to learn task-specific representations. This design promotes expert specialization while improving computational efficiency by reducing the number of pa-rameters and computations required per path. 4. Expert-Specific Heads : Dedicated linear classifiers per expert, mapping expert-processed features to class-specific logits. 
+
+Sliced Mixture-of-Experts. We propose a Sliced-MoE ar-chitecture that enables parameter-efficient collaboration in Figure 1: Overview of the four stages of the COSMIC-FL framework. resource-constrained satellite FL. Unlike conventional MoE designs that allocate separate parameters to each expert, Sliced-MoE partitions intermediate feature channels of a shared convolutional block into disjoint slices assigned to different experts. This allows experts to specialize while reusing the same underlying model weights, significantly reducing memory and communication overhead. Let the shared convolutional block produce a feature map 
+
+z ∈ RC×H×W with C channels. The channels are par-titioned into E disjoint index sets I1, . . . , IE such that 
+
+I = SEe=1 {1, . . . , C } and Ii ∩ I j = ∅ for i̸ = j. Expert 
+
+e receives only the slice corresponding to Ie ⊆ I of chan-nels: z(e) = z[Ie] ∈ R|I e|× H×W , where |I e| is the number of channels assigned to expert i. Equivalently, this slicing can be implemented via element-wise masking: 
+
+z(e) = me ⊙ z, me ∈ { 0, 1}C×1×1, (1) where me is the channel mask for expert e (ones at posi-tions in Ii, zeros elsewhere) and ⊙ denotes the Hadamard (element-wise) product. The binary-mask notation is a conceptual representation of channel membership. In the implementation, expert paths are represented through explicit channel ranges or index sets. Af-ter structured pruning, channels that are no longer used by any expert path are physically removed from the shared convo-lutional layers, and the remaining path indices are remapped to the compacted channel coordinates. By sharing the same convolutional weights while activat-ing only expert-specific channel subsets, Sliced-MoE enables satellites to update different experts without replicating the full model. During federated rounds, satellites assigned to expert i (through masking) compute gradients only for chan-nels in Ie, enabling lightweight expert updates, reducing computation and communication while preserving the over-all capacity of the global model. Modular Mixture-of-Experts. Unlike Sliced-MoE , which shares convolutional tensors across expert paths, Modular-MoE assigns each expert a physically separated tower with dedicated parameters, layers, and classification heads. While this increases the static parameter footprint, it enables simpler dense execution and independent expert training, communi-cation, and structured pruning. Without loss of generality, COSMIC-FL primarily adopts the Modular-MoE architecture because it (i) enables expert-wise updates and pruning without affecting other experts, and (ii) remains compatible with standard dense training and inference operators. In this design, each expert tower fi(·) is implemented as an independent ML model composed of an input convolution layer followed by several residual blocks (see Fig. 1). The residual connections stabilize optimiza-tion by learning residual corrections around identity map-pings (He et al. 2016). Each expert also includes its own classification head ci(·). The final prediction is computed as a dense, gate-weighted combination of all E experts such that 
+
+ˆy = PEi=1 pi(x) ci(fi(z)) , where z = h(x) is the feature representation produced by the shared backbone, and pi(x)
+
+is the routing weight assigned to expert i as defined in (2). For Sliced-MoE , this dense combination does not increase inference cost with E, since the experts partition a fixed total channel width. 
+
+Semantic Class-to-Expert Mapping and Gate Initialization 
+
+To enable efficient expert specialization, COSMIC-FL as-signs classes to experts in a semantically coherent manner. The goal is to cluster classes such that those handled by the same expert are semantically similar (high within-expert similarity), while classes assigned to different experts remain well separated (low between-expert similarity). To achieve this, we compute a class-to-expert mapping using an auxil-iary dataset Dr , following the idea of leveraging a reserved dataset to improve initial routing (Jiang et al. 2025). We first employ a pretrained CNN feature extractor ϕ to map inputs into a semantic feature space. For each class 
+
+m ∈ { 1, . . . , M }, we compute a class centroid using samples from the auxiliary dataset as μm = 1 
+
+> |Dmr|
+
+P 
+
+> x∈Dmr
+
+ϕ(x),where Dmr ⊆ Dr contains samples with label m. The set of centroids {μ1, . . . , μM } is then partitioned into E clusters using K-means: 
+
+min  
+
+> {G 1,..., GE}
+> E
+
+P
+
+> e=1
+
+P
+
+> m∈G e
+
+μm − ve
+
+> 2
+
+, ve = 1
+
+> |G e|
+
+P
+
+> m∈G e
+
+μm. (2) Each group Ge is assigned to one expert, yielding the map-ping π(m) = e if m ∈ G e. This mapping guides sample routing during expert specialization and provides a semanti-cally meaningful initialization for the gating mechanism. To stabilize routing before federated training, we pre-train the gating module using the auxiliary dataset Dr . During this phase, only the gate and shared backbone are optimized, while all expert parameters remain frozen. This server-side pre-training establishes informative feature representations and reliable initial routing decisions, facilitating subsequent federated expert specialization. 
+
+Federated Learning Training Stages 
+
+Federated Expert Specialization via Rotation. After gate initialization (Section ), expert specialization is performed through a federated expert-rotation phase over TE commu-nication rounds. The schedule is independent of the number of experts E, since all experts are updated within each round. At each round, the GS broadcasts the current expert and classification-head parameters to available satellites, while the shared backbone and gate remain fixed after initializa-tion. In Sliced-MoE , each expert corresponds to a channel slice of shared convolutional tensors, whereas in Modular-MoE , each expert is an independent tower. Each satellite updates only the active expert and its classification head in a randomized order, while other components remain frozen. The frozen backbone and gate participate only in forward propagation and incur no gradient, optimizer-state, or com-munication cost during this phase. For expert e, each satellite trains on local samples assigned by the class-to-expert mapping π, i.e., samples satisfying 
+
+π(s) = e, and uploads only the updated expert parameters. The GS aggregates each expert independently using feder-ated averaging: θ(t+1)  
+
+> e
+
+= 1
+
+> |S|
+
+P 
+
+> s∈S
+
+θ(t+1)  
+
+> s,e
+
+, where θ(t+1)  
+
+> s,e
+
+de-notes the local update of expert e from satellite s. Since all experts are updated in every round, the total rotation du-ration remains fixed at TE regardless of E; increasing the number of experts only affects per-round computation and communication. Training experts independently in this rotating manner 
+
+significantly reduces the computation and communication burden on each satellite , since only a small portion of the model is updated and exchanged at a time: gradients, opti-mizer state, and uploads are confined to one expert and its head per phase, and with sparse expert training a satellite trains and uploads only the experts covering its local classes. The result of this phase is a set of specialized experts that capture task- or class-specific knowledge, which are later refined during the gate and head fine-tuning stages. 
+
+Federated Gate Fine-Tuning After expert specialization, the gating module is fine-tuned so that routing decisions align with the trained experts. In each communication round tG,the GS broadcasts the current global gate to the available satellites. Each participating satellite updates only the gate parameters using its local data, while keeping the experts, their classification heads, and the shared backbone frozen. The updated gate parameters are then sent back to the GS, which aggregates them using federated averaging. This pro-cess is repeated until routing becomes consistent with the learned expert specializations. The gate maps the shared feature representation z to ex-pert logits ze, which are converted into routing weights via the softmax function (2) as pe(x) = exp( ze)   
+
+> PEj=1 exp( zj)
+
+, e ∈{1, . . . , E }, with ze defines the gate logit corresponding to expert e. These routing weights combine the outputs oe of expert e into the final routed output: o = PEe=1 pe(x) oe.During this phase, satellites optimize only the gate parame-ters while all expert networks and classification heads remain fixed. The gate is trained using local data to learn routing decisions consistent with the class-to-expert mapping. After local training, the GS aggregates the updated gate parameters across participating satellites as θ(t+1) gate = 1
+
+> |S|
+
+P 
+
+> c∈S
+
+θ(t+1) 
+
+> s, gate
+
+,with θ(t+1)  
+
+> s, gate
+
+denotes the gate parameters updated by satellite 
+
+s and S is the set of participating satellites. 
+
+Federated Head Fine-Tuning. In the final stage, the fea-ture extraction and routing components are frozen, including the gating module, shared backbone, and expert convolu-tional blocks. Only the expert classification heads are opti-mized. At each round, the GS broadcasts the current heads to participating satellites, which perform local updates on their head parameters while keeping all other components fixed. The GS then aggregates the updated heads using federated av-eraging: θ(t+1) head = 1
+
+> |S|
+
+P 
+
+> s∈S
+
+θ(t+1) 
+
+> s, head
+
+, where θ(t+1)  
+
+> s, head
+
+denotes the locally updated heads at satellite s. Local optimization minimizes cross-entropy loss with label smoothing using AdamW with gradient clipping and weight decay. By refin-ing only the classification heads after expert specialization and routing stabilization, this stage consolidates knowledge across experts and produces the final global model. 
+
+Scalability in experts and classes. COSMIC-FL decouples the number of experts ( E) from the number of classes ( C). The communication rounds remain fixed at TE + TG + TH
+
+regardless of E, while the per-round communication grows only modestly: Sliced-MoE maintains a nearly constant con-volutional payload by partitioning shared channels, whereas 
+
+Modular-MoE scales linearly with E. The gating module incurs only O(E) overhead, and only the expert classifica-tion heads scale with C. Furthermore, sparse expert training allows each satellite to optimize and communicate only ex-perts covering its local classes, reducing communication by up to 89% with 100 clients (Supplementary Material F). Empirically, E=3 consistently provides the best accuracy– efficiency trade-off across datasets with 10–100 classes (Sup-plementary Material F). 
+
+Structured (Physical) Expert Pruning 
+
+This section describes how COSMIC-FL compresses expert paths after dense training. Rather than introducing sparse masks, our goal is to obtain physically smaller subnetworks with reduced parameters, FLOPs, communication payloads, and memory footprint. We therefore adopt structured fil-ter/channel pruning, which removes complete channels and reconstructs convolutional and batch-normalization layers with smaller dense tensors. Unlike unstructured pruning, structured pruning preserves compatibility with standard dense operators without requiring specialized sparse kernels. For a convolution with kernel size K × K and output feature map size Hout × Wout , the computational cost scales approximately as 
+
+O  Hout Wout K2Cin Cout 
+
+ , (3) while the parameter count scales as O  K2Cin Cout 
+
+ . Thus, pruning output channels reduces the current layer width Cout 
+
+and, after physical layer reconstruction, also reduces the in-put width Cin of subsequent layers. This cascading effect explains why structured channel pruning can reduce both model size and dense FLOPs, especially when applied con-sistently across consecutive layers. For each convolutional layer, the importance of an output filter Wi ∈ RCin ×K×K is quantified using its L1 magnitude: 
+
+Si = ∥Wi∥1 =
+
+> Cin
+
+X
+
+> c=1
+> K
+
+X
+
+> h=1
+> K
+
+X
+
+> w=1
+
+|Wi,c,h,w | . (4) Given a set of retained filters Ikeep , we apply physical pruning by re-instantiating smaller convolutional and batch-normalization layers and copying the retained parameters by index selection. Since the expert towers contain residual blocks, pruning decisions must preserve tensor-shape com-patibility at residual additions (He et al. 2016). To avoid destabilizing early feature learning, pruning is applied only after an initial dense-training phase, following the common train–prune–fine-tune paradigm (Han, Mao, and Dally 2015). 
+
+Federated Pruning Strategies. We introduce three feder-ated pruning strategies that differ in the signals used to de-rive pruning decisions. In all variants, satellites locally train assigned expert paths and may compute layer-wise filter-importance statistics. The GS then derives pruning decisions from either aggregated global weights or client-side impor-tance signals and centrally applies structured pruning by shrinking the corresponding expert paths. Satellite-informed methods transmit only compact per-layer importance vectors in addition to model updates; for a layer with Cout filters, this overhead is O(Cout ) compared with O(K2Cin Cout ) for convolution weights. Thus, pruning coordination incurs min-imal communication overhead. While client-informed prun-ing better captures satellite-specific relevance under hetero-geneous data, GS-side pruning provides consistent central-ized control during aggregation (Wu, Song, and Zeng 2023). 
+
+1. Centralized weight-based pruning. After aggregation, the GS computes global filter scores Si on the aggregated expert model θt and removes a fixed fraction r of the least important filters per layer. This baseline is simple but may ignore satellite-specific relevance under heterogeneous data distributions. Moreover, computing magnitude-based impor-tance on aggregated weights can underestimate filter rele-vance when satellite parameters partially cancel after averag-ing. Formally, with ¯Wi = P 
+
+> k
+
+αkW (k) 
+
+> i
+
+, GS-side scoring uses 
+
+SGS  
+
+> i
+
+= ∥ ¯Wi∥1, whereas satellite-informed voting can aggre-gate non-negative scores such as Svote  
+
+> i
+
+= P 
+
+> k
+
+αk∥W (k) 
+
+> i
+
+∥1,reducing sensitivity to sign cancellations. 
+
+2. Satellite-informed fixed-ratio pruning. Each participat-ing satellite computes local filter scores and sends a vote vector Vk to the GS. The GS aggregates votes by the mean, 
+
+Vagg = 1
+
+> K
+
+PKk=1 Vk, and prunes a fixed fraction r using Vagg .This incorporates local data signals while keeping a uniform pruning schedule. 
+
+3. Satellite-informed adaptive pruning. To avoid a fixed pruning ratio, the adaptive strategy determines the prun-ing strength for each layer based on the distribution of aggregated filter importance scores. Importance vectors are aggregated using a coordinate-wise median: Vagg =median( V1, . . . , V K ). We analyze stabilized scores s =log(1+ Vagg ) and identify significant separations in the sorted scores. Let s(1) ≤ · · · ≤ s(N ) denote the sorted scores and 
+
+gi = s(i+1) − s(i) the consecutive gaps. A gap is considered significant if the maximum gap g∗ exceeds a robust MAD-based threshold: 
+
+g∗ > z thresh ˆσ, ˆσ = 1 .4826 · MAD( g),
+
+and satisfies a minimum relative separation criterion. Filters below the detected gap are pruned, while layers without clear separation are skipped. Safety constraints, including mini-mum channel retention and per-step pruning limits, prevent structural collapse. Unlike target-based pruning, the proposed criterion prunes only layers with clear importance separation, making adap-tive pruning a gap-constrained rather than target-exact strat-egy. Therefore, we report both requested and achieved prun-ing ratios. Importantly, the current implementation focuses on structured convolutional channel pruning; extending prun-ing to fully connected expert heads requires coordinated re-construction of dependent linear layers and is left for fu-ture work. Consequently, compression gains primarily re-flect convolutional pruning, while retained heads continue to contribute to model footprint and runtime. This explains why modular pruning reduces peak memory and power on NVIDIA Jetson AGX Orin without necessarily improv-ing batch-size-one latency, motivating the joint reporting of memory, latency, power, and parameter counts. 
+
+Performance Evaluation 
+
+Dataset & Architecture. We simulate satellite constella-tions with non-overlapping data distributions, varying the number of clients as S ∈ { 10 , 50 , 100 } and, for MoE vari-ants, the number of experts as E ∈ { 3, 5, 7, 10 }. We eval-uate COSMIC-FL on six image-classification benchmarks: CIFAR-10 (Krizhevsky, Hinton et al. 2009), AID (Xia et al. 2017), EuroSAT (Helber et al. 2019), UCMerced (Yang and Newsam 2010), RESISC45 (Cheng, Han, and Lu 2017), and CIFAR-100 (Krizhevsky, Hinton et al. 2009). Dataset statis-tics and additional experimental details are provided in Sup-plementary Material A. 
+
+Hyperparameters. Unless stated otherwise, COSMIC-FL uses expert specialization for TE = 50 rounds, gate finetun-ing for TG = 20 rounds, and head finetuning for TH = 20 
+
+rounds. For non-IID data heterogeneity we use Dirichlet con-centration parameter α ∈ { 0.1, 0.3, 1.0, 10 }. Batch size, ar-chitecture, learning rates, FedAvg/FedProx rounds, and re-maining settings are given in Supplementary Material B. 
+
+Pruning Protocol. Pruning runs are initialized from the dense baseline; we apply four pruning rounds followed by six recovery rounds to reach the target pruning ratio. The full protocol is described in Supplementary Material C. 
+
+Baselines. We consider six baselines to evaluate the effec-tiveness of COSMIC-FL: FedAvg (McMahan et al. 2017), FedProx (Li et al. 2020), CentMoE (Shazeer et al. 2017), PM-MoE (Feng et al. 2025), and two resource-efficient FL meth-ods, FedDropout (Caldas et al. 2018) and HeteroFL (Diao, Ding, and Tarokh 2020), where r denotes the fraction of the full model trained by each client. We provide a brief description of each baseline in Supplementary Material E. Table 1: Accuracy (%) under IID settings with different num-bers of satellites. Method (# Satellites) CIFAR-10 AID EuroSAT RESISC45 UC Merced FedAvg (10) 88.50 79.39 97.41 83.73 83.81 FedAvg (50) 82.03 62.88 94.48 72.78 56.51 FedAvg (100) 75.46 53.24 91.07 60.40 49.21 FedProx (10) 86.99 78.80 97.30 83.02 83.17 FedProx (50) 81.55 64.80 94.56 73.67 55.87 FedProx (100) 74.61 53.43 90.22 62.82 48.89 CentMoE (10) 91.08 83.09 98.44 87.36 87.30 CentMoE (50) 82.56 68.63 95.15 67.56 75.24 CentMoE (100) 76.51 62.55 92.26 59.42 73.02 PM-MoE (10) 91.83 45.44 97.33 89.02 86.03 PM-MoE (50) 76.57 70.67 95.93 70.53 73.97 PM-MoE (100) 75.35 63.28 92.37 61.49 64.13 FedDropout ( r=0 .75 , 10) 84.84 62.09 90.11 71.04 45.40 FedDropout ( r=0 .75 , 50) 69.25 33.22 79.67 42.81 18.41 FedDropout ( r=0 .75 , 100) 56.20 23.31 69.96 28.35 14.60 HeteroFL ( r=0 .75 , 10) 87.88 74.01 97.06 79.83 66.03 HeteroFL ( r=0 .75 , 50) 76.15 48.76 89.19 58.37 41.27 HeteroFL ( r=0 .75 , 100) 65.35 37.51 78.76 43.93 31.75                                     
+
+> COSMIC-FL (Modular, 10) 76.37 76.75 92.67 79.62 70.16
+> COSMIC-FL (Modular, 50) 69.42 58.26 88.15 66.02 50.16
+> COSMIC-FL (Modular, 100) 63.16 52.05 82.19 53.84 38.41
+> COSMIC-FL (Sliced, 10) 61.81 69.75 89.93 70.60 69.52
+> COSMIC-FL (Sliced, 50) 62.91 55.02 87.96 63.67 51.43
+> COSMIC-FL (Sliced, 100) 65.76 46.37 83.15 51.04 41.27
+
+Table 2: Impact of data heterogeneity (Dirichlet-α) on test accuracy (EuroSAT, 50 clients). Lower α = more non-i.i.d (see Supplementary Material F for more results). Method α=0 .1 α=0 .3 α=1 .0 α=10 .0
+
+FedAvg 81.33 90.89 93.74 94.41 FedProx 83.00 90.63 93.37 94.48 CentMoE 86.89 94.07 95.07 95.26 PM-MoE 11.11 92.70 95.22 95.26 FedDropout ( r=0 .75 ) 64.72 75.13 79.19 79.94 HeteroFL ( r=0 .75 ) 74.98 81.70 86.17 89.54 
+
+COSMIC-FL (Modular) 67.26 82.37 86.67 88.37 
+
+COSMIC-FL (Sliced) 67.67 83.26 86.52 87.78 
+
+Metrics. The server-side evaluation reports test accuracy, parameter count, analytical FLOPs, phase-specific trainable parameters, and communicated parameters. The embedded evaluation additionally reports mean and 95th-percentile in-ference latency, throughput, peak allocated CUDA memory, board power, and device temperature. The embedded inference benchmarking protocol (device, warm-up, timed batches, and measurement tooling) is de-tailed in Supplementary Material G. 
+
+Experimental Results 
+
+Accuracy Comparison of COSMIC-FL vs. Baselines un-der i.i.d. Settings. Table 1 shows that accuracy generally declines as the number of satellites increases (10 →50 →100) and the datasets become more challenging (e.g., AID, RE-SISC45, and UC Merced). CentMoE achieves the highest accuracy in most cases across all datasets due to full-model aggregation and larger capacity. In contrast, COSMIC-FL trades marginal accuracy loss for substantial reductions in phase-specific training and communication costs, which is critical for onboard learning under constrained compute, memory, energy, and contact windows. Compared with sub-model efficiency baselines at their strongest partial-capacity setting ( r=0 .75 ), COSMIC-FL consistently outperforms FedDropout across all remote-sensing benchmarks and con-stellation sizes, and surpasses HeteroFL on AID, RESISC45, and UC Merced at 50 and 100 clients (e.g., RESISC45 with 50 clients: 66.02%/63.67% for Modular/Sliced vs. 58.37%). HeteroFL remains competitive on CIFAR-10 and EuroSAT under smaller constellations. 
+
+Accuracy Comparison of COSMIC-FL vs. Baselines (non-i.i.d) Settings. Table 2 reports test accuracy on Eu-roSAT under varying data heterogeneity (Dirichlet-α, where smaller α indicates stronger non-i.i.d. distributions) with 50 clients. RESISC45 results are provided in Supplemen-tary Material F. On EuroSAT, all methods improve as α in-creases from 0.1 to 10. Under strong heterogeneity ( α = 0 .1), COSMIC-FL (Modular) and COSMIC-FL (Sliced) achieve 67.26% and 67.67%, respectively, rising to about 86–88% at α = 10 . FedAvg, FedProx, and CentMoE achieve about 81–87% at α = 0 .1 and 94–95% at α = 10 . PM-MoE drops to 11.11% at α = 0 .1 but recovers to 92.70% at α = 0 .3
+
+and 95.26% at α = 10 . Similar trends appear on RESISC45, indicating that COSMIC-FL follows the same heterogeneity-dependent behavior while prioritizing reduced staged train-ing and communication cost. 
+
+Communication and Inference Efficiency of COSMIC-FL vs. Baselines. Fig. 2 reports the inference cost of all methods. The complete communication analysis — per-client per-round payloads and total uplink across all training phases — is provided in Supplementary Material F. The analytical FLOP count captures arithmetic complexity but does not necessarily predict embedded latency. In par-ticular, despite lower nominal FLOPs, the Sliced implemen-tation can exhibit higher runtime on Jetson AGX Orin due to kernel execution overhead, tensor indexing, and memory behavior. Therefore, analytical FLOPs and measured embed-ded runtime should be viewed as complementary, rather than interchangeable, efficiency metrics. 
+
+Sparse Expert Participation. Supplementary Material F reports the full sparse expert participation study, where each client trains only experts with sufficient local samples instead of the full expert set. Under strong heterogeneity ( α=0 .1)with 50 clients, sparse participation reduces the average ac-tive experts per client from 3.0 to 0.82 (Modular) and 0.92 (Sliced), reducing per-round uploads by 72.7% and 69.3%, respectively. Despite fewer updates, accuracy improves by 7.3% (Modular) and 8.2% (Sliced), as experts avoid noisy updates from clients lacking relevant classes. Rotation time also decreases by 26–29%, with larger communication sav-ings as the constellation scales (up to 89.3% for Modular and 87.7% for Sliced at 100 clients). Sparse participation main-tains comparable or better accuracy than full expert training across scales. Unlike width-reduction methods such as Fed-Dropout and HeteroFL, COSMIC-FL enables clients to skip entire experts based on local data coverage. Table 3: Pruning strategy and ratio analysis for COSMIC-FL (Sliced and Modular) on EuroSAT with 50 satellites. Results report retained parameters (P, millions) and accuracy (%). Additional results are provided in Supplementary Material F. Model Prune  Server Client Adaptive P Acc P Acc P Acc COSMIC-FL (Sliced)  0 12.4 87.56 12.4 87.56 12.4 87.56 10 11.5 83.74 11.5 82.07 11.5 83.15 30 8.2 81.15 8.2 81.04 8.4 81.93 50 5.6 80.67 5.6 82.04 5.8 82.22 70 3.5 80.59 3.5 79.67 4.0 80.89 80 2.7 79.63 2.7 75.41 3.0 78.70 COSMIC-FL (Modular)  0 19.8 87.37 19.8 87.37 19.8 87.37 10 18.7 79.89 18.7 79.22 18.7 79.15 30 16.4 80.11 16.4 79.78 16.6 80.41 50 13.9 80.85 13.9 80.81 14.2 81.07 70 11.2 81.00 11.2 81.63 11.3 81.33 80 9.7 81.07 9.7 81.33 10.1 81.19 
+
+Effect of Structured Expert Pruning. Table 3 compares pruning strategies for COSMIC-FL on EuroSAT with 50 satellites; RESISC45 results are provided in Supplementary Material F. All pruning methods substantially reduce pa-rameters with modest accuracy loss. At the same pruning ratio, server-side, fixed-ratio client-side, and adaptive prun-ing achieve comparable performance, with larger differences observed for RESISC45 and Sliced-MoE. Adaptive pruning retains slightly more parameters due to its layer-wise gap-based decisions rather than strict ratio enforcement. The op-timal pruning level is architecture-dependent: Modular-MoE remains competitive under aggressive pruning (70–80%), while Sliced-MoE achieves its best trade-off under moderate pruning (30–50%). 
+
+Embedded Training Feasibility To assess deployment feasibility, we execute the proposed training pipeline on an NVIDIA Jetson AGX Orin with 64 GB unified memory (Jet-son Linux R36.4.7). This experiment validates embedded execution rather than serving as the primary training bench-mark. For the sliced EuroSAT model, the pipeline achieves 
+
+87 .78% accuracy with a total runtime of 1,195 .12 minutes, including 1,103 .19 minutes of training, demonstrating the feasibility of staged training on embedded hardware. Table 4 shows that FedAvg and FedProx provide the lowest-latency single-tower baselines. Among reduced-capacity methods ( r=0 .75 ), HeteroFL achieves the lowest peak memory, while FedDropout suffers larger accuracy degradation. PM-MoE achieves high accuracy but requires substantially more memory. Thus, the proposed pruned vari-ants represent accuracy–resource trade-offs rather than uni-versally faster models: Sliced pruning reduces memory rela-tive to PM-MoE at the cost of accuracy. Additional profiling results are provided in Supplementary Material G. AID 
+
+1×10 ³ 
+
+0.01 0.10 1.00 
+
+> GFLOPs
+> 3.84 2.17 3.85 3.84 3.84 2.50 2.50 2.52 0.03 1.4×10 1.4×10 1.4×10
+> ³
+> ³
+> ³
+
+EuroSAT 
+
+> 3.84 2.17 3.85 3.84 3.84 2.50 2.50 2.54 0.03 1.4×10 1.4×10 1.4×10
+> ³
+> ³
+> ³
+
+RESISC45   
+
+> 3.84 2.17 3.85 3.84 3.84 2.50 2.50 2.50 0.03 1.4×10 1.4×10 1.5×10
+> ³
+> ³
+> ³
+> FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )CentMoE PM-MoE COSMIC-FL (Modular) Modular (server pruning) Modular (client pruning) Modular (adaptive pruning) COSMIC-FL (Sliced) Sliced (server pruning) Sliced (client pruning) Sliced (adaptive pruning)
+
+Figure 2: Inference cost (GFLOPs per sample) by method and dataset (AID, EuroSAT, RESISC45). Methods: CentMoE, COSMIC-FL (Modular), COSMIC-FL (Sliced), and their server-, client-, and adaptive-pruning variants. Table 4: Jetson AGX Orin inference performance on Eu-roSAT and RESISC45. Reported metrics include classifica-tion accuracy (%), latency (ms), peak allocated GPU memory (MB), and average board power (W). EuroSAT RESISC45 Method Acc Lat. Mem Pow Acc Lat. Mem Pow FedAvg 94.3 3.66 38.2 4.90 72.1 3.66 38.3 4.96 FedProx 94.6 3.65 38.2 4.99 72.1 3.66 38.3 5.04 FedDropout 79.7 4.52 39.1 4.34 42.8 4.53 40.0 4.59 HeteroFL 89.2 4.54 26.9 4.12 58.4 4.54 26.9 4.12 PM-MoE 96.0 22.9 190.3 4.47 68.6 22.9 193.8 4.47 Modular 79.1 11.2 61.5 4.53 58.9 11.2 55.0 4.52 Sliced 79.5 21.4 42.3 4.07 43.7 21.5 44.5 4.06 
+
+Conclusion 
+
+This paper presented COSMIC-FL, a resource-aware FL framework for LEO satellite constellations that integrates staged expert training, complementary MoE architectures, semantic class-to-expert routing, and federated structured pruning. Extensive evaluations demonstrate an accuracy– efficiency trade-off across trained, communicated, and re-tained parameters, while embedded experiments on NVIDIA Jetson AGX Orin validate the feasibility of onboard execu-tion. Further analysis shows that structured pruning reduces memory and power consumption, whereas runtime improve-ments depend on the expert architecture. These results high-light that FLOPs, parameter count, and embedded runtime provide complementary efficiency perspectives for onboard AI evaluation. Future work will investigate operator-level op-timization of sliced execution and adaptive expert scheduling under dynamic satellite connectivity. 
+
+References 
+
+Bai, G.; Li, Y.; Li, Z.; Zhao, L.; and Kim, K. 2025. Fedspallm: Federated pruning of large language models. In Proceed-ings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers) ,8361–8373. Bhope, R. A.; Jayaram, K.; Venkateswaran, P.; and Venkata-subramanian, N. 2025. Shift Happens: Mixture of Experts based Continual Adaptation in Federated Learning. In Pro-ceedings of the 26th International Middleware Conference ,455–468. Caldas, S.; Konečny, J.; McMahan, H. B.; and Talwalkar, A. 2018. Expanding the reach of federated learning by reducing client resource requirements. arXiv preprint arXiv:1812.07210 .Cheng, G.; Han, J.; and Lu, X. 2017. Remote sensing image scene classification: Benchmark and state of the art. Pro-ceedings of the IEEE , 105(10): 1865–1883. Diao, E.; Ding, J.; and Tarokh, V. 2020. Heterofl: Com-putation and communication efficient federated learning for heterogeneous clients. arXiv preprint arXiv:2010.01264 .Dun, C.; Garcia, M. H.; Zheng, G.; Awadallah, A.; Sim, R.; Kyrillidis, A.; and Dimitriadis, D. 2023. Fedjets: Efficient just-in-time personalization with federated mixture of ex-perts. In R0-FoMo: Robustness of Few-shot and Zero-shot Learning in Large Foundation Models .Elmahallawy, M.; and Luo, T. 2023. Optimizing federated learning in LEO satellite constellations via intra-plane model propagation and sink satellite scheduling. In ICC 2023-IEEE International Conference on Communications , 3444–3449. IEEE. Elmahallawy, M.; Luo, T.; and Ibrahem, M. I. 2023. Secure and efficient federated learning in LEO constellations using decentralized key generation and on-orbit model aggrega-tion. In GLOBECOM 2023-2023 IEEE Global Communica-tions Conference , 5727–5732. IEEE. Elmahallawy, M.; Luo, T.; and Ramadan, K. 2024. Communication-efficient federated learning for LEO con-stellations integrated with HAPs using hybrid NOMA-OFDM. IEEE Journal on Selected Areas in Communica-tions , 42(5): 1097–1114. Feng, Y.; Geng, Y.-a.; Zhu, Y.; Han, Z.; Yu, X.; Xue, K.; Luo, H.; Sun, M.; Zhang, G.; and Song, M. 2025. PM-MOE: mixture of experts on private model parameters for personalized federated learning. In Proceedings of the ACM on Web Conference 2025 , 134–146. Han, S.; Mao, H.; and Dally, W. J. 2015. Deep com-pression: Compressing deep neural networks with pruning, trained quantization and huffman coding. arXiv preprint arXiv:1510.00149 .He, K.; Zhang, X.; Ren, S.; and Sun, J. 2016. Deep residual learning for image recognition. In Proceedings of the IEEE conference on computer vision and pattern recognition , 770– 778. Helber, P.; Bischke, B.; Dengel, A.; and Borth, D. 2019. Eurosat: A novel dataset and deep learning benchmark for land use and land cover classification. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , 12(7): 2217–2226. Internò, C.; Raponi, E.; van Stein, N.; Bäck, T.; Olhofer, M.; Jin, Y.; and Hammer, B. 2024. Adaptive hybrid model pruning in federated learning through loss exploration. In 
+
+International Workshop on Federated Foundation Models in Conjunction with NeurIPS 2024 .Jia, Y.; Liu, B.; Zhang, X.; Dai, F.; Khan, A.; Qi, L.; and Dou, W. 2024. Model pruning-enabled federated split learn-ing for resource-constrained devices in artificial intelligence empowered edge computing environment. ACM Transac-tions on Sensor Networks .Jiang, J.; Chen, Y.; Liu, X.; Jiang, H.; and Fan, C. 2025. Het-erogeneous federated learning with scalable server mixture-of-experts. In Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence , 5480–5488. Kim, G. R.; Svoboda, F.; and Lane, N. D. 2026. Bring-ing Federated Learning to Space. In 2026 IEEE Aerospace Conference , 1–15. IEEE. Krizhevsky, A.; Hinton, G.; et al. 2009. Learning multiple layers of features from tiny images. Li, A.; Markovic, M.; Edwards, P.; and Leontidis, G. 2024. Model pruning enables localized and efficient federated learning for yield forecasting and data sharing. Expert Sys-tems with Applications , 242: 122847. Li, T.; Sahu, A. K.; Zaheer, M.; Sanjabi, M.; Talwalkar, A.; and Smith, V. 2020. Federated optimization in heterogeneous networks. Proceedings of Machine learning and systems , 2: 429–450. Li, X.; Huang, K.; Yang, W.; Wang, S.; and Zhang, Z. 2019. On the convergence of fedavg on non-iid data. arXiv preprint arXiv:1907.02189 .Lin, Z.; Chen, Z.; Fang, Z.; Chen, X.; Wang, X.; and Gao, Y. 2024. FedSN: A federated learning framework over het-erogeneous LEO satellite networks. IEEE Transactions on Mobile Computing , 24(3): 1293–1307. Matthiesen, B.; Razmi, N.; Leyva-Mayorga, I.; Dekorsy, A.; and Popovski, P. 2023. Federated learning in satellite con-stellations. IEEE Network , 38(2): 232–239. McMahan, B.; Moore, E.; Ramage, D.; Hampson, S.; and y Arcas, B. A. 2017. Communication-efficient learning of deep networks from decentralized data. In Artificial intelli-gence and statistics , 1273–1282. Pmlr. Pasandi, H. B.; Tan, Z.; Hosseini, M.; Darabi, S.; Rousseau, F.; and Fraire, J. A. 2025. FedSat-LAM: Enabling Large AI Models on Resource-Constrained Satellites via Hierarchical Federated Learning. In Proceedings of the 2nd International Workshop on Edge and Mobile Foundation Models , 19–24. Riquelme, C.; Puigcerver, J.; Mustafa, B.; Neumann, M.; Je-natton, R.; Susano Pinto, A.; Keysers, D.; and Houlsby, N. 2021. Scaling vision with sparse mixture of experts. Ad-vances in Neural Information Processing Systems , 34: 8583– 8595. Shazeer, N.; Mirhoseini, A.; Maziarz, K.; Davis, A.; Le, Q.; Hinton, G.; and Dean, J. 2017. Outrageously large neural networks: The sparsely-gated mixture-of-experts layer. arXiv preprint arXiv:1701.06538 .Videau, M.; Leite, A.; Schoenauer, M.; and Teytaud, O. 2024. Mixture of Experts in Image Classification: What’s the Sweet Spot? arXiv preprint arXiv:2411.18322 .Wang, S.; and Li, Q. 2023. Satellite computing: Vision and challenges. IEEE Internet of Things Journal , 10(24): 22514– 22529. Wu, T.; Song, C.; and Zeng, P. 2023. Efficient federated learn-ing on resource-constrained edge devices based on model pruning. Complex & Intelligent Systems , 9(6): 6999. Xia, G.-S.; Hu, J.; Hu, F.; Shi, B.; Bai, X.; Zhong, Y.; Zhang, L.; and Lu, X. 2017. AID: A benchmark data set for perfor-mance evaluation of aerial scene classification. IEEE Trans-actions on Geoscience and Remote Sensing , 55(7): 3965– 3981. Xie, L.; Luan, T.; Cai, W.; Yan, G.; Chen, Z.; Xi, N.; Fang, Y.; Shen, Q.; Wu, Z.; and Yuan, J. 2025. dFLMoE: Decentralized Federated Learning via Mixture of Experts for Medical Data Analysis. In Proceedings of the Computer Vision and Pattern Recognition Conference , 10203–10213. Yang, Y.; and Newsam, S. 2010. Bag-of-visual-words and spatial extensions for land-use classification. In Proceed-ings of the 18th SIGSPATIAL international conference on advances in geographic information systems , 270–279. Yi, L.; Yu, H.; Wang, G.; Liu, X.; and Hu, Q. 2026. pFed-MoE: Data-Level Personalization With Mixture of Experts in Model-Heterogeneous Personalized Federated Learning. 
+
+IEEE Transactions on Knowledge and Data Engineering .Zhang, F.; Wang, D.; Kang, J.; and Niyato, D. 2025. Ground-Assisted LEO Satellite Federated Learning: Dynamic, Effi-cient, Distributed Learning. IEEE Transactions on Mobile Computing .Dataset & Architecture 
+
+Datasets 
+
+We evaluate our framework on standard remote-sensing im-age classification benchmarks under federated learning using five widely-used datasets: 
+
+• AID (Xia et al. 2017): 10,000 aerial scene images col-lected from Google Earth and annotated into 30 scene classes (e.g., airport, beach, desert); widely used for aerial scene classification. 
+
+• EuroSAT (Helber et al. 2019): 27,000 Sentinel-2 satel-lite image patches (64 ×64) covering 10 land-cover classes such as forest, crop, and water; commonly used for mul-tispectral land-cover classification. 
+
+• UCMerced (Yang and Newsam 2010): 2,100 aerial im-ages (256 ×256) distributed across 21 land-use classes; often used as a smaller benchmark for evaluating remote-sensing classification methods. 
+
+• CIFAR-10 (Krizhevsky, Hinton et al. 2009): 60,000 nat-ural images (32 ×32) in 10 object classes; included as a standard vision benchmark to facilitate comparison with general federated learning and MoE methods. 
+
+• RESISC45 (Cheng, Han, and Lu 2017): 31,500 remote-sensing images (256 ×256) across 45 scene classes; pro-vides a larger and more diverse benchmark for aerial scene classification. 
+
+• CIFAR-100 (Krizhevsky, Hinton et al. 2009): 60,000 nat-ural images (32 ×32) in 100 object classes; included to evaluate scalability to larger label spaces. For all datasets, we use a 70%–15%–15% split for train-ing, validation, and test. A 5% portion of the training set is reserved for server-side gate pretraining. We simulate a con-stellation of satellites, each holding a non-overlapping por-tion of the data, and vary the number of satellites (clients) 
+
+S ∈ { 10 , 50 , 100 }; for MoE variants we vary the number of experts E ∈ { 3, 5, 7, 10 }.
+
+Architecture 
+
+The architecture uses a shared stem (1 conv block, 128 chan-nels) and expert conv blocks (4 blocks, hidden dimension 256 — per expert tower in Modular design, and as the total width partitioned into per-expert channel ranges in Sliced design), with a gating network and per-expert classification heads. The gating network takes the stem output, applies global average pooling, and passes the 128-d vector through a two-layer MLP (128 → 128 → num _experts ) with ReLU to produce expert logits. Each head is a three-layer MLP (256 → 1024 → 512 → num _classes ) with ReLU and dropout after the first two layers; there is one head per ex-pert. For semantic class-to-path mapping we use a frozen ResNet18 (ImageNet-pretrained) to extract 512-d features, compute per-class mean vectors on the training set, and run k-means ( k = num _experts ) to assign each class to an expert path. FedAvg, FedProx, and CentMoE use the same expert structure for fair comparison. 
+
+Hyperparameters 
+
+We use batch size 64 and weight decay 10 −4 for all methods. Head dropout is 0.3. For COSMIC-FL (sliced and modular), gate pretraining runs 40 epochs for sliced and 12 for modular, with learning rate for the stem 1.5 × 10 −4 and for the gate 
+
+2 × 10 −4. Expert specialization runs for TE = 50 rounds, 5 local epochs, and learning rate 5×10 −4; gate finetuning uses 
+
+TG = 20 rounds and head finetuning TH = 20 rounds, each with 4 local epochs and learning rates 2×10 −3 and 7×10 −4.FedAvg and FedProx use 50 rounds, 5 local epochs, and a learning rate 5 × 10 −4; FedProx uses the default proximal coefficient μ = 0 .01 . For non-IID data heterogeneity, we use a Dirichlet concentration parameter α ∈ { 0.1, 0.3, 1.0, 10 }.Studies that use different schedules state them explicitly: the sparse-participation study uses TE =15 (Table 9), and the CIFAR-100 scalability study uses the two budgets given in Table 7. 
+
+Simulation Environment 
+
+Server-side federated training simulations were run on a workstation with an NVIDIA GeForce RTX 4090 GPU (24 GB), an Intel Core i9-14900K CPU, and 125 GB RAM, running Ubuntu 24.04 with Python 3.10, PyTorch 2.5.1, and CUDA 12.1. All experiments use a fixed random seed (42) that controls data partitioning, model initialization, and client sampling; the seeding utilities are included in the released code. Unless stated otherwise, all reported training results are obtained from a single run under this fixed seed, while embedded measurements are averaged over two independent runs. Embedded measurements use the NVIDIA Jetson AGX Orin platform described in Supplementary Material G. 
+
+Pruning Protocol 
+
+For the pruning ablation, we initialize all pruning runs from the corresponding dense baseline obtained in the preceding experiment. The dense model continues to be trained for 10 additional epochs, which serves as the reference model for the pruning-stage reported as “No Pruning” in the pruning ablation table of the main paper. For each pruning strategy, pruning is applied over four pruning rounds followed by six recovery rounds. The per-round pruning rate is chosen such that the desired final pruning ratio (10%, 30%, 50%, 70%, or 80%) is reached at the end of the pruning schedule. 
+
+MAD Threshold Sensitivity 
+
+To analyze the robustness of the adaptive pruning criterion, we evaluate the MAD-based gap threshold zthresh (Table 5) for requested pruning targets of 30% , 50% , and 70% on Eu-roSAT and RESISC45 using both the modular and sliced implementations. The adaptive method is gap-constrained rather than target-exact: it prunes a layer only when the sorted importance scores exhibit a sufficiently pronounced separa-tion. Consequently, the achieved pruning ratio may differ from the requested pruning target. Low and moderate thresholds often lead to identical prun-ing decisions, indicating that the detected score gaps are sufficiently pronounced. Higher thresholds make the adap-tive rule more conservative and reduce the achieved pruning Table 5: MAD-threshold sensitivity of adaptive pruning for the reported threshold sweep. Each cell reports achieved parameter pruning and test accuracy. Dataset Impl. Target z=1 z=2 z=3 z=10 z=20 
+
+EuroSAT Modular 30% 20.44 / 78.30 20.44 / 78.30 20.44 / 78.30 20.44 / 78.30 16.14 / 77.63 EuroSAT Modular 50% 35.42 / 79.11 35.42 / 79.11 35.42 / 79.11 35.42 / 79.11 24.54 / 77.78 EuroSAT Modular 70% 49.97 / 78.93 49.97 / 78.93 49.97 / 78.93 47.01 / 79.00 33.54 / 78.33 EuroSAT Sliced 30% 34.52 / 80.19 34.52 / 80.19 34.52 / 80.19 29.79 / 82.22 18.00 / 79.81 EuroSAT Sliced 50% 53.30 / 79.52 53.30 / 79.52 53.30 / 79.52 46.47 / 81.63 29.94 / 77.37 EuroSAT Sliced 70% 65.05 / 76.93 65.05 / 76.93 65.05 / 76.93 56.29 / 79.56 39.15 / 79.96 RESISC45 Modular 30% 23.70 / 57.31 23.70 / 57.31 23.70 / 57.31 23.70 / 57.31 22.28 / 57.27 RESISC45 Modular 50% 39.81 / 58.87 39.81 / 58.87 39.81 / 58.87 39.81 / 58.87 30.81 / 58.18 RESISC45 Modular 70% 55.11 / 59.78 55.11 / 59.78 55.11 / 59.78 49.32 / 59.29 44.45 / 58.80 RESISC45 Sliced 30% 34.14 / 43.78 34.14 / 43.78 34.14 / 43.78 27.01 / 45.44 16.08 / 43.31 RESISC45 Sliced 50% 51.52 / 43.67 51.52 / 43.67 51.52 / 43.67 42.93 / 43.47 28.28 / 43.40 RESISC45 Sliced 70% 65.03 / 37.67 65.03 / 37.67 65.03 / 37.67 60.24 / 35.87 38.10 / 44.24 Table 6: Impact of the number of experts on COSMIC-FL modular and sliced variants evaluated on EuroSAT and RESISC45 with 50 clients. Results report parameter counts (M) and classification accuracy (%). Num. Experts EuroSAT RESISC45 Modular Sliced Modular Sliced Params (M) Acc. (%) Params (M) Acc. (%) Params (M) Acc. (%) Params (M) Acc. (%) 3 19.8 88.19 7.4 87.96 19.9 65.82 7.4 63.67 5 33.0 73.56 9.0 73.85 33.2 55.56 9.0 40.27 7 46.3 67.74 10.6 73.44 46.5 49.07 10.7 37.98 Best 19.8 88.19 7.4 87.96 19.9 65.82 7.4 63.67 
+
+Table 7: Impact of the number of experts on COSMIC-FL modular and sliced variants evaluated on CIFAR-100 (100 classes) under a short and a long training budget. Results report parameter counts (M) and classification accuracy (%). Modular Sliced Num. Experts Params (M) Acc. short (%) Acc. long (%) Params (M) Acc. short (%) Acc. long (%) 3 17.6 21.00 29.05 7.6 22.30 29.15 
+
+5 29.3 18.37 25.21 9.2 15.46 19.31 7 41.0 15.52 21.59 10.9 10.22 13.20 10 58.6 14.03 19.96 13.4 9.13 12.72 Table 8: Test accuracy (%) after each training stage of COSMIC-FL (Sliced) on EuroSAT with 50 clients under varying Dirichlet heterogeneity. δ = gain over the preceding stage. 
+
+## α=0 .1 α=0 .3 α=1 .0 α=10 
+
+## Stage Acc. δ Acc. δ Acc. δ Acc. δ
+
+## Gate pretraining (init.) 8.07 – 8.22 – 8.52 – 8.48 –+ Expert specialization 53.15 +45.08 73.48 +65.26 75.85 +67.33 76.37 +67.89 + Gate fine-tuning 57.04 +3.89 76.52 +3.04 80.19 +4.34 80.07 +3.70 + Head fine-tuning 67.67 +10.63 83.26 +6.74 86.52 +6.33 87.78 +7.71 10 20 30 40 50 
+
+Round   
+
+> 020 40 60 80 100
+> Accuracy (%)
+> FedAvg FedProx CentMoE PM-MoE FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )COSMIC-FL (Modular) COSMIC-FL (Sliced)
+
+(a) EuroSAT 10 20 30 40 50 
+
+Round    
+
+> 020 40 60 80 100
+> Accuracy (%)
+> FedAvg FedProx CentMoE PM-MoE FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )COSMIC-FL (Modular) COSMIC-FL (Sliced)
+
+(b) AID 10 20 30 40 50 
+
+Round    
+
+> 020 40 60 80 100
+> Accuracy (%)
+> FedAvg FedProx CentMoE PM-MoE FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )COSMIC-FL (Modular) COSMIC-FL (Sliced)
+
+(c) RESISC45 
+
+Figure 3: Test accuracy during the expert-specialization phase with 50 rounds and 50 clients on EuroSAT, AID, and RESISC45. Curves compare FedAvg, FedProx, CentMoE, PM-MoE, and the COSMIC-FL variants. ratio. This behavior supports interpreting the requested prun-ing target as an upper-level compression objective, while the achieved pruning ratio reflects the layer-wise compressibility detected by the MAD-based gap test. 
+
+Baseline descriptions 
+
+FedAvg (McMahan et al. 2017) performs standard averaging of client updates. FedProx (Li et al. 2020) adds a proxi-mal term to the local objective to limit client drift. Cent-MoE (Shazeer et al. 2017) trains a central mixture-of-experts model with federated aggregation. PM-MOE (Feng et al. 2025) first trains a FedPer-style shared body with personal-ized heads, then fine-tunes a mixture-of-experts over those heads so clients can combine converged personalized param-eters from others. FedDropout (Caldas et al. 2018) reduces client cost by having each client train a randomly selected sub-model of the global network; the server aggregates the sparse updates back into the full model. HeteroFL (Diao, Ding, and Tarokh 2020) assigns clients width-scaled sub-models of a shared global architecture and aggregates over-lapping parameters, allowing heterogeneous client capaci-ties. For both methods, r denotes the fraction of the full model trained by each client ( r=1 .0 recovers full-model training); we evaluate r ∈ { 0.25 , 0.5, 0.75 , 1.0} to match the resource-constrained satellite setting. 
+
+More Results 
+
+Effect of Number of Experts 
+
+Tables 6 and 7 show that using more experts does not nec-essarily improve performance. Across datasets spanning a 10 × range of class counts — EuroSAT (10 classes), RE-SISC45 (45), and CIFAR-100 (100) — the best accuracy is always achieved with E=3 , the smallest configuration, and accuracy declines monotonically as E grows (on CIFAR-100: 29.1% → 25.2% → 21.6% → 20.0% for Modular at E=3 , 5, 7, 10 ). The CIFAR-100 study (Table 7) uses 50 clients, IID partitioning, and the semantic class-to-expert mapping, and reports two training budgets: short ( TE =15 ,
+
+TG=20 , TH =20 ) and long ( TE =30 , TG=20 , TH =40 ). For Modular, increasing to five or seven experts reduces accuracy (e.g., EuroSAT: 88.19% → 73.56% → 67.74%; RESISC45: 65.82% → 55.56% → 49.07%) while parameters grow from 19.8M to 33.0M to 46.3M on EuroSAT and from 19.9M to 33.2M to 46.5M on RESISC45. For Sliced, three experts also yields the highest accuracy (87.96% on EuroSAT, 63.67% on RESISC45); with five or seven experts, accuracy drops, and on RESISC45 the drop is large (to 40.27% and 37.98%). A likely explanation is that, under fixed communication and training budgets, a larger expert pool makes expert special-ization harder to stabilize and weakens the effective signal per branch— each expert sees fewer samples, consistent with observations in centralized MoE that the useful number of ex-perts tracks data volume rather than class count (Videau et al. 2024), and with large-scale vision MoE models that serve 18k–21k classes with a fixed 32 experts per layer (Riquelme et al. 2021). These results directly address scalability to larger label spaces: the number of experts E is decoupled from the num-ber of classes C. Scaling from 10 to 100 classes does not require growing E — instead, the semantic class-to-expert mapping assigns a larger cluster of classes to each expert, and E=3 remains optimal across the entire range. The scal-ing knob is therefore classes-per-expert , not experts-per-class, mirroring how federated MoE methods operate with 
+
+E ≪ C (Dun et al. 2023). The ranking is also invariant to the training budget: doubling the rotation rounds improves all configurations but widens the advantage of E=3 (the Mod-ular E=3 vs. E=10 gap grows from 7.0 to 9.1 points, and the Sliced gap from 13.2 to 16.4), ruling out the possibility that larger expert pools merely converge more slowly. We note that absolute accuracy on CIFAR-100 is bounded by the compact onboard model capacity; the relevant evidence is the trend in E, which is consistent at every class count. 
+
+Accuracy over Expert-Specialization Rounds Figure 3 summarizes the evolution of test accuracy during the expert-specialization phase across all three datasets. Across all three datasets (EuroSAT, AID, RESISC45), test accuracy increases steadily over the 50 expert-specialization rounds, with CentMoE and the single-tower baselines (FedAvg, Fed-Prox) converging the fastest and to the highest accuracy. FedProx typically provides a small but consistent improve-ment over FedAvg, especially on RESISC45. PM-MoE starts Table 9: Sparse expert participation vs. full (normal) expert training for COSMIC-FL (EuroSAT, Dirichlet α=0 .1, 3 ex-perts, 15 rotation rounds) across 10, 50, and 100 clients. With sparse participation, a client only trains experts for which it holds sufficient local samples, so it does not have to train the whole expert set each round. As the constellation scales, each client holds fewer samples, so fewer experts pass the ownership threshold: the communication saving grows (40% →89% for Modular, 43% →88% for Sliced) while val-idation accuracy is maintained or improved. Modular Sliced Metric Sparse Normal Sparse Normal                                                                                     
+
+> 10 clients
+> Val. accuracy (%) 76.22 75.78 80.41 78.85 Expert participation rate (%) 60.0 100 56.7 100 Experts trained / client / round 1.80 3.00 1.70 3.00 Params transferred / client / round (M) 11.89 19.81 4.19 7.39 Total params transferred (G) 1.78 2.97 0.63 1.11 Communication saving (%) 40.0 –43.3 –Rotation wall time (s) 784 834 836 887
+> 50 clients
+> Val. accuracy (%) 58.69 51.39 66.56 58.41 Expert participation rate (%) 27.3 100 30.7 100 Experts trained / client / round 0.82 3.00 0.92 3.00 Params transferred / client / round (M) 5.42 19.81 2.27 7.39 Total params transferred (G) 4.06 14.86 1.70 5.54 Communication saving (%) 72.7 –69.3 –Rotation wall time (s) 658 924 718 971
+> 100 clients
+> Val. accuracy (%) 59.87 44.63 53.52 52.67 Expert participation rate (%) 10.7 100 12.3 100 Experts trained / client / round 0.32 3.00 0.37 3.00 Params transferred / client / round (M) 2.11 19.81 0.92 7.39 Total params transferred (G) 3.17 29.72 1.37 11.09 Communication saving (%) 89.3 –87.7 –Rotation wall time (s) 558 1015 610 1071
+
+lower and converges more slowly than CentMoE, but eventu-ally reaches competitive accuracy on EuroSAT and AID. Our COSMIC-FL variants (Modular and Sliced) also start from lower accuracy and converge more slowly, reflecting their lower-capacity, modular design and the fact that only parts of the model are updated in this phase. Overall, CentMoE and the single-tower baselines converge fastest and to the highest accuracy, while PM-MoE and COSMIC-FL trade some accuracy for different personalization and efficiency properties. 
+
+Contribution of Each Training Stage 
+
+Table 8 decomposes the final Sliced EuroSAT accuracies of the non-i.i.d. comparison in the main paper into the contribu-tions of the individual training stages: the runs are identical to those reported there (50 clients, semantic class-to-expert mapping, reference schedule TE =50 , TG=20 , TH =20 ), so the last row of the progression reproduces the corresponding main-paper entries exactly. The initialization row is mea-sured after server-side gate pretraining, where the shared stem and gate are trained but all experts are still randomly initialized; accuracy is accordingly near chance. Three ob-servations follow. First, every stage contributes positively at every heterogeneity level. Second, expert specialization pro-vides by far the largest gain (+45 to +68 points), growing with 
+
+α as local distributions approach i.i.d. Third, the fine-tuning stages divide the remaining gap: gate fine-tuning adds a con-sistent +3.0–4.3 points while aligning routing accuracy to 75–83%, and head fine-tuning contributes most under strong heterogeneity (+10.6 points at α=0 .1 versus +6.3–7.7 else-where), consistent with the heads consolidating knowledge across experts precisely when local label distributions are most skewed. We note these are sequential incremental gains under a fixed schedule rather than a leave-one-out ablation. The same qualitative pattern holds for the Modular variant at α=0 .1 under the shorter sparse-study schedule ( TE =15 ): 17.41 → 39.22 → 43.56 → 50.89. 
+
+Sparse Expert Participation across Constellation Sizes 
+
+Table 9 reports the sparse expert participation study dis-cussed in the main paper across 10, 50, and 100 clients. As the constellation scales, each client holds fewer samples, so fewer experts pass the ownership threshold: the communica-tion saving grows from 40.0% to 89.3% (Modular) and from 43.3% to 87.7% (Sliced), while sparse validation accuracy remains at or above full training at every scale. Under strong heterogeneity ( α=0 .1) with 50 clients, sparse participation reduces the average active experts per client from 3.0 to 0.82 (Modular) and 0.92 (Sliced), reducing per-round uploads by 72.7% and 69.3%, respectively. Despite fewer updates, ac-curacy improves by 7.3% (Modular) and 8.2% (Sliced), as experts avoid noisy updates from clients lacking relevant classes, and rotation wall time decreases by 26–29%. Unlike width-reduction methods such as FedDropout and HeteroFL, which shrink every layer but still require every client to train in every round, COSMIC-FL enables clients to skip entire experts based on local data coverage. 
+
+Data Heterogeneity on EuroSAT and RESISC45 
+
+Table 10 reports the full data-heterogeneity study on both EuroSAT and RESISC45 (the main paper presents the Eu-roSAT columns). RESISC45 follows the same trends: all methods improve with larger α, PM-MoE collapses under strong heterogeneity ( α=0 .1), and the COSMIC-FL variants track the heterogeneity-dependent behavior of the full-model baselines at a fraction of their staged training and communi-cation cost. 
+
+Per-Round Communication Across Training Phases 
+
+Fig. 4 reports the per-client per-round communication analysis on EuroSAT, AID, and RESISC45. CentMoE trains approximately 7.4–7.5M parameters per round, while COSMIC-FL reduces this to 6.6M for Modular-MoE and 2.5M for Sliced-MoE during expert specialization. Con-sidering all expert, head, and gate updates, Sliced-MoE transfers 4.9M parameters per round, reducing communi-cation by 34% compared with CentMoE and 46% compared with Modular-MoE. Gate fine-tuning introduces negligible overhead ( ∼0.02M). The phase-wise pattern is consistent across datasets: Sliced-MoE achieves superior parameter ef-ficiency through shared representations, whereas Modular-MoE trades higher communication cost for greater expert capacity and flexibility. Table 10: Impact of data heterogeneity (Dirichlet-α) on test accuracy (EuroSAT & RESISC45, 50 clients). Lower α = more non-i.i.d. Method EuroSAT RESISC45 
+
+α=0 .1 α=0 .3 α=1 .0 α=10 .0 α=0 .1 α=0 .3 α=1 .0 α=10 .0
+
+FedAvg 81.33 90.89 93.74 94.41 57.69 66.64 69.24 72.2 FedProx 83.00 90.63 93.37 94.48 62.27 68.42 70.98 73.27 CentMoE 86.89 94.07 95.07 95.26 61.49 66.60 66.96 67.36 PM-MoE 11.11 92.70 95.22 95.26 29.91 45.44 65.91 71.56 FedDropout ( r=0 .75 ) 64.72 75.13 79.19 79.94 33.28 36.84 41.09 43.73 HeteroFL ( r=0 .75 ) 74.98 81.70 86.17 89.54 49.65 55.75 58.32 59.14 
+
+COSMIC-FL (Modular) 67.26 82.37 86.67 88.37 47.00 57.02 62.38 65.58 
+
+COSMIC-FL (Sliced) 67.67 83.26 86.52 87.78 46.49 57.11 61.51 63.18 010 20 30 40 50       
+
+> Parameters transferred (×10 )
+> 7.40 5.82 45.48 3.27 3.27 6.60 2.46 0.02 0.02 2.38 2.38 CentMoE PM-MoE (Phase 1) PM-MoE (Phase 2) FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )Modular (Expert) Sliced (Expert) Modular (Gating) Sliced (Gating) Modular (Head) Sliced (Head)
+
+(a) EuroSAT 010 20 30 40 50        
+
+> Parameters transferred (×10 )
+> 7.43 5.83 46.01 3.28 3.28 6.62 2.48 0.02 0.02 2.41 2.41 CentMoE PM-MoE (Phase 1) PM-MoE (Phase 2) FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )Modular (Expert) Sliced (Expert) Modular (Gating) Sliced (Gating) Modular (Head) Sliced (Head)
+
+(b) AID 010 20 30 40 50        
+
+> Parameters transferred (×10 )
+> 7.46 5.83 46.40 3.29 3.29 6.64 2.48 0.02 0.02 2.43 2.43 CentMoE PM-MoE (Phase 1) PM-MoE (Phase 2) FedDropout ( r= 0.75 )HeteroFL ( r= 0.75 )Modular (Expert) Sliced (Expert) Modular (Gating) Sliced (Gating) Modular (Head) Sliced (Head)
+
+(c) RESISC45 
+
+Figure 4: Per-client parameters trained and uploaded per round (millions) on EuroSAT, AID, and RESISC45. Each phase com-municates only the parameters being optimized. CentMoE and PM-MoE train full models, while COSMIC-FL (Sliced/Modular) separates expert, gating, and head components. Table 11: Total uplink communication across all training phases on EuroSAT, computed from measured per-client per-round payloads under the reference schedule ( TE =50 , TG=20 , TH =20 ). Sparse-expert variants scale rotation communication by the measured expert-participation rate ρ (Table 9). “–” denotes methods without separate gate or head phases. †PM-MoE communication is derived from the implementation, where Phase 2 aggregates the full model including body, heads, and gate, causing client-dependent scaling. Payload / client / round (M) Total uplink (G) Method Rotation Gate Head 50 clients 100 clients FedAvg (full model) 5.82 – – 14.5 29.1 FedProx (full model) 5.82 – – 14.5 29.1 CentMoE 7.40 – – 18.5 37.0 PM-MoE † 5.02 – – 58.0 195.4 FedDropout ( r=0 .75 ) 3.27 – – 8.2 16.4 HeteroFL ( r=0 .75 ) 3.27 – – 8.2 16.4 COSMIC-FL Modular 19.81 0.02 2.38 51.9 103.9 COSMIC-FL Sliced 7.43 0.02 2.38 21.0 41.9 COSMIC-FL Modular (sparse expert training) 19 .81 ρ 0.02 2.38 15.9 15.4 
+
+COSMIC-FL Sliced (sparse expert training) 7.43 ρ 0.02 2.38 8.1 9.4 Table 12: Full capacity-fraction sweep for FedDropout and HeteroFL: accuracy (%) under IID settings with different numbers of satellites. Method (# Satellites) CIFAR-10 AID EuroSAT RESISC45 UC Merced FedDropout ( r=0 .25 , 10) 31.53 14.33 33.72 12.42 5.08 FedDropout ( r=0 .25 , 50) 21.75 6.30 19.59 6.62 7.62 FedDropout ( r=0 .25 , 100) 14.41 5.56 18.24 4.47 4.76 FedDropout ( r=0 .5, 10) 65.01 37.44 66.33 35.04 13.65 FedDropout ( r=0 .5, 50) 43.92 13.46 59.98 16.42 9.52 FedDropout ( r=0 .5, 100) 38.71 6.90 47.13 9.41 8.57 FedDropout ( r=0 .75 , 10) 84.84 62.09 90.11 71.04 45.40 FedDropout ( r=0 .75 , 50) 69.25 33.22 79.67 42.81 18.41 FedDropout ( r=0 .75 , 100) 56.20 23.31 69.96 28.35 14.60 FedDropout ( r=1 .0, 10) 88.80 77.23 97.44 81.01 73.02 FedDropout ( r=1 .0, 50) 79.89 55.19 91.26 64.77 45.08 FedDropout ( r=1 .0, 100) 70.25 43.94 82.65 51.36 31.43 HeteroFL ( r=0 .25 , 10) 79.57 58.61 92.91 63.53 45.08 HeteroFL ( r=0 .25 , 50) 57.45 32.08 76.13 33.78 20.95 HeteroFL ( r=0 .25 , 100) 46.95 22.44 68.35 24.57 17.46 HeteroFL ( r=0 .5, 10) 86.41 69.86 96.33 75.09 60.63 HeteroFL ( r=0 .5, 50) 69.04 44.27 82.54 49.31 30.48 HeteroFL ( r=0 .5, 100) 58.93 32.95 75.31 36.17 25.40 HeteroFL ( r=0 .75 , 10) 87.88 74.01 97.06 79.83 66.03 HeteroFL ( r=0 .75 , 50) 76.15 48.76 89.19 58.37 41.27 HeteroFL ( r=0 .75 , 100) 65.35 37.51 78.76 43.93 31.75 HeteroFL ( r=1 .0, 10) 88.81 78.03 97.33 81.09 72.70 HeteroFL ( r=1 .0, 50) 79.85 53.92 90.96 64.59 43.17 HeteroFL ( r=1 .0, 100) 69.89 41.66 81.96 51.19 37.14 
+
+Total Uplink Communication across Training Phases 
+
+Table 11 reports the total uplink communication across all training phases on EuroSAT under the reference schedule. Sparse-expert variants scale rotation communication by the measured expert-participation rates of Table 9. Since all ex-perts are updated within each rotation round, communication scales with payload, rounds, and participating clients, rather than the number of experts. Two observations emerge. First, under full training, the staged pipeline may transmit more to-tal data than FedAvg (3.6 × for Modular and 1.4 × for Sliced); its advantage lies in phase-specific communication, where satellites exchange only the parameters required by the ac-tive stage. Second, the communication reduction is achieved through sparse expert participation: at 100 clients, Modular-sparse and Sliced-sparse reduce total uplink by 47% and 68% compared with FedAvg, respectively, with larger gains as constellation size increases. Compared with sub-model baselines at r=0 .75 , Sliced-sparse becomes increasingly ad-vantageous as participation becomes sparser. 
+
+Sub-Model Baselines under Varying Capacity Fractions 
+
+Table 12 reports the full capacity-fraction sweep r ∈{0.25 , 0.5, 0.75 , 1.0} for FedDropout and HeteroFL under i.i.d. partitioning; the r=0 .75 rows are repeated in the main paper. Accuracy increases monotonically with r for both methods, and r=1 .0 recovers full-model training, closely matching FedAvg. FedDropout degrades sharply at low r
+
+(e.g., 5–33% accuracy at r=0 .25 ), since random sub-model sampling leaves each parameter undertrained, whereas Het-eroFL degrades more gracefully because its deterministic width scaling trains a consistent sub-network every round. We therefore use r=0 .75 as the strongest partial-capacity op-erating point when comparing against the proposed variants in the main paper. Table 13: Impact of pruning ratio and strategy (server-side, client-side, adaptive) on COSMIC-FL (Sliced and Modular) on EuroSAT and RESISC45 with 50 satellites. Results report parameters (P, millions) and test accuracy (%). Model Pruning  EuroSAT RESISC45 Server Client Adaptive Server Client Adaptive P Acc P Acc P Acc P Acc P Acc P Acc COSMIC-FL (Sliced)  0 12.4 87.56 12.4 87.56 12.4 87.56 12.5 64.07 12.5 64.07 12.5 64.07 10 11.5 83.74 11.5 82.07 11.5 83.15 11.5 46.62 11.5 46.58 11.5 46.40 30 8.2 81.15 8.2 81.04 8.4 81.93 8.3 44.91 8.3 44.31 8.5 46.96 50 5.6 80.67 5.6 82.04 5.8 82.22 5.7 44.09 5.7 45.33 6.3 43.27 70 3.5 80.59 3.5 79.67 4.0 80.89 3.6 41.20 3.6 40.36 3.9 42.18 80 2.7 79.63 2.7 75.41 3.0 78.70 2.8 39.20 2.8 40.16 3.2 40.64 COSMIC-FL (Modular)  0 19.8 87.37 19.8 87.37 19.8 87.37 19.9 66.44 19.9 66.44 19.9 66.44 10 18.7 79.89 18.7 79.22 18.7 79.15 18.8 57.49 18.8 57.33 18.8 56.69 30 16.4 80.11 16.4 79.78 16.6 80.41 16.5 56.64 16.5 56.40 16.5 57.96 50 13.9 80.85 13.9 80.81 14.2 81.07 14.0 58.67 14.0 58.84 14.1 58.31 70 11.2 81.00 11.2 81.63 11.3 81.33 11.3 59.82 11.3 59.98 11.4 59.73 80 9.7 81.07 9.7 81.33 10.1 81.19 9.8 59.76 9.8 59.89 10.1 59.60 Table 14: Dense and adaptively pruned proposed models on the Jetson AGX Orin. Values are averaged over two independent runs. Dataset Impl. Variant Acc. (%) Ach. pruning (%) Latency (ms) Throughput (img/s) Peak memory (MB) EuroSAT Modular Dense 86.22 0.00 10.59 94.43 83.45 EuroSAT Modular Adaptive 79.11 35.42 11.21 89.17 61.52 EuroSAT Sliced Dense 86.26 0.00 23.23 43.05 105.05 EuroSAT Sliced Adaptive 79.52 53.30 21.37 46.80 42.28 RESISC45 Modular Dense 63.60 0.00 10.70 93.50 84.78 RESISC45 Modular Adaptive 58.87 39.81 11.23 89.07 55.01 RESISC45 Sliced Dense 60.96 0.00 23.23 43.05 105.26 RESISC45 Sliced Adaptive 43.67 51.52 21.52 46.47 44.48 Table 15: Relative hardware effect of adaptive pruning with respect to the corresponding dense implementation. Dataset Impl. Memory Latency Throughput Power EuroSAT Modular −26 .28% +5 .90% −5.57% −3.96% 
+
+# EuroSAT Sliced −59 .75% −7.98% +8 .70% −10 .75% 
+
+# RESISC45 Modular −35 .11% +4 .96% −4.73% −6.20% 
+
+# RESISC45 Sliced −57 .74% −7.36% +7 .94% −11 .11% 
+
+Structured Pruning on EuroSAT and RESISC45 
+
+Table 13 reports the full pruning study on both EuroSAT and RESISC45 (the main paper presents the EuroSAT columns). The RESISC45 results confirm the trends discussed in the main paper: differences between pruning strategies are more pronounced on RESISC45, the Modular variant remains competitive under strong pruning (70–80%, up to 59.98%), and the Sliced variant peaks at moderate ratios (46.96% at 30% adaptive pruning). Additional Jetson Hardware Results 
+
+This section provides additional embedded inference results on the NVIDIA Jetson AGX Orin. The measurements com-plement the server-side federated training evaluation by re-porting latency, throughput, peak allocated CUDA memory, power, and temperature for dense and adaptively pruned checkpoints. Table 14 reports the absolute measurements for the dense and adaptively pruned variants of the proposed modular and sliced implementations, while Table 15 sum-marizes the relative hardware effect of adaptive pruning. 
+
+Embedded inference protocol 
+
+Each final checkpoint is loaded and benchmarked inde-pendently on a single NVIDIA Jetson AGX Orin. The benchmark does not load all federated client models si-multaneously and does not simulate a complete feder-ated training round. Measurements use batch size one, 50 warm-up batches, and 500 timed batches. Two inde-pendent benchmark runs are performed for every check-point. Throughput is computed as the total number of processed images divided by the sum of the measured batch-inference times. Peak GPU memory is measured us-ing torch.cuda.max_memory_allocated() after resetting CUDA peak-memory statistics. Board power and temperature are sampled through tegrastats during the measurement window. Table 15 summarizes the relative hardware effect of adap-tive pruning with respect to the corresponding dense imple-mentation. Adaptive pruning consistently reduces peak allo-cated CUDA memory and board power across both datasets and both expert implementations. The memory reduction is particularly large for the sliced implementation, reach-ing 59 .75% on EuroSAT and 57 .74% on RESISC45, while power decreases by about 11% . The effect on latency is implementation-dependent: pruning improves sliced-model latency by about 7–8% , but slightly increases modular-model latency by about 5–6% . This confirms that structured pruning provides clear memory and power benefits, whereas latency gains depend on the execution pattern and hardware behavior rather than parameter count alone. We repeated the modular-versus-sliced baseline memory check three times. The sliced baseline consistently used more peak allocated CUDA memory than the modular baseline despite its smaller static parameter count. On EuroSAT, the modular baseline used 83.45 MB and the sliced base-line used 105.05 MB. On RESISC45, the corresponding values were 84.78 MB and 105.26 MB. This confirms that the runtime footprint is not determined by parameter count alone, but can also depend on activations, temporary ten-sors, path-specific indexing, and implementation-dependent CUDA workspaces. A lightweight CUDA-event diagnostic further showed that the modular forward pass is largely accounted for by the explicit expert towers. In contrast, a substantial fraction of the sliced forward time was not attributed to the coarse instrumented nn.Module blocks. This observation sug-gests implementation-level overhead outside the main mod-ule stages, such as slicing, indexing, routing logic, tensor re-organization, or temporary allocation. The diagnostic should not be interpreted as isolating a single causal operation; a lower-level operator trace would be required to do so.

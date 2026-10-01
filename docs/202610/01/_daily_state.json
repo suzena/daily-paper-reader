@@ -1,0 +1,105 @@
+{
+  "date": "20261001",
+  "date_label": "",
+  "generated_at": "2026-10-01 23:46:50 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.30836v1",
+      "route": "202610/01/2609.30836v1-ptc-decoder-towards-intelligent-slms-on-offline-resource-constrained-edge-devices",
+      "title": "PTC-Decoder: Towards Intelligent SLMs on Offline Resource-Constrained Edge Devices",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感卫星边缘设备上的智能体工具编排",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    },
+    {
+      "paper_id": "2609.34577v1",
+      "route": "202610/01/2609.34577v1-calibrated-uncertainty-for-informative-path-planning-in-aquatic-environmental-monitoring",
+      "title": "Calibrated Uncertainty for Informative Path Planning in Aquatic Environmental Monitoring",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "水生环境监测中基于校准不确定性的信息路径规划",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    },
+    {
+      "paper_id": "2609.31932v1",
+      "route": "202610/01/2609.31932v1-resource-aware-federated-mixture-of-experts-with-adaptive-pruning-for-onboard-learning-in-leo-satellite-constellations",
+      "title": "Resource-Aware Federated Mixture-of-Experts with Adaptive Pruning for Onboard Learning in LEO Satellite Constellations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向星上遥感数据的联邦学习",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    },
+    {
+      "paper_id": "2609.32756v1",
+      "route": "202610/01/2609.32756v1-reuse-or-relearn-a-spectral-view-of-earth-observation-foundation-models",
+      "title": "Reuse or Relearn? A Spectral View of Earth Observation Foundation Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "地球观测基础模型微调表征分析",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    },
+    {
+      "paper_id": "2609.34196v1",
+      "route": "202610/01/2609.34196v1-convcue-complementary-visual-inductive-biases-for-vision-language-models",
+      "title": "ConvCue: Complementary Visual Inductive Biases for Vision-Language Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "以冻结CNN特征增强视觉语言模型的多模态视觉表征",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    },
+    {
+      "paper_id": "2609.34795v1",
+      "route": "202610/01/2609.34795v1-physics-guided-spectral-distillation-for-underwater-image-enhancement-on-resource-constrained-devices",
+      "title": "Physics-Guided Spectral Distillation for Underwater Image Enhancement on Resource-Constrained Devices",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向资源受限水下机器人的水下图像增强",
+      "first_seen_at": "2026-10-01 23:46:50 UTC",
+      "updated_at": "2026-10-01 23:46:50 UTC"
+    }
+  ]
+}
