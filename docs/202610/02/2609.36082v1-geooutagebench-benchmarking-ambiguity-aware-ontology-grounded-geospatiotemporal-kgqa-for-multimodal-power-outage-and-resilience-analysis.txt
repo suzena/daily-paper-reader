@@ -1,0 +1,669 @@
+Title: GeoOutageBench: Benchmarking Ambiguity-aware, Ontology-grounded Geospatiotemporal KGQA for Multimodal Power Outage and Resilience Analysis
+
+URL Source: https://arxiv.org/pdf/2609.36082v1
+
+Published Time: Wed, 30 Sep 2026 00:15:08 GMT
+
+Number of Pages: 13
+
+Markdown Content:
+# GeoOutageBench: Benchmarking Ambiguity-aware, Ontology-grounded Geospatiotemporal KGQA for Multimodal Power Outage and Resilience Analysis 
+
+## Ethan D. Frakes ∗
+
+University of Central Florida Orlando, Florida, USA ethan.frakes@ucf.edu 
+
+## Amy Kvien 
+
+University of Central Florida Orlando, Florida, USA amy.kvien@ucf.edu 
+
+## Rishabh Kundu 
+
+Case Western Reserve University Cleveland, Ohio, USA rxk857@case.edu 
+
+## Redad Mehdi 
+
+Case Western Reserve University Cleveland, Ohio, USA mxm1684@case.edu 
+
+## Van D. Tran 
+
+Case Western Reserve University Cleveland, Ohio, USA vxt101@case.edu 
+
+## Vibha S. Mandayam 
+
+Case Western Reserve University Cleveland, Ohio, USA vsm21@case.edu 
+
+## Kristopher O. Davis 
+
+University of Central Florida Orlando, Florida, USA kristopher.davis@ucf.edu 
+
+## Erika I. Barcelos 
+
+Case Western Reserve University Cleveland, Ohio, USA eib14@case.edu 
+
+## Roger H. French 
+
+Case Western Reserve University Cleveland, Ohio, USA roger.french@case.edu 
+
+## Yinghui Wu 
+
+Case Western Reserve University Cleveland, Ohio, USA yinghui.wu2@case.edu 
+
+## Mengjie Li 
+
+University of Central Florida Orlando, Florida, USA mengjie.li@ucf.edu 
+
+## Abstract 
+
+We introduce GeoOutageBench , a benchmark for assessing LLM-based geospatiotemporal KGQA for multimodal outage and re-silience analysis. Unlike existing KGQA benchmarks for Web knowl-edge, GeoOutageBench considers a spatiotemporal KG that inte-grates visual, textual, and structured data from outage records, remote sensing, weather observations, storm and power events, geographic entities, and domain ontologies. It provides a compe-tency query taxonomy at different difficulty levels from spatiotem-poral containment and proximity, spatiotemporal co-occurrence analysis, multimodal evidence, to hypothetical evaluation. Over multimodal KG and query classes, GeoOutageBench provides user-configurable evaluation of three important, highly coherent yet less studied tasks: (1) LLMs’ understanding for ambiguous geospatiotem-poral questions in terms of NL to SPARQL interpretation, (2) query-driven assessment of ontology utility, and (3) answer accuracy of multimodal KGQA retrieval. GeoOutageBench provides a design principle and foundation for assessing LLM-KG systems that sup-port real-world infrastructure resilience analysis. Our benchmark, source code, data, results, and other documentation are available at https://github.com/UCF-SAGE/GeoOutageBench. 
+
+> ∗Corresponding author.
+> This work is licensed under a Creative Commons Attribution 4.0 International License.
+> SIGSPATIAL ’26, Riverside, CA, USA
+> © 2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2950-8/2026/11 https://doi.org/10.1145/3841645.3842982
+
+## CCS Concepts 
+
+• Information systems → Geographic information systems ;
+
+Spatial-temporal systems ; Question answering ; Graph-based database models ; • Computing methodologies → Natural lan-guage processing ; Knowledge representation and reasoning .
+
+## Keywords 
+
+Geospatiotemporal knowledge graphs, KGQA, Benchmark datasets, Multimodal retrieval, Outage resilience 
+
+ACM Reference Format: 
+
+Ethan D. Frakes, Amy Kvien, Rishabh Kundu, Redad Mehdi, Van D. Tran, Vibha S. Mandayam, Kristopher O. Davis, Erika I. Barcelos, Roger H. French, Yinghui Wu, and Mengjie Li. 2026. GeoOutageBench: Benchmarking Ambiguity-aware, Ontology-grounded Geospatiotemporal KGQA for Multi-modal Power Outage and Resilience Analysis. In The 34th ACM International Conference on Advances in Geographic Information Systems (SIGSPATIAL ’26), November 03–06, 2026, Riverside, CA, USA. ACM, New York, NY, USA, 13 pages. https://doi.org/10.1145/3841645.3842982 
+
+## 1 Introduction 
+
+Question Answering over knowledge graphs (KGQA), which in-creasingly leverages Large Language Models (LLMs), has signifi-cantly advanced knowledge exploration and spatial intelligence via natural language (NL) questions. Meanwhile, geospatiotemporal KGs [6, 13, 40] have become critical for modeling dynamic spa-tial systems, including mobility, administrative boundaries, sensor observations, and event dynamics. This calls for effective integra-tion of diverse, dynamic multimodal geospatiotemporal data ( e.g., 
+
+localized storm events [28], hurricane tracks [27], and nighttime arXiv:2609.36082v1 [cs.AI] 28 Sep 2026 SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al. Natural Language Question             
+
+> Which counties in the hurricane-prone state had high SVI in a recent year and a dozen or so wind-related storm events?
+> state
+> Florida or Louisiana
+> year
+> 2022 or 2018
+> SVI
+> ≥0.75
+> or ≥0.85
+> “dozen”
+> ≥12
+> or 10–14
+> Interpretation 1
+> County
+> ?county Florida State
+> SVI Record ?sviRecord 2022 ?score
+> ≥.75
+> Storm Event
+> ?event ?eventType T-storm ?count
+> ≥12
+> alocState arepCounty sviYear sviSoc aoccCounty eventType startYr COUNT
+> Interpretation 2
+> NTL Image
+> ?ntlImg Louisiana State 2018 SVI score
+> ≥.85
+> Wind events 10–14 ?countyName
+> type covers acqYear SVI events county
+> spatial temporal semantic semantic
+
+Figure 1: Abstract view of how one question can support multiple KGQA interpretations. The same term can bind the state, year, SVI threshold, and event-count semantics differently, while alternative ontology-compatible traversals can reach the same answer through different paths in KG. 
+
+light remote sensing [31]) to understand evolving geographic phe-nomena [6, 13, 40]. For example, GeoOutageKG [13] curates factual spatiotemporal data for power outage analysis, remote sensing observations, and energy resilience. Effective KGQA requires benchmarking tools to understand how to best exploit LLMs, ontologies, and KGs. Existing KGQA bench-marks [2, 11, 19, 38] provide valuable resources for evaluating an-swer correctness, formal query generation, and execution accuracy over scholarly, encyclopedic, or heterogeneous linked-data KGs. However, they provide limited support for assessing how ontolo-gies, geospatial KGs, and multimodal evidence jointly affect the usability and accuracy of spatiotemporal KGQA for outage and storm-resilience analysis. 
+
+Example 1: Consider the question “Which counties in the hurricane-prone state had high socioeconomic vulnerability in a recent year and a dozen or so wind-related storm events recorded that same year?” 
+
+Figure 1 abstracts the interpretations licensed by this question, with blue elements denoting query variables and green elements denot-ing ontology classes. For outage and storm analysis, the answer depends on how a KGQA system binds underspecified state, year, SVI threshold, and event-count semantics. In the left query reading (Q1), ontology classes ground county, SVI-record, and storm-event nodes in a direct county-year query; in the right reading (Q2), an NTL Image class mediates image coverage and acquisition year to the county answer and associated constraints. These choices preserve the same county-year co-occurrence structure but lead to different executable queries and resilience evidence. □
+
+Example 1 highlights three limitations of general-purpose KGQA benchmarks that are especially consequential for geospatiotempo-ral resilience analysis. First, current benchmarks provide limited evidence about whether modern LLMs can perform domain-specific spatiotemporal understanding. Real-world NL questions are often underspecified not only in their entity references, but also in the joint spatial and temporal constraints they imply; as Example 1 shows, a single outage-and-storm question can support multiple valid interpretations over state, year, and event-count semantics. Second, existing evaluations rarely measure the practical usability 
+
+of ontologies and KGs for KGQA: given the same NL workload, how much do a particular ontology and KG improve schema grounding, query generation, and answer accuracy? Third, benchmarks provide limited insight into the role of multimodality . Additional modal-ities such as outage records, storm reports, and remote-sensing imagery may enrich answers but also introduce irrelevant evidence or conflicting signals that degrade KGQA quality. The need for such efforts is evident to support accurate KGQA for location- and temporal-sensitive power event and resilience analysis. Indeed, power outages have become more frequent, more intense, and more prolonged over the past decade, driven by factors including the frequency and severity of extreme weather events, deferred maintenance, and insufficient investment in modernizing energy infrastructure [22]. We advocate a benchmark that can provide all the above assessments, beyond ranking LLMs over static knowledge, hence helping users to best exploit LLMs, ontologies, and multimodal data holistically to support geospatial and temporal retrieval and reasoning. 
+
+Contribution . We introduce GeoOutageBench , a domain-specific benchmark for ontology-grounded geospatiotemporal KGQA over multimodal power infrastructure outage data. GeoOutageBench 
+
+advances geospatiotemporal KGQA benchmarking for outage and storm resilience through the following primary contributions. (1) A multimodal geospatiotemporal KG , built on top of the GeoOutageKG [13] architecture with multimodal outage records including administrative geographies, storm and hurricane data, social vulnerability indicators, nighttime-light imagery, and outage-severity map metadata. (2) A taxonomy of competency queries , spanning seven categories— spatial containment, spatial proximity, temporal interval, event sequence, spatiotemporal co-occurrence, multimodal evidence, and scenario-based evaluation—with complexity levels ranging from one-hop to multi-hop reasoning. (3) Three benchmark tasks with evaluation metrics and algorithms. 
+
+GeoOutageBench evaluates ontology-grounded NL2SPARQL gen-eration, spatiotemporal KGQA over GeoOutageKG, and query-driven ontology utility. Its metrics capture schema-valid query generation and ambiguity handling, answer quality for multimodal and cross-modal questions, and GeoOutageOnto coverage through workload-vocabulary relevance and schema-utilization density. (4) A configurable sandbox platform that integrates GeoOutageKG and ontologies [13], KG hosting through partners such as GraphDB [29], SPARQL engines, and spatial and time-series retrieval tools. 
+
+Related Work . We summarize related work below. GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA GeoOutageBench        
+
+> C=( Q ,O,R Q ,G,M,P )
+> Serialized package of questions, SPARQL interpretations, ontology context, KG references, and answers
+
+Dataset   
+
+> Multimodal Data Tabular Data Remote Sensing Data Outage Maps GeoOutageOnto O
+> GeoOutageKG G
+
+Query Construction    
+
+> Natural Language Questions 𝑞 𝑖 ∈ Q
+> “Which NTL images and outage-severity maps provide multimodal evidence?”
+> SPARQL Interpretations R Q
+> ontology-grounded, ambiguity-aware alternatives semantic, spatial, temporal, and spatiotemporal readings 1-hop, 2-hop, and multi-hop graph traversals interpret
+
+Tools and Benchmark Tasks    
+
+> Tools LLMs M
+> GPT, Gemini, Claude
+> Library L
+> NoSQL Database
+> OntoCheck
+> ontology evaluator
+> NL2SPARQL
+> query generation
+> Spatiotemporal
+> KGQA
+> answer retrieval
+> Ontology Utility
+> task-based assessment
+> Benchmark Tasks Evaluation Metrics P
+
+Figure 2: GeoOutageBench framework. Dataset assets are linked through GeoOutageOnto and instantiated in GeoOutageKG; natural-language questions are mapped to ambiguity-aware SPARQL interpretations; and LLMs, GraphDB [29], and OntoCheck [21] support the benchmark tasks and custom metrics P.
+
+Geospatial Ontologies and KGs . The W3C Geospatial Ontologies In-cubator report [23] provides an early foundation for representing geospatial concepts on the Web, including features, feature types, spatial relationships, coordinate reference systems, metadata, and geospatial services. The W3C Basic Geo/WGS84 vocabulary [5] offers a lightweight RDF namespace for WGS84 latitude, longitude, and altitude, supporting simple point-based geolocation but not richer geometric or topological reasoning. Related spatial and spa-tiotemporal ontologies include the Time ontology [9], GeoSPARQL [3], and SOSA/SSN [16] for sensor observations, sampled features, and measurement processes relevant to remote sensing and me-teorological data. Although widely adopted, these ontologies re-main only partially interoperable because their terms are not fully mapped to ISO-standard ontologies and they often separate spa-tial and temporal domains. The Common Core Ontologies (CCO) [17, 32] address this gap by integrating spatial and temporal con-cepts in a Basic Formal Ontology-mapped framework [15]. As a mid-level ontology, CCO links top-level abstractions to specialized domains, but practical deployment still requires low-level ontolo-gies such as MDS-Onto [30] and GeoOutageOnto [13]. 
+
+KGQA Benchmarks . Standard benchmarks such as LC-QuAD 2.0 and QALD-9 focus on open-domain factual questions over encyclo-pedic knowledge bases such as DBpedia and Wikidata [11, 38]. How-ever, their pattern-based generation may not capture real-world linguistic diversity. Spider4SPARQL [19] addresses this limitation with a complex benchmark derived from 200 databases, where state-of-the-art models reach only about 45 percent execution accuracy for complex SPARQL queries. 
+
+Power System KGQA and Benchmarks . Research on KGQA and benchmarking for power outages and resilience analysis remains limited. BuildingQA [24], which provides NL interfaces for building metadata, identifies a significant lexical gap between practitioner terminology and formal graph classes. More broadly, NL ambiguity affects KGQA due to ambiguous schema, vague value mappings, and underspecified language [12]. Other domain benchmarks in-clude SciQA [2] for scholarly knowledge graphs. Unlike bench-marks over simpler encyclopedic sources, SciQA uses the Open Research Knowledge Graph (ORKG) to capture concept drift and varied granularities of scientific literature. While SciQA provides a useful framework for text-rich KGs and some geographic concepts, its geospatial coverage is limited: most of its 2,465 automatically generated questions are restricted to Computer Science. We remark that our work is not to develop a new KGQA system, but to advocate and demonstrate enhanced assessment capability to enable finer-grained, in-depth experimental analysis; to provide evaluation infrastructure and assessment tools for LLM-based spa-tiotemporal analysis of power-system resilience. 
+
+## 2 GeoOutageBench Overview 
+
+GeoOutageBench characterizes KGQA assessment using a uni-fied, user-specified configuration profile C = (Q , O, RQ , G, M, P) ,where Q = {𝑞 𝑖 }𝑁 𝑖 =1 is a set of NL questions, RQ is the correspond-ing reference SPARQL-interpretation workload, O and G are the ontology and spatiotemporal KG, M is a set of language models or agents, and P is a set of evaluation metrics. To support the bench-mark tasks (see Section 3), GeoOutageBench provides a library L
+
+of primitive operators summarized below, where ′_′ denotes an optional wildcard input. 
+
+• Multimodal Information Extractor : this operator performs data integration and extraction to curate and maintain G
+
+from raw multimodal data, supported by LLMs, graph data systems, and IE tools. 
+
+• NL query interpreter NL2STQ (𝑞 𝑖 , O, ∅, G, 𝑚, P) : takes as in-put an NL question 𝑞 𝑖 posed on G, and leverages a language model 𝑚 ∈ M to generate structured SPARQL interpreta-tions dRQ 𝑚 𝑖 that can interpret 𝑞 𝑖 ; if O is specified (O ≠ ∅) ,
+
+O is included in prompting 𝑚 to generate dRQ 𝑚 𝑖 that aligns with the classes, properties, and constraints in O.SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al. goo:HurricaneEventRecord       
+
+> rdfs:subClassOf
+> goo:recordDateTime goo:acquisitionDateTime
+> goo:generatedFromNTLImage
+> goo:hasOutageMap
+> mds:Dataset goo:TabularData goo:SVIRecord
+> goo:State goo:StormEventRecord
+> goo:County goo:CustomerOutageRecord goo:OutageMap goo:NTLImage goo:SatelliteImage
+> rdfs:subClassOf
+> goo:Satellite mds:Sensor mds:Satellite
+> rdfs:subClassOf goo:fromSensor goo:fromSatellite goo:representsCounty goo:representsCounty goo:representsCounty goo:containsSensor
+> goo:Sensor
+> rdfs:subClassOf
+> xsd:dateTime
+> rdfs:subClassOf goo:representsCounty rdfs:subClassOf rdfs:subClassOf goo:occurredInCounty rdfs:subClassOf goo:locatedInState
+> xsd:float
+> goo:lat / goo:lon
+> LEGEND Data Classes Geospatial Classes Temporal Properties Miscellaneous
+
+Figure 3: A fraction of GeoOutageOnto. Data classes are displayed in blue, geospatial classes are in yellow, temporal properties are in orange, and miscellaneous instrument/superclass classes are in gray. goo stands for GeoOutageOnto, mds stands for MDS-Onto [30], and xsd stands for XML Schema Definition [39]. 
+
+• Graph Query Evaluator Q2A (_, _, RQ , G, _, P) : this opera-tor calls a SPARQL engine to deterministically compute the answers of structured interpretations RQ (G) .
+
+• Ontology-based Evaluator OntoQ2A (𝑞 𝑖 , O, RQ , G, _, P) : this operator extends Q2A by using O to identify ontology-compatible labels and relations that satisfy the conditions expressed in RQ .
+
+• Multimodal Evaluators mmQ2A (resp. mmOntoQ2A ), a vari-ant of Q2A (resp. OntoQ2A ) that supports multimodal re-trieval; rather than only querying and returning entities in 
+
+G, it performs retrieval over multimodal data and returns a wikipage-style document to include all relevant answers. 
+
+• User-defined Functions (UDFs) and Tools : users register task-specific operators with L to extend query semantics beyond what the SPARQL engine evaluates natively. Registered oper-ators include a geodesic buffer for resolving vague radius ex-pressions, spatiotemporal join, spatial indexing, kNN search, and raster-tile access for NTLImage and OutageMap retrieval. These operators serve as algorithmic building blocks and are syn-thesized for automated assessment pipelines in GeoOutageBench .
+
+Example 2: For the ambiguous question in Example 1, NL2STQ 
+
+(𝑞 𝑖 , O, ∅, G, 𝑚, P) produces dRQ 𝑚 𝑖 , binding the underspecified state, year, SVI, and event-count phrases to concrete entities and con-straints. Q2A then returns county-level bindings (county, SVI record, vulnerability score, storm-event count); OntoQ2A checks these against ontology labels and relations, and mmQ2A and 
+
+mmOntoQ2A attach multimodal evidence to the answers. □
+
+We next elaborate details of O and G (Section 2.1), competency NL questions Q and reference SPARQL interpretations RQ (Sec-tion 2.2), benchmark tasks with matching evaluation metrics P
+
+(Section 3) and evaluation methods built on operator library L. Fig-ure 2 illustrates the general framework. While we make a case for power outage and storm event analysis, GeoOutageBench readily extends to other geospatiotemporal KGQA query scenarios. 
+
+## 2.1 GeoOutageBench Ontologies and KGs 
+
+Multimodal GeoOutageOnto O. GeoOutageOnto provides the schema for GeoOutageKG and the GeoOutageBench KGQA dataset. The ontology O is designed as a robust representation for integrat-ing heterogeneous geospatial and temporal resources, including satellite-derived nighttime light images [31], meteorological remote-sensing products [14, 25, 26], county-level customer outage records [34], and storm event reports [28]. By defining a unified semantic layer over these resources, GeoOutageOnto supports systematic ingestion, alignment, and reasoning for power outage analysis and storm resilience applications. 
+
+Example 3: Figure 3 illustrates a representative subset of GeoOuta-geOnto. Classes associated with ingested datasets are spatially grounded through their administrative divisions, such as coun-ties and states in the U.S. These classes are further organized by modality, distinguishing between quantitative tabular datasets and geospatial raster imagery. GeoOutageOnto is curated to be con-ceptually well aligned with the Materials Data Science Ontology (MDS-Onto) [30] to promote the standardization of location- and time-sensitive concepts. MDS-Onto is aligned with the Basic For-mal Ontology (BFO) [15], which justifies the well-groundedness of GeoOutageOnto. □
+
+Multimodal Spatiotemporal KG G. GeoOutageBench specifies 
+
+G by default as GeoOutageKG [13], enriched with multimodal data sources typed by O. Its semantically enriched entities are grounded by real-world geographic location, acquisition time, and record-time GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+metadata, forming the geospatial, temporal, and multimodal evi-dence base for GeoOutageBench . Full statistics on GeoOutageKG classes and instance counts are provided in Table 1. 
+
+Table 1: GeoOutageKG instance and triple counts by class. Class Instances Triples 
+
+CustomerOutageRecord 11 733 064 117 330 640 
+
+NTLImage 335 469 7 907 444 
+
+OutageMap 191 661 2 108 267 
+
+StormEventRecord 2 012 856 36 211 668 
+
+HurricaneEventRecord 3 266 128 831 
+
+SVIRecord 21 997 395 940 
+
+Total 14 298 313 164 082 790 
+
+Raster layer . The raster layer uses NASA Black Marble nighttime light (NTL) observations [31], which provide nightly imagery from 2012 to 2025 at 500 meters per pixel; because artificial illumination is a spatially explicit proxy for electricity availability, infrastruc-ture functionality, and human activity, departures from historical radiance can indicate outage impacts when interpreted with admin-istrative boundaries, outage records, and storm metadata. Raw rasters are partitioned into U.S. counties using county-level bounding boxes and coordinate polygons, then transformed into outage severity maps by comparing daily radiance against the pre-ceding three-month average [1, 8, 10, 13, 18]. These maps encode anomalous radiance loss as outage severity, allowing G to represent the spatial extent, intensity, and temporal evolution of disruption and recovery; daily NTL images and outage severity maps are seri-alized as NTLImage and OutageMap instances, while the observing Suomi-NPP satellite and VIIRS sensor are represented as instances of Satellite and Sensor , respectively. 
+
+Tabular Layer . The tabular layer comprises quantitative datasets aligned by observation time and grounded through coordinate pairs or administrative divisions, most commonly U.S. counties; currently, the multimodal geospatiotemporal KG G integrates: (1) The Department of Energy’s EAGLE-I Customer Outage Record [4, 33–36], which provides county-level outage observations at 15-minute intervals (2014-2025) and the primary temporal signal for modeling outage severity and persistence. (2) NOAA’s Storm Events Database [28], which records county-level storm events and damaging episodes from 1950 to 2025, contextu-alizing outages through meteorological events, affected locations, severity, and infrastructure disruption. (3) NOAA’s Hurricane Databases (HURDAT) [27], which contain metadata for tropical cyclones in the North Atlantic Ocean from 1851 to 2025 and the Northeastern Pacific Ocean from 1949 to 2025, including name, maximum wind strength, barometric pressure, and six-hour status updates with location and wind strength. (4) The CDC/ATSDR Social Vulnerability Index (SVI) [7], which provides spatially resolved measures of relative social vulnerability across socioeconomic status, household characteristics, racial and ethnic minority status, etc.; its theme-specific and overall percentile Remote Geography Tabular        
+
+> Nighttime light County geometry EAGLE-I
+> Storm HURDAT SVI
+> Shared county key: FIPS, polygon mask, bbox, centroid, state
+> Clip NTL by county
+> NTL images
+> Radiance loss
+> Δ𝐿 =𝐿 90 𝑑 −𝐿 𝑑
+> Outage maps
+> Normalize records and align by county/date
+> EAGLE-I: 15-min outages Storm Events: hazards HURDAT + SVI context county-date table
+> Counties GeoOutageKG county bundle: (NTLImage, OutageMap, CustomerOutageRe-cord, StormEventRecord, HurricaneEventRecord, SVIRecord) per county
+
+Figure 4: Multimodal data construction for GeoOutageBench. County geography provides the shared spatial key used to segment nighttime-light imagery, derive radiance-loss out-age maps, and ground outage, storm, hurricane, and vulnera-bility records as county-level GeoOutageKG evidence. 
+
+rankings allow GeoOutageKG to incorporate community vulnera-bility when analyzing outage exposure, disaster preparedness, and post-event recovery capacity. 
+
+Geographic Metadata . G also serializes metadata for all 3,144 U.S. counties and county-equivalent entities, together with all U.S. states and territories, using the U.S. Census Bureau’s TIGER digital map-ping and shapefile database [37]. County and state instances include centroid coordinates, Federal Information Processing Standards (FIPS) codes, geohashes, and bounding-box geometries. We note that Storm Events, SVI, HURDAT, and TIGER geometries are in-gested for all counties, while Black Marble and EAGLE-I derived assets are currently sampled within Florida due to raster volume. Because all layers are partitioned by the same shared county key, extending coverage requires re-running the ingestion pipeline over additional TIGER geometries rather than revising GeoOutageOnto or the query templates. 
+
+Multimodal Data Integration . Figure 4 summarizes the multi-modal data-processing workflow (conducted by multimodal infor-mation extractor; Section 2): geographic boundary data partitions remote-sensing imagery into county-level NTL images and de-rived outage severity maps while also spatially grounding tabular records as geospatially segmented county-level data. By linking county-partitioned raster imagery and temporally aligned tabular records through shared administrative geographies, G provides the semantic substrate for GeoOutageBench questions that require SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al. 
+
+Table 2: Query classification by primary category. Coverage entries are template instances / SPARQL interpretations and are inclusive: an interpretation at a given hop depth also satisfies shallower depths. Ambiguous spans in the example questions are shown as surface form [ binding type ].                                                                                              
+
+> Coverage by hop depth Category 1-hop 2-hop Multi-hop Total Q / I Example question Underlying operation Spatial containment
+> 12 / 13 7 / 8 7 / 8 12 / 13 Which U.S. county [jurisdiction type ] is depicted in the power outage severity map [map type ]corresponding to a specific customer outage record [outage record ]? Region containment, jurisdiction lookup, or spatial aggregation
+> Spatial proximity
+> 4 / 9 4 / 9 4 / 9 4 / 9 On Ian’s Florida landfall day [event date ], what was the peak outage count in the southwest Florida county centered on Fort Myers [place descriptor ], and were any hurricanes active within the general area of the county [distance/radius abstraction ] that day? Buffer, distance filter, spatial join
+> Temporal interval
+> 11 / 14 3 / 3 2 / 2 11 / 14 How many and which hurricanes [cyclone type ] made landfall in Louisiana [jurisdiction ] in
+> August [month ] across all years? Temporal filtering, aggregation, and interval comparison
+> Event sequence 3 / 7 3 / 7 3 / 7 3 / 7 Which storm events [event type ] in Florida [state ] started before same-county EAGLE-I records [outage record source ] that later exceeded 50,000 outages [outage threshold ] on the same day [temporal alignment ]? Temporal precedence over event graph
+> Spatiotemporal co-occurrence
+> 3 / 7 3 / 7 2 / 4 3 / 7 Which counties [jurisdiction type ] in the hurricane-prone state [state descriptor ] had high socioeconomic vulnerability [vulnerability descriptor ] in a recent year [relative year descriptor ] and adozen or so wind-related storm events [event-count condition ] recorded that same year [temporal alignment ]? Spatial–temporal join
+> Multimodal evidence
+> 13 / 18 6 / 10 2 / 4 13 / 18 Which outage map [map type ] corresponds to this customer outage record [outage record ]? KG retrieval plus file, text, or image lookup
+> Scenario / what-if
+> 2 / 4 2 / 4 2 / 4 2 / 4 If Fort Myers’s county [focal place ] outage impact extended to neighboring counties [spatial relation ]during Hurricane Ian [event window ], which neighboring counties had high social vulnerability [vulnerability condition ] and high recorded outages [outage condition ]? Constrained scenario retrieval and impact exploration
+> Overall 48 / 72 28 / 48 22 / 38 48 / 72 48 benchmark questions drawn from 11 template families, with 72 reference SPARQL interpretations. Per-category counts are illustrative; corpus-level metrics are the reportable figures.
+
+multimodal and geospatiotemporal reasoning over power outages, environmental hazards, and community resilience. 
+
+## 2.2 Competency Query Classes 
+
+GeoOutageBench considers a set of built-in competency NL ques-tions Q for evaluation tasks. Questions in Q are constructed through human authoring and LLM-assisted generation. 
+
+NL query classes . GeoOutageBench characterizes the query com-plexity of NL questions in terms of the common practice of “hops” as in Web KGQA (length of traversal across entities via relations in KG), and spatiotemporal semantics. (1) One-hop queries involve direct retrieval or filtering over a single class or relation, while two-hop and multi-hop queries require the composition of multi-ple relations across linked entities. (2) Each NL 𝑞 ∈ Q is further assigned to one of seven categories. Together, these categories ad-dress a useful fragment of reasoning needed for outage and storm resilience analysis, from basic spatial or temporal filtering to com-plex linking of administrative geographies, hazard events, outage records, remote-sensing imagery, and vulnerability indicators. 
+
+NL query generation . The built-in competency question set Q
+
+contains manually designed questions and LLM-generated ones. It starts with a set of parameterized NL templates that specify hop and query category, with “placeholders” for specific targeted entities and predicates. (1) The human expert team consists of 11 researchers, with overlapping expertise spanning 4 environmental and energy system experts, 4 computer scientists, 2 geospatial experts, and 3 power domain experts. 1 The geospatial and power experts are requested to propose practical NL questions, and the 
+
+> 1
+
+Some researchers occupy multiple positions. 
+
+full team works together to make ground-truth interpretations. (2) For LLM-assisted question generation, an initial “draft” is generated from GeoOutageBench metadata and ontology conforming to the target query categories and template, and then manually augmented to introduce varied ambiguity and query-generation difficulty by human experts. 
+
+NL Query Interpretation . For the generated competency NL ques-tions, the CS experts provide validated ground-truth (“gold”) SPARQL interpretation sets RQ 𝑖 for each NL question 𝑞 𝑖 ∈ Q .The resulting reference query workload is RQ = Ð𝑁 𝑖 =1 RQ 𝑖 , and the ground-truth answers A = RQ (G) are derived by executing these queries on supporting multimodal and NoSQL data engines such as graph and document data systems ( e.g., GraphDB, MongoDB), with their answers passing the manual validation of domain experts. Table 2 summarizes the query categories, hop-complexity, ques-tion and interpretation counts, representative questions, and un-derlying operations used to process the query workload. 
+
+## 3 Benchmark Tasks and Evaluation Metrics 
+
+Given the benchmark-level configuration (Q , O, RQ , G, M, P) , an ML oracle ( e.g., an LLM) 𝑚 ∈ M deterministically maps each NL question 𝑞 𝑖 ∈ Q to a generated set of interpretations (i.e., syntacti-cally validated structured SPARQL queries) dRQ 𝑚 𝑖 . The correspond-ing generated query workload over Q is dRQ 𝑚 = Ð𝑁 𝑖 =1 dRQ 𝑚 𝑖 . Let the ground-truth interpretations (resp. answers) of 𝑞 𝑖 ∈ Q be RQ 𝑖 
+
+(resp. A𝑖 = RQ 𝑖 (G) , i.e., the union of the answers of each ground-truth SPARQL query in RQ 𝑖 ). The ground-truth queries for Q and answers, denoted as RQ = Ð𝑁 𝑖 =1 RQ 𝑖 and A = RQ (G) = Ð𝑁 𝑖 =1 A𝑖 ,are defined similarly. Table 3 summarizes the metrics used by the three benchmark tasks (see formal definitions in Appendix A.2.) GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+Table 3: Major benchmark tasks and Evaluation metrics                                   
+
+> Benchmark Tasks Evaluation object Example Metrics in PWhat the metrics measure Task 1: Geospatiotempo-ral NL to SPARQL
+> Predicted interpretations dR Q 𝑚 𝑖
+> compared with reference interpreta-tions R Q 𝑖
+> Syntax; Compat.; Exact; Alignment; Class F1; Prop. F1; Schema F1; Spatial F1; Temporal F1; ST F1 Whether 𝑚 generates executable, ontology-grounded SPARQL and preserves schema, spatial, and temporal constraints under ambiguity.
+> Task 2: Ontology Utility Workload term set 𝑇 𝑎 compared with ontology term set 𝑇 𝑜
+> Relevance / Query Coverage |𝑇𝑎 ∩𝑇𝑜 ||𝑇𝑎 |; Accuracy / Query Closeness |𝑇𝑎 ∩𝑇𝑜 ||𝑇𝑜 |
+> Whether Odeclares the GeoOutageOnto vocabulary required by the SPARQL workload and how densely each query activates that vocabulary.
+> Task 3: Multimodal Spa-tiotemporal KGQA
+> Predicted answer bA𝑚 𝑖 vs. ground-truth answer A𝑖 over G
+> Prec.; Rec.; Answer F1; Sel.; Hits@ 𝑘 ; MRR; nDCG@ 10 ; spatial correctness 𝑆 𝑖 ; temporal correctness 𝑇 𝑖 ; SRS Whether the executable query returns correct entities, values, records, images, or aggregates and preserves the question’s spatiotemporal intent.
+
+## 3.1 Task 1: Assessing LLM’s ability in Geospatiotemporal Understanding 
+
+The first benchmark task assesses LLMs M’s ability of geospa-tiotemporal understanding, by quantifying the quality of its query interpretation. We introduce three groups of metrics below, in terms of interpretation ambiguity, query accuracy, and accuracy of answers from interpreted queries compared with ground-truth SPARQL queries and answers. 
+
+Interpretation Ambiguity . For each question 𝑞 𝑖 ∈ Q , the evalua-tor records the number of ground-truth interpretations |RQ 𝑖 | and generated interpretations |dRQ 𝑚 𝑖 |; questions with multiple interpre-tations indicate ambiguity in the NL-to-SPARQL mapping. 
+
+Query Accuracy . We measure the accuracy of model 𝑚 by compar-ing generated SPARQL interpretations dRQ 𝑚 𝑖 with ground-truth in-terpretations RQ 𝑖 . The evaluator reports normalized exact original-query match, interpretation alignment, syntactic validity, and end-point compatibility with G. In the Task 1 workflow, interpretation alignment is the structural pair-selection score used for each candi-date SPARQL interpretation generated by NL2STQ per 𝑞 𝑖 . For each generated–gold pair ( ˆ𝑟, 𝑟 ) ∈ dRQ 𝑚 𝑖 × RQ 𝑖 , the evaluator extracts class, property, spatial-constraint, and temporal-constraint feature sets, computes the corresponding F1 scores, and takes the maximum average score over all pairs (interpretations) for 𝑞 𝑖 . Thus, alignment measures whether an interpretation preserves the ontology ground-ing and spatiotemporal constraints of a gold counterpart, rather than whether its syntax exactly matches a gold counterpart. 
+
+Schema-level F1 measures . GeoOutageBench also provides schema-level query accuracy by extracting semantic components from inter-preted and ground-truth SPARQL queries, and reporting F1 scores for classes, properties, schema-linking, spatial constraints, tem-poral constraints, and spatiotemporal constraints. For ambiguous questions, every model-generated interpretation is scored against its ground-truth counterpart, and the best aligned generated–gold pair provides the schema-level scores. This group includes three metrics: class F1, property F1, and schema-linking F1. Class and property F1 compare the classes and object or datatype properties in ground-truth and interpreted queries. Schema-linking F1 is the harmonic mean of class and property F1, penalizing outputs that recover only entities or relations. 
+
+Quality of Query Answers . GeoOutageBench provides a rich set of evaluation metrics for quality of query answers, including (1) commonly used precision, recall, and F1 measures, and (2) Hits@1, Hits@5, Hits@10, MRR, nDCG@10, spatial correctness, temporal correctness, and SRS, to distinguish the assessment of entity-level correctness and spatiotemporal-focused interpretation. 
+
+GeoOutageBench can also be easily configured to perform in-depth, finer-grained assessment for spatiotemporal reasoning, with performance metric P specified as follows. 
+
+Spatiotemporal-focused Metrics . For spatial and temporal reason-ing, P specifies three F1 scores for individual competency query classes. This includes spatial-constraint, temporal-constraint, and spatiotemporal-constraint. Spatial-constraint F1 captures con-straints such as geometry vectors, coordinates, distance func-tions, and spatial predicates; temporal-constraint F1 captures tem-poral literals, datatype use, date operators, and interval filters. Spatiotemporal-constraint F1 is the harmonic mean of spatial and temporal F1. The benchmark reports the macro-average of 𝑆𝑇 𝐹 1𝑖 across ques-tions and the corpus-level harmonic mean of macro spatial- and temporal-constraint F1. The question-level score is stricter because it requires both constraint types to be present within the same se-lected interpretation, rather than aggregating them independently across the benchmark. We provide a detailed description of the metrics in Appendix A.2. 
+
+Evaluation method . The assessment is triggered by a configura-tion (Q , O, ∅, G, M, P) , with P specified as ambiguity and accu-racy (a vector of accuracy metrics), by default. GeoOutageBench 
+
+invokes operator NL2STQ (𝑞 𝑖 , O, ∅, G, 𝑚, P) (see Appendix A.1) with 𝑞 𝑖 ranging over Q and 𝑚 over M to produce an assessment report. 
+
+## 3.2 Task 2: Ontology Utility Evaluation 
+
+Task 2 aims to evaluate whether an ontology O (e.g., GeoOuta-geOnto) is usable and useful by measuring how well it supplies the domain vocabulary required by the reference interpretations RQ 
+
+or model-generated interpretations dRQ 𝑚 .
+
+Evaluation Metric . Given an interpretation workload RQ (or 
+
+dRQ 𝑚 ), let 𝑇 𝑎 denote the ontology terms occurring in the supplied SPARQL interpretations. For a scope radius ℎ, we construct the scoped ontology term set 𝑇 𝑜 as follows: for each class label 𝑙 ∈ 𝑇 𝑎 
+
+with an instance 𝑣 ∈ G typed by 𝑙 , 𝑇 𝑜 includes all ontology terms in 
+
+O associated with nodes reachable within ℎ hops of 𝑣 . Intuitively, 
+
+𝑇 𝑜 includes all the concept classes that may contribute in answering 
+
+Q within a scope specified by ℎ-hop neighbors. We report two com-plementary metrics: Query Coverage , defined as |𝑇 𝑎 ∩𝑇 𝑜 ||𝑇 𝑎 | , and Query Closeness , defined as |𝑇 𝑎 ∩𝑇 𝑜 ||𝑇 𝑜 | . The coverage measure quantifies the SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al. 
+
+fraction of workload terms that are also mentioned in the ontology; higher values are preferable. The closeness penalizes irrelevant concepts not seen in Q; the larger, the better. 
+
+Evaluation Method . Task 2 is triggered by configuration 
+
+(Q , O, RQ , G, M, P) . If RQ = ∅, it invokes NL2STQ to generate 
+
+dRQ 𝑚 from Q and uses the generated interpretations as the query workload. It then computes Query Coverage and Query Closeness and may call Q2A or OntoQ2A for answer-accuracy comparison. The computation pipeline adapts OntoCheck [21], an ontology-assessment package, to support ontology-grounded SPARQL pro-cessing. 
+
+## 3.3 Task 3: Multimodal Spatiotemporal KGQA 
+
+Task 3 evaluates the impact of multimodal data and queries on answer quality by comparing structured KGQA workflows ( Q2A 
+
+or OntoQ2A ) with multimodal counterparts that explicitly retrieve multimodal information ( mmQ2A or mmOntoQ2A ). Table 3 sum-marizes the answer-quality metrics. 
+
+Evaluation Metric . Task 3 uses the answer-quality metrics listed in Task 1, with a few KGQA-specific additions. Sel. denotes the selected interpretation-pair score used when multiple generated and reference interpretations are available. Spatial correctness 𝑆 𝑖 
+
+and temporal correctness 𝑇 𝑖 check whether the returned answers preserve the expected spatial and temporal constraints, and the Spa-tiotemporal Relevance Score (SRS) summarizes this spatiotemporal agreement at the answer level. 
+
+Evaluation Method . Task 3 is triggered by a configuration 
+
+(Q , O, RQ , G, M, P) . GeoOutageBench executes each reference or generated interpretation over G with Q2A , OntoQ2A , mmQ2A , or 
+
+mmOntoQ2A , compares bA 𝑚 𝑖 with A𝑖 , and reports macro-averages over the best selected answer pair for each 𝑞 𝑖 ∈ Q .
+
+## 4 Experimental Evaluation 
+
+We next make a case to demonstrate GeoOutageBench in assess-ing spatiotemporal KGQA for power outage event analysis. We initialize the configuration C by default, where (1) O and G refer to GeoOutageOnto and GeoOutageKG, respectively, (2) Q is a sam-pled competency query workload spanning all the categories, (3) 
+
+M includes three frontier LLMs: GPT-5.5 with Extended Thinking, Gemini 3.1 Pro with Extended Thinking, and Claude Opus 4.7 with Extra Effort and Adaptive Thinking; and (4) P is selected to match the benchmark tasks. 
+
+Environment . GeoOutageBench is developed in Python with the RDFLib [20] library. All tests are conducted on Intel(R) Core(TM) i5-14400F CPU @ 2.50GHz, 32 GB Memory, 10 cores, and 1 8GB NVIDIA(R) RTX(TM) 4060 GPU. Our source code and datasets are made available 2. A live demo of GeoOutageBench, as well as additional resources of the GeoResilience project, will be available on our sandbox website 3.
+
+Evaluation-1: Assessing LLM for Power Outage KGQA . The first evaluation measures whether a model 𝑚 ∈ M can translate an ambiguous NL question 𝑞 𝑖 about power-outage and storm-event 
+
+> 2https://github.com/UCF-SAGE/GeoOutageBench
+> 3https://purl.archive.org/georesilience
+
+analysis into ontology-grounded SPARQL. We evaluate Qeval ⊆ Q 
+
+with |Q eval | = 48, where each 𝑞 𝑖 is associated with at most 3 valid SPARQL interpretations in RQ 𝑖 . Table 4 summarizes corpus-level results, and Table 5 reports a finer-grained ablation assess-ment over spatial (S), temporal (T), spatiotemporal (ST), and non-spatiotemporal (Non-ST). 
+
+Interpretation ambiguity . The 48-question evaluation set contains 72 reference SPARQL interpretations, with each 𝑞 𝑖 associated with at most three valid readings. Gemini 3.1 Pro generated the fewest interpretations (51), while GPT-5.5 generated 60 and Claude Opus 4.7 generated 61. We treat these counts as an ambiguity diagnos-tic: fewer generated interpretations reduce downstream execution cost, whereas larger interpretation sets can cover more alternative readings of the same NL question. 
+
+Query accuracy . We next report the query accuracy (the first three columns of Table 4). All three LLMs in M generate syntactically valid SPARQL interpretations. GPT-5.5 and Claude Opus 4.7 also achieve full endpoint compatibility with G, while Gemini 3.1 Pro achieves 0.979 compatibility. Exact query-text match is near zero, which is expected because valid interpretations may differ in vari-able names, projections, join order, filters, or the selected reading of an ambiguous NL question. 
+
+Alignment & schema performance. Interpretation alignment, de-fined in Section 3.1, is therefore a more informative Task 1 signal than exact match. Claude Opus 4.7 obtains the highest alignment score (0.805), followed by Gemini 3.1 Pro (0.749) and GPT-5.5 (0.745). At the schema level, Gemini achieves the highest class F1 (0.834), but Claude leads on property F1 (0.774) and schema-linking F1 (0.772), showing stronger joint recovery of classes and properties. 
+
+Spatiotemporal performance. Claude Opus 4.7 also leads the corpus-level spatial-, temporal-, and spatiotemporal-constraint F1 scores, with 0.886, 0.754, and 0.711, respectively. GPT-5.5 is close on spatial grounding (0.870) and reaches 0.662 ST F1, while Gemini 3.1 Pro is lower on the same spatiotemporal measures (0.783 spatial F1, 0.675 temporal F1, and 0.578 ST F1). The results in Table 5 reinforce this pattern: Claude performs best on explicitly spatiotemporal questions, with 0.842 alignment and 0.850 ST F1 on the ST axis. 
+
+Overall performance . Overall, Claude Opus 4.7 provides the strongest Task 1 performance for NL spatiotemporal understand-ing because it combines the best alignment, schema-linking, and spatiotemporal-constraint scores. GPT-5.5 is the most competitive alternative on execution reliability, matching Claude on syntax and endpoint compatibility and remaining close on spatial F1. Gem-ini 3.1 Pro is strongest at class recovery and is the only model with a nonzero exact-match score, but its lower compatibility and spatiotemporal-constraint scores reduce its overall performance on ontology-grounded spatiotemporal interpretation. We report details ( e.g., prompts) in Appendix A.1. 
+
+Evaluation-2: Ontology Utility Evaluation . We evaluated the coverage of O over the SPARQL workload using OntoCheck’s task-based framework [21]. The query workload contains 72 query inter-pretations. For the case of GeoOutageOnto O, the Query Coverage is 1.0: every extracted goo: domain term in the query workload has been declared in O, leaving no extracted GeoOutageOnto term GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+Table 4: Task 1 macro results for NL2SPARQL over 48 GeoOutageBench questions. 
+
+Model Syntax Compat. Exact Align. Class F1 Prop. F1 Schema F1 Spatial F1 Temporal F1 ST F1 GPT-5.5 1.000 1.000 0.000 0.745 0.716 0.679 0.678 0.870 0.715 0.662 Gemini 3.1 Pro 1.000 0.979 0.021 0.749 0.834 0.703 0.737 0.783 0.675 0.578 Claude Opus 4.7 1.000 1.000 0.000 0.805 0.807 0.774 0.772 0.886 0.754 0.711 
+
+Table 5: Assessment of LLMs in Task 1, with finer-grained analysis over spatiotemporal axis. S abbreviates Spatial, T abbreviates Temporal, and ST abbreviates Spatiotemporal. 
+
+Model Axis Align. S F1 T F1 ST F1 GPT-5.5 Non-ST 0.585 1.000 0.250 0.250 GPT-5.5 S 0.699 0.969 0.625 0.607 GPT-5.5 T 0.751 1.000 0.626 0.676 GPT-5.5 ST 0.776 0.812 0.807 0.725 Gemini 3.1 Pro Non-ST 0.688 1.000 0.250 0.250 Gemini 3.1 Pro S 0.697 0.875 0.500 0.375 Gemini 3.1 Pro T 0.734 0.750 0.609 0.485 Gemini 3.1 Pro ST 0.771 0.738 0.780 0.682 Claude Opus 4.7 Non-ST 0.688 1.000 0.250 0.250 Claude Opus 4.7 S 0.727 0.875 0.625 0.500 Claude Opus 4.7 T 0.785 0.750 0.639 0.485 Claude Opus 4.7 ST 0.842 0.891 0.863 0.850 unanchored in the schema. This result is expected given the co-design of GeoOutageOnto and the benchmark workload. The Query Closeness, which measures schema-utilization, ranges from 0.0196 for simple single-predicate lookups to 0.1373 for the most composi-tionally complex queries, with a mean of 0.0673. This range reflects benchmark heterogeneity rather than an ontology weakness: simple queries activate a small subset of the vocabulary, whereas multi-hop, spatiotemporal, and aggregative queries require broader schema coverage. 
+
+Case study on competency queries . We present three query-case analyses of LLM-generated interpretations and compare their an-swers. (1) Queries 70–72 (Average Query Closeness = 0.1078) are different interpretations for the same NL question “ Which counties in the hurricane-prone state had high socioeconomic vulnerability in a recent year, and a dozen or so wind-related storm events recorded that year? ” with different predicates posed on state, year, vulnerability threshold, event type, and count; all conform to the same GeoOuta-geOnto vocabulary. (2) Queries 22–24 (Average Query Closeness = 0.0490) resolve “ around Hurricane Ian ” as a 15-day impact win-dow (2022-09-23 to 2022-10-08), a two-month disruption period (2022-08-28 to 2022-10-28), or the Florida landfall date (2022-09-28 to 2022-09-29 UTC), while consistently grounding Lee County severity maps through ontology-defined imagery classes and spa-tial, temporal, and map-association properties. (3) Queries 37–39 (Average Query Closeness = 0.0686) resolve “ within the general area of Cleveland County ” to within a 10 km radius, a 50 km radius, and a buffered Moore tornado event window, respectively. These observations support two conclusions. First, the consis-tently high query coverage indicates that O covers all extracted goo: 
+
+domain terms in the query workload, suggesting that GeoOuta-geOnto provides a grounded schema reference for power-outage analysis over the spatiotemporal GeoOutageKG G. Second, query-level closeness variation shows that different workload types ac-tivate different portions of O: simple lookups use small schema subsets, while multi-hop, spatiotemporal, multimodal, and aggrega-tive queries use broader vocabulary. The per-query scores make this variation visible, including the multimodal evidence interpre-tations in queries 46–48 and the alternative interpretations of the ambiguous outage-and-storm question in queries 70–72. A full list of per-query scores is reported in Table 7, Appendix A.2. 
+
+Evaluation-3: Multimodal KGQA . The third evaluation executes 
+
+dRQ 𝑚 𝑖 against G and compares the generated answer set bA 𝑚 𝑖 against ground-truth answers A𝑖 . This task differs from query accuracy in Task 1, because a query can be syntactically valid and structurally plausible yet still return an irrelevant answer. Table 6 emphasizes that answer-level evaluation over A𝑖 is more discriminative than syntax or executability. Claude Opus 4.7 obtains the highest answer F1 and SRS, while GPT is comparable in answer F1 and slightly higher on Hits@1; Gemini 3.1 Pro lags in answer F1 despite strong Task 1 syntax and class-recovery scores. This gap shows that correct ontology vocabulary alone does not ensure KGQA correctness: small errors in property choice, temporal filter-ing, aggregation, or administrative joins can preserve a plausible query form while changing the returned answers. The relatively higher SRS scores for GPT and Claude indicate that many generated queries preserve the broad spatial and tem-poral intent even when the answer rows differ from gold results. This is typically because the query relaxes predicates, omits an ag-gregation, or returns less relevant evidence such as outage records rather than derived outage maps. Complexity and template break-downs show the same observation. Two-hop questions are much easier than multi-hop questions for GPT (0.992 vs. 0.310 answer F1) and Claude (0.833 vs. 0.359), while Gemini drops most sharply on multi-hop questions (0.151). Template-level results show that direct lookup and outage-ranking queries are generally more reli-able, while storm-event/SVI threshold queries are model-dependent, with strong performance for Claude but weaker results for Gem-ini. In contrast, hurricane-landfall ranking and event-sequence questions remain difficult because they require coordinated event ranking, spatial aggregation, storm semantics, and a proper setting of spatiotemporal-sensitive vulnerability thresholds. 
+
+Single Modal vs. Multimodal Querying: A Case Study . We use the ambiguous outage-and-storm question from Example 1 to illustrate what changes when KGQA moves from a single-modal, tabular SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al. 
+
+Table 6: Task 3 results over 48 questions (Sel.: interpretation selection; SRS: Spatiotemporal Relevance Score) 
+
+Model Prec. Rec. Answer F1 Sel. Hits@1 Hits@5 Hits@10 MRR nDCG@10 SRS GPT-5.5 0.529 0.582 0.522 0.754 0.542 0.583 0.583 0.553 0.530 0.785 Gemini 3.1 Pro 0.323 0.460 0.314 0.669 0.417 0.438 0.438 0.424 0.387 0.739 Claude Opus 4.7 0.546 0.545 0.540 0.792 0.521 0.542 0.542 0.531 0.530 0.850 Single-modal KGQA   
+
+> Question variant
+> Which Florida counties in 2022 had high socioeconomic vul-nerability and at least twelve wind-related storm events?
+> SVIRecord
+> county-year score
+> StormEvent
+> wind count
+> County
+> answer rows
+> Answer surface
+> county bindings, SVI records, and event counts
+> Multimodal KGQA
+> Question variant
+> For those counties, which NTL images and derived outage maps around Hurricane Ian corroborate outage severity?
+> County
+> tabular answer
+> NTLImage
+> acquisition date
+> OutageMap
+> radiance loss
+> NTL 2022-09-29 Map 2022-09-29 Map 2022-09-30
+> Answer surface
+> county-level bindings plus date-aligned raster evidence for visual inspection, retrieval, and answer-level grading. add image-evidence constraints
+
+Figure 5: Single- versus multimodal querying for the outage-and-storm case study. The multimodal variant supplements county-level tabular answers with date-aligned NTL images and outage maps, enabling evidence-aware visual inspection and richer answer-level assessment. 
+
+answer surface to a multimodal one. A single-modal variant asks: 
+
+“Which Florida counties in 2022 had high socioeconomic vulnerability and at least twelve wind-related storm events?” This query returns county, CDC SVI, and NOAA Storm Events bindings, but no remote-sensing evidence of the outage footprint, leading to potentially biased or less interpretable results. The multimodal variant keeps the same county-level analytic intent but adds an evidence requirement: “For those counties, which nighttime-light images and derived outage maps around Hurri-cane Ian corroborate outage severity?” In this setting, mmQ2A or 
+
+mmOntoQ2A returns not only the county, SVI, and storm-event bindings, but also date-aligned goo:NTLImage and goo:OutageMap 
+
+assets linked through the same county and time constraints. Figure 5 displays how additional image evidence changes the assessment target: the benchmark can grade entity-level correctness while also checking whether the retrieved multimodal bundle supports the intended spatiotemporal explanation. This pattern is useful for downstream resilience applications in which analysts need both ranked county answers and inspectable evidence for outage extent, recovery timing, or vulnerability-aware resource prioritization. 
+
+## 5 Conclusions 
+
+We have introduced GeoOutageBench , a domain-specific KGQA benchmark for evaluating LLM-based spatiotemporal KGQA for out-age, social-vulnerability, and storm-resilience analysis. The bench-mark curates multimodal data into a geospatiotemporal knowledge graph (GeoOutageKG) and ontology (GeoOutageOnto). It supports automatic generation of diverse competency queries that cover seven geospatiotemporal templates and provides a built-in library of primitive operators for efficient assessment. It provides com-prehensive performance metrics to assess LLMs’ spatiotemporal understanding, usability and utility of ontologies, and multimodal KGQA. Our experimental evaluation verifies that Claude Opus 4.7 achieves the best overall performance in NL spatiotemporal under-standing, while GPT-5.5 remains competitive on executability and spatial grounding, and Gemini 3.1 Pro is strongest on class recovery. Meanwhile, our query-level and finer-grained assessment verifies the effectiveness of GeoOutageOnto and multimodal GeoOutageKG for improving the answer accuracy for power outage analysis. Future work will broaden the assessment to richer query se-mantics, including cross-modal and cross-model (hybrid raster-and-tabular) retrieval, counterfactual spatiotemporal reasoning, and other causes of energy disruption such as cyberattacks and grid overload. We will also extend the Black Marble and EAGLE-I layers beyond the sampled Florida counties. 
+
+## Acknowledgments 
+
+This material is based upon research in the Materials Data Science for Stockpile Stewardship Center of Excellence (MDS3-COE), and supported by the Department of Energy’s National Nuclear Security Administration under Award Number(s) DE-NA0004104. The au-thors thank the CWRU University Technology center and the UCF Advanced Research Computing Center for their High Performance Computing (HPC) resources, which were utilized in this work. 
+
+## Declaration of the use of Generative AI 
+
+The usage of Large Language Models and Agents, including Chat-GPT, Google Gemini, Claude, and coding agents such as OpenAI Codex, was employed to automate code and experiment script gen-eration, with human refinement and editing. LLMs were also used to help in refining portions of text, tables, and figures. GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+## References 
+
+[1] Alejandro Aparcedo, Christian Lopez, Abhinav Kotta, and Mengjie Li. 2024. Multimodal Power Outage Prediction for Rapid Disaster Response and Resource Allocation. In 2024 IEEE 52nd Photovoltaic Specialist Conference (PVSC) . 1093–1099. doi:10.1109/PVSC57443.2024.10749545 [2] Sören Auer, Dante A. C. Barone, Cassiano Bartz, Eduardo G. Cortes, Mo-hamad Yaser Jaradeh, Oliver Karras, Manolis Koubarakis, Dmitry Mouromtsev, Dmitrii Pliukhin, Daniil Radyush, Ivan Shilin, Markus Stocker, and Eleni Tsalap-ati. 2023. The SciQA Scientific Question Answering Benchmark for Scholarly Knowledge. Scientific Reports 13, 1 (2023), 7240. doi:10.1038/s41598-023-33607-z [3] Robert Battle and Dave Kolas. 2012. Enabling the geospatial Semantic Web with Parliament and GeoSPARQL. Semantic Web 3 (Oct. 2012), 355–370. doi:10.3233/ SW-2012-0065 [4] Christa Brelsford, Sarah Tennille, Aaron Myers, Supriya Chinthavali, Varisara Tansakul, Matthew Denman, Mark Coletti, Joshua Grant, Sangkeun Lee, Karl Allen, et al. 2024. A dataset of recorded electricity outages by United States county 2014–2022. Scientific Data 11, 1 (2024), 271. doi:10.1038/s41597-024-03095-5 [5] Dan Brickley. 2003. Basic Geo (WGS84 lat/long) Vocabulary. W3C Semantic Web Interest Group. http://www.w3.org/2003/01/geo/wgs84_pos# Accessed: 2026-05-25. [6] Martin Böckling, Heiko Paulheim, and Sarah Detzler. 2024. Comparing Spatial-Temporal Knowledge Graph on Spatial Downstream Tasks. In Proceedings of the 32nd ACM International Conference on Advances in Geographic Information Systems . 581–584. doi:10.1145/3678717.3691321 [7] Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. 2022. CDC/ATSDR Social Vulnerability Index 2022 Database: U.S. https://www.atsdr. cdc.gov/place-health/php/svi/svi-data-documentation-download.html. [8] Tony A. Cole, David W. Wanik, Andrew L. Molthan, Miguel O. Román, and Robert E. Griffin. 2017. Synergistic Use of Nighttime Satellite Data, Electric Utility Infrastructure, and Ambient Population to Improve Power Outage Detections in Urban Areas. Remote Sensing 9, 3 (2017). doi:10.3390/rs9030286 [9] Simon Cox and Chris Little. 2017. Time Ontology in OWL. W3C Recommendation. https://www.w3.org/TR/owl-time/ Available at https://www.w3.org/TR/owl-time/. [10] Haodong Cui, Shi Qiu, Yicheng Wang, Yu Zhang, Zhaoyan Liu, Kirsi Karila, Jianxin Jia, and Yuwei Chen. 2023. Disaster-Caused Power Outage Detection at Night Using VIIRS DNB Images. Remote Sensing 15, 3 (2023). doi:10.3390/ rs15030640 [11] Mohnish Dubey, Debayan Banerjee, Abdelrahman Abdelkawi, and Jens Lehmann. 2019. LC-QuAD 2.0: A Large Dataset for Complex Question Answering over Wikidata and DBpedia. In The Semantic Web – ISWC 2019: 18th International Semantic Web Conference, Auckland, New Zealand, October 26–30, 2019, Proceed-ings, Part II (Auckland, New Zealand). Springer-Verlag, Berlin, Heidelberg, 69–78. doi:10.1007/978-3-030-30796-7_5 [12] Avrilia Floratou, Fotis Psallidas, Fuheng Zhao, Shaleen Deep, Gunther Hagleither, Wangda Tan, Joyce Cahoon, Rana Alotaibi, Jordan Henkel, Abhik Singla, et al. 2024. Nl2sql is a solved problem... not!. In CIDR .[13] Ethan Frakes, Yinghui Wu, Roger H. French, and Mengjie Li. 2025. GeoOutageKG: A Multimodal Geospatiotemporal Knowledge Graph for Multiresolution Power Outage Analysis. In The Semantic Web – ISWC 2025 , Daniel Garijo, Sabrina Kirrane, Angelo Salatino, Cogan Shimizu, Maribel Acosta, Andrea Giovanni Nuzzolese, Sebastián Ferrada, Thibaut Soulard, Kouji Kozaki, Hideaki Takeda, and Anna Lisa Gentile (Eds.). Springer Nature Switzerland, Cham, 221–239. arXiv:2507.22878 [cs.IR] doi:10.1007/978-3-032-09530-5_13 [14] GOES-R Series Program. 2019. NOAA GOES-R Series Advanced Baseline Imager (ABI) Level 0 Data. NOAA National Centers for Environmental Information. doi:10.25921/tvws-w071 [15] International Organization for Standardization and International Electrotechnical Commission. 2021. ISO/IEC 21838-2:2021: Information technology – Top-level ontologies (TLO) – Part 2: Basic Formal Ontology (BFO). https://www.iso.org/ standard/74572.html. [16] Krzysztof Janowicz, Armin Haller, Simon J. D. Cox, Danh Le Phuoc, and Maxime Lefrançois. 2019. SOSA: A lightweight ontology for sensors, obser-vations, samples, and actuators. Journal of Web Semantics 56 (2019), 1–10. doi:10.1016/j.websem.2018.06.003 [17] Mark Jensen, Giacomo De Colle, Sean Kindya, Cameron More, Alexander P. Cox, and John Beverley. 2024. The Common Core Ontologies. arXiv:2404.17758 [cs] doi:10.48550/arXiv.2404.17758 [18] Virginia Kalb, Z. Wang, M. Román, Q. Sun, A. Molthan, and L. Schultz. 2018. Monitoring disaster-related power outages using NASA Black Marble nighttime light product. ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences XLII-3 (Apr. 2018), 1853–1856. doi:10.5194/isprs-archives-XLII-3-1853-2018 [19] Catherine Kosten, Philippe Cudré-Mauroux, and Kurt Stockinger. 2023. Spi-der4SPARQL: A Complex Benchmark for Evaluating Knowledge Graph Question Answering Systems. In 2023 IEEE International Conference on Big Data (BigData) .5272–5281. doi:10.1109/BigData59044.2023.10386182 [20] Daniel Krech, Gunnar Aastrand Grimnes, Graham Higgins, Nicholas Car, Jörn Hees, Iwan Aucamp, Niklas Lindström, Natanael Arndt, Ashley Sommer, Ed-mond Chuc, Ivan Herman, Alex Nelson, Jamie McCusker, Tom Gillespie, Thomas Kluyver, Florian Ludwig, Pierre-Antoine Champin, Mark Watts, Urs Holzer, Ed Summers, Whit Morriss, Donny Winston, Drew Perttula, Filip Kovacevic, Remi Chateauneu, Harold Solbrig, Benjamin Cogrel, and Veyndan Stuart. 2025. RDFLib .doi:10.5281/zenodo.6845245 [21] Rishabh Kundu, Redad Mehdi, Van D. Tran, Ethan Frakes, Abhishek Daundkar, Maliesha Sumudumalie, Vibha S. Mandayam, Jacob A. Lample, Mengjie Li, Laura S. Bruckman, Erika I. Barcelos, Alp Sehirlioglu, Roger H. French, and Yinghui Wu. 2025. OntoCheck: Query-Driven Ontology Assessments for Scientific Domain Applications. https://pypi.org/project/OntoCheck/. Python software package. [22] Bo Li, Junwei Ma, Olufemi A. Omitaomu, and Ali Mostafavi. 2026. Revealing growing and disparate vulnerability in the U.S. power system: A spatiotemporal analysis of nationwide outages from 2014 to 2023. International Journal of Disaster Risk Reduction 133 (Feb. 2026), 105980–1856. doi:10.1016/j.ijdrr.2025.105980 [23] Joshua Lieberman, Raj Singh, and Chris Goad. 2007. W3C Geospatial Ontologies .W3C Incubator Group Report. World Wide Web Consortium. https://www.w3. org/2005/Incubator/geo/XGR-geo-ont-20071023/ Accessed: 2026-05-25. [24] Ozan Baris Mulayim, Avia Anwar, Umut Mete Saka, Lazlo Paul, Anand Krishnan Prakash, Gabe Fierro, Marco Pritoni, and Mario Bergés. 2025. BuildingQA: A Benchmark for Natural Language Question Answering over Building Knowledge Graphs. In Proceedings of the 12th ACM International Conference on Systems for Energy-Efficient Buildings, Cities, and Transportation (Colorado School of Mines, Golden, CO, USA) (BuildSys ’25) . Association for Computing Machinery, New York, NY, USA, 65–75. doi:10.1145/3736425.3770097 [25] NASA Earthdata. 2026. Aqua. https://www.earthdata.nasa.gov/data/platforms/ space-based-platforms/aqua. [26] NASA Earthdata. 2026. Terra. https://www.earthdata.nasa.gov/data/platforms/ space-based-platforms/terra. [27] National Hurricane Center. 2026. Atlantic Hurricane Database (HURDAT2) 1851-2025. National Oceanic and Atmospheric Administration (NOAA). https: //www.nhc.noaa.gov/data/ [28] NOAA National Centers for Environmental Information. 2026. Storm Events Database. https://www.ncei.noaa.gov/stormevents/. [29] Ontotext. 2026. GraphDB: GraphDB 11.3 Documentation. https://graphdb. ontotext.com/documentation/11.3/ [30] Balashanmuga Priyan Rajamohan, Alexander C. Harding Bradley, Van D. Tran, Jonathan E. Gordon, Hayden W. Caldwell, Redad Mehdi, Gabriel Ponon, Quynh D. Tran, Ozan Dernek, Jarod Kaltenbaugh, Benjamin G. Pierce, Raymond Wieser, Weiqi Yue, Kiefer Lin, Jiana Kambo, Christian Lopez, Arafath Nihar, Daniel J. Sav-age, Donald W. Brown, Hemant Sharma, Brian Giera, Pawan K. Tripathi, Yinghui Wu, Mengjie Li, Kristopher O. Davis, Laura S. Bruckman, Erika I. Barcelos, and Roger H. French. 2025. Materials Data Science Ontology (MDS-Onto): Unifying Domain Knowledge in Materials and Applied Data Science. Scientific Data 12 (2025), 628. doi:10.1038/s41597-025-04938-5 [31] Miguel O. Román, Zhuosen Wang, Qingsong Sun, Virginia Kalb, Steven D. Miller, Andrew Molthan, Lori Schultz, Jordan Bell, Eleanor C. Stokes, Bhartendu Pandey, Karen C. Seto, Dorothy Hall, Tomohiro Oda, Robert E. Wolfe, Gary Lin, Navid Golpayegani, Sadashiva Devadiga, Carol Davidson, Sudipta Sarkar, Cid Praderas, Jeffrey Schmaltz, Ryan Boller, Joshua Stevens, Olga M. Ramos González, Elizabeth Padilla, José Alonso, Yasmín Detrés, Roy Armstrong, Ismael Miranda, Yasmín Conte, Nitza Marrero, Kytt MacManus, Thomas Esch, and Edward J. Masuoka. 2018. NASA’s Black Marble nighttime lights product suite. Remote Sensing of Environment 210 (2018), 113–143. doi:10.1016/j.rse.2018.03.017 [32] Ron Rudnicki. 2019. An Overview of the Common Core Ontologies . Technical Report. CUBRC, Inc., Buffalo, NY. https://www.nist.gov/document/nist-ai-rfi-cubrcinc004pdf [33] Varisara Tansakul, Aaron Myers, Sarah Tennille, Mitchell Broughton, Matthew Denman, Alec Hamaker, Jonathan Huihui, Evelyn Johnson, Kyle Medlen, Robert Moncrief, et al. 2024. EAGLE-I Power Outage Data 2023. doi:10.13139/OLCF/ 2297398 [34] Varisara Tansakul, Aaron Myers, Sarah Tennille, Matthew Denman, Alec Hamaker, Jonathan Huihui, Kyle Medlen, Karl Allen, Daniel Redmon, Supriya Chinthavali, et al. 2023. EAGLE-I Power Outage Data 2014 - 2022. doi:10.13139/ ORNLNCCS/1975202 [35] Varisara Tansakul, Aaron Myers, Sarah Tennille, Matthew Denman, Jonathan Huihui, Kyle Medlen, Midgie MacFarland, Mitchell Broughton, Julio Ibanez, Radley Ciego, et al. 2026. EAGLE-I Power Outage Data 2025. doi:10.13139/ ORNLNCCS/3012826 [36] Varisara Tansakul, Aaron Myers, Sarah Tennille, Matthew Denman, Jonathan Huihui, Kyle Medlen, Midgie MacFarland, Julio Ibanez, Radley Ciego, and Faith Quinn. 2025. EAGLE-I Power Outage Data 2024. doi:10.13139/OLCF/2500278 [37] U.S. Census Bureau. 2025. TIGER/Line Shapefiles. https://www.census.gov/ geographies/mapping-files/time-series/geo/tiger-line-file.html. [38] Ricardo Usbeck, Ria Hari Gusmita, Axel-Cyrille Ngonga Ngomo, and Muhammad Saleem. 2018. 9th Challenge on Question Answering over Linked Data (QALD-9) SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA Frakes et al.      
+
+> (invited paper). In Semdeep/NLIWoD@ISWC .https://api.semanticscholar.org/ CorpusID:53220210 [39] World Wide Web Consortium. 2004. XML Schema Part 1: Structures Second Edition. W3C Recommendation. https://www.w3.org/TR/xmlschema-1/ [40] Ruiyi Yang, Flora D. Salim, and Hao Xue. 2024. SSTKG: Simple Spatio-Temporal Knowledge Graph for Intepretable and Versatile Dynamic Information Embed-ding. In Proceedings of the ACM Web Conference 2024 . 551–559. doi:10.1145/ 3589334.3645441
+
+## A Appendix A.1 Query-Interpretation: Prompts 
+
+Task 1 uses ontology-grounded prompts to generate the query inter-pretations evaluated in Sections 3 and 4. This process implements the operator NL2STQ with the following steps. (1) The LLM re-ceives a JSON prediction template with benchmark metadata, the GeoOutageOnto ontology in Turtle, and a compact vocabulary file containing core classes, properties, prefixes, and domain/range; gold SPARQL queries are not provided. (2) The interpreter shares the template and consults the LLM to fill sparql_query with the best default interpretation. To mitigate ambiguity, it includes the query set (a memory space sparql_interpretations ) containing syntactically correct SPARQL queries. The prompt constrains the generated SPARQL interpretation to align with the ontology vocabulary when available, requires distinct interpretations for different spatial, temporal, semantic, or spatiotemporal readings, and discourages variants that merely rename variables or reorder triples. It also standardizes SPARQL style through required prefixes, bound projected variables, ISO 8601 
+
+xsd:dateTime filters, half-open day-level ranges, aggregation and ranking rules, and namespace requirements. Figure 6 summarizes the operative structure of the prompt; the full prompt is available in the GitHub repository. Internally, the prompt asks the model to identify answer type, ontology class, con-necting properties, spatial or temporal filters, aggregation, ranking, multimodal evidence, and ambiguity, but the returned output is only the completed JSON prediction file. 
+
+## A.2 Evaluation Metrics 
+
+GeoOutageBench evaluates formal query generation, ontology utility, and answer-level spatiotemporal KGQA. We use dRQ 𝑚 𝑖 for the realized generated interpretation set of model 𝑚 on question 
+
+𝑞 𝑖 and RQ 𝑖 for the reference interpretation set. Unless otherwise stated, corpus scores are macro-averages over the 𝑁 evaluated questions: 
+
+𝜇 = 1
+
+𝑁 
+
+> 𝑁
+
+∑︁ 
+
+> 𝑖 =1
+
+𝜇 𝑖 . (1) Several metrics use the same set-overlap precision, recall, and F1 form. For a generated set b𝑋 𝑖 , a gold set 𝑋 𝑖 , and a matched-correct count 𝑐 𝑖 , we compute 
+
+𝑃 𝑖 = 𝑐 𝑖 
+
+| b𝑋 𝑖 | , 𝑅 𝑖 = 𝑐 𝑖 
+
+|𝑋 𝑖 | ,𝐹 1𝑖 =
+
+
+
+2𝑃 𝑖 𝑅 𝑖 
+
+𝑃 𝑖 + 𝑅 𝑖 
+
+, if 𝑃 𝑖 + 𝑅 𝑖 ≠ 0,
+
+0, if 𝑃 𝑖 + 𝑅 𝑖 = 0.
+
+(2)                                                                                                  
+
+> Role : expert GeoSPARQL , temporal SPARQL , and ontology - grounded query generation system . Inputs : 1. GeoOutageBench prediction JSON with empty sparql_query fields . 2. Full ontology in Turtle . 3. Allowed classes , properties , prefixes , and domain / range hints . Core rules : -Use only the provided ontology / schema context . -Do not use gold / reference SPARQL . -Preserve existing JSON fields . -Fill sparql_query with the default interpretation . -Add sparql_interpretations only for answer - changing ambiguity . -Return only valid JSON . -Generate executable SPARQL using allowed prefixes . Ambiguity rules : -Generate separate queries for materially different spatial , temporal , semantic , or spatiotemporal readings . -Do not create variants that only rename variables or reorder triples . -Keep interpretations small , usually 1 - -3. Output for each interpretation : label , ambiguity_dimensions , rationale , sparql_query .
+
+Figure 6: Condensed structure of the NL2STQ prompt used to produce GeoOutageBench query interpretations. 
+
+When both generated and gold sets are empty, the corresponding feature-family score is defined as 1; when the prediction is empty and the gold set is non-empty, it is 0. 
+
+Task 1 metrics . The Task 1 evaluator first normalizes each pre-diction into a deduplicated list of query records, accepting either a single sparql_query or richer ambiguity-aware fields such as 
+
+sparql_interpretations . Each generated interpretation is scored against each reference interpretation, and the best aligned pair gives the question-level structural score. Class F1 is based on qnames used as rdf:type targets, property F1 uses graph-pattern pred-icates excluding rdf:type , spatial F1 uses GeoSPARQL/WGS84, geometry, coordinate, distance, and spatial-predicate markers, and temporal F1 uses date/dateTime literals and temporal filter markers. Axis-level results group questions by non-spatiotemporal, spatial, temporal, or spatiotemporal annotations. Let 𝜈 (𝑟 ) denote normalized SPARQL text after removing prefixes and comments, collapsing whitespace, and lowercasing. Let b𝑁 𝑚 𝑖 =
+
+{𝜈 ( ˆ𝑟 ) | ˆ𝑟 ∈ dRQ 𝑚 𝑖 } and 𝑁 𝑖 = {𝜈 (𝑟 ) | 𝑟 ∈ RQ 𝑖 }. Syntax validity is the fraction of generated interpretations that pass the coarse SELECT/ASK and WHERE/braces check: Syn 𝑚 𝑖 = 1
+
+|dRQ 𝑚 𝑖 |∑︁ ˆ𝑟 ∈ dR Q 𝑚 𝑖 
+
+1{ ˆ𝑟 is syntactically valid }. (3) If dRQ 𝑚 𝑖 = ∅, syntax validity is defined as 0. Compatibility (also referred to as executability) receives credit when at least one generated interpretation executes successfully over the configured graph or endpoint: Compat 𝑚 𝑖 = 1{∃ ˆ𝑟 ∈ dRQ 𝑚 𝑖 :ˆ𝑟 executes over G} . (4) Exact original-query match receives credit when the original source query 𝑟 𝑖 0 appears anywhere in the generated interpretation GeoOutageBench SIGSPATIAL ’26, November 03–06, 2026, Riverside, CA, USA 
+
+Table 7: Task-Based Assessment of GeoOutageOnto through OntoCheck [21]. 
+
+Q Close. Q Close. Q Close. Q Close. Q Close. Q Close. 1 0.0294 13 0.0686 25 0.0392 37 0.0686 49 0.0784 61 0.0882 2 0.0392 14 0.0196 26 0.0392 38 0.0686 50 0.0784 62 0.1373 3 0.0294 15 0.0196 27 0.0392 39 0.0686 51 0.0784 63 0.1275 4 0.0294 16 0.0196 28 0.0294 40 0.0392 52 0.0490 64 0.0686 5 0.0392 17 0.0392 29 0.0686 41 0.0686 53 0.0490 65 0.0686 6 0.0392 18 0.0392 30 0.0294 42 0.0882 54 0.1176 66 0.0980 7 0.0196 19 0.0588 31 0.0490 43 0.0882 55 0.0686 67 0.0980 8 0.0196 20 0.0588 32 0.0588 44 0.0882 56 0.1176 68 0.0980 9 0.0196 21 0.0588 33 0.0490 45 0.0882 57 0.0686 69 0.0980 10 0.0196 22 0.0490 34 0.1078 46 0.1078 58 0.1078 70 0.1078 11 0.0196 23 0.0490 35 0.1078 47 0.1078 59 0.0980 71 0.1078 12 0.0490 24 0.0490 36 0.1078 48 0.1078 60 0.1275 72 0.1078 
+
+Average Closeness : 0.0673 
+
+set, while ambiguity-aware matching compares the full interpreta-tion sets: Exact 𝑚 𝑖 = 1{𝜈 (𝑟 𝑖 0) ∈ b𝑁 𝑚 𝑖 },
+
+Any 𝑚 𝑖 = 1{ b𝑁 𝑚 𝑖 ∩ 𝑁 𝑖 ≠ ∅} . (5) Interpretation recall is IRec 𝑚 𝑖 = | b𝑁 𝑚 𝑖 ∩ 𝑁 𝑖 ||𝑁 𝑖 | . (6) For structural alignment, Eq. 2 is applied to extracted feature sets: classes, properties, spatial constraints, and temporal constraints. The selected interpretation pair maximizes the average of these four F1 scores: Align 𝑚 𝑖 = max     
+
+> ˆ𝑟 ∈dR Q 𝑚 𝑖
+> 𝑟 ∈ R Q 𝑖
+
+14
+
+ ClassF1 ˆ𝑟,𝑟 + PropF1 ˆ𝑟,𝑟 
+
++ SF1 ˆ𝑟,𝑟 + TF1 ˆ𝑟,𝑟 
+
+.
+
+(7) Schema-linking F1 and spatiotemporal-constraint F1 use har-monic means: SchemaF1 𝑚 𝑖 =
+
+
+
+2 · ClassF1 𝑚 𝑖 · PropF1 𝑚 𝑖 
+
+ClassF1 𝑚 𝑖 + PropF1 𝑚 𝑖 
+
+, if ClassF1 𝑚 𝑖 
+
++PropF1 𝑚 𝑖 ≠ 0,
+
+0, otherwise, (8) STF1 𝑚 𝑖 =
+
+
+
+2 · 𝑆𝐹 1𝑚 𝑖 · 𝑇 𝐹 1𝑚 𝑖 
+
+𝑆𝐹 1𝑚 𝑖 + 𝑇 𝐹 1𝑚 𝑖 
+
+, if 𝑆𝐹 1𝑚 𝑖 + 𝑇 𝐹 1𝑚 𝑖 ≠ 0,
+
+0, if 𝑆𝐹 1𝑚 𝑖 + 𝑇 𝐹 1𝑚 𝑖 = 0.
+
+(9) 
+
+Task 2 metrics . OntoCheck [21] constructs a task term set 𝑇 𝑎 (𝑟 𝑖 𝑗 )
+
+from extracted goo: terms in each SPARQL interpretation 𝑟 𝑖 𝑗 ∈RQ 𝑖 and compares it with the scoped ontology term set 𝑇 𝑜 . Query Coverage (or Relevance) measures how much workload vocabulary is declared by the ontology; Query Closeness (or Accuracy) mea-sures how densely the scoped ontology vocabulary is activated by the query: Cov 𝑖 𝑗 = |𝑇 𝑎 (𝑟 𝑖 𝑗 ) ∩ 𝑇 𝑜 ||𝑇 𝑎 (𝑟 𝑖 𝑗 )| ,
+
+Clo 𝑜𝑛𝑡𝑜 𝑖 𝑗 = |𝑇 𝑎 (𝑟 𝑖 𝑗 ) ∩ 𝑇 𝑜 ||𝑇 𝑜 | .
+
+(10) The full list of Closeness scores for all 72 queries in the ground-truth set is listed in Table 7 (all queries returned a Coverage of 1.00, hence are not shown). 
+
+Task 3 metrics . Task 3 treats Task 1 outputs as query workload to be processed. Each SPARQL interpretation is executed against GeoOutageKG, using GraphDB [29] for the reported experiments, and gold answers are obtained by executing ground-truth inter-pretations, or by using stored human-validated benchmark an-swers if all interpretations return empty results. Returned bind-ings are normalized by compacting IRIs, simplifying datatype and language-tag variants, normalizing numeric and UTC date/time val-ues, and aligning common aliases such as ntl /image , rec /record ,and num /numOutages .Answer scoring uses Eq. 2 with b𝑋 𝑖 = bA 𝑚 𝑖 , 𝑋 𝑖 = A𝑖 , and 𝑐 𝑖 equal to the number of generated rows matched to distinct gold rows after normalization. For ranked outputs, let 𝑦 𝑖ℓ ∈ { 0, 1} indicate whether the row at rank ℓ is relevant. We compute Hits@ 𝑘 𝑖 = 1
+
+n 𝑘 ∑︁ 
+
+> ℓ=1
+
+𝑦 𝑖ℓ > 0
+
+o
+
+,
+
+RR 𝑖 =
+
+
+
+1min {ℓ : 𝑦 𝑖ℓ = 1} , if any 𝑦 𝑖ℓ = 1,
+
+0, otherwise, (11) and report MRR as the macro-average of RR 𝑖 . Ranking quality at depth 10 is DCG@10 𝑖 =
+
+> 10
+
+∑︁ 
+
+> ℓ=1
+
+𝑦 𝑖ℓ 
+
+log 2 (ℓ + 1) ,
+
+nDCG@10 𝑖 = DCG@10 𝑖 
+
+IDCG@10 𝑖 
+
+if IDCG@10 𝑖 > 0,
+
+= 0 otherwise. (12) Spatial correctness 𝑆 𝑖 and temporal correctness 𝑇 𝑖 are defined from explicit annotations when available; otherwise, they are derived from overlap between the selected generated and gold SPARQL constraints. Dimensions not required by the question re-ceive full credit, while required dimensions fall back to answer F1 only when no query-level signal is available. The Spatiotemporal Relevance Score is SRS 𝑖 =
+
+
+
+2𝑆 𝑖 𝑇 𝑖 
+
+𝑆 𝑖 + 𝑇 𝑖 
+
+, if 𝑆 𝑖 + 𝑇 𝑖 ≠ 0,
+
+0, if 𝑆 𝑖 + 𝑇 𝑖 = 0.
+
+(13) With multiple generated and reference interpretations, answer-level alignment selects the generated–gold pair maximizing the interpretation-selection score Sel 𝑚 𝑖 = 14
+
+ AnswerF1 𝑚 𝑖 + 𝑆 𝑖 + 𝑇 𝑖 
+
++SRS 𝑖 
+
+.
+
+(14)

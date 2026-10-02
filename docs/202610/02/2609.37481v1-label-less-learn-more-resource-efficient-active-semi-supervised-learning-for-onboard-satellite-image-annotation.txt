@@ -1,0 +1,673 @@
+Title: Label Less, Learn More: Resource-Efficient Active Semi-Supervised Learning for Onboard Satellite Image Annotation
+
+URL Source: https://arxiv.org/pdf/2609.37481v1
+
+Published Time: Wed, 30 Sep 2026 02:16:25 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Label Less, Learn More: Resource-Efficient Active Semi-Supervised Learning for Onboard Satellite Image Annotation 
+
+> 1
+
+Ahmed Abdelnaby, 1Mohamed Elmahallawy, 2Marius Bernahrndt, 2Tobias Hecking  
+
+> 1
+
+School of Engineering and Applied Science, Washington State University, Richland, WA 99354, USA  
+
+> 2
+
+Institute for Software Technology, German Aerospace Center (DLR), Porz, 51147 Cologne, Germany 
+
+Email:{ahmedabelnaby, mohamed.elmahallawy}@wsu.edu, {marius.bernahrndt, Tobias.Hecking}@dlr.de 
+
+Abstract —Large-scale pervasive sensing increasingly relies on high-resolution satellite imagery, yet task-specific onboard vision 
+
+is constrained by costly annotation and limited computation, memory, energy, and communication resources. Existing ap-proaches largely rely on either data-hungry supervised learning or large vision-language foundation models, limiting efficient adaptation and deployment under these constraints. We present 
+
+SAT LABEL , a resource-aware learning framework that transforms limited satellite labels into progressively refined onboard models through adaptive sample acquisition and semi-supervised model adaptation . Rather than repeatedly training on uniformly sampled labels, SAT LABEL closes the loop between model uncertainty, class imbalance, and pseudo-label quality to selectively acquire informative samples while exploiting abundant unlabeled imagery. This enables a compact student to adapt to target sensing domains with reduced annotation and inference costs. We further introduce an optional Mixture-of-Experts (MoE) student with graph-based feature refinement to enhance representation capacity while retaining a lightweight footprint. We evaluate SAT LABEL on 11 remote-sensing datasets spanning core, extended, and unseen domains against RemoteCLIP zero-shot inference. SAT LABEL 
+
+improves Macro-F1 on most core and extended datasets while maintaining strong cross-dataset transfer to unseen domains. More importantly, the Balanced student contains only 11.2M parameters and occupies approximately 42.8 MB, compared with 151.3M parameters and 577 MB for RemoteCLIP, while requiring 3.65 versus 5.89 GFLOPs. Across four efficiency benchmarks, it achieves approximately 2× higher GPU-forward throughput and reduces energy per image on datasets. These results demonstrate that SAT LABEL enables accurate and resource-efficient satellite image annotation and adaptation for constrained onboard deployment. 
+
+Index Terms —Pervasive sensing; remote sensing; resource-constrained AI; active learning; vision–language models 
+
+I. I NTRODUCTION 
+
+High-resolution satellite imagery has become foundational for large-scale pervasive sensing applications, from envi-ronmental monitoring and precision agriculture to disaster response [1], [2]. These domains demand timely, in-situ analysis of remotely sensed data. However, conventional workflows that downlink all raw imagery for ground-based processing face serious bottlenecks. Satellites have severely limited resources 
+
+– including computing power, memory, and energy budgets – and only brief communication windows to ground stations (GSs) [3], [4]. For example, CubeSats and small LEO platforms simply cannot offload all collected data each pass, motivating a shift towards onboard intelligence . Recent research echoes this vision, treating LEO satellite constellations as a type of global edge network [4], [5], where processing is pushed to the “edge” (i.e. the satellites) rather than relying solely on GSs. This paradigm transforms satellites from passive data collectors 
+
+into pervasive sensing and edge-computing platforms , reducing raw-data downlink, communication overhead, and latency for time-sensitive applications. Enabling task-specific onboard vision brings two key chal-lenges. First, modern deep learning methods are typically data-hungry, yet satellites have very few labeled examples. Second, satellites have extremely constrained computation and power. State-of-the-art vision-language foundation models (e.g. RemoteCLIP [6]) and large vision transformers (ViTs) remain challenging to deploy efficiently on resource-constrained satellite hardware due to their substantial computational and memory requirements [7]. Recent works have begun to address these challenges by compressing or distributing learning. For instance, Le et al. [8] distill two large ViT teachers into a tiny ResNet-8 student, achieving over 90% accuracy while using 97.5% fewer parameters and 86% less power. Similarly, Östman et al. [9] demonstrate that a distributed semi-supervised learning scheme can train a constellation of satellites to ∼ 91% 
+
+classification accuracy on the EuroSAT dataset within one day. These results show that on-board learning is feasible even under stringent resource limits. Nevertheless, existing approaches have critical limitations for practical satellite deployment. Many methods assume uniform data sampling or fixed model architectures, ignoring the rich feedback available onboard. Uniform sampling wastes precious annotation budget on easy examples, while static student models cannot adapt their capacity when new types of images arrive. By contrast, vision-language models (VLMs) like RemoteCLIP [6] achieve broad generalization but require billions of parameters and extensive fine-tuning , making them impractical for satellites. Even recent satellite–ground collaborative systems (e.g. Grace [4]) that deploy small VLMs on satellites must rely on the ground for heavy lifting , highlighting the persistent resource gap. TinyML efforts (e.g. the Φ-Sat-1 mission) focus on compressing convolutional neural networks (CNNs) to save downlink (e.g. removing cloudy images in orbit saved ≈30% of data [3]), but 
+
+do not address how to select or label new data autonomously .In short, prior work overlooks the combined problem of which satellite images to label and how to update a model under strict onboard constraints. 
+
+To address these gaps, we propose S AT LABEL , a resource-aware learning framework for satellite edge intelligence. S AT -LABEL closes the loop between data acquisition and model arXiv:2609.37481v1 [cs.CV] 25 Sep 2026 adaptation: it uses the current model’s uncertainty and the dataset’s class balance to actively select informative samples for labeling, and then performs semi-supervised adaptation using both these labels and the remaining unlabeled images. This adaptive strategy ensures that each annotation maximally improves the model, avoiding redundant labeling of easy or over-represented examples. Furthermore, S AT LABEL ’s student model is compact and adaptive: we introduce a Mixture-of-Experts (MoE) architecture with graph-based feature refinement to boost representation power without bloating computation .In our evaluation on 11 remote-sensing datasets (including core, extended, and unseen domains), S AT LABEL significantly improves classification performance (e.g. macro-F1) over baseline models, while using a fraction of the resources .In particular, our adaptive student runs ≈2× faster and has 
+
+≈13.5 × fewer parameters than RemoteCLIP, making on-board annotation and model refinement far more practical under satellite constraints. These results demonstrate that S AT LABEL 
+
+advances pervasive satellite computing by enabling autonomous on-board image labeling and learning in a highly resource-aware manner. We summarize our key contributions as follows:  
+
+> •
+
+We introduce S AT LABEL , the first onboard semi-supervised learning framework that adaptively acquires labels from limited satellite data and refines a model with unlabeled imagery, all under stringent satellite resource constraints.  
+
+> •
+
+We develop a closed-loop sample-selection strategy that jointly exploits model uncertainty, class imbalance, and pseudo-label quality to acquire the most informative samples for onboard adaptation.  
+
+> •
+
+We design a compact adaptive student with MoE routing and graph-based feature refinement to improve representation quality under a limited compute budget, leveraging multiple experts for richer features while keeping inference lightweight for resource-constrained onboard deployment . 
+
+> •
+
+We evaluate S AT LABEL across 11 remote-sensing datasets spanning core, extended, and unseen domains, where it achieves competitive or higher Macro-F1 than state-of-the-art remote-sensing models on most datasets. The Balanced student uses approximately 13 .5× fewer parameters, requires 
+
+38% fewer FLOPs, and delivers approximately 2× higher GPU-forward throughput than RemoteCLIP, while reducing energy consumption per image on three of four efficiency benchmarks. These gains support resource-constrained on-board image annotation and adaptation. II. R ELATED WORK 
+
+Earth-observation satellites generate massive imagery vol-umes, but costly labeling and stringent onboard resource constraints hinder continuous model adaptation. Existing ap-proaches address foundation models, semi-supervised learning (SSL), active learning (AL), and distillation largely separately, whereas S AT LABEL integrates these capabilities for label-efficient and resource-efficient onboard learning .
+
+Remote sensing scene classification. Early remote-sensing scene classification methods relied on hand-crafted repre-sentations, including bag-of-visual-words features [10]. The emergence of deep CNNs substantially improved feature learn-ing and classification performance on remote-sensing bench-marks [11], while more recent ViTs have further improved the ability to capture long-range spatial and semantic relationships in satellite imagery [12]. Despite these advances, conventional supervised approaches still rely on large manually labeled datasets, making adaptation increasingly costly as satellite archives expand across new regions, conditions, and categories. Thus, although these models achieve strong classification performance, they do not address the recurring labeling cost required to adapt to newly acquired imagery. 
+
+Foundation models for remote sensing. VLMs offer an alter-native by transferring semantic knowledge learned from large-scale image-text corpora to previously unseen visual concepts. CLIP [13] demonstrated that aligning visual and textual representations enables effective zero-shot recognition without task-specific labeled training data. Building on this paradigm, RemoteCLIP [14] adapts CLIP to remote-sensing imagery through domain-specific pre-training, substantially improving zero-shot recognition of aerial scenes. Other efforts, including RS-CLIP [15] and GeoRSCLIP [16], further specialize vision-language features for Earth observation using large remote-sensing data, pseudo-labeling, and geospatial information. These models substantially reduce the dependence on task-specific annotation, but their primary role remains recognition :they provide predictions for individual images rather than a mechanism for efficiently adapting a lightweight onboard model to a continuously evolving satellite data stream. More-over, directly deploying a large foundation model onboard can be prohibitively expensive under satellite compute and memory constraints. S AT LABEL instead exploits a remote-sensing vision-language model as a frozen semantic teacher ,using its transferable knowledge to supervise adaptation of a substantially smaller student model. This formulation separates the semantic capability of the foundation model from the resource requirements of the onboard classifier. 
+
+Semi-supervised learning. SSL reduces annotation require-ments by exploiting large collections of unlabeled data together with a small labeled set. FixMatch [17], for example, combines confidence-based pseudo-labeling with weak-to-strong consis-tency regularization, while Mean Teacher [18] improves pseudo-label stability through exponential moving-average (EMA) teacher updates. Such approaches are attractive for satellite learning because the vast majority of newly acquired imagery can be exploited without requiring manual annotation. However, conventional SSL methods typically derive pseudo-labels from the model being trained or from an evolving EMA teacher. Consequently, pseudo-label quality can be limited during the early stages of adaptation, precisely when the student has little task-specific knowledge. S AT LABEL addresses this limitation by obtaining initial semantic supervision from a pretrained and frozen remote-sensing foundation model rather than relying exclusively on self-generated predictions. The resulting supervision provides a stronger starting point for adaptation while allowing the student to progressively learn from the much larger unlabeled satellite archive. 
+
+Active learning for remote sensing. AL complements SSL by addressing a different question: rather than labeling data indis-criminately, which samples should receive human annotation? Existing remote-sensing studies have investigated uncertainty-based sampling [19] and query-by-committee strategies for selecting informative samples from hyperspectral [20] and RGB satellite imagery. These approaches can substantially reduce annotation effort by prioritizing samples where the current model is uncertain or where competing models disagree. For onboard satellite learning, however, sample selection is especially important because transmitting every newly acquired image to the GSs for annotation is constrained by communication bandwidth and energy . AL alone does not provide a mechanism for exploiting the remaining unlabeled imagery, while SSL alone does not determine which samples are most valuable for human supervision. S AT LABEL combines the two: uncertainty-driven querying identifies informative images for labeling, while foundation-model-guided semi-supervised adaptation exploits the remaining unlabeled data , enabling the annotation budget to be concentrated on samples that provide the greatest value for improving the onboard model. 
+
+Knowledge distillation (KD). It provides a complementary mechanism for transferring the capabilities of large models to resource-efficient models. Hinton et al. [21] showed that soft predictions from a larger teacher encode inter-class relationships that can be transferred to a compact student. Subsequent approaches, such as FitNets [22], extended distillation to intermediate representations, while recent Earth-observation studies have applied KD using supervised ViT teachers [23]. Unlike these approaches, S AT LABEL uses a zero-shot remote-sensing VLM as the teacher rather than a task-specific classifier 
+
+trained on the target label space. This distinction is important for satellite adaptation: the teacher can provide transferable semantic supervision without requiring retraining whenever the target scene categories or deployment environment changes. More importantly, distillation in S AT LABEL is integrated with active and semi-supervised learning rather than used solely as a one-time model compression step. The student therefore acquires semantic knowledge from the foundation model while progressively adapting to locally acquired satellite imagery, yielding a compact model suitable for resource-constrained onboard inference and continued learning. III. M ETHODOLOGY 
+
+We present SATL ABEL , a resource-aware active semi-supervised framework that enables satellites to autonomously annotate their continuously acquired imagery, providing locally generated training data for downstream onboard AI learning. The framework addresses the key challenge of performing this process under stringent onboard computation, memory, energy, and communication constraints, where transmitting large image volumes to GSs for annotation can be costly or impractical. To achieve this goal, SATL ABEL addresses three coupled challenges: obtaining reliable supervision from few labels, adapting a lightweight model for onboard deployment, and efficiently allocating scarce human annotation effort to the most informative imagery .As illustrated in Fig. 1, SATL ABEL innovates by offering three interconnected components. First, a frozen remote-sensing foundation model acts as a teacher , providing semantic guid-ance for unlabeled imagery and reducing reliance on manual labels. This knowledge is transferred to a compact student 
+
+through semi-supervised adaptation, yielding a lightweight model suitable for resource-constrained onboard deployment. To offset its reduced capacity, an adaptive feature-refinement module enriches the student’s representations through ex-pert specialization and inter-sample relationships. Finally, 
+
+uncertainty-guided active acquisition selects informative unla-beled samples for human annotation, which are added to the training pool for subsequent adaptation. This closed learning loop progressively improves the onboard model while jointly reducing annotation demand and computational overhead. The following subsections detail each component of the framework. 
+
+A. Teacher-Guided Semi-Supervised Learning 
+
+SAT LABEL employs a frozen RemoteCLIP [14] as a semantic teacher to provide stable supervision for the lightweight student. This design avoids relying solely on potentially unreliable student predictions when only a small labeled set is available. For each unlabeled image x ∈ D u, S AT LABEL generates two views using weak and strong augmentations: 
+
+xw = Aw(x), xs = As(x), (1) where Aw(·) applies semantics-preserving transformations such as random cropping and flipping, while As(·) introduces stronger appearance variations, including color jittering, blur, and random erasing (Fig. 1). The weak view is used by the frozen teacher to obtain semantic supervision, whereas the strongly augmented view is used to train the student to preserve the same semantics under appearance variations. 
+
+Frozen teacher supervision. Given a weakly augmented image 
+
+xw, RemoteCLIP computes an image embedding v(xw) and compares it with the text embedding tc of each target class 
+
+c ∈ { 1, . . . , C }. The teacher produces a soft class distribution: 
+
+Pt(y = c | xw) = exp(cos( v(xw), tc) /T t)
+
+PCj=1 exp(cos( v(xw), tj ) /T t) , (2) where Tt denotes the teacher temperature. Freezing the teacher provides stable supervision throughout training, avoids back-propagation through its approximately 307M parameters, and preserves its zero-shot capability. Adapting to a new target label space therefore requires only changing the class prompts rather than retraining the teacher. Moreover, the resulting soft distribution captures relative semantic relationships among classes that are not represented by one-hot labels. 
+
+Soft-target KD for student adaptation. The semantic knowl-edge encoded by the frozen teacher is transferred to a compact student model, such as ResNet-18 , through KD and consistency regularization. Using a lightweight student is essential for Fig. 1: Overview of the proposed S AT LABEL methodology. The teacher–student framework integrates pseudo-labeling, consistency regularization, and uncertainty-guided active learning to progressively improve the student model.  
+
+> Fig. 2: An illustration of the adaptive student model architecture. The ResNet-18 backbone is augmented with a Mixture-of-Heads module, adaptive routing, and BatchGCN for efficient feature refinement, followed by a classification head for final prediction.
+
+onboard deployment, as directly executing a large model such as RemoteCLIP can impose substantial computational, memory, and energy overhead on resource-constrained satellite platforms. The student approximates the teacher’s class posterior distri-bution, retaining its semantic knowledge while substantially reducing inference cost. For an input xw, we compute temperature-scaled teacher and student distributions as 
+
+LKD = T 2 KL ( Pt(y | xw; T ), |, P s(y | xw; T )) , (3) where T denotes the distillation temperature. Temperature scaling produces a softer probability distribution, exposing relative similarities among non-dominant classes and providing richer supervision than hard one-hot targets. For example, the student can learn that a forest scene is more closely related to 
+
+farmland than to an airport . We assign a larger weight to the distillation objective than to the supervised classification loss, i.e., λKD > λ CE , to emphasize semantic knowledge transferred from the foundation-model teacher. 
+
+Pseudo-labeling and consistency regularization. In addition to soft supervision, S AT LABEL generates hard pseudo-labels from confident teacher predictions. An unlabeled sample is selected when 
+
+max  
+
+> y
+
+Pt(y | xw) > τ, (4) and its pseudo-label is given by 
+
+ˆy = arg max  
+
+> y
+
+Pt(y | xw). (5) These pseudo-labels enlarge the effective training set without requiring additional human annotation. For each selected sample, the student is trained on the strongly augmented view 
+
+xs to match the teacher’s prediction: 
+
+Lcons = E ∗ x ∈ D ′ 
+
+> u
+
+[H (Pt(y | xw), P s(y | xs))] , (6) where 
+
+D′ 
+
+> u
+
+= x ∈ D u : max  
+
+> y
+
+Pt(y | xw) > τ . (7) This FixMatch-style consistency objective [17] encourages the student to learn semantic features that remain invariant to substantial appearance changes. To avoid reinforcing unstable or accidentally correct predictions during early adaptation, the consistency objective is activated from round 3, where each round denotes one complete AL iteration consisting of sample selection, annotation/pseudo-labeling, and student model update. By this stage, the student has undergone two rounds of supervised and teacher-guided training, providing more reliable predictions for consistency regularization. 
+
+EMA stabilization. To further stabilize the evolving student during iterative adaptation, S AT LABEL maintains an EMA copy of the student [18]: 
+
+θEMA ← αθ EMA + (1 − α)θS , α = 0 .999 . (8) Gradients propagate only through the online student parameters 
+
+θS . The EMA parameters are used as a temporally smoothed version of the student for prediction filtering, reducing sensi-tivity to short-term fluctuations during iterative learning. 
+
+B. Adaptive Student Architecture 
+
+This stage enhances the representational capacity of the lightweight student while preserving its suitability for resource-constrained onboard deployment. We first employ a ResNet-18 backbone [24] as the base student because of its compact architecture and efficient inference. Although this lightweight backbone is attractive for onboard deployment, its limited capacity may hinder discrimination among the visually diverse and semantically similar scenes common in satellite imagery. To address this limitation, S AT LABEL introduces an adaptive feature-refinement module composed of two complementary components: (i) a MoE module that adaptively specializes fea-ture transformation across heterogeneous scene characteristics, and (ii) a Batch Graph Convolutional Network (BatchGCN) 
+
+that exploits feature-space relationships among samples within a mini-batch. The MoE increases the effective representational capacity through expert specialization, while BatchGCN further refines these features by propagating information across related samples. Together, these modules enhance the base student’s representations without requiring a substantially larger back-bone. The resulting adaptive student is shown in Fig. 2. Given an input image x, its feature transformation is expressed as: 
+
+x fbb 
+
+−−→ z fMoE 
+
+−−−→ zMoE 
+
+> fGCN
+
+−−−→ z′ fcls 
+
+−−→ p(y | x), (9) where z denotes the ResNet-18 backbone representation, zMoE 
+
+is the expert-refined representation, and z′ is the relationally refined feature provided to the classification head. 
+
+MoE with Sinkhorn routing. To enable adaptive represen-tation learning for satellite imagery, where scenes exhibit substantial visual heterogeneity and differ in spatial structures, textures, and semantic characteristics, we employ a MoE layer comprising K learnable expert networks. Given the backbone feature z, a gating network produces routing scores that determine which experts process the input. The resulting representation is 
+
+zMoE =
+
+> K
+
+X
+
+> k=1
+
+gk(z), E k(z), (10) where Ek(·) denotes the k-th expert and gk(z) is its corre-sponding routing weight. A conventional softmax gate may assign a disproportion-ately large fraction of samples to a small subset of experts, leading to expert collapse and inefficient utilization of the available capacity. S AT LABEL therefore applies Sinkhorn– Knopp normalization [25], [26] to the batch-level routing scores. The resulting approximately doubly stochastic assignment encourages a more balanced allocation of samples across experts while preserving input-dependent routing. This allows different experts to specialize in distinct visual characteristics without permitting a few experts to dominate training. To maintain computational efficiency, only the top-2 experts selected by the balanced routing mechanism are activated for each sample. 
+
+Batch Graph Convolution for Relational Refinement. While the MoE module provides input-adaptive feature extraction, it processes samples independently and therefore does not explicitly exploit relationships among images observed in the same training batch. This is suboptimal for remote-sensing scenes, where visually related categories can exhibit similar textures, shapes, or spatial layouts. For example, cropland, grassland, and farmland may share similar texture patterns, whereas airports and industrial areas may exhibit related geometric structures. To capture such inter-sample relationships, SAT LABEL 
+
+constructs a k-nearest-neighbor (KNN) similarity graph over the MoE features within each mini-batch. Each sample is treated as a graph node, and edges connect visually similar samples according to their feature-space similarity. Let Z ∈ RB×d
+
+denote the matrix of MoE features for a batch of B samples and 
+
+A denote the resulting adjacency matrix. BatchGCN performs graph-based feature propagation using 
+
+Z′ = ReLU 
+
+ ˆAZW 
+
+
+
+, ˆA = ˜D− 12 ˜A ˜D− 12 , (11) where ˜A = A + I adds self-loops, ˜D is the corresponding degree matrix, and W is a learnable projection matrix. This operation allows each sample to incorporate complementary information from its nearest neighbors while retaining its own representation. We use a single graph-convolution layer to provide relational refinement while limiting additional computation and avoiding the over-smoothing associated with deeper graph propagation [27]. The refined representation Z′ is subsequently regularized with dropout and passed through a lightweight fully connected classification head to obtain the student’s prediction Ps(y | x).In this design, the MoE captures heterogeneous visual semantics 
+
+through adaptive expert specialization, whereas BatchGCN captures relational semantics by propagating information among visually related samples. Together, they increase the rep-resentational capacity of the compact student while preserving its suitability for resource-constrained onboard deployment. 
+
+C. Uncertainty-Guided Active Sample Acquisition 
+
+To efficiently allocate the limited human-annotation budget, SAT LABEL employs uncertainty-guided AL after each student adaptation round. Rather than querying samples uniformly from the unlabeled pool, the framework prioritizes images for which the current student exhibits the greatest predictive uncertainty. This strategy concentrates annotation effort on ambiguous or difficult examples that are more likely to expose weaknesses in the current decision boundary and provide useful supervision for subsequent model updates. For each unlabeled sample x ∈ D ru, the student computes a least-confidence score based on its maximum posterior probability: 
+
+c(x) = max  
+
+> y
+
+Ps(y | x), (12) where Ps(y | x) is the predicted probability of class y. A lower 
+
+c(x) indicates greater uncertainty, as the model assigns less probability mass to its most likely class. Given an annotation budget of B samples per round, S AT LABEL selects the subset with the smallest confidence scores: 
+
+Sr = arg min 
+
+> S⊆D ru,;|S| =B
+
+X
+
+> x∈S
+
+c(x). (13) where Sr denotes the set of samples selected for annotation at round r. Low-confidence samples are typically associated with ambiguous or difficult instances for the current decision boundary and therefore provide greater potential value for model refinement than samples that are already classified with high confidence [19]. After annotation, Sr is removed from the unlabeled pool and incorporated into the labeled training set for the subsequent round. This criterion requires only a forward pass through the lightweight student and therefore introduces minimal computational overhead, which is important for onboard deployment. After human annotation, the queried samples are transferred from the unlabeled pool to the labeled set: 
+
+Dr+1  
+
+> l
+
+= Drl ∪ S r , Dr+1  
+
+> u
+
+= Dru/Sr , (14) The expanded labeled set is then used in the subsequent adap-tation round. Thus, active acquisition progressively replaces a small number of unlabeled, uncertain samples with ground-truth supervision, enabling S AT LABEL to improve the onboard student while avoiding the substantially higher annotation cost of labeling the entire imagery stream. 
+
+D. Joint Optimization 
+
+The preceding components are jointly integrated to optimize the lightweight student. Specifically, the student is trained using three complementary supervisory signals: ground-truth and high-confidence pseudo-labels through LCE , semantic knowledge transferred from the frozen RemoteCLIP teacher through LKD , and consistency between weakly and strongly augmented views through Lcons . The resulting objective is 
+
+L = λCE LCE + λKD LKD + λcons Lcons , (15) where LCE anchors learning to human and pseudo-labels, 
+
+LKD transfers semantic knowledge from the teacher, and 
+
+Lcons enforces prediction consistency across different aug-mentation strengths. The weights λCE , λKD , and λcons control the contributions of supervised/pseudo-label learning, teacher knowledge transfer, and consistency regularization, respectively. The RemoteCLIP teacher remains frozen throughout all training rounds, while only the student parameters are updated. This joint objective enables S AT LABEL to simultaneously exploit labeled and unlabeled imagery, transfer rich semantic knowledge from the foundation model, and improve robustness to appearance variations within a single lightweight student model. The complete S AT LABEL framework is illustrated in Fig. 1 and summarized in Algorithm 1. IV. P ERFORMANCE EVALUATION 
+
+A. Experimental Setup 
+
+Datasets. We evaluate S AT LABEL on eleven remote-sensing scene-classification datasets grouped into three categories. The Core group comprises AID [28], UC-Merced [10], and EuroSAT [29], forming the baseline training configuration. The Extended group includes RESISC45 [11], PatternNet [30], WHU-RS19 [31], and RSI-CB256 [32]. The Unseen group comprises OPTIMAL31 [33], RSC11 [34], RS2800 [35], 
+
+Algorithm 1 SAT LABEL Training                                                                                                       
+
+> Input: D0
+> l,D0
+> u, frozen teacher fT, rounds R, budget B
+> Output: Trained student fs
+> 1: Initialize fs(ResNet-18 →MoE →BatchGCN); θEMA ←θS
+> 2: for r= 1 to Rdo
+> 3: Teacher: Pt(y|xw)←fT(Aw(x)) ,∀x∈ D ru▷Eq. (2)
+> 4: Distillation: minimize LKD ▷Eq. (17)
+> 5: if r≥3then
+> 6: Pseudo-labeling: construct D′
+> u={x∈Dru:max yPt(y|xw)> τ }
+> 7: Consistency: minimize Lcons on D′
+> u▷Eq. (18)
+> 8: end if
+> 9: Student update: minimize L=λCE LCE +λKD LKD +
+> λcons Lcons ▷Eq. (15)
+> 10: EMA: θEMA ←αθ EMA + (1 −α)θS▷Eq. (8)
+> 11: Query: select Sr⊂ D ruusing uncertainty; obtain human labels ▷Eq. (13)
+> 12: Update sets: Dr+1
+> l← D rl∪ S r;Dr+1
+> u← D ru\ S r▷Eq. (14)
+> 13: end for
+> 14: return fs
+
+and SIRI-WHU [36], which are excluded from training and used solely for out-of-domain evaluation using the canonical class mapping. Datasets that do not satisfy the single-label scene-classification setting are excluded from the benchmark. 
+
+Balanced Sampling and Querying. The datasets vary sub-stantially in size, from 1,005 to 31,500 images, causing conventional pooled sampling to favor larger datasets during training. To mitigate this bias, S AT LABEL employs dataset-balanced sampling , assigning each sample from dataset d aweight proportional to 1/N d, where Nd is the dataset size. This promotes a more uniform contribution across domains. We further use stratified active querying , allocating the anno-tation budget across datasets and selecting the least-confident samples within each dataset. This prevents larger datasets from dominating the annotation budget and maintains coverage of smaller domains, such as WHU-RS19. For each experiment, 20 % of images are held out for testing, 30 % initialize D0 
+
+> l
+
+, and the remaining 50 % form D0
+
+> u
+
+. Training proceeds for R = 5 AL rounds with budget B = 200 per round. 
+
+Student Variants. We compare two variants: (i) Balanced ,using ResNet-18 with dataset-balanced sampling; and (ii) Bal-anced + MoE+GCN , augmenting ResNet-18 with Sinkhorn-routed MoE and BatchGCN. Both use the same sampling strategy, isolating the architectural contribution. 
+
+Implementation. We use Adam with cosine annealing ( 3×10 −4
+
+to 1.5 × 10 −5), gradient clipping (max norm 1.0), and FP16. The MoE uses K = 4 experts with top-2 Sinkhorn routing, and BatchGCN uses k = 8 . Pseudo-labeling ( M = 600 , τ = 0 .95 )starts from round 3. We set λCE = 0 .3, λKD = 0 .7, α = 0 .999 ,and T = 2 . We report best-checkpoint accuracy and Macro-F1, with Macro-F1 computed over classes present in each dataset. 
+
+Baselines. We compare against four recent remote-sensing foundation VLMs. RemoteCLIP [14], pre-trained on remote-sensing image–text pairs, serves as both our frozen teacher and primary baseline. RS-M-CLIP [37] is trained on the large-scale SAMRS dataset, while GeoRSCLIP [16] is trained on TABLE I: Accuracy comparison of S AT LABEL against baselines on the core and extended datasets. Best results are shown in bold and second-best results are underlined . Values are reported in percent. The student variant used by S AT LABEL is indicated in parentheses.                                          
+
+> Dataset RemoteCLIP RS-M-CLIP GeoRSCLIP SkyCLIP SAT LABEL
+> AID 86.83 88.90 76.33 70.89 94.41 (MoE+GCN) EuroSAT 32.46 25.85 67.47 71.70 95.37 (Balanced) UC Merced 77.95 91.50 74.50 74.80 91.00 (MoE+GCN) RESISC45 68.38 92.62 73.83 70.94 86.63 (Balanced) PatternNet 57.52 50.95 74.80 80.88 95.90 (Balanced) RSI-CB256 50.38 47.50 61.00 50.09 87.01 (Balanced) WHU-RS19 94.33 93.80 82.00 83.50 77.41 (MoE+GCN)
+
+RS5M with broad remote-sensing coverage. SkyCLIP [38] learns ground–aerial image alignment without text supervision. 
+
+B. Results: Comparison with Baselines 
+
+Accuracy and Macro-F1 Comparison. Table I compares the two S AT LABEL student variants with our baselines across the core and extended datasets. S AT LABEL achieves the highest accuracy on four of seven benchmarks, demonstrating the benefit of combining knowledge distillation with active semi-supervised adaptation. The largest gains occur on EuroSAT, PatternNet, and RSI-CB256, reaching 95.37%, 95.90%, and 87.01%, respectively. On AID, the MoE+GCN variant achieves 94.41%, compared with 88.90% for RS-M-CLIP. These improvements suggest that the student effectively transfers foundation-model semantic knowledge while incorporating target-domain supervision and unlabeled data. RS-M-CLIP remains strongest on UC Merced (91.50%) and RESISC45 (92.62%), where S AT LABEL achieves 91.00% and 86.63%, respectively. RemoteCLIP performs best on WHU-RS19 (94.33%), substantially exceeding the student (77.41%). Despite these modest accuracy gaps, S AT LABEL employs a substantially lighter student architecture , making it more suitable for resource-constrained onboard deployment while maintaining competitive predictive performance. Thus, the small loss in accuracy on these datasets represents a favorable accuracy–efficiency trade-off for satellite deployment. Overall, SAT LABEL demonstrates the potential of task-specific student adaptation to approach or exceed large foundation models while substantially reducing deployment complexity. Fig. 3 compares Macro-F1 for RemoteCLIP and the best SAT LABEL student. The trends corroborate the accuracy results, with substantial gains on EuroSAT, PatternNet, and RSI-CB256 and competitive performance on AID and UC Merced. The WHU-RS19 gap further shows that the effectiveness of adaptation varies across domains, with pretrained semantic priors remaining advantageous for some datasets. 
+
+Computation and Efficiency Comparison. Beyond classifica-tion accuracy, computational and energy efficiency are critical for onboard satellite image annotation, where limited compute, memory, and power constrain continuous large-scale processing. Table II summarizes the model complexity of S AT LABEL and the CLIP-based baselines in terms of parameter count, model size, and floating-point operations (FLOPs). The Balanced student requires only 11.21M parameters, 42.83 MB of storage, 
+
+Fig. 3: RemoteCLIP zero-shot Macro-F1 compared with the best balanced student model on the core and extended datasets. The student outperforms RemoteCLIP on most datasets, while RemoteCLIP remains strongest on WHU-RS19. 
+
+TABLE II: Comparison of S AT LABEL with baselines in terms of parameters, model size and computational complexity. 
+
+Model Params (M) ↓ Size (MB) ↓ FLOPs (G) ↓
+
+RemoteCLIP ViT-B/32 151.28 577.21 5.89 RS-M-CLIP 366.12 1396.81 5.89 GeoRSCLIP ViT-B/32 151.28 577.21 5.89 SkyCLIP ViT-B/32 151.28 577.21 5.89 
+
+SatLabel (Balanced) 11.21 42.83 3.65 SatLabel (MoE+GCN) 20.40 77.93 3.67 
+
+TABLE III: Comparison of S AT LABEL with baselines in terms of runtime and resource efficiency on AID (10,000 images).                                         
+
+> Model Images/s ↑Energy (J/img) ↓Power (W) ↓Peak GPU (MB) ↓
+> RemoteCLIP ViT-B/32 12128.4 0.128 143 .19 ±62 .97 741.9 RS-M-CLIP 12211.2 0.124 140 .00 ±59 .80 1560.4 GeoRSCLIP ViT-B/32 11692.5 0.127 142 .58 ±65 .30 760.7 SkyCLIP ViT-B/32 12246.8 0.130 136 .24 ±59 .23 741.9
+> SatLabel (Balanced) 24353.8 0.106 110 .55 ±30 .50 381.1 SatLabel (MoE+GCN) 12623.0 0.123 132 .34 ±47 .20 575.4
+
+and 3.65 GFLOPs per inference, compared with 151.28– 366.12M parameters, 577.21–1396.84 MB, and 5.89 GFLOPs for the CLIP-based baselines. Thus, relative to the smallest CLIP baseline, S AT LABEL Balanced reduces the parameter count and model size by approximately 13 .5×, while reducing the computational cost by approximately 1.6×. Relative to RS-M-CLIP, these reductions reach approximately 32 .6× for both parameters and model size. The MoE+GCN variant uses 20.4M parameters and 77.9 MB, while remaining substantially smaller than the CLIP-based baselines. Tables III–VI further evaluate S AT LABEL and the baselines across AID, EuroSAT, PatternNet, and OPTIMAL31 in terms of inference throughput, energy per image, average power, and peak GPU memory. All experiments use a batch size of 64, 
+
+224 × 224 input images, and automatic mixed precision (AMP). The CLIP-based baselines use ViT-B/32 implemented with OpenCLIP. For zero-shot classification, we use the prompt template a satellite image of {} , with class names derived from the corresponding folder names by replacing underscores and slashes with spaces. Class-text embeddings are computed once using encode_text and cached before evaluation. Consequently, the measured inference path consists of encode_image followed by cosine-similarity classifica-TABLE IV: Comparison of S AT LABEL with baselines in terms of runtime and resource efficiency on EuroSAT (27,000 images).                                         
+
+> Model Images/s ↑Energy (J/img) ↓Power (W) ↓Peak GPU (MB) ↓
+> RemoteCLIP ViT-B/32 11966.9 0.055 291 .88 ±46 .42 741.9 RS-M-CLIP 12028.5 0.055 295 .95 ±31 .00 1560.4 GeoRSCLIP ViT-B/32 11712.4 0.056 299 .99 ±46 .62 760.6 SkyCLIP ViT-B/32 12111.9 0.055 297 .14 ±40 .29 741.9
+> SatLabel (Balanced) 24143.0 0.036 185 .11 ±27 .21 381.1 SatLabel (MoE+GCN) 12607.4 0.052 268 .27 ±27 .63 575.4
+
+TABLE V: Comparison of S AT LABEL with baselines in terms of runtime and resource efficiency on PatternNet (30,400 images).                                         
+
+> Model Images/s ↑Energy (J/img) ↓Power (W) ↓Peak GPU (MB) ↓
+> RemoteCLIP ViT-B/32 11992.8 0.064 232 .96 ±50 .63 741.9 RS-M-CLIP 11852.3 0.068 222 .07 ±46 .29 1560.4 GeoRSCLIP ViT-B/32 11711.4 0.065 245 .00 ±53 .79 760.7 SkyCLIP ViT-B/32 12012.8 0.064 241 .46 ±47 .66 741.9
+> SatLabel (Balanced) 24282.9 0.044 160 .21 ±31 .45 381.2 SatLabel (MoE+GCN) 12598.1 0.059 226 .55 ±35 .38 575.5
+
+TABLE VI: Comparison of S AT LABEL with baselines in terms of runtime and resource efficiency on OPTIMAL31 (1,860 images).                                         
+
+> Model Images/s ↑Energy (J/img) ↓Power (W) ↓Peak GPU (MB) ↓
+> RemoteCLIP ViT-B/32 12029.0 0.097 394 .36 ±5.35 741.9 RS-M-CLIP 11891.9 0.103 408 .85 ±2.68 1560.4 GeoRSCLIP ViT-B/32 11585.5 0.107 418 .21 ±16 .80 760.7 SkyCLIP ViT-B/32 12185.9 0.105 402 .34 ±15 .96 741.9
+> SatLabel (Balanced) 24292.2 0.100 254 .30 ±24 .24 381.3 SatLabel (MoE+GCN) 12677.1 0.129 351 .10 ±10 .88 575.6
+
+tion against the cached text embeddings. Images/s denotes GPU-forward throughput. Energy is obtained by integrating GPU power measurements from NVML over the evaluation period and normalizing by the number of processed images; power and peak GPU memory are measured under the same evaluation configuration. Across all four datasets, SAT LABEL Balanced student variant achieves roughly 2× higher inference throughput than the CLIP-based baselines, processing 24.1K–24.4K images/s versus 11.6K–12.2K images/s. The MoE+GCN variant achieves approximately 12.6K images/s due to its additional expert and graph-based processing. The Balanced variant also consumes less energy on AID, EuroSAT, and PatternNet, with 0.106, 0.036, and 0.044 J/image, corresponding to reductions of 15– 18%, 35–36%, and 31–35%, respectively, relative to the lowest-energy CLIP baseline. On OPTIMAL31, RemoteCLIP uses slightly less energy (0.097 vs. 0.100 J/image). Nevertheless, SAT LABEL Balanced consistently achieves lower average GPU power across all four datasets. The compact student also substantially reduces peak GPU memory on AID (381.1 MB vs. 741.9–1560.4 MB for the baselines), while the MoE+GCN variant remains considerably smaller than the CLIP-based models. Overall, S AT LABEL 
+
+provides a favorable accuracy–efficiency trade-off, combin-ing lower model complexity with approximately 2× higher throughput and generally lower energy and power consumption. 
+
+C. Results: Ablation Study 
+
+Cross-Dataset Generalization with Canonical Class Mapping. 
+
+To evaluate cross-dataset generalization, we test the trained 
+
+TABLE VII: Best student results on unseen datasets using canonical class mapping. Values are reported in percent.                          
+
+> Dataset Cov. RC F1 Stud. Acc. Stud. F1 Best setup OPTIMAL31 100.00 75.98 92.63 93.56 06 Mix, Balanced RSC11 90.91 60.42 56.97 71.97 06 Mix, MoE+GCN RS2800 100.00 62.99 48.82 54.70 04 WHU, MoE+GCN SIRI-WHU 100.00 59.07 47.33 51.14 01 Base, MoE+GCN
+
+students on four unseen benchmarks: OPTIMAL31, RSC11, RS2800, and SIRI-WHU. Since their native label spaces differ from the student’s training label space, we map semantically equivalent classes to a shared canonical label space. For example, airport across OPTIMAL31, AID, RESISC45, and WHU-RS19 is mapped to the canonical class airport .Evaluation is then performed only on classes with valid mappings, with coverage (Cov.) reporting the percentage of unseen classes retained after mapping. Table VII shows that the student models achieve strong trans-fer when sufficient semantic overlap exists. On OPTIMAL31, SAT LABEL Balanced achieves 92.63% accuracy and 93.56% Macro-F1, exceeding RemoteCLIP by 17.58 percentage points in Macro-F1. On RSC11, the MoE+GCN student achieves 71.97% Macro-F1, an 11.55-point improvement over Remote-CLIP, despite lower overall accuracy. In contrast, RemoteCLIP outperforms the students on RS2800 and SIRI-WHU by 8.29 and 7.93 Macro-F1 points, respectively. These results indicate that student transfer depends on the degree of semantic and domain alignment between the unseen benchmark and the training data, while RemoteCLIP’s zero-shot representations can provide an advantage under greater distribution shift. 
+
+Comparison of Student Backbone Architectures. Table VIII compares knowledge-distilled students using ResNet-18 and ResNet-50 across seven remote-sensing benchmarks. Both students substantially outperform zero-shot RemoteCLIP on six datasets, demonstrating effective transfer of foundation-model semantics into compact task-specific classifiers. ResNet-18 achieves the best student Macro-F1 on UC Merced, PatternNet, and RSI-CB256, while ResNet-50 provides modest gains on AID, EuroSAT, and RESISC45. On WHU-RS19, however, RemoteCLIP remains superior, achieving 94.33% Macro-F1 versus 84.81% and 85.93% for ResNet-18 and ResNet-50, respectively. Overall, the results show that increasing backbone capacity does not consistently improve transfer performance, supporting ResNet-18 as a more efficient student architecture with competitive or superior accuracy across most benchmarks. 
+
+Model Component Analysis. Table IX reports a cumulative ablation on AID with 30% labeled data. Knowledge dis-tillation provides the largest initial gain (+1.8 percentage points), followed by FixMatch consistency regularization (+1.1), demonstrating the complementary benefits of teacher-guided supervision and unlabeled-data utilization. Uncertainty-based active learning adds a further +0.5 points over random selection, while Sinkhorn routing improves the MoE student by +0.3 points over softmax gating. Finally, BatchGCN yields an additional +0.8 points, indicating the benefit of modeling within-batch feature relationships. Overall, the complete framework TABLE VIII: RemoteCLIP zero-shot performance compared with knowledge-distilled ResNet-18 and ResNet-50 student models. Best student results are shown in bold . Values are reported in percent. RemoteCLIP Student ResNet-18 Student ResNet-50 Dataset Acc. F1 Acc. F1 Acc. F1 AID 86.83 86.04 94.41 94.76 94.53 95.02                                     
+
+> EuroSAT 32.46 29.87 95.37 95.95 94.87 96.29
+> UC Merced 77.95 74.63 91.00 94.01 80.52 86.09 RESISC45 68.38 66.53 86.63 88.24 88.38 90.34
+> PatternNet 57.52 52.15 95.90 96.26 93.24 93.41 RSI-CB256 50.38 42.60 87.01 91.36 80.94 89.66 WHU-RS19 94.33 94.33 77.41 84.81 78.52 85.93
+
+TABLE IX: Cumulative component analysis on AID (30 % labeled). 
+
+Configuration (Accuracy, %) ∆
+
+(1) ResNet-18 supervised 89.4 —(2) +KD from RemoteCLIP 91.2 +1.8 (3) +Consistency (FixMatch) 92.3 +1.1 (4) +Active learning (random) † 92.6 +0.3 (5) +Active learning (uncertainty) 93.1 +0.5 (6) +MoE (softmax gating) 93.3 +0.2 (7) +MoE (Sinkhorn gating) 93.6 +0.3 (8) +BatchGCN (full model) 94.4 +0.8 
+
+improves ResNet-18 accuracy from 89.4% to 94.4%, 5× gain. 
+
+Feature-Space Analysis on Unseen Domains. To examine representation transfer, we visualize the learned student em-beddings on four unseen datasets using t-SNE. As shown in Fig. 4, the embeddings exhibit distinct class-dependent structures across OPTIMAL31, RSC11, RS2800, and SIRI-WHU, despite these datasets being excluded from training. The observed inter-class separation and intra-class concentration indicate that the student preserves discriminative semantic structure under domain shift. Differences in cluster separability align with the quantitative results, indicating stronger transfer under greater semantic alignment. 
+
+Class-Wise Performance Analysis. Fig. 5 shows the normal-ized confusion matrices across the core, extended, and unseen datasets. The dominant diagonal structure indicates strong class-wise discrimination, while most errors occur between visually and semantically related categories that share similar spatial layouts, textures, or land-cover characteristics. The remaining confusion is particularly concentrated in fine-grained classes, such as residential-density and related vegetation or land-cover categories. These patterns suggest that the primary errors stem from subtle inter-class visual similarities rather than confusion across unrelated scene types. V. C ONCLUSION 
+
+We presented S AT LABEL , a resource-aware framework that integrates adaptive sample acquisition with semi-supervised model adaptation to transform limited satellite labels and abun-dant unlabeled imagery into compact onboard vision models. By jointly exploiting model uncertainty, class balance, teacher-guided pseudo-labeling, and consistency learning, S AT LABEL       
+
+> (a) OPTIMAL31 (b) RSC11
+> (c) RS2800 (d) SIRI-WHU
+
+Fig. 4: t-SNE projections of student features on unseen datasets.                  
+
+> (a) AID (b) EuroSAT (c) UC Merced
+> (d) RESISC45 (e) PatternNet (f) RSI-CB256
+> (g) OPTIMAL31 (h) RSC11 (i) RS2800 (j) SIRI-WHU
+
+Fig. 5: Normalized confusion matrices on all benchmarks. 
+
+achieves competitive or higher Macro-F1 on most core and extended datasets while maintaining strong transfer to unseen domains. Beyond predictive performance, the Balanced student substantially reduces deployment overhead: compared with RemoteCLIP, it uses approximately 13 .5× fewer parameters, requires 38% fewer FLOPs, and delivers approximately 2×
+
+higher GPU-forward throughput, while reducing energy con-sumption per image on three of four efficiency benchmarks. The optional MoE+GCN variant increases representation capacity while remaining lightweight. Overall, S AT LABEL provides label-efficient, resource-aware onboard satellite annotation. REFERENCES [1] K. Karwowska and D. Wierzbicki, “Using super-resolution algorithms for small satellite imagery: A systematic review,” IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , vol. 15, pp. 3292–3312, 2022. [2] Y. Li, B. Dang, W. Li, and Y. Zhang, “Glh-water: A large-scale dataset for global surface water detection in large-size very-high-resolution satellite imagery,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 38, no. 20, 2024, pp. 22 213–22 221. [3] L. Capogrosso and M. Magno, “Tinyml enhances cubesat mission capabilities,” in Proc. of the ACM/IEEE Int. Conf. on Cyber-Physical Systems (ICCPS) , 2026. [4] Z. Li, J. Yang, Y. Zhang, Z. Chen, and Y. Gao, “Enabling near-realtime remote sensing via satellite–ground collaboration of large vision–language models,” arXiv preprint arXiv:2510.24242 , 2025. [5] M. Elmahallawy and T. Luo, “Stitching satellites to the edge: Pervasive and efficient federated LEO satellite learning,” in Proc. IEEE Int. Conf. on Pervasive Computing and Communications (PerCom) , 2024. [6] F. Liu, D. Chen, Z. Guan, X. Zhou, J. Zhu, Q. Ye, L. Fu, and J. Zhou, “Remoteclip: A vision language foundation model for remote sensing,” 
+
+IEEE Trans. on Geoscience and Remote Sensing , 2024, accepted. [7] T.-D. Le, V. N. Ha, T. T. Nguyen, D.-D. Tran, H. Nguyen-Kha, L. M. Garces-Socarras, J. C. Merlano-Duncan, and S. Chatzinotas, “Onboard satellite image classification for earth observation: A comparative study of vit models,” IEEE Transactions on Geoscience and Remote Sensing ,2026. [8] T.-D. Le, V. N. Ha, T. T. Nguyen, G. Eappen, P. Thiruvasagam, H.-f. Chou, D.-D. Tran, L. M. Garces-Socarras, J. L. Gonzalez-Rios, J. C. Merlano-Duncan et al. , “Semantic knowledge distillation for onboard satellite earth observation image classification,” in 2025 IEEE International Conference on Machine Learning for Communication and Networking (ICMLCN) .IEEE, 2025, pp. 1–6. [9] J. Ø stman, P. Gómez, V. M. Shreenath, and G. Meoni, “Decentralised semi-supervised onboard learning for scene classification in low-earth orbit,” arXiv preprint arXiv:2305.04059 , 2023. [10] Y. Yang and S. Newsam, “Bag-of-visual-words and spatial extensions for land-use classification,” in Proceedings of the 18th SIGSPATIAL international conference on advances in geographic information systems ,2010, pp. 270–279. [11] G. Cheng, J. Han, and X. Lu, “Remote sensing image scene classification: Benchmark and state of the art,” Proceedings of the IEEE , vol. 105, no. 10, pp. 1865–1883, 2017. [12] S. K. Roy, A. Deria, D. Hong, B. Rasti, A. Plaza, and J. Chanussot, “Multimodal fusion transformer for remote sensing image classification,” 
+
+IEEE Transactions on Geoscience and Remote Sensing , vol. 61, pp. 1–20, 2023. [13] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark et al. , “Learning transferable visual models from natural language supervision,” in International conference on machine learning . PmLR, 2021, pp. 8748–8763. [14] F. Liu, D. Chen, Z. Guan, X. Zhou, J. Zhu, Q. Ye, L. Fu, and J. Zhou, “Remoteclip: A vision language foundation model for remote sensing,” 
+
+IEEE Transactions on Geoscience and Remote Sensing , vol. 62, pp. 1–16, 2024. [15] X. Li, C. Wen, Y. Hu, and N. Zhou, “Rs-clip: Zero shot remote sensing scene classification via contrastive vision-language supervision,” 
+
+International Journal of Applied Earth Observation and Geoinformation ,vol. 124, p. 103497, 2023. [16] Z. Zhang, T. Zhao, Y. Guo, and J. Yin, “Rs5m and georsclip: A large-scale vision-language dataset and a large vision-language model for remote sensing,” IEEE Transactions on Geoscience and Remote Sensing ,vol. 62, pp. 1–23, 2024. [17] K. Sohn, D. Berthelot, N. Carlini, Z. Zhang, H. Zhang, C. Raffel, E. D. Cubuk, A. Kurakin, and C.-L. Li, “Fixmatch: Simplifying semi-supervised learning with consistency and confidence,” Advances in neural information processing systems , vol. 33, pp. 596–608, 2020. [18] A. Tarvainen and H. Valpola, “Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results,” Advances in neural information processing systems ,vol. 30, 2017. [19] D. Cacciarelli and M. Kulahci, “Active learning for data streams: a survey,” Machine Learning , vol. 113, no. 1, pp. 185–239, 2024. [20] R. Thoreau, V. Achard, L. Risser, B. Berthelot, and X. Briottet, “Active learning for hyperspectral image classification: A comparative review,” 
+
+IEEE geoscience and remote sensing magazine , vol. 10, no. 3, pp. 256– 278, 2022. [21] G. Hinton, O. Vinyals, and J. Dean, “Distilling the knowledge in a neural network,” arXiv preprint arXiv:1503.02531 , 2015. [22] A. Dietmüller, A. G. Alcoz, and L. Vanbever, “Fitnets: An adap-tive framework to learn accurate traffic distributions,” arXiv preprint arXiv:2405.10931 , 2024. [23] T.-D. Le, V. N. Ha, T. T. Nguyen, G. Eappen, P. Thiruvasagam, H.-f. Chou, D.-D. Tran, L. M. Garces-Socarras, J. L. Gonzalez-Rios, J. C. Merlano-Duncan et al. , “Semantic knowledge distillation for onboard satellite earth observation image classification,” in 2025 IEEE International Conference on Machine Learning for Communication and Networking (ICMLCN) .IEEE, 2025, pp. 1–6. [24] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image recognition,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2016, pp. 770–778. [25] M. Cuturi, “Sinkhorn distances: Lightspeed computation of optimal transport,” Advances in neural information processing systems , vol. 26, 2013. [26] G. Peyré and M. Cuturi, Computational optimal transport: With applica-tions to data science . Now Foundations and Trends, 2019. [27] Q. Li, Z. Han, and X.-M. Wu, “Deeper insights into graph convolutional networks for semi-supervised learning,” in Proceedings of the AAAI conference on artificial intelligence , vol. 32, no. 1, 2018. [28] G.-S. Xia, J. Hu, F. Hu, B. Shi, X. Bai, Y. Zhong, L. Zhang, and X. Lu, “Aid: A benchmark data set for performance evaluation of aerial scene classification,” IEEE Transactions on Geoscience and Remote Sensing ,vol. 55, no. 7, pp. 3965–3981, 2017. [29] P. Helber, B. Bischke, A. Dengel, and D. Borth, “Eurosat: A novel dataset and deep learning benchmark for land use and land cover classification,” 
+
+IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing , vol. 12, no. 7, pp. 2217–2226, 2019. [30] W. Zhou, S. Newsam, C. Li, and Z. Shao, “Patternnet: A benchmark dataset for performance evaluation of remote sensing image retrieval,” 
+
+ISPRS journal of photogrammetry and remote sensing , vol. 145, pp. 197–209, 2018. [31] G.-S. Xia, W. Yang, J. Delon, Y. Gousseau, H. Sun, and H. Maître, “Structural high-resolution satellite image indexing,” in ISPRS TC VII Symposium-100 Years ISPRS , vol. 38, 2010, pp. 298–303. [32] H. Li, X. Dou, C. Tao, Z. Wu, J. Chen, J. Peng, M. Deng, and L. Zhao, “Rsi-cb: A large-scale remote sensing image classification benchmark using crowdsourced data,” Sensors , vol. 20, no. 6, p. 1594, 2020. [33] Q. Wang, S. Liu, J. Chanussot, and X. Li, “Scene classification with recurrent attention of vhr remote sensing images,” IEEE Transactions on Geoscience and Remote Sensing , vol. 57, no. 2, pp. 1155–1167, 2018. [34] L. Zhao, P. Tang, and L. Huo, “Feature significance-based multibag-of-visual-words model for remote sensing image scene classification,” 
+
+Journal of Applied Remote Sensing , vol. 10, no. 3, pp. 035 004–035 004, 2016. [35] B. Liu, C. Zhan, C. Guo, X. Liu, and S. Ruan, “Efficient remote sensing image classification using the novel stconvnext convolutional network,” 
+
+Scientific Reports , vol. 15, no. 1, p. 8406, 2025. [36] B. Zhao, Y. Zhong, G. Xia, and L. Zhang, “Dirichlet-derived multiple topic scene classification model fusing heterogeneous features for high spatial resolution remote sensing imagery,” IEEE Trans. Geosci. Remote Sens , vol. 54, no. 4, pp. 2108–2123, 2016. [37] D. Wang, J. Zhang, B. Du, M. Xu, L. Liu, D. Tao, and L. Zhang, “Samrs: Scaling-up remote sensing segmentation dataset with segment anything model,” Advances in Neural Information Processing Systems , vol. 36, pp. 8815–8827, 2023. [38] U. K. Mall, C. P. Phoo, M. Liu, C. Vondrick, B. Hariharan, and K. Bala, “Remote sensing vision-language foundation models without annotations via ground remote alignment,” in International Conference on Learning Representations , vol. 2024, 2024, pp. 49 294–49 314. APPENDIX 
+
+A. Detailed Augmentation Strategy 
+
+The weak/strong augmentation strategy is a central design choice in S AT LABEL and deserves elaboration beyond the main paper description. 
+
+Weak Augmentation Aw(·). Weak augmentation applies mild, semantics-preserving transformations to produce a view xw =
+
+Aw(x) that closely resembles the original image in terms of scene content. The transformations applied are:  
+
+> •
+
+Random resized crop : images are cropped to a random region (scale 0.8–1.0 of the original area) and resized to 
+
+224 ×224 . 
+
+> •
+
+Random horizontal flip : applied with probability 0.5. These transformations preserve the overall scene structure, ensuring that the teacher’s prediction on xw closely reflects its prediction on the original image. The weak view is used exclusively for teacher forward passes and never directly for student training. 
+
+Strong Augmentation As(·). Strong augmentation applies an aggressive sequence of appearance-level transformations to produce xs = As(x), substantially altering the image’s visual characteristics while preserving its semantic category:  
+
+> •
+
+Random color jitter : brightness, contrast, saturation, and hue each perturbed with strength 0.4 and probability 0.8.  
+
+> •
+
+Random grayscale conversion : applied with probability 0.2.  
+
+> •
+
+Gaussian blur : kernel size 23 ×23 , σ ∈ [0 .1, 2.0] , applied with probability 0.5.  
+
+> •
+
+Random erasing : a random rectangular region (area ratio 0.02–0.33, aspect ratio 0.3–3.3) is replaced with the mean pixel value; applied with probability 0.5.  
+
+> •
+
+Random resized crop and horizontal flip : same as weak. The student is trained on xs and must reproduce the teacher’s prediction on xw, enforcing invariance to appearance changes irrelevant to scene category. This asymmetric design—stable in-puts for the teacher, distorted inputs for the student—is the core mechanism of FixMatch-style consistency regularization [17]. 
+
+B. Training Objectives in Full 
+
+The main paper presents equations for LKD , Lcons , and the combined objective. Here we give the complete formulation including the supervised loss. 
+
+Supervised Cross-Entropy. For images in the labeled set 
+
+Drl , standard cross-entropy anchors the student to ground-truth human annotations and prevents drift toward spurious patterns introduced by pseudo-label noise: 
+
+LCE = −E(x,y )∼D l
+
+hP 
+
+> c
+
+yc log Ps(yc | x)
+
+i
+
+. (16) Without this term, the student would depend entirely on the teacher’s pseudo-labels, which—while generally accurate—can be wrong for scenes that are ambiguous even to the foundation model. 
+
+Knowledge Distillation. For all images (labeled and unlabeled), the student minimizes the temperature-scaled KL divergence from the teacher’s soft distribution: 
+
+LKD = T 2 KL  Pt(y | x; T ) ∥ Ps(y | x; T ). (17) The temperature T = 2 softens both distributions, amplifying differences among non-dominant classes and encoding inter-class semantic similarity ( e.g. , forest is closer to farmland than to airport). The T 2 factor compensates for the reduced gradient magnitude at higher temperatures, keeping LKD on a comparable scale to LCE .
+
+{Consistency Regularization. For unlabeled images whose teacher confidence exceeds τ , the student is penalized when its prediction on the strongly augmented view xs differs from the teacher’s prediction on xw:
+
+Lcons = Ex∈D ′
+
+> u
+
+h
+
+H Pt(y | xw), P s(y | xs)i
+
+, (18) where D′ 
+
+> u
+
+= {x ∈ D u : max y Pt(y|xw) > τ } and H denotes cross-entropy. 
+
+Combined Objective. The student is trained with the weighted sum: 
+
+L = λCE LCE + λKD LKD + λcons Lcons , (19) with λCE = 0 .3, λKD = 0 .7. The higher weight on LKD reflects the richer information content of the teacher’s soft distributions. 
+
+λcons is activated from round 3 onward, once the student has reached sufficient reliability to avoid reinforcing early errors. 
+
+C. Mixture-of-Experts Routing 
+
+The MoE module addresses the visual heterogeneity of satellite imagery by learning K specialized expert networks. Each expert independently transforms the backbone feature z:
+
+ek = Ek(z), k = 1 , . . . , K, (20) where each Ek is a two-layer MLP with ReLU activation. Through gradient-driven learning, experts develop complemen-tary specializations: one may focus on the geometric regularity of urban structures, another on the spectral texture of vegetation, and a third on the smooth homogeneous appearance of water bodies. A lightweight gating network predicts routing logits over the experts. Standard softmax gating suffers from expert collapse— routing nearly all inputs to one dominant expert—which is particularly harmful in remote sensing where diverse scene categories require genuine expert diversity. We apply Sinkhorn– Knopp normalization to the routing logit matrix G ∈ RB×K ,alternating row and column normalizations to produce a doubly-stochastic assignment that enforces balanced expert utilization across the mini-batch. Only the top-2 experts are activated per sample (sparse routing). The final MoE output is: 
+
+zmoe = PKk=1 gk Ek(z), (21) where {gk} are the Sinkhorn-normalized routing weights summing to 1. In our experiments we use K = 4 experts. TABLE X: Dataset statistics. Support denotes images per class (min / max / mean). 
+
+Group Dataset Classes Images Min Max Mean 
+
+Core AID 30 10,000 220 420 333 Core EuroSAT 10 27,000 2000 3000 2700 Core UC Merced 21 2,100 100 100 100 Extended RESISC45 45 31,500 700 700 700 Extended PatternNet 38 30,400 800 800 800 Extended RSI-CB256 7 24,747 884 6258 3535 Extended WHU-RS19 19 1,005 50 61 53 Unseen OPTIMAL31 31 1,860 60 60 60 Unseen RSC11 11 1,232 80 142 112 Unseen RS2800 7 2,800 400 400 400 Unseen SIRI-WHU 12 2,400 200 200 200 
+
+TABLE XI: Student training configurations used in the ablation study. Experiment Training domains 01 Baseline AID, UC Merced, EuroSAT 02 + RESISC45 AID, UC Merced, EuroSAT, RESISC45 03 + PatternNet AID, UC Merced, EuroSAT, PatternNet 04 + WHU-RS19 AID, UC Merced, EuroSAT, WHU-RS19 05 + RSI-CB256 AID, UC Merced, EuroSAT, RSI-CB256 06 All Eval Mix AID, UC Merced, EuroSAT, RESISC45, Pat-ternNet, WHU-RS19, RSI-CB256 
+
+TABLE XII: ResNet-18 MoE+GCN student – best checkpoint results on all eleven datasets. Acc: accuracy. F1: Macro-F1. ∆: student minus RemoteCLIP (Accuracy).                                                              
+
+> Group Dataset RC Acc. Stud. Acc. Stud. F1 ∆Acc.
+> Core AID 86.83 94.41 94.76 +7.58 Core EuroSAT 32.46 95.37 95.95 +62.91 Core UC Merced 77.95 91.00 94.01 +13.05 Extended RESISC45 68.38 86.63 88.24 +18.25 Extended PatternNet 57.52 95.90 96.26 +38.38 Extended RSI-CB256 50.38 87.01 91.36 +36.63 Extended WHU-RS19 94.33 77.41 84.81 −16.92 Unseen OPTIMAL31 77.47 83.66 83.74 +6.19 Unseen RSC11 62.91 86.20 86.10 +23.29 Unseen RS2800 63.61 76.00 76.03 +12.39 Unseen SIRI-WHU 61.54 85.17 84.96 +23.63
+
+TABLE XIII: RemoteCLIP zero-shot vs. best ResNet-18 MoE+GCN student (Accuracy / Macro-F1, %). ∆: student minus RemoteCLIP (Accuracy). Bold : best per dataset. 
+
+Dataset RemoteCLIP Student (R18) ∆ Acc. 
+
+AID 86.83 / 86.06 94.41 / 94.76 +7.58 EuroSAT 32.46 / 29.87 95.37 / 95.95 +62.91 UC Merced 77.95 / 74.63 91.00 / 94.01 +13.05 RESISC45 68.38 / 66.53 86.63 / 88.24 +18.25 PatternNet 57.52 / 52.15 95.90 / 96.26 +38.38 RSI-CB256 50.38 / 42.60 87.01 / 91.36 +36.63 WHU-RS19 94.33 / 94.33 77.41 / 84.81 −16.92 
+
+TABLE XIV: AID – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Forest 250 99.6 99.6 100.0 Beach 400 99.0 99.2 99.7 Meadow 280 99.3 98.9 99.6 Parking 390 98.5 99.2 99.4 Mountain 340 98.8 98.5 99.2 Viaduct 420 97.2 100.0 99.1 Farmland 370 98.6 97.8 98.8 Pond 420 97.6 98.1 98.4 Playground 370 98.6 97.0 98.4 Storagetanks 360 96.7 98.3 98.1 Baseballfield 220 95.6 99.1 97.9 Stadium 290 96.3 98.3 97.8 Port 380 95.6 98.2 97.4 Desert 300 97.3 96.0 97.2 Bareland 310 95.3 97.7 97.0 River 410 99.2 93.9 97.0 Sparseresidential 300 99.6 93.3 96.9 Airport 360 96.1 95.6 96.3 Bridge 360 91.5 98.9 95.6 Denseresidential 410 95.2 91.7 93.9 Mediumresidential 290 90.8 95.9 93.8 Industrial 390 91.8 92.3 92.6 Railwaystation 260 89.3 93.5 91.9 Commercial 350 91.3 86.6 89.3 Church 240 80.4 99.2 89.3 Park 350 89.8 85.4 88.0 Square 330 93.3 80.0 86.6 Center 260 89.6 82.7 86.5 School 300 77.9 90.3 84.1 Resort 290 89.8 76.2 82.9 
+
+Macro — 94.3 94.4 94.76 
+
+TABLE XV: EuroSAT – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Residential 3000 99.5 99.0 98.5 Industrial 2500 98.9 99.4 98.5 Sea Or Lake 3000 98.8 99.0 98.2 Forest 3000 98.2 98.9 97.9 Highway 2500 98.4 94.6 95.8 River 2500 93.4 98.8 95.3 Annual Crop 3000 95.5 95.9 95.0 Herbaceous Vegetation 3000 91.3 98.0 93.8 Pasture 2000 98.8 90.1 93.6 Permanent Crop 2500 96.0 91.2 92.9 
+
+Macro — 96.9 96.5 95.95 TABLE XVI: UC Merced – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Beach 100 100.0 100.0 99.4 Harbor 100 99.0 100.0 98.9 Parkinglot 100 100.0 99.0 98.9 Tenniscourt 100 100.0 99.0 98.9 Agricultural 100 99.0 99.0 98.4 Baseballdiamond 100 100.0 98.0 98.4 Sparseresidential 100 100.0 96.0 97.4 Airplane 100 96.1 99.0 97.0 Runway 100 98.0 97.0 96.9 Chaparral 100 100.0 94.0 96.3 Forest 100 93.5 100.0 96.1 River 100 94.2 98.0 95.5 Intersection 100 94.2 97.0 95.0 Golfcourse 100 100.0 90.0 94.2 Storagetanks 100 96.8 92.0 93.8 Freeway 100 85.5 100.0 91.6 Overpass 100 94.7 89.0 91.2 Buildings 100 92.8 90.0 90.8 Mobilehomepark 100 74.1 100.0 84.6 Mediumresidential 100 93.6 73.0 81.5 Denseresidential 100 83.5 76.0 79.4 
+
+Macro — 95.0 94.6 94.01 
+
+D. BatchGCN Refinement 
+
+The BatchGCN module exploits relational structure within each mini-batch. For a mini-batch of B images, we extract MoE features and build a k-nearest-neighbor ( k-NN) graph in feature space. Each image corresponds to one node; an edge connects xi to xj if xj is among the k = 8 nearest neighbors of xi by cosine similarity: 
+
+Aij = 1[xj ∈ N k(xi)] . (22) Constructing this graph per mini-batch rather than over the entire dataset keeps computation tractable: for batch sizes up to 256 the k-NN construction requires negligible time relative to the forward pass. A single graph convolutional layer with symmetric degree normalization propagates information between neighboring nodes: 
+
+Z′ = ReLU   ˆA Z W , ˆA = ˜D− 12 ˜A ˜D− 12 , (23) where ˜A = A+I adds self-loops so each node retains its own features, ˜D is the corresponding degree matrix, and W is a learnable weight matrix. The normalization by ˜D prevents high-degree nodes from dominating the aggregation. A single layer is used deliberately to avoid over-smoothing, which would collapse all node representations toward the graph mean and destroy class-discriminative structure. After one round of message passing, each image’s represen-tation has been enriched by the features of its most similar 
+
+TABLE XVII: RESISC45 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Sea Ice 700 99.7 98.3 97.0 Airplane 700 98.1 98.3 96.2 Beach 700 96.7 97.7 95.3 Circular Farmland 700 96.6 97.6 95.1 Golf Course 700 98.8 94.7 94.8 Harbor 700 93.7 99.6 94.6 Chaparral 700 95.4 97.3 94.4 Cloud 700 97.0 95.6 94.3 Baseball Diamond 700 93.9 98.6 94.2 Parking Lot 700 92.8 98.3 93.6 Storage Tank 700 91.0 99.1 93.0 Basketball Court 700 97.4 92.4 92.9 Roundabout 700 98.3 91.6 92.9 Forest 700 94.8 93.6 92.3 Runway 700 98.6 89.7 92.0 Intersection 700 95.7 91.6 91.7 Airport 700 92.6 94.4 91.6 Meadow 700 91.5 95.4 91.5 Desert 700 91.7 94.9 91.4 Overpass 700 92.4 93.3 90.9 Thermal Power Station 700 94.4 91.3 90.9 Mobile Home Park 700 90.0 95.3 90.7 Island 700 98.5 87.1 90.6 Bridge 700 87.8 97.6 90.6 Ship 700 89.6 94.3 90.0 Tennis Court 700 96.4 87.1 89.7 Sparse Residential 700 90.1 92.7 89.6 Ground Track Field 700 83.8 99.0 88.9 Industrial Area 700 88.1 92.3 88.3 Rectangular Farmland 700 84.3 95.7 87.8 Terrace 700 98.0 82.3 87.6 Freeway 700 87.8 90.4 87.3 Lake 700 82.7 95.7 86.9 Railway Station 700 91.6 82.9 85.3 Railway 700 89.6 84.0 85.0 Dense Residential 700 86.8 84.6 83.9 River 700 80.4 91.7 83.9 Stadium 700 98.9 75.0 83.6 Snowberg 700 96.7 74.3 82.3 Medium Residential 700 71.6 93.1 79.3 Mountain 700 73.4 90.1 79.3 Wetland 700 97.0 64.7 76.1 Commercial Area 700 86.1 68.1 74.5 Church 700 57.8 92.3 69.6 Palace 700 96.6 44.1 59.4 
+
+Macro — 91.2 90.2 88.24 
+
+neighbors. The graph-refined features Z′ are passed to a dropout layer (rate 0.3) followed by a fully connected classification head. (a) Total images per dataset. (b) Number of classes per dataset. 
+
+Fig. 6: Dataset overview. The 30 × size imbalance (1 005 to 31 500 images) motivates dataset-balanced sampling and stratified active queries. 
+
+TABLE XVIII: PatternNet – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Forest 800 100.0 100.0 100.0 Oil Well 800 100.0 100.0 100.0 Freeway 800 100.0 99.7 100.0 Airplane 800 99.8 99.9 100.0 Runway 800 99.9 99.7 100.0 Beach 800 99.5 100.0 100.0 Runway Marking 800 99.6 99.9 100.0 Parking Space 800 99.4 100.0 100.0 Golf Course 800 100.0 99.4 100.0 Oil Gas Field 800 100.0 99.1 100.0 Transformer Station 800 99.3 99.7 100.0 Baseball Field 800 98.9 100.0 100.0 River 800 99.9 99.0 100.0 Tennis Court 800 99.1 99.6 100.0 Football Field 800 100.0 98.6 100.0 Solar Panel 800 99.5 98.6 100.0 Cemetery 800 98.9 99.1 100.0 Railway 800 98.6 99.2 100.0 Intersection 800 97.8 99.2 100.0 Overpass 800 99.1 97.7 100.0 Shipping Yard 800 98.7 97.6 100.0 Basketball Court 800 99.6 96.6 100.0 Chaparral 800 96.2 100.0 100.0 Christmas Tree Farm 800 98.2 96.5 99.7 Parking Lot 800 92.2 100.0 98.2 Closed Road 800 99.6 92.0 98.0 Bridge 800 92.1 98.9 97.7 Dense Residential 800 96.0 93.6 97.1 Nursing Home 800 99.9 84.2 93.6 Sparse Residential 800 85.5 95.9 92.6 Harbor 800 79.8 99.7 90.8 Mobile Home Park 800 79.7 99.7 90.8 Crosswalk 800 99.8 79.5 90.7 Swimming Pool 800 68.5 99.9 83.2 Ferry Terminal 800 100.0 64.1 81.4 Storage Tank 800 60.5 99.9 81.3 Coastal Mansion 800 98.9 58.2 81.3 Wastewater Treatment Plant 800 100.0 36.4 81.3 
+
+Macro — 95.6 94.3 96.26 
+
+TABLE XIX: RSI-CB256 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Woodland 6258 99.8 99.8 92.0 Construction Land 3791 99.8 99.4 91.9 Water Area 4104 98.8 99.1 91.4 Other Objects 884 99.7 98.1 91.3 Other Land 3593 99.1 98.5 91.2 Cultivated Land 2817 98.1 98.8 90.9 Transportation 3300 98.2 98.6 90.8 
+
+Macro — 99.1 98.9 91.36 
+
+TABLE XX: WHU-RS19 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Football Field 50 100.0 100.0 87.6 Meadow 61 100.0 98.4 86.8 River 56 100.0 98.2 86.8 Pond 54 98.2 100.0 86.8 Port 53 100.0 98.1 86.7 Mountain 50 98.0 100.0 86.7 Parking 50 100.0 98.0 86.7 Bridge 52 100.0 96.2 85.9 Desert 50 96.2 100.0 85.9 Farmland 50 100.0 96.0 85.8 Beach 50 94.3 100.0 85.0 Park 50 100.0 94.0 84.9 Forest 53 96.2 96.2 84.3 Railway Station 50 92.5 98.0 83.3 Commercial 56 96.3 92.9 82.8 Industrial 53 96.1 92.5 82.5 Residential 54 88.5 100.0 82.2 Viaduct 58 87.9 100.0 81.9 Airport 55 100.0 81.8 78.8 
+
+Macro — 97.1 96.9 84.81 
+
+E. Dataset Statistics 
+
+Table X provides comprehensive statistics for all eleven datasets. The wide size range (1 005 to 31 500 images) and TABLE XXI: RSC11 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Dense Forest 69 100.0 98.6 99.3 Harbor 44 97.7 97.7 97.7 Sparse Forest 56 100.0 89.3 94.3 Storage Tanks 53 98.0 90.6 94.1 Grassland 51 90.7 96.1 93.3 Residential Area 70 86.8 94.3 90.4 High Buildings 54 85.5 87.0 86.2 Low Buildings 55 66.2 96.4 78.5 Railway 40 76.9 75.0 75.9 Overpass 53 71.4 75.5 73.4 Roads 71 82.2 52.1 64.0 
+
+Macro — 86.9 86.6 86.10 
+
+TABLE XXII: RS2800 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Field 200 86.8 85.5 86.0 Resident 200 82.4 82.0 82.2 Forest 200 75.7 85.5 80.3 River Or Lake 200 83.9 75.5 79.5 Parking 200 72.2 67.5 69.8 Grass 200 71.8 67.5 69.6 Industry 200 61.4 68.5 64.8 
+
+Macro — 76.3 76.0 76.03 
+
+TABLE XXIII: SIRI-WHU – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Water 100 99.0 100.0 99.4 Residential 100 91.4 96.0 93.7 Harbor 100 92.9 92.0 92.5 Overpass 100 83.8 98.0 90.3 Commercial 100 86.5 90.0 88.2 Industrial 100 83.2 84.0 83.6 Idle Land 100 76.5 88.0 81.9 Agriculture 100 89.0 73.0 80.2 River 100 83.5 76.0 79.6 Pond 100 76.1 83.0 79.4 Park 100 78.8 78.0 78.4 Meadow 100 83.1 64.0 72.3 
+
+Macro — 85.3 85.2 84.96 
+
+class count range (7 to 45 classes) motivate both the dataset-
+
+TABLE XXIV: OPTIMAL31 – ResNet-18 student per-class results (%). Sorted by F1-Score descending. 
+
+Class Support Precision Recall F1-Score 
+
+Airplane 30 100.0 100.0 100.0 Beach 30 96.7 96.7 96.7 Chaparral 30 96.6 93.3 94.9 Island 30 100.0 90.0 94.7 Harbor 30 93.1 90.0 91.5 Parking Lot 30 93.1 90.0 91.5 Circular Farmland 30 96.3 86.7 91.2 Runway 30 96.3 86.7 91.2 Airport 30 87.5 93.3 90.3 Roundabout 30 92.9 86.7 89.7 Forest 30 81.1 100.0 89.6 Rectangular Farmland 30 82.9 96.7 89.2 Mountain 30 84.8 93.3 88.9 Dense Residential 30 87.1 90.0 88.5 Basketball Court 30 96.0 80.0 87.3 Mobile Home Park 30 84.4 90.0 87.1 Desert 30 81.8 90.0 85.7 Golf Course 30 83.3 83.3 83.3 Bridge 30 85.7 80.0 82.8 Lake 30 85.7 80.0 82.8 Baseball Diamond 30 74.3 86.7 80.0 Railway 30 88.0 73.3 80.0 Overpass 30 82.1 76.7 79.3 Ground Track Field 30 84.6 73.3 78.6 Meadow 30 84.6 73.3 78.6 Medium Residential 30 69.4 83.3 75.8 Industrial Area 30 75.9 73.3 74.6 Freeway 30 70.4 63.3 66.7 Church 30 69.2 60.0 64.3 Commercial Area 30 56.8 70.0 62.7 Intersection 30 54.3 63.3 58.5 
+
+Macro — 84.3 83.7 83.74 
+
+Fig. 7: WHU-RS19 Macro-F1 comparison. RemoteCLIP remains strongest on this small dataset, while the balanced student substantially narrows the gap and MoE+GCN further improves the best checkpoint. (a) AID (RemoteCLIP) (b) EuroSAT (RemoteCLIP) (c) UC Merced (RemoteCLIP) 
+
+Fig. 8: t-SNE projections of RemoteCLIP features on core datasets. Classes are generally well-separated, confirming the quality of the teacher’s zero-shot representations.      
+
+> (a) AID (Student) (b) EuroSAT (Student) (c) UC Merced (Student)
+
+Fig. 9: t-SNE projections of student features on core datasets. The student achieves comparable cluster separation to RemoteCLIP, confirming successful knowledge distillation.      
+
+> (a) RESISC45 (b) PatternNet (c) RSI-CB256
+
+Fig. 10: Normalized confusion matrices – extended datasets.        
+
+> (a) OPTIMAL31 (b) RSC11 (c) RS2800 (d) SIRI-WHU
+
+Fig. 11: Normalized confusion matrices – unseen datasets (prototype mode). 
+
+balanced sampling and the stratified active-query selection described in the main paper. 
+
+F. ResNet-18 Student vs. RemoteCLIP 
+
+Table XIII compares the best ResNet-18 MoE+GCN student against RemoteCLIP zero-shot on all core and extended datasets. The student outperforms RemoteCLIP on six of seven datasets. WHU-RS19 is the exception: with only 1 005 images, the foundation model’s zero-shot generalization (94.33 %) substantially exceeds the student’s best checkpoint (11.14 % accuracy), confirming that data-driven adaptation is limited when training samples are very scarce. 
+
+G. WHU-RS19 Deep Dive 
+
+Figure 7 analyzes the three model variants on WHU-RS19. While the balanced student without MoE/GCN achieves 80.72 % Macro-F1, adding MoE+GCN improves the best checkpoint to 84.81 %. RemoteCLIP retains the lead at 94.33 %, confirming that foundation-model zero-shot generalization is superior when training data is very scarce. The gap highlights a genuine limitation: dataset-balanced sampling and active learning improve small-dataset coverage but cannot fully substitute for richer training data. 
+
+H. Per-Class Results: ResNet-18 MoE+GCN Student 
+
+Tables XIV–XXIV report ResNet-18 MoE+GCN student per-class Precision, Recall, and F1-Score for all eleven datasets, sorted by F1-Score (descending). Per-class metrics are derived from the evaluation CSV and reveal which categories the student finds challenging. (a) AID (b) RESISC45 (c) PatternNet      
+
+> (d) UC Merced (e) OPTIMAL31 (f) SIRI-WHU
+
+Fig. 12: Lowest-accuracy classes per dataset. Hard categories typically share visual patterns with neighboring classes, limiting discriminability under limited labeled supervision.    
+
+> (a) Config 01 (Baseline). (b) Config 04 (+WHU-RS19).
+
+Fig. 13: Initial labeled pool class distributions. WHU-RS19 (config 04) introduces the largest imbalance: some classes receive as few as 15 initial labeled samples vs. over 200 for PatternNet or RESISC45 classes, motivating the stratified active-query strategy. 
+
+I. Hardest Classes per Dataset 
+
+Figure 12 shows the lowest-accuracy classes for selected datasets. Hard categories consistently involve fine-grained distinctions within a semantic group ( e.g. , residential density levels, crop types) or categories with high inter-class visual overlap. 
+
+J. Initial Labeled Pool Distribution 
+
+Figure 13 shows the class distribution of the initial labeled pool for selected configurations, illustrating the imbalance that arises when datasets of very different sizes are combined.

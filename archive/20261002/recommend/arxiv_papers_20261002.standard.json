@@ -1,0 +1,506 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-02T22:49:02.937392+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 15,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2609.38511v1",
+      "source": "arxiv",
+      "title": "Onboard Vision and MPC Navigation for Underwater Robots: An Open BlueROV2 Platform for Multi-Robot Experiments & Docking",
+      "abstract": "Autonomous underwater robots require robust perception, estimation and control to operate in confined environments. This paper presents an open-source BlueROV2 platform combining onboard vision with nonlinear Model Predictive Control (NMPC) for autonomous navigation and docking. The platform integrates an NVIDIA Jetson Orin NX and an Intel RealSense D435i stereo camera in a modular pressure housing. Underwater-calibrated stereo depth and realtime object detection provide relative position measurements of nearby BlueROV2 vehicles in the camera and body frames. A quaternion-based estimator fuses external pose and inertial measurements, while an NMPC controller based on a nonlinear six-degree-of-freedom model tracks planned navigation and docking trajectories. To support reproducible development, we also provide open-source physics-based PX4 SITL and Gazebo environments, multi-robot simulation tools and a lowcost physical docking station. Experiments evaluate underwater perception, onboard computational performance, state estimation, trajectory tracking and autonomous docking.",
+      "authors": [
+        "Victor Nan Fernandez-Ayala",
+        "Wiktor Kowalczyk",
+        "Cezary Banaszek",
+        "Dimos V. Dimarogonas"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SY"
+      ],
+      "published": "2026-09-29T20:33:23+00:00",
+      "link": "https://arxiv.org/pdf/2609.38511v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "autonomous underwater robot platform with onboard vision, estimation and MPC navigation",
+      "llm_evidence_cn": "具备机载视觉、状态估计与MPC导航的自主水下机器人平台",
+      "llm_evidence": "具备机载视觉、状态估计与MPC导航的自主水下机器人平台",
+      "canonical_evidence": "具备机载视觉、状态估计与MPC导航的自主水下机器人平台",
+      "llm_tldr_en": "An open-source BlueROV2 platform combining onboard stereo vision, object detection, quaternion state estimation and nonlinear MPC for autonomous underwater navigation and docking.",
+      "llm_tldr_cn": "针对自主水下机器人在受限环境中需要稳健感知、估计与控制的问题，本文提出开源BlueROV2平台，集成Jetson Orin NX与RealSense立体相机，利用水下标定深度与实时目标检测获取邻近机器人相对位置，并以四元数估计器融合位姿与惯性测量，配合六自由度非线性MPC控制器实现自主导航与对接。该平台支持多机器人实验，为海洋自主智能体提供了可复现的硬件与算法基线。",
+      "llm_tldr": "针对自主水下机器人在受限环境中需要稳健感知、估计与控制的问题，本文提出开源BlueROV2平台，集成Jetson Orin NX与RealSense立体相机，利用水下标定深度与实时目标检测获取邻近机器人相对位置，并以四元数估计器融合位姿与惯性测量，配合六自由度非线性MPC控制器实现自主导航与对接。该平台支持多机器人实验，为海洋自主智能体提供了可复现的硬件与算法基线。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.36082v1",
+      "source": "arxiv",
+      "title": "GeoOutageBench: Benchmarking Ambiguity-aware, Ontology-grounded Geospatiotemporal KGQA for Multimodal Power Outage and Resilience Analysis",
+      "abstract": "We introduce GeoOutageBench, a benchmark for assessing LLM-based geospatiotemporal KGQA for multimodal outage and resilience analysis. Unlike existing KGQA benchmarks for Web knowledge, GeoOutageBench considers a spatiotemporal KG that integrates visual, textual, and structured data from outage records, remote sensing, weather observations, storm and power events, geographic entities, and domain ontologies. It provides a competency query taxonomy at different difficulty levels from spatiotemporal containment and proximity, spatiotemporal co-occurrence analysis, multimodal evidence, to hypothetical evaluation. Over multimodal KG and query classes, GeoOutageBench provides user-configurable evaluation of three important, highly coherent yet less studied tasks: (1) LLMs' understanding for ambiguous geospatiotemporal questions in terms of NL to SPARQL interpretation, (2) query-driven assessment of ontology utility, and (3) answer accuracy of multimodal KGQA retrieval. GeoOutageBench provides a design principle and foundation for assessing LLM-KG systems that support real-world infrastructure resilience analysis. Our benchmark, source code, data, results, and other documentation are available at https://github.com/UCF-SAGE/GeoOutageBench.",
+      "authors": [
+        "Ethan D. Frakes",
+        "Amy Kvien",
+        "Rishabh Kundu",
+        "Redad Mehdi",
+        "Van D. Tran",
+        "Vibha S. Mandayam",
+        "Kristopher O. Davis",
+        "Erika I. Barcelos",
+        "Roger H. French",
+        "Yinghui Wu",
+        "Mengjie Li"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.IR"
+      ],
+      "published": "2026-09-28T18:26:22+00:00",
+      "link": "https://arxiv.org/pdf/2609.36082v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LLM-based multimodal KGQA integrating remote sensing, text and structured data",
+      "llm_evidence_cn": "融合遥感、文本与结构化数据的LLM多模态知识图谱问答",
+      "llm_evidence": "融合遥感、文本与结构化数据的LLM多模态知识图谱问答",
+      "canonical_evidence": "融合遥感、文本与结构化数据的LLM多模态知识图谱问答",
+      "llm_tldr_en": "GeoOutageBench benchmarks LLM-based geospatiotemporal KGQA that integrates remote sensing, weather, textual outage records and ontologies, with a competency query taxonomy for multimodal resilience analysis.",
+      "llm_tldr_cn": "现有知识图谱问答基准多面向网络知识，缺乏对融合遥感、文本与结构化数据的时空推理评估。本文提出GeoOutageBench，构建整合停电记录、遥感、气象与地理实体的时空知识图谱，并给出从时空包含、共现分析到多模态证据与假设评估的能力查询分类。该基准支持用户可配置的LLM多模态问答评测，为遥感数据与文本报告联合的环境评估提供可复用评测框架。",
+      "llm_tldr": "现有知识图谱问答基准多面向网络知识，缺乏对融合遥感、文本与结构化数据的时空推理评估。本文提出GeoOutageBench，构建整合停电记录、遥感、气象与地理实体的时空知识图谱，并给出从时空包含、共现分析到多模态证据与假设评估的能力查询分类。该基准支持用户可配置的LLM多模态问答评测，为遥感数据与文本报告联合的环境评估提供可复用评测框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.34094v1",
+      "source": "arxiv",
+      "title": "Advancing Wildlife Conservation through Multimodal Animal Re-Identification with Environmental Metadata",
+      "abstract": "Identifying individual animals is crucial for effective wildlife monitoring and conservation efforts. Recent advancements in computer vision have shown promise in animal re-identification (Animal ReID) by leveraging data from camera traps. However, existing Animal ReID datasets rely exclusively on visual data, overlooking environmental metadata that ecologists have identified as highly correlated with animal behavior and identity, such as temperature and circadian rhythms. Meanwhile, modern vision-language models (VLMs) offer rich multimodal reasoning capabilities, but existing resources underutilize their text-processing potential. To address these limitations, we propose MetaWild, a multimodal Animal ReID dataset comprising 20,890 images across six species, paired with environmental metadata extracted from embedded camera trap overlays and scene contexts. Additionally, to facilitate the use of metadata in existing ReID methods, we propose the Meta-Feature Adapter (MFA), a lightweight module that can be incorporated into existing VLM-based ReID methods, allowing ReID models to leverage both environmental metadata and visual information to improve ReID performance. Experiments on MetaWild show that combining baseline ReID models with MFA to incorporate metadata consistently improves performance compared to using visual information alone, validating the effectiveness of incorporating metadata in re-identification.",
+      "authors": [
+        "Yuzhuo Li",
+        "Di Zhao",
+        "Tingrui Qiao",
+        "Yihao Wu",
+        "Bo Pang",
+        "Yun Sing Koh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-28T01:35:23+00:00",
+      "link": "https://arxiv.org/pdf/2609.34094v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal fusion of imagery and environmental metadata text with vision-language models",
+      "llm_evidence_cn": "利用视觉语言模型融合影像与环境元数据文本",
+      "llm_evidence": "利用视觉语言模型融合影像与环境元数据文本",
+      "canonical_evidence": "利用视觉语言模型融合影像与环境元数据文本",
+      "llm_tldr_en": "Animal re-identification datasets rely only on visual data, ignoring environmental metadata. This paper introduces MetaWild, a multimodal Animal ReID dataset combining imagery with environmental metadata text and leveraging vision-language models to improve wildlife monitoring.",
+      "llm_tldr_cn": "动物个体重识别对野生动物监测与保护至关重要，但现有数据集仅依赖视觉数据，忽视了与行为和身份高度相关的环境元数据，也未充分发挥视觉语言模型的文本处理能力。本文提出MetaWild多模态数据集，融合视觉信息与温度、昼夜节律等环境元数据文本，借助VLM进行多模态推理。实验表明引入环境元数据可提升重识别性能，为生态监测中影像与文本融合提供新范式。",
+      "llm_tldr": "动物个体重识别对野生动物监测与保护至关重要，但现有数据集仅依赖视觉数据，忽视了与行为和身份高度相关的环境元数据，也未充分发挥视觉语言模型的文本处理能力。本文提出MetaWild多模态数据集，融合视觉信息与温度、昼夜节律等环境元数据文本，借助VLM进行多模态推理。实验表明引入环境元数据可提升重识别性能，为生态监测中影像与文本融合提供新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.38072v2",
+      "source": "arxiv",
+      "title": "RS-OPSD: Reliable Privileged On-Policy-Self-Distillation for Ultra-High-Resolution Remote Sensing VQA",
+      "abstract": "Ultra-high-resolution (UHR) remote sensing visual question answering (VQA) requires models to resolve small visual evidence within extremely large images. Existing approaches typically rely on token pruning, visual search, or tool-augmented reasoning at inference time. We instead investigate whether the benefit of zoom-in visual privilege can be internalized into the model. We introduce RS-OPSD, a reliable privileged on-policy self-distillation (OPSD) framework for UHR remote sensing VQA. To provide high-quality privileged information with explicit question-relevant evidence, we construct GeoEvidence-6K, containing 6,750 VQA samples across seven task categories with evidence-region annotations, and develop Human Feedback-Guided Skill Refinement (HF-SR) for scalable annotation. To address context loss from tight crops and conflicting signals from imperfect teachers, RS-OPSD introduces Context-Preserving Visual Privilege (CPVP) and Correctness-Aligned Distillation (CAD). Without any additional visual search or tool calls at inference time, RS-OPSD achieves state-of-the-art (SOTA) performance on XLRS-Bench, MME-RealWorld-RS, and LRS-VQA, outperforming previous SOTA models of comparable scale by an average of 4.0 percentage points. Moreover, our 2B variant, RS-OPD-Lite, surpasses most 8B-scale models while achieving the fastest measured inference speed. Our Code, GeoEvidence-6K, and the model weights for RS-OPSD and RS-OPD-Lite are publicly available.",
+      "authors": [
+        "Chengjie Jiang",
+        "Yunqi Zhou",
+        "Jiafeng Yan",
+        "Sihang Zhao",
+        "Chun Yuan",
+        "Jing Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-29T17:34:12+00:00",
+      "link": "https://arxiv.org/pdf/2609.38072v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "remote sensing visual question answering combining imagery and text with privileged distillation",
+      "llm_evidence_cn": "结合图像与文本的遥感视觉问答与特权蒸馏",
+      "llm_evidence": "结合图像与文本的遥感视觉问答与特权蒸馏",
+      "canonical_evidence": "结合图像与文本的遥感视觉问答与特权蒸馏",
+      "llm_tldr_en": "Ultra-high-resolution remote sensing VQA must resolve small evidence in huge images. This paper proposes RS-OPSD, a privileged on-policy self-distillation framework that internalizes zoom-in visual privilege, plus the GeoEvidence-6K dataset with evidence-region annotations.",
+      "llm_tldr_cn": "超高分辨率遥感视觉问答需要在超大图像中解析微小视觉证据，现有方法多依赖推理期的裁剪、视觉搜索或工具增强。本文提出RS-OPSD可靠特权同策略自蒸馏框架，尝试把放大视觉特权内化进模型，并构建带证据区域标注的GeoEvidence-6K数据集。实验覆盖七类任务共6750个样本，验证了证据定位与回答可靠性的提升，为遥感图像与文本联合推理提供新思路。",
+      "llm_tldr": "超高分辨率遥感视觉问答需要在超大图像中解析微小视觉证据，现有方法多依赖推理期的裁剪、视觉搜索或工具增强。本文提出RS-OPSD可靠特权同策略自蒸馏框架，尝试把放大视觉特权内化进模型，并构建带证据区域标注的GeoEvidence-6K数据集。实验覆盖七类任务共6750个样本，验证了证据定位与回答可靠性的提升，为遥感图像与文本联合推理提供新思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.34860v1",
+      "source": "arxiv",
+      "title": "Attention-based Hierarchical Variational Information Bottleneck for Robust Multi-Agent Communication under Variable Bandwidth",
+      "abstract": "Learning-based multi-agent communication under limited bandwidth does not only require deciding what to communicate, but also structuring messages so that partial transmissions remain useful. We study this problem under prefix truncation, where only the first part of each message is received. To address it, we propose \\textbf{AH-VIB}, an attention-based autoregressive variational communication model that combines a variational information bottleneck (VIB) with sequential message generation and a hierarchical robustness loss. We evaluate AH-VIB on a custom cooperative object-inspection and occupancy-mapping task, where agents equipped with a limited field-of-view sensor coordinate to scan inspection objects in an occupancy-grid world, under variable and fixed bandwidth conditions, and compare it against MADDPG, CommNet, a flat VIB baseline, and an autoregressive MLP ablation. AH-VIB achieves competitive mean return while improving performance reliability under the most constrained bandwidth conditions.   These results indicate that AH-VIB improves the reliability and graceful degradation of learned communication under bandwidth constraints.",
+      "authors": [
+        "Lukas Koch Vindbjerg",
+        "Qi Zhang",
+        "Yury Brodskiy",
+        "Lukas Esterle"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-09-28T10:48:36+00:00",
+      "link": "https://arxiv.org/pdf/2609.34860v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent communication architecture for cooperative inspection and occupancy mapping",
+      "llm_evidence_cn": "面向协作检查与占据建图的多智能体通信架构",
+      "llm_evidence": "面向协作检查与占据建图的多智能体通信架构",
+      "canonical_evidence": "面向协作检查与占据建图的多智能体通信架构",
+      "llm_tldr_en": "Multi-agent communication under limited bandwidth must structure messages so partial transmissions stay useful. This paper proposes AH-VIB, an attention-based autoregressive variational communication model with a hierarchical robustness loss, evaluated on cooperative inspection and occupancy-mapping tasks.",
+      "llm_tldr_cn": "有限带宽下的多智能体通信不仅需要决定传什么，还需组织消息使部分传输仍具信息量。本文提出AH-VIB注意力自回归通信模型，将变分信息瓶颈与序列化消息生成、分层鲁棒性损失结合，应对前缀截断场景。在协作式目标检查与占据栅格建图任务中，配备有限视野传感器的智能体协调扫描并保持鲁棒通信，为带宽受限的自主多智能体监测提供架构参考。",
+      "llm_tldr": "有限带宽下的多智能体通信不仅需要决定传什么，还需组织消息使部分传输仍具信息量。本文提出AH-VIB注意力自回归通信模型，将变分信息瓶颈与序列化消息生成、分层鲁棒性损失结合，应对前缀截断场景。在协作式目标检查与占据栅格建图任务中，配备有限视野传感器的智能体协调扫描并保持鲁棒通信，为带宽受限的自主多智能体监测提供架构参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.38846v1",
+      "source": "arxiv",
+      "title": "Coral Grow-out Robotic Assessment System (CGRAS): Scaling Coral Recruit Monitoring Through Robotics and Computer Vision",
+      "abstract": "Climate change is the largest threat to coral reefs, with increasing global impacts accelerating the need for scalable reef restoration technologies. Large-scale reef restoration depends on the mass production of corals, such as through coral aquaculture. Coral seeding with recruits grown in aquaculture facilities is a feasible restoration approach, but effective production requires consistent, high-frequency monitoring of tens of thousands of macroscopic (0.5-2mm diameter) recruits, making conventional manual assessment prohibitively labor-intensive. To address this monitoring bottleneck, we introduce the Coral Grow-out Robotic Assessment System (CGRAS) which combines robotic imaging and computer vision to automate data acquisition, perform multi-species detection and counting of corals, and evaluate coral health. CGRAS automatically extracts coral growth, survival and spatial distribution metrics, with the aim of providing timely feedback to operators for optimizing production, grow-out and deployment workflow processes. We demonstrate CGRAS in a large aquaculture facility on standardized coral settlement tiles, reducing the time and labor costs by a factor of 9.6 as compared to manual monitoring, whilst achieving 96.4% agreement for Acropora kenti corals relative to expert counts.",
+      "authors": [
+        "Dorian Tsai",
+        "Scarlett Raine",
+        "Emilio Olivastri",
+        "Riki Lamont",
+        "Andrew Lui",
+        "Timothy Morris",
+        "Joshua Esplin",
+        "Christopher A. Brunner",
+        "F. Mikaela Nordborg",
+        "Reginald Wardleworth",
+        "Garima Samvedi",
+        "Karen Jackel",
+        "Matthew Dunbabin",
+        "Tobias Fischer",
+        "Andrea Severati"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-30T03:05:46+00:00",
+      "link": "https://arxiv.org/pdf/2609.38846v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Robotic imaging and computer vision for coral recruit monitoring",
+      "llm_evidence_cn": "机器人与计算机视觉用于珊瑚幼体监测",
+      "llm_evidence": "机器人与计算机视觉用于珊瑚幼体监测",
+      "canonical_evidence": "机器人与计算机视觉用于珊瑚幼体监测",
+      "llm_tldr_en": "Large-scale reef restoration needs high-frequency monitoring of tens of thousands of coral recruits, which manual assessment cannot sustain. CGRAS combines robotic imaging and computer vision to automatically assess recruits, easing the monitoring bottleneck for coral aquaculture.",
+      "llm_tldr_cn": "气候变化威胁珊瑚礁，规模化修复依赖珊瑚养殖，但数万个微小珊瑚幼体的高频监测使人工评估难以承受。论文提出珊瑚培育机器人评估系统 CGRAS，结合机器人成像与计算机视觉自动识别并计数珊瑚幼体。该系统缓解了监测瓶颈，为大规模珊瑚修复的产量管理提供可扩展方案。",
+      "llm_tldr": "气候变化威胁珊瑚礁，规模化修复依赖珊瑚养殖，但数万个微小珊瑚幼体的高频监测使人工评估难以承受。论文提出珊瑚培育机器人评估系统 CGRAS，结合机器人成像与计算机视觉自动识别并计数珊瑚幼体。该系统缓解了监测瓶颈，为大规模珊瑚修复的产量管理提供可扩展方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.37003v1",
+      "source": "arxiv",
+      "title": "VesselBench-800K: A Large-scale Perception Benchmark for Multimodal Vessel Detection, Counting, and Density Estimation",
+      "abstract": "Vessel perception from space is crucial for a wide range of maritime applications, from traffic monitoring to environmental protection. However, most existing datasets predominantly focus on general object detection tasks in optical remote sensing (RS) images. Relying solely on single-modality optical RS images proves inadequate for effectively perceiving vessel objects in complex maritime scenarios, where ever-changing weather conditions (e.g., clouds and rain), the need for day-and-night coverage, and the inherent limitations of a single imaging modality pose significant challenges. To fill this gap, we introduce VesselBench-800K, the largest-to-date benchmark dataset on a global scale for vessel perception in multimodal RS images. As its name suggests, VesselBench-800K comprises 800,000 images, each at a resolution of 512x512 pixels, specifically curated for vessel perception tasks such as detection, counting, and density estimation. These multimodal image pairs (i.e., optical, SAR) are collected from diverse platforms, sensors, scenes, shooting heights, and synthetic sources, spanning spatial resolutions from 4.5m to 0.1m. Furthermore, we evaluate numerous state-of-the-art detection, counting, and density estimation models on VesselBench-800K through both qualitative and quantitative comparisons. By revealing previously unrecognized cues, this dataset holds immense potential to significantly advance our understanding of marine traffic. Our VesselBench dataset will be publicly available at https://github.com/danfenghong/IEEE_TGRS_VesselBench to support and contribute to community development.",
+      "authors": [
+        "Danfeng Hong",
+        "Chenyu Li",
+        "Jocelyn Chanussot"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-29T08:29:49+00:00",
+      "link": "https://arxiv.org/pdf/2609.37003v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Global multimodal benchmark for maritime vessel perception from space",
+      "llm_evidence_cn": "面向空间船舶感知的全球多模态基准",
+      "llm_evidence": "面向空间船舶感知的全球多模态基准",
+      "canonical_evidence": "面向空间船舶感知的全球多模态基准",
+      "llm_tldr_en": "Maritime vessel perception from space is limited by single-modality optical datasets; VesselBench-800K provides a global multimodal benchmark for detection, counting and density estimation.",
+      "llm_tldr_cn": "从太空感知船舶对交通监控与环境保护至关重要，但现有数据集多聚焦光学遥感通用目标检测，单一模态在云雨、昼夜等复杂海况下难以有效感知船舶。本文构建VesselBench-800K，这是目前全球规模最大的船舶感知基准，涵盖多模态数据与检测、计数、密度估计任务。该基准揭示了多模态融合在复杂海洋场景中的必要性，为海事遥感研究提供统一评测平台。",
+      "llm_tldr": "从太空感知船舶对交通监控与环境保护至关重要，但现有数据集多聚焦光学遥感通用目标检测，单一模态在云雨、昼夜等复杂海况下难以有效感知船舶。本文构建VesselBench-800K，这是目前全球规模最大的船舶感知基准，涵盖多模态数据与检测、计数、密度估计任务。该基准揭示了多模态融合在复杂海洋场景中的必要性，为海事遥感研究提供统一评测平台。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.39898v1",
+      "source": "arxiv",
+      "title": "Active Mapping of Underwater Litter Using Camera-Sonar Fusion",
+      "abstract": "Marine litter is a growing threat to the underwater ecosystem, driving demand for autonomous survey methods that can locate debris efficiently over large areas. Existing survey methods typically follow predefined paths or operate with a single sensing modality, typically a camera (with image quality suffering in poor-visibility conditions) or sonar (usually noisy and low-resolution). We present an active mapping framework in which a forward-looking sonar and a camera both feed into a shared Bayesian occupancy map, and an optimization problem is solved at each step to decide on the next best view. Candidate viewpoints are scored by a two-term utility that balances exploration of uncertain regions via voxel entropy against exploitation of likely objects. Each sensor is characterized by range- and bearing-dependent detection and false-alarm probability tables determined from data. We evaluate the approach in a realistic underwater simulator, demonstrating that active mapping finds objects faster than a lawnmower coverage pattern, and that the dual-sensor approach works better than using either of the individual sensors.",
+      "authors": [
+        "David Rete",
+        "Patrick Boros",
+        "Lucian Busoniu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-30T15:00:35+00:00",
+      "link": "https://arxiv.org/pdf/2609.39898v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "autonomous active mapping with next-best-view decision for ocean surveys",
+      "llm_evidence_cn": "面向海洋调查的自主主动建图与下一最佳视角决策",
+      "llm_evidence": "面向海洋调查的自主主动建图与下一最佳视角决策",
+      "canonical_evidence": "面向海洋调查的自主主动建图与下一最佳视角决策",
+      "llm_tldr_en": "Marine litter surveys are limited by predefined paths and single sensors. This paper presents an active mapping framework fusing forward-looking sonar and camera into a shared Bayesian occupancy map, optimizing the next best view to efficiently locate underwater debris.",
+      "llm_tldr_cn": "海洋垃圾威胁水下生态，但现有调查多沿预设路径或依赖单一相机/声呐传感器，在能见度差或噪声大的条件下效率有限。本文提出主动建图框架，将前视声呐与相机融合进共享贝叶斯占据栅格，并在每步求解优化问题选择下一最佳视角。候选视角以体素熵探索不确定区域并兼顾目标开发，实现高效的水下垃圾自主定位与建图，为自主海洋监测提供多传感器主动感知方案。",
+      "llm_tldr": "海洋垃圾威胁水下生态，但现有调查多沿预设路径或依赖单一相机/声呐传感器，在能见度差或噪声大的条件下效率有限。本文提出主动建图框架，将前视声呐与相机融合进共享贝叶斯占据栅格，并在每步求解优化问题选择下一最佳视角。候选视角以体素熵探索不确定区域并兼顾目标开发，实现高效的水下垃圾自主定位与建图，为自主海洋监测提供多传感器主动感知方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.37340v1",
+      "source": "arxiv",
+      "title": "HyperSAM: A Promptable Foundation Model for Hyperspectral Remote Sensing",
+      "abstract": "Hyperspectral remote sensing provides dense spectral measurements that are indispensable for material-level Earth observation, yet the construction of a general-purpose hyperspectral foundation model remains difficult. Two bottlenecks are especially limiting. First, large hyperspectral corpora rarely provide high spatial resolution together with reliable dense annotations. Second, many hyperspectral models are still trained almost from scratch, so the geometric and interactive priors learned by modern vision foundation models are not fully reused. To alleviate these issues, we \\highlight{present} \\textbf{HyperSAM}, a promptable hyperspectral foundation model that couples a data-centric hyperspectral synthesis pipeline with a spectral adaptation architecture based on Segment Anything Model 3 (SAM3). On the data side, HyperSAM synthesizes full-spectrum hyperspectral cubes from high-resolution SpaceNet multispectral imagery through a physics-informed abundance-transfer generator, while SAM3-derived pseudo-masks provide object-centric supervision. On the model side, the latest implementation uses a frozen SAM3 RGB image branch, a trainable hyperspectral side encoder initialized from the RGB vision transformer (ViT), ControlNet-style zero-initialized feature injection, and a lightweight mixture-of-experts mask refiner. To enhance training robustness against noisy pseudo-labels, Cross-modal Sample Selection (CromSS)-style confidence selection is incorporated for noisy-label weighting. Extensive experiments show that HyperSAM obtains strong generalization on diverse hyperspectral tasks (e.g., classification, anomaly detection, change detection, target detection, and airborne oil-spill mapping) and that high-quality synthetic hyperspectral data can be more effective than simply scaling noisy hyperspectral supervision.",
+      "authors": [
+        "Li Pang",
+        "Xinqiao Wu",
+        "Jing Yao",
+        "Pedram Ghamisi",
+        "Jun Zhou",
+        "Zhengchao Chen",
+        "Deyu Meng",
+        "Xiangyong Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-29T12:10:13+00:00",
+      "link": "https://arxiv.org/pdf/2609.37340v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Promptable hyperspectral foundation model for remote sensing",
+      "llm_evidence_cn": "面向高光谱遥感的可提示基础模型",
+      "llm_evidence": "面向高光谱遥感的可提示基础模型",
+      "canonical_evidence": "面向高光谱遥感的可提示基础模型",
+      "llm_tldr_en": "HyperSAM addresses the lack of general hyperspectral foundation models by coupling a data-centric synthesis pipeline with spectral adaptation, enabling promptable dense Earth observation.",
+      "llm_tldr_cn": "高光谱遥感虽能提供密集光谱信息，却缺乏通用基础模型，主要受限于高分数据与密集标注稀缺，且模型多需从零训练。本文提出HyperSAM，将数据中心的合成流水线与光谱适配架构相结合，构建可提示的高光谱基础模型，复用视觉基础模型的几何与交互先验。实验表明该框架能提升高光谱稠密任务表现，为材料级地球观测提供通用且可交互的建模基础。",
+      "llm_tldr": "高光谱遥感虽能提供密集光谱信息，却缺乏通用基础模型，主要受限于高分数据与密集标注稀缺，且模型多需从零训练。本文提出HyperSAM，将数据中心的合成流水线与光谱适配架构相结合，构建可提示的高光谱基础模型，复用视觉基础模型的几何与交互先验。实验表明该框架能提升高光谱稠密任务表现，为材料级地球观测提供通用且可交互的建模基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.01569v1",
+      "source": "arxiv",
+      "title": "Managing Context and Communication in Distributed Agentic UAV Swarms",
+      "abstract": "Unmanned aerial vehicle (UAV) swarms increasingly rely on language-model agents to provide adaptive mission-level reasoning in uncertain environments. Fully distributed control, in which each UAV hosts an independent Small Language Model (SLM), removes reliance on a centralized coordinator but introduces an information-management problem: long-running interaction histories can degrade the reasoning context, while indiscriminate information dissemination increases communication and inference overhead. We address these challenges with a distributed UAV-agent architecture that enables continuous local SLM control through an event-driven reason-act-observe lifecycle. Runtime knowledge is represented as structured atomic notes and organized into core, local, and peer-specific memory. A deterministic interest-aware gossip engine selectively disseminates these notes according to recipient-specific semantic novelty and recency. We evaluate the architecture using ten UAVs in a simulated search-and-rescue mission. Our approach completes all experimental runs, whereas unrestricted flooding messages completes only 70-85\\%, and delegating forwarding decisions to the SLM prevents mission completion in every run. Compared with unrestricted flooding, our approach approximately halves inference-token consumption, reduces transmitted data, and achieves lower survivor-count error.",
+      "authors": [
+        "Andrea Iannoli",
+        "Ivan Zyrianoff",
+        "Angelo Trotta",
+        "Lorenzo Gigli",
+        "Marco Di Felice"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.AI",
+        "cs.LG",
+        "cs.NI",
+        "cs.RO"
+      ],
+      "published": "2026-10-01T12:30:29+00:00",
+      "link": "https://arxiv.org/pdf/2610.01569v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "distributed language-model agent architecture for autonomous UAV swarm monitoring",
+      "llm_evidence_cn": "面向自主无人机蜂群监测的分布式语言模型智能体架构",
+      "llm_evidence": "面向自主无人机蜂群监测的分布式语言模型智能体架构",
+      "canonical_evidence": "面向自主无人机蜂群监测的分布式语言模型智能体架构",
+      "llm_tldr_en": "Distributed UAV swarms run local small language models, but long interaction histories degrade reasoning and broadcasting wastes bandwidth. An event-driven reason-act-observe architecture stores runtime knowledge as structured atomic notes.",
+      "llm_tldr_cn": "分布式无人机蜂群日益依赖语言模型智能体进行任务级推理，但完全分布式控制会带来信息管理难题：长交互历史使推理上下文退化，无差别广播又增加通信与推理开销。本文提出分布式UAV智能体架构，每架无人机本地运行小型语言模型，通过事件驱动的感知-行动-观察生命周期实现持续控制，并将运行时知识表示为结构化原子笔记并分层组织。该架构为自主监测场景中的多智能体系统提供了可扩展的上下文与通信管理范式。",
+      "llm_tldr": "分布式无人机蜂群日益依赖语言模型智能体进行任务级推理，但完全分布式控制会带来信息管理难题：长交互历史使推理上下文退化，无差别广播又增加通信与推理开销。本文提出分布式UAV智能体架构，每架无人机本地运行小型语言模型，通过事件驱动的感知-行动-观察生命周期实现持续控制，并将运行时知识表示为结构化原子笔记并分层组织。该架构为自主监测场景中的多智能体系统提供了可扩展的上下文与通信管理范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.37481v1",
+      "source": "arxiv",
+      "title": "Label Less, Learn More: Resource-Efficient Active Semi-Supervised Learning for Onboard Satellite Image Annotation",
+      "abstract": "Large-scale pervasive sensing increasingly relies on high-resolution satellite imagery, yet task-specific onboard vision is constrained by costly annotation and limited computation, memory, energy, and communication resources. Existing approaches largely rely on either data-hungry supervised learning or large vision-language foundation models, limiting efficient adaptation and deployment under these constraints. We present SatLabel, a resource-aware learning framework that transforms limited satellite labels into progressively refined onboard models through adaptive sample acquisition and semi-supervised model adaptation. Rather than repeatedly training on uniformly sampled labels, SatLabel closes the loop between model uncertainty, class imbalance, and pseudo-label quality to selectively acquire informative samples while exploiting abundant unlabeled imagery. This enables a compact student to adapt to target sensing domains with reduced annotation and inference costs. We further introduce an optional Mixture-of-Experts (MoE) student with graph-based feature refinement to enhance representation capacity while retaining a lightweight footprint. We evaluate SatLabel on 11 remote-sensing datasets spanning core, extended, and unseen domains against RemoteCLIP zero-shot inference. SatLabel improves Macro-F1 on most core and extended datasets while maintaining strong cross-dataset transfer to unseen domains. More importantly, the Balanced student contains only 11.2 M parameters and occupies approximately 42.8 MB, compared with 151.3M parameters and 577 MB for RemoteCLIP, while requiring 3.65 versus 5.89 GFLOPs. Across four efficiency benchmarks, it achieves approximately 2x higher GPU-forward throughput and reduces energy per image on datasets.",
+      "authors": [
+        "Ahmed Abdelnaby",
+        "Mohamed Elmahallawy",
+        "Marius Bernahrndt",
+        "Tobias Hecking"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-25T18:15:31+00:00",
+      "link": "https://arxiv.org/pdf/2609.37481v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "resource-efficient onboard learning for satellite image annotation",
+      "llm_evidence_cn": "面向卫星影像标注的资源高效星上学习",
+      "llm_evidence": "面向卫星影像标注的资源高效星上学习",
+      "canonical_evidence": "面向卫星影像标注的资源高效星上学习",
+      "llm_tldr_en": "SatLabel addresses costly annotation and limited onboard resources in satellite imagery analysis by combining adaptive sample acquisition with semi-supervised model adaptation, progressively refining onboard models from limited labels.",
+      "llm_tldr_cn": "针对星上视觉任务受标注成本高与计算、存储、能量、通信资源受限的难题，本文提出资源感知学习框架SatLabel。它通过自适应样本获取与半监督模型适配，把有限的卫星标注逐步转化为不断精化的星上模型，而非在均匀采样标签上反复训练。该闭环策略在资源受限条件下实现高效适配，为遥感影像分析与星上部署提供可复用方法。",
+      "llm_tldr": "针对星上视觉任务受标注成本高与计算、存储、能量、通信资源受限的难题，本文提出资源感知学习框架SatLabel。它通过自适应样本获取与半监督模型适配，把有限的卫星标注逐步转化为不断精化的星上模型，而非在均匀采样标签上反复训练。该闭环策略在资源受限条件下实现高效适配，为遥感影像分析与星上部署提供可复用方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.37485v1",
+      "source": "arxiv",
+      "title": "PoE-Fuse: Precision-Weighted Expert Fusion for Bi-Temporal Change Understanding",
+      "abstract": "Bi-temporal change understanding, which localizes and characterizes what changed between two satellite images, is central to disaster response and environmental monitoring, spanning change detection, building localization, and damage assessment. Strong vision-language models address these tasks, but adapting them typically requires full fine-tuning or reinforcement learning, which is costly and unstable. We propose PoE-Fuse, a parameter-efficient framework that instead composes frozen foundation experts for geometry, grounding, and language, resampling their features onto a shared spatial grid and training only a lightweight fusion trunk. PoE-Fuse treats the aligned features as Gaussian observations of a latent scene state and fuses them by learned per-cell precision. This product-of-experts estimator strictly generalizes uniform summation and scalar gating, and extends to change fields by composing the precisions of the two timestamps. A single shared trunk solves the three tasks at once, reaching a mean F1 of 59.2%, compared with 40.7% for an instruction-tuned temporal vision-language assistant, and surpassing dedicated change-detection models retrained under the same protocol and training budget.",
+      "authors": [
+        "Haruki Watase",
+        "Shunya Nagashima",
+        "Takayuki Nishimura"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-09-27T14:13:14+00:00",
+      "link": "https://arxiv.org/pdf/2609.37485v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "parameter-efficient vision-language fusion for remote sensing change understanding",
+      "llm_evidence_cn": "面向遥感变化理解的参数高效视觉语言融合",
+      "llm_evidence": "面向遥感变化理解的参数高效视觉语言融合",
+      "canonical_evidence": "面向遥感变化理解的参数高效视觉语言融合",
+      "llm_tldr_en": "PoE-Fuse is a parameter-efficient framework for bi-temporal remote sensing change understanding that composes frozen geometry, grounding, and language experts and fuses them via a lightweight trunk, avoiding costly full fine-tuning.",
+      "llm_tldr_cn": "面向灾害响应与环境监测的双时相遥感变化理解通常依赖视觉语言模型，但适配需全量微调或强化学习，代价高且不稳定。本文提出PoE-Fuse，将冻结的几何、定位与语言专家特征重采样到统一空间网格，仅训练轻量融合主干，并以高斯观测方式融合对齐特征。该方法在参数高效前提下支持变化检测、建筑定位与损毁评估，为遥感与文本联合的多模态分析提供可复用框架。",
+      "llm_tldr": "面向灾害响应与环境监测的双时相遥感变化理解通常依赖视觉语言模型，但适配需全量微调或强化学习，代价高且不稳定。本文提出PoE-Fuse，将冻结的几何、定位与语言专家特征重采样到统一空间网格，仅训练轻量融合主干，并以高斯观测方式融合对齐特征。该方法在参数高效前提下支持变化检测、建筑定位与损毁评估，为遥感与文本联合的多模态分析提供可复用框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

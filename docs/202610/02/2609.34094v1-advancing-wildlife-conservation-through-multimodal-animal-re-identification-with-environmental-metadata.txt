@@ -1,0 +1,260 @@
+Title: Advancing Wildlife Conservation through Multimodal Animal Re-Identification with Environmental Metadata
+
+URL Source: https://arxiv.org/pdf/2609.34094v1
+
+Published Time: Tue, 29 Sep 2026 02:46:02 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# Advancing Wildlife Conservation through Multimodal Animal Re-Identification with Environmental Metadata 
+
+## Yuzhuo Li 1* , Di Zhao 1*† , Tingrui Qiao 1, Yihao Wu 1, Bo Pang 1, Yun Sing Koh 1
+
+> 1
+
+School of Computer Science, University of Auckland Auckland, New Zealand 
+
+{yil708, tqia361, ywu840, bpan882 }@aucklanduni.ac.nz 
+
+{di.zhao, y.koh }@auckland.ac.nz 
+
+Abstract 
+
+Identifying individual animals is crucial for effective wildlife monitoring and conservation efforts. Recent advancements in computer vision have shown promise in animal re-identification (Animal ReID) by leveraging data from cam-era traps. However, existing Animal ReID datasets rely ex-clusively on visual data, overlooking environmental meta-data that ecologists have identified as highly correlated with animal behavior and identity, such as temperature and cir-cadian rhythms. Meanwhile, modern vision–language mod-els (VLMs) offer rich multimodal reasoning capabilities, but existing resources underutilize their text-processing poten-tial. To address these limitations, we propose MetaWild, a multimodal Animal ReID dataset comprising 20,890 images across six species, paired with environmental metadata ex-tracted from embedded camera trap overlays and scene con-texts. Additionally, to facilitate the use of metadata in existing ReID methods, we propose the Meta-Feature Adapter (MFA), a lightweight module that can be incorporated into existing VLM-based ReID methods, allowing ReID models to lever-age both environmental metadata and visual information to improve ReID performance. Experiments on MetaWild show that combining baseline ReID models with MFA to incorpo-rate metadata consistently improves performance compared to using visual information alone, validating the effectiveness of incorporating metadata in re-identification. 
+
+## Introduction 
+
+Animal re-identification (Animal ReID) aims to recognize individual animals across images to support wildlife re-search such as population monitoring, movement ecology, and conservation management (Schneider et al. 2019; Wu et al. 2026a; Schofield et al. 2022). Compared to tradi-tional tagging-based approaches, computer vision offers a scalable, non-invasive solution that avoids disturbing endan-gered species (Beery 2023; Xu et al. 2024). However, most existing Animal ReID datasets are purely visual, captured by surveillance or camera traps without contextual informa-tion (Adam et al. 2024; Li et al. 2020; Gao et al. 2021). This visual-only design introduces two limitations. First, it omits environmental metadata ( e.g. , temperature and circa-dian rhythms), which ecologists have shown to be highly 
+
+> *
+
+These authors contributed equally. 
+
+> †
+
+Corresponding author. (a)          
+
+> Circadian Rhythm:
+> Face Orientation:
+> Temperature:
+> Day Day Night Night
+> Right Right Left Right
+> ID-22 ID-3
+> Circadian Rhythm: day
+> Face Orientation: left
+> Multimodality Animal ReID
+> Temperature: Text Encoder
+> Query Image
+> ReID Task - Gallery Images
+> Metadata for Query Image
+> Image Encoder
+> (b)
+> Individual-specific Metadata Patterns
+
+Figure 1: Overview of multimodal Animal ReID framework and the role of metadata. (a) Example images of two deer in-dividuals showing distinct preferences across environmental conditions. (b) The model integrates visual features with tex-tual environmental metadata. correlated with animal behavior and appearance (Leliveld et al. 2022). Figure 1(a) shows that different individuals tend to appear under distinct environmental conditions, showing the potential of metadata to provide identity-discriminative cues. Without such information, existing datasets cannot support the evaluation of the impact of incorporating envi-ronmental metadata on ReID performance. Second, with the rapid advancement of multimodal models capable of jointly processing images and text (Radford et al. 2021; Qiao et al. 2026a; Pang et al. 2025a), image-only datasets underutilize their text-encoding capabilities, limiting the full potential of multimodal representations in Animal ReID. To address these limitations, we present MetaWild, a dataset designed to enable systematic evaluation of meta-data integration and multimodal learning in Animal ReID. MetaWild is constructed from the publicly available New Zealand Trail Camera (NZ-TrailCams) dataset (LILA BC Project 2024), a wildlife image collection captured using camera traps deployed in diverse natural habitats across New Zealand. We select six representative species, includ-ing invasive and native animals. We have carefully curated images that are visually clear and contain reliable meta-arXiv:2609.34094v1 [cs.CV] 28 Sep 2026 data overlays, comprising a total of 20,890 images. In ad-dition to visual data, MetaWild provides curated environ-mental metadata, including temperature , circadian rhythms ,and face orientation , which are chosen based on their avail-ability from overlays and their influence on animal appear-ance. This design supports multimodal ReID by jointly ex-ploiting visual and textual cues, as illustrated in Figure 1(b). Furthermore, since existing Animal ReID methods are gen-erally designed to operate solely on visual inputs and can-not directly incorporate the textual metadata, we propose the Meta-Feature Adapter (MFA), a lightweight module that can be incorporated into existing VLM-based Animal ReID methods (Jiao et al. 2024), allowing the integration of envi-ronmental metadata into visual representations. Our contributions are summarized as follows. Firstly, we create and release MetaWild, a new dataset that pairs visual animal images with curated environmental metadata to eval-uate the impact of incorporating environmental metadata on ReID performance, thereby facilitating the development of multimodal ReID methods. Secondly, we propose MFA, a lightweight module that enables the integration of metadata into existing VLM-based Animal ReID models, allowing for performance evaluation with MetaWild without modifying the model architecture. Finally, extensive experiments on MetaWild show that incorporating environmental metadata alongside visual data within a multimodal learning frame-work consistently improves Animal ReID performance. 
+
+## Related Work 
+
+Animal ReID aims to recognize and match individual an-imals across images for wildlife monitoring (Wu et al. 2026b). Existing methods include: (1) Global feature learn-ing that treats the entire image as input, directly extract-ing global features for ReID (He et al. 2023). (2) Species-specific feature extraction that relies on distinctive local pat-terns ( e.g. , elephant ears (Weideman et al. 2020)), but they are sensitive to occlusions and viewpoint variations, which hinder their generalizability across species. and (3) Auxiliary information integration : Methods such as pose key point es-timation (Li et al. 2020, 2025) incorporate additional visual cues to refine feature extraction. Despite their success, these methods remain constrained to image-based data. 
+
+Animal ReID Datasets. Existing datasets range from con-trolled farm or lab environments (Kern et al. 2024; Wang et al. 2026; Wahltinez and Wahltinez 2024) to challeng-ing in-the-wild camera-trap collections (Li et al. 2020). WildlifeDatasets ( ˇ Cerm´ ak et al. 2024) provide a unified li-brary and standardized tools for visual ReID benchmarking. While these datasets have advanced visual-based ReID, they omit environmental metadata, which has been shown to in-fluence animal behavior and appearance, limiting the evalu-ation of its impact on ReID performance. 
+
+Vision-Language Model learn aligned visual–textual rep-resentations (Jia et al. 2021; Pang et al. 2025b; Zhao et al. 2025) and show strong generalization ability (Zhao et al. 2024, 2026; Qiao et al. 2026b). While some recent works have adapted VLMs to ReID tasks (Li, Sun, and Li 2023; Jiao et al. 2024), they primarily leverage the image encoder {"img_path": "0_Doc-MIS-CT-GIG-03_49_fdf14955.JPG", "class_name": "Deer", "metadata": { "face_direction": "right", "temperature": 28, "day_night": "day", "timestamp": "2012-01-18 14:10:00" }}     
+
+> MetaWild
+> (20,890 Images + Metadata) Animal Re-Identification dataset with Environmental Metadata Deer Hare Penguin Pūkeko Stoat Wallaby
+> Metadata of the image
+> Metadata Analysis Dataset Examples
+
+Figure 2: Examples of the MetaWild dataset. and use the text encoder only for static, category-level de-scriptions. In this paper, we leverage environmental meta-data as a semantically rich textual information source to more fully utilize the text encoder for Animal ReID. 
+
+## The MetaWild Dataset 
+
+Dataset Composition 
+
+MetaWild is designed to facilitate the evaluation of mul-timodal learning approaches in Animal ReID by pair-ing visual data with contextual environmental metadata. It is constructed from the publicly available NZ-TrailCams dataset (LILA BC Project 2024). To ensure the applicability and diversity of metadata integration across various animal species, MetaWild comprises 20,890 images spanning six representative species: Deer, Hare, Penguin, P¯ ukeko, Stoat, and Wallaby. Each image is paired with environmental meta-data extracted from embedded camera trap overlays. Train Gallery Query Total Datasets Imgs IDs Imgs IDs Imgs IDs Imgs IDs Deer 1,631 21 586 17 216 17 2,433 38 Hare 1,820 31 926 29 306 29 3,052 60 Penguin 1,431 34 725 43 296 43 2,452 77 P¯ ukeko 1,854 11 800 19 411 19 3,065 30 Stoat 4,067 151 1,649 102 1,017 102 6,733 253 Wallaby 1,888 25 964 22 303 22 3,155 47 Table 1: Details of Benchmark Datasets. Figure 2 presents examples of the species and environ-mental metadata included in the MetaWild dataset. The se-lection of species reflects conservation priorities, including predators (Stoat), pests (Wallaby, Hare), endangered native species (Yellow-eyed Penguin), and native animals (Deer and P¯ ukeko) (Department of Conservation 2024, 2025). Stoats compete with native birdlife for food and habitat, also eat the eggs and young, and attack the adults, posing a sig-nificant threat to native wildlife. The Yellow-eyed Penguin, classified as endangered with a rapidly declining population, exemplifies a vulnerable native species in urgent need of protection. Wallabies and hares are considered agricultural pests, causing significant damage to native vegetation and ecosystems. Deer and P¯ ukeko, both native to New Zealand, exhibit unique visual and behavioral patterns that introduce diversity and realism, further enriching the dataset’s applica-bility. The dataset was organized according to standard ReID protocols, comprising 60% for training, 25% for the gallery, and 15% for the query sets (Li et al. 2018), and detailed statistics are shown in Table 1. 
+
+Dataset Construction 
+
+We ensured high data quality by filtering visually clear im-ages, performing reliable identity annotations, and extract-ing consistent metadata. Both identity labels and metadata were independently verified by at least three annotators. The detailed procedure is described below. 
+
+Image Selection. We first conducted a filtering process to remove low-quality images in which the target animals ap-peared as unrecognizable, blurry blobs due to motion blur or poor lighting. We further selected a representative subset of images for each species to ensure sufficient intra-species variation across individuals and conditions ( e.g. , viewpoints, lighting, and environments) and maintain balanced distribu-tion across environmental metadata. 
+
+Identity Annotation. We employed a combination of tem-poral analysis and visual verification to assign identities within each species. For temporal analysis, we used the camera trap images’ time-stamped nature to track animals across sequential frames. Animals captured within narrow time windows ( e.g. , a few seconds) at the same camera loca-tion were likely to belong to the same individual. To comple-ment this, manual visual inspection was conducted to con-firm or correct identity groupings based on distinct physical characteristics, such as markings, size, and shape. 
+
+Metadata Extraction. We focus on three metadata fea-tures: temperature , circadian rhythms , and face orientation ,as they directly influence the animal’s appearance and be-havior (Cade et al. 2021; McVey et al. 2023). Temperature is read from embedded overlays, circadian rhythm (day/night) is inferred from timestamps and lighting, and face orienta-tion is manually annotated to support geometric reasoning in ReID. Other metadata types were excluded due to redun-dancy or unavailability ( e.g. , missing geolocation). All meta-data is standardized and stored in structured JSON files for each image. 
+
+Image Preprocessing. To focus on the target animal and reduce background noise, we used a YOLO-based detec-tor to generate bounding boxes for cropping, followed by manual verification to correct detection errors. Furthermore, each cropped image was renamed using a structured for-mat, id camera -id count (e.g. , 11 CT -GIG -03 27 , where 
+
+11 denotes the individual identity, CT -GIG -03 represents the camera ID, and 27 indicates the 28th image for identity A photo of a Stoat <Bob> in <cool>     
+
+> temperature, with face direction
+> <left> , captured during the <day> .
+> Textual Expert
+> Meta-augmented Prompt
+> Loss
+> Computation
+> Identity Label
+> Image Encoder
+> 0Circadian Rhythm: day
+> Face Orientation: left
+> Temperature: Text Encoder Visual Expert Gated Cross Attention ReID Loss
+> Feature Experts
+> : Frozen : Learnable
+
+Figure 3: Overview of the proposed Meta-Feature Adapter (MFA) module 11). This systematic naming convention facilitates efficient data management and traceability. 
+
+## Methodology 
+
+We propose a lightweight Meta-Feature Adapter (MFA) to integrate environmental metadata into existing VLM-based Animal ReID models without modifying their backbone ar-chitectures. As shown in Figure 3, MFA consists of two main components: (1) Feature Experts , employed adapters (Gao et al. 2024) as experts that refine visual and textual em-beddings into metadata-aware representations. (2) Gated Cross-Attention , which fuses visual and metadata features by weighting relevant information from each modality. 
+
+Feature Experts 
+
+To enable effective fusion between visual features and envi-ronmental metadata, we incorporate feature experts in both the text and image branches. In the text branch, we convert metadata into natural language descriptions using a fixed prompt template: “A photo of a {species } { individual id } in 
+
+{freezing, cold, chilly, cool, warm, hot } temperature, with face direction {front, back, left, right }, captured during the 
+
+{day, night }.” This template mimics natural language cap-tions used during VLM pretraining, maximizing compatibil-ity with the text encoder. The metadata-augmented prompt 
+
+PM is encoded using the pretrained text encoder T (·) to ob-tain text embedding TM = T (PM), which is then refined by a Textual Metadata Expert (TME) ET into a metadata-aware embedding T ′ 
+
+> M
+
+= ET(TM). Similarly, in the image branch, we introduce a Visual Feature Expert (VFE) EI to transform the raw visual embedding Ix into metadata-aware representations I′ 
+
+> x
+
+= EI (Ix). Both experts ET and EI are trained end-to-end using ReID loss functions including the identity classification loss Lid for encouraging separability across identities and the triplet loss Ltri for enforcing rela-tive distance constraints (Wang and Liu 2021). By allowing gradients from the ReID objective to propagate through the feature experts, ET and EI learn task-relevant transforma-tions that directly improve ReID performance. 
+
+Gated Cross-Attention 
+
+We utilize a cross-attention mechanism to integrate metadata-aware text embeddings T ′ 
+
+> M
+
+with visual features I′
+
+> x
+
+.Methods Deer Hare Penguin P¯ ukeko Stoat Wallaby mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 CLIP-ZS (Radford et al. 2021) 50.0±.0 92.1±.0 33.8±.0 81.1±.0 34.0±.0 57.8±.0 33.0±.0 69.6±.0 30.1±.0 72.7±.0 46.2±.0 85.5±.0 CLIP-FT 63.2±.1 95.4±.4 56.7±.2 92.5±.4 44.0±.3 64.9±.2 56.8±.1 80.3±.5 68.6±.1 92.3±.3 55.5±.1 92.4±.4 CLIP-FT+MFA 66.7±.2 95.7±.3 58.4±.3 92.6±.2 46.0±.2 64.9±.3 58.2±.2 81.6±.3 69.8±.2 91.8±.2 56.8±.4 90.7±.3 CLIP-ReID (Li, Sun, and Li 2023) 65.2±.4 95.8±.3 60.0±.6 95.1±.3 44.8±.4 67.9±.4 57.6±.2 82.0±.1 67.5±.1 91.5±.3 56.9±.4 88.8±.2 CLIP-ReID+MFA 69.4±.2 98.1±.1 63.2±.1 95.4±.1 50.3±.4 68.6±.2 59.8±.1 83.7±.2 71.5±.2 92.0±.1 61.8±.2 92.1±.1   
+
+> ReID-AW (Jiao et al. 2024) 67.5±.3 96.0±.2 63.3±.4 95.6±.3 48.8±.5 69.4±.3 58.5±.3 82.0±.4 69.5±.3 93.5±.5 58.4±.3 91.8±.2 ReID-AW+MFA 72.4±.2 97.0±.2 66.2±.3 96.8±.2 55.3±.4 70.8±.4 61.8±.2 86.7±.3 74.1±.4 95.0±.2 63.5±.1 92.7±.2
+
+Table 2: Intra-species re-identification performance on the MetaWild dataset across six species, we report mAP and CMC-1 accuracy (%) with 95% confidence intervals. CLIP-ZS shows zero variance due to its deterministic zero-shot inference nature.                            
+
+> Methods Deer Hare Penguin P¯ ukeko Stoat Wallaby mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 mAP CMC-1 CLIP-ZS (Radford et al. 2021) 40.3±.0 80.5±.0 25.1±.0 75.1±.0 27.5±.0 50.4±.0 24.6±.0 64.5±.0 23.0±.0 62.3±.0 40.6±.0 80.3±.0 CLIP-FT 55.1±.2 83.0±.4 41.5±.2 81.4±.2 38.7±.3 59.7±.2 41.3±.2 76.9±.2 45.4±.3 79.3±.2 49.0±.2 72.2±.1 CLIP-FT+MFA 56.7±.2 86.4±.4 43.9±.4 81.6±.2 40.8±.1 63.5±.2 42.3±.3 76.9±.4 46.2±.4 79.6±.2 50.0±.3 72.8±.3
+> CLIP-ReID (Li, Sun, and Li 2023) 56.3±.3 84.4±.3 43.5±.1 86.3±.3 39.5±.2 60.3±.4 43.8±.4 77.9±.1 45.8±.3 79.3±.2 50.1±.4 82.5±.2 CLIP-ReID+MFA 60.2±.4 89.2±.3 44.1±.1 88.6±.2 41.3±.2 64.1±.4 45.1±.3 78.3±.2 47.9±.1 80.3±.2 52.3±.2 82.8±.2
+> ReID-AW (Jiao et al. 2024) 59.3±.3 89.0±.2 47.6±.2 90.2±.4 40.8±.5 63.9±.3 50.4±.4 80.3±.1 53.3±.3 83.9±.1 51.7±.3 84.2±.2 ReID-AW+MFA 62.5±.4 92.4±.4 50.2±.3 90.8±.2 44.2±.4 64.6±.3 53.6±.3 83.6±.1 56.1±.1 84.6±.1 53.1±.2 86.0±.3
+
+Table 3: Leave-one-domain-out inter-species ReID performance on the MetaWild dataset, we report mAP and CMC-1 accuracy (%) with 95% confidence intervals for each target species. Unlike conventional fusion methods, cross-attention enables context-aware integration, allowing image features to selec-tively attend to relevant metadata cues. Given image em-beddings I′ 
+
+> x
+
+∈ RN ×d and metadata-aware text embeddings 
+
+T ′ 
+
+> M
+
+∈ RM ×d, we compute Query ( Q), Key ( K), and Value (V ) matrices as Q = I′
+
+> x
+
+WQ, K = T ′
+
+> M
+
+WK , V = T ′
+
+> M
+
+WV ,where WQ, WK , and WV are learnable projection matrices. To address the fact that metadata relevance varies across im-ages, we employ a gating mechanism to selectively adjust metadata contribution. A gating value γ ∈ [0 , 1] is computed as γ = Gate (I′
+
+> x
+
+, T ′
+
+> M
+
+) = σ(MLP ([ I′
+
+> x
+
+; T ′
+
+> M
+
+])) , where [I′
+
+> x
+
+; T ′
+
+> M
+
+]
+
+denotes concatenation, MLP is a multi-layer perceptron with layer normalization, and σ is the sigmoid activation. The fi-nal meta-augmented image embedding Imeta is computed as 
+
+Imeta = γAV + I′
+
+> x
+
+, where A is the cross-attention weight matrix (Shi et al. 2022). The loss function is defined as: 
+
+Li 
+
+> A
+
+= − log exp  s  T ′i 
+
+> M
+
+, I i
+
+> meta
+
+ /τ PBj=1 exp 
+
+
+
+s
+
+
+
+T ′i 
+
+> M
+
+, I j
+
+> meta
+
+
+
+/τ 
+
+ (1) where B is the batch size, (T ′iM , I i
+
+> meta
+
+) is the i-th matched pair, and τ is the temperature parameter. 
+
+## Experiments 
+
+We evaluate existing Animal ReID models under visual-only and visual+metadata settings on MetaWild using two proto-cols: (1) Intra-species ReID (Varghese, Jawahar, and Prince 2023), where training and testing are performed on different individuals within the same species; and (2) Inter-species ReID (Heiling et al. 2016), where we adopt a leave-one-domain-out (LODO) strategy (Yu et al. 2024), training on five species and testing on the remaining unseen species to reflect real-world scenarios where collecting labeled data for every species is impractical (Jiao et al. 2024). 
+
+Experimental Results 
+
+Intra-species ReID. Table 2 shows that incorporating en-vironmental metadata consistently improves ReID perfor-mance across all six species. CLIP-ReID achieves mAP gains of 5.5% on Penguin, 4.9% on Wallaby, and 4.2% on Deer, while ReID-AW shows improvements of 6.5% on Pen-guin, 5.1% on Wallaby, and 4.9% on Deer, demonstrating the effectiveness of metadata integration. 
+
+Inter-species ReID. Table 3 summarizes LODO evaluations where one species is held out for testing while the remain-ing five are used for training. Incorporating metadata con-sistently improves all baseline methods: CLIP-ReID+MFA achieves mAP gains of 3.9% on Deer, 3.3% on P¯ ukeko, and 1.8% on Penguin, while ReID-AW shows improve-ments of 3.4% on Penguin, 3.2% on Deer, and 2.6% on Hare. These results demonstrate that environmental meta-data provides complementary cues that enhance model gen-eralization across species boundaries and improve transfer-able identity representation learning. 
+
+## Conclusion 
+
+We present MetaWild, a multimodal Animal ReID dataset pairing visual data with environmental metadata to evalu-ate metadata’s impact on ReID performance. To support this investigation without architectural changes, we further pro-pose the Meta-Feature Adapter (MFA), a lightweight mod-ule that enables the integration of metadata into VLM-based Animal ReID methods. Extensive experiments demonstrate that incorporating metadata alongside visual information consistently improves ReID accuracy, confirming the value of contextual environmental metadata. We hope this work can inspire broader exploration of environmental metadata and multimodal approaches in wildlife ReID and beyond. References 
+
+Adam, L.; ˇ Cerm´ ak, V.; Papafitsoros, K.; and Picek, L. 2024. SeaTurtleID2022: A long-span dataset for reliable sea tur-tle re-identification. In Proceedings of the IEEE/CVF Win-ter Conference on Applications of Computer Vision , 7146– 7156. Beery, S. M. 2023. Where the Wild Things Are: Computer Vision for Global-Scale Biodiversity Monitoring . California Institute of Technology. Cade, D. E.; Gough, W. T.; Czapanskiy, M. F.; Fahlbusch, J. A.; Kahane-Rapport, S. R.; Linsky, J. M.; Nichols, R. C.; Oestreich, W. K.; Wisniewska, D. M.; Friedlaender, A. S.; et al. 2021. Tools for integrating inertial sensor data with video bio-loggers, including estimation of animal orienta-tion, motion, and position. Animal Biotelemetry , 9(1): 34. ˇCerm´ ak, V.; Picek, L.; Adam, L.; and Papafitsoros, K. 2024. WildlifeDatasets: An open-source toolkit for animal re-identification. In Proceedings of the IEEE/CVF Winter Con-ference on Applications of Computer Vision , 5953–5963. Department of Conservation. 2024. New Zealand’s Unique Biodiversity is at Risk from Pests, Weeds, and Other Threats. https://www.doc.govt.nz/nature/pests-and-threats/. Accessed: 2024. Department of Conservation. 2025. New Zealand’s Native Animals. https://www.doc.govt.nz/nature/native-animals/. Accessed: 2025. Gao, J.; Burghardt, T.; Andrew, W.; Dowsey, A. W.; and Campbell, N. W. 2021. Towards self-supervision for video identification of individual Holstein-Friesian cattle: The Cows2021 dataset. arXiv preprint arXiv:2105.01938 .Gao, P.; Geng, S.; Zhang, R.; Ma, T.; Fang, R.; Zhang, Y.; Li, H.; and Qiao, Y. 2024. CLIP-Adapter: Better vision-language models with feature adapters. International Jour-nal of Computer Vision , 132(2): 581–595. He, Z.; Qian, J.; Yan, D.; Wang, C.; and Xin, Y. 2023. Animal re-identification algorithm for posture diversity. In ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing , 1–5. IEEE. Heiling, S.; Khanal, S.; Barsch, A.; Zurek, G.; Baldwin, I. T.; and Gaquerel, E. 2016. Using the knowns to discover the un-knowns: MS-based dereplication uncovers structural diver-sity in 17-hydroxygeranyllinalool diterpene glycoside pro-duction in the Solanaceae. The Plant Journal , 85(4): 561– 577. Jia, C.; Yang, Y.; Xia, Y.; Chen, Y.-T.; Parekh, Z.; Pham, H.; Le, Q.; Sung, Y.-H.; Li, Z.; and Duerig, T. 2021. Scaling up visual and vision-language representation learning with noisy text supervision. In International Conference on Ma-chine Learning , 4904–4916. PMLR. Jiao, B.; Liu, L.; Gao, L.; Wu, R.; Lin, G.; Wang, P.; and Zhang, Y. 2024. Toward re-identifying any animal. Ad-vances in Neural Information Processing Systems , 36. Kern, D.; Schiele, T.; Klauck, U.; and Ingabire, W. 2024. Towards Automated Chicken Monitoring: Dataset and Ma-chine Learning Methods for Visual, Noninvasive Reidentifi-cation. Animals , 15(1): 1. Leliveld, L. M.; Riva, E.; Mattachini, G.; Finzi, A.; Lo-varelli, D.; and Provolo, G. 2022. Dairy cow behavior is affected by period, time of day and housing. Animals , 12(4): 512. Li, D.; Zhang, Z.; Chen, X.; and Huang, K. 2018. Arichly annotated pedestrian dataset for person retrieval in real surveillance scenarios. IEEE Transactions on Image Processing , 28(4): 1575–1590. Li, S.; Li, J.; Tang, H.; Qian, R.; and Lin, W. 2020. ATRW: A Benchmark for Amur Tiger Re-identification in the Wild. In Proceedings of the 28th ACM International Conference on Multimedia , 2590–2598. Li, S.; Sun, L.; and Li, Q. 2023. CLIP-ReID: exploiting vision-language model for image re-identification without concrete text labels. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 37, 1405–1413. Li, Y.; Zhao, D.; Qiao, T.; Wu, Y.; Pang, B.; and Koh, Y. S. 2025. MetaWild: A multimodal dataset for animal re-identification with environmental metadata. In Proceedings of the 33rd ACM international conference on multimedia ,13009–13015. LILA BC Project. 2024. Trail Camera Images of New Zealand Animals. https://lila.science/datasets/nz-trailcams. Accessed: 2024. McVey, C.; Hsieh, F.; Manriquez, D.; Pinedo, P.; and Hor-back, K. 2023. Invited Review: Applications of unsuper-vised machine learning in livestock behavior: Case studies in recovering unanticipated behavioral patterns from preci-sion livestock farming data streams. Applied Animal Sci-ence , 39(2): 99–116. Pang, B.; Qiao, T.; Walker, C.; Cunningham, C.; and Koh, Y. S. 2025a. CABIN: Debiasing Vision-Language Models Using Backdoor Adjustments. In IJCAI , 484–492. Pang, B.; Qiao, T.; Walker, C.; Cunningham, C.; and Koh, Y. S. 2025b. Libra: Measuring bias of large language model from a local context. In European Conference on Informa-tion Retrieval , 1–16. Springer. Qiao, T.; Zhao, D.; Li, Y.; Pang, B.; Walker, C.; Cunning-ham, C.; and Koh, Y. S. 2026a. Multiple Images Dis-tract Large Multimodal Models via Attention Fragmenta-tion. In European Conference on Computer Vision , 361– 379. Springer. Qiao, T.; Zhao, D.; Walker, C.; Cunningham, C.; and Koh, Y. S. 2026b. Zero-Shot Domain Generalisation via Prompt-Driven Feature Refinement. In 2026 IEEE/CVF Winter Con-ference on Applications of Computer Vision (WACV) , 6184– 6193. IEEE. Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.; Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.; et al. 2021. Learning transferable visual models from nat-ural language supervision. In International Conference on Machine Learning , 8748–8763. PMLR. Schneider, S.; Taylor, G. W.; Linquist, S.; and Kremer, S. C. 2019. Past, present and future approaches using computer vision for animal re-identification from camera trap data. 
+
+Methods in Ecology and Evolution , 10(4): 461–470. Schofield, G.; Papafitsoros, K.; Chapman, C.; Shah, A.; Westover, L.; Dickson, L. C.; and Katselidis, K. A. 2022. More aggressive sea turtles win fights over foraging re-sources independent of body size and years of presence. An-imal Behaviour , 190: 209–219. Shi, X.; Wei, D.; Zhang, Y.; Lu, D.; Ning, M.; Chen, J.; Ma, K.; and Zheng, Y. 2022. Dense cross-query-and-support at-tention weighted mask aggregation for few-shot segmenta-tion. In European Conference on Computer Vision , 151– 168. Springer. Varghese, A.; Jawahar, M.; and Prince, A. A. 2023. Fine-tuning ConvNets with novel leather image data for species identification. In Fifteenth International Conference on Ma-chine Vision , volume 12701, 150–157. SPIE. Wahltinez, O.; and Wahltinez, S. J. 2024. An open-source general purpose machine learning framework for individual animal re-identification using few-shot learning. Methods in Ecology and Evolution , 15(2): 373–387. Wang, D.; Zhou, C.; Zhao, D.; Liu, X.; Ma, M. C.; Ushaw, G.; and Davison, R. 2026. TowerMind: A tower defence game learning environment and benchmark for LLM as agents. In Proceedings of the AAAI Conference on Artifi-cial Intelligence , volume 40, 26151–26159. Wang, F.; and Liu, H. 2021. Understanding the behaviour of contrastive loss. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition , 2495– 2504. Weideman, H.; Stewart, C.; Parham, J.; Holmberg, J.; Flynn, K.; Calambokidis, J.; Paul, D. B.; Bedetti, A.; Henley, M.; Pope, F.; et al. 2020. Extracting identifying contours for African elephants and humpback whales using a learned appearance model. In Proceedings of the IEEE/CVF Win-ter Conference on Applications of Computer Vision , 1276– 1285. Wu, Y.; Zhao, D.; Getz, W. M.; Liu, L.; Dobbie, G.; Wilson, D.; and Koh, Y. S. 2026a. Region-Aware Multimodal Inter-leaving for Animal Re-Identification. In European Confer-ence on Computer Vision , 76–94. Springer. Wu, Y.; Zhao, D.; Li, Y.; Alajas, M.; Glen, A. S.; Zhang, J.; Dobbie, G.; Wilson, D.; and Koh, Y. S. 2026b. Overcoming fine-grained visual challenges in animal re-identification via semantic feature alignment. In 2026 IEEE/CVF Winter Con-ference on Applications of Computer Vision (WACV) , 371– 381. IEEE. Xu, P.; Zhang, Y.; Ji, M.; Guo, S.; Tang, Z.; Wang, X.; Guo, J.; Zhang, J.; and Guan, Z. 2024. Advanced intelligent moni-toring technologies for animals: A survey. Neurocomputing ,585: 127640. Yu, H.; Zhang, X.; Xu, R.; Liu, J.; He, Y.; and Cui, P. 2024. Rethinking the evaluation protocol of domain generaliza-tion. In Proceedings of the IEEE/CVF Conference on Com-puter Vision and Pattern Recognition , 21897–21908. Zhao, D.; Koh, Y. S.; Dobbie, G.; Hu, H.; and Fournier-Viger, P. 2024. Symmetric Self-Paced Learning for Domain Generalization. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 38, 16961–16969. Zhao, D.; Zhang, J.; Hu, H.; Fournier-Viger, P.; Dobbie, G.; and Koh, Y. S. 2025. Balancing Invariant and Specific Knowledge for Domain Generalization with Online Knowl-edge Distillation. In IJCAI , 2440–2448. Zhao, D.; Zhang, J.; Hu, H.; Fournier-Viger, P.; Dobbie, G.; and Koh, Y. S. 2026. Unlearning during training: Domain-specific gradient ascent for domain generalization. In The Fourteenth International Conference on Learning Represen-tations .

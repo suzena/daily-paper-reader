@@ -1,0 +1,201 @@
+{
+  "date": "20261002",
+  "date_label": "",
+  "generated_at": "2026-10-02 22:56:07 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.38511v1",
+      "route": "202610/02/2609.38511v1-onboard-vision-and-mpc-navigation-for-underwater-robots-an-open-bluerov2-platform-for-multi-robot-experiments--docking",
+      "title": "Onboard Vision and MPC Navigation for Underwater Robots: An Open BlueROV2 Platform for Multi-Robot Experiments & Docking",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "具备机载视觉、状态估计与MPC导航的自主水下机器人平台",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.36082v1",
+      "route": "202610/02/2609.36082v1-geooutagebench-benchmarking-ambiguity-aware-ontology-grounded-geospatiotemporal-kgqa-for-multimodal-power-outage-and-resilience-analysis",
+      "title": "GeoOutageBench: Benchmarking Ambiguity-aware, Ontology-grounded Geospatiotemporal KGQA for Multimodal Power Outage and Resilience Analysis",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "融合遥感、文本与结构化数据的LLM多模态知识图谱问答",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.38072v2",
+      "route": "202610/02/2609.38072v2-rs-opsd-reliable-privileged-on-policy-self-distillation-for-ultra-high-resolution-remote-sensing-vqa",
+      "title": "RS-OPSD: Reliable Privileged On-Policy-Self-Distillation for Ultra-High-Resolution Remote Sensing VQA",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "结合图像与文本的遥感视觉问答与特权蒸馏",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.38846v1",
+      "route": "202610/02/2609.38846v1-coral-grow-out-robotic-assessment-system-cgras-scaling-coral-recruit-monitoring-through-robotics-and-computer-vision",
+      "title": "Coral Grow-out Robotic Assessment System (CGRAS): Scaling Coral Recruit Monitoring Through Robotics and Computer Vision",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "机器人与计算机视觉用于珊瑚幼体监测",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.39898v1",
+      "route": "202610/02/2609.39898v1-active-mapping-of-underwater-litter-using-camera-sonar-fusion",
+      "title": "Active Mapping of Underwater Litter Using Camera-Sonar Fusion",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海洋调查的自主主动建图与下一最佳视角决策",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2610.01569v1",
+      "route": "202610/02/2610.01569v1-managing-context-and-communication-in-distributed-agentic-uav-swarms",
+      "title": "Managing Context and Communication in Distributed Agentic UAV Swarms",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向自主无人机蜂群监测的分布式语言模型智能体架构",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.34094v1",
+      "route": "202610/02/2609.34094v1-advancing-wildlife-conservation-through-multimodal-animal-re-identification-with-environmental-metadata",
+      "title": "Advancing Wildlife Conservation through Multimodal Animal Re-Identification with Environmental Metadata",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "利用视觉语言模型融合影像与环境元数据文本",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.34860v1",
+      "route": "202610/02/2609.34860v1-attention-based-hierarchical-variational-information-bottleneck-for-robust-multi-agent-communication-under-variable-bandwidth",
+      "title": "Attention-based Hierarchical Variational Information Bottleneck for Robust Multi-Agent Communication under Variable Bandwidth",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向协作检查与占据建图的多智能体通信架构",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.37003v1",
+      "route": "202610/02/2609.37003v1-vesselbench-800k-a-large-scale-perception-benchmark-for-multimodal-vessel-detection-counting-and-density-estimation",
+      "title": "VesselBench-800K: A Large-scale Perception Benchmark for Multimodal Vessel Detection, Counting, and Density Estimation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向空间船舶感知的全球多模态基准",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.37340v1",
+      "route": "202610/02/2609.37340v1-hypersam-a-promptable-foundation-model-for-hyperspectral-remote-sensing",
+      "title": "HyperSAM: A Promptable Foundation Model for Hyperspectral Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向高光谱遥感的可提示基础模型",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.37481v1",
+      "route": "202610/02/2609.37481v1-label-less-learn-more-resource-efficient-active-semi-supervised-learning-for-onboard-satellite-image-annotation",
+      "title": "Label Less, Learn More: Resource-Efficient Active Semi-Supervised Learning for Onboard Satellite Image Annotation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向卫星影像标注的资源高效星上学习",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    },
+    {
+      "paper_id": "2609.37485v1",
+      "route": "202610/02/2609.37485v1-poe-fuse-precision-weighted-expert-fusion-for-bi-temporal-change-understanding",
+      "title": "PoE-Fuse: Precision-Weighted Expert Fusion for Bi-Temporal Change Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感变化理解的参数高效视觉语言融合",
+      "first_seen_at": "2026-10-02 22:56:07 UTC",
+      "updated_at": "2026-10-02 22:56:07 UTC"
+    }
+  ]
+}
