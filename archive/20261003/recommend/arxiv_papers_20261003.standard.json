@@ -1,0 +1,257 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-03T22:29:39.675743+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2609.37002v2",
+      "source": "arxiv",
+      "title": "Visual Parallel Search: Learning to Search High-Resolution Images with Parallel Tile Inspection and Adaptive Zoom",
+      "abstract": "High-resolution visual question answering often fails because a multimodal model does not acquire the small, spatially localized evidence needed to answer a question. Sequential zooming can recover detail, but it asks the main model to choose a region before obtaining a reliable overview. We introduce VPS, a visual parallel-search framework in which a main agent first invokes grid_search to inspect image tiles in parallel with question-conditioned sub-agents, and then adaptively invokes zoom_in on a precise or merged region. The same interface supports both training-free inference and post-training of the main and sub-agents. Across five benchmark splits and three model sizes, VPS improves mean accuracy over dedicated zoom-only search in 14 of 15 same-model comparisons, with gains up to 8.0 points and especially strong improvements for smaller main models. ZoomBench retains an approximately 3.2-point gain at every tested size. We further develop a supervision pipeline with hint-free verification and a paired role-specific GRPO surrogate for learning the controller and tile-reader roles. SFT improves observed accuracy on all five benchmark splits, including a 4.17-point gain on HR-Bench 4K. Role-specific RL further reshapes search behavior: main-only RL reduces mean tool use from 2.65 to 2.11 with similar pass@1 in an internal four-response evaluation, while external accuracy changes are mixed. Joint training reveals an asymmetry between local evidence reading and global search control. Together, these results support VPS as an effective inference-time scaffold and a trainable decomposition for visual evidence acquisition.",
+      "authors": [
+        "Xijia Tao",
+        "Yihua Teng",
+        "Xinyu Fu",
+        "Cheng Gong",
+        "Ziru Liu",
+        "Xudong Xie",
+        "Rui Liu",
+        "Lingpeng Kong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-29T08:29:48+00:00",
+      "link": "https://arxiv.org/pdf/2609.37002v2",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agentic multimodal framework combining image tiles and question text for high-resolution visual search",
+      "llm_evidence_cn": "融合图像分块与问题文本的智能体式多模态高分辨率搜索",
+      "llm_evidence": "融合图像分块与问题文本的智能体式多模态高分辨率搜索",
+      "canonical_evidence": "融合图像分块与问题文本的智能体式多模态高分辨率搜索",
+      "llm_tldr_en": "VPS targets high-resolution VQA failures by letting a main agent inspect image tiles in parallel with question-conditioned sub-agents, then zoom into precise regions, improving accuracy across benchmarks.",
+      "llm_tldr_cn": "针对高分辨率视觉问答中多模态模型难以获取局部细节证据、顺序缩放又需先选区域的问题，本文提出VPS视觉并行搜索框架：主智能体先用grid_search并行检查图像分块，再由问题条件化的子智能体自适应调用zoom_in放大关键区域。在五个基准划分与三种模型规模上平均准确率均有提升。该工作为图像与文本融合的智能体式高分辨率分析提供了通用接口。",
+      "llm_tldr": "针对高分辨率视觉问答中多模态模型难以获取局部细节证据、顺序缩放又需先选区域的问题，本文提出VPS视觉并行搜索框架：主智能体先用grid_search并行检查图像分块，再由问题条件化的子智能体自适应调用zoom_in放大关键区域。在五个基准划分与三种模型规模上平均准确率均有提升。该工作为图像与文本融合的智能体式高分辨率分析提供了通用接口。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.37809v1",
+      "source": "arxiv",
+      "title": "Pixel-Level Transformers in Remote Sensing: A Canopy Height Case Study",
+      "abstract": "Predicting canopy height from medium-resolution satellite imagery is a common and scalable approach for assessing the condition of the world's forests, which play a crucial role in climate change mitigation. While Transformer-based architectures have shown strong performance in many domains, their straightforward application to dense (i.e., pixel-level) regression tasks often yields suboptimal results. In particular, the patch size has a crucial impact on the model performance. In this work, we consider pixel-level attention schemes and show that the resulting models generally outperform those relying on larger patch sizes. However, pixel-level attention can be a prohibitively resource-intensive operation. For this reason, we conduct an extensive experimental study using efficient attention variants to identify favorable trade-offs between prediction quality and resource requirements, facilitating the practical deployment of the proposed models. In addition, we perform a comprehensive comparison with several well-established models in the field and show that, with suitable hyperparameter choices, Transformer-based architectures can outperform competing approaches. Our findings provide practical guidance for designing models for pixel-level regression tasks on medium-resolution satellite imagery, including canopy height and biomass estimation, soil moisture mapping, and yield forecasting.",
+      "authors": [
+        "Sven Ligensa",
+        "Jan Pauls",
+        "Karsten Schrödter",
+        "Ibrahim Fayad",
+        "Fabian Gieseke"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-09-29T15:25:15+00:00",
+      "link": "https://arxiv.org/pdf/2609.37809v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning transformers for dense satellite image analysis",
+      "llm_evidence_cn": "面向卫星影像稠密分析的深度学习Transformer",
+      "llm_evidence": "面向卫星影像稠密分析的深度学习Transformer",
+      "canonical_evidence": "面向卫星影像稠密分析的深度学习Transformer",
+      "llm_tldr_en": "A canopy-height case study shows pixel-level attention Transformers outperform large-patch variants for dense satellite-image regression, though at high computational cost.",
+      "llm_tldr_cn": "针对Transformer直接用于卫星影像像素级回归时效果欠佳、补丁尺寸影响显著的问题，论文以树冠高度预测为案例展开研究。方法比较了像素级注意力与不同补丁尺寸的方案，并分析其资源开销。实验表明像素级注意力模型普遍优于大补丁模型，但计算成本高昂。该工作为遥感稠密预测中的Transformer设计提供了实证依据。",
+      "llm_tldr": "针对Transformer直接用于卫星影像像素级回归时效果欠佳、补丁尺寸影响显著的问题，论文以树冠高度预测为案例展开研究。方法比较了像素级注意力与不同补丁尺寸的方案，并分析其资源开销。实验表明像素级注意力模型普遍优于大补丁模型，但计算成本高昂。该工作为遥感稠密预测中的Transformer设计提供了实证依据。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.39112v1",
+      "source": "arxiv",
+      "title": "CamAgent: An LLM-Agent Framework for Multi-Species Camera-Trap Workflows",
+      "abstract": "Camera traps accumulated vast, multidimensional data for wildlife monitoring, yet translating raw media archives into meaningful ecological insights remains highly fragmented. Current research workflows require laboriously stitching together disparate analysis tools and scripts, creating steep programming hurdles and complicating end-to-end spatiotemporal analyses. To overcome this fragmentation, we present CamAgent, an autonomous Large Language Model (LLM) agent framework that integrates camera-trap analytical workflows into a unified intelligent ecosystem. CamAgent interprets natural-language ecological intent, schedules computational routing, and executes specialized tools spanning computer-vision perception (e.g., SpeciesNet), CamtrapDP-compatible data management, detection-corrected occupancy modeling, temporal activity analysis, and species co-occurrence networks. The framework automates multi-stage analytical pipelines while maintaining essential data-quality controls and analytical conventions. Consequently, CamAgent significantly reduces manual programming overhead for conservationists, establishing a transparent, scalable, and fully integrated paradigm for camera-trap ecology. Our project is available at https://anonymous.4open.science/r/artifact72c6f4.",
+      "authors": [
+        "Yutong Deng",
+        "Qi Song",
+        "Xi Guo",
+        "Tianming Wang",
+        "Lei Bao",
+        "Jianping Ge"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-30T06:49:27+00:00",
+      "link": "https://arxiv.org/pdf/2609.39112v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous LLM agent framework for ecological monitoring workflows",
+      "llm_evidence_cn": "面向生态监测的自主LLM智能体框架",
+      "llm_evidence": "面向生态监测的自主LLM智能体框架",
+      "canonical_evidence": "面向生态监测的自主LLM智能体框架",
+      "llm_tldr_en": "Camera-trap archives are hard to turn into ecological insight because workflows require stitching many tools. CamAgent is an autonomous LLM-agent framework that parses natural-language intent, routes computation, and executes species-recognition tools into end-to-end workflows.",
+      "llm_tldr_cn": "红外相机积累的海量多维影像难以直接转化为生态学洞见，现有流程需人工拼接多种分析工具，编程门槛高且难以端到端分析。本文提出CamAgent，一个自主LLM智能体框架，可解析自然语言的生态意图、调度计算路由并调用物种识别等专业工具。它把碎片化的相机陷阱工作流整合为统一的智能生态，支撑端到端的时空分析，为自动监测工作流提供了可迁移的智能体范式。",
+      "llm_tldr": "红外相机积累的海量多维影像难以直接转化为生态学洞见，现有流程需人工拼接多种分析工具，编程门槛高且难以端到端分析。本文提出CamAgent，一个自主LLM智能体框架，可解析自然语言的生态意图、调度计算路由并调用物种识别等专业工具。它把碎片化的相机陷阱工作流整合为统一的智能生态，支撑端到端的时空分析，为自动监测工作流提供了可迁移的智能体范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2609.39871v1",
+      "source": "arxiv",
+      "title": "Hyperspectral Image Models: Technical Report",
+      "abstract": "Hyperspectral remote sensing has advanced across diverse deep learning paradigms, including spectral spatial CNNs, Vision Transformers, Mamba, graph neural networks, Kolmogorov Arnold networks, and self supervised masked autoencoding. Yet progress remains hindered by fragmented repositories, incompatible tensor conventions, and non standardized evaluation. Hyperspectral Image Models addresses these challenges through a modular framework unifying 55 representative models across six paradigms with a common registry, automatic 4D/5D tensor adaptation, and standardized constructors. It integrates 24 benchmark scenes from Airborne, Spaceborne, UAV, and Mars CRISM sensors, with caching, label remapping, PCA, explicit band selection or raw spectra, optional spatial max pooling, and arbitrary PxP patch extraction. To prevent inflated accuracy from overlapping windows, it supports class balanced random partitioning and spatially disjoint regional blocking with Chebyshev guard bands that eliminate train test pixel overlap. Experiments use a single config.yaml with deterministic seeds and complete provenance, generating LaTeX benchmark tables and classification maps. Across 1,320 model scene evaluations and 6,600 seeded runs, scene difficulty dominates architecture, with mean accuracy ranging from 96.40% on Botswana to 56.70% on Houston 2018, versus a 15 point spread across paradigm means. No paradigm universally dominates, while sub 1 M parameter models can match architectures two orders of magnitude larger. Code is publicly available at https://github.com/Tanishq251/Hyperspectral-Image-Models.",
+      "authors": [
+        "Tanishq Rachamalla",
+        "Aryan Das",
+        "Srishti Kaushik",
+        "Swalpa Kumar Roy"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-30T14:50:21+00:00",
+      "link": "https://arxiv.org/pdf/2609.39871v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified framework of deep learning models for hyperspectral remote sensing",
+      "llm_evidence_cn": "统一的高光谱遥感深度学习模型框架",
+      "llm_evidence": "统一的高光谱遥感深度学习模型框架",
+      "canonical_evidence": "统一的高光谱遥感深度学习模型框架",
+      "llm_tldr_en": "To fix fragmented repositories and non-standard evaluation in hyperspectral remote sensing, this report unifies 55 models across six deep learning paradigms with standardized tensors and benchmarks.",
+      "llm_tldr_cn": "针对高光谱遥感深度学习模型代码库分散、张量约定不兼容、评估标准不统一的问题，论文提出模块化框架，统一六类范式共55个代表模型，并实现自动4D/5D张量适配与标准化构造。框架集成机载、星载、无人机及火星CRISM等24个基准场景，为高光谱遥感研究提供统一可复现的基础设施。",
+      "llm_tldr": "针对高光谱遥感深度学习模型代码库分散、张量约定不兼容、评估标准不统一的问题，论文提出模块化框架，统一六类范式共55个代表模型，并实现自动4D/5D张量适配与标准化构造。框架集成机载、星载、无人机及火星CRISM等24个基准场景，为高光谱遥感研究提供统一可复现的基础设施。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.01480v1",
+      "source": "arxiv",
+      "title": "FiVOS: A Fish Segmentation Algorithm Based on Interactive Video Object Segmentation and Filter Enhancement",
+      "abstract": "With the continuous expansion of aquaculture, precise and efficient monitoring of fish behavior has become increasingly critical for improving farming efficiency and reducing economic losses. In particular, with the ongoing enhancement of computational capabilities in deep learning models, vision-based fish segmentation methods are garnering growing attention. By analyzing video segmentation results, fish behavior can be effectively tracked, thereby providing reliable data support for the precise regulation of aquaculture environments. However, existing deep learning-based video segmentation methods for aquaculture scenarios often overlook the dynamic correlations between video frames. In contrast, Interactive Video Object Segmentation (IVOS) employs an interaction-propagation scheme to achieve high-precision segmentation while minimizing user effort, thereby enhancing monitoring efficiency. Yet, IVOS applications in aquaculture remain limited due to data scarcity, and are susceptible to error accumulation and mask loss over long sequence propagation due to high intra-class similarity. In response, this paper proposes an improved interactive video object segmentation method (FiVOS) and constructs two fish-specific datasets. FiVOS utilizes a mask block filter to enable early detection and correction of erroneous propagated mask blocks, enhancing filtering accuracy through a rule-based thresholding approach. Additionally, it serializes noise filters to further eliminate erroneous mask noise, thereby improving model robustness. Experimental results demonstrate that FiVOS achieves state-of-the-art (SOTA) performance in fish video segmentation tasks, providing robust technical support for fish behavior research.",
+      "authors": [
+        "Yuqing Duan",
+        "Song Zhang",
+        "Shili Zhao",
+        "Daoliang Li",
+        "Ran Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-01T11:20:41+00:00",
+      "link": "https://arxiv.org/pdf/2610.01480v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning fish video segmentation for aquaculture monitoring",
+      "llm_evidence_cn": "面向水产养殖监测的深度学习鱼类视频分割",
+      "llm_evidence": "面向水产养殖监测的深度学习鱼类视频分割",
+      "canonical_evidence": "面向水产养殖监测的深度学习鱼类视频分割",
+      "llm_tldr_en": "FiVOS tackles fish video segmentation for aquaculture monitoring, where existing methods neglect inter-frame dynamic correlations. It combines interactive video object segmentation with filter enhancement to track fish behavior and support precise regulation of farming environments.",
+      "llm_tldr_cn": "随着水产养殖规模扩大，鱼类行为精准监测愈发关键，但现有深度学习视频分割方法常忽视帧间动态关联，难以稳定刻画鱼群运动。FiVOS将交互式视频目标分割与滤波增强相结合，利用帧间动态相关性提升养殖场景下的鱼类分割精度。分割结果可有效支撑鱼类行为跟踪，为养殖环境的精准调控提供可靠数据。该工作为海洋水产场景的视觉监测提供了实用方法。",
+      "llm_tldr": "随着水产养殖规模扩大，鱼类行为精准监测愈发关键，但现有深度学习视频分割方法常忽视帧间动态关联，难以稳定刻画鱼群运动。FiVOS将交互式视频目标分割与滤波增强相结合，利用帧间动态相关性提升养殖场景下的鱼类分割精度。分割结果可有效支撑鱼类行为跟踪，为养殖环境的精准调控提供可靠数据。该工作为海洋水产场景的视觉监测提供了实用方法。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.01890v1",
+      "source": "arxiv",
+      "title": "Unsupervised Domain Adaptation for Enhanced Radiometer Image Precipitation Estimation using Conditional Flow Matching",
+      "abstract": "Deep generative networks have recently achieved unprecedented performance in precise image and video editing using sophisticated textual prompts. However, the effectiveness of such models heavily depends on access to very large supervised and annotated image datasets, which can be very difficult to obtain. This is particularly true for satellite instruments, which very rarely overlap with labelled data, and suffer from domain shifts in the rare occasions they do. In this paper, we investigate the potential of flow matching models for unsupervised domain adaptation of satellite radiometer images. Our main contribution is a novel unsupervised method that achieves precise domain alignment by leveraging parts of the deterministic ordinary differential equations in flow matching models, conditioned on different satellite instruments. A key strength of our approach is its ability to preserve essential information while adapting across any domains since the perturbations are in theory bijective. Extensive experiments conducted on the GPM-Core constellation show the benefit of our conditional domain adaptation, particularly in improving rain precipitation estimation from radiometer imagery.",
+      "authors": [
+        "Victor Enescu",
+        "Assaad Zeghina",
+        "Matthieu Meignin",
+        "Nicolas Viltard",
+        "Cécile Mallet"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-01T15:40:49+00:00",
+      "link": "https://arxiv.org/pdf/2610.01890v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unsupervised domain adaptation for satellite radiometer remote sensing",
+      "llm_evidence_cn": "面向卫星辐射计遥感的无监督域自适应",
+      "llm_evidence": "面向卫星辐射计遥感的无监督域自适应",
+      "canonical_evidence": "面向卫星辐射计遥感的无监督域自适应",
+      "llm_tldr_en": "This paper explores conditional flow matching for unsupervised domain adaptation of satellite radiometer images, addressing scarce labels and domain shifts to improve precipitation estimation over ocean and land.",
+      "llm_tldr_cn": "卫星仪器往往缺乏与标注数据重叠的样本，且存在显著域偏移，而深度生成模型又高度依赖大规模有标注数据。该文研究流匹配模型用于卫星辐射计图像的无监督域自适应，通过精确的域对齐提升降水估计性能。方法无需目标域标注即可缓解域偏移，增强了辐射计遥感降水估计的可靠性。其域自适应思路对海洋遥感数据的跨域挖掘具有可迁移价值。",
+      "llm_tldr": "卫星仪器往往缺乏与标注数据重叠的样本，且存在显著域偏移，而深度生成模型又高度依赖大规模有标注数据。该文研究流匹配模型用于卫星辐射计图像的无监督域自适应，通过精确的域对齐提升降水估计性能。方法无需目标域标注即可缓解域偏移，增强了辐射计遥感降水估计的可靠性。其域自适应思路对海洋遥感数据的跨域挖掘具有可迁移价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

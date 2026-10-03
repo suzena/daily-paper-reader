@@ -1,0 +1,105 @@
+{
+  "date": "20261003",
+  "date_label": "",
+  "generated_at": "2026-10-03 22:34:04 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2609.37002v2",
+      "route": "202610/03/2609.37002v2-visual-parallel-search-learning-to-search-high-resolution-images-with-parallel-tile-inspection-and-adaptive-zoom",
+      "title": "Visual Parallel Search: Learning to Search High-Resolution Images with Parallel Tile Inspection and Adaptive Zoom",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "融合图像分块与问题文本的智能体式多模态高分辨率搜索",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    },
+    {
+      "paper_id": "2609.37809v1",
+      "route": "202610/03/2609.37809v1-pixel-level-transformers-in-remote-sensing-a-canopy-height-case-study",
+      "title": "Pixel-Level Transformers in Remote Sensing: A Canopy Height Case Study",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向卫星影像稠密分析的深度学习Transformer",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    },
+    {
+      "paper_id": "2609.39112v1",
+      "route": "202610/03/2609.39112v1-camagent-an-llm-agent-framework-for-multi-species-camera-trap-workflows",
+      "title": "CamAgent: An LLM-Agent Framework for Multi-Species Camera-Trap Workflows",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向生态监测的自主LLM智能体框架",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    },
+    {
+      "paper_id": "2609.39871v1",
+      "route": "202610/03/2609.39871v1-hyperspectral-image-models-technical-report",
+      "title": "Hyperspectral Image Models: Technical Report",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "统一的高光谱遥感深度学习模型框架",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    },
+    {
+      "paper_id": "2610.01480v1",
+      "route": "202610/03/2610.01480v1-fivos-a-fish-segmentation-algorithm-based-on-interactive-video-object-segmentation-and-filter-enhancement",
+      "title": "FiVOS: A Fish Segmentation Algorithm Based on Interactive Video Object Segmentation and Filter Enhancement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向水产养殖监测的深度学习鱼类视频分割",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    },
+    {
+      "paper_id": "2610.01890v1",
+      "route": "202610/03/2610.01890v1-unsupervised-domain-adaptation-for-enhanced-radiometer-image-precipitation-estimation-using-conditional-flow-matching",
+      "title": "Unsupervised Domain Adaptation for Enhanced Radiometer Image Precipitation Estimation using Conditional Flow Matching",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向卫星辐射计遥感的无监督域自适应",
+      "first_seen_at": "2026-10-03 22:34:04 UTC",
+      "updated_at": "2026-10-03 22:34:04 UTC"
+    }
+  ]
+}
