@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-03</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-04</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 6 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>6</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-03 22:34:04 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-04 22:01:18 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>2026-10-03 日报速读 6 篇视觉与遥感方向新作，无精读。</p>
-<p>最值得看的是《Visual Parallel Search》提出的并行分块检查加自适应缩放的高分辨率图像搜索思路，以及《Pixel-Level Transformers in Remote Sensing》用像素级 Transformer 做树冠高度估计的案例。</p>
-<p>普通读者可先从这两篇入手，感受&quot;边看边缩放&quot;的搜索范式和遥感像素级建模的实际效果。</p>
+<p>今日速读两篇遥感视觉语言模型论文，聚焦灾害制图与多尺度概念瓶颈。最值得看的是《Decoding the Disaster》，用 VLM 结合众包影像做多任务地理空间推理，评分 7.0；《Aperture》则提出免训练的多尺度概念瓶颈，评分 6.0。普通读者可先关注灾害影像智能解译的落地思路，再按需了解可解释性方法。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -93,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">6 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Visual Parallel Search: Learning to Search High-Resolution Images with Parallel Tile Inspection and Adaptive Zoom">Visual Parallel Search: Learning to Search High-Resolution Images with Parallel Tile Inspection and Adaptive Zoom</span></li><li><span class="dpr-home-dashboard-paper-title" title="Pixel-Level Transformers in Remote Sensing: A Canopy Height Case Study">Pixel-Level Transformers in Remote Sensing: A Canopy Height Case Study</span></li><li><span class="dpr-home-dashboard-paper-title" title="CamAgent: An LLM-Agent Framework for Multi-Species Camera-Trap Workflows">CamAgent: An LLM-Agent Framework for Multi-Species Camera-Trap Workflows</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Decoding the Disaster: Multi-Task Geospatial Reasoning with Vision-Language Models and Crowdsourced Imagery for Disaster Mapping">Decoding the Disaster: Multi-Task Geospatial Reasoning with Vision-Language Models and Crowdsourced Imagery for Disaster Mapping</span></li><li><span class="dpr-home-dashboard-paper-title" title="Aperture: Training-Free Multiscale Concept Bottlenecks for Remote Sensing">Aperture: Training-Free Multiscale Concept Bottlenecks for Remote Sensing</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>6</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 </div>
 

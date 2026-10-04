@@ -1,0 +1,39 @@
+{
+  "label": "2026-10-04",
+  "date": "2026-10-04",
+  "generated_at": "2026-10-04T22:01:20",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202610/04/2610.00302v1-decoding-the-disaster-multi-task-geospatial-reasoning-with-vision-language-models-and-crowdsourced-imagery-for-disaster-mapping",
+      "section": "quick",
+      "title_en": "Decoding the Disaster: Multi-Task Geospatial Reasoning with Vision-Language Models and Crowdsourced Imagery for Disaster Mapping",
+      "authors": "Wenping Yin, Fabian Desuer, Ziqi Liu, Naixia Mou, Weijia Li, Pedram Ghamisi, Xiao Xiang Zhu, Hao Li",
+      "date": "2026-09-28",
+      "pdf": "https://arxiv.org/pdf/2610.00302v1",
+      "score": "7.0",
+      "evidence": "视觉语言模型融合遥感与众源影像进行环境评估",
+      "tldr": "灾害应急中，众包影像可提供及时街景观测并与遥感互补，但数据非结构化、空间模糊且缺地理元数据，人工定位与解译难规模化。本文提出多任务地理空间推理框架GRDisaster，基于PhotoMappers构建26,340张VGI、街景与遥感跨视角三元组基准，覆盖2018至2024年多起灾害。框架结合确定性/概率跨视角地理定位与多视角融合，并设计两组空间推理指标验证对应关系、评估可观测灾损严重度，增强VLM可解释性。该研究首次系统评估VLM空间推理将众包灾害影像转化为可行动GeoAI，支撑定位验证、可解释推理与灾损评估。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Crowdsourced imagery provides timely, fine-grained, street-level observations for disaster mapping, complementing conventional remote sensing imagery (RSI) during emergency response. However, such imagery is often unstructured, spatially ambiguous, and lacks reliable geographic metadata, making manual geolocalization and interpretation labor-intensive and difficult to scale. This work proposes a multi-task Geospatial Reasoning Disaster mapping framework, namely GRDisaster, to examine the potential of vision-language models (VLMs) in understanding, geolocalizing, and reasoning over crowdsourced disaster imagery. GRDisaster is built on a newly curated benchmark dataset derived from PhotoMappers, comprising 26,340 images organized into human-validated volunteered geographic information (VGI), street-view imagery (SVI), RSI cross-view triplets covering multiple disaster events from 2018 to 2024. The framework combines deterministic and probabilistic cross-view geolocalization with multi-view fusion to associate VGI images with georeferenced SVI and RSI. It introduces two sets of spatial reasoning indicators for cross-view geolocalization validation and disaster damage assessment. These indicators use structural, environmental, and global-scene cues to validate cross-view correspondences and visually observable damage evidence with expert-verified annotations to assess disaster severity, improving the interpretability of VLM outputs. To our knowledge, this study provides the first systematic investigation and unified evaluation framework for examining how VLM-based spatial reasoning can transform crowdsourced disaster imagery into actionable geospatial artificial intelligence (GeoAI) through cross-view geolocalization validation, interpretable spatial reasoning, and damage-aware severity assessment.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/04/2609.38603v1-aperture-training-free-multiscale-concept-bottlenecks-for-remote-sensing",
+      "section": "quick",
+      "title_en": "Aperture: Training-Free Multiscale Concept Bottlenecks for Remote Sensing",
+      "authors": "Rishabh Mondal, Nipun Batra, Utkarsh Mall",
+      "date": "2026-09-29",
+      "pdf": "https://arxiv.org/pdf/2609.38603v1",
+      "score": "6.0",
+      "evidence": "面向遥感的免训练多模态大模型概念瓶颈",
+      "tldr": "遥感地球观测模型性能突出却缺乏可解释性；概念瓶颈模型虽提供解释与专家交互，但训练昂贵或缺少标注时表现不佳。APERTURE提出免训练多尺度概念瓶颈：图像端用贪心四叉树路由定位细小概念，概念端借助预训练多模态大模型获取可靠概念分数，并融合全局与原生尺度分数。作者发布跨三国、带人工审核概念图的细粒度数据集SiFC。在SiFC上，APERTURE宏F1比最佳免训练基线高10个百分点以上，还超越监督概念瓶颈模型；实验表明概念分数响应视觉证据，描述符更新可提升技术变化识别且无需重训。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "While earth observation models have advanced substantially, they still lack interpretability. While concept-bottleneck models provide interpretability and expert interaction, they are either too expensive to train for the remote sensing domain or perform poorly without annotation. We posit that in expert domains like remote sensing, such training-free models require both fine details in both image and concept space. In image space, we propose a multiscale concept bottleneck using greedy quadtree routing to locate small concepts. In concept space, we replace contrastive vision language models with pre-trained MLLMs and present a way to get reliable concept scores from them. We introduce APERTURE that blends concept scores at the global image and native concept-scale level to give state-ofthe-art training-free model performance. To test these models, introduce SiFC, a fine-grained concept-centric dataset across three countries, with human-reviewed class-level concept maps. On SiFC, APERTURE outperforms the best training-free baselines by more than 10 percentage points in macro F1-score, and notably also outperforms supervised concept bottleneck models. Targeted component-removal tests examine whether concept scores respond to changes in visual evidence, while temporal experiments show that descriptor updates improve recognition of technological changes without retraining.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

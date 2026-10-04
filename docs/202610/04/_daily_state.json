@@ -1,0 +1,41 @@
+{
+  "date": "20261004",
+  "date_label": "",
+  "generated_at": "2026-10-04 22:01:18 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.00302v1",
+      "route": "202610/04/2610.00302v1-decoding-the-disaster-multi-task-geospatial-reasoning-with-vision-language-models-and-crowdsourced-imagery-for-disaster-mapping",
+      "title": "Decoding the Disaster: Multi-Task Geospatial Reasoning with Vision-Language Models and Crowdsourced Imagery for Disaster Mapping",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "视觉语言模型融合遥感与众源影像进行环境评估",
+      "first_seen_at": "2026-10-04 22:01:18 UTC",
+      "updated_at": "2026-10-04 22:01:18 UTC"
+    },
+    {
+      "paper_id": "2609.38603v1",
+      "route": "202610/04/2609.38603v1-aperture-training-free-multiscale-concept-bottlenecks-for-remote-sensing",
+      "title": "Aperture: Training-Free Multiscale Concept Bottlenecks for Remote Sensing",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感的免训练多模态大模型概念瓶颈",
+      "first_seen_at": "2026-10-04 22:01:18 UTC",
+      "updated_at": "2026-10-04 22:01:18 UTC"
+    }
+  ]
+}
