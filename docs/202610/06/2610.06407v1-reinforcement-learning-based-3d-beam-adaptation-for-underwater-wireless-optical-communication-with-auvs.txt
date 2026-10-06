@@ -1,0 +1,355 @@
+Title: Reinforcement Learning-Based 3D Beam Adaptation for Underwater Wireless Optical Communication with AUVs
+
+URL Source: https://arxiv.org/pdf/2610.06407v1
+
+Published Time: Tue, 06 Oct 2026 03:34:04 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# Reinforcement Learning-Based 3D Beam Adaptation for Underwater Wireless Optical Communication with AUVs 
+
+Viviana Centritto Arrojo, Ama Bandara, Sergi Abadal, Evgenii Vinogradov 
+
+Nanonetworking Center in Catalunya, Universitat Politècnica de Catalunya, Barcelona, Spain 
+
+Abstract —Underwater Wireless Optical Communications (UWOC) provide essential high data rates for Autonomous Underwater Vehicles (AUVs), but reliable connectivity is criti-cally affected by transmitter-receiver misalignment. This work addresses the beam pointing problem for a moving AUV subject to unknown ocean currents through a Deep Reinforcement Learning (DRL) framework. We develop a comprehensive 3D UWOC channel model incorporating depth-dependent atten-uation, turbulence, and a discrete-ray method to accurately quantify geometric and misalignment losses. The resulting agent jointly optimizes beam steering and divergence angles, learning a policy that prioritizes continuous link maintenance. Evaluated using real oceanographic data, the framework’s performance is assessed via the excess outage metric, which isolates outages occurring exclusively due to pointing errors. Relative to perfect alignment between nodes, the proposed method bounds this metric to 8.5% under ocean current-free tracking conditions and limits it to 16.2% when subjected to current-induced drift. The findings obtained in this work confirms that DRL-enabled beam control is capable of adaptive tracking and mitigating link outages in dynamic underwater environments. 
+
+Index Terms —underwater wireless optical communications, 3D beam adaptation, deep reinforcement learning. 
+
+I. I NTRODUCTION 
+
+UWOC has emerged as an essential technology for high-capacity underwater links, overcoming the severe attenuation of radio frequency (RF) signals and the bandwidth limitations of acoustic systems [1]. Characterized by high data rates and low latency, UWOC is a relevant solution for integrating underwater networks into beyond 5G and 6G ecosystems [2]. Nevertheless, the underwater environment presents a chan-nel plagued by impairments, leading to severe problems of pointing accuracy [3].While environmental factors degrade signal quality, a lack of alignment between the transmitter and receiver can produce a complete link outage. This alignment is further compromised by ocean currents, which introduce drift and jitter, resulting in significant positional uncertainty [2], [4]. In this context, there is a need for autonomous systems capable of processing high amounts of heterogeneous information to make optimal real-time decisions. The objective of such systems is to ensure the reliability of the communication link in harsh dynamic environments. Recent literature has demonstrated the efficacy of reinforce-ment learning (RL) algorithms in addressing UWOC pointing challenges. Romdhane and Kaddoum [5] proposed a dynamic RL beam width orientation and adaptation framework. This was achieved by implementing model-free Q-learning and State-Action-Reward-State-Action (SARSA) algorithms to op-timize link performance for underwater nodes. To improve upon reactive approaches, the work in [6] integrates Long Short-Term Memory (LSTM) with Deep-Q Networks (DQNs), leveraging the LSTM to predict vessel displacement based on historical wave data, and enabling the DQN agent to optimize both the beam divergence and steering angles. Furthermore, to maintain a seabed-to-vessel link disrupted by waves, the au-thors in [7] propose a two-agent DRL framework. The system divides the tracking tasks temporally: one agent updates the beam’s azimuth and elevation over longer intervals, while a second agent preemptively fine-tunes the divergence at every time slot to ensure coverage. However, prior studies largely rely on 2D spatial models or focus on surface-bound receivers disrupted by surface waves. By treating the underwater channel as a homogeneous environment, they cannot model depth-dependent variations in attenuation, turbulence and noise. Consequently, 3D tracking for submerged, mobile AUVs remains unresolved. We propose a dynamic 3D DRL framework that incorporates vertical link characteristics and underwater current-induced positional un-certainty. To accurately quantify geometric and pointing losses, our approach evaluates the individual optical rays failing to reach the receiver aperture. Therefore, the main contributions of this work are: (i) char-acterization of the 3D UWOC environment; and (ii) design and evaluation of a RL-based DQN control framework that maintains beam alignment and link quality. II. S YSTEM MODEL 
+
+Fig. 1a illustrates the point-to-point downlink UWOC com-munication scenario between a stationary transmitter (T x)AUV near the surface and a mobile receiver (R x) AUV. We adopt a 3D Cartesian coordinate system with depth measured positively along the downward z axis. The R x-AUV follows a dynamic trajectory with an instantaneous position pRx (t) = [ x(t), y (t), z (t)] , defined using a set of N
+
+discrete waypoints Wk = [ tk, x k, y k, z k] for k = 1 , . . . , N .Furthermore, the T x-AUV emits a Gaussian laser beam with wavelength λ, beam radius wz , and half-divergence angle θdiv .As shown in Fig. 1b, the T x steers the beam axis toward arXiv:2610.06407v1 [eess.SP] 5 Oct 2026 (a) (b) Fig. 1. UWOC system model. (a) 3D downlink setup between the fixed T x 
+
+> and mobile R xAUVs. (b) Geometric representation of the controllable beam steering and divergence angles.
+
+any location using polar θsteer and azimuthal ϕsteer angles. To maintain the communication link, the T x tracks the R x-AUV’s trajectory by adjusting the beam steering and divergence angles. However, because underwater currents perturb the R x
+
+from its original trajectory, we represent these disturbances as depth-dependent velocity components, namely a northward velocity Vv (y-direction) and an eastward velocity Vh (x-direction) [4]. The DRL framework is depicted in Fig. 2, where a RL agent at the T x-AUV governs the steering and divergence mechanisms. Based on state observations, the agent selects actions that interact with the UWOC environment. During training, the environment evaluates these actions and returns a reward signal reflecting the agent’s efficiency. The following assumptions are considered: (i) both AUVs are initialized with knowledge of the starting positions and planned waypoints; 
+
+(ii) each vehicle is equipped with an Inertial Measurement Unit (IMU) for onboard position and velocity estimation; (iii) 
+
+since the AUVs can operate collaboratively, they exchange state information via a bidirectional UWOC link. While this work focuses on the T x-side agent, the same procedure can be performed at the R x-AUV when the communication roles are reversed. To validate the proposed framework, we evaluate our model under two distinct operational scenarios. The first is a current-free environment that assumes zero positional uncertainty. The second scenario introduces a dynamic drift caused by ocean currents, forcing the agent to continuously update the R x’s position estimates based on historical and environmental data. III. DRL IMPLEMENTATION 
+
+The DRL model maintains a consistent action space, re-ward function, and UWOC environment across both scenarios, which differ solely in their state space formulation. 
+
+A. State space vector ( St)
+
+Under the current-free scenario, St is represented as Strack ,which encompasses 11 variables tailored to address the R x
+
+tracking problem. However, to model the drift caused by ocean currents, we leverage the Hybrid Coordinate Ocean                                       
+
+> Fig. 2. DRL framework illustrating the closed-loop interaction between the agent and UWOC environment. The T x-AUV agent optimizes the beam steering and divergence angles based on the tracking and environmental states. TABLE I FEATURES DEFINING STATE SPACE VECTORS
+> Vector Component Description
+> Strack
+> pt,pt−1Receiver position at time tand t−1in spherical angles (θ, ϕ, r )
+> PRx,t , P Rx,t −1Received optical power at time tand the previous time step.
+> btBeam parameters at time t: Agent’s beam parameter settings ( θsteer , ϕ steer , θ div ).
+> Total Dimension 11 components
+> Senv
+> ztDepth of the receiver at time step t.
+> ηsurf Sea surface elevation.
+> dcyc Cyclical day encoding vector.
+> hcyc Cyclical hour encoding vector.
+> vlag 3,vlag 24 Water x-y velocity from 3 and 24 hours prior.
+> wlag 3Water temperature and salinity from 3hours prior.
+> τtTime step tof the episode.
+> Total Dimension 13 components
+
+Model (HYCOM) [8] to generate a dataset of the dynamics influencing the R x-AUV’s trajectory. This requires expanding the agent’s observation space to incorporate the environmental data. The augmented St consists of 24 continuous variables divided into two branches, Strack t and Senv t , introducing 13 new components. This decoupling separates the beam dynam-ics from environmental uncertainties, as detailed in Table I. 
+
+B. Action space 
+
+The agent operates within a discrete action space comprising 27 distinct actions representing every possible combination of increasing, decreasing, or maintaining the beam controllable parameters: the steering angles ( θsteer and ϕsteer ) for the pointing direction, and the divergence angle θdiv for the beam width. At each time step, the agent updates each parameter via an action selected from [up, keep, down ] with step sizes Fig. 3. Geometric constraint of Rt based on the spatial overlap between the beam radius w(z) and the R x aperture radius Ar .
+
+∆θ = ∆ ϕ = 10 mrad, and ∆div = 1 mrad. To compute Q-values for these 27 actions, the current-free scenario uses a standard Multilayer Perceptron (MLP), while the induced-current case employs a two-tower MLP to independently process Strack and Senv .
+
+C. Reward function 
+
+To maintain a robust link while penalizing pointing errors, we define the reward function as 
+
+Rt =
+
+( SN R t 
+
+> SN R ideal
+
+if d ≤ [Ar + w(z)] 
+
+−1 if d > [Ar + w(z)] , (1) where d denotes the positional misalignment between the optical beam center and the R x-AUV aperture center, and Ar
+
+is the R x aperture radius. This approach prioritizes alignment efficiency, defined as the ratio of the instantaneous Signal-to-Noise Ratio SN R t to the maximum possible SN R ideal 
+
+at a given depth z, eliminating the depth-dependence signal attenuation inherent to the underwater channel. The reward 
+
+Rt is subject to a geometrical constraint, as illustrated in Fig. 3. If d exceeds the sum of wz and Ar , the R x-AUV fails to capture any optical power. To discourage this outcome, the agent receives a penalty of −1. Notably, while Ar represents a fixed hardware constraint, w(z) is controlled by the agent. IV. UWOC E NVIRONMENT : C HANNEL MODELING 
+
+The electrical signal received at the photodetector is mod-eled as r = ηhs + n, where s denotes the transmitted optical power, η is the photodetector responsivity, h is the overall channel loss coefficient, and n represents the additive noise components. This loss is decomposed as h = hchthghp, which respectively account for channel attenuation hc, turbulence ht,geometric spreading hg, and pointing losses hp [9]. 
+
+A. Channel attenuation 
+
+The attenuation model is based on Koutsonas et al. [10]. It follows Beer-Lambert Law (BLL), which states that power decays exponentially with respect to the propagation distance 
+
+Lt and attenuation coefficient c(λ, z ) [2]. Depending on water type and depth z, this coefficient is the sum of the absorption 
+
+a(λ, z ) and scattering coefficients b(λ, z ) [11]. Both a(λ, z )
+
+and b(λ, z ) are based on the Haltrin model [12]. The absorp-tion coefficient is modeled by accounting for the individual contributions of several aquatic constituents, each scaled by its concentration C [12, Eq. (1)] 
+
+a(λ, z ) = Cwaw(λ, z )+ Cphy aphy +Cg ag (λ, z )+ Cnan(λ, z ),
+
+(2) where the subscripts w, phy, g, and n denote pure water, chlorophyll-dominated phytoplankton [13], colored dissolved organic material, and non-algal suspended particles [14], re-spectively. In this work, only pure water and chlorophyll are considered as the main absorption components. Furthermore, the scattering coefficient is calculated as the summation of scattering contributions from pure sea water bw, small particles 
+
+bs and large organic particles bl [12, Eq. (2)] 
+
+b(λ, z ) = bw + Cs(z)bs(λ) + Cl(z)bl(λ), (3) where Cs(z) and Cl(z) represent the effective concentrations of these particles as estimated by [12, Eq. (14)] 
+
+Cs(z) = 0 .01739 · Cphy (z) · exp [0 .11631 · Cphy (z)] (4) 
+
+Cl(z) = 0 .76284 · Cphy (z) · exp [0 .03092 · Cphy (z)] . (5) The chlorophyll concentration Cphy (z) is linked to a(λ, z )
+
+and b(λ, z ). To capture the vertical heterogeneity of the water column induced by the Deep Chlorophyll Maximum (DCM), 
+
+Cphy (z) is modeled using a Gaussian vertical profile. This profile is parameterized by the surface background chlorophyll concentration B0 and its vertical gradient S, the chlorophyll peak depth zmax , the integrated peak biomass h, and the DCM layer thickness σ [15, Eq. (7)] 
+
+Cphy (z) = B0 + S · z + hσ√2π exp 
+
+
+
+− (z − zmax )2
+
+2σ2
+
+
+
+. (6) By adjusting B0, the model simulates four distinct water types: pure sea water ( B0 = 0.005), clear ocean ( B0 = 0.31), coastal (B0 = 0.83) and harbor ( B0 = 5.9) [10], [15]. 
+
+B. Turbulence 
+
+As shown in Fig. 4a, the turbulence model divides the water column into K discrete layers with each layer characterized by its thickness dk, and scintillation index σ2 
+
+> ht,k
+
+. Under weak turbulence conditions, the turbulence loss is modeled as a cascaded fading channel where the total fading coefficient ht
+
+is the product of the independent layer coefficients ht,k [16, Eq. (1)] 
+
+ht =
+
+> K
+
+Y
+
+> k=1
+
+ht,k . (7) Since each ht,k is a lognormal random variable, ht is inherently lognormal. This parameter is determined using a multi-step procedure based on [16]. 
+
+1) Characterization of the turbulence environment: Tem-perature and salinity profiles are extracted from HYCOM [8]. Using these profiles, the density ratio ω is computed as [16, Eq. (19)] 
+
+ω = α(dT /dz )
+
+β(dS/dz ) , (8) where dT /dz and dS/dz are the vertical gradients of temper-ature and salinity, respectively. The parameter α represents the thermal expansion coefficient and β is the saline contraction coefficient of each layer; both are calculated using the Gibbs-SeaWater (GSW) Oceanographic Toolbox [17]. 
+
+2) Calculation of the scintillation index σ2 
+
+> ht,k
+
+: Each layer’s scintillation index is derived from its Rytov variance σ21k (dk)
+
+[18, Eq. (19)] 
+
+σ2 
+
+> ht,k
+
+= exp(4 σ21k (dk)) − 1, (9) which requires numerical integration over the normalized path distance L and spatial frequency κ [18, Eq. (20)] 
+
+σ21k (dk) = 2 π2k21 dk
+
+Z 10
+
+Z ∞
+
+> 0
+
+κΦnk (κ) exp 
+
+ −κ2ρ2dkΛ1,k 
+
+k1
+
+
+
+× 1 − cos κ2dkρ(1 − ρ) ˆΘ1,k 
+
+k1
+
+!! 
+
+dκ dρ, 
+
+(10) where the key auxiliary parameters include the optical wavenumber k1, the modified Nikishov spatial power spectrum for a Gaussian beam through the k-th layer Φn(κ), and both the Fresnel ratio Λ1,k and estimated curvature parameter ˆΘ1,k 
+
+evaluated at that layer’s upper boundary. 
+
+3) Estimation of the total turbulence fading coefficient: 
+
+Assuming statistically independent fading across the layers, we determine the total scintillation index by summing the individual log-variances of each discrete layer [16, Eq. (3)] 
+
+σ2 
+
+> ht
+
+=
+
+> N
+
+X
+
+> k=1
+
+ln(1 + σ2 
+
+> ht,k
+
+). (11) Finally, we stochastically generate ht as 
+
+ht = exp ( μt + N (0 , 1) · σht ) , (12) where the mean logarithmic amplitude μt is normalized to ensure a unity power expectation [16]. 
+
+C. Geometric spreading and pointing losses 
+
+The laser beam profile is modeled using N discrete rays. Fig. 4b illustrates the initial ray trajectories, defined by spher-ical angles (θi, ϕ i) to reproduce a Gaussian intensity profile with a divergence angle θdiv [9]. These rays are then projected onto the R x plane at depth zRx, yielding intersection points 
+
+P (i) 
+
+> int
+
+= ( xi, y i, z Rx ). Geometric loss arises from the spatial spreading of the rays over the propagation distance. For a ray to be detected, the distance di of the i-th ray’s intersection point P (i) 
+
+> int
+
+to the center of the R x-AUV aperture (xRx , y Rx )
+
+must be bounded by the receiver radius Ar
+
+di = p(xi − xRx )2 + ( yi − yRx )2 ≤ Ar . (13) The proportion of rays failing to meet this condition quantifies the combined effect of geometric and pointing losses. 
+
+D. Noise model 
+
+To account for the primary noise components specific to the oceanic environment, we define the total noise variance 
+
+σ2 
+
+> total
+
+as the sum of three independent variances: ambient solar background σ2
+
+> solar
+
+, dark current σ2
+
+> dark
+
+, and thermal σ2 
+
+> thermal
+
+[19], [20]. Among these, σ2 
+
+> solar
+
+often constitutes the most significant                                    
+
+> (a) (b) Fig. 4. UWOC channel impairments. (a) Cascaded turbulence model with depth-dependent layers ( dk,σ2
+> ht,k ). (b) Discrete-ray method to calculate geometric spreading and pointing losses. TABLE II UWOC SIMULATION PARAMETERS AND DRL HYPERPARAMETERS
+> Category Parameter Current free Current induced
+> DRL Learning rate 10 −45×10 −5
+> Batch size 64 128
+> Update frequency 100 200
+> Replay buffer 50 ,000 100 ,000
+> ϵ-decay 10 −43×10 −6
+> UWOC Chlorophyll B00.005
+> Wavelength λ530 nm
+> Rxaperture Ar0.2m
+
+source of interference [14]. This variance is calculated as a function of the electronic charge q, the R x sensitivity S, the bandwidth B and the background solar power P sol [20, Eq. (4), Eq (5)] 
+
+σ2 
+
+> solar
+
+= 2 qSPsol B, (14) where Psol depends on the R x’s field of view (FOV), aperture radius, and the upwelling solar radiance at the R x’s depth. V. R ESULTS 
+
+The assessment of the proposed framework begins with a tailored training phase, utilizing 15,000 episodes for the current-free scenario and 30,0000 episodes for the current-induced case. Each 10-s episode comprises 100 discrete steps divided into 0.1-s decision intervals. At the start of every episode, a unique R x trajectory is generated via an interpolated 3D random walk, bounded between 1 and 50 m in depth with simulated AUV velocities ranging from 0.6 to 1.2 m/s. The scenario specific DRL hyperparameters and the share UWOC simulation parameters are summarized in Table II. Following training, we evaluate the system on unseen tra-jectories. Fig. 5 illustrates a first test episode under positional certainty conditions, where the R x-AUV trajectory is closely followed by the agent’s beam-steered path, despite minor path oscillations caused by the discrete step decision-making pro-cess. A second test episode assesses the system’s resilience to 30 29 t = 10 :0s    
+
+> Depth  (m)
+> 28 27
+> t= 7 :5s 26 4
+> X (m)
+> t= 5 :0s
+> t= 2 :5s -4 -4.5
+
+Y (m)       
+
+> 5-5 -5.5
+> t= 0 :0s
+> Rxtrajectory
+> Txbeam trajectory
+> Rxwaypoints
+> Txbeam waypoints Fig. 5. First test episode under current-free conditions, showing the trajectory of the R x-AUV through the planned waypoints (blue) alongside the tracking path of the T x-AUV (green).
+
+ocean currents. As shown in Fig. 6a, the R x-AUV path deviates from its planned path due current-induced drift. Nevertheless, the agent actively tracks the drifting target, demonstrating the successful integration of environmental data. Because this continuous drift degrades alignment efficiency and causes the beam to progressively deviate from the receiver aperture, the agent autonomously increases the beam divergence to maintain connectivity. Fig. 6b illustrates this adaptive response, which yields a more diffuse beam over time. To further analyze the agent’s dynamic beam management capabilities under drift conditions, we evaluate a third test episode, depicted in Fig. 7. At 2.5 s, the positional mis-alignment remains tightly within the overlap region defined in Fig. 3, specifically below Ar . Leveraging this precise align-ment, the agent narrows the beam to maximize the received power, achieving -21.82 dBm. Beyond 3.5 s, tracking stability deteriorates and the agent responds through increasing beam divergence to preserve the communication link. Moving beyond individual test cases, the agent’s overall performance is assessed across 1,500 unseen episodes by measuring the percentage of simulation time experiencing communication outages ( SN R < 10 dB). To isolate outages caused by depth-dependent channel effects, which are be-yond the agent’s control, we compare the agent’s per-episode outage duration against a baseline that assumes perfect R x-AUV tracking. The difference between both is the excess outage metric, which quantifies the fraction of simulation time where connectivity is lost exclusively due to pointing errors. As depicted in Fig. 8, the histograms for both scenarios are positively skewed with the primary peak located at the lower bound, corresponding to episodes with zero tracking-induced signal loss. Under current-free conditions, the mean excess outage is 8.5%, indicating that, on average, pointing errors account for 0.8 s of signal loss during the total 10-second simulation. However, in current-induced trajectories, this metric increases to 16.2%. This performance degradation reflects the increased complexity of the task, as the agent must simultaneously manage pointing control, estimate current-induced drift, and predict the R x-AUV’s actual position. Y (m)       
+
+> t= 5 :0s t= 10 :0s 14
+> t= 2 :5s 113 9
+> t= 7 :5s 12
+> Depth  (m)  11 010
+> t= 0 :0s
+
+X (m) 10 -1 -2 11     
+
+> Original trajectory
+> Rxtrajectory with currents
+> Txbeam trajectory
+> Rxwaypoints with currents
+> Txbeam waypoints
+> (a)
+
+- - Rx aperture 
+
+> Normalized ray density
+
+X (m)   
+
+> Y (m)
+> (b) Fig. 6. Second test episode under induced-current conditions. (a) Actual R x-AUV trajectory (blue) deviating from the planned trajectory (dotted black), alongside the T xbeam path (green). (b) Evolution of beam alignment at different time steps, where the agent increases beam divergence to maintain connectivity.
+
+VI. C ONCLUSION 
+
+This work presented a 3D DRL framework to address transmitter-receiver misalignment between mobile AUVs. To model this environment, we developed a 3D UWOC channel incorporating depth-dependent impairments, and a discrete-ray mechanism to simulate pointing loss. Evaluating 1,500 trajec-tories, we assessed the framework using the excess outage metric, which strictly accounts for the pointing accuracy of the agent. Under positional certainty, the agent successfully tracked the R x, limiting the mean excess outage to 8.5% when compared to ideal conditions without pointing errors. In the scenario where the R x’s trajectory is perturbed by ocean currents, the system constrained this metric to 16.2%. These results demonstrate that the agent learned a baseline policy to estimate oceanic drift and preserve link reliability by simultaneously controlling beam direction and divergence. - - Rx aperture Fig. 7. Third test episode illustrating the positional misalignment relative to 
+
+Ar , demonstrating that the agent narrows the beam when alignment is precise. 
+
+ACKNOWLEDGMENT 
+
+This research is supported by the AVALON project under European Union’s European Defence Fund un-der Grant Agreement No. 101168152 and by the Span-ish Ministry of Science, Innovation and Universities MI-CIU/AEI/10.13039/501100011033 through the Ramón y Cajal grant RYC2024-051003-1. REFERENCES [1] A. Gorodilov, I. Zhilin, A. Sakhnini, J. Simonjan, and I. Akyildiz, “Unisdm proof of concept: A multimode software defined modem for underwater communications,” in 2025 IEEE Wireless Communications and Networking Conference (WCNC) , 2025, pp. 1–3. [2] N. Saeed, A. Celik, T. Y. Al-Naffouri, and M.-S. Alouini, “Underwater optical wireless communications, networking, and localization: A sur-vey,” Ad hoc networks , vol. 94, p. 101935, 2019. [3] Z. Vali, A. Gholami, D. G. Michelson, Z. Ghassemlooy, M. Omoomi, and H. Noori, “Use of gaussian beam divergence to compensate for misalignment of underwater wireless optical communication links,” IET Optoelectronics , vol. 11, no. 5, pp. 171–175, 2017. [4] S. Shakeera, V. B. N. Jyothi, and H. Venkataraman, “ML-based tech-niques for prediction of ocean currents for underwater vehicles,” in 
+
+2023 11th International Symposium on Electronic Systems Devices and Computing (ESDC) , vol. 1. IEEE, 2023, pp. 1–6. [5] I. Romdhane and G. Kaddoum, “A reinforcement-learning-based beam adaptation for underwater optical wireless communications,” IEEE In-ternet of Things Journal , vol. 9, no. 20, pp. 20 270–20 281, 2022. [6] T. Ishida, C. B. Naila, and H. Okada, “Adaptive beam steering and divergence control for underwater optical wireless communication using reinforcement learning,” IEEE Photonics Journal , 2025. [7] H. Shin, S. Baek, and Y. Song, “Multidimensional beam optimization in underwater optical wireless communication based on deep reinforcement learning,” IEEE Internet of Things Journal , vol. 11, no. 17, pp. 28 623– 28 634, 2024. [8] Naval Research Laboratory, “Global ocean forecast sys-tem (gofs) 3.1,” Dataset, 2014–2021. [Online]. Available: https://www.hycom.org/dataserver/gofs-3pt1/analysis [9] W. Cox and J. Muth, “Simulating channel losses in an underwater optical communication system,” Journal of the Optical Society of America A ,vol. 31, no. 5, pp. 920–934, 2014. [10] E. Koutsonas, A. Pitilakis, O. Tsilipakos, T. A. Tsiftsis, and A. A. A. Boulogeorgos, “Performance analysis of underwater optical wireless communications under the joint impact of disorientation and misalign-ment,” in Proceedings of the 20th European Conference on Antennas and Propagation (EuCAP 2026) , March 2026, accepted for publication. [11] N. G. Jerlov, Marine optics . Elsevier, 1976, vol. 14. [12] V. Haltrin, “Chlorophyll-based model of seawater optical properties,” 
+
+Journal of Applied Optics , vol. 38, no. 33, pp. 6826–6832, 1999. 0 50 100 
+
+> Frequency
+
+0200 400 600 800 1000 No-ocean currents Mean: 8.5% 
+
+Excess outage (%) 
+
+0 50 100 
+
+Ocean currents Mean: 16.2% 
+
+Fig. 8. Assessment of the DRL agent’s tracking accuracy across 1,500 episodes for both operational scenarios. [13] R. Deng, Y. He, Y. Quin, Q. Cheng, and L. Chen, “Pure water absorption coefficient measurement after eliminating the impact of suspended substance in spectrum from 400 nm to 900 nm,” Journal of Remote Sensing , pp. 1007–4619, 2012. [14] L. J. Johnson, “Optical property variability in the underwater optical wireless channel,” Ph.D. dissertation, University of Warwick, 2015. [15] J. Utiz, H. Clustré, A. Morel, and S. Hoooker, “Vertical distribution of phytoplankton communities in open ocean: An assessment based on surface chlorophyll,” Journal of Geophysical Research , vol. 111, pp. 1–23, 2006. [16] M. Elamassie and M. Uysal, “Vertical underwater visible light com-munication links: Channel modeling and performance analysis,” IEEE Transactions on Wireless Communications , vol. 19, no. 10, pp. 6948– 6959, 2020. [17] IOC, SCOR, and IAPSO. (2011) TEOS-10 Software: Gibbs Seawater (GSW) Oceanographic Toolbox. Intergovernmental Oceanographic Commission, Scientific Committee on Oceanic Research, and International Association for the Physical Sciences of the Oceans. [Online]. Available: https://www.teos-10.org/software.htm [18] S. Tayebnaimi and K. Kiasaleh, “Scintillation index analysis for multi-wavelength gaussian beams in turbulent underwater channels,” Optical Engineering , vol. 63, no. 12, pp. 128 105–128 105, 2024. [19] M. M. Zayed and M. Shokair, “Modeling and simulation of optical wire-less communication channels in iout considering water types turbulence and transmitter selection,” Scientific Reports , vol. 15, no. 1, 2025. [20] Y. Mahmuto˘ glu, C. Albayrak, and K. Türk, “Investigation of under-water wireless optical communication channel capacity for different environment and system parameters,” Hittite Journal of Science and Engineering , vol. 7, no. 4, pp. 279–285, 2020.

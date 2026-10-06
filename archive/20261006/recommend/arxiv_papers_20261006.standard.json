@@ -1,17 +1,60 @@
 {
   "mode": "standard",
-  "generated_at": "2026-10-06T01:05:39.740042+00:00",
+  "generated_at": "2026-10-06T23:07:08.340621+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 1,
+    "deep_divecandidates": 2,
     "deep_cap": 6,
-    "deep_selected": 1,
-    "quick_candidates": 1,
+    "deep_selected": 2,
+    "quick_candidates": 6,
     "quick_skim_target": 11,
-    "quick_selected": 1
+    "quick_selected": 6
   },
   "deep_dive": [
+    {
+      "id": "2610.03780v1",
+      "source": "arxiv",
+      "title": "OceanMind: A multi-agent AI system for ocean diagnosis",
+      "abstract": "Time-dependent, three-dimensional (3D) oceanic multi-variables define coherent states of the evolving ocean to facilitate ocean diagnosis and advance ocean science to better inform environmental and hazard management. However, extracting quantitative evidence from these variables requires substantial and complex analytical effort. We introduce OceanMind, a multi-agent AI system that directly couples large language models (LLMs) with comprehensive time-dependent 3D ocean states for swift and effective diagnosis. OceanMind organizes the analytical process into four coordinated complexity stages: Query Routing, Skill-based Planning, Tool Execution, and Evidence-based Summary Generation. Specialized agents interpret user requests, construct and execute multi-step computational workflows, and synthesize quantitative evidence. To ensure reliable workflow construction, 63 reusable ocean-specific analysis skills serve as procedural manuals that guide the LLM agent in selecting data, conducting diagnostics, and applying analytical tools. With reflection and replanning mechanisms that use execution feedback to repair invalid plans, OceanMind ensures reliable analysis workflows across diverse needs. On a benchmark of 240 computational-workflow queries spanning the four stages, OceanMind outperformed general ReAct agents with the same registered tool pool, achieving relative improvements of 41.2% in effectiveness and 21.5% in efficiency. Beyond the benchmark, OceanMind reproduced published oceanic diagnostics, validated hypotheses, and supported environmental decision-making over global oceans. Overall, OceanMind advances LLMs by integrating them with time-dependent 3D ocean analysis, enabling scientific interpretation and enhancing formulation of environmental policies based on quantitative ocean evidence.",
+      "authors": [
+        "Fan Zhang",
+        "Weicong Cheng",
+        "Yuheng Chen",
+        "Hiuseut Kung",
+        "Ying Zhang",
+        "Aixi Han",
+        "Quanjia Zhong",
+        "Can Yang",
+        "Jianping Gan"
+      ],
+      "primary_category": "physics.ao-ph",
+      "categories": [
+        "physics.ao-ph",
+        "cs.AI"
+      ],
+      "published": "2026-09-30T06:51:31+00:00",
+      "link": "https://arxiv.org/pdf/2610.03780v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-agent AI system for ocean diagnosis",
+      "llm_evidence_cn": "面向海洋诊断的多智能体AI系统",
+      "llm_evidence": "面向海洋诊断的多智能体AI系统",
+      "canonical_evidence": "面向海洋诊断的多智能体AI系统",
+      "llm_tldr_en": "Introduces OceanMind, a multi-agent AI system coupling LLMs with time-dependent 3D ocean states, orchestrating query routing, planning, tool execution and evidence summaries.",
+      "llm_tldr_cn": "论文针对从随时间变化的三维海洋多变量状态中提取定量证据需大量复杂分析、制约海洋诊断的问题展开研究。作者提出OceanMind多智能体AI系统，将大语言模型与完整的三维海洋状态直接耦合，并把分析流程组织为查询路由、技能规划、工具执行与基于证据的摘要生成四个协同阶段。专用智能体解析用户请求并构建执行多步计算。该系统面向海洋诊断与环境灾害管理，是海洋领域智能体应用的直接范例。",
+      "llm_tldr": "论文针对从随时间变化的三维海洋多变量状态中提取定量证据需大量复杂分析、制约海洋诊断的问题展开研究。作者提出OceanMind多智能体AI系统，将大语言模型与完整的三维海洋状态直接耦合，并把分析流程组织为查询路由、技能规划、工具执行与基于证据的摘要生成四个协同阶段。专用智能体解析用户请求并构建执行多步计算。该系统面向海洋诊断与环境灾害管理，是海洋领域智能体应用的直接范例。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
     {
       "id": "2610.03649v1",
       "source": "arxiv",
@@ -39,62 +82,265 @@
         "query:ocean-ai"
       ],
       "llm_score": 8.0,
-      "llm_evidence_en": "satellite AI marine environmental monitoring",
-      "llm_evidence_cn": "卫星AI海洋环境监测",
-      "llm_evidence": "卫星AI海洋环境监测",
-      "canonical_evidence": "卫星AI海洋环境监测",
-      "llm_tldr_en": "Marine ecosystems face oil spills and algal blooms. This paper proposes an onboard satellite pipeline with a self-supervised encoder and anomaly detection model to detect marine environmental anomalies efficiently in orbit.",
-      "llm_tldr_cn": "针对溢油、藻华和泥沙泛滥等威胁海洋生态系统、亟需及早发现的问题，本文提出一套面向多光谱与高光谱地球观测卫星的海洋事件检测流程。该方法先用自监督神经网络编码器将卫星图像压缩到低维潜空间以支持星上处理，再用机器学习异常检测模型识别偏离正常海况的环境异常。实验对比了该方案在海洋环境异常检测上的性能。该工作为卫星海洋环境的自主实时监测提供了轻量高效的方案。",
-      "llm_tldr": "针对溢油、藻华和泥沙泛滥等威胁海洋生态系统、亟需及早发现的问题，本文提出一套面向多光谱与高光谱地球观测卫星的海洋事件检测流程。该方法先用自监督神经网络编码器将卫星图像压缩到低维潜空间以支持星上处理，再用机器学习异常检测模型识别偏离正常海况的环境异常。实验对比了该方案在海洋环境异常检测上的性能。该工作为卫星海洋环境的自主实时监测提供了轻量高效的方案。",
+      "llm_evidence_en": "onboard marine environmental monitoring with AI anomaly detection",
+      "llm_evidence_cn": "基于AI异常检测的星上海洋环境监测",
+      "llm_evidence": "基于AI异常检测的星上海洋环境监测",
+      "canonical_evidence": "基于AI异常检测的星上海洋环境监测",
+      "llm_tldr_en": "Proposes an onboard marine event detection pipeline for Earth-observation satellites that uses a self-supervised encoder to compress imagery and an anomaly detector to flag oil spills, algal blooms and sediment floods early.",
+      "llm_tldr_cn": "针对海洋生态系统受溢油、藻华和泥沙泛滥等威胁的问题，本文提出面向多/高光谱对地观测卫星的海洋事件检测流程。方法采用自监督神经网络编码器将卫星影像压缩到低维隐空间以实现高效星上处理，再用机器学习异常检测模型识别偏离正常海况的异常。实验比较了不同配置的检测性能，表明星上异常检测能在有限算力下及早发现海洋环境异常，为自主海洋监测提供高效可部署方案。",
+      "llm_tldr": "针对海洋生态系统受溢油、藻华和泥沙泛滥等威胁的问题，本文提出面向多/高光谱对地观测卫星的海洋事件检测流程。方法采用自监督神经网络编码器将卫星影像压缩到低维隐空间以实现高效星上处理，再用机器学习异常检测模型识别偏离正常海况的异常。实验比较了不同配置的检测性能，表明星上异常检测能在有限算力下及早发现海洋环境异常，为自主海洋监测提供高效可部署方案。",
       "llm_tags": [
         "query:ocean-ai"
       ],
       "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
-      "matched_requirement_id": "req-3",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
       "selection_source": "fresh_fetch"
     }
   ],
   "quick_skim": [
     {
-      "id": "2609.40320v1",
+      "id": "2610.04836v1",
       "source": "arxiv",
-      "title": "Atomizer-IO: Beyond Pixels, Patches and Grids",
-      "abstract": "Most vision architectures assume that observations lie on a regular grid, an effective abstraction for natural images but a restrictive one for sensing data whose channels, temporal sampling, spatial resolution, and geometry can vary. Generic set-based architectures remove the grid, but also remove useful spatial inductive biases. We introduce Atomizer-IO, an architecture that places observations first and derives structure from their physical relationships. Building on top of an atomic representation of the data, each observation is described by its measurement and acquisition metadata, while local cross-attention maps observations to anchor points that can be arbitrarily placed. We evaluate this design by progressively relaxing the grid assumption, from varying input raster configurations and incomplete channel sets to flexible output density and, ultimately, inputs without a raster grid. Atomizer-IO is competitive with flexible EO-specific architectures on most tasks, while offering post-training control over inference cost and competitive compute--performance trade-offs. The same formulation extends without architectural redesign to unordered 3D point clouds, showing that the atomic interface generalizes beyond regular raster inputs. These results suggest that pixels, patches, and grids do not need to define the interface of a sensing architecture.",
+      "title": "RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents",
+      "abstract": "Remote sensing agents rely on perception, measurement, and raster analysis tools to solve Earth observation tasks. We refer to their judgments and quantitative results about ground objects as tool observations. However, these observations are subject to substantial uncertainty and may be incorrect even when the tools execute successfully. When agents accept incorrect observations, the errors can propagate through subsequent reasoning and cause task failure. We analyze 1,229 execution trajectories across three remote sensing agent benchmarks. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect observations despite successful tool execution. These errors propagate to the final answer in at least 82.0% of affected tasks on each benchmark. To address this problem, we propose RSure-Agent, a framework for verifying tool observations and limiting error propagation. We introduce a verifiable observation protocol that requires tools to return process evidence for the agent to verify their observations. We also construct a task-tool reliability prior from offline task feedback. The prior summarizes each tool configuration's past performance across task types and provides a task-specific reference for verification. Using process evidence and this prior, RSure-Agent decides whether to accept an observation, request additional evidence, or reject it. We evaluate RSure-Agent on EarthBench, ThinkGeo, TerraLogic, and CHOICE-420. Across the three agent benchmarks, RSure-Agent reduces the error propagation rate by 21.3 to 25.9 percentage points relative to the base configuration with verification and the prior disabled. On CHOICE-420, it improves overall accuracy over direct answering by 5.71 percentage points on average across 11 backbone models. On EarthBench, it reduces the tool-call ratio by 25.9% relative to Earth-Agent.",
       "authors": [
-        "Hugo Riffaud de Turckheim",
-        "Sylvain Lobry",
-        "Nicolas Houdré",
-        "Damien Robert",
-        "Roberto Interdonato",
-        "Diego Marcos"
+        "Fuyuan Liu",
+        "Nayu Liu",
+        "Wenhao Yu",
+        "Peijin Wang",
+        "Yingchao Feng",
+        "Fanglong Yao",
+        "Liang Wan",
+        "Wei Feng"
       ],
       "primary_category": "cs.CV",
       "categories": [
         "cs.CV"
       ],
-      "published": "2026-09-30T17:54:41+00:00",
-      "link": "https://arxiv.org/pdf/2609.40320v1",
+      "published": "2026-10-04T00:43:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.04836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "remote sensing agents and reliability of tool observations",
+      "llm_evidence_cn": "遥感智能体与工具观测可靠性",
+      "llm_evidence": "遥感智能体与工具观测可靠性",
+      "canonical_evidence": "遥感智能体与工具观测可靠性",
+      "llm_tldr_en": "Analyzes 1229 remote sensing agent trajectories, showing that tool observations are often incorrect and propagate to task failure, and proposes reliability mechanisms for agent reasoning.",
+      "llm_tldr_cn": "论文针对遥感智能体在执行地球观测任务时，工具观测结果即便工具成功执行也可能出错的问题展开研究。作者分析了三个遥感智能体基准上的1229条执行轨迹，发现大量任务依赖工具观测且相当比例包含错误观测。错误会沿后续推理传播导致任务失败。该工作为提升遥感智能体推理可靠性提供了分析与方法支撑，对智能体遥感应用具有直接价值。",
+      "llm_tldr": "论文针对遥感智能体在执行地球观测任务时，工具观测结果即便工具成功执行也可能出错的问题展开研究。作者分析了三个遥感智能体基准上的1229条执行轨迹，发现大量任务依赖工具观测且相当比例包含错误观测。错误会沿后续推理传播导致任务失败。该工作为提升遥感智能体推理可靠性提供了分析与方法支撑，对智能体遥感应用具有直接价值。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.06407v1",
+      "source": "arxiv",
+      "title": "Reinforcement Learning-Based 3D Beam Adaptation for Underwater Wireless Optical Communication with AUVs",
+      "abstract": "Underwater Wireless Optical Communications (UWOC) provide essential high data rates for Autonomous Underwater Vehicles (AUVs), but reliable connectivity is critically affected by transmitter-receiver misalignment. This work addresses the beam pointing problem for a moving AUV subject to unknown ocean currents through a Deep Reinforcement Learning (DRL) framework. We develop a comprehensive 3D UWOC channel model incorporating depth-dependent attenuation, turbulence, and a discrete-ray method to accurately quantify geometric and misalignment losses. The resulting agent jointly optimizes beam steering and divergence angles, learning a policy that prioritizes continuous link maintenance. Evaluated using real oceanographic data, the framework's performance is assessed via the excess outage metric, which isolates outages occurring exclusively due to pointing errors. Relative to perfect alignment between nodes, the proposed method bounds this metric to 8.5% under ocean current-free tracking conditions and limits it to 16.2% when subjected to current-induced drift. The findings obtained in this work confirms that DRL-enabled beam control is capable of adaptive tracking and mitigating link outages in dynamic underwater environments.",
+      "authors": [
+        "Viviana Centritto~Arrojo",
+        "Ama Bandara",
+        "Sergi Abadal",
+        "Evgenii Vinogradov"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP",
+        "cs.ET",
+        "eess.SY"
+      ],
+      "published": "2026-10-05T14:25:57+00:00",
+      "link": "https://arxiv.org/pdf/2610.06407v1",
       "tags": [
         "keyword:ocean-ai",
         "query:ocean-ai"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "architecture for sensing data with variable channels and geometry, relaxing grid assumptions",
-      "llm_evidence_cn": "面向通道与几何多变的传感数据的非网格架构",
-      "llm_evidence": "面向通道与几何多变的传感数据的非网格架构",
-      "canonical_evidence": "面向通道与几何多变的传感数据的非网格架构",
-      "llm_tldr_en": "Most vision architectures assume regular grid observations, which fails for sensing data with variable channels and geometry; Atomizer-IO uses atomic observation representations and cross-attention to arbitrary anchors, relaxing grid assumptions for flexible remote sensing analysis.",
-      "llm_tldr_cn": "论文针对多数视觉架构依赖规则网格假设、难以处理通道与几何多变的传感数据这一局限，提出Atomizer-IO架构。该方法以原子化表示编码每个观测的测量值与采集元数据，并用局部交叉注意力将观测映射到任意锚点，从而在去除网格约束的同时保留空间归纳偏置。作者通过逐步放宽网格假设的系列实验验证了设计的有效性。该工作为遥感等非规则观测数据的分析提供了通用架构基础。",
-      "llm_tldr": "论文针对多数视觉架构依赖规则网格假设、难以处理通道与几何多变的传感数据这一局限，提出Atomizer-IO架构。该方法以原子化表示编码每个观测的测量值与采集元数据，并用局部交叉注意力将观测映射到任意锚点，从而在去除网格约束的同时保留空间归纳偏置。作者通过逐步放宽网格假设的系列实验验证了设计的有效性。该工作为遥感等非规则观测数据的分析提供了通用架构基础。",
+      "llm_evidence_en": "Reinforcement learning agent for AUV underwater optical communication beam adaptation",
+      "llm_evidence_cn": "面向AUV水下光通信波束自适应的强化学习智能体",
+      "llm_evidence": "面向AUV水下光通信波束自适应的强化学习智能体",
+      "canonical_evidence": "面向AUV水下光通信波束自适应的强化学习智能体",
+      "llm_tldr_en": "Underwater wireless optical communication for AUVs suffers from misalignment. A deep RL agent jointly optimizes beam steering and divergence using a 3D channel model with depth attenuation and turbulence, learning to maintain continuous links.",
+      "llm_tldr_cn": "水下无线光通信能为自主水下航行器提供高数据率，但收发端失配严重威胁链路可靠性。本文针对受未知洋流影响的移动AUV波束指向问题，提出深度强化学习框架，联合优化波束转向与发散角，并构建包含深度相关衰减、湍流与离散射线法的三维信道模型以精确量化几何与失配损耗。智能体学习到优先维持连续链路的策略，并使用真实海洋学数据评估，为海洋自主平台的通信自适应提供了智能体解决方案。",
+      "llm_tldr": "水下无线光通信能为自主水下航行器提供高数据率，但收发端失配严重威胁链路可靠性。本文针对受未知洋流影响的移动AUV波束指向问题，提出深度强化学习框架，联合优化波束转向与发散角，并构建包含深度相关衰减、湍流与离散射线法的三维信道模型以精确量化几何与失配损耗。智能体学习到优先维持连续链路的策略，并使用真实海洋学数据评估，为海洋自主平台的通信自适应提供了智能体解决方案。",
       "llm_tags": [
         "query:ocean-ai"
       ],
       "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
-      "matched_requirement_id": "req-3",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
       "selection_source": "fresh_fetch",
       "quick_tier": "6"
+    },
+    {
+      "id": "2610.05342v1",
+      "source": "arxiv",
+      "title": "IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning",
+      "abstract": "Infrared small-target detection plays an important role in maritime monitoring and aerial surveillance. Although multimodal large language models (MLLMs) offer promising capabilities for visual understanding, existing MLLM-based approaches struggle to precisely localize infrared small targets. In this paper, we propose IRSTD-Agent, an agentic framework for infrared small target detection through dynamic visual search. The framework enables an MLLM to adaptively determine where and at what scale to inspect an image and progressively gather fine-grained visual evidence for precise target localization. Five complementary visual tools (PROPOSAL, ZOOM, DETECT, DROP and REFINE) support object candidate discovery, adaptive observation, target localization, hypothesis rejection, and target extent refinement, together enabling a coordinated search process over original-resolution images. To teach the MLLMs to conduct this search, we introduce Zoom-guided Interaction Learning, which uses annotation-derived interaction trajectories to supervise tool selection and the corresponding arguments. Through extensive experiments on WideIRSTD-Full and IRSTD-1k datasets, we demonstrate that IRSTD-Agent outperforms the evaluated vision-language models and enhances the precise localization capabilities of MLLMs in IRSTD tasks.",
+      "authors": [
+        "Jiawen Xi",
+        "Yu Zhang",
+        "Tianyi Zhao",
+        "Zhu Liu",
+        "Maoxun Yuan",
+        "Xingxing Wei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-04T16:10:08+00:00",
+      "link": "https://arxiv.org/pdf/2610.05342v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agentic MLLM framework for maritime monitoring and target detection",
+      "llm_evidence_cn": "面向海上监测的智能体多模态大模型目标检测框架",
+      "llm_evidence": "面向海上监测的智能体多模态大模型目标检测框架",
+      "canonical_evidence": "面向海上监测的智能体多模态大模型目标检测框架",
+      "llm_tldr_en": "Proposes IRSTD-Agent, an MLLM-based agentic framework for infrared small-target detection that adaptively decides where and at what scale to inspect an image, using five visual tools to gather evidence for maritime monitoring.",
+      "llm_tldr_cn": "红外小目标检测对海上监测至关重要，但现有多模态大模型方法难以精确定位小目标。论文提出IRSTD-Agent智能体框架，让多模态大模型自适应决定观察位置与尺度，并借助提议、缩放、检测、丢弃与细化五类视觉工具逐步收集细粒度证据。该工作展示了智能体式多模态视觉搜索在海上目标检测中的潜力。",
+      "llm_tldr": "红外小目标检测对海上监测至关重要，但现有多模态大模型方法难以精确定位小目标。论文提出IRSTD-Agent智能体框架，让多模态大模型自适应决定观察位置与尺度，并借助提议、缩放、检测、丢弃与细化五类视觉工具逐步收集细粒度证据。该工作展示了智能体式多模态视觉搜索在海上目标检测中的潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.06704v1",
+      "source": "arxiv",
+      "title": "Extending Dynamic World Surface Water Mapping to Sentinel-1 with AlphaEarth Embeddings",
+      "abstract": "Dynamic World (DW) maps land use and land cover globally at 10 m from Sentinel-2 (S2) imagery, but only for cloud-free observations, which limits where and when surface water can be mapped. We use the DW water class as weak supervision for a Sentinel-1 (S1) synthetic aperture radar (SAR) model so that DW-like water maps can be produced for every S1 acquisition. Google's AlphaEarth Foundations (AEF) annual embedding supplies spatial context, while S1 backscatter supplies the acquisition-time observation. On 53 globally distributed scenes with independent annotations of 3 m PlanetScope imagery acquired within 48 h of the S1 overpass, the S1-only model already reaches a pooled water intersection over union (IoU) of 0.77, comparable to 0.75 for the operational OPERA DSWx-S1 product, and adding AEF raises it to 0.85. The fused model improves on the S1-only model on 44 of 53 scenes and exceeds OPERA on 48, and on the independent S1S2-Water benchmark it reaches 0.94, compared with 0.87 for OPERA. Optical land-cover products can thus provide scalable training labels for SAR surface water mapping.",
+      "authors": [
+        "Rohit Mukherjee",
+        "Frederick Policelli",
+        "Beth Tellman",
+        "TC Chakraborty",
+        "Jonathan Giezendanner",
+        "Jonathan A. Sullivan",
+        "Ning Sun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T17:01:41+00:00",
+      "link": "https://arxiv.org/pdf/2610.06704v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Extending surface water mapping to Sentinel-1 SAR with AlphaEarth embeddings and weak supervision",
+      "llm_evidence_cn": "用AlphaEarth嵌入与弱监督将地表水制图扩展到Sentinel-1 SAR",
+      "llm_evidence": "用AlphaEarth嵌入与弱监督将地表水制图扩展到Sentinel-1 SAR",
+      "canonical_evidence": "用AlphaEarth嵌入与弱监督将地表水制图扩展到Sentinel-1 SAR",
+      "llm_tldr_en": "Dynamic World water mapping is limited to cloud-free Sentinel-2 observations. Using DW water class as weak supervision, a Sentinel-1 SAR model with AlphaEarth embeddings reaches 0.77 water IoU across 53 global scenes.",
+      "llm_tldr_cn": "Dynamic World虽能以10米分辨率全球制图地表覆盖，但依赖Sentinel-2无云观测，限制了地表水制图的时空覆盖。本文以DW水体类别作为弱监督训练Sentinel-1 SAR模型，并用AlphaEarth年度嵌入提供空间上下文、SAR后向散射提供成像时刻观测，从而为每次S1获取生成类DW水体图。在53个全球分布场景上，仅用S1的模型水体IoU达0.77，接近S2的0.75，证明SAR可实现全天候地表水制图。",
+      "llm_tldr": "Dynamic World虽能以10米分辨率全球制图地表覆盖，但依赖Sentinel-2无云观测，限制了地表水制图的时空覆盖。本文以DW水体类别作为弱监督训练Sentinel-1 SAR模型，并用AlphaEarth年度嵌入提供空间上下文、SAR后向散射提供成像时刻观测，从而为每次S1获取生成类DW水体图。在53个全球分布场景上，仅用S1的模型水体IoU达0.77，接近S2的0.75，证明SAR可实现全天候地表水制图。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.05625v1",
+      "source": "arxiv",
+      "title": "A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation",
+      "abstract": "This paper presents the workflow for building an automated ArcGIS Pro tool using ArcPy to extract the Land Surface Temperature (LST) from Landsat 7, 8 and 9 datasets. The tool eliminates the need for manual band selection and repetitive raster computations by automating the multi-step workflow of radiometric calibration, NDVI-based emissivity correction, and thermal conversion. In addition to supporting batch and single-scene processing, the tool has an optional Large Language Model (LLM) for statistical result interpretation and reporting. Depending on batch size, the tool reduced the processing time from around 11-58 minutes when done manually to around 4-11 minutes using the tool. We tested the tool with data from Ras Al Khaimah (RAK) in the UAE, and the LST obtained for Ras Al Khaimah ranged from approximately 25C to 50C, demonstrating an accurate LST mapping compatible with the weather conditions of RAK. In summary, our tool reduces human errors and improves processing accuracy and efficiency for thermal and environmental remote sensing applications, in addition to providing an interactive LLM-based interface for result interpretation.",
+      "authors": [
+        "Hind Yousif Alhammadi",
+        "Isam Mashhour Al Jawarneh"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "astro-ph.IM"
+      ],
+      "published": "2026-10-04T23:41:18+00:00",
+      "link": "https://arxiv.org/pdf/2610.05625v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "satellite data analytics with LLM report generation",
+      "llm_evidence_cn": "卫星数据分析与大模型报告生成",
+      "llm_evidence": "卫星数据分析与大模型报告生成",
+      "canonical_evidence": "卫星数据分析与大模型报告生成",
+      "llm_tldr_en": "Builds an ArcGIS Pro tool automating Landsat LST extraction with optional LLM interpretation and reporting, cutting processing time from 11-58 to 4-11 minutes.",
+      "llm_tldr_cn": "论文针对多源卫星数据提取地表温度时人工选波段与栅格计算繁琐的问题展开研究。作者用ArcPy构建ArcGIS Pro自动化工具，自动完成辐射定标、基于NDVI的比辐射率校正与热转换，并可选配大语言模型进行统计结果解读与报告生成。实验表明批处理时间从约11-58分钟降至4-11分钟。该工作将遥感数据分析与LLM文本报告结合，契合遥感数据与文本报告融合的环境评估需求。",
+      "llm_tldr": "论文针对多源卫星数据提取地表温度时人工选波段与栅格计算繁琐的问题展开研究。作者用ArcPy构建ArcGIS Pro自动化工具，自动完成辐射定标、基于NDVI的比辐射率校正与热转换，并可选配大语言模型进行统计结果解读与报告生成。实验表明批处理时间从约11-58分钟降至4-11分钟。该工作将遥感数据分析与LLM文本报告结合，契合遥感数据与文本报告融合的环境评估需求。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.06196v1",
+      "source": "arxiv",
+      "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+      "abstract": "Remote sensing images often carry composite degradations, in which haze, cloud, noise, blur, low light, and low resolution coexist. Restoring them requires deciding which tool to apply, in what order, and when to stop, yet no clean reference is available at inference time to verify these decisions. All-in-one models trained on single degradations converge to a narrow PSNR band as degradations accumulate. To formulate real-world remote sensing restoration as a traceable trajectory, we present EORestore-Agent, which replaces this unmeasurable objective with reference-free, verifiable per-step decisions. A fine-tuned vision-language model reports all residual degradation types, whose tool pools are scored together, so the restoration order emerges from step-wise selection. A relative quality scorer, trained with full-reference supervision on synthetic degradation chains, predicts the changes in PSNR, SSIM, and LPIPS from the current image to each candidate. A step is accepted only when no predicted change is negative and the predicted PSNR gain is positive. Otherwise, the agent keeps the current image. On a synthetic Landsat-8 benchmark with six degradation types, EORestore-Agent improves PSNR by 2.3 to 3.2 dB over the strongest retrained all-in-one baseline on composites of two to six degradations, whereas zero-shot natural-image agents fall below the degraded input in PSNR in 17 of 18 settings. Replacing the learned scorer with no-reference quality differences costs 1.1 to 4.6 dB. The remaining harmful steps are small and cluster near the acceptance threshold. Sentinel-2 examples illustrate transfer to real atmospheric degradation without retraining.",
+      "authors": [
+        "Heli Qi",
+        "Zeqi Zhou",
+        "Jingjun Yi",
+        "Kunyi Liu",
+        "Ziyang Lihe",
+        "Junjue Wang",
+        "Osamu Yoshie",
+        "Naoto Yokoya"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T12:11:31+00:00",
+      "link": "https://arxiv.org/pdf/2610.06196v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agentic VLM-driven restoration of remote sensing images with per-step decisions",
+      "llm_evidence_cn": "视觉语言模型驱动的遥感图像智能体式逐步修复",
+      "llm_evidence": "视觉语言模型驱动的遥感图像智能体式逐步修复",
+      "canonical_evidence": "视觉语言模型驱动的遥感图像智能体式逐步修复",
+      "llm_tldr_en": "EORestore-Agent casts remote sensing restoration with composite degradations as a traceable agent trajectory, using a fine-tuned vision-language model to verify per-step tool decisions without clean references.",
+      "llm_tldr_cn": "遥感图像常同时存在雾霾、云、噪声、模糊等多重退化，修复时需决定使用哪些工具及顺序，但推理阶段缺乏干净参考来验证决策。本文提出EORestore-Agent，用微调视觉语言模型检测残余退化类型并联合评分工具池，将修复建模为可追踪的智能体轨迹。方法实现无参考的逐步可验证决策，缓解一体化模型在多退化下性能收窄的问题。该工作为遥感图像智能体式修复提供了新范式。",
+      "llm_tldr": "遥感图像常同时存在雾霾、云、噪声、模糊等多重退化，修复时需决定使用哪些工具及顺序，但推理阶段缺乏干净参考来验证决策。本文提出EORestore-Agent，用微调视觉语言模型检测残余退化类型并联合评分工具池，将修复建模为可追踪的智能体轨迹。方法实现无参考的逐步可验证决策，缓解一体化模型在多退化下性能收窄的问题。该工作为遥感图像智能体式修复提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
     }
   ]
 }

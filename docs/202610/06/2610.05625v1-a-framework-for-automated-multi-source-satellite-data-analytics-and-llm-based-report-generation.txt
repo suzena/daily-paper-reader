@@ -1,0 +1,223 @@
+Title: A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation
+
+URL Source: https://arxiv.org/pdf/2610.05625v1
+
+Published Time: Tue, 06 Oct 2026 02:06:04 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+# A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation 
+
+Hind Yousif Alhammadi 1, Isam Mashhour Al Jawarneh 2
+
+> 1
+
+Department of Applied Physics and Astronomy , University of Sharjah , Sharjah, UAE Email: U25108456@sharjah.ac.ae 
+
+> 2
+
+Department of Computer Science , University of Sharjah , P.O.Box. 27272 Sharjah, UAE Email: ijawarneh@sharjah.ac.ae 
+
+Abstract —This paper presents the workflow for building an automated ArcGIS Pro tool using ArcPy to extract the Land Surface Temperature (LST) from Landsat 7, 8 and 9 datasets. The tool eliminates the need for manual band selection and repet-itive raster computations by automating the multi-step workflow of radiometric calibration, NDVI-based emissivity correction, and thermal conversion. In addition to supporting batch and single-scene processing, the tool has an optional Large Language Model (LLM) for statistical result interpretation and reporting. Depending on batch size, the tool reduced the processing time from around 11–58 minutes when done manually to around 4–11 minutes using the tool. We tested the tool with data from Ras Al Khaimah (RAK) in the UAE, and the LST obtained for Ras Al Khaimah ranged from approximately 25°C to 50°C, demonstrating an accurate LST mapping compatible with the weather conditions of RAK. In summary, our tool reduces human errors and improves processing accuracy and efficiency for thermal and environmental remote sensing applications, in addition to providing an interactive LLM-based interface for result’s interpretation. 
+
+Index Terms —ArcGIS, Explainable AI (XAI), Remote Sensing, Land Surface Temperature (LST), Multi-modal Large Language Models (MLLMs), Large Geospatial Models (LGMs) 
+
+I. I NTRODUCTION 
+
+Land Surface Temperature (LST) is one of the most sig-nificant factors in investigating climate change, urban climate analysis, vegetation assessment, and a wide range of envi-ronmental studies. LST is a measurement of Earth’s surface temperature. It is calculated from satellite imagery and used in a variety of scientific fields, including agriculture, hydrol-ogy, ecology, and meteorology. LST can help in identifying environmental issues, evaluate the severity of droughts, and measure the intensity of heat by using various analytical methods [1], [2]. Several studies on thermal analysis have been conducted using MODIS, ASETR, Landsat Thematic Mapper (TM)/Enhanced Thematic Mapper (ETM), and Landsat 8 data [3], [4]. Typically, a raster calculator is used to o obtain LST from a Landsat imagery in ArcGIS Pro. It performs a sequence of corrections to the thermal band, that mainly consists of the following: conversion of Top of Atmosphere (TOA) Radiance, conversion to Top of Atmosphere (TOA) brightness tempera-tures, and conversion from At-Satellite Temperature to Land Surface Temperature. These steps usually require repeated use of the raster calculator, which increases the risk of user error in addition to increase analysis processing time. Few satellites provide calibrated LST, such as Sentinel 3 and MODIS, however, they have lower resolutions (capped at approximately 1km). This low resolution is typically insufficient for research that requires more precise spatial information in the form of a higher resolution. Consequently, developers and researchers frequently rely on a higher resolution Landsat’s 30m thermal data, which typically imposes a higher processing time. This project addresses this problem by developing an au-tomated LST tool in ArcGIS Pro using ArcPy. The tool accepts Landsat 7, 8, and 9 data files and generate the LST map directly, without running the raster calculator or even opening the data files to extract the required band. The tool can recognize each satellite from the file name and uses the specific constants required for the calculations. We have also integrated a Large Language Models (LLM)-based interface to produce a summarized report based on LST map’s statistics. Our LST tool improves productivity, consistency, and utility for academics and researchers using thermal remote sensing data by automating the entire workflow. The specific objectives of this study are the following: (1) To automate the process of calculating LST and supporting Landsat 7, 8, and 9. (2) to allow single-scene and batch processing. (3) to support LLM-driven reporting and interpretation. (4) To reduce human error in calculating LST and improve the processing accuracy and efficiency. II. L ITERATURE REVIEW 
+
+Land Surface Temperature (LST) has gained widespread recognition as an essential factor in climate and environmental research due to its influence on surface energy exchange and climatic variability. To generate LST values, recent studies utilize Landsat 8 and 9 satellite data. They employ Single-Channel methods on Band 10 or multiple channel Split-Window (SW) algorithms that utilize both Thermal Infrared Sensor (TIRS) Bands 10 and 11 [5]–[7]. The algorithms studied include methods based on the Radiative Transfer Equation (RTE), particularly Single-Channel techniques, and Multi-Channel Split-Window Algorithms (SWA) [5]–[7]. Re-cent studies have shown techniques based on NDVI-derived emissivity values, where they change raw digital numbers to radiance, reflectance, and brightness temperature before synthesizing LST using the Radiative Transfer Equation (RTE) arXiv:2610.05625v1 [cs.AI] 4 Oct 2026 approach with Landsat 8 data [6], [7]. Similarly, recent studies have employed the Split-Window approach using Landsat 8 thermal bands, and they demonstrate that LST estimates differ depending on emissivity and atmospheric correction [6], [7]. Numerous studies have used NDVI-based emissivity models to address emissivity, which remains a major concern in LST extraction. Sekertekin et al. used Surface Radiation Budget Network (SURFRAD) ground measurements for validation to assess many LSE models and retrieval techniques in Landsat 5, 7 and 8 in rural locations [8]. The MWA approach produces the lowest error (RMSE 2.39 K) throughout missions, according to the study’s conclusion that algorithm accuracy differs by sensor type. The study also demonstrates the growing interest in automated, tool-based processes by offering an ArcGIS toolbox that integrates many retrieval techniques. The use of LST analysis in environmental monitoring is the subject of other research. [9] used Landsat-derived trends from 2016 to 2020 and NDVI–LST correlations to evaluate drought severity. The findings confirmed the value of LST as an indicator of agricultural stress, showing astrong correlation (up to 99%) between NDVI and LST . Similarly, [10] used Landsat 8 thermal bands in conjunction with supplementary vegetation indicators to study LST change in agricultural zones. The results demonstrated a significant agreement (RMSE 0.94–1.26°C) between satellite-estimated LST and meteorological station readings. The use of tra-ditional processing procedures, such as determining neces-sary bands, collecting metadata information, and repeatedly performing raster computations, is a common theme in the literature. While a number of studies suggest automated or semi-automatic procedures, the majority are either unable to process batch processing or restricted to single satellite types, or need manual band selection. Furthermore, many procedures still use Level-1 products to adjust intermediate variables such as NDVI, radiance, and emissivity, or to preserve consistency across historical archives. III. M ETHODOLOGY 
+
+In this section, we explain the workflow for constructing an automated tool to calculate the LST, including data prepara-tion, correction factors, and the complete pipeline. 
+
+A. Study Area 
+
+Ras Al Khaimah (RAK) in the UAE, is one of the seven Emirates of the United Arab Emirates (UAE), is the study area that we have chosen for thispaper. It is located at 55° 60 E and 25° 26 N. It borders the Sultanate of Oman and is located in the northernmost region of the United Arab Emirates. It is estimated that RAK has 400,000 residents and a total area of 2478 square kilometers in 2025. 
+
+B. Input Data 
+
+Level-1 Landsat images from Landsat 7, Landsat 8, or Landsat 9 can be used as an input for our tool. Each scene input to the tool must use the file name generated by Earth Explorer, and the file must contain the thermal, red, and NIR bands, as well as metadata. This produces the scene’s LST. Table 1 summarizes the band numbers that are required for each satellite, where Landsat 7 uses bands 3, 4, and 6 while Landsat 8/9 uses bands 4, 5, and 10 for Red, NIR, and thermal bands, respectively. The Red and NIR bands are required to calculate NDVI (see 6), which is then used for the emissivity correction. The thermal band is used to determine the bright-ness temperature. The radiometric scaling parameters that is needed to transform raw Digital Number (DN) measurements into radiance, reflectance, and final land surface temperature are provided by the Metadata Text file (MTL) metadatam which accompanies satellite imagery, particularly Landsat data products. It contains essential metadata information that is needed for processing the raw data. DM is a raw pixel value stored by satellite sensors. They are uncalibrated digital values that represent the intensity of electromagnetic radiation that is recorded by the sensor for each spectral band. Since level-2 items already have processed surface temperature information, they are not utilized. A Summary of the Landsat spectral bands that we have used in this paper are summarized in table I               
+
+> TABLE I SUMMARY OF THE LANDSAT SPECTRAL BANDS USED IN THIS STUDY .
+> Satellite/Bands Red NIR Thermal Landsat 7 3(0.63–0.69 μm), 30 m
+> 4(0.77–0.90 μm), 30 m
+> 6(10.40–12.50 μm), 60 m
+> Landsat 8 4(0.64–0.67 μm), 30 m
+> 5(0.85–0.88 μm), 30 m
+> 10/11
+> (10.6–11.19 μm), 100 m
+> Landsat 9 4(0.64–0.67 μm), 30 m
+> 5(0.85–0.88 μm), 30 m
+> 10/11
+> (10.6–11.19 μm), 100 m
+
+1) Conversion of TOA Radiance: The first step in the process of calculating the LST is to convert the thermal band digital number (DN) into Top of Atmosphere (TOA) radiance using Equation 1. 
+
+Lλ = ML × Qcal + AL (1) Where:  
+
+> •
+
+Lλ = TOA spectral radiance (Watts/(m 2·sr· μm))  
+
+> •
+
+ML = band–specific multiplicative rescaling factor (from metadata)  
+
+> •
+
+Qcal = quantized and calibrated pixel value (DN)  
+
+> •
+
+AL = band–specific additive rescaling factor (from meta-data) 
+
+2) Conversion to Top of Atmosphere Brightness Tempera-ture: The second step converts TOA radiance to brightness temperature using Equation 2. 
+
+TB = K2
+
+ln 
+
+ K1 
+
+> Lλ
+
++ 1 
+
+ − 273 .15 (2) Where:  
+
+> •
+
+TB = top-of-atmosphere brightness temperature (Kelvin)  
+
+> •
+
+Lλ = TOA spectral radiance  
+
+> •
+
+K1, K 2 = band–specific thermal conversion constants (from metadata) 3) Conversion from At-Satellite Temperature to Land Sur-face Temperature: The final step is to convert the brightness temperature to the Land Surface Temperature (LST) using Equation 3. Before applying this equation, the emissivity must be calculated using Equations 4–6. 
+
+T = TB
+
+1 + 
+
+ λT B
+
+> c2
+
+
+
+ln ( ε)
+
+(3) Where:  
+
+> •
+
+λ = wavelength of emitted radiance  
+
+> •
+
+c2 = hc k = 1 .4388 × 10 −2 m·K  
+
+> •
+
+h = Planck’s constant ( 6.626 × 10 −34 J·s)  
+
+> •
+
+k = Boltzmann constant ( 1.38 × 10 −23 J/K)  
+
+> •
+
+c = speed of light ( 2.998 × 10 8 m/s)  
+
+> •
+
+ε = surface emissivity Surface emissivity is estimated using the NDVI-based method in equation 4: 
+
+ε = 0 .004 × Pv + 0 .986 (4) Where Pv (proportion of vegetation) is calculated as in 5: 
+
+Pv =
+
+ N DV I − N DV I min 
+
+N DV I max − N DV I min 
+
+2
+
+(5) The normalized difference vegetation index (NDVI) is cal-culated from the near-infrared (NIR) and red (RED) bands using equation 6: 
+
+N DV I = N IR − RED N IR + RED (6) These steps must be repeated several times and depending on each satellite or scene, the MTL metadata file must be opened to extract the required values to fill the equations, such as the K1 and K2 constants. Table 2 shows the summarized required data to be extracted from the metadata file to produce the LST. 
+
+TABLE II METADATA FIELD REQUIRED TO BE USED IN EQUATIONS .
+
+Metadata Feild Use in equations 
+
+RADIANCE MULT BAND X ML in Equation 1 RADIANCE ADD BAND X AL in Equation 1 K1 CONSTANT BAND X K1 in Equation 2 K2 CONSTANT BAND X K2 in Equation 2 
+
+The tool can also be used for batch processing (i.e., multiple files). We can prepare a parent file that contains multiple Landsat scenes to generate LST for each scene in the folder. If valid file extensions are found in the folder, they follow the workflow that we have discussed for single-scene processing, which are summarized in the flowchart that is shown in Figure 1. This can be useful for scenarios that require large-area thermal mapping. The time-consuming process of reviewing multiple scenes to obtain LST is automated, thus saving time and reducing errors. Single Scene Input   
+
+> (Landsat 7/ 8/ 9)
+> Start
+> Locate
+> Metadata
+> File
+> Detect
+> Landsat
+> Sensor
+> Find Bands
+> Thermal Band Red & NIR
+> Bands
+> Conversion of
+> TOA Radiance
+> Conversion of
+> TOA to
+> Brightness
+> Temperature
+> NDVI
+> Vegetation
+> Proportion Pv
+> Surface
+> Emmisivity
+> Calcualting LST
+> No
+> Yes
+> Loop
+> through
+> scenes
+> Export Raster
+> Outputs(optional)
+> LLM Summary
+> Report
+> (optional)
+> End
+> Batch
+> Input Folder
+
+Fig. 1. Flowchart showing the automated LST workflow. 
+
+The tool also includes an optional function that integrates a Large Language Model (LLM) to provide an interpretive summary of the output LST dataset. It collects basic descrip-tive statistics, including the minimum, maximum, mean, and standard deviation of LST values, along with raster metadata such as geographic reference, resolution, and scene name. This data is then submitted to the LLM via an API request. The generated summary provides a quick qualitative assessment of the scene’s thermal characteristics, including potential heat islands, natural temperature gradients, and anomalous thermal patterns. This outcome is documented in a text-based report together with the raster products. If the user chooses to disable the capability or fails to provide an API key, the report is gen-erated but contains only numerical data without interpretation. The LLM component enhances the usability of our system. It provides an automatically generated narrative that speeds up evaluation, decision-making, and the transmission of results to non-technical individuals. It does this without affecting the fundamental LST computation. IV. S YSTEM DESIGN AND IMPLEMENTATION 
+
+We have used the ArcGIS Pro software to create the Land Surface Temperature (LST) tool by implementing a Python script through the ArcPy library. The tool contains 9 parameters, as shown in Figure 2. The first parameter is where the user adds input data files, and it can be a single Landsat scene or a parent folder containing multiple scenes. In the second parameter, the user can specify the output raster path. Additionally, the tool includes an optional thermal band selector that allows the users to select a specific thermal band as needed. This applies to Landsat 8 and 9: choose between band 10 and 11; otherwise, band 10 is automatically used. Followed by three parameters for optional saving of NDVI, emissivity, and brightness temperature rasters. The seventh parameter must be checked when adding batch scenes as input; otherwise, it is assumed that the input is a single scene. The last two parameters are for optional reporting using an LLM as follows: an API Key that must be obtained and provided to produce results. If left empty, a report file containing LST results statistics without interpretation will be generated.  
+
+> Fig. 2. Parameters of LST Tool.
+
+V. R ESULTS AND DISCUSSION 
+
+Our tool was tested on all three satellites and we have verified that it works as planned. For demonstration purposes, the results obtained from Landsat 8 are presented in this paper. The produced LST map is shown in Figure 3. The data indicate that temperatures range from approximately 25 to 50 degrees Celsius, which is a reasonable range for the Emirates of RAK in the UAE. Also, the LLM-based report is shown in Figure 4, which includes raster information, LST Statistics, and an interpretation of the results. To assess the tool’s efficiency, its running time is compared with manual processing time, assuming the manual processing time remains constant and is multiplied by the number of scenes. The tool took 3m 52s to produce the output by running all optional parameters, including saving NDVI, emissivity, and brightness temperature, and by using an LLM to generate   
+
+> Fig. 3. Obtained LST map for RAK using Landsat 8.
+> Fig. 4. LST summary report generated using LLM.
+
+a summary report of the data. Manually finding LST through the raster calculator can take up to 11m 33s or even longer if users are beginners or running a batch process. The time saved when finding LST for a single scene is 7m 41s, and the time saved grows with batch processing: running five scenes saves 46m 29s. The tool took 11m 16s to run a batch of scenes, which is less than the time required to manually find the LST for a single scene. Table 3 shows a comparison between the plain manual running time and our tool’s running time for processing 1-5 scenes. VI. C ONCLUSION AND FUTURE WORK 
+
+In this study, we have built an automated LST extraction tool for ArcGIS Pro using the ArcPy. The tool supports Landsat 7, 8, and 9 datasets. Specifically, we have automated the TABLE III COMPARISON BETWEEN MANUAL AND AUTOMATED LST PROCESSING TIME .# Scenes Manual Time Tool Time Time Saved 1 11m 33s 3m 52s 7m 41s 2 23m 06s 4m 31s 18m 35s 3 34m 39s 7m 36s 27m 03s 4 46m 12s 9m 3s 37m 09s 5 57m 45s 11m 16s 46m 29s 
+
+workflow of manually identifying bands, extracting metadata values, and going through the raster calculator multiple times to finally extract the LST. Additionally, the tool supports single-scene and batch (i.e., multiple-scene) processing, thus reducing the processing time and minimizing the human error. Furthermore, the Large Language Model (LLM) LST-based report generation greatly enhances usability and increases the comprehensibility of the results for non-expert audiences. In a future work, we will integrate cloud masking techniques and atmospheric correction capabilities. Also, we will develop novel techniques that aim at reducing the running time, especially for batch processing, by integrating cloud-based computing or GPU acceleration. With further development, the tool can serve as a thermal remote sensing framework for environmental research, policy assessment, and GIS-based decision support systems. REFERENCES [1] M. A. S. Almouctar, Y. Wu, F. Zhao, and C. Qin, “Drought analysis using normalized difference vegetation index and land surface temperature over niamey region, the southwestern of the niger between 2013 and 2019,” Journal of Hydrology: Regional Studies , vol. 52, p. 101689, 2024. [2] Y. Hu, G. Jia, H. Gao, Y. Li, M. Hou, J. Li, and C. Miao, “Spatial characterization of global heat waves using satellite-based land surface temperature,” International Journal of Applied Earth Observation and Geoinformation , vol. 125, p. 103604, 2023. [3] P. Kowe and C. Shoko, “A spatial autocorrelation approach in examining the impacts of spatial-temporal dynamics of seasonal land surface tem-perature and land cover changes on the urban climate of the metropolitan city of bulawayo,” Journal of Spatial Science , vol. 70, no. 4, pp. 621– 642, 2025. [4] S. Patel, M. Indraganti, and R. N. Jawarneh, “Urban planning impact on summer human thermal comfort in doha, qatar,” Building and Environment , vol. 254, p. 111374, 2024. [5] X. Zheng, Z. Zhou, Z. Wang, T. Wang, and J. Pei, “Development of a hybrid SW-TES method for simultaneous land surface temperature and emissivity retrieval from landsat 8/9 thermal infrared data,” IEEE Transactions on Geoscience and Remote Sensing , vol. 64, pp. 1–14, 2026. [6] S. Asghari Saraskanroud, B. Faramarzi Ouri, B. Zeinali, and R. Mostafazadeh, “Estimation of land surface temperature (lst) using single-channel and multi-band methods in sablan mountainous region,” 
+
+Advances in Space Research , vol. 74, no. 7, pp. 2915–2929, 2024. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S0273117724005878 [7] A. S. A. Nugraha, M. Kamal, S. H. Murti, and W. Widyatmanti, “Accuracy assessment of land surface temperature retrievals from re-mote sensing imagery: pixel-based, single and multi-channel methods,” 
+
+Geomatics, Natural Hazards and Risk , vol. 15, no. 1, p. 2324975, 2024. [8] A. Sekertekin and S. Bonafoni, “Land surface temperature retrieval from landsat 5, 7, and 8 over rural areas: Assessment of different retrieval algorithms and emissivity models and toolbox implementation,” Remote Sensing , vol. 12, no. 2, 2020. [Online]. Available: https://www.mdpi.com/2072-4292/12/2/294 [9] K. Mohan, A. Ramasamy, and J. Varghese, “Drought severity assessment using automated land surface temperature retrieval technique,” Arabian Journal of Geosciences 2021 14:22 , vol. 14, pp. 2358–, 11 2021. [10] B. N. Aryalekshmi, M. A. J. Ahamed J., R. C. Biradar, and C. K., “Land surface temperature estimation of mandya district using landsat-8 data,” 
+
+Journal of Applied Science and Engineering , vol. 23, pp. 583–591, 2020.

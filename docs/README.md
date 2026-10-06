@@ -51,14 +51,14 @@
       <span class="dpr-home-dashboard-kicker">2026-10-06</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 2 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-06 01:08:32 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-06 23:11:31 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,7 +69,10 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精选 2 篇论文，精读海上环境监测中的船载异常检测，速读超越像素与网格的 Atomizer-IO。最值得看的是船载异常检测（8.0 分）如何提升海洋监测效率，以及 Atomizer-IO 对像素、图块、网格思路的突破。建议普通读者先读精读那篇，再按兴趣浏览速读。</p>
+<p>今日共生成 9 篇推荐（精读 2 篇，速读 7 篇）</p>
+<p>精读：《OceanMind: A multi-agent AI system for ocean diagnosis》（9.0/10）, 《On-Board Anomaly Detection for Efficient Marine Environmental Monitoring》（8.0/10）</p>
+<p>速读：《RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents》（7.0/10）, 《IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning》（7.0/10）, 《A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation》（7.0/10）</p>
+<p>这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -78,12 +81,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">2 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="On-Board Anomaly Detection for Efficient Marine Environmental Monitoring">On-Board Anomaly Detection for Efficient Marine Environmental Monitoring</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="OceanMind: A multi-agent AI system for ocean diagnosis">OceanMind: A multi-agent AI system for ocean diagnosis</span></li><li><span class="dpr-home-dashboard-paper-title" title="On-Board Anomaly Detection for Efficient Marine Environmental Monitoring">On-Board Anomaly Detection for Efficient Marine Environmental Monitoring</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -91,12 +94,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">7 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Atomizer-IO: Beyond Pixels, Patches and Grids">Atomizer-IO: Beyond Pixels, Patches and Grids</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents">RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning">IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation">A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>7</strong></span></div>
 </section>
 </div>
 

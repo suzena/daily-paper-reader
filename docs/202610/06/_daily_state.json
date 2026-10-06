@@ -1,10 +1,26 @@
 {
   "date": "20261006",
   "date_label": "",
-  "generated_at": "2026-10-06 01:08:32 UTC",
+  "generated_at": "2026-10-06 23:11:31 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
+    {
+      "paper_id": "2610.03780v1",
+      "route": "202610/06/2610.03780v1-oceanmind-a-multi-agent-ai-system-for-ocean-diagnosis",
+      "title": "OceanMind: A multi-agent AI system for ocean diagnosis",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向海洋诊断的多智能体AI系统",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
     {
       "paper_id": "2610.03649v1",
       "route": "202610/06/2610.03649v1-on-board-anomaly-detection-for-efficient-marine-environmental-monitoring",
@@ -17,9 +33,105 @@
         }
       ],
       "score": 8.0,
-      "evidence": "卫星AI海洋环境监测",
+      "evidence": "基于AI异常检测的星上海洋环境监测",
       "first_seen_at": "2026-10-06 01:08:32 UTC",
-      "updated_at": "2026-10-06 01:08:32 UTC"
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.04836v1",
+      "route": "202610/06/2610.04836v1-rsure-agent-reliable-use-of-tool-observations-for-remote-sensing-agents",
+      "title": "RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感智能体与工具观测可靠性",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.05342v1",
+      "route": "202610/06/2610.05342v1-irstd-agent-agentic-infrared-small-target-detection-via-zoom-guided-interaction-learning",
+      "title": "IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向海上监测的智能体多模态大模型目标检测框架",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.05625v1",
+      "route": "202610/06/2610.05625v1-a-framework-for-automated-multi-source-satellite-data-analytics-and-llm-based-report-generation",
+      "title": "A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "卫星数据分析与大模型报告生成",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.06196v1",
+      "route": "202610/06/2610.06196v1-eorestore-agent-fidelity-guided-agentic-restoration-of-remote-sensing-images-with-composite-degradations",
+      "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "视觉语言模型驱动的遥感图像智能体式逐步修复",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.06407v1",
+      "route": "202610/06/2610.06407v1-reinforcement-learning-based-3d-beam-adaptation-for-underwater-wireless-optical-communication-with-auvs",
+      "title": "Reinforcement Learning-Based 3D Beam Adaptation for Underwater Wireless Optical Communication with AUVs",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向AUV水下光通信波束自适应的强化学习智能体",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
+    },
+    {
+      "paper_id": "2610.06704v1",
+      "route": "202610/06/2610.06704v1-extending-dynamic-world-surface-water-mapping-to-sentinel-1-with-alphaearth-embeddings",
+      "title": "Extending Dynamic World Surface Water Mapping to Sentinel-1 with AlphaEarth Embeddings",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "用AlphaEarth嵌入与弱监督将地表水制图扩展到Sentinel-1 SAR",
+      "first_seen_at": "2026-10-06 23:11:31 UTC",
+      "updated_at": "2026-10-06 23:11:31 UTC"
     },
     {
       "paper_id": "2609.40320v1",
