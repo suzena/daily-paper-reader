@@ -1,0 +1,100 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-06T01:05:39.740042+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2610.03649v1",
+      "source": "arxiv",
+      "title": "On-Board Anomaly Detection for Efficient Marine Environmental Monitoring",
+      "abstract": "Marine ecosystems are impacted by various threats such as oil spills, algal blooms, and sediment floods, which disrupt habitats, wildlife, and human activities. Advances in satellite imagery and Artificial Intelligence (AI) have enhanced our capabilities for early detection and mitigation of such hazards. In this paper, we propose a marine event detection pipeline for Earth observation satellites equipped with multi- or hyperspectral sensors. Our approach includes a self-supervised neural network encoder that compresses satellite images into a reduced latent space, enabling efficient onboard processing. A machine learning anomaly detection model identifies deviations from normal sea patterns to detect environmental anomalies. We compare its performance against traditional algorithms such as Isolation Forest, One-Class Support Vector Machine and Local Outlier Factors. Our lightweight, resource-efficient pipeline is optimized for deployment on satellites with limited computational resources, ranging from embedded CPUs to AI hardware accelerators. By prioritizing the transmission of critical information, our solution enhances system responsiveness and optimizes satellite communication bandwidth. Demonstrated through current integration across multiple missions, including European Space Agency's (ESA) Phisat-2 mission and Microsoft/Thales Alenia Space IMAGIN-e mission, our pipeline aims to improve marine environmental monitoring by providing timely alerts and efficient data reduction.",
+      "authors": [
+        "Thomas Goudemant",
+        "Clotilde Szywala",
+        "Benjamin Francesconi",
+        "Michelle Aubrun",
+        "Yves Bobichon",
+        "Marjorie Bellizzi",
+        "Adrien Girard"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-10-02T17:32:34+00:00",
+      "link": "https://arxiv.org/pdf/2610.03649v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "satellite AI marine environmental monitoring",
+      "llm_evidence_cn": "卫星AI海洋环境监测",
+      "llm_evidence": "卫星AI海洋环境监测",
+      "canonical_evidence": "卫星AI海洋环境监测",
+      "llm_tldr_en": "Marine ecosystems face oil spills and algal blooms. This paper proposes an onboard satellite pipeline with a self-supervised encoder and anomaly detection model to detect marine environmental anomalies efficiently in orbit.",
+      "llm_tldr_cn": "针对溢油、藻华和泥沙泛滥等威胁海洋生态系统、亟需及早发现的问题，本文提出一套面向多光谱与高光谱地球观测卫星的海洋事件检测流程。该方法先用自监督神经网络编码器将卫星图像压缩到低维潜空间以支持星上处理，再用机器学习异常检测模型识别偏离正常海况的环境异常。实验对比了该方案在海洋环境异常检测上的性能。该工作为卫星海洋环境的自主实时监测提供了轻量高效的方案。",
+      "llm_tldr": "针对溢油、藻华和泥沙泛滥等威胁海洋生态系统、亟需及早发现的问题，本文提出一套面向多光谱与高光谱地球观测卫星的海洋事件检测流程。该方法先用自监督神经网络编码器将卫星图像压缩到低维潜空间以支持星上处理，再用机器学习异常检测模型识别偏离正常海况的环境异常。实验对比了该方案在海洋环境异常检测上的性能。该工作为卫星海洋环境的自主实时监测提供了轻量高效的方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.40320v1",
+      "source": "arxiv",
+      "title": "Atomizer-IO: Beyond Pixels, Patches and Grids",
+      "abstract": "Most vision architectures assume that observations lie on a regular grid, an effective abstraction for natural images but a restrictive one for sensing data whose channels, temporal sampling, spatial resolution, and geometry can vary. Generic set-based architectures remove the grid, but also remove useful spatial inductive biases. We introduce Atomizer-IO, an architecture that places observations first and derives structure from their physical relationships. Building on top of an atomic representation of the data, each observation is described by its measurement and acquisition metadata, while local cross-attention maps observations to anchor points that can be arbitrarily placed. We evaluate this design by progressively relaxing the grid assumption, from varying input raster configurations and incomplete channel sets to flexible output density and, ultimately, inputs without a raster grid. Atomizer-IO is competitive with flexible EO-specific architectures on most tasks, while offering post-training control over inference cost and competitive compute--performance trade-offs. The same formulation extends without architectural redesign to unordered 3D point clouds, showing that the atomic interface generalizes beyond regular raster inputs. These results suggest that pixels, patches, and grids do not need to define the interface of a sensing architecture.",
+      "authors": [
+        "Hugo Riffaud de Turckheim",
+        "Sylvain Lobry",
+        "Nicolas Houdré",
+        "Damien Robert",
+        "Roberto Interdonato",
+        "Diego Marcos"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-09-30T17:54:41+00:00",
+      "link": "https://arxiv.org/pdf/2609.40320v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "architecture for sensing data with variable channels and geometry, relaxing grid assumptions",
+      "llm_evidence_cn": "面向通道与几何多变的传感数据的非网格架构",
+      "llm_evidence": "面向通道与几何多变的传感数据的非网格架构",
+      "canonical_evidence": "面向通道与几何多变的传感数据的非网格架构",
+      "llm_tldr_en": "Most vision architectures assume regular grid observations, which fails for sensing data with variable channels and geometry; Atomizer-IO uses atomic observation representations and cross-attention to arbitrary anchors, relaxing grid assumptions for flexible remote sensing analysis.",
+      "llm_tldr_cn": "论文针对多数视觉架构依赖规则网格假设、难以处理通道与几何多变的传感数据这一局限，提出Atomizer-IO架构。该方法以原子化表示编码每个观测的测量值与采集元数据，并用局部交叉注意力将观测映射到任意锚点，从而在去除网格约束的同时保留空间归纳偏置。作者通过逐步放宽网格假设的系列实验验证了设计的有效性。该工作为遥感等非规则观测数据的分析提供了通用架构基础。",
+      "llm_tldr": "论文针对多数视觉架构依赖规则网格假设、难以处理通道与几何多变的传感数据这一局限，提出Atomizer-IO架构。该方法以原子化表示编码每个观测的测量值与采集元数据，并用局部交叉注意力将观测映射到任意锚点，从而在去除网格约束的同时保留空间归纳偏置。作者通过逐步放宽网格假设的系列实验验证了设计的有效性。该工作为遥感等非规则观测数据的分析提供了通用架构基础。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

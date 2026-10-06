@@ -1,0 +1,41 @@
+{
+  "date": "20261006",
+  "date_label": "",
+  "generated_at": "2026-10-06 01:08:32 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.03649v1",
+      "route": "202610/06/2610.03649v1-on-board-anomaly-detection-for-efficient-marine-environmental-monitoring",
+      "title": "On-Board Anomaly Detection for Efficient Marine Environmental Monitoring",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "卫星AI海洋环境监测",
+      "first_seen_at": "2026-10-06 01:08:32 UTC",
+      "updated_at": "2026-10-06 01:08:32 UTC"
+    },
+    {
+      "paper_id": "2609.40320v1",
+      "route": "202610/06/2609.40320v1-atomizer-io-beyond-pixels-patches-and-grids",
+      "title": "Atomizer-IO: Beyond Pixels, Patches and Grids",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向通道与几何多变的传感数据的非网格架构",
+      "first_seen_at": "2026-10-06 01:08:32 UTC",
+      "updated_at": "2026-10-06 01:08:32 UTC"
+    }
+  ]
+}
