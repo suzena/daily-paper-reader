@@ -1,0 +1,449 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-07T23:28:56.957748+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 10,
+    "quick_skim_target": 11,
+    "quick_selected": 10
+  },
+  "deep_dive": [
+    {
+      "id": "2610.08539v1",
+      "source": "arxiv",
+      "title": "RSJEV: Discriminative Remote Sensing Scene Classification with Multimodal Large Language Models",
+      "abstract": "Remote sensing scene classification is a fundamental task in Earth observation and geospatial analysis. Existing approaches mainly follow three paradigms: task-specific visual classification, vision-language similarity matching, and autoregressive multimodal generation. However, visual classifiers rely on predefined label spaces, CLIP-based methods perform recognition through static image-text alignment, and multimodal large language models (MLLMs) introduce unnecessary token-level generation for classification tasks with explicit candidate categories. To address these limitations, we propose RSJEV, a one-pass multimodal decision framework for remote sensing scene classification. Unlike conventional MLLMs that formulate classification as autoregressive text generation, RSJEV reformulates scene classification as a candidate-conditioned multimodal discriminative decision process, where visual representations, task instructions, and candidate category semantics are jointly modeled. Specifically, we introduce a OnePass Decider that extracts multimodal decision states and directly estimates category probabilities within the candidate category space, eliminating autoregressive decoding while preserving vision-language interactions. Extensive experiments on three widely used remote sensing scene classification benchmarks, including UC Merced, AID, and NWPU-RESISC45, demonstrate that RSJEV achieves superior classification performance compared with representative CNN-, Transformer-, Mamba-, CLIP-, and MLLM-based methods. Moreover, RSJEV significantly reduces inference costs and achieves a better accuracy-efficiency trade-off with only a compact 0.8B-parameter model. These results demonstrate the effectiveness of state-conditioned multimodal decision making for efficient remote sensing image understanding. The code will be available at https://github.com/Dongtcs/RSJEV.",
+      "authors": [
+        "Dongchen Si",
+        "Di Wang",
+        "Mingzhen Xu",
+        "Jing Zhang",
+        "Bo Du",
+        "Liangpei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T15:28:36+00:00",
+      "link": "https://arxiv.org/pdf/2610.08539v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal large language model for remote sensing scene classification",
+      "llm_evidence_cn": "多模态大模型用于遥感场景分类",
+      "llm_evidence": "多模态大模型用于遥感场景分类",
+      "canonical_evidence": "多模态大模型用于遥感场景分类",
+      "llm_tldr_en": "Proposes RSJEV, a one-pass multimodal decision framework using large language models for remote sensing scene classification, avoiding unnecessary token-level generation and static image-text alignment.",
+      "llm_tldr_cn": "遥感场景分类现有方法存在标签空间固定、图文对齐静态以及多模态大模型逐token生成冗余等问题。本文提出RSJEV，一种面向遥感场景分类的一次性多模态决策框架，利用多模态大模型直接判别候选类别。该框架避免了不必要的生成开销，提升了分类效率与准确性，为大模型结合遥感影像与语义信息用于环境判读提供了直接支持。",
+      "llm_tldr": "遥感场景分类现有方法存在标签空间固定、图文对齐静态以及多模态大模型逐token生成冗余等问题。本文提出RSJEV，一种面向遥感场景分类的一次性多模态决策框架，利用多模态大模型直接判别候选类别。该框架避免了不必要的生成开销，提升了分类效率与准确性，为大模型结合遥感影像与语义信息用于环境判读提供了直接支持。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.04836v1",
+      "source": "arxiv",
+      "title": "RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents",
+      "abstract": "Remote sensing agents rely on perception, measurement, and raster analysis tools to solve Earth observation tasks. We refer to their judgments and quantitative results about ground objects as tool observations. However, these observations are subject to substantial uncertainty and may be incorrect even when the tools execute successfully. When agents accept incorrect observations, the errors can propagate through subsequent reasoning and cause task failure. We analyze 1,229 execution trajectories across three remote sensing agent benchmarks. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect observations despite successful tool execution. These errors propagate to the final answer in at least 82.0% of affected tasks on each benchmark. To address this problem, we propose RSure-Agent, a framework for verifying tool observations and limiting error propagation. We introduce a verifiable observation protocol that requires tools to return process evidence for the agent to verify their observations. We also construct a task-tool reliability prior from offline task feedback. The prior summarizes each tool configuration's past performance across task types and provides a task-specific reference for verification. Using process evidence and this prior, RSure-Agent decides whether to accept an observation, request additional evidence, or reject it. We evaluate RSure-Agent on EarthBench, ThinkGeo, TerraLogic, and CHOICE-420. Across the three agent benchmarks, RSure-Agent reduces the error propagation rate by 21.3 to 25.9 percentage points relative to the base configuration with verification and the prior disabled. On CHOICE-420, it improves overall accuracy over direct answering by 5.71 percentage points on average across 11 backbone models. On EarthBench, it reduces the tool-call ratio by 25.9% relative to Earth-Agent.",
+      "authors": [
+        "Fuyuan Liu",
+        "Nayu Liu",
+        "Wenhao Yu",
+        "Peijin Wang",
+        "Yingchao Feng",
+        "Fanglong Yao",
+        "Liang Wan",
+        "Wei Feng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-04T00:43:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.04836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "remote sensing agents and reliability of tool observations",
+      "llm_evidence_cn": "遥感智能体与工具观测可靠性",
+      "llm_evidence": "遥感智能体与工具观测可靠性",
+      "canonical_evidence": "遥感智能体与工具观测可靠性",
+      "llm_tldr_en": "Remote sensing agents rely on tool observations that can be wrong even when tools succeed, propagating errors through reasoning. Analyzing 1,229 trajectories across three benchmarks, the paper shows at least 88.1% of tasks depend on such observations and 22.7% contain errors.",
+      "llm_tldr_cn": "遥感智能体依赖感知、测量与栅格分析工具给出地面目标判断，但工具即使成功执行也可能产生错误观测，误差会沿推理链传播导致任务失败。作者分析了三个遥感智能体基准上的1229条执行轨迹，统计工具观测错误的分布与传播规律，并提出提升观测可靠性的机制。结果显示各基准至少88.1%的任务依赖工具观测，其中至少22.7%存在错误观测。该研究为构建可靠的地球观测智能体提供了实证基础。",
+      "llm_tldr": "遥感智能体依赖感知、测量与栅格分析工具给出地面目标判断，但工具即使成功执行也可能产生错误观测，误差会沿推理链传播导致任务失败。作者分析了三个遥感智能体基准上的1229条执行轨迹，统计工具观测错误的分布与传播规律，并提出提升观测可靠性的机制。结果显示各基准至少88.1%的任务依赖工具观测，其中至少22.7%存在错误观测。该研究为构建可靠的地球观测智能体提供了实证基础。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2609.38482v1",
+      "source": "arxiv",
+      "title": "PANDA: A Decentralized Architecture with Flexible Orchestration for Scalable, Fault-Tolerant Multi-Agent Systems",
+      "abstract": "Existing architectures for LLM-based multi-agent systems (MAS) cannot reliably and efficiently solve multi-step tasks at scale: they struggle to support large numbers of agents and concurrent tasks, tolerate failures, govern agent interactions, and accommodate the diverse planning and execution patterns different tasks require. We present PANDA, a decentralized architecture that connects a large collective of heterogeneous, independently administered agents, letting them discover each other's capabilities and self-organize into small specialized teams per task. PANDA scales by decoupling collective communication from team communication, allowing agents to participate in multiple teams simultaneously, load-balancing tasks across the collective, and scheduling concurrent work within each agent. PANDA further separates the underlying architecture from the orchestration strategy, supporting three planning and execution patterns (star, chain, and mesh) that can be selected according to the structure and requirements of each task. PANDA detects infrastructure and orchestration failures and recovers affected tasks by dynamically replanning around failed components. Finally, to provide governance without a centralized service that would limit scalability, PANDA uses a web-of-trust model to constrain agent interactions to established trust relationships. We evaluate PANDA on the HotPotQA benchmark, demonstrating that it scales to thousands of agents, assembles teams in milliseconds, matches state-of-the-art accuracy at up to 8x the efficiency, and sustains 100% task completion under faults where existing systems fail.",
+      "authors": [
+        "Matthew D. Laws",
+        "Cristina Nita-Rotaru"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.AI"
+      ],
+      "published": "2026-09-29T20:10:31+00:00",
+      "link": "https://arxiv.org/pdf/2609.38482v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Decentralized architecture for scalable LLM-based multi-agent systems",
+      "llm_evidence_cn": "面向可扩展LLM多智能体系统的去中心化架构",
+      "llm_evidence": "面向可扩展LLM多智能体系统的去中心化架构",
+      "canonical_evidence": "面向可扩展LLM多智能体系统的去中心化架构",
+      "llm_tldr_en": "This paper presents PANDA, a decentralized architecture letting heterogeneous agents discover capabilities and self-organize into specialized teams, addressing scalability and fault tolerance of LLM-based multi-agent systems.",
+      "llm_tldr_cn": "针对LLM多智能体系统在规模化多步任务中难以支撑大量智能体、并发任务、容错与交互治理的问题，本文提出PANDA去中心化架构，使异构自治智能体能够发现彼此能力并按任务自组织为小型专业团队。该架构通过解耦群体通信与团队通信实现扩展与负载均衡，支持智能体同时参与多个团队。其智能体编排思想可迁移至海洋自主监测等多智能体协同场景。",
+      "llm_tldr": "针对LLM多智能体系统在规模化多步任务中难以支撑大量智能体、并发任务、容错与交互治理的问题，本文提出PANDA去中心化架构，使异构自治智能体能够发现彼此能力并按任务自组织为小型专业团队。该架构通过解耦群体通信与团队通信实现扩展与负载均衡，支持智能体同时参与多个团队。其智能体编排思想可迁移至海洋自主监测等多智能体协同场景。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.07269v1",
+      "source": "arxiv",
+      "title": "What Words Keep of a Place: Zero-Shot Language Reasoning for Cross-View Geo-Localization",
+      "abstract": "Cross-view geo-localization is commonly solved as an image retrieval problem, matching a ground-level image against a database of satellite tiles through a jointly trained embedding. Such models are accurate, but they need large paired supervision and cannot show what evidence supports a match. In this paper, we study a different question: how much of this task can be solved through language alone? We prompt a multimodal large language model (MLLM) to describe each ground panorama and each satellite tile as structured text, and localize by comparing these descriptions. No component is trained. We evaluate on 9,826 VIGOR pairs from four U.S. cities, in three settings. First, the descriptions are faithful but not discriminative. They agree closely across the two views, yet ranking the full pool by description similarity almost never returns the correct tile (0.39% Recall@1). Second, we narrow the pool to ten neighboring tiles, as a coarse prior would do. The same descriptions now become useful: an MLLM judge that scores structural consistency doubles random ranking and matches a strong lexical baseline. It also states which fields of the two descriptions agree and which conflict, which an embedding distance cannot do, and which we see as a step toward interpretable localization. Third, we place the judge on a trained visual retriever. On the queries it ranks wrongly, reranking from images works, while reranking from our descriptions does not (23.5% against 10.7% Recall@1). Scene structure survives the conversion into language, while the fine appearance detail needed to separate nearby places does not. Code and prompts are publicly available at https://github.com/AyeshAbuLehyeh/GeoLingual.",
+      "authors": [
+        "Ayesh Abu Lehyeh",
+        "Jay Hwasung Jung",
+        "Safwan Wshah"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-10-05T19:11:38+00:00",
+      "link": "https://arxiv.org/pdf/2610.07269v1",
+      "tags": [
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "MLLM describes satellite tiles and panoramas as text for localization",
+      "llm_evidence_cn": "用多模态大模型将卫星影像与全景描述为文本进行定位",
+      "llm_evidence": "用多模态大模型将卫星影像与全景描述为文本进行定位",
+      "canonical_evidence": "用多模态大模型将卫星影像与全景描述为文本进行定位",
+      "llm_tldr_en": "This paper asks how far cross-view geo-localization can be solved by language alone, prompting an MLLM to describe ground panoramas and satellite tiles as structured text and matching them without any training.",
+      "llm_tldr_cn": "针对现有跨视角地理定位依赖大量成对监督且无法解释匹配依据的问题，本文探索仅用语言完成该任务的可能性：提示多模态大模型将地面全景与卫星瓦片分别描述为结构化文本，再通过文本比较进行定位，全过程无需训练。在四个城市9826对VIGOR数据上的实验表明描述虽忠实但判别性有限，揭示了影像与文本跨模态融合的潜力与边界。",
+      "llm_tldr": "针对现有跨视角地理定位依赖大量成对监督且无法解释匹配依据的问题，本文探索仅用语言完成该任务的可能性：提示多模态大模型将地面全景与卫星瓦片分别描述为结构化文本，再通过文本比较进行定位，全过程无需训练。在四个城市9826对VIGOR数据上的实验表明描述虽忠实但判别性有限，揭示了影像与文本跨模态融合的潜力与边界。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.04073v1",
+      "source": "arxiv",
+      "title": "Why Convolution Still Matters: Evaluating Inductive Biases in Cryospheric Image Classification",
+      "abstract": "Recent advances in attention-based deep learning have motivated their adoption for remote sensing image classification; however, their benefits for cryospheric imagery, where surface states are dominated by fine-grained textures and class imbalance, remain unclear. In this work, we revisit a benchmark Greenland Ice Sheet image dataset, previously shown to favor convolutional neural networks (CNNs), to examine whether modern attention-based and hybrid architectures improve class-wise reliability. We conduct a controlled comparison between a classical CNN (AlexNet), a modern CNN (ConvNeXt-Tiny), a pure attention-based model (Swin-Tiny), and a hybrid convolution-attention model (CoAtNet-0) under identical training and evaluation protocols. Results show that AlexNet achieves the highest accuracy and the strongest balanced performance as measured by macro-averaged F1, while ConvNeXt-Tiny exhibits the highest macro-averaged AUC, indicating strong class separability but less consistent final decision quality. Class-wise analysis reveals that hybrid architectures improve recall for rare and structurally distinct surface classes, whereas convolutional models remain more reliable for texture-dominated categories. These findings highlight the importance of aligning architectural inductive bias with cryospheric data characteristics and suggest that increased model complexity does not necessarily translate to improved reliability for ice-sheet surface classification.",
+      "authors": [
+        "Chhaya Kulkarni",
+        "Emam Hossain"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-10-02T21:35:30+00:00",
+      "link": "https://arxiv.org/pdf/2610.04073v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "controlled comparison of CNN and attention models for remote sensing image classification",
+      "llm_evidence_cn": "遥感图像分类中CNN与注意力模型的受控比较",
+      "llm_evidence": "遥感图像分类中CNN与注意力模型的受控比较",
+      "canonical_evidence": "遥感图像分类中CNN与注意力模型的受控比较",
+      "llm_tldr_en": "This work compares CNN, attention and hybrid architectures on a cryospheric remote sensing benchmark, examining whether modern attention models improve class-wise reliability under texture dominance and imbalance.",
+      "llm_tldr_cn": "注意力模型被广泛用于遥感图像分类，但其在纹理主导且类别不平衡的冰冻圈影像上收益不明。本文在 Greenland 冰盖基准数据集上，对经典CNN、现代CNN、纯注意力与卷积-注意力混合模型在相同训练与评估条件下做受控比较，考察各架构的类别可靠性。研究为遥感分类中归纳偏置的选择提供实证依据。结果显示卷积结构在细粒度纹理与不平衡条件下仍具价值，对模型选型有直接指导意义。",
+      "llm_tldr": "注意力模型被广泛用于遥感图像分类，但其在纹理主导且类别不平衡的冰冻圈影像上收益不明。本文在 Greenland 冰盖基准数据集上，对经典CNN、现代CNN、纯注意力与卷积-注意力混合模型在相同训练与评估条件下做受控比较，考察各架构的类别可靠性。研究为遥感分类中归纳偏置的选择提供实证依据。结果显示卷积结构在细粒度纹理与不平衡条件下仍具价值，对模型选型有直接指导意义。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Which deep learning models perform best for coral reef classification in satellite images?",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.07788v1",
+      "source": "arxiv",
+      "title": "Image-Space Refraction Correction for Underwater 3D Reconstruction: Warping Flat-Port Views into Pinhole Perspective",
+      "abstract": "Consumer-grade cameras in flat-port housings are widely used for underwater exploration and mapping of coral reefs and seafloor habitats due to their low cost and accessibility. However, refraction at flat-port interfaces causes bowl-shaped deformation in reconstructed scenes and camera trajectories, compromising the metric accuracy required for mapping and navigation. To remove the dominant refractive distortion before reconstruction, we introduce a physics-based refraction correction in image space. Our method is downstream-agnostic: the refraction-corrected images can be directly used as input to existing reconstruction and SLAM algorithms. We characterize the refractive distortion through ray-tracing simulations and validate our correction on two real underwater datasets with differing scene structures. Compared with conventional and refractive Structure-from-Motion (SfM), our approach removes reconstruction deformation while registering more frames and maintaining low reprojection error. The correction further generalizes across diverse reconstruction and VSLAM backends, demonstrating its broad applicability to downstream vision pipelines.",
+      "authors": [
+        "Chelim Lim",
+        "Tobias Fischer",
+        "Emilio Olivastri",
+        "Beverley Gorry",
+        "Michael Milford",
+        "Alejandro Fontan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T05:33:46+00:00",
+      "link": "https://arxiv.org/pdf/2610.07788v1",
+      "tags": [
+        "keyword:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "refraction-corrected underwater reconstruction for coral reef and seafloor mapping",
+      "llm_evidence_cn": "面向珊瑚礁与海底测绘的水下折射校正重建",
+      "llm_evidence": "面向珊瑚礁与海底测绘的水下折射校正重建",
+      "canonical_evidence": "面向珊瑚礁与海底测绘的水下折射校正重建",
+      "llm_tldr_en": "Flat-port camera refraction distorts underwater reconstruction used for coral reef mapping; this physics-based image-space correction warps views to pinhole perspective and feeds existing SLAM pipelines.",
+      "llm_tldr_cn": "消费级相机配平面端口外壳常用于珊瑚礁与海底栖息地测绘，但端口折射会造成碗状畸变，损害重建与导航所需度量精度。本文提出图像空间的物理折射校正方法，通过光线追踪刻画畸变，将平面端口视图校正为针孔透视，且与下游算法无关。校正后的图像可直接输入现有重建与SLAM流程，显著提升水下珊瑚礁测绘的几何精度与可用性。",
+      "llm_tldr": "消费级相机配平面端口外壳常用于珊瑚礁与海底栖息地测绘，但端口折射会造成碗状畸变，损害重建与导航所需度量精度。本文提出图像空间的物理折射校正方法，通过光线追踪刻画畸变，将平面端口视图校正为针孔透视，且与下游算法无关。校正后的图像可直接输入现有重建与SLAM流程，显著提升水下珊瑚礁测绘的几何精度与可用性。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "remote sensing techniques for coral reef ecosystem mapping",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.04300v1",
+      "source": "arxiv",
+      "title": "A Geometric-Transformation Feature-Adaptive Manifold Restoration Method for Open-Vocabulary Semantic Segmentation of Remote Sensing Images",
+      "abstract": "The semantic information of objects in remote sensing images is typically invariant to geometric transformations from the dihedral group D4. However, SAM3-based open-vocabulary semantic segmentation (OVSS) methods often exhibit inconsistent responses to different geometric transformations. To exploit this property and improve the stability of OVSS for remote sensing images, we propose a feature-adaptive manifold repair method based on dihedral-group geometric transformations. First, we introduce multi-scale harmonic-guided D4 view selection (MH-D4VS) to select complementary candidate views from a set of geometrically transformed views. Next, we propose original-view-anchored adaptive manifold repair (OAMR), which uses the original view as an anchor and reliable cross-view information to selectively repair locally unreliable visual features. Finally, we develop pixel decoder test-time adaptation (PD-TTA) for SAM3, which fine-tunes only the parameters of the GroupNorm layers online during inference, thereby enhancing the model's ability to adapt to sample-level distribution shifts. Experimental results show that the proposed method achieves an average mIoU of 55.6% across eight remote sensing semantic segmentation benchmarks and delivers consistent performance improvements under different SAM3-based inference frameworks.",
+      "authors": [
+        "Jianzheng Wang",
+        "Huan Ni",
+        "Xiaonan Niu",
+        "Danfeng Hong",
+        "Haiyan Guan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-03T05:26:17+00:00",
+      "link": "https://arxiv.org/pdf/2610.04300v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Open-vocabulary semantic segmentation for remote sensing images",
+      "llm_evidence_cn": "面向遥感图像的开放词汇语义分割",
+      "llm_evidence": "面向遥感图像的开放词汇语义分割",
+      "canonical_evidence": "面向遥感图像的开放词汇语义分割",
+      "llm_tldr_en": "This paper addresses unstable responses of SAM3-based open-vocabulary segmentation to geometric transforms in remote sensing images, proposing a dihedral-group manifold repair method that improves segmentation stability.",
+      "llm_tldr_cn": "针对遥感图像中SAM3类开放词汇语义分割方法对D4几何变换响应不一致、稳定性不足的问题，本文提出一种基于二面体群几何变换的特征自适应流形修复方法，通过多尺度谐波引导视图选择与原始视图锚定的自适应机制融合候选视图。实验表明该方法提升了遥感图像开放词汇分割的稳定性与精度，可迁移至海洋栖息地等遥感分割任务。",
+      "llm_tldr": "针对遥感图像中SAM3类开放词汇语义分割方法对D4几何变换响应不一致、稳定性不足的问题，本文提出一种基于二面体群几何变换的特征自适应流形修复方法，通过多尺度谐波引导视图选择与原始视图锚定的自适应机制融合候选视图。实验表明该方法提升了遥感图像开放词汇分割的稳定性与精度，可迁移至海洋栖息地等遥感分割任务。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.07895v1",
+      "source": "arxiv",
+      "title": "Textual Environmental Context and Spatial Graphs for LLM-Based Regional SST Forecasting",
+      "abstract": "Sea surface temperature (SST) forecasting depends on local temporal persistence, regional spatial dependence, and environmental conditions that evolve with the forecast date. We study how these heterogeneous conditions can be presented to a large language model (LLM) for regional multi-step forecasting without serializing the full SST grid as text. We formulate forecasting as conditional numerical generation: historical SST and anomaly sequences, date-aligned environmental records, and static ocean knowledge form a textual context, while regional spatial state is supplied through continuous graph-derived prefixes. A static graph encodes persistent geographic--climatological relations, and a dynamic graph encodes recent SST correlations and localized tropical-cyclone influence. Two graph neural networks produce a target-node representation that is mapped by a spatial-prefix fusion and injected into the LLM input. On SST forecasting in the South China Sea, the complete configuration achieves the best MAE and $\\Rtwo$ among the compared methods over ten forecast steps. Alongside the numerical forecast, a rule-based module matches predicted trends and environmental-factor directions with knowledge entries to return source-linked, post-hoc contextual explanations.",
+      "authors": [
+        "Xiong Li",
+        "Xiaowei Zhou",
+        "Yanwei Yu",
+        "Qian Cui",
+        "Junyu Dong"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-06T07:42:51+00:00",
+      "link": "https://arxiv.org/pdf/2610.07895v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LLM with textual context and spatial graphs for ocean SST",
+      "llm_evidence_cn": "结合文本上下文与空间图的大模型海洋温度预报",
+      "llm_evidence": "结合文本上下文与空间图的大模型海洋温度预报",
+      "canonical_evidence": "结合文本上下文与空间图的大模型海洋温度预报",
+      "llm_tldr_en": "Regional SST forecasting depends on temporal, spatial and environmental conditions. The paper casts forecasting as conditional numerical generation, feeding historical SST, environmental records and ocean knowledge as text while graph-derived prefixes supply spatial state.",
+      "llm_tldr_cn": "区域海表温度多步预报需要同时刻画时间持续性、空间依赖与随预报日期变化的环境条件，而把完整SST网格序列化为文本既不高效也不自然。作者将预报重构为条件数值生成任务：历史SST与异常序列、日期对齐的环境记录及静态海洋知识组成文本上下文，区域空间状态则由静态与动态图导出的连续前缀提供。实验表明该框架能利用异构环境信息完成区域多步预报。该工作为LLM处理海洋时空数据提供了新范式。",
+      "llm_tldr": "区域海表温度多步预报需要同时刻画时间持续性、空间依赖与随预报日期变化的环境条件，而把完整SST网格序列化为文本既不高效也不自然。作者将预报重构为条件数值生成任务：历史SST与异常序列、日期对齐的环境记录及静态海洋知识组成文本上下文，区域空间状态则由静态与动态图导出的连续前缀提供。实验表明该框架能利用异构环境信息完成区域多步预报。该工作为LLM处理海洋时空数据提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.06196v1",
+      "source": "arxiv",
+      "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+      "abstract": "Remote sensing images often carry composite degradations, in which haze, cloud, noise, blur, low light, and low resolution coexist. Restoring them requires deciding which tool to apply, in what order, and when to stop, yet no clean reference is available at inference time to verify these decisions. All-in-one models trained on single degradations converge to a narrow PSNR band as degradations accumulate. To formulate real-world remote sensing restoration as a traceable trajectory, we present EORestore-Agent, which replaces this unmeasurable objective with reference-free, verifiable per-step decisions. A fine-tuned vision-language model reports all residual degradation types, whose tool pools are scored together, so the restoration order emerges from step-wise selection. A relative quality scorer, trained with full-reference supervision on synthetic degradation chains, predicts the changes in PSNR, SSIM, and LPIPS from the current image to each candidate. A step is accepted only when no predicted change is negative and the predicted PSNR gain is positive. Otherwise, the agent keeps the current image. On a synthetic Landsat-8 benchmark with six degradation types, EORestore-Agent improves PSNR by 2.3 to 3.2 dB over the strongest retrained all-in-one baseline on composites of two to six degradations, whereas zero-shot natural-image agents fall below the degraded input in PSNR in 17 of 18 settings. Replacing the learned scorer with no-reference quality differences costs 1.1 to 4.6 dB. The remaining harmful steps are small and cluster near the acceptance threshold. Sentinel-2 examples illustrate transfer to real atmospheric degradation without retraining.",
+      "authors": [
+        "Heli Qi",
+        "Zeqi Zhou",
+        "Jingjun Yi",
+        "Kunyi Liu",
+        "Ziyang Lihe",
+        "Junjue Wang",
+        "Osamu Yoshie",
+        "Naoto Yokoya"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T12:11:31+00:00",
+      "link": "https://arxiv.org/pdf/2610.06196v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agentic tool scheduling for remote sensing image restoration",
+      "llm_evidence_cn": "面向遥感图像修复的智能体工具调度",
+      "llm_evidence": "面向遥感图像修复的智能体工具调度",
+      "canonical_evidence": "面向遥感图像修复的智能体工具调度",
+      "llm_tldr_en": "Composite degradations in remote sensing images require deciding which tool to apply, in what order and when to stop. EORestore-Agent replaces unmeasurable objectives with reference-free, verifiable per-step decisions from a fine-tuned vision-language model.",
+      "llm_tldr_cn": "遥感图像常同时存在雾霾、云、噪声、模糊、低光与低分辨率等复合退化，而推理时没有干净参考可用于校验修复决策，全合一模型在退化叠加时性能收窄。论文将修复建模为可追踪轨迹，用微调视觉语言模型报告残余退化类型并对工具池联合评分，实现无参考、可验证的逐步决策。实验表明该方法能自适应选择工具与顺序并决定停止时机。该工作为遥感图像智能体式修复提供了可验证流程。",
+      "llm_tldr": "遥感图像常同时存在雾霾、云、噪声、模糊、低光与低分辨率等复合退化，而推理时没有干净参考可用于校验修复决策，全合一模型在退化叠加时性能收窄。论文将修复建模为可追踪轨迹，用微调视觉语言模型报告残余退化类型并对工具池联合评分，实现无参考、可验证的逐步决策。实验表明该方法能自适应选择工具与顺序并决定停止时机。该工作为遥感图像智能体式修复提供了可验证流程。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体在珊瑚、遥感的应用, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; What intelligent agent architectures are proposed for autonomous ocean monitoring?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.07472v1",
+      "source": "arxiv",
+      "title": "SURGE: Sonar-fUsed Reconstruction and localization via image-gated Graph Estimation",
+      "abstract": "Remotely operated vehicles (ROVs) are widely used to explore and inspect underwater environments such as caves, shipwrecks, and submerged infrastructure. These missions require accurate 3D understanding of the surrounding environment, which depends on both reliable vehicle localization and metric scene reconstruction. However, external positioning is often unavailable underwater, requiring small ROVs to rely primarily on onboard perception. Optic vision provides rich visual and geometric information but suffers from scale ambi- guity and trajectory drift, whereas 2D imaging sonar provides metric range but incomplete 3D geometry. Existing underwater reconstruction approaches typically address these limitations separately or assume known sensor poses, leaving localization and reconstruction disconnected. We present SURGE, a camera sonar framework that jointly estimates the ROV trajectory and target location by integrating visual and acoustic observations within a factor graph, then uses the recovered metric poses for sonar Gaussian splatting. Experiments on real underwater RGB sonar observations show that SURGE substantially improves localization consistency over conventional vision based pose estimation and produces a more compact, natively metric reconstruction than RGB Gaussian splatting baselines.",
+      "authors": [
+        "Mohammed Ibrahim M",
+        "Vallabh Deogaonkar",
+        "Trung Dong",
+        "Jane Shin",
+        "Abhilash Somayajula",
+        "Xiaomin Lin"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-10-05T22:38:27+00:00",
+      "link": "https://arxiv.org/pdf/2610.07472v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "underwater ROV perception, sonar-visual reconstruction and localization",
+      "llm_evidence_cn": "水下ROV感知与声呐视觉融合重建定位",
+      "llm_evidence": "水下ROV感知与声呐视觉融合重建定位",
+      "canonical_evidence": "水下ROV感知与声呐视觉融合重建定位",
+      "llm_tldr_en": "Underwater ROVs lack external positioning, and optical vision suffers scale ambiguity while 2D sonar gives incomplete geometry. SURGE fuses sonar and vision via image-gated graph estimation for metric reconstruction and localization.",
+      "llm_tldr_cn": "遥控水下航行器用于探索洞穴、沉船与水下设施，但外部定位常不可用，需依赖自身感知；光学视觉易受尺度模糊与轨迹漂移影响，二维成像声呐几何信息不完整。论文提出SURGE方法，通过图像门控图估计融合声呐与视觉，实现尺度与几何互补的定位与重建。实验表明该方法在缺乏外部定位的水下场景中改善了三维重建与定位精度。该工作为自主水下平台的感知与建图提供方法支撑。",
+      "llm_tldr": "遥控水下航行器用于探索洞穴、沉船与水下设施，但外部定位常不可用，需依赖自身感知；光学视觉易受尺度模糊与轨迹漂移影响，二维成像声呐几何信息不完整。论文提出SURGE方法，通过图像门控图估计融合声呐与视觉，实现尺度与几何互补的定位与重建。实验表明该方法在缺乏外部定位的水下场景中改善了三维重建与定位精度。该工作为自主水下平台的感知与建图提供方法支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.08401v1",
+      "source": "arxiv",
+      "title": "GeoPID: Decomposing and Steering Visual Information in Vision-Language Models",
+      "abstract": "While recent vision-language models (VLMs) have shown outstanding performance across diverse applications, they tend to under-use visual information and over-rely on textual context. In this work, we propose \\textsc{GeoPID}, a training-free framework that analyzes multimodal information within VLMs from a geometric perspective. \\textsc{GeoPID} decomposes information into Redundant, Modality-Unique, and Synergistic components through the geometric relationships between visual and textual representation subspaces. Through an extensive analysis across 22 VLMs and 14 benchmarks, we confirm that correct predictions exhibit stronger vision-unique components when questions strongly require visual grounding. Building on this geometric analysis, we introduce a targeted intervention technique that selectively amplifies visual representations along the vision-unique subspace during inference. As a result, visual grounding capabilities were enhanced without any additional model parameter updates, achieving an average relative accuracy gain of 7.63\\%.",
+      "authors": [
+        "Seulgi Kim",
+        "Zhixiong Zhang",
+        "Xinwei Zhang",
+        "Jie Ling",
+        "Ronn Shaw"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-06T14:14:25+00:00",
+      "link": "https://arxiv.org/pdf/2610.08401v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Vision-language model visual-text information decomposition and steering",
+      "llm_evidence_cn": "视觉语言模型中视觉与文本信息的分解与引导",
+      "llm_evidence": "视觉语言模型中视觉与文本信息的分解与引导",
+      "canonical_evidence": "视觉语言模型中视觉与文本信息的分解与引导",
+      "llm_tldr_en": "This paper proposes GeoPID, a training-free geometric framework that decomposes VLM multimodal information into redundant, modality-unique and synergistic components to correct visual under-use.",
+      "llm_tldr_cn": "针对视觉语言模型倾向过度依赖文本、利用视觉信息不足的问题，本文提出免训练的GeoPID框架，从几何视角将多模态信息分解为冗余、模态独有与协同三类分量，并据此引导模型更充分地利用视觉证据。在22个VLM与14个基准上的分析表明，需要视觉定位的问题在正确预测时具有更强的视觉独有分量。该工作为遥感与文本的多模态环境评估提供了可迁移的分析与增强工具。",
+      "llm_tldr": "针对视觉语言模型倾向过度依赖文本、利用视觉信息不足的问题，本文提出免训练的GeoPID框架，从几何视角将多模态信息分解为冗余、模态独有与协同三类分量，并据此引导模型更充分地利用视觉证据。在22个VLM与14个基准上的分析表明，需要视觉定位的问题在正确预测时具有更强的视觉独有分量。该工作为遥感与文本的多模态环境评估提供了可迁移的分析与增强工具。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

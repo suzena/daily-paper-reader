@@ -1,0 +1,185 @@
+{
+  "date": "20261007",
+  "date_label": "",
+  "generated_at": "2026-10-07 23:34:44 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.08539v1",
+      "route": "202610/07/2610.08539v1-rsjev-discriminative-remote-sensing-scene-classification-with-multimodal-large-language-models",
+      "title": "RSJEV: Discriminative Remote Sensing Scene Classification with Multimodal Large Language Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "多模态大模型用于遥感场景分类",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.04836v1",
+      "route": "202610/07/2610.04836v1-rsure-agent-reliable-use-of-tool-observations-for-remote-sensing-agents",
+      "title": "RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "遥感智能体与工具观测可靠性",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.07269v1",
+      "route": "202610/07/2610.07269v1-what-words-keep-of-a-place-zero-shot-language-reasoning-for-cross-view-geo-localization",
+      "title": "What Words Keep of a Place: Zero-Shot Language Reasoning for Cross-View Geo-Localization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "用多模态大模型将卫星影像与全景描述为文本进行定位",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.07788v1",
+      "route": "202610/07/2610.07788v1-image-space-refraction-correction-for-underwater-3d-reconstruction-warping-flat-port-views-into-pinhole-perspective",
+      "title": "Image-Space Refraction Correction for Underwater 3D Reconstruction: Warping Flat-Port Views into Pinhole Perspective",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "面向珊瑚礁与海底测绘的水下折射校正重建",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.07895v1",
+      "route": "202610/07/2610.07895v1-textual-environmental-context-and-spatial-graphs-for-llm-based-regional-sst-forecasting",
+      "title": "Textual Environmental Context and Spatial Graphs for LLM-Based Regional SST Forecasting",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "结合文本上下文与空间图的大模型海洋温度预报",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2609.38482v1",
+      "route": "202610/07/2609.38482v1-panda-a-decentralized-architecture-with-flexible-orchestration-for-scalable-fault-tolerant-multi-agent-systems",
+      "title": "PANDA: A Decentralized Architecture with Flexible Orchestration for Scalable, Fault-Tolerant Multi-Agent Systems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向可扩展LLM多智能体系统的去中心化架构",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.04073v1",
+      "route": "202610/07/2610.04073v1-why-convolution-still-matters-evaluating-inductive-biases-in-cryospheric-image-classification",
+      "title": "Why Convolution Still Matters: Evaluating Inductive Biases in Cryospheric Image Classification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "遥感图像分类中CNN与注意力模型的受控比较",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.04300v1",
+      "route": "202610/07/2610.04300v1-a-geometric-transformation-feature-adaptive-manifold-restoration-method-for-open-vocabulary-semantic-segmentation-of-remote-sensing-images",
+      "title": "A Geometric-Transformation Feature-Adaptive Manifold Restoration Method for Open-Vocabulary Semantic Segmentation of Remote Sensing Images",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感图像的开放词汇语义分割",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.06196v1",
+      "route": "202610/07/2610.06196v1-eorestore-agent-fidelity-guided-agentic-restoration-of-remote-sensing-images-with-composite-degradations",
+      "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向遥感图像修复的智能体工具调度",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.07472v1",
+      "route": "202610/07/2610.07472v1-surge-sonar-fused-reconstruction-and-localization-via-image-gated-graph-estimation",
+      "title": "SURGE: Sonar-fUsed Reconstruction and localization via image-gated Graph Estimation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "水下ROV感知与声呐视觉融合重建定位",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    },
+    {
+      "paper_id": "2610.08401v1",
+      "route": "202610/07/2610.08401v1-geopid-decomposing-and-steering-visual-information-in-vision-language-models",
+      "title": "GeoPID: Decomposing and Steering Visual Information in Vision-Language Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型中视觉与文本信息的分解与引导",
+      "first_seen_at": "2026-10-07 23:34:44 UTC",
+      "updated_at": "2026-10-07 23:34:44 UTC"
+    }
+  ]
+}

@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-06</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-07</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 9 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 11 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>2</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>7</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>10</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-06 23:11:31 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-07 23:34:44 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,10 +69,8 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共生成 9 篇推荐（精读 2 篇，速读 7 篇）</p>
-<p>精读：《OceanMind: A multi-agent AI system for ocean diagnosis》（9.0/10）, 《On-Board Anomaly Detection for Efficient Marine Environmental Monitoring》（8.0/10）</p>
-<p>速读：《RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents》（7.0/10）, 《IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning》（7.0/10）, 《A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation》（7.0/10）</p>
-<p>这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。</p>
+<p>2026-10-07日报：11篇中精读1篇，RSJEV以8.0分领跑，速读聚焦遥感智能体、跨视角地理定位与水下3D重建。</p>
+<p>最值得</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -81,12 +79,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">1 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="OceanMind: A multi-agent AI system for ocean diagnosis">OceanMind: A multi-agent AI system for ocean diagnosis</span></li><li><span class="dpr-home-dashboard-paper-title" title="On-Board Anomaly Detection for Efficient Marine Environmental Monitoring">On-Board Anomaly Detection for Efficient Marine Environmental Monitoring</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RSJEV: Discriminative Remote Sensing Scene Classification with Multimodal Large Language Models">RSJEV: Discriminative Remote Sensing Scene Classification with Multimodal Large Language Models</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -94,12 +92,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">7 篇</strong>
+    <strong class="dpr-home-dashboard-count">10 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents">RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning">IRSTD-Agent: Agentic Infrared Small Target Detection via Zoom-Guided Interaction Learning</span></li><li><span class="dpr-home-dashboard-paper-title" title="A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation">A Framework for Automated Multi-Source Satellite Data Analytics and LLM-Based Report Generation</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents">RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="What Words Keep of a Place: Zero-Shot Language Reasoning for Cross-View Geo-Localization">What Words Keep of a Place: Zero-Shot Language Reasoning for Cross-View Geo-Localization</span></li><li><span class="dpr-home-dashboard-paper-title" title="Image-Space Refraction Correction for Underwater 3D Reconstruction: Warping Flat-Port Views into Pinhole Perspective">Image-Space Refraction Correction for Underwater 3D Reconstruction: Warping Flat-Port Views into Pinhole Perspective</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>7</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>10</strong></span></div>
 </section>
 </div>
 

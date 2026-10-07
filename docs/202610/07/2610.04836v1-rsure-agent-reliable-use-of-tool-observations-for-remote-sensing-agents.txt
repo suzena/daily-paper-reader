@@ -1,0 +1,770 @@
+Title: RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents
+
+URL Source: https://arxiv.org/pdf/2610.04836v1
+
+Published Time: Tue, 06 Oct 2026 01:14:57 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+1
+
+# RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents 
+
+Fuyuan Liu , Nayu Liu , Wenhao Yu , Peijin Wang , Member, IEEE, Yingchao Feng , Member, IEEE, 
+
+Fanglong Yao , Member, IEEE, Liang Wan , Member, IEEE, and Wei Feng , Member, IEEE Question & inputs (a) Direct use of tool observations (b) RSure-Agent: verify before acceptance Question 
+
+What is the total area of all small vehicles in this image(m ²)? 
+
+Provided image 
+
+3498 × 1151 pixels 
+
+Provided scale (GSD) 
+
+0.125083119972 m / pixel 
+
+Verifiable observation protocol 
+
+Execution status: ok | Area: 506.626 m ²
+
+Source: layer.json | image + GSD Mask: labels.npy | Log: dag_execution.json 
+
+Full vehicle mask: 32,381 counted pixels 
+
+> Purple = pixels counted as vehicles
+
+A
+
+Tool observation verification 
+
+source mask 
+
+Rule-based verification: PASS Files readable; scale and area arithmetic agree. verifier Decision: reject. Feedback: refine the mask. 
+
+Refine vehicle masks; measure again 
+
+SAM 2.1 | 2,184 pixels × GSD ² 34.170 m ²CORRECT 
+
+Task–tool reliability prior        
+
+> Task Detect objects Measure area Count objects 0.926 0.818 Physical properties 0.872 0.706 Spatial relations 0.880 0.846 History: 32 calls; 23 usable.
+
+The question asks for vehicle area. The mask includes a pool and its deck. This area is not supported by the image. 
+
+Tool call 
+
+measure: total small-vehicle area Detect objects; segment regions. Sum pixels and apply the given GSD. 
+
+Tool return 
+
+Execution status: ok (call completed) Counted pixels: 32,381 Area = 32,381 × GSD ²
+
+Returned area: 506.626 m ²
+
+Agent action 
+
+Use the returned measurement as the final answer. Mask is not reviewed. Non-vehicle pixels remain in the reported area. 
+
+Final answer 
+
+506.626 m ² WRONG 
+
+Evaluation reference 
+
+Reference answer 
+
+32.67 m ²
+
+Accepted range 
+
+29.40–35.94 m ²
+
+Fig. 1. Illustration of RSure-Agent. (a) The tool runs normally, but the segmentation mask contains non-vehicle pixels. Trusting the measurement gives a wrong area of 506 .626 m 2. (b) Through the verifiable observation protocol, RSure-Agent obtains the original image, mask, and execution record. After the deterministic checks pass, the verifier finds that the mask covers a swimming pool. It rejects the observation and requests mask correction. After SAM 2.1 correction, the area is 34 .170 m 2, within the accepted range of 29 .40 to 35 .94 m 2. The task–tool reliability prior provides a historical reference for verification. 
+
+Abstract —Remote sensing agents rely on perception, mea-surement, and raster analysis tools to solve Earth observation tasks. We refer to their judgments and quantitative results about ground objects as tool observations. However, these observations are subject to substantial uncertainty and may be incorrect even when the tools execute successfully. When agents accept incor-rect observations, the errors can propagate through subsequent reasoning and cause task failure. We analyze 1,229 execution tra-jectories across three remote sensing agent benchmarks. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect observations despite successful tool execution. These errors propagate to the final answer in at least 82.0% of affected tasks on each benchmark. To address this problem, we propose RSure-Agent, a framework for verifying tool observations and limiting error propagation. We introduce a verifiable observation protocol that requires tools to return process evidence for the agent to verify their observations. We also construct a task–tool reliability prior from offline task feedback. The prior summarizes each tool configuration’s past performance across task types and provides a 
+
+This work is supported by the National Natural Science Foundation of China (NSFC) under Grants 62406223 and 62572349. (Corresponding author: Nayu Liu.) Fuyuan Liu, Nayu Liu, Wenhao Yu, Liang Wan, and Wei Feng are with the School of Computer Science and Technology, Tianjin University, Tianjin 300350, China (e-mail: fuyuan695104062@tju.edu.cn; nyliu@tju.edu.cn). Peijin Wang, Yingchao Feng, and Fanglong Yao are with the Key Labora-tory of Target Cognition and Application Technology (TCAT), Aerospace In-formation Research Institute, Chinese Academy of Sciences, Beijing 100094, China (e-mail: wangpeijin17@mails.ucas.ac.cn; fengyc@aircas.ac.cn). 
+
+task-specific reference for verification. Using process evidence and this prior, RSure-Agent decides whether to accept an observation, request additional evidence, or reject it. We evaluate RSure-Agent on EarthBench, ThinkGeo, TerraLogic, and CHOICE-420. Across the three agent benchmarks, RSure-Agent reduces the error propagation rate by 21.3 to 25.9 percentage points relative to the base configuration with verification and the prior disabled. On CHOICE-420, it improves overall accuracy over direct answering by 5.71 percentage points on average across 11 backbone models. On EarthBench, it reduces the tool-call ratio by 25.9% relative to Earth-Agent. The demo is available at https://github.com/airs101/RSure-Agent, and the code will also be released for further research. 
+
+Index Terms —Earth observation, remote sensing agents, ob-servation verification, task–tool reliability prior. 
+
+I. I NTRODUCTION 
+
+Earth observation is essential for understanding the dy-namics of the Earth system. Remote sensing (RS) agents now automate Earth observation tasks through planning and external tool use [1], [2]. Unlike end-to-end methods that rely on a single model, agents combine specialized tools according to task requirements. They also decide when to use their own capabilities and when to call external tools. During execution, agents use visual perception, spatial measurement, and raster analysis tools to obtain judgments and quantitative results about ground objects. These results include object categories, arXiv:2610.04836v1 [cs.CV] 4 Oct 2026 2
+
+geometric distances, areas, and remote sensing products. Fol-lowing the definition of observations in Earth observation [3], [4], we refer to these outputs as tool observations . The term differs from observation in agent paradigms such as ReAct [5], where it refers to any feedback from tool execution. Existing remote sensing agents typically build on general-purpose agent frameworks [6], [7]. Their methods combine task planning [8], [9], [10], knowledge retrieval and mem-ory [11], and tool calling [12], [13] to solve complex tasks. For tool use, these methods focus mainly on correct selection and successful execution. Tool observations are usually passed directly to subsequent reasoning once execution completes successfully [14], [15]. However, successful execution does not guarantee reliable observations. Studies of semantic seg-mentation, object detection, hyperspectral classification, and target extraction link result reliability to scene complexity, image quality, and uncertainty in model predictions [16], [17], [18], [19]. If the agent accepts an incorrect observation, later steps may rely on it. The error can propagate through the workflow and cause task failure. We analyze 1,229 agent execution trajectories from three benchmarks to quantify this problem. These are Earth-Bench [8], ThinkGeo [20], and TerraLogic [21]; Section III presents the analysis. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect observations despite successful tool execution. On each benchmark, errors reach the final answer in at least 82.0% of tasks containing incorrect observations. These findings identify tool observation reliability as a recur-ring challenge in remote sensing agent workflows. To address this problem, we propose RSure-Agent to use tool observations more reliably and limit the impact of tool observation errors on subsequent reasoning. Fig. 1 illustrates RSure-Agent in a task that measures the area of a small vehi-cle. We design a verifiable observation protocol that requires each tool to return process evidence with its observation. Process evidence exposes intermediate results and computation conditions for verification. The verifier checks whether this evidence supports accepting the current observation. We build a task–tool reliability prior from offline trajectories. The prior records how different tool configurations have performed on each task type. When the prior is low, the verifier checks the evidence more strictly. When the prior is high, the observation must still be supported by the image and process evidence. After a tool returns an observation, RSure-Agent combines the two sources of information to accept it, request additional evidence, or reject it. This reduces the effect of incorrect observations on subsequent reasoning. We evaluate RSure-Agent on three remote sensing agent benchmarks: EarthBench, ThinkGeo, and TerraLogic [20], [8], [21]. We also construct CHOICE-420 from CHOICE [22] to evaluate remote sensing visual question answering (VQA). On agent benchmarks, RSure-Agent achieves competitive task per-formance. Relative to the base configuration with verification and the prior disabled, RSure-Agent reduces the error propaga-tion rate by 21.3 to 25.9 percentage points. On CHOICE-420, it improves overall accuracy over direct answering by 5.71 percentage points on average across 11 backbone models. Our main contributions are as follows:  
+
+> •
+
+We quantify tool observation reliability across three RS agent benchmarks. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect tool observations despite successful tool execution. Among tasks with observation errors, the error propagation rate is at least 82.0%.  
+
+> •
+
+We propose RSure-Agent, a framework limiting how in-correct tool observations affect subsequent reasoning. Its verifiable observation protocol requires process evidence from tools for verifying observations before acceptance.  
+
+> •
+
+We introduce a task–tool reliability prior to account for differences in tool reliability across task types. Derived from offline task feedback, the prior summarizes tool con-figuration performance and guides verification strictness.  
+
+> •
+
+We evaluate RSure-Agent on RS agent benchmarks and CHOICE-420. It reduces the error propagation rate by 21.3 to 25.9 percentage points on agent benchmarks and improves average VQA accuracy across 11 backbones. II. R ELATED WORK 
+
+A. Remote Sensing Agents and Benchmarks 
+
+Remote sensing agents automate Earth observation tasks by understanding tasks, planning, and calling external tools [1], [2]. They combine specialized tools as needed for image per-ception, spatial analysis, and quantitative computation through multi-step interaction. This enables complex spatiotemporal reasoning and quantitative analysis [8], [12], [23]. Early work explores how to combine remote sensing models with natural language interaction. Remote Sensing ChatGPT calls remote sensing models through dialogue [13]. Tree-GPT enables interactive interpretation of forest remote sensing images [24]. Change-Agent combines change perception with language interaction to interpret land surface changes [25]. For task planning and execution, RS-Agent converts user intent into executable sequences of remote sensing tool op-erations [12]. Earth-Agent performs quantitative Earth obser-vation analysis through multi-step tool calls and working-memory updates [8]. To handle more complex analysis, multi-agent collaboration has been introduced to this field. Ge-oMMAgent and GeoLLM-Squad divide knowledge retrieval, target perception, and integrated reasoning among several agents [2], [9]. For long-horizon tasks, HiRS-Agent uses a hi-erarchical architecture with dynamic replanning [26]. RingMo-Agent and RingMo-Claw also explore autonomous execution and capability extension for remote sensing tasks [27], [28]. Tool organization and the reuse of past experience are another research focus. GeoLLM-Engine integrates geospatial APIs, map operators, and external knowledge into a unified tool environment [29]. OpenEarthAgent integrates a remote sensing tool chain and builds standardized tool-call trajecto-ries [14]. For tool retrieval and selection, RS-Claw retrieves the required tools level by level through a skill tree [30]. RemoteAgent decides by itself whether to reason directly or to call specialized tools [23]. REMSA selects suitable foundation models under given constraints [31]. OpenEarth-Agent further explores creating tools on demand [32]. In addition, RSMeM, 3
+
+GeoEvolver, and GeoForge use past trajectories and execution experience to improve later task solving [11], [10], [33]. Agents are also built for specific applications. RescueADI decomposes disaster interpretation into coordinated perception and analysis tasks [34]. AirSpatialBot targets the recognition and retrieval of fine-grained vehicle attributes in aerial im-ages [35]. MineAgent and PEACE are designed for mineral ex-ploration and geological map understanding, respectively [36], [37]. Agents have further been applied to satellite observation scheduling. TSLC uses large language models (LLMs) to coor-dinate order-driven satellite task planning [38]. For large-scale agile Earth observation satellites, LLM agents are used to solve bi-level online order dispatching and dynamic scheduling [39]. Existing benchmarks evaluate remote sensing agents in terms of task completion, tool use, and the reasoning process. ThinkGeo focuses on image-driven tool chains, multi-step planning, and spatial reasoning [20]. EarthBench covers quan-titative Earth observation tasks on multi-source spectral data and remote sensing products [8]. TerraLogic examines hierar-chical geospatial reasoning and compositional analysis [21]. GeoMMBench systematically evaluates perception, knowl-edge use, and reasoning in multimodal geoscience tasks [2]. GeoLLM-Engine, UnivEARTH, and OpenEarth-Bench build diverse geospatial tool environments for evaluation [29], [40], [32]. TerraBench further studies agent reasoning over het-erogeneous Earth system data [41]. For specialized tasks, AirSpatialBot and PEACE provide benchmarks for aerial spatial question answering and geological map understanding, respectively [35], [37]. CHOICE evaluates perception and reasoning in remote sensing VQA [22]. In summary, prior work on remote sensing agents mainly focuses on task planning, tool selection, knowledge retrieval, and workflow execution. Less attention has been paid to whether the observations returned by normally executed tools are reliable. Munir et al. [15] note that remote sensing work-flows operate on georeferenced, multimodal, and temporally structured data. Reprojection, resampling, mosaicking, and aggregation change the underlying state and constrain later analysis, so errors can propagate through subsequent reason-ing. We quantify the propagation of tool observation errors on ThinkGeo, EarthBench, and TerraLogic and show its impact on remote sensing agents. 
+
+B. Agent Verification 
+
+Verification for general agents covers three levels: model reasoning, tool-call actions, and returned results [42], [43]. At the reasoning level, Reflexion [44], RetroFormer [45], and Self-Refine [46] correct generated content with self-reflection feedback or external evaluators. SCORE [47] stud-ies optimization with process rewards. Other work analyzes when self-correction works [48]. CRITIC [49] guides the correction of multimodal reasoning through interactive tool use. SPoRT [50] assigns a process reward to each reasoning step to guide trajectory optimization. SGV [51] addresses bias when multimodal models evaluate agent behavior. It first forms an independent expectation of the behavior and then uses it to evaluate candidate trajectories. RV-LLM [52] proposes a runtime verification framework to detect hallucinations. Tool-MVR [53] trains models on verified tool-call data and reflection samples to improve tool calling and error correction. Other studies analyze fault propagation and failure attribution in long-horizon reasoning [54], [55], [56], [57]. At the action level, ToolEmu [58] evaluates the potential risks of tool calls. ToolSword [59] detects malicious tool-call intentions. Relign [60] addresses hallucinations in tool selection and use by introducing actions such as deferring execution, asking for clarification, and changing the selected tool. Vigil [61] and ToolGate [62] check the completeness and safety of arguments before a call. AgentSpec [63], AgentLTL [64], Reason Less, Verify More [65], Reinforced Agent [66], and Verified Tool Calls [67] constrain execution with temporal logic rules or formal specifications. At the result level, Tools Fail [68] studies how to detect silent tool errors. RIVA [69] cross-checks the results of different tools to reduce the effect of wrong outputs on detection. EG-VAR [70] requires reasoning to rest on traceable evidence. Trust or Escalate [71] enables agents to abstain or escalate when the available evidence is insufficient. Existing remote sensing agents mainly improve execution reliability through feedback and rule checks. GeoMMAgent decides whether to output a conclusion or re-execute based on self-evaluation [2]. HiRS-Agent introduces step-level veri-fication and replanning [26]. CangLing-KnowFlow constrains workflows with tool preconditions and quality feedback, and triggers repair when anomalies occur [72]. In satellite task scheduling, TSLC checks feasibility using external rules [38]. In summary, existing studies verify agents at the level of rea-soning, actions, and execution results. Unlike work that verifies agent execution steps, checks tool outputs against images and task context, or cross-checks results between tools [26], [68], [69], we focus on the reliability of the observations returned by remote sensing tools. Remote sensing agents rely on visual perception, spatial measurement, and raster analysis tools, and most of their outputs are uncertain observations. Even under normal execution, these observations can be wrong because of scene complexity, image quality, and model prediction uncertainty. The errors can then propagate through subsequent reasoning. RSure-Agent builds its verification on two intu-itions. First, exposing the internal process of a tool helps judge whether an observation is trustworthy. We therefore define a verifiable observation protocol that requires tools to provide process evidence. Second, the past performance of different tool configurations on specific tasks can serve as a reference for verification. We therefore build a task–tool reliability prior. The framework verifies tool observations with both the process evidence and the prior, limiting the propagation of incorrect observations. III. E MPIRICAL ANALYSIS OF TOOL OBSERVATIONS 
+
+To quantify the role of tool observations in the reasoning of remote sensing agents, we collect 1,229 execution tra-jectories from the native agents of EarthBench, ThinkGeo, and TerraLogic, namely Earth-Agent [8], ThinkGeo [20], and HieraPlan [21]. We study three questions. First, how often 4                      
+
+> TABLE I TOOL OBSERVATION STATISTICS (%) OF THE NATIVE AGENTS .
+> Benchmark Agent Backbone Rdep Rerr Rprop
+> EarthBench Earth-Agent GPT-5 88.7 22.7 82.0 ThinkGeo ThinkGeo GPT-4o 91.7 41.3 91.5 TerraLogic HieraPlan GPT-4o 88.1 39.8 93.2
+
+do agents depend on tool observations? Second, how often are tool observations wrong when the tool executes normally? Third, how often do incorrect observations propagate to the final answer? In this offline analysis, observation errors are judged against the expert reference trajectories and ground-truth answers from the benchmarks. These references are used only for evaluation and are never given to the online verifier. 
+
+A. Metric Definitions 
+
+Let T be the set of evaluated tasks. We define three task-level metrics. 
+
+Observation dependence rate Rdep measures the fraction of tasks that use tool observations. Let Tdep ⊆ T be the subset of tasks in which at least one tool observation is used in subsequent reasoning. Then      
+
+> Rdep =|Tdep ||T|.(1)
+
+Observation error rate Rerr measures how often observa-tions are wrong when tools execute normally. An observation error means that the tool completes execution and reports no error, but the returned observation disagrees with the reference facts. Let Terr ⊆ Tdep be the subset of tasks with at least one observation error. Then     
+
+> Rerr =|Terr ||Tdep |.(2)
+
+This metric separates the execution status of a tool from the actual correctness of its observation. 
+
+Error propagation rate Rprop measures how often awrong observation is adopted by subsequent reasoning and carried into a wrong final answer. Let Tprop ⊆ Terr be the subset of tasks in which a wrong observation is adopted by subsequent reasoning and the wrong final answer is consistent with that observation. Then     
+
+> Rprop =|Tprop ||Terr |.(3)
+
+This definition corresponds to the error propagation probability that AgentProp-Bench [73] measures for general tool agents. The difference is that we count naturally occurring errors rather than injected ones. 
+
+B. Results 
+
+Table I reports the statistics. We draw three findings. 
+
+Remote sensing agents widely depend on tool observa-tions. Rdep is at least 88.1% on all three benchmarks. Tool observations are used in most tasks, indicating that remote sensing agents widely depend on them. 
+
+Normal execution does not guarantee correct obser-vations. Rerr is 22.7%, 41.3%, and 39.8% on EarthBench, ThinkGeo, and TerraLogic, respectively. All these errors occur when the tool reports no anomaly. Error handling based on execution status cannot catch them. 
+
+Wrong tool observations propagate at a high rate. 
+
+Among tasks with observation errors, Rprop is at least 82.0%, and it exceeds 91% on ThinkGeo and TerraLogic. incorrect observations are often carried forward by subsequent reason-ing. This is consistent with the over-trust observed in general tool agents [68], [74], [75]. IV. M ETHOD 
+
+To address the propagation of tool observation errors iden-tified in Section III, we propose RSure-Agent, an observation verification framework. It verifies each tool observation af-ter the tool executes and before the backbone model reads the observation. Fig. 2 shows the overall architecture. The verifiable observation protocol requires tools to return the execution status and process evidence with each observation. Online verification first runs deterministic rule checks and then queries the reliability prior for the task and tool configuration. The verifier uses the same model as the backbone but a separate context. It combines the input images, the process evidence, and the prior to accept the observation, request additional evidence, or reject it. Accepted observations enter the verified history for final reasoning, while ongoing tasks continue planning and tool execution based on feedback. 
+
+A. Problem Formulation 
+
+A remote sensing task is denoted by x = ( I, q, c ), where I
+
+is the set of input remote sensing images, q is the natural-language question, and c is the answer requirement that specifies the output format. The agent follows the ReAct framework, in which a backbone model M selects tools and generates call arguments. The initial history h0 contains the task input x, the system prompt, and the tool instructions. The tool set K contains four types of remote sensing tools. 
+
+perceive provides 7 perception modes, such as detection and segmentation. measure provides 7 metrics, such as count and area. execute runs typed DAGs and includes 10 built-in standard Earth observation products. Its functions cover product computation, raster algebra, statistical analysis, time series, and spatial relation analysis. retrieve provides 3 types of knowledge retrieval for algorithm specifications and domain knowledge. The first three tools return perception and quantitative results about ground objects, which we define as tool observations ot. retrieve returns auxiliary text knowledge cards. Appendix A provides tool descriptions and arguments; Appendix C provides the retrieval card library. The total tool-call budget is Hmax = 10 , and both first calls and retries count toward the budget. Before the t-th tool call, the backbone model reads the history ht−1 and generates an action at = ( kt, u t), where kt ∈ K is the selected tool and 
+
+ut is the call argument. The environment executes the action and returns a result Rt. The base ReAct framework updates the history directly:      
+
+> ht=ht−1⊕(at, R t),(4) 5
+
+A. Structured tool return D. protocol use Prompt  
+
+> 1. Return the observation result. 2. Return source, intermediate, and validity evidence. 3. Do not hide critical intermediate steps. 4. If evidence is insufficient, return insufficient and explain why. 5. Do not output a confident conclusion without adequate evidence.
+> Tool
+> return
+
+= Status + +Result Evidence               
+
+> Source evidence
+> •model
+> •backend
+> •parameters
+> •source
+> Intermediate evidence
+> •candidates
+> •masks
+> •confidence
+> •statistics
+> •outputs
+> •post-results
+> Validity evidence
+> •valid-region
+> •quality masks
+> •node
+> •file paths
+
+C. Status code     
+
+> ok empty unsupport insufficient fail
+
+A. Deterministic checks 
+
+Online Observation Verification 
+
+B. Task-tool reliability prior    
+
+> Tool Task A Tool 1 score1 Tool 2 score3 Task B score2 score4
+
+C. Independent verifier 
+
+> Image Question Evidence Task type Tool action Reliability prior Tool observation
+
+Input 
+
+1. What should be checked for the current task? 2. Does the image support the observation? 3. Does the process evidence support the observation? 4. Is additional evidence needed? 5. Use the reliability prior only as historical reference. 
+
+Verification Prompt D. Verification Decision 
+
+Accept 
+
+> Add observation and evidence to history
+
+Request evidence 
+
+> Revise parameters or switch tools, then verify again
+
+Reject 
+
+> Exclude observation from downstream reasoning
+
+A. Interaction history 
+
+Final Answer Generation 
+
+> Step1 Accept Step2 Request Step4 Reject Step3 Accept
+> Verified history
+
+B. Continue or stop  
+
+> Termination token or budget exhausted?
+> No Yes
+
+Continue reasoning Final answer 
+
+C. Final answer 
+
+Answer the original task using only verified observations. Ignore rejected or unverified results. Follow the answer requirement c. 
+
+Verifiable Observation Protocol 
+
+B. Process evidence 
+
+• status code valid 
+
+• required fields complete 
+
+• not duplicated 
+
+• basic constraints satisfied 
+
+Fig. 2. Overall framework of RSure-Agent. The verifiable observation protocol requires tools to return execution status, tool observation, and process evidence. Process evidence includes source evidence, intermediate results, and validity evidence. Online verification runs deterministic rule checks and queries the reliability prior for the task and tool configuration. For observations that pass rule checks, the verifier examines them using the image, task information, process evidence, and prior. The verifier decides to accept, request evidence, or reject. Accepted observations and their evidence enter the verified history. The backbone model continues planning and calling tools based on feedback. After interaction ends, the model generates the final answer from verified history. 
+
+where ⊕ appends the current action and result to the history context. The interaction ends when the backbone model outputs a stop token or the call budget runs out. The actual number of tool calls is H ≤ Hmax . In the base ReAct framework, wrong tool observations also enter the reasoning context and may affect subsequent reasoning. RSure-Agent verifies each tool observation before the history update and decides whether to add it to the reasoning context. 
+
+B. Verifiable Observation Protocol 
+
+Verifying a tool observation requires checking its data source, computation process, and applicable conditions. RSure-Agent therefore defines a unified verifiable observation protocol for the three observation tools. Besides the obser-vation, each call returns the execution status and process evidence: 
+
+Rt = ( σt, o t, Et), Et = ( Esrc  
+
+> t
+
+, Emid  
+
+> t
+
+, Eval  
+
+> t
+
+), (5) 
+
+where σt ∈ {ok , empty , unsupport , insufficient , fail } is the execution status code, ot is the tool observation, and Et is the process evidence. Process evidence has three parts. Source evidence Esrc 
+
+> t
+
+records the backend model, thresholds, sensor type, and input resolution. Intermediate results Emid  
+
+> t
+
+record target polygons, confidence scores, the numerator and denominator of a mea-surement, and the number of valid pixels. Validity evidence 
+
+Eval  
+
+> t
+
+records valid-pixel masks, class coverage flags, and paths to intermediate files. The protocol requires tools to return all required evidence. Even when the status is ok , an observation with missing required fields cannot pass verification. When data quality is insufficient, the tool returns insufficient with a reason and does not output an estimate. Tools save derived layers and intermediate data as local files so that programs can re-check them. Coordinates predicted by vision-language models without spatial calibration are marked as approximate geometry. Such coordinates cannot be used by measure for quantitative geometric measurement. Field descriptions are given in Appendix A, and the prompts for each perception mode are given in Appendix B-D. 
+
+C. Task–Tool Reliability Prior 
+
+The deterministic rules used here check execution status and computation conditions, but do not directly assess whether an observation matches the image content. Tool performance also varies with the task type. For example, an open-vocabulary perception tool can judge whether a target exists but may miss objects when counting dense small targets. Because online verification can not access the current observation’s ground truth, RSure-Agent uses offline calibration results as a historical reference. The prior reflects how a tool configuration has performed on the task type and helps the verifier check current evidence. We define the task-type set Z using the 21 multiple-choice task types of CHOICE [22], so |Z| = 21 . The set includes image captioning and excludes visual grounding and referring 6
+
+> TABLE II PROCESS EVIDENCE RETURNED BY THE THREE OBSERVATION TOOLS .
+
+Evidence type perceive measure execute 
+
+Source evidence Esrc 
+
+> t
+
+Detector weights Thresholds Sensor Resolution Input layer sources Metric Unit specification Operator parameters Product formulas Band mapping Intermediate results Emid 
+
+> t
+
+Object bounding boxes Confidence scores Number of filtered candidates Measurement numerator Denominator Pixel counts Per-node outputs Valid-pixel counts Validity evidence Eval 
+
+> t
+
+Layer status Class completeness Geometry flags Layer status Class coverage Node status Quality masks List of failed nodes 
+
+expression segmentation. Definitions of all task types are given in Appendix D. The calibration set Dcal contains 1,200 tasks from OpenEarthAgent [14] and CHOICE. The evaluation set CHOICE-420 is a subset of CHOICE. The calibration set does not overlap with the test set of any evaluation benchmark. The original task labels differ across data sources. The system maps each task to a type z ∈ Z based on its question 
+
+q. It first applies deterministic keyword rules and falls back to a large language model when no rule matches. Offline calibration and online verification use the same classification procedure. With GPT-4o as the backbone, the system runs the base ReAct framework on the calibration set. Each calibration task is run once with at most Hmax = 10 tool calls. This yields 10,795 tool-call records for estimating the past performance of each configuration. Counting calls only by tool type ignores differences in function and configuration. We therefore count calls at both a coarse and a fine level. Coarse configurations distinguish perception modes, measurement metrics, and exe-cution operators. Fine perception configurations further distin-guish the backend and the view setting, and fine measurement configurations further distinguish the spatial relation and the input layer type. Each level aggregates its own call counts and computes the prior with (6). Configuration examples and statistics are given in Appendix E. For task type z and configuration v, n(z, v ) is the total number of past calls. nvalid (z, v ) is the number of these calls that executed normally, had a valid format, and belonged to a task whose final answer was correct. We use task-level correctness as an offline weak supervision signal. All calls in a task share the outcome of that task. The resulting score therefore reflects how a tool configuration has performed on task type z. We estimate reliability with Laplace smoothing: 
+
+ˆr(z, v ) = nvalid (z, v ) + 1 
+
+n(z, v ) + 2 . (6) 
+
+This estimate avoids scores of exactly 0 or 1 when there are few samples. The scores of all task types and tool configurations form a task–tool reliability matrix. The matrix is fixed after offline calibration and is only queried during online execution. Ta-ble III lists selected entries. More statistics and configuration identifiers are given in Appendix E.                           
+
+> TABLE III SELECTED ENTRIES OF THE TASK –TOOL RELIABILITY PRIOR .Task type Tool Configuration Level ˆr
+> Object Counting perceive objects Coarse 0.926 Object Counting measure count|auto|objects Fine 0.975 Object Presence perceive objects Coarse 0.800 Image Caption perceive evidence Coarse 0.923 Change Detection perceive change Coarse 0.321 Env. Assessment execute raster.product Coarse 0.810 Env. Assessment execute asset.catalog Coarse 0.803 Physical Property measure area|auto|regions Fine 0.706
+
+For the t-th tool call, the system determines the fine configuration vfine  
+
+> t
+
+and the coarse configuration vcoarse  
+
+> t
+
+from the action at. The prior retrieved for this call is denoted by 
+
+ˆrt. During offline construction, the matrix keeps only entries with at least nmin = 8 samples. At query time, the system first looks up the fine entry and falls back to the coarse entry if no fine entry is available. If neither level has an entry, the system returns None . The lookup rule is 
+
+ˆrt =
+
+
+
+ˆr(z, v fine  
+
+> t
+
+), n(z, v fine  
+
+> t
+
+) ≥ nmin ,
+
+ˆr(z, v coarse  
+
+> t
+
+), n(z, v fine  
+
+> t
+
+) < n min ≤ n(z, v coarse  
+
+> t
+
+),
+
+None , otherwise .
+
+(7) 
+
+Uncalibrated configurations still go through full verification, but semantic verification uses no prior information for them. All backbone models in our evaluation share the same offline reliability matrix. Section V-C uses GPT-5 as the backbone and examines the added value of the prior through ablation. 
+
+D. Online Verification 
+
+Online verification applies to the observations returned by perceive , measure , and execute . The system first runs deterministic rule checks and then performs semantic verification on the observations that pass. The verification result is to accept the observation, request additional evidence, or reject it, denoted by accept , request_evidence , and 
+
+reject , respectively. For the t-th call that passes the rule checks, the semantic verification result is Vt:
+
+Vt ∈ { accept , request_evidence , reject }. (8) 7
+
+The deterministic rule checks are run by programs without calling a language model:            
+
+> Vdet
+> t=I
+> 
+> (σt=ok )∧Valid( at,Et)∧Novel( at, h t−1)
+> 
+> ,(9)
+
+where I(·) is the indicator function. Valid checks required fields, geometric coordinates, and numerical statistics accord-ing to the tool type and mode. For computations that require a non-empty region, it also checks that the mask area is greater than zero. Novel compares the arguments and input image extent of the current call with those of past calls to rule out repeated calls. If any check fails, the system returns a diagnosis f det 
+
+> t
+
+so that the backbone model can adjust the call. The current observation does not enter subsequent reasoning. After the rule checks pass, the verifier Meval judges whether the image and process evidence support the current observa-tion. Meval uses the same model as the backbone M but does not share its dialogue context:       
+
+> (Vt, f sem
+> t) = Meval (I, q, z, a t, o t,Et,ˆrt),(10)
+
+where z is the task type and f sem  
+
+> t
+
+is the verification feedback. The verifier infers what to check and what the task requires from the question q and the action at. For example, for object detection it checks the class of the instance in each box, and for measurement it checks whether the measured object matches the question. Semantic verification uses a separate input context and receives only the inputs in (10). The verifier does not read the interaction history or the earlier reasoning text of the backbone model. During verification, the history is used only for the repeated-call check in the deterministic rules. The verification prompt is given in Appendix B-B. The reliability prior points the verifier to the past perfor-mance of the tool on the current task. When the score is low, the verifier must check more strictly whether the evidence is sufficient. When the score is high, the observation must still be supported by the image and the process evidence. If 
+
+ˆrt = None, the verifier decides from the other inputs only. The verifier checks whether the current evidence supports the observation. If the evidence is sufficient, it accepts the ob-servation. If the evidence is insufficient, it requests additional evidence and states what is needed. If the evidence shows that the observation is wrong or inapplicable, it rejects the observation and gives the reason. For the three observation tools, the system updates the history according to the check and verification results. On acceptance, it appends the current action, the observation, and the process evidence. On an evidence request or a rejection, it appends the action, the verification decision, and the feedback. If the rule checks fail, it appends only the action and the rule diagnosis:                          
+
+> ht=
+> 
+> ht−1⊕(at, o t,Et),Vdet
+> t= 1 , V t=accept ,ht−1⊕(at, V t, f sem
+> t),Vdet
+> t= 1 , V t̸=accept ,ht−1⊕(at, f det
+> t),Vdet
+> t= 0 .
+> (11)
+
+When additional evidence is requested, the backbone model adjusts the arguments or switches tools based on the feedback. Within the remaining call budget, the system allows at most 
+
+Kmax = 3 follow-up calls. Each follow-up call counts as a new tool call, for which the prior is queried and verification is run again. The evidence request ends when the observation is accepted or rejected, or when the follow-up limit is reached. If the call budget is not exhausted, the backbone model continues reasoning from the updated history. We denote the complete verified history used for the final answer by Hver  
+
+> H
+
+. Its tool observation records contain only the triples (at, o t, Et) with Vt = accept , in call order. After the interaction ends, the backbone model generates the final answer in a newly built context. This stage does not reuse the dialogue context from execution. Its input contains the original task description, the answer requirement, and the complete verified history Hver  
+
+> H
+
+:      
+
+> y=M(x, Hver
+> H).(12)
+
+The final-answer prompt is given in Appendix B-C, and the input and output requirements of each benchmark are given in Appendix B-E. V. E XPERIMENTS 
+
+A. Experimental Setup 
+
+Datasets. We evaluate on ThinkGeo [20], EarthBench [8], and TerraLogic [21], with 436, 248, and 545 test tasks, respectively. ThinkGeo tests structured tool use, multi-step planning, and spatial reasoning on remote sensing images. EarthBench tests autonomous planning and multi-step tool calls for quantitative analysis of RGB images, spectral data, and remote sensing products. TerraLogic focuses on hierarchi-cal geospatial reasoning through long compositional analysis chains. We also construct CHOICE-420 from the 21 multiple-choice task types in CHOICE [22]. We exclude the other two of its 23 task types, visual grounding and referring expression segmentation, which require bounding boxes or segmentation masks. This keeps the answer format consistent across the selected tasks. We select 20 samples per type, yielding 280 perception tasks across 14 types and 140 reasoning tasks across 7 types. The resulting benchmark contains 420 tasks, with task definitions provided in Appendix D. The reliability calibration set does not overlap with any evaluation set. 
+
+Evaluation Protocols and Compared Methods. For ThinkGeo, we follow the official protocol, using GPT-4o-mini to judge answer correctness based on each query’s evaluation question. We report final answer accuracy (Ans.) and image-grounded answer accuracy ( Ans I ), both of which are end-to-end metrics. For EarthBench, we report end-to-end accuracy (Acc.) in Autonomous Planning (AP) mode. For TerraLogic, we report final answer accuracy (AnsAcc). On CHOICE-420, we report Overall, Perception, and Reasoning accuracy. The compared methods include Thinkgeo-Agent [20], Hier-aPlan [21], Earth-Agent [8], OpenEarth-Agent [32], HiRS-Agent [26], and RS-Claw [30]. We use results from their original papers, including both accuracy and efficiency for Earth-Agent. On CHOICE-420, direct answering by each backbone model serves as the baseline for measuring accuracy changes with the full framework. 
+
+Implementation Details. We obtain the base ReAct config-uration RSure-Base by disabling observation verification and 8                                                                                                                                 
+
+> TABLE IV TASK PERFORMANCE (%) ON RS AGENT BENCHMARKS .†DENOTES RESULTS FOLLOWING RS-C LAW ’S TEST SPLIT ON EARTH BENCH .
+> Method Backbone Weights ThinkGeo EarthBench TerraLogic Ans. Ans IAcc. AnsAcc Thinkgeo-Agent GPT-4o Closed 9.8 20.4 ––HieraPlan GPT-4o Closed –––25.7 Earth-Agent GPT-4o Closed ––45.3 –Earth-Agent GPT-5 Closed ––65.6 –OpenEarth-Agent GPT-5 Closed ––67.6 –RS-Claw †GPT-5 Closed ––68.7 –HiRS-Agent Qwen3-4B Open 11.3 13.8 44.0 –HiRS-Agent Qwen3-8B Open 12.1 14.8 48.4 –RSure-Agent Qwen3.5-27B Open 16.9 24.1 59.3 27.7 Qwen3.5-122B Open 18.7 25.3 60.5 29.0 Qwen3.5-397B Open 22.1 30.0 65.7 29.7 Mistral Small 4 Open 13.5 21.7 54.8 25.9 Qwen3.6-27B Open 20.6 27.4 65.3 28.3 GLM-4.6V Open 22.5 29.8 66.1 30.1 Kimi K2.6 Open 23.2 31.6 66.9 31.6 Gemini-3.5-Flash Closed 21.9 30.6 64.9 30.5 Gemini-3.1-Pro Closed 23.9 32.8 66.5 32.1 GPT-4o Closed 14.1 22.6 55.2 26.1 GPT-5 Closed 23.6 32.6 68.1 31.4 GPT-5 †Closed 23.6 32.6 69.2 31.4 GPT-5.5 Closed 26.4 32.9 70.2 33.0
+
+its history management and removing the task–tool reliability prior. RSure-Base passes tool results directly to subsequent reasoning and shares the backbone model, tool set, and call budget with RSure-Agent. The full framework combines the verifiable observation protocol with online verification and history management, querying the prior during verification. Following Section IV, we set the tool-call limit to Hmax = 10 
+
+and allow at most Kmax = 3 follow-up calls per observation. All follow-up calls count toward the total budget. The verifier uses the same model as the backbone but operates in a separate context. We build the reliability prior from the offline calibration set, requiring at least nmin = 8 past samples, and keep it fixed during evaluation. Tool arguments and prompts are provided in Appendix A and Appendix B, respectively. 
+
+B. Main Results 
+
+Table IV reports the results on the three agent benchmarks. With GPT-4o, RSure-Agent achieves 14.1% Ans. and 22.6% 
+
+Ans I on ThinkGeo, which are 4.3 and 2.2 percentage points higher than Thinkgeo-Agent. On EarthBench, RSure-Agent reaches 55.2%, 9.9 percentage points higher than Earth-Agent with the same backbone. On TerraLogic, RSure-Agent reaches 26.1%, 0.4 percentage points higher than HieraPlan. HieraPlan reports results only with GPT-4o. With GPT-5 and GPT-5.5, RSure-Agent reaches 31.4% and 33.0% AnsAcc on TerraLogic, respectively. With GPT-5, RSure-Agent reaches 68.1% accuracy on the full EarthBench test set. This is 2.5 percentage points higher than Earth-Agent and higher than OpenEarth-Agent with Full Tools. Following RS-Claw’s test split, RSure-Agent with GPT-5 reaches 69.2%, exceeding RS-Claw with the same backbone by 0.5 percentage points. With GPT-5.5, RSure-Agent reaches 70.2% on the full EarthBench test set. Across all RSure-Agent configurations, Ans I is 6.5 to 9.0 percentage points higher than Ans. Under the same framework, performance varies across backbone models. For Qwen3.5, all four metrics increase as the model grows from 27B to 397B. Ans. rises from 16.9% to 22.1%, and EarthBench accuracy rises from 59.3% to 65.7%. With GPT-5.5, the four metrics reach 26.4%, 32.9%, 70.2%, and 33.0%. These are the highest full-set values in Table IV. The open-weight backbone Kimi K2.6 reaches 23.2%, 31.6%, 66.9%, and 31.6%, close to Gemini-3.1-Pro’s 23.9%, 32.8%, 66.5%, and 32.1%. Their relative performance varies across benchmarks. Kimi K2.6 slightly outperforms Gemini-3.1-Pro on EarthBench, while Gemini-3.1-Pro performs better on ThinkGeo and TerraLogic. Table V reports the remote sensing VQA results. All three metrics improve for all 11 backbone models, so all 33 com-parisons show positive gains. Averaged over models, Overall, Perception, and Reasoning improve by 5.71, 5.84, and 5.45 percentage points, respectively. Models with lower original accuracy usually have more room for improvement. Qwen3.5-122B has the lowest original Overall accuracy and obtains the largest gain of 13.57 percentage points. Its perception and reasoning accuracy improve by 14.29 and 12.14 percentage points, respectively. Qwen3.5-397B, Kimi K2.6, and Gemini-3.1-Pro start from high original accuracy, and their Overall gains are all no more than 2.14 percentage points. Perception and reasoning gains differ across models. GPT-5 improves perception accuracy by 10.72 percentage points and 9       
+
+> TABLE V ACCURACY (%) ON CHOICE-420 WITH DIRECT ANSWERING (O RIGIN )AND WITH RS URE -A GENT . N UMBERS IN PARENTHESES ARE ABSOLUTE GAINS IN PERCENTAGE POINTS . B OLD MARKS THE BEST VALUE .
+
+Backbone Weights Overall Perception Reasoning Origin RSure-Agent Origin RSure-Agent Origin RSure-Agent Mistral Small 4 Open 75.71 84.05 (+8.34) 76.07 86.07 (+10.00) 75.00 80.00 (+5.00) Qwen3.5-27B 74.05 83.33 (+9.28) 78.57 86.79 (+8.22) 65.00 76.43 (+11.43) Qwen3.5-122B 69.29 82.86 (+13.57) 72.50 86.79 (+14.29) 62.86 75.00 (+12.14) Qwen3.5-397B 83.81 85.95 (+2.14) 85.36 87.50 (+2.14) 80.71 82.86 (+2.15) Qwen3.6-27B 79.76 85.24 (+5.48) 83.93 88.21 (+4.28) 71.43 79.29 (+7.86) GLM-4.6V 79.29 85.71 (+6.42) 80.36 87.50 (+7.14) 77.14 82.14 (+5.00) Kimi K2.6 84.29 86.43 (+2.14) 87.50 89.64 (+2.14) 77.86 80.00 (+2.14) Gemini-3.5-Flash Closed 84.52 87.14 (+2.62) 88.57 90.00 (+1.43) 76.43 81.43 (+5.00) Gemini-3.1-Pro 87.14 89.05 (+1.91) 89.64 91.07 (+1.43) 82.14 85.00 (+2.86) GPT-5 80.48 88.10 (+7.62) 81.07 91.79 (+10.72) 79.29 80.71 (+1.42) GPT-5.5 85.24 88.57 (+3.33) 86.43 88.93 (+2.50) 82.86 87.86 (+5.00)                         
+
+> TABLE VI ABLATION STUDY (%, GPT-5 BACKBONE ). Verification Prior ThinkGeo EarthBench TerraLogic Ans. Ans IAcc. AnsAcc
+> ✗✗21.1 24.8 64.9 26.4
+> ✓✗22.5 29.5 66.9 29.7
+> ✓✓23.6 32.6 68.1 31.4
+
+reasoning accuracy by 1.42 percentage points. The correspond-ing gains of GPT-5.5 are 2.50 and 5.00 percentage points. Qwen3.5-122B gains substantially on both. These results show that the benefit of the framework varies with the backbone model and the task type. With RSure-Agent, Gemini-3.1-Pro achieves the highest Overall accuracy of 89.05%, GPT-5 achieves the highest Perception accuracy of 91.79%, and GPT-5.5 achieves the highest Reasoning accuracy of 87.86%. With the framework, some open-weight models also outper-form closed-source models that answer directly. For exam-ple, Qwen3.5-397B reaches 85.95% Overall, higher than the 80.48% of GPT-5 with direct answering. 
+
+C. Ablation Study 
+
+Core component ablation. We use GPT-5 as the backbone and enable observation verification and the task–tool reliability prior in turn. When the prior is turned off, the verifier still checks the current image and process evidence but does not receive the historical reliability score. When both are turned off, the configuration becomes RSure-Base in Section V-A. All configurations use the same tool set and call budget. The first row of Table VI is RSure-Base. Compared with RSure-Base, the full RSure-Agent improves the four metrics by 2.5, 7.8, 3.2, and 5.0 percentage points, and the gains cover all three benchmarks. Without the reliability prior, enabling observation verification alone also improves every metric. On ThinkGeo, Ans. and Ans I improve by 1.4 and 4.7 percentage points. EarthBench and TerraLogic improve by 2.0 and 3.3 percentage points, respectively. The gain on Ans I is clearly larger than that on Ans. Adding the reliability prior further improves the four metrics by 1.1, 3.1, 1.2, and 1.7 percentage points. This shows that a historical reference beyond the current process evidence is helpful. When a tool returns normally but its evidence is questionable, the prior shows how the configuration has performed on related tasks and helps the verifier decide whether more evidence is needed. The prior also improves Ans I more than Ans. Both stages bring positive gains on all three benchmarks. Process evidence describes the current call, while the reliability prior provides a task-related historical reference. The two carry different information, and combining them outperforms verification without the prior. 
+
+D. Analysis of Verification Strategies 
+
+We compare the task performance and inference cost of different tool verification strategies. CRITIC [49] checks and revises an initial answer with tool feedback. Tools Fail [68] judges whether a tool output is reliable based on the task context. RSure-Agent verifies each tool observation before it enters the reasoning history. The verification uses process evidence and the task–tool reliability prior. The system accepts the observation, requests additional evidence, or rejects it. CRITIC and Tools Fail were not originally evaluated on remote sensing tasks. We adapt both strategies to RSure-Base. For CRITIC, the base agent first generates an initial answer. The model then calls remote sensing tools to check it and revises the answer based on the feedback. For Tools Fail, we use the checklist setting. The model judges tool outputs with the image, the task context, and the checklist. Accepted obser-vations enter the reasoning history, and rejection feedback is returned to the planner. The planner then adjusts later tool calls based on the feedback. Neither adaptation uses our reliability prior. All configurations use the same backbone, tool set, and test samples. The total tool-call budget is Hmax = 10 for all configurations. Calls made for the initial solution, evidence requests, and corrections all count toward this budget. Table VII reports the performance and cost of each strategy. Compared with RSure-Base, RSure-Agent improves accuracy by 3.2 percentage points. The average number of LLM calls 10                         
+
+> TABLE VII PERFORMANCE AND COST OF DIFFERENT TOOL VERIFICATION STRATEGIES ON EARTH BENCH .Method Acc. LLM calls Token usage Time per question Mean Median RSure-Base 64.9 7.117 90,454 460.37 321.99 RSure-Base + CRITIC 66.9 8.871 148,562 610.45 505.76 RSure-Base + Tools Fail 65.3 9.935 125,322 557.30 458.28 RSure-Agent 68.1 8.367 107,860 477.08 334.46
+
+increases by 17.56%. The average token usage increases by 19.24%. The mean time per question increases by 3.63%, and the median increases by 3.87%. These times reflect the running cost under the preset time limit. Compared with the CRITIC adaptation, RSure-Agent is 1.2 percentage points more accurate. It also reduces the average token usage and time by 27.40% and 21.85%, respectively. Compared with the Tools Fail adaptation, RSure-Agent is 2.8 percentage points more accurate. It also reduces the average token usage and time by 13.93% and 14.39%, respectively. Among the three verification configurations, RSure-Agent has the highest accuracy. It also has the fewest model calls, the lowest token usage, and the shortest mean time. Under the current evalua-tion setting, RSure-Agent achieves a more favorable trade-off between task performance and computational cost. 
+
+E. Analysis of Observation Error Propagation 
+
+Verification and evidence requests. We track what happens after an observation fails verification. Table VIII reports the results. Based on the current evidence, the verifier requests more information or rejects the observation. The backbone model then adjusts the tool arguments or switches to alterna-tive tools according to the feedback. Of the 1,229 tasks, 569 (46.3%) contain at least one observation that fails verification. Of these, 545 tasks request additional evidence, and 520 of them obtain at least one ac-cepted observation after the request. On all three benchmarks, more than 90% of tasks with failed observations request addi-tional evidence. For an observation that fails verification, the system usually seeks more evidence rather than rejecting the observation directly. On EarthBench, 72.2% of tasks contain at least one failed observation, higher than 42.4% on ThinkGeo and 37.6% on TerraLogic. This difference may come from how EarthBench tasks are organized. A single task usually comes with many files, and the agent needs to inspect, select, and combine information from different files several times. The execution produces more tool observations related to data selection and intermediate computation, and these observations more often need further verification. Of the 520 tasks with an accepted observation after the request, 246 (47.3%) are answered correctly. This ratio varies across benchmarks: 59.4% on EarthBench, 50.0% on ThinkGeo, and 34.0% on TerraLogic. The other 274 tasks still fail after obtaining accepted observations. Passing verification on a local observation does not mean that the whole task suc-ceeds. After a verified observation is obtained, later planning and multi-step reasoning still affect the final result. The system also rejects 52 observations. These rejected observations are not written to the verified history as accepted records. Sec-tions V-F and V-H further analyze the related failure modes. 
+
+Propagation of wrong tool observations. Following the definition in Section III, we compare the error propagation rates of RSure-Base and RSure-Agent. Table IX reports the error propagation rates of RSure-Base and RSure-Agent. In RSure-Base, the error propagation rate exceeds 93% on all three benchmarks. In other words, in almost all tasks with wrong tool observations, at least one wrong observation is adopted by subsequent reasoning, and the wrong final answer is consistent with it. With the full RSure-Agent framework, the error propagation rate drops on all three benchmarks. It falls from 95.5% to 69.6% on EarthBench, a drop of 25.9 percentage points. It falls from 93.4% to 71.2% on ThinkGeo, a drop of 22.2 percentage points. It falls from 96.8% to 75.5% on TerraLogic, a drop of 21.3 percentage points. Because verification may trigger follow-up calls and change the later trajectory, the tasks with incorrect observations are not exactly the same for the two methods. Each rate is therefore computed over the tasks in which that method produces incorrect observations. These results show that the full framework substantially limits the effect of wrong tool observations on the final result. 
+
+F. Case Study 
+
+Fig. 3 compares RSure-Agent with direct VLM answering and Earth-Agent on benchmark tasks. 
+
+Comparison with a VLM. In Fig. 3(A1), the VLM directly answers that there are three aircraft. RSure-Agent calls measure to count them, and the tool returns two aircraft with their instance polygons. The verifier matches the two polygons to the aircraft in the image one by one and confirms that both are supported by the image, so the count observation passes verification. The system writes the count and its instance evidence to the verified history, and the model gives the correct answer. In Fig. 3(A2), the VLM directly judges the heading of the left vehicle as upper right to lower left. RSure-Agent first locates the vehicle with 
+
+perceive(objects) . The detection box in the process evidence is 67 × 71 pixels, which is almost square, so the box alone cannot show where the vehicle’s front is. The backbone model then calls perceive(evidence) to obtain local features. The returned evidence shows that the front and the windshield are at the upper left and the rear is at the lower right. The verifier checks the positions of the front and the rear, confirms that the heading from lower right to upper left is supported by visual evidence, and accepts the observation. The model gives the correct answer. The two cases verify an instance count and a vehicle heading, respectively. Aircraft counting requires checking that the observed number matches the instances in the image. Vehicle heading requires checking that local features such as the front and the rear support the direction. These checks link tool observations to specific instances and their visual features. 11 Prior: 0.919 (batch_reduce) | 0.933 (trend) Prior: 0.810 (product) | 0.803 (catalog) 
+
+Fig. 3. Case comparison. (A) The VLM answers incorrectly on aircraft counting and vehicle heading. RSure-Agent verifies the observations with instance polygons and visual evidence of the vehicle front and rear, and obtains the correct answers. (B) Earth-Agent uses single-day means for an annual trend test. RSure-Agent aggregates the data by year and corrects the output fields based on the diagnosis from the deterministic rule check. The corrected annual trend observation passes verification for the final answer. (C) RSure-Agent accepts the mean of the seven available images and keeps its time range. This observation covers only June to August and still lacks the September data required by the question. Because the physical inputs for an alternative computation are also missing, the evidence request cannot be completed. Following the evaluation requirement, the model finally selects B, which differs from the reference answer. 12                                          
+
+> TABLE VIII STATISTICS OF OBSERVATION VERIFICATION AND SUBSEQUENT EXECUTION (GPT-5 BACKBONE ). T HE FIRST FOUR COLUMNS COUNT TASKS ,AND EACH RATIO IS CONDITIONED ON THE PREVIOUS COLUMN . T HE LAST COLUMN COUNTS TOOL OBSERVATIONS .Benchmark Tasks with a failed observation Tasks with evidence requests Tasks with an accepted observation after the request Of which answered correctly Rejected observations EarthBench 179/248 (72.2%) 177/179 (98.9%) 175/177 (98.9%) 104/175 (59.4%) 6ThinkGeo 185/436 (42.4%) 168/185 (90.8%) 154/168 (91.7%) 77/154 (50.0%) 32 TerraLogic 205/545 (37.6%) 200/205 (97.6%) 191/200 (95.5%) 65/191 (34.0%) 14 Overall 569/1,229 (46.3%) 545/569 (95.8%) 520/545 (95.4%) 246/520 (47.3%) 52 TABLE IX ERROR PROPAGATION RATE Rprop OF TOOL OBSERVATIONS (%, GPT-5
+> BACKBONE ). ∆IS THE CHANGE OF RS URE -A GENT RELATIVE TO
+> RS URE -B ASE IN PERCENTAGE POINTS .Benchmark RSure-Base RSure-Agent ∆
+> EarthBench 95.5 69.6 −25 .9
+> ThinkGeo 93.4 71.2 −22 .2
+> TerraLogic 96.8 75.5 −21 .3
+
+Comparison with Earth-Agent. Fig. 3(B) asks for the trend of the annual mean land surface temperature over the Ganges Delta from 2015 to 2020. Earth-Agent uses only the image of January 1 of each year and feeds six single-day means into the trend test, which gives p = 1 .0000 and a Sen’s slope of +0 .5824 K/year. Its final answer D is also inconsistent with these tool results. RSure-Agent uses all 161 images. It first computes the mean of each image and then aggregates the means by year, so that each annual mean includes 26 to 27 images. The first trend call refers to the nonexistent fields 
+
+sen_slope and z_score , and the deterministic rule check returns the specific error. The backbone model then corrects the output fields and computes the Sen’s slope separately. It finally obtains p = 0 .7071 and −1.4470 K/year and selects the correct answer C. In this process, the source dates and image counts make the annual aggregation traceable, and the rule diagnosis helps the model locate and fix the call error. Fig. 3(C) shows a case where a local observation is accepted but the evidence for the whole task is still incomplete. The question asks for the mean land surface temperature (LST) over the Sahara from June to September 2018, but the input contains only seven images from June to August. Earth-Agent computes 314.0214 K from the available data and directly selects option B (314.56 K). In contrast, RSure-Agent detects the missing September images before the first tool call. It computes the same 314.0214 K from the available data. The observation passes the rule check, and the verifier confirms that the value matches the mean of the seven input images. The system accepts the observation and records its data source and temporal coverage in the verified history. The observation can be used in subsequent reasoning, but it is not enough to determine the full June–September mean, and the coverage gap remains. The computed value differs from the closest option by about 0.54 K, so the backbone model tries another LST algorithm to obtain more evidence. However, this algorithm needs emissivity31/32 , which is also missing.   
+
+> TABLE X TOOL -CALL EFFICIENCY ON EARTH BENCH . – MEANS NOT REPORTED .
+
+Method Backbone Spectrum Products RGB Overall Earth-Agent GPT-4o 3.7736 1.1800 0.8779 2.1579 Earth-Agent GPT-5 3.5510 1.7154 1.5312 2.4146 HiRS-Agent Qwen3-4B – – – 2.5059 HiRS-Agent Qwen3-8B – – – 2.5248 RSure-Agent GPT-5 2.2697 1.6103 1.2502 1.7891 
+
+The computation cannot run, and the later option-selection call also fails. Following the evaluation rule, the model selects B, the option closest to the computed value, which differs from the reference answer C (312.02 K). This case shows that observation verification is limited by the capabilities of the tools. Verification can identify evidence gaps and guide the backbone model to adjust its calls. Whether the gaps can be filled, however, depends on the data access and computing capabilities of the tools. When a task goes beyond these capabilities, verification alone cannot make up for them. 
+
+G. Efficiency Analysis 
+
+We use the Efficiency metric of EarthBench to measure tool-call cost. For each task, the metric divides the actual number of calls by the number of calls in the expert reference, and then averages the ratio over tasks. Table X reports the tool-call efficiency on EarthBench. The overall tool-call ratio of RSure-Agent is 1.7891, lower than the 2.4146 of Earth-Agent with the same GPT-5 backbone, a relative reduction of 25.9%. All follow-up calls triggered by verification are included in the total count. Even with these calls, the overall ratio of RSure-Agent is still lower than that of Earth-Agent with GPT-5. The metric counts tool calls only and excludes the extra inference cost of the verifier. On every task subset, namely Spectrum, Products, and RGB, RSure-Agent has a lower tool-call ratio than Earth-Agent with GPT-5. The ratio drops from 3.5510 to 2.2697 on Spectrum, a relative reduction of 36.1%. It drops from 1.7154 to 1.6103 on Products, a relative reduction of 6.1%, and from 1.5312 to 1.2502 on RGB, a relative reduction of 18.4%. Together with Table IV, these results show that RSure-Agent improves task accuracy and reduces the tool-call ratio relative to Earth-Agent with GPT-5. The Overall ratios of all configurations are still above 1, so there is room to further reduce tool calls relative to the expert reference. 13 
+
+H. Limitations 
+
+The effect of RSure-Agent depends on the available data and the capabilities of existing tools. When the observations needed for a task are missing from the input data and no exist-ing tool can obtain them, further verification cannot produce new valid observations. For example, the period-mean case in Section V-F lacks September observations, which no tool can fill. Additionally, the verifiable observation protocol depends on tools that provide process evidence for their observations. The perception, measurement, and execution tools in this work return source evidence, intermediate results, and validity evi-dence, allowing the verifier to check whether observations are supported. For tools that return only final results without full process evidence, less information is available for verification. Finally, the reliability of tool observations is not the only factor that determines the task outcome. In Table VIII, some tasks still fail after obtaining accepted observations, and in Table IX, the error propagation rate of RSure-Agent is still 69.6% to 75.5%. These results show that more reliable tool observations reduce the effect of incorrect observations on subsequent reasoning, but the final task performance depends on both the quality of tool observations and the subsequent reasoning process. VI. C ONCLUSION 
+
+In this paper, we present RSure-Agent, a framework for limiting the effect of incorrect tool observations on subsequent reasoning in remote sensing agents. Motivated by our analy-sis of 1,229 execution trajectories, the framework combines process evidence from a verifiable observation protocol with a task–tool reliability prior. The prior provides historical information about tool reliability across task types to support verification. Together, these sources guide decisions to accept observations, request additional evidence, or reject observa-tions. Experiments on EarthBench, ThinkGeo, and TerraLogic show competitive task performance. Across these benchmarks, RSure-Agent reduces the error propagation rate by at least 21 percentage points. On EarthBench, it improves task accuracy and reduces the tool-call ratio by 25.9% relative to Earth-Agent. On CHOICE-420, it improves overall accuracy on average across 11 backbone models. These results support verifying tool observations before accepting them as evidence for subsequent reasoning. Future work focuses on using verifi-cation feedback to correct subsequent reasoning and extending observation verification to more Earth observation tasks. REFERENCES [1] N. A. Talemi, J. Boone, and F. Afghah, “Agentic AI in remote sensing: Foundations, taxonomy, and emerging systems,” in Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision Workshops , 2026, pp. 786–799. [2] A. Xiao, S. Cheng, Y. Xu, Y. Ren, H. Chen, and N. Yokoya, “GeoMM-Bench and GeoMMAgent: Toward expert-level multimodal intelligence in geoscience and remote sensing,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2026, pp. 34 843–34 853. [3] International Organization for Standardization, “Geographic informa-tion: Observations, measurements and samples,” 2023, ISO 19156:2023, 2nd ed. [Online]. Available: https://www.iso.org/standard/82463.html [4] P. A. Strobl, E. R. Woolliams, and K. Molch, “Lost in translation: The need for common vocabularies and an interoperable thesaurus in earth observation sciences,” Surveys in Geophysics , 2024. [5] S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, and Y. Cao, “ReAct: Synergizing reasoning and acting in language models,” in The Eleventh International Conference on Learning Representations , 2023. [6] L. Wang, C. Ma, X. Feng, Z. Zhang, H. Yang, J. Zhang, Z. Chen, J. Tang, X. Chen, Y. Lin et al. , “A survey on large language model based autonomous agents,” Frontiers of Computer Science , vol. 18, no. 6, p. 186345, 2024. [7] Z. Xi, W. Chen, X. Guo, W. He, Y. Ding, B. Hong, M. Zhang, J. Wang, S. Jin, E. Zhou et al. , “The rise and potential of large language model based agents: A survey,” Science China Information Sciences , vol. 68, p. 121101, 2025. [8] P. Feng, Z. Lv, J. Ye, X. Wang, X. Huo, J. Yu, W. Xu, W. Zhang, L. Bai, C. He, and W. Li, “Earth-Agent: Unlocking the full landscape of earth observation with agents,” in The Fourteenth International Conference on Learning Representations , 2026. [9] C. Lee, V. Paramanayakam, A. Karatzas, Y. Jian, M. Fore, H. Liao, F. Yu, R. Li, I. Anagnostopoulos, and D. Stamoulis, “Multi-agent geospatial copilots for remote sensing workflows,” in IGARSS 2025 - 2025 IEEE International Geoscience and Remote Sensing Symposium , 2025. [10] P. Dai, W. Xuan, J. Wang, H. Chen, J. Song, Y. Ou, and N. Yokoya, “Experience-driven multi-agent systems are training-free context-aware earth observers,” arXiv preprint arXiv:2602.02559 , 2026. [11] B. Wu, Y. Zhang, Z. Guo, T. Liu, C. Qian, Y. Lu, X. Du, Y. Li, Y. Zhang, C. Chen et al. , “RSMeM: Knowledge-enhanced memory evolution for remote sensing agents with systematic evaluation,” in Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 2026, pp. 32 899–32 915. [12] W. Xu, Z. Yu, B. Mu, J. Wang, Z. Wei, and M. Peng, “RS-Agent: Automating remote sensing tasks through intelligent agent,” Science China Information Sciences , vol. 69, no. 8, p. 180302, 2026. [13] H. Guo, X. Su, C. Wu, B. Du, L. Zhang, and D. Li, “Remote sensing ChatGPT: Solving remote sensing tasks with ChatGPT and visual models,” in IGARSS 2024 - 2024 IEEE International Geoscience and Remote Sensing Symposium , 2024, pp. 11 474–11 478. [14] A. Shabbir, M. U. Sheikh, M. A. Munir, H. Debary, M. Fiaz, M. Z. Zaheer, P. Fraccaro, F. S. Khan, M. H. Khan, X. X. Zhu, and S. Khan, “OpenEarthAgent: A unified framework for tool-augmented geospatial agents,” in Computer Vision – ECCV 2026 , ser. Lecture Notes in Computer Science, vol. 17021. Springer, 2026, pp. 172–191. [15] M. A. Munir, M. U. Sheikh, A. Shabbir, M. H. Khan, F. Khan, X. X. Zhu, B. Demir, and S. Khan, “Agentic AI for remote sensing: Technical challenges and research directions,” arXiv preprint arXiv:2604.24919 ,2026. [16] H. Shi, Z. Tan, Z. Zhang, H. Wei, Y. Hu, Y. Zhang, and Z. Chen, “Remote sensing semantic segmentation quality assessment based on vision language model,” IEEE Transactions on Geoscience and Remote Sensing , vol. 63, pp. 1–15, 2025. [17] Z. Huang, Y. Liu, X. Yao, J. Ren, and J. Han, “Uncertainty exploration: Toward explainable SAR target detection,” IEEE Transactions on Geo-science and Remote Sensing , vol. 61, pp. 1–14, 2023. [18] X. He, Y. Chen, and L. Huang, “Toward a trustworthy classifier with deep CNN: Uncertainty estimation meets hyperspectral image,” IEEE Transactions on Geoscience and Remote Sensing , vol. 60, pp. 1–15, 2022. [19] J. Li, W. He, W. Cao, L. Zhang, and H. Zhang, “UANet: An uncertainty-aware network for building extraction from remote sensing images,” 
+
+IEEE Transactions on Geoscience and Remote Sensing , vol. 62, pp. 1– 13, 2024. [20] A. Shabbir, M. A. Munir, A. Dudhane, M. U. Sheikh, M. H. Khan, P. Fraccaro, J. B. Moreno, F. S. Khan, and S. Khan, “ThinkGeo: Evaluating tool-augmented agents for remote sensing tasks,” arXiv preprint arXiv:2505.23752 , 2025. [21] Y. Yan, L. Mou, B. Yang, and Q. Li, “TerraLogic: A benchmark for hierarchical geospatial reasoning in earth observation,” arXiv preprint arXiv:2607.12497 , 2026. [22] X. An, J. Sun, Z. Gui, and W. He, “CHOICE: Benchmarking the remote sensing capabilities of large vision-language models,” Advances in Neural Information Processing Systems , vol. 38, pp. 146 328–146 367, 2025. [23] L. Yao, S. Xu, F. Liu, C. Zhang, B. Yao, R. Min, Y. Li, C. Ouyang, S. Di, and M.-L. Zhang, “RemoteAgent: Bridging vague human intents and earth observation with RL-based agentic MLLMs,” IEEE Transactions on Geoscience and Remote Sensing , vol. 64, 2026. 14 
+
+[24] S. Du, S. Tang, W. Wang, X. Li, and R. Guo, “Tree-GPT: Modular large language model expert system for forest remote sensing image un-derstanding and interactive analysis,” arXiv preprint arXiv:2310.04698 ,2023. [25] C. Liu, K. Chen, H. Zhang, Z. Qi, Z. Zou, and Z. Shi, “Change-Agent: Toward interactive comprehensive remote sensing change interpretation and analysis,” IEEE Transactions on Geoscience and Remote Sensing ,vol. 62, pp. 1–16, 2024. [26] B. Mu, Z. Wei, M. Peng, and W. Xu, “HiRS-Agent: A hierarchical multi-agent system for reliable long-horizon remote sensing task solving,” in 
+
+Proceedings of the 34th ACM International Conference on Multimedia ,2026. [27] H. Hu, P. Wang, Y. Feng, K. Wei, W. Yin, W. Diao, M. Wang, H. Bi, K. Kang, T. Ling et al. , “Ringmo-agent: A unified remote sensing foundation model for multi-platform and multi-modal reasoning,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2026. [28] K. Kang, Q. He, P. Wang, Y. Feng, C. Ren, K. Wang, W. Diao, Y. Wang, L. Zhao, K. Wei et al. , “Ringmoclaw: An experience-inspired multi-agent framework for self-evolving research in remote sensing,” arXiv preprint arXiv:2609.00814 , 2026. [29] S. Singh, M. Fore, and D. Stamoulis, “GeoLLM-Engine: A realistic environment for building geospatial copilots,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops , 2024, pp. 585–594. [30] L. Liu, Z. Wang, Z. Li, K. Ouyang, Z. Tang, C. Liu, H. Li, H. Yu, W. Yang, C. Yang, and D. Hou, “RS-Claw: Progressive active tool exploration via hierarchical skill trees for remote sensing agents,” IEEE Transactions on Geoscience and Remote Sensing , vol. 64, 2026. [31] B. Chen, T. E. B¨ ok, B. Rasti, V. Markl, and B. Demir, “REMSA: Foundation Model Selection for Remote Sensing via a Constraint-Aware Agent,” 2025. [Online]. Available: https://arxiv.org/abs/2511.17442 [32] S. Zhao, F. Liu, X. Zhang, H. Chen, X. Gu, Z. Jiang, F. Ling, B. Fei, W. Zhang, J. Wang et al. , “OpenEarth-Agent: From tool calling to tool creation for open-environment earth observation,” arXiv preprint arXiv:2603.22148 , 2026. [33] X. Xiao, J. Zhong, J. Zhu, Y. Feng, P. Wang, Y. Zhang, and K. Wei, “GeoForge: Non-parametric self-evolving agents for earth-observation reasoning,” arXiv preprint arXiv:2608.10494 , 2026. [34] Z. Liu, D. Zhao, B. Yuan, and Z. Jiang, “RescueADI: Adaptive disaster interpretation in remote sensing images with autonomous agents,” IEEE Transactions on Geoscience and Remote Sensing , vol. 63, pp. 1–14, 2025. [35] Y. Zhou, R. Ding, X. Yang, X. Jiang, and X. Liu, “AirSpatialBot: A spatially aware aerial agent for fine-grained vehicle attribute recognition and retrieval,” IEEE Transactions on Geoscience and Remote Sensing ,vol. 63, pp. 1–12, 2025. [36] B. Yu, T. Shen, H. Na, L. Chen, and D. Li, “MineAgent: Towards Remote-Sensing Mineral Exploration with Multimodal Large Language Models,” 2024. [Online]. Available: https://arxiv.org/abs/2412.17339 [37] Y. Huang, T. Gao, H. Xu, Q. Zhao, Y. Song, Z. Gui, T. Lv, H. Chen, L. Cui, S. Li, and F. Wei, “PEACE: Empowering Geologic Map Holistic Understanding with MLLMs,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2025, pp. 3899–3908. [38] J. Chen, W. Pedrycz, F. Wang, J. Wu, G. Wu, L. Xing, Y. Chen, and Y. Song, “A Tri-Stage LLM-Coordinated Framework for Order-Driven Scheduling of Earth Observation Satellite Tasks,” IEEE Transactions on Geoscience and Remote Sensing , vol. 64, 2026. [39] Z. Zhang, Y. Du, Y. Song, X. Liu, J. Chen, Z. Zhu, and L. Xing, “LLM Agent-Enhanced Bi-Level Online Order Dispatching and Scheduling for Large-Scale Agile Earth Observation Satellites,” IEEE Transactions on Geoscience and Remote Sensing , vol. 64, 2026. [40] C. H. Kao, W. Zhao, S. Revankar, S. Speas, S. Bhagat, R. Datta, C. P. Phoo, U. Mall, C. Vondrick, K. Bala, and B. Hariharan, “Towards LLM Agents for Earth Observation,” 2025. [Online]. Available: https://arxiv.org/abs/2504.12110 [41] D. T. Nguyen, T. Nguyen, F. A. Maani, H. M. Le, M. U. Sheikh, N. Saeed, M. H. Khan, and S. Khan, “TerraBench: Can Agents Reason Over Heterogeneous Earth-System Data?” 2026. [Online]. Available: https://arxiv.org/abs/2606.13148 [42] M. Yu et al. , “A survey on trustworthy LLM agents: Threats and countermeasures,” arXiv preprint arXiv:2503.09648 , 2025. [43] A. Yehudai, L. Eden, A. Li, G. Uziel, Y. Zhao, R. Bar-Haim, A. Co-han, and M. Shmueli-Scheuer, “A survey on evaluation of LLM-based agents,” in Findings of the Association for Computational Linguistics: ACL 2026 , 2026, pp. 26 690–26 714. [44] N. Shinn, F. Cassano, A. Gopinath, K. Narasimhan, and S. Yao, “Reflex-ion: Language agents with verbal reinforcement learning,” Advances in Neural Information Processing Systems , vol. 36, pp. 8634–8652, 2023. [45] W. Yao, S. Heinecke, J. C. Niebles, Z. Liu, Y. Feng, L. Xue, R. Murthy, Z. Chen, J. Zhang, D. Arpit et al. , “Retroformer: Retrospective large language agents with policy gradient optimization,” in The Twelfth International Conference on Learning Representations , 2024. [46] A. Madaan, N. Tandon, P. Gupta, S. Hallinan, L. Gao, S. Wiegreffe, U. Alon, N. Dziri, S. Prabhumoye, Y. Yang et al. , “Self-refine: Iter-ative refinement with self-feedback,” Advances in Neural Information Processing Systems , vol. 36, 2023. [47] A. Kumar, V. Zhuang, R. Agarwal, Y. Su, J. D. Co-Reyes, A. Singh, K. Baumli, S. Iqbal, C. Bishop, R. Roelofs et al. , “Training language models to self-correct via reinforcement learning,” in The Thirteenth International Conference on Learning Representations , 2025. [48] J. Huang, X. Chen, S. Mishra, H. S. Zheng, A. W. Yu, X. Song, and D. Zhou, “Large language models cannot self-correct reasoning yet,” in The Twelfth International Conference on Learning Representations ,2024. [49] Z. Gou, Z. Shao, Y. Gong, Y. Shen, Y. Yang, N. Duan, and W. Chen, “CRITIC: Large language models can self-correct with tool-interactive critiquing,” in The Twelfth International Conference on Learning Rep-resentations , 2024. [50] P. Li, Z. Gao, B. Zhang, Y. Mi, X. Ma, C. Shi, T. Yuan, Y. Wu, Y. Jia, S.-C. Zhu, and Q. Li, “Iterative tool usage exploration for multimodal agents via step-wise preference tuning,” Advances in Neural Information Processing Systems , vol. 38, 2025. [51] M. Andrade, J. Cha, B. Ho, V. Srihari, K. Yadav, and Z. Kira, “Let’s think in two steps: Mitigating agreement bias in MLLMs with self-grounded verification,” in The Fourteenth International Conference on Learning Representations , 2026. [52] Y. Zhang, Y. E. Sun, A. J. E. Lee, and J. S. Dong, “RvLLM: LLM runtime verification with domain knowledge,” Advances in Neural Information Processing Systems , vol. 38, pp. 89 374–89 394, 2025. [53] Z. Ma, J. Liu, X. Luo, Z. Huang, Q. Zhu, and W. Che, “Advancing tool-augmented large language models via meta-verification and reflection learning,” in Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining , 2025, pp. 2078–2089. [54] J.-T. Huang, J. Zhou, T. Jin, X. Zhou, Z. Chen, W. Wang, Y. Yuan, M. Lyu, and M. Sap, “On the resilience of LLM-based multi-agent col-laboration with faulty agents,” in Proceedings of the 42nd International Conference on Machine Learning , ser. Proceedings of Machine Learning Research, vol. 267, 2025, pp. 26 202–26 226. [55] S. Zhang, M. Yin, J. Zhang, J. Liu, Z. Han, J. Zhang, B. Li, C. Wang, H. Wang, Y. Chen et al. , “Which agent causes task failures and when? on automated failure attribution of LLM multi-agent systems,” in 
+
+Proceedings of the 42nd International Conference on Machine Learning ,ser. Proceedings of Machine Learning Research, vol. 267, 2025, pp. 76 583–76 599. [56] S. Zhang, Z. Li, Y. Zhang, J. Fu, L. Song, J. Bian, J. Zhang, Y. Yang, and R. Wang, “PixelCraft: A multi-agent system for high-fidelity vi-sual reasoning on structured images,” in The Fourteenth International Conference on Learning Representations , 2026. [57] Z. Gao et al. , “CLOVA: A closed-loop visual assistant with tool usage and update,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 13 258–13 268. [58] Y. Ruan, H. Dong, A. Wang, S. Pitis, Y. Zhou, J. Ba, Y. Dubois, C. J. Maddison, and T. Hashimoto, “Identifying the risks of LM agents with an LM-emulated sandbox,” in The Twelfth International Conference on Learning Representations , 2024. [59] J. Ye, S. Li, G. Li, C. Huang, S. Gao, Y. Wu, Q. Zhang, T. Gui, and X. Huang, “ToolSword: Unveiling safety issues of large language models in tool learning across three stages,” in Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 2024, pp. 2181–2211. [60] H. Xu, Z. Zhu, L. Pan, Z. Wang, S. Zhu, D. Ma, R. Cao, L. Chen, and K. Yu, “Reducing tool hallucination via reliability alignment,” in 
+
+Proceedings of the 42nd International Conference on Machine Learning ,ser. Proceedings of Machine Learning Research, vol. 267, 2025, pp. 69 992–70 006. [61] J. Lin, Z. Zhou, Z. Zheng, S. Liu, T. Xu, Y. Chen, and E. Chen, “VIGIL: Defending LLM agents against tool-stream injection via verify-before-commit,” in Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 2026, pp. 9764– 9785. [62] Y. Liu, X. Peng, J. Cao, X. Wang, S. Deng, J. Chen, J. Yin, and X. Zhang, “ToolGate: Contract-grounded and verified tool execution for LLMs,” in 15                                                
+
+> Findings of the Association for Computational Linguistics: ACL 2026 ,2026, pp. 9653–9684. [63] H. Wang, C. M. Poskitt, and J. Sun, “AgentSpec: Customizable runtime enforcement for safe and reliable LLM agents,” in Proceedings of the 48th IEEE/ACM International Conference on Software Engineering ,2026, pp. 2938–2950. [64] L. Elkoussy and J. Perez, “AgentLTL: A trace-verification framework for measuring, enforcing, and training procedural compliance in tool-using LLM agents,” arXiv preprint arXiv:2607.02599 , 2026. [65] V. Reddy, S. R. Challaram, and A. Basu, “Reason less, verify more: Deterministic gates recover a silent policy-violation failure mode in tool-using LLM agents,” in KDD Workshop on Evaluation and Trustworthi-ness of Agentic AI , 2026. [66] A. Ta, J. Zhu, and S. Shayandeh, “Reinforced agent: Inference-time feedback for tool-calling agents,” in Proceedings of the Fifth Workshop on Generation, Evaluation and Metrics , 2026, pp. 136–147. [67] I. K. Mansoor, A. Phadke, and P. Rana, “Verified tool calls im-prove LLM agent reliability under non-atomic failures,” arXiv preprint arXiv:2608.02645 , 2026. [68] J. Sun, S. Y. Min, Y. Chang, and Y. Bisk, “Tools fail: Detecting silent errors in faulty tools,” in Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing , 2024, pp. 14 272– 14 289. [69] S. Abuzakuk, L. Crijns, A.-M. Kermarrec, R. Pires, and M. de Vos, “RIVA: Leveraging LLM agents for reliable configuration drift detec-tion,” in Proceedings of the 6th Workshop on Machine Learning and Systems (EuroMLSys ’26) , 2026, pp. 499–509. [70] J. Ren, “Evidence-grounded verified agentic reasoning: A path toward eliminating LLM hallucination in empirical inference via tool-attested kernel proofs,” arXiv preprint arXiv:2607.12650 , 2026. [71] J. Jung, F. Brahman, and Y. Choi, “Trust or escalate: LLM judges with provable guarantees for human agreement,” in The Thirteenth International Conference on Learning Representations , 2025. [72] Z. Chen, H. Wang, J. Yao, J. Zhang, P. Ghamisi, J. Zhou, P. M. Atkinson, and B. Zhang, “CangLing-KnowFlow: A Unified Knowledge-and-Flow-fused Agent for Comprehensive Remote Sensing Applications,” 2025. [Online]. Available: https://arxiv.org/abs/2512.15231 [73] B. Gurram, “Auditing automated evaluation, error propagation, and runtime mitigation in tool-using language agents,” arXiv preprint arXiv:2604.16706 , 2026. [74] Z. Wang and P. Vemuri, “When the tool decides: LLM agents defer blindly to graph neural network tools, and stronger backbones defer more,” arXiv preprint arXiv:2606.14476 , 2026. [75] A. Liu, Y. Song, Z. Chen, Z. Gong, Z. Yu, and J. Wang, “ToolGate: Token-efficient pre-call control for tool-augmented vision-language agents,” arXiv preprint arXiv:2606.03054 , 2026.
+
+APPENDIX ATOOL DESCRIPTIONS AND PROTOCOL PARAMETERS 
+
+This appendix lists the tool descriptions and key argument fields visible to the model. In the code, the tools are regis-tered as rs_perceive , rs_measure , rs_execute , and 
+
+rs_retrieve . Braced variables in the prompts, such as 
+
+{objective }, are filled in at run time. 
+
+A. Top-Level Tool Descriptions 
+
+perceive tool description 
+
+Unified visual evidence for remote sensing. Use mode=evidence for image/figure VQA facts, document only for literal transcription of text/axes/legends, and scene for taxonomy-constrained classification. Use objects for instance boxes, regions for semantic masks, change for ordered before/after images, or measurement for two landmarks and a visible scale bar. For scene, put semantic land-use labels in label space and expect one exact label per source image. Never use the final answer letters as scene classes. Use objects or regions when later geometry must be computed; evidence does not choose the final answer. One scene backend is selected per image set and reused. Numerical measurements and coordinate-based spatial relations must be computed deterministically. Qualitative heading judgments may use visible front and rear features. 
+
+measure tool description 
+
+Produce one numerical spatial observation from explicitly declared image sources and a typed geometry specification. Each source states whether it needs instances, semantic regions, an ordered T1/T2 transition, or a caller-declared rectangular coordinate extent. The spec states the metric, labels, relation, distance, denominator, unit, and GSD. Sources must name raw visual evidence only. Use objects for discrete instances, regions for continuous or linear surfaces, change for a T1/T2 transition, and extent only for explicit frame coordinates. Put buffers, overlap, ratios, and zones in spec. The tool does not infer these from wording, read candidate answers, or use benchmark metadata. Prefer it to a hand-written spatial DAG when the required result is a count, area, fraction, percentage, distance, overlap, or boolean relation over visible imagery. 
+
+execute tool description 
+
+Compile and execute a deterministic DAG for raster for-mulas, statistics, time series, arithmetic, and spatial rela-tions over SpatialLayer artifacts. Connect ordinary stages with inputs.data=@node. Prefer this tool whenever the requested answer is a number, area, distance, percentage, trend, threshold result, or spatial count. Return the mea-sured value and compare it directly with answer choices when provided. Unknown operators and invalid units fail closed. 
+
+retrieve tool description 
+
+Retrieve a small set of trusted remote-sensing capabil-ity, algorithm-recipe, or domain-knowledge cards. Use it for formulas, sensor/physics concepts, or to identify the abstract workflow. Retrieval provides context, not a final numeric answer; execute calculations with rs execute. 
+
+B. Key Argument Fields 
+
+Tables XI and XII summarize the key arguments. Perception tools that produce geometry layers also return the following contract. 
+
+Geometry contract (geometry contract) 
+
+Exact geometry is stored in layer paths. Use rs measure or rs execute with spatial.query to compute distances, areas, and coordinate-based spatial relations. Do not estimate these quantities or relations from the summary. 16                                         
+
+> TABLE XI KEY ARGUMENTS OF P E R C E I V E .Argument Description visible to the model (summary)
+> image_paths Input image paths in their semantic order.
+> objective Exact visual fact or layer required by the task.
+> mode One of seven perception modes: evidence / doc-ument / scene / objects / regions / change / measurement.
+> label_space Exact semantic classes for mode=scene, separate from the outer multiple-choice response labels.
+> target_groups Semantic target id to one or more open-vocabulary prompts; prompts in one group are fused as one class.
+> landmarks Exactly two visible landmark descriptions, re-quired only for measurement mode.
+> view tiles adds non-overlapping detail views for large images.
+> gsd One ground sample distance for all images, or one meters-per-pixel value per image.
+> quality_policy strict enables an opt-in confidence/geometry gate and aretry when arequired target group is missing. TABLE XII KEY ARGUMENTS OF M E A S U R E .Argument Description visible to the model (sum-mary)
+> sources Explicit perception sources. Declare the needed geometry instead of asking the tool to infer it from question wording.
+> spec Typed metric, subject/reference labels, spatial relation, optional distance, de-nominator, and output unit.
+> source.mode objects / regions / change / extent; de-rived spatial relations go only in spec.
+> source.gsd Meters per pixel for each source image. Required when this layer is used with meter or square-meter geometry.
+> source.backend Use local for measurable geometry. VLM geometry is approximate and may be rejected by the measurement con-tract.
+> spec.distance_statistic minimum is the closest pair; mean and maximum aggregate one edge distance per subject instance or component.
+
+C. Standard Products of execute 
+
+execute includes five LST retrieval products: single_ channel_lst , multi_channel_lst , split_ window_lst , ttm_lst , and tes . It also includes five other products: normalized_difference , pwv_ band_ratio , tvdi , day_night_temperature , and 
+
+apparent_thermal_inertia . A product is declared through asset.catalog , mapped to each observation by 
+
+raster.product , and aggregated by raster.batch_ reduce into a timestamped scalar series. APPENDIX BAGENT AND VERIFICATION PROMPTS 
+
+A. Main System Prompt 
+
+Main system prompt (SYSTEM PROMPT) 
+
+You are RSure, a remote-sensing analysis agent with four tools. - rs retrieve supplies trusted concepts and standard work-flows. - rs perceive extracts option-neutral visual evidence, documents, object layers, region layers, change layers, or a scale-bar measurement. - rs measure turns explicitly declared visual sources, spatial relations, units, and GSD into one deterministic numeric observation. - rs execute runs typed DAGs for products, raster math, statistics, time series, and spatial relations. Plan from evidence, never benchmark names or shortcuts. Retrieve only missing knowledge. Ground pixel claims in perception. For spatial measurements use rs measure with declared sources, relation, units, and GSD. Use objects for instances, regions for surfaces, change for ordered T1/T2, and extent for stated rectangles. Put derived rela-tions in spec. Execute numeric, temporal, and coordinate-based spatial computations. Ground qualitative heading judgments in visible front and rear features. EO algorithms require physical product inputs. Prefer one complete DAG. Use inputs.data=@node; fields only for non-primary results. raster.summarize takes one raster; product collections use raster.batch reduce before temporal stages. Filter phases in asset.catalog params.phases; bind ambiguous bXX roles with role bands; pass date bounds in params.start/end. Use masks only for spatial validity. threshold fraction uses params.threshold/comparison. For scene classification, declare taxonomy in label space, never final A/B/C/D labels. Use one exact class per source image and repair insufficient output. Compare success-ful measurements with choices when provided; use deci-sion.select for numeric candidates. Failed or low-quality evidence never means absence. Do not repeat successful calls, invent constants, guess measurable values, or artifact paths. Return only requested concise format. 
+
+B. Online Verification Prompt 
+
+The verifier Meval receives the inputs in (10) with the following prompt. 
+
+Online verification prompt 
+
+You are an independent observation verifier for a remote-sensing agent. Decide whether the current tool observation is sufficiently supported. TASK TYPE: {task type } QUESTION: {question }
+
+TOOL ACTION: {tool action } TOOL OBSERVATION: 
+
+{observation } PROCESS EVIDENCE: {evidence } RELI-ABILITY PRIOR: {prior }
+
+Check: 1. What should be checked for the current task? 2. Does the image support the observation? 3. Does the process evidence support the observation? 4. Is additional 17 
+
+evidence needed? 5. Use the reliability prior only as historical reference. A low prior requires stricter evidence; a high prior never waives evidence. If the prior is None, decide from the remaining inputs only. Decide exactly one: - accept: the evidence sufficiently supports the observation. - request evidence: additional evidence is needed to determine whether the current obser-vation is correct or applicable. - reject: the evidence shows the observation is wrong or inapplicable; state the reason. 
+
+C. Final Answer Synthesis Prompt 
+
+The final answer is generated in a new context with the following prompt. 
+
+Final answer synthesis prompt 
+
+Answer the original task using only the verified obser-vations below. Ignore rejected or unverified results. If the verified observations are insufficient for the requested measurement, follow the task-specific answer requirement. When an explanatory response is allowed, state what evidence is missing. Do not invent missing measurements. Return only the required final answer. TASK: {task } ANSWER REQUIREMENT: 
+
+{response contract } VERIFIED OBSERVATIONS: 
+
+{verified history }
+
+The answer requirement c comes from the benchmark adapter (Appendix B-E), and numerical answers carry the units required by the task. 
+
+D. VLM Perception Prompts 
+
+Each perception mode sends a common prefix and mode-specific instructions to the VLM. 
+
+Common prefix 
+
+You are a remote-sensing perception component. Use only visible evidence. Return one strict JSON object, without markdown. Modality hint: {modality }. GSD: {gsd } m/px. Objective: {objective }
+
+The mode-specific instructions follow. The evidence 
+
+mode stays option-neutral. 
+
+evidence mode 
+
+Provided views in order: {view descriptions }. Detail tiles from one source do not overlap; use the overview for con-text and count each tile exactly once. Candidate options: 
+
+{options }
+
+Extract visible evidence without choosing a final answer. Candidate concepts only define which visible distinctions matter; do not compare, rank, support, contradict, or rec-ommend candidates. Do not return answer, answer label, or a preferred option. For workflow diagrams, separate the purpose of the full input-output graph from the names of internal steps. For plots, identify the axis scale first. Anchor at least two visible tick values to their positions, and interpolate peaks or crossings in the transformed axis coordinates. Never estimate values from apparent spacing alone. Report plot calibration in measurements with the scale and at least two {tick value, normalized position } anchors. Include each important feature’s normalized position and interpo-lated value. Return keys evidence kind (scene/diagram/plot/map/doc-ument/geometry/change), observations, visible text, mea-surements, spatial relations, quality, missing evidence, un-certainty. Each observation has claim, view index, optional region, and confidence. quality has visibility, readability, and issues. quality.visibility must be clear, limited, or unusable; quality.readability must be clear, limited, or unreadable. 
+
+document mode 
+
+Transcribe only visible text, axes, legends, labels, panels, and their spatial relations. Do not identify an unlabeled subject, interpret its meaning, compare candidates, or an-swer the objective. Return keys text, structure, confidence. 
+
+measurement mode 
+
+Displayed views in order: {view descriptions }. Landmark A: {landmark A } Landmark B: {landmark B }
+
+Locate only those two visible landmarks and one visible scale bar from the same source image. Do not infer an an-swer, choose a candidate, estimate a final ground distance, or use information not visible in the image. Coordinates must be in pixels of the corresponding displayed view, with origin at upper-left. For a labeled or arrowed feature, locate the indicated physical marker or arrow tip, never the label glyph itself. For a scale bar, locate the endpoints of the physical bar line or tick marks, never its text label or surrounding box. Return exactly {measurement: {view index, point a: 
+
+{label, xy, view index, uncertainty px }, point b: {label, xy, view index, uncertainty px }, scale bar: {start xy, end xy, view index, ground length, unit, uncertainty px, ground length uncertainty }, confidence }} .A point and the scale bar may use different displayed detail views of the same source image. ground length is the numeric value printed by the scale bar, and unit is its separate visible unit text. 
+
+scene mode 
+
+Candidate scene classes: {options } Displayed source im-ages in order: {view descriptions }.Classify the overall scene of every source image using visible land use, geometry, and context. Return exactly one strict JSON object with keys predictions and evidence. predictions must contain exactly one object for each source image, with no ranked alternatives. Each object has the fol-lowing fields: {image index: 1-based source image index, 18 
+
+class name: one exact candidate scene class, confidence: number from 0 to 1, evidence: short visible justification }.Every image index from 1 through the number of source images must appear exactly once. Do not return final answer letters or a label outside Candidate scene classes. 
+
+objects / regions mode 
+
+Target groups: {target groups } Displayed image views in order: {view descriptions }.When detail tiles are present, use overviews only for context and report geometry from the non-overlapping detail tiles, so each target is returned once. Return key {mode }, a list. Each item must contain view index (1-based), target group id, label, confidence, and ei-ther bbox xyxy=[x1,y1,x2,y2] or polygon xy=[[x,y],...] in displayed-image pixels. 
+
+change mode 
+
+Compare the images in order. Report changed regions on the corresponding displayed view. Each changed re-gion must contain view index, target group id, label, confidence, and either bbox xyxy=[x1,y1,x2,y2] or poly-gon xy=[[x,y],...]. Return keys changed regions, evidence, confidence, uncertainty. The local zero-shot scene backend ensembles four templates, a satellite image of {label }, an aerial photograph of {label }, a remote sensing scene of {label }, and a top-down remote sensing view of {label }, where {label }
+
+comes from the declared label_space .
+
+E. Task Templates 
+
+Each benchmark adapter turns an official sample into the task text below. For benchmarks with candidate answers, the model must choose one candidate from the available evidence even if an information gap remains. This rule follows the benchmark evaluation setting and is also part of the answer requirement c, as shown in the EarthBench template. 
+
+EarthBench task template 
+
+Solve this remote-sensing data-analysis task. Clean data di-rectory: {clean dir } Official input files ( {n}): {inventory }
+
+Question: {question } { options } Return the final result in the format {answer format }.When candidate answers are provided for this benchmark, return exactly one candidate answer in the required format. 
+
+ThinkGeo task template 
+
+Solve this remote-sensing task from the supplied images. Images: {images }
+
+Task: {question } Return a concise concrete answer con-taining every requested value, direction, count, and unit. 
+
+TABLE XIII RETRIEVAL CARD INDEX .id title capability (3 cards) cap.visual Visual perception cap.compute Deterministic computation cap.dag contract Deterministic DAG contract recipe (13 cards) recipe.normalized difference Normalized difference recipe.threshold ratio Threshold fraction recipe.conditional raster statistics Conditional raster statistics recipe.thermal raster products Thermal raster product retrieval recipe.pwv band ratio Near-infrared PWV band ratio recipe.tvdi Temperature Vegetation Dryness Index recipe.temporal trend Temporal aggregation and trend recipe.spatial relation Spatial relation over layers recipe.change Multi-temporal change recipe.raster collection aggregation Aligned raster collection aggregation recipe.series distribution and sen Distribution statistics and robust trend recipe.day night temperature Paired day and night temperature recipe.apparent thermal inertia Apparent thermal inertia knowledge (13 cards) knowledge.raster scaling Raster storage scale and physical values knowledge.sar SAR interpretation knowledge.hyperspectral Spectral and hyperspectral reasoning knowledge.photogrammetry Photogrammetry knowledge.gnss GNSS knowledge.lidar dem LiDAR and elevation knowledge.thermal Thermal remote sensing knowledge.atmospheric spectroscopy Atmospheric transmission and spectroscopy knowledge.cartography Cartography and map projections knowledge.dem derivatives DEM slope and aspect knowledge.image quality Remote-sensing image quality knowledge.remote sensing resolution Remote-sensing resolution and sampling knowledge.landsat qa pixel Landsat QA PIXEL validity bits 
+
+TerraLogic task template 
+
+Solve this remote-sensing spatial-analysis task with-out candidate options. Images: {image text } Question: 
+
+{question } Return only the requested numeric result and unit as <Answer>value unit</Answer> .APPENDIX CRETRIEVAL CARD LIBRARY 
+
+retrieve performs semantic retrieval over 29 local cards: 3 capability-routing cards, 13 algorithm recipes, and 13 domain-knowledge cards (Table XIII). For exam-ple, recipe.temporal_trend defines the per-image aggregation and Theil–Sen trend computation used in Fig. 3(B), and recipe.thermal_raster_products 
+
+lists the physical inputs of each LST product, in-cluding the emissivity31/32 missing in Fig. 3(C). 
+
+knowledge.landsat_qa_pixel defines the QA PIXEL validity bit masks used as validity evidence. All cards are released with the code. APPENDIX DTASK TYPES OF CHOICE-420 Table XIV lists the 21 task types of CHOICE-420. Fol-lowing CHOICE [22], perception covers image-level com-prehension, single-instance identification, and cross-instance discernment, and reasoning covers attribute, assessment, and common-sense reasoning. All tasks are multiple-choice. For example, Image Caption selects a candidate caption instead of generating one, and Object Localization selects a position description instead of outputting box coordinates. 19 
+
+TABLE XIV TASK TYPES OF CHOICE-420 (20 SAMPLES PER TYPE ). Category Task Type Definition Answer Form Perception Image Modality Identify the sensor type or imaging mode of the image Image modality Image Quality Judge or compare image quality Quality judgment Map Recognition Identify the region from the outline or content of a map Region Scene Classification Identify the overall scene category of the image Scene category Image Caption Judge whether a candidate caption matches the overall image content Matching caption Landmark Recognition Identify a specific landmark in the image Landmark name Object Counting Count the objects of a given category Object count Object Localization Determine the position of a target in the image Position description Object Presence Determine whether a given target exists Presence judgment Attribute Recognition Identify the category or visible attributes of a given instance Attribute Hallucination Detection Judge whether a question or description contains content not supported by the image Consistency judgment Attribute Comparison Compare the visible attributes of multiple instances Comparison result Spatial Relationship Determine the relative positions of targets Spatial relationship Change Detection Identify changes in the same area at different times Change description Reasoning Time Property Infer temporal attributes such as the season from the image Time property Physical Property Infer physical attributes such as the height of a target Value Environmental Assessment Estimate environmental indicators or conditions from the image Indicator level Resource Assessment Estimate resource indicators such as population from the image Estimate Disaster Discrimination Determine the disaster type from the image Disaster type Geospatial Determination Determine the city or country from cues such as landmarks Location Situation Inference Infer related activities or objects from the scene and common sense Situation judgment 
+
+The task taxonomy, sampling rules, and full task instances of CHOICE-420 will be released with the code. APPENDIX ETASK –T OOL RELIABILITY PRIOR 
+
+The prior matrices are built from the 1,200 calibration tasks in Section IV-C and use the 21 task types in Appendix D. The coarse and fine matrices have 37 and 88 configuration columns, of which 27 and 18 have non-empty scores. Each level is filtered by its own call counts and keeps only entries with n(z, v ) ≥ nmin = 8 . A dash (–) means that no prior is available, not that the score is zero. Because this filtering is done offline, the exported matrices contain only scores, and online queries apply (7) to the kept entries. Scores are rounded to three decimals. 
+
+A. Coarse Reliability Matrix 
+
+Coarse configurations are defined by mode for perception, 
+
+metric for measurement, and op for execution. Table XV lists the perception modes and selected measurement metrics and execution operators, grouped by tool. Each score belongs to one task and configuration and should be queried with the full configuration identifier. 
+
+B. Examples of the Fine Reliability Matrix 
+
+Fine perception configurations are defined by mode, back-end, and view, where auto denotes automatic selection. Fine measurement configurations are defined by metric, spatial relation, and input layer type, with the original export labels. Table XVI shows perception and measurement examples in panels (a) and (b), respectively. The fine export has no execution columns. Each level computes its scores from its own call counts, so coarse scores are not averages of fine scores. The full configuration matrix and the task label mapping will be released with the code. 20 
+
+TABLE XV COARSE RELIABILITY PRIOR GROUPED BY TOOL .Perception Measurement Execution Task type change doc. evid. meas. objects regions scene area boolean count distance asset. catalog raster. product raster. summarize Attribute Comparison – – 0.970 – 0.909 – – – – – – – – –Change Detection 0.321 – 0.947 – 0.830 – – 0.833 – 0.964 – – – –Spatial Relationship – – 0.988 – 0.880 0.818 – 0.857 – 0.951 0.860 – – –Image Caption – – 0.923 – – – 0.909 – – – – – – –Image Modality – – 0.966 – – – – – – – – – – –Image Quality – – 0.964 – – – – – – – – – – –Map Recognition – – 0.893 – – – – – – – – – – –Scene Classification – – – – – – 0.955 – – – – – – –Attribute Recognition – – 0.974 – 0.958 – – – – – – – – –Hallucination Detection – – 0.909 – 0.455 – – – – – – – – –Landmark Recognition – – 0.963 – – – – – – – – – – –Object Counting – – 0.971 – 0.926 0.750 – 0.714 – 0.968 – – – –Object Localization – – 0.971 – 0.931 0.600 – – – 0.933 0.818 – – 0.971 Object Presence – – – – 0.800 – – – – 0.867 – – – –Environmental Assessment – 0.875 0.885 – 0.852 – 0.913 – – – – 0.803 0.810 0.973 Resource Assessment – – 0.964 – 0.571 – – – – 0.727 – – – 0.900 Physical Property – – 0.956 0.200 0.872 0.750 – 0.686 – – 0.833 – – –Time Property – – 0.963 – – – – – – – – – – –Disaster Discrimination 0.346 – 0.936 – 0.865 0.938 – 0.800 0.900 0.897 0.944 – – –Geospatial Determination – – 0.955 – – – – – – – – – – –Situation Inference – – 0.973 – 0.733 – – – – – – – – –   
+
+> doc. = document ; evid. = evidence ; meas. = measurement .
+
+TABLE XVI FINE RELIABILITY PRIOR : PERCEPTION AND MEASUREMENT CONFIGURATIONS .(a) Perception configurations Mode Backend View Image Caption Object Counting Object Presence Spatial Relationship Attribute Comparison Change Detection Scene Classification 
+
+evidence auto auto 0.900 0.958 – 0.983 0.964 0.957 –
+
+evidence auto overview 0.917 – – – – – –
+
+evidence auto tiles – 0.909 – 0.929 – – –
+
+evidence vlm auto – – – 0.900 – – –
+
+objects auto auto – 0.918 0.800 0.889 0.905 0.857 –
+
+objects local auto – – – 0.929 – – –
+
+scene auto auto – – – – – – 0.955 
+
+change auto auto – – – – – 0.321 –(b) Measurement configurations Metric Relation Sources Object Counting Object Presence Object Localization Change Detection Spatial Relationship Physical Property Disaster Discrimination Environmental Assessment 
+
+area auto regions 0.818 – – – 0.846 0.706 0.917 –
+
+count auto objects 0.975 0.867 0.923 0.917 – – 0.824 –
+
+count within_ distance objects+ objects – – – – 0.941 – – –
+
+distance nearest objects – – – – 0.867 – – –
+
+distance nearest objects+ objects – – – – 0.846 – – –
+
+unknown auto unknown 0.036 – 0.030 0.027 0.018 0.028 0.017 0.091
