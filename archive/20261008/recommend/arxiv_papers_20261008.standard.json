@@ -1,0 +1,295 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-08T23:42:43.918338+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 5,
+    "quick_skim_target": 11,
+    "quick_selected": 5
+  },
+  "deep_dive": [
+    {
+      "id": "2610.04836v1",
+      "source": "arxiv",
+      "title": "RSure-Agent: Reliable Use of Tool Observations for Remote Sensing Agents",
+      "abstract": "Remote sensing agents rely on perception, measurement, and raster analysis tools to solve Earth observation tasks. We refer to their judgments and quantitative results about ground objects as tool observations. However, these observations are subject to substantial uncertainty and may be incorrect even when the tools execute successfully. When agents accept incorrect observations, the errors can propagate through subsequent reasoning and cause task failure. We analyze 1,229 execution trajectories across three remote sensing agent benchmarks. On each benchmark, at least 88.1% of tasks depend on tool observations. Among these tasks, at least 22.7% contain incorrect observations despite successful tool execution. These errors propagate to the final answer in at least 82.0% of affected tasks on each benchmark. To address this problem, we propose RSure-Agent, a framework for verifying tool observations and limiting error propagation. We introduce a verifiable observation protocol that requires tools to return process evidence for the agent to verify their observations. We also construct a task-tool reliability prior from offline task feedback. The prior summarizes each tool configuration's past performance across task types and provides a task-specific reference for verification. Using process evidence and this prior, RSure-Agent decides whether to accept an observation, request additional evidence, or reject it. We evaluate RSure-Agent on EarthBench, ThinkGeo, TerraLogic, and CHOICE-420. Across the three agent benchmarks, RSure-Agent reduces the error propagation rate by 21.3 to 25.9 percentage points relative to the base configuration with verification and the prior disabled. On CHOICE-420, it improves overall accuracy over direct answering by 5.71 percentage points on average across 11 backbone models. On EarthBench, it reduces the tool-call ratio by 25.9% relative to Earth-Agent.",
+      "authors": [
+        "Fuyuan Liu",
+        "Nayu Liu",
+        "Wenhao Yu",
+        "Peijin Wang",
+        "Yingchao Feng",
+        "Fanglong Yao",
+        "Liang Wan",
+        "Wei Feng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-04T00:43:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.04836v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "remote sensing agents and tool observation reliability",
+      "llm_evidence_cn": "遥感智能体与工具观测可靠性",
+      "llm_evidence": "遥感智能体与工具观测可靠性",
+      "canonical_evidence": "遥感智能体与工具观测可靠性",
+      "llm_tldr_en": "Remote sensing agents rely on tool observations that can be wrong despite successful execution, propagating errors; this work analyzes 1,229 trajectories and proposes reliability mechanisms.",
+      "llm_tldr_cn": "遥感智能体依赖感知、测量与栅格分析工具完成地球观测任务，但工具即便成功执行，其观测结果仍可能出错，错误会沿后续推理传播并导致任务失败。本文分析了三个遥感智能体基准上的1229条执行轨迹，发现至少88.1%的任务依赖工具观测，其中至少22.7%含错误观测。作者据此提出提升工具观测可靠性的机制，以减少错误在推理链中的传播。",
+      "llm_tldr": "遥感智能体依赖感知、测量与栅格分析工具完成地球观测任务，但工具即便成功执行，其观测结果仍可能出错，错误会沿后续推理传播并导致任务失败。本文分析了三个遥感智能体基准上的1229条执行轨迹，发现至少88.1%的任务依赖工具观测，其中至少22.7%含错误观测。作者据此提出提升工具观测可靠性的机制，以减少错误在推理链中的传播。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.09112v1",
+      "source": "arxiv",
+      "title": "GeoNatureAgent (GNA): A Framework and Benchmark for Pre-Production Evaluation of Tool-Using Agents on Geospatial and Environmental Tasks",
+      "abstract": "Before tool-using LLM agents are deployed in environmental and geospatial workflows, teams need evidence that an agent reliably selects the right operations against real APIs. We introduce GeoNatureAgent (GNA), a framework for pre-production evaluation of tool-using agents: a fixed sixteen-tool geospatial interface published as a Model Context Protocol (MCP) server, so the agent under test is the only variable, scored against an identical tool layer, task suite, and deterministic scorer. Its flagship instance is a 103-task benchmark (a 93-task main suite across 18 categories plus a ten-task comparison expansion) evaluated against an open, self-hostable geospatial API serving three environmental indicators across Spain and Portugal. We evaluate nine LLMs under three temperature-1.0 seeds, reporting capability and per-case cost as orthogonal axes. (1) Claude Sonnet 4 achieves the highest capability (61.7% +/- 0.7% on all 103 tasks; 60.8% on the main suite), followed closely by DeepSeek V3.2 (57.9%), while no other model exceeds 53%; (2) the cost-accuracy Pareto frontier is mostly open-weight, with DeepSeek V3.2 offering 93% of Claude's capability at 11.3x lower list-price cost; (3) under strict all-checks scoring the best model sits 24-36 points below the 85-97% reported on general-purpose GIS benchmarks, whereas per-check partial credit for the top four models (86-90%) is comparable, so much of that gap reflects scoring strictness rather than task difficulty alone. The MCP server, evaluation harness, benchmark, and API are publicly available; swapping the tool executors and task suite instantiates an equivalent benchmark for any geospatial domain.",
+      "authors": [
+        "Gabriel Diaz-Ireland",
+        "Diego Prieto-Herráez",
+        "Mario García Peces",
+        "Javier Velázquez",
+        "Benjamin Zaitchik",
+        "Devika Jain"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-06T21:03:04+00:00",
+      "link": "https://arxiv.org/pdf/2610.09112v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "tool-using LLM agents for geospatial and environmental tasks",
+      "llm_evidence_cn": "面向地理与环境任务的工具型大模型智能体",
+      "llm_evidence": "面向地理与环境任务的工具型大模型智能体",
+      "canonical_evidence": "面向地理与环境任务的工具型大模型智能体",
+      "llm_tldr_en": "GeoNatureAgent provides a fixed sixteen-tool MCP geospatial interface and a 103-task benchmark to evaluate whether tool-using LLM agents reliably select correct operations for environmental and geospatial workflows.",
+      "llm_tldr_cn": "针对工具型大模型智能体在地理与环境工作流部署前缺乏可靠性证据的问题，作者提出GeoNatureAgent框架与基准。它以模型上下文协议服务器提供固定的十六工具地理接口，使被测智能体成为唯一变量，并用确定性评分器评估。旗舰基准含103个任务，覆盖18类环境与地理操作，为遥感与环境评估中的智能体选型提供标准化测试。",
+      "llm_tldr": "针对工具型大模型智能体在地理与环境工作流部署前缺乏可靠性证据的问题，作者提出GeoNatureAgent框架与基准。它以模型上下文协议服务器提供固定的十六工具地理接口，使被测智能体成为唯一变量，并用确定性评分器评估。旗舰基准含103个任务，覆盖18类环境与地理操作，为遥感与环境评估中的智能体选型提供标准化测试。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.06196v1",
+      "source": "arxiv",
+      "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+      "abstract": "Remote sensing images often carry composite degradations, in which haze, cloud, noise, blur, low light, and low resolution coexist. Restoring them requires deciding which tool to apply, in what order, and when to stop, yet no clean reference is available at inference time to verify these decisions. All-in-one models trained on single degradations converge to a narrow PSNR band as degradations accumulate. To formulate real-world remote sensing restoration as a traceable trajectory, we present EORestore-Agent, which replaces this unmeasurable objective with reference-free, verifiable per-step decisions. A fine-tuned vision-language model reports all residual degradation types, whose tool pools are scored together, so the restoration order emerges from step-wise selection. A relative quality scorer, trained with full-reference supervision on synthetic degradation chains, predicts the changes in PSNR, SSIM, and LPIPS from the current image to each candidate. A step is accepted only when no predicted change is negative and the predicted PSNR gain is positive. Otherwise, the agent keeps the current image. On a synthetic Landsat-8 benchmark with six degradation types, EORestore-Agent improves PSNR by 2.3 to 3.2 dB over the strongest retrained all-in-one baseline on composites of two to six degradations, whereas zero-shot natural-image agents fall below the degraded input in PSNR in 17 of 18 settings. Replacing the learned scorer with no-reference quality differences costs 1.1 to 4.6 dB. The remaining harmful steps are small and cluster near the acceptance threshold. Sentinel-2 examples illustrate transfer to real atmospheric degradation without retraining.",
+      "authors": [
+        "Heli Qi",
+        "Zeqi Zhou",
+        "Jingjun Yi",
+        "Kunyi Liu",
+        "Ziyang Lihe",
+        "Junjue Wang",
+        "Osamu Yoshie",
+        "Naoto Yokoya"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T12:11:31+00:00",
+      "link": "https://arxiv.org/pdf/2610.06196v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agentic vision-language framework for restoring degraded remote sensing images",
+      "llm_evidence_cn": "面向退化遥感图像恢复的智能体视觉语言框架",
+      "llm_evidence": "面向退化遥感图像恢复的智能体视觉语言框架",
+      "canonical_evidence": "面向退化遥感图像恢复的智能体视觉语言框架",
+      "llm_tldr_en": "EORestore-Agent formulates remote sensing restoration with composite degradations as a traceable trajectory, using a fine-tuned VLM to make reference-free, verifiable per-step tool decisions.",
+      "llm_tldr_cn": "遥感图像常同时存在雾、云、噪声、模糊、低照度与低分辨率等复合退化，恢复时需决定工具顺序与停止时机，但推理时缺乏干净参照。本文提出EORestore-Agent，将恢复建模为可追踪的决策轨迹，用微调视觉语言模型报告残余退化类型并对工具池联合打分，实现无参考、可验证的逐步决策。该方法提升了复杂退化下的恢复稳定性，其智能体式遥感处理思路可迁移到海洋遥感分析。",
+      "llm_tldr": "遥感图像常同时存在雾、云、噪声、模糊、低照度与低分辨率等复合退化，恢复时需决定工具顺序与停止时机，但推理时缺乏干净参照。本文提出EORestore-Agent，将恢复建模为可追踪的决策轨迹，用微调视觉语言模型报告残余退化类型并对工具池联合打分，实现无参考、可验证的逐步决策。该方法提升了复杂退化下的恢复稳定性，其智能体式遥感处理思路可迁移到海洋遥感分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.07928v1",
+      "source": "arxiv",
+      "title": "Dynamic Alignment and Calibration for Multimodal Learning",
+      "abstract": "Dynamic multimodal learning aims to learn robust representations by adaptively modeling information discrepancies across modalities. However, existing methods still suffer from two limitations: (i) static cross-modal alignment strategies usually impose uniform constraints on all samples while overlooking sample-wise variations, potentially leading to unreasonable over-alignment; and (ii) confidence- or uncertainty-aware fusion methods often fail to adequately account for feature magnitude and confidence differences across modalities. For modality pairs with significant feature magnitude differences or small confidence gaps, it might be unreliable to strictly align fusion weights according to confidence. To address these issues, we propose an Alignment- and Calibration-driven Multimodal Learning framework (ACML). Specifically, ACML incorporates a dynamic cross-modal triplet alignment module, which enforces strong semantic consistency for high-confidence positive pairs while encouraging diverse representation learning between high- and low-confidence positive pairs according to their confidence gaps. Additionally, ACML introduces a difference-aware attention calibration strategy that adaptively adjusts attention regularization based on feature magnitude and confidence differences across modalities, thereby mitigating biases caused by unreasonable fusion constraints. Extensive experiments on multiple multimodal benchmark datasets demonstrate that ACML consistently achieves superior performance and robustness over recent state-of-the-art methods.",
+      "authors": [
+        "Jinghao Xu",
+        "Zhenhua Guo",
+        "Xiaofeng Zhu",
+        "Xiaoshuang Shi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-06T08:05:46+00:00",
+      "link": "https://arxiv.org/pdf/2610.07928v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal alignment and fusion of modalities",
+      "llm_evidence_cn": "多模态对齐与融合",
+      "llm_evidence": "多模态对齐与融合",
+      "canonical_evidence": "多模态对齐与融合",
+      "llm_tldr_en": "Dynamic multimodal learning suffers from static alignment and unreliable confidence fusion; this work proposes alignment and calibration considering feature magnitude and confidence gaps.",
+      "llm_tldr_cn": "动态多模态学习希望通过自适应建模模态间信息差异来获得鲁棒表示，但现有方法存在静态对齐约束过于统一、以及置信度感知融合未充分考虑特征量级与置信度差异的问题。本文提出对齐与校准框架，按样本自适应地进行跨模态对齐，并同时考虑特征量级与置信度差异来调整融合权重。实验表明该方法在模态差异较大时更为可靠，为多模态表示学习提供更稳健的融合策略。",
+      "llm_tldr": "动态多模态学习希望通过自适应建模模态间信息差异来获得鲁棒表示，但现有方法存在静态对齐约束过于统一、以及置信度感知融合未充分考虑特征量级与置信度差异的问题。本文提出对齐与校准框架，按样本自适应地进行跨模态对齐，并同时考虑特征量级与置信度差异来调整融合权重。实验表明该方法在模态差异较大时更为可靠，为多模态表示学习提供更稳健的融合策略。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.08933v1",
+      "source": "arxiv",
+      "title": "Toward Evidence-Driven Human-Agent-Robot Teaming for Earth-Independent Anomaly Triage",
+      "abstract": "Deep-space crews cannot rely on real-time ground support for urgent off-nominal events. Initial alerts may underdetermine cause, while discriminating evidence may reside in crew observations or at locations that are unsafe, costly, or unavailable for crew inspection. We present an evidence-driven architecture for human-agent-robot teaming in Earth-independent anomaly triage. Agentic AI is treated as a stateful coordinator over bounded, inspectable services rather than as a fully autonomous vehicle controller. A triage state manager maintains hypotheses, evidence provenance, uncertainty, operational context, and tool status; a crew-facing embodied agent elicits observations and explains assessment changes; and a mobile robot acquires targeted, localized evidence. Typed interfaces separate dialogue and orchestration from monitoring, robot command, context retrieval, and safety-critical control. Two scenarios illustrate the architecture: a crewed deep-space mission based on an actual ISS ammonia false alarm, where suspected contamination restricts crew access, and a power-interface anomaly at a crewed lunar base, where robotic inspection distinguishes a local connector fault from other causes ambiguous in remote telemetry. Our main contribution is an authority-bounded closed evidence-loop architecture, exercised in a hardware-in-the-loop integration prototype using Reachy Mini and an Innate MARS mobile robot.",
+      "authors": [
+        "Ignacio G Lopez-Francos",
+        "Alexis Gallagher",
+        "Samira Shalal"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.HC"
+      ],
+      "published": "2026-10-06T18:03:09+00:00",
+      "link": "https://arxiv.org/pdf/2610.08933v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Agentic AI architecture as stateful coordinator for autonomous anomaly triage",
+      "llm_evidence_cn": "智能体AI架构作为自主异常分诊协调器",
+      "llm_evidence": "智能体AI架构作为自主异常分诊协调器",
+      "canonical_evidence": "智能体AI架构作为自主异常分诊协调器",
+      "llm_tldr_en": "Deep-space anomaly triage lacks real-time ground support. The paper presents an evidence-driven human-agent-robot teaming architecture where agentic AI acts as a stateful coordinator managing hypotheses and evidence, improving autonomous diagnosis under communication limits.",
+      "llm_tldr_cn": "深空乘组无法依赖地面实时支持，初始告警往往不足以确定故障原因，判别性证据可能位于危险或不可达位置。本文提出证据驱动的人-智能体-机器人协同架构，将智能体AI作为有状态协调器管理假设、证据溯源与不确定性，并由具身智能体与移动机器人获取证据。该架构提升通信受限下的自主诊断能力，为智能体架构在自主监测与异常处理中的落地提供可解释范式。",
+      "llm_tldr": "深空乘组无法依赖地面实时支持，初始告警往往不足以确定故障原因，判别性证据可能位于危险或不可达位置。本文提出证据驱动的人-智能体-机器人协同架构，将智能体AI作为有状态协调器管理假设、证据溯源与不确定性，并由具身智能体与移动机器人获取证据。该架构提升通信受限下的自主诊断能力，为智能体架构在自主监测与异常处理中的落地提供可解释范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "What intelligent agent architectures are proposed for autonomous ocean monitoring?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.09456v1",
+      "source": "arxiv",
+      "title": "GeoPrior-Mamba: Structured Process Priors with Mamba for Fine-Resolution XCO2 Reconstruction",
+      "abstract": "Reconstructing fine-resolution column-averaged dry-air CO2 (XCO2) fields from sparse satellite observations requires models to infer spatial structure that is only weakly constrained by direct measurements. Existing learning-based methods typically treat environmental covariates as ordinary numerical inputs and must therefore learn heterogeneous source-sink relationships largely from sparse supervision. We introduce GeoPrior-Mamba, a multi-directional Mamba framework augmented with offline language-model-induced structured process priors. Rather than using a language model to predict XCO2, we use it before training to organize relative process knowledge for biospheric uptake, ecosystem respiration, and anthropogenic emissions into deterministic prior tables. These priors are spatially instantiated using geographic, ecological, emission-related, and seasonal information and are adaptively injected into the reconstruction backbone through a lightweight knowledge adapter. Using OCO-2 observations from 2018-2020, GeoPrior-Mamba achieves an RMSE of 0.81 ppm and an R2 of 0.93 on held-out observations, reducing RMSE by 48.2% relative to CAMS background interpolation and by 3.1% relative to Trans-XCO2 under the same evaluation protocol. Ablation experiments show a measurable contribution from the knowledge-prior branch and substantially faster convergence than the knowledge-free Mamba backbone. Independent TCCON evaluation further supports the consistency of the reconstructed fields with ground-based column CO2 measurements. These results suggest that language models can provide a practical mechanism for constructing structured process priors when globally consistent process-response representations are difficult to obtain directly, while remaining outside the numerical prediction loop.",
+      "authors": [
+        "Zhao Meng",
+        "Yinan Cai",
+        "Siru Zhong",
+        "Juepeng Zheng",
+        "Haohuan Fu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-07T05:11:52+00:00",
+      "link": "https://arxiv.org/pdf/2610.09456v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "language-model-induced priors fused with remote sensing reconstruction",
+      "llm_evidence_cn": "语言模型先验与遥感重建的融合",
+      "llm_evidence": "语言模型先验与遥感重建的融合",
+      "canonical_evidence": "语言模型先验与遥感重建的融合",
+      "llm_tldr_en": "GeoPrior-Mamba injects offline language-model-induced structured process priors into a multi-directional Mamba framework to reconstruct fine-resolution XCO2 fields from sparse satellite observations.",
+      "llm_tldr_cn": "从稀疏卫星观测重建精细分辨率XCO2场需要推断仅被弱约束的空间结构，现有学习方法难以从稀疏监督中学到异质源汇关系。本文提出GeoPrior-Mamba，在多方向Mamba框架中引入离线语言模型诱导的结构化过程先验，用其组织生物吸收、生态系统呼吸与人为排放的相对过程知识，而非直接预测XCO2。实验表明该先验有助于在稀疏监督下提升重建质量。该工作展示了语言模型先验与遥感重建结合的多模态潜力。",
+      "llm_tldr": "从稀疏卫星观测重建精细分辨率XCO2场需要推断仅被弱约束的空间结构，现有学习方法难以从稀疏监督中学到异质源汇关系。本文提出GeoPrior-Mamba，在多方向Mamba框架中引入离线语言模型诱导的结构化过程先验，用其组织生物吸收、生态系统呼吸与人为排放的相对过程知识，而非直接预测XCO2。实验表明该先验有助于在稀疏监督下提升重建质量。该工作展示了语言模型先验与遥感重建结合的多模态潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.10496v1",
+      "source": "arxiv",
+      "title": "Evolutionary Architecture Search for Chlorophyll-$a$ Prediction in Lakes using Sentinel-2",
+      "abstract": "Small tabular datasets with expert-designed spectral features are the norm in   operational Earth observation, and the networks applied to them are typically   hand-designed. We revisit one such published model -- a Sentinel-2 algal   bloom classifier -- and ask what architecture search adds, holding the task,   the features and the lake-level train/test split of the original study fixed.   Searching an extended multilayer-perceptron space with regularized evolution,   and selecting on inner-cross-validation AUC only, we find networks that   improve held-out AUC from 0.790 to 0.820 and accuracy from 0.733 to 0.748   while using 409 trainable parameters, 26 times fewer than the strongest   hand-designed reference. The search converges on a consistent recipe -- a   single narrow layer, RMS normalisation, $\\tanh$ activation, step-decayed   RMSprop and weight averaging -- that a practitioner would be unlikely to   reach by default. At 1.6\\,kB the resulting model is small enough to serve as   an onboard screening trigger, which is the setting that motivates the work.   Code: https://github.com/VU-AIML/automl4eo-bloom-nas.",
+      "authors": [
+        "Kursat Komurcu",
+        "Linas Petkevicius"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.LG"
+      ],
+      "published": "2026-10-07T17:47:17+00:00",
+      "link": "https://arxiv.org/pdf/2610.10496v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "architecture search for chlorophyll-a prediction from Sentinel-2 over lakes",
+      "llm_evidence_cn": "基于Sentinel-2的湖泊叶绿素a预测架构搜索",
+      "llm_evidence": "基于Sentinel-2的湖泊叶绿素a预测架构搜索",
+      "canonical_evidence": "基于Sentinel-2的湖泊叶绿素a预测架构搜索",
+      "llm_tldr_en": "This work applies evolutionary architecture search to Sentinel-2 chlorophyll-a prediction, improving held-out AUC from 0.790 to 0.820 with 26 times fewer parameters than hand-designed models.",
+      "llm_tldr_cn": "运营性地球观测常使用小型表格数据集与专家设计的谱段特征，所用网络多靠手工设计。本文以已发表的Sentinel-2藻华分类器为基线，固定任务、特征与湖泊级划分，仅在扩展的多层感知机空间中用正则化进化做架构搜索，并以内层交叉验证AUC选择模型。结果将留出AUC从0.790提升到0.820、精度从0.733提升到0.748，参数量仅为最强手工模型的二十六分之一。该工作展示了自动架构搜索在水体遥感数据挖掘中的价值。",
+      "llm_tldr": "运营性地球观测常使用小型表格数据集与专家设计的谱段特征，所用网络多靠手工设计。本文以已发表的Sentinel-2藻华分类器为基线，固定任务、特征与湖泊级划分，仅在扩展的多层感知机空间中用正则化进化做架构搜索，并以内层交叉验证AUC选择模型。结果将留出AUC从0.790提升到0.820、精度从0.733提升到0.748，参数量仅为最强手工模型的二十六分之一。该工作展示了自动架构搜索在水体遥感数据挖掘中的价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
