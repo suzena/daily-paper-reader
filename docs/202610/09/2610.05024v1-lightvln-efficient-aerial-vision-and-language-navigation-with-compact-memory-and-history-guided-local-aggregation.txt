@@ -1,0 +1,453 @@
+Title: LightVLN: Efficient Aerial Vision-and-Language Navigation with Compact Memory and History-Guided Local Aggregation
+
+URL Source: https://arxiv.org/pdf/2610.05024v1
+
+Published Time: Tue, 06 Oct 2026 01:26:49 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# LightVLN: Efficient Aerial Vision-and-Language Navigation with Compact Memory and History-Guided Local Aggregation 
+
+Yiming Zhao, Tianshun Li, Jingle He, Ruonan Chai, and Xinhu Zheng ∗
+
+The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China 
+
+> ∗
+
+Corresponding author. Three Lightweight Components    
+
+> Compact Language Backbone
+> Qwen2.5-0.5B
+> backbone 0.5B
+> Temporal Efficiency
+> Single-token historical
+> compression ...
+> Spatial Efficiency
+> History- and instruction-
+> conditioned local aggregation
+> Benchmark
+> OpenFly AerialVLN-S
+
+Closed-loop onboard-compute HIL evaluation 
+
+1 Campus Reconstruction  
+
+> Scene views → Digital twin
+> Scene references Textured campus
+> digital twin
+
+2 Unreal Engine 
+
+> Rendering
+> Render current observation
+> RGB observation
+
+3 Onboard LightVLN 
+
+> RGB + instruction → action
+> “Fly toward the sports field.”
+> LightVLN (on Orin NX)
+
+at 
+
+4 Simulator Update  
+
+> Apply action to virtual UAV
+> Next observation
+> (in simulation)
+> Closed-loop HIL evaluation
+> Orin NX
+> E-port
+> connection
+> DJI M350 RTK Laptop
+
+Fig. 1. LightVLN: lightweight components, benchmark evaluation, and closed-loop onboard-compute HIL. In the Unreal Engine campus environment, AirSim acquires images, LightVLN predicts actions on Orin NX, and AirSim applies the actions to the virtual UAV to obtain the next observation. 
+
+Abstract — Aerial vision-and-language navigation (VLN) en-ables unmanned aerial vehicles to execute long-horizon natural-language instructions from visual observations in complex three-dimensional environments. However, recent aerial VLN models often rely on large-scale vision-language backbones and dense visual histories, imposing substantial computation and memory costs that hinder onboard deployment. We propose LightVLN, a lightweight history-aware aerial VLN framework that combines a compact 0.5B language backbone with compact representations of both historical and current observations. LightVLN compresses each historical frame into a single token using visual features already computed by the policy. It further introduces history- and instruction-conditioned local aggregation to reduce the current observation from 256 to 32 visual tokens while preserving navigation-relevant spatial information. With up to 16 historical frames, the policy uses at most 48 observation-derived tokens. On the public OpenFly dataset, LightVLN achieves 50.93% Test-Seen and 36.14% Test-Unseen success rates (SR), outperforming the evaluated 7B language-backbone baselines on most reported metrics. It also achieves 25.83% SR on AerialVLN-S Val-Seen. In a reconstructed unseen campus, we deploy LightVLN on a DJI M350 RTK with an external Jetson Orin NX 16 GB for closed-loop onboard-compute real-to-sim hardware-in-the-loop (HIL) evaluation, achieving 14.61 Hz model inference and 11.13 Hz end-to-end decision updates. These results demonstrate the effectiveness and efficiency of LightVLN for aerial navigation. 
+
+I. I NTRODUCTION 
+
+Aerial vision-and-language navigation (VLN) enables un-manned aerial vehicles (UAVs) to follow long-horizon natural-language instructions from visual observations in complex three-dimensional environments [1]. It requires the UAV to connect instructions with visual observations and predict a sequence of actions toward the navigation goal. The AerialVLN benchmark established a foundation for this task through simulated aerial environments, annotated navi-gation trajectories, and a cross-modal alignment baseline [1]. Subsequent platforms expanded the realism and scale of aerial navigation data, supporting the development of more advanced navigation models [2], [3]. Recent methods further improve spatial reasoning and long-horizon decision making through explicit spatial representations, semantic subgoals, grounded targets, and learned multimodal policies [4]–[8]. Aerial navigation models have increasingly adopted larger language backbones and richer visual histories. Video-based navigation models [9], [10] and aerial foundation-model poli-cies [3], [8], [11] use large pretrained multimodal backbones for visual grounding and action prediction. Meanwhile, long-horizon aerial navigation has motivated retaining informa-tion across observation sequences through selected-frame histories [3], [8], structured spatiotemporal memory [12], [13], and relevance-aware or causal history integration [11], [14]. These mechanisms provide access to historical visual information for subsequent navigation decisions. However, the use of larger language backbones and richer visual histories also brings substantial computation and memory demands at inference [9], [15]. Deploying aerial navigation models on resource-constrained UAV platforms remains challenging [15]. In particular, large backbones and extensive visual context increase computation and memory demands at inference. Recent deployment-oriented systems improve efficiency arXiv:2610.05024v1 [cs.CV] 4 Oct 2026 through optimized inference pipelines, lightweight action generation, shared perception, and fast–slow or asynchronous execution [15]–[17]. Complementary to these deployment-oriented techniques, we target a compact language backbone and compact representations of both historical and current observations. Lightweight aerial VLN therefore also requires reducing the intrinsic resource demands of the navigation policy while preserving its navigation capability. Designing such a policy poses two challenges: con-structing low-cost historical memory that remains useful for action prediction, and compressing the current observa-tion while preserving navigation-relevant spatial information. First, for historical memory, existing aerial VLN meth-ods typically control temporal redundancy and computation through keyframe selection or compact history representa-tions [3], [8], [13]. These strategies reduce memory cost by limiting the number of retained observations or com-pressing their representations. NativeMEM [18] addresses this trade-off by compressing each historical frame into a single action-supervised token, enabling substantially longer and denser visual histories. It constructs memory through a separately optimized visual-encoding path initialized from the policy’s vision encoder. Second, for current-view com-pression, existing methods reduce visual redundancy through learned-query bottlenecks, regional aggregation, or language-conditioned token selection [9], [19]–[21]. These meth-ods effectively compress the current observation but do not exploit navigation history. DreamFly [11] incorporates historical context to enhance current-view representations through causal memory, but does not target lightweight visual token compression or low-cost memory construction. These observations motivate an integrated lightweight design that combines low-cost historical memory with compact current-view representations. To address these challenges, we propose LightVLN, a lightweight history-aware aerial VLN framework that com-bines a compact 0.5B language backbone with compact representations of both historical and current observations (Fig. 1). Each historical frame is compressed into a single token using visual features already extracted by the pol-icy. For the current observation, history- and instruction-conditioned local aggregation reduces 256 visual tokens to 32 while preserving navigation-relevant spatial information. With up to 16 historical frames, the resulting visual context contains at most 48 observation-derived tokens. We evaluate LightVLN on the public OpenFly splits [3] and AerialVLN-S [1] and conduct extensive same-backbone ablations on OpenFly. We further reconstruct a campus environment and construct a 500-episode unseen evaluation set, where LightVLN is deployed on a DJI M350 RTK with an external Jetson Orin NX 16 GB for closed-loop onboard-compute real-to-sim HIL evaluation. The main contributions are: 1) We propose LightVLN, a lightweight history-aware aerial VLN framework that combines a compact 0.5B language backbone with low-cost historical memory and compact current-view representations. With at most 48 observation-derived tokens, LightVLN pro-vides a compact visual interface for aerial VLN with a substantially smaller language backbone. 2) We develop two complementary lightweight designs: single-token historical compression that reuses visual features already extracted by the policy, and history-and instruction-conditioned local aggregation that re-duces the current observation from 256 to 32 visual tokens while preserving spatial information relevant to navigation. 3) We evaluate LightVLN on OpenFly and AerialVLN-S and conduct extensive same-backbone ablations on OpenFly. LightVLN achieves 50.93% Test-Seen and 36.14% Test-Unseen SR on public OpenFly, out-performing the evaluated 7B baselines on most re-ported OpenFly metrics, and achieves 25.83% SR on AerialVLN-S Val-Seen. We further conduct closed-loop onboard-compute real-to-sim HIL evaluation in a reconstructed unseen campus, where LightVLN reaches 14.61 Hz model inference and 11.13 Hz end-to-end decision updates on Jetson Orin NX 16 GB. II. R ELATED WORK 
+
+A. Aerial Vision-and-Language Navigation 
+
+Existing aerial VLN methods broadly include structured reasoning and learned multimodal navigation approaches. Structured methods introduce explicit spatial or semantic rep-resentations to support navigation reasoning. STMR [4] con-structs spatial representations for language-guided reason-ing, while CityNavAgent [5] performs hierarchical semantic planning with global memory. LookasideVLN [6] incorpo-rates direction-aware reasoning, and Fly0 [7] uses persistent metric anchors for zero-shot navigation. Learned multimodal approaches directly predict navigation decisions from visual observations and language instructions. AerialVLN [1] es-tablishes an early cross-modal navigation baseline, while OpenFly-Agent [3] scales aerial VLN with pretrained mul-timodal models and historical observations. AeroAct [8] further integrates spatial, temporal, and embodied reasoning within a unified navigation model. 
+
+B. Efficient Aerial VLN and Onboard Deployment 
+
+Existing work improves the efficiency of aerial VLN through lightweight inference, decoupled decision making, and computation reuse. VLA-AN [15] combines lightweight action generation with an optimized inference pipeline for onboard deployment. FSD-VLN [16] adopts a fast–slow dual-system architecture, separating high-level semantic rea-soning from frequent navigation updates. OnFly [17] shares perception features and reuses memory across decision steps to reduce redundant computation and support real-time on-board execution. 
+
+C. Compact Historical and Current Visual Representations 
+
+Existing work reduces visual redundancy from two com-plementary aspects: historical representation and current-view compression. For historical representation, OpenFly-1 Inputs (time t)  2 Encoding (current frame only)  3 Current-Frame Compression  4 Multimodal Token  
+
+> Interface
+
+5 Prediction (time t)  
+
+> Instruction ▤
+> “Fly straight
+> through the square
+> toward the library,
+> then ascend and
+> make a right turn.”
+> Current
+> Observation I ₜ
+> ▧
+> Single RGB frame
+> at time t
+> Instruction Embedding
+> Tokenizer /
+> Qwen Token
+> Embedding
+> Text
+> embeddings
+> ...
+> Visual Encoding
+> (current frame)
+> DINOv2 +
+> SigLIP
+> Visual Encoders
+> (shared)
+> 256 visual
+> tokens (16 × 16)
+> ...
+> History- and Instruction-
+> Conditioned Local Aggregation Text embeddings
+> ...
+> 32 current tokens
+> (from current frame)
+> ...
+> 16 history tokens M ₜ
+> (projected from cache)
+> ...
+
++
+
++
+
+> Compact visual interface
+> 48 observation-derived
+> tokens
+
+Qwen2.5-0.5B 
+
+Backbone 
+
+Action Head 
+
+> Next navigation action
+
+aₜ
+
+Persistent Memory Update 
+
+> After each action prediction,
+> append the new feature.
+> Keep the latest 16 historical
+> frames; evict the oldest when
+> the queue is full.
+> Historical
+> Compression
+
+256 → 1 token m̄ 
+
+ₜ Cached features at t  FIFO Update  Cached features at t + 1           
+
+> Compact Language
+> Backbone
+> 0.5B LLM backbone
+> Temporal Efficiency
+> 1 token / historical frame
+> Spatial Efficiency
+> Current frame:
+> 256 → 32 tokens
+> Text embeddings Current-frame tokens History tokens
+> Forward flow (current step) Single-token history
+> construction
+> Instruction History M ₜ
+> Mean pool History-conditioned
+> attention
+> Residual instruction
+> refinement
+> Shared query
+> 16 × 16 patches One region: 4 × 2
+> Local
+> softmax
+> Weighted sum
+> 4 × 8 = 32 regions
+> 32 current tokens z₁ …zⱼ…z₃₂
+
+Fig. 2. LightVLN architecture. The main inference pipeline consists of inputs, encoding, current-observation compression, multimodal token interface, and action prediction. A persistent memory branch constructs one compact representation for each observed frame and updates the historical memory after action prediction. At H = 16 , the policy receives at most 48 observation-derived tokens together with the instruction. 
+
+Agent [3] and AeroAct [8] retain selected historical obser-vations to provide temporal context while controlling the number of stored views. HETT [12] organizes historical information through history-enhanced spatial representations, while LongFly [13] integrates compact spatiotemporal con-text for long-horizon navigation. S2D [14] further empha-sizes relevance-aware historical information for decision making. Beyond aerial VLN, NativeMEM [18] compresses each historical frame into a single action-supervised token, enabling much denser temporal memory. It constructs mem-ory through a separately optimized visual-encoding path initialized from the policy’s vision encoder. Our memory directly reuses the policy’s existing patch features. For current-view compression, BLIP-2 [19] uses a learned query bottleneck to extract a compact set of visual features, while TokenPacker [20] aggregates local visual tokens to preserve spatial structure with fewer tokens. NaVid [9] introduces language-conditioned visual compression for nav-igation, and EvoComp [21] selects task-relevant visual to-kens through semantic guidance. AeroAct [8] also employs regional visual aggregation in aerial navigation. These meth-ods mainly focus on compressing the current observation itself, whereas navigation history is usually handled as a separate source of context. DreamFly [11] instead uses causal memory to enhance current-view representations with historical information. We use compact historical memory to condition fixed-region aggregation of the current view, while constructing that memory from visual features already computed by the policy. III. L IGHT VLN LightVLN combines a compact 0.5B language backbone with compact historical and current visual representations. At decision step t, it predicts at = πθ (It, L, M t) from the current RGB observation It, instruction L, and historical tokens Mt = [ mt−Ht , . . . , m t−1], where 0 ≤ Ht ≤ H and 
+
+H = 16 is the default history capacity. Figure 2 illustrates the five-stage inference pipeline: in-puts, encoding, current-observation compression, multimodal token interface, and action prediction. In parallel, a persistent memory branch constructs a compact representation of each observed frame and updates the historical memory across decision steps. 
+
+A. Inputs and Encoding 
+
+At each decision step, the model receives the current RGB observation It, the instruction L, and the historical memory 
+
+Mt constructed from previous observations. For visual encoding, frozen DINOv2 [22] and SigLIP [23] encoders produce aligned 16 × 16 patch grids from It.Features at corresponding spatial locations are concatenated into Xt ∈ R256 ×dr , where dr = 2176 . An MLP projector maps them to Ft = PV (Xt) ∈ R256 ×d, where d = 896 is the language-model width. For instruction encoding, Qwen’s tokenizer and token-embedding layer [24] produce EL = [ e1, . . . , e L] ∈ RL×d.These encoded representations are subsequently used by the single-token historical compression, history- and instruction-conditioned current-observation aggregation, multimodal to-ken interface, and action prediction modules. 
+
+B. Single-Token Historical Compression 
+
+Following the single-token memory design of Native-MEM [18], we construct one token per historical frame using visual features already extracted by the policy. A learned input-independent query qN 
+
+> 0
+
+∈ Rdr pools the current-frame features Xt using multi-head attention (MHA): 
+
+¯mt = MHA( qN 
+
+> 0
+
+, X t, X t), mt = LN( PM ( ¯ mt)) ∈ Rd.
+
+(1) The tokenizer uses eight attention heads with internal width 2176, reducing the 256 × 2176 visual features to a single 
+
+2176 -dimensional representation ¯mt. The memory projector 
+
+PM maps the cached representations to the language-model width d = 896 . At decision step t, the cached features from previous frames are projected and normalized to form Mt =[mt−Ht , . . . , m t−1].
+
+Persistent memory update. After action prediction, the current representation ¯mt is appended to a first-in, first-out (FIFO) cache. The cache retains the most recent H frame representations and discards the oldest one when its capacity is exceeded. The updated cache is used to construct Mt+1 
+
+for the next decision step. This design requires no additional memory encoder or online re-encoding of historical images. 
+
+C. History- and Instruction-Conditioned Local Aggregation 
+
+The current observation contains 256 visual tokens in Ft.To obtain a compact representation while retaining spatial coverage, we use the historical memory and instruction to guide local aggregation. 
+
+History-conditioned instruction representation. We first mean-pool the valid instruction embeddings to obtain aglobal instruction representation eG. The historical tokens are zero-left-padded to length H and summarized along the temporal dimension by a shared H → 32 → 1 MLP with GELU activation: 
+
+ht = Tϕ
+
+ PadLeft( Mt), (2) where Tϕ is applied independently to each feature channel, yielding ht ∈ Rd.We then use the history representation to select instruction content relevant to the current navigation state: 
+
+esel = Attn  Wq ht, E LW ⊤ 
+
+> k
+
+, E L
+
+ , (3) where Attn denotes single-head scaled dot-product attention and esel ∈ Rd is the history-conditioned instruction repre-sentation. When no historical observation is available, we set esel = eG.To retain the global instruction semantics while incorpo-rating history-conditioned information, we combine the two representations as 
+
+eref = eG + γ(esel − eG), (4) where γ is a learnable scalar initialized to zero. The resulting 
+
+eref is used to guide current-view aggregation. 
+
+Local aggregation. To preserve spatial coverage under a compact token budget, we partition the 16 × 16 current-view feature grid into 32 non-overlapping 4 × 2 regions. The refined instruction representation is projected into a shared visual query qV = WV eref . For each region, we locally aggregate its eight visual tokens as 
+
+αt,r,j = softmax j∈R r
+
+f ⊤ 
+
+> t,j
+
+qV
+
+√d
+
+!
+
+,zt,r = X
+
+> j∈R r
+
+αt,r,j ft,j ,
+
+(5) where Rr denotes the r-th local region. This produces one token per region, reducing the current observation from 256 to 32 visual tokens while maintaining fixed spatial coverage. The resulting tokens form Zt ∈ R32 ×d.
+
+D. Multimodal Token Interface and Action Prediction 
+
+The current-view tokens Zt, instruction embeddings EL,and valid historical tokens Mt are assembled into the input sequence of Qwen2.5-0.5B. A learned MEM-BOS embed-ding marks the beginning of the historical block, and a learnable 896-dimensional ACT query is appended at the end: 
+
+St = [BOS , Z t, E L, MEM-BOS , M t, ACT] . (6) Only valid historical tokens are included and are ordered from oldest to newest. Under causal attention, the final ACT query attends to all preceding valid tokens. At H = 16 , the current and historical visual blocks contain at most 32+ Ht ≤
+
+48 observation-derived tokens, excluding the instruction and special tokens. Let hACT  
+
+> t
+
+∈ R896 denote the final hidden state at the ACT position. A lightweight MLP action head with one hidden layer and LayerNorm maps this representation to eight action logits, followed by softmax for the action distribution. 
+
+E. Two-Stage Training 
+
+We first obtain a well-trained single-frame Base policy with the 32-token current-view representation but without historical memory. Starting from this Base policy, we adopt a two-stage training strategy to learn stable single-token histor-ical representations. All stages use cross-entropy supervision over the demonstrated actions. 
+
+Stage 1: memory representation learning. We freeze the well-trained Base policy and optimize only the historical tokenizer, memory projector, and MEM-BOS embedding. The 32-token current-frame pathway is retained, while the compressed historical tokens are introduced through the multimodal token interface in Eq. (6). After Stage 1, the his-torical tokenizer is frozen and used to generate the historical features cached for Stage 2. 
+
+Stage 2: memory-augmented policy training. We train the final policy using the cached historical features. The historical tokenizer and visual encoders remain frozen, while all remaining trainable modules are jointly optimized. IV. E XPERIMENTS 
+
+A. Experimental Setup 
+
+Benchmarks and training inputs. Separate policies are trained on the released OpenFly and AerialVLN-S train-ing splits, using RGB images and instructions as inputs and demonstrated actions as supervision. OpenFly train-ing uses 100,221 episodes with 1,608,400 supervised step samples; AerialVLN-S training uses 1,157,437 supervised step samples. OpenFly [3] Test-Seen contains 1,392 public episodes from AirSim scenes 16, 18, 26, gz, sh, and 23, plus UE BigCity; Test-Unseen contains 404 episodes from UE SmallCity. AerialVLN-S uses the original release, simulator, annotations, and 333-instruction Val-Seen split [1]. 
+
+Campus unseen evaluation set. We reconstruct an anonymized campus environment from DJI Mavic 3E ob-servations. DJI Terra performs pose estimation, dense recon-struction, meshing, and texture mapping; the metric textured model is imported into UE/AirSim with OpenFly’s cate-gorical action interface and motion settings [3]. The 500-episode campus unseen evaluation set allocates balanced quotas across five sub-regions and 53 verified goal land-marks. Collision-checked 3D routes have controlled intra-/cross-region composition, length, and maneuver complexity. Following the data-generation paradigm of OpenFly [3], routes and navigation instructions are constructed from dis-crete actions and key-view observations. The campus and its observations are reserved for unseen evaluation of an OpenFly-trained checkpoint. 
+
+Metrics and comparisons. We follow the official OpenFly and AerialVLN-S evaluation implementations. We report navigation error (NE), success rate (SR), oracle success rate (OSR), and success weighted by path length (SPL) on OpenFly. On AerialVLN-S, we report NE, SR, OSR, and Success weighted by normalized Dynamic Time Warping (SDTW). Both benchmarks define successful navigation as stopping within 20 m of the goal, with collisions counted as failures [1], [3]. OSR measures whether the agent enters the 20 m goal region at any point during navigation. Campus evaluation follows the OpenFly protocol. Table I separates OpenFly-Agent’s released scores from our same-pipeline re-evaluation and groups six-scene AirSim-only results sepa-rately from the public setting used by DreamFly [11] and LightVLN. Table II groups LAG, STMR, CityNavAgent, and LookasideVLN, which use additional depth, panoramic observations, or odometry, separately from monocular RGB methods [1], [4]–[6]. FLOPs and latency are profiled on an RTX 4090. Latency is averaged over 500 synchronized inferences after 20 warm-up iterations. 
+
+Implementation. We initialize from MiniVLA’s 
+
+prism-qwen25-0.5b-hf checkpoint [25], using Qwen2.5-0.5B-Instruct [24], DINOv2 ViT-L/14 with four register tokens, and SigLIP ViT-SO400M/14-224 at 
+
+224 ×224 resolution. The complete policy has approximately 1.276B parameters; 0.5B denotes the language backbone. Offline training and inference use BF16 for most parameters and FP32 for numerically sensitive parameters. Both datasets use separately trained eight-class action heads. For OpenFly, we exclude the two released action categories that are unused in the released trajectories, resulting in an eight-action policy space. All stages use an effective batch size of 256. Base, Stage 1, and Stage 2 are trained for 3, 1, and 4 epochs, respectively. The Stage 1 checkpoint is used to build the 1T cache, and the reported model uses the Stage 2 epoch-4 checkpoint. Training uses two H100 80 GB GPUs and LoRA [26] with rank r = 64 , α = 16 , and dropout 0.05. Learning rates are 10 −4 for the historical tokenizer and current-view visual projector, 5×10 −5 for the memory projector and MEM-BOS, and 2 × 10 −4 for LoRA, current-view aggregation, history-conditioning modules, and action modules, with 3% linear warm-up and cosine decay. 
+
+Onboard setup and profiling. The closed-loop onboard-compute HIL platform couples a stationary, disarmed DJI M350 RTK carrying an E-Port-connected Jetson Orin NX 16 GB with a UE/AirSim host over USB Ethernet. AirSim supplies rendered observations and applies the Jetson’s pre-dicted actions through SetPose, confirming the virtual-pose update before the next observation. FLOPs and local latency cover complete policy inference. All latency measurements use batch size 1. Onboard inference uses TensorRT 10.3.0 and TensorRT-LLM 0.12.0 with module-specific mixed pre-cision and no model offloading. The exported policy agrees with the offline reference on all 500 action-check steps. Dense current and LightVLN use H = 16 , with the Jetson Orin NX configured in MAXN power mode. Latency is aver-aged over 500 measured frames after 10 warm-up steps. End-to-end latency includes image acquisition, communication, model inference, and virtual-pose update/confirmation. 
+
+B. Main Benchmark Results 
+
+Among the compared methods in the public OpenFly setting, LightVLN achieves the best NE, SR, OSR, and SPL on Test-Seen and the best NE, SR, and SPL on Test-Unseen (Table I). It also leads all four reported metrics on AerialVLN-S Val-Seen (Table II). 
+
+OpenFly. LightVLN achieves 50.93%/36.14% SR and 44.68%/30.45% SPL on Test-Seen/Test-Unseen. Compared with OpenFly-Agent re-evaluated, LightVLN improves SR by 25.86 and 17.08 percentage points on the two splits, respectively. Compared with DreamFly, LightVLN improves SR by 18.89/6.68 points and SPL by 16.46/6.91 points, while reducing NE by 4.62/3.07 m on Test-Seen/Test-Unseen. These results show that LightVLN achieves substantially bet-ter terminal success and path efficiency than the evaluated 7B language-backbone methods despite using a 0.5B language backbone. 
+
+AerialVLN-S. LightVLN achieves 65.61 m NE, 25.83% SR, 41.74% OSR, and 22.76% SDTW on Val-Seen, lead-ing all four metrics in Table II. Compared with AeroAct, LightVLN improves SR and SDTW by 14.43 and 16.46 per-centage points, respectively, while reducing NE by 13.99 m. Compared with LookasideVLN, which uses additional in-puts, LightVLN improves SR by 11.13 points and SDTW by TABLE I OPEN FLY RESULTS . S CALE : LANGUAGE -BACKBONE SIZE .Method Scale Test-Seen Test-Unseen NE ↓(m) SR ↑(%) OSR ↑(%) SPL ↑(%) NE ↓(m) SR ↑(%) OSR ↑(%) SPL ↑(%) 
+
+> AirSim-only setting: 6 Seen scenes, 1,210 episodes
+
+AeroAct † [8] 8B 38.00 54.50 72.10 49.90 – – – –
+
+> Public dataset setting: 7 Seen scenes / 1,392 episodes, 1 Unseen scene / 404 episodes
+
+CMA ‡ [1] – 313.03 7.97 69.32 6.26 230.05 5.69 73.02 3.92 AerialVLN ‡ [1] – 176.29 16.52 65.66 14.63 161.19 9.65 68.07 7.93 OpenFly-Agent (reported) [3] 7B 118.72 28.76 63.10 18.71 164.40 26.20 68.80 18.00 OpenFly-Agent (our re-eval.) § [3] 7B 107.39 25.07 56.68 22.54 140.66 19.06 68.81 16.19 DreamFly [11] 7B 44.87 32.04 46.77 28.22 45.29 29.46 46.78 23.54 
+
+LightVLN (Ours) 0.5B 40.25 50.93 71.41 44.68 42.22 36.14 62.13 30.45     
+
+> †AeroAct trains only on AirSim and evaluates on six AirSim scenes. Public evaluation additionally includes one Seen and one Unseen scene.
+> ‡Results reported by DreamFly [11]. §Released checkpoint re-evaluated on the same episodes and pipeline as LightVLN.
+
+TABLE II PERFORMANCE ON THE AERIAL VLN-S V AL -S EEN .Method Val-Seen NE ↓
+
+(m) SR ↑
+
+(%) OSR ↑
+
+(%) SDTW ↑
+
+(%) LAG † [1] 90.2 7.2 15.7 2.4 STMR † [4] 96.3 12.6 31.6 2.7 CityNavAgent † [5] 80.8 13.9 30.2 5.1 LookasideVLN † [6] 77.1 14.7 31.2 5.4 NaVid [9] 105.1 6.8 15.5 1.1 OpenFly-Agent [3] 127.2 8.1 21.8 1.6 AeroAct [8] 79.6 11.4 37.7 6.3 LightVLN 65.61 25.83 41.74 22.76 
+
+> †: additional depth, panoramic observations, or odometry.
+
+TABLE III COMPARISON OF HISTORICAL COMPRESSION METHODS ON OPEN FLY 
+
+(SR/SPL IN %). T HE CURRENT OBSERVATION REMAINS UNCOMPRESSED AT 256 TOKENS AND H = 16 .History compression Test-Seen Test-Unseen SR ↑ SPL ↑ SR ↑ SPL ↑
+
+MeanPool-1T 45.98 40.27 36.14 29.53 
+
+Learned-1T (Ours) 51.58 45.58 34.90 29.36 
+
+17.36 points, with an 11.49 m lower NE. Overall, LightVLN achieves substantially stronger goal-reaching performance and trajectory quality on AerialVLN-S using only RGB observations. 
+
+C. Ablation Study 
+
+We first compare different historical compression methods. We then fix the proposed learned single-token history and evaluate different current-view compression and instruction-conditioning designs. Finally, we study the effect of history capacity and compare with the single-frame Base policy. All ablations are conducted on OpenFly and report SR/SPL. 
+
+Historical compression. Table III compares two meth-ods for compressing each historical frame into one token. MeanPool-1T directly averages the visual features of each historical frame, whereas Learned-1T uses our learned his-torical tokenizer. With the same history length H = 16 ,Learned-1T improves Test-Seen SR/SPL from 45.98/40.27% 
+
+TABLE IV ABLATION OF CURRENT -VIEW COMPRESSION AND INSTRUCTION CONDITIONING ON OPEN FLY (SR/SPL IN %). A LL VARIANTS USE 
+
+LEARNED -1T HISTORY WITH H = 16 .Configuration Test-Seen Test-Unseen SR ↑ SPL ↑ SR ↑ SPL ↑
+
+> Current-view compression
+
+AvgPool-32 30.68 25.95 20.30 16.12 GlobalMHA-32 47.13 41.00 34.41 28.15 
+
+> Instruction conditioning for local aggregation
+
+Local-32, instruction-only 48.06 42.38 31.93 25.93 Local-32, history-selected 48.78 43.03 34.65 27.98 
+
+LightVLN 50.93 44.68 36.14 30.45 
+
+> Current-token budget
+
+Local-64, instruction-only 47.84 42.07 34.16 28.32     
+
+> AvgPool-32 directly averages local visual features. GlobalMHA-32 compresses all 256 current-view tokens into 32 tokens using global multi-head attention. For local aggregation, instruction-only uses the global instruction representation, while history-selected first uses the historical representation to select relevant instruction content. LightVLN combines the global and history-selected instruction representations to guide local aggregation.
+
+to 51.58/45.58%. On Test-Unseen, the two methods perform similarly, with MeanPool-1T obtaining 36.14/29.53% and Learned-1T obtaining 34.90/29.36%. Thus, the learned his-torical compression provides a clear advantage on Test-Seen while maintaining comparable performance on Test-Unseen. 
+
+Current-view compression. Table IV compares alterna-tive methods for compressing the 256-token current observa-tion to 32 tokens while using the same Learned-1T history. AvgPool-32 obtains 30.68/25.95% SR/SPL on Test-Seen and 20.30/16.12% on Test-Unseen. GlobalMHA-32 substantially improves these results to 47.13/41.00% and 34.41/28.15%, respectively. The instruction-only local aggregation achieves 48.06/42.38% on Test-Seen and 31.93/25.93% on Test-Unseen. These results show that learned aggregation is sub-stantially more effective than direct average pooling, while the global and local learned aggregation schemes exhibit different behavior across Seen and Unseen environments. 
+
+Instruction conditioning for local aggregation. We next compare three ways of constructing the instruction represen-tation used by the same 32-token local aggregation. Local-32, instruction-only uses the global instruction representa-tion without history-based instruction selection. Local-32, TABLE V SINGLE -FRAME BASE REFERENCES AND HISTORY -CAPACITY ABLATION ON OPEN FLY . E ACH ENTRY REPORTS SR/SPL (%). Configuration H Current tokens Max. obs. tokens Test-Seen SR/SPL Test-Unseen SR/SPL 
+
+> Single-frame Base references
+
+Base-Dense 0 256 256 42.53/37.31 34.41/29.10 Base-AvgPool32 0 32 32 37.86/33.34 35.39/30.22 
+
+> History capacity
+
+LightVLN ( H = 8 ) 8 32 40 49.78/43.87 33.91/27.70 
+
+LightVLN ( H = 16 ) 16 32 48 50.93/44.68 36.14/30.45 
+
+LightVLN ( H = 31 ) 31 32 63 49.78/44.13 34.16/28.26 
+
+history-selected uses the historical representation to select relevant instruction content before local aggregation. This improves SR/SPL from 48.06/42.38% to 48.78/43.03% on Test-Seen and from 31.93/25.93% to 34.65/27.98% on Test-Unseen. The full LightVLN further combines the global and history-selected instruction representations, reaching 50.93/44.68% on Test-Seen and 36.14/30.45% on Test-Unseen. The consistent gains on both splits support using both global instruction semantics and history-selected in-struction information for current-view aggregation. 
+
+Current-token budget. We compare the instruction-only local aggregation with 32 and 64 current tokens. Reducing the current-token budget from 64 to 32 slightly improves Test-Seen SR/SPL from 47.84/42.07% to 48.06/42.38%, while Test-Unseen changes from 34.16/28.32% to 31.93/25.93%. Overall, the 32-token setting maintains competitive navigation performance with a 50% smaller current-view token budget, and is therefore adopted in LightVLN. 
+
+History capacity. Table V summarizes the single-frame references and history capacities. Base-Dense is the single-frame Base policy with the original 256-token current obser-vation, while Base-AvgPool32 replaces the current observa-tion with 32 average-pooled tokens. They provide references without historical input. For LightVLN, H = 8 , 16, and 31 correspond to a maximum of 40, 48, and 63 observation-derived tokens, respectively. Each history capacity is trained separately in Stage 2 from the same Base checkpoint and Stage 1 cache. Among the three history settings, H = 16 
+
+achieves the highest SR/SPL on both splits: 50.93/44.68% on Test-Seen and 36.14/30.45% on Test-Unseen. Increasing the history capacity to H = 31 does not provide further improvement. 
+
+D. Efficiency and Closed-Loop Evaluation 
+
+Offline efficiency. Dense current and LightVLN use the same learned single-token history; they differ only in the current-view representation. LightVLN reduces the current visual tokens from 256 to 32 and the total observation-derived tokens from 272 to 48, corresponding to an 82.35% reduction. Figure 3 shows that full-model computation de-creases from 711.59 to 539.84 GFLOPs, while RTX 4090 latency decreases from 31.79 to 24.90 ms, corresponding to reductions of 24.14% and 21.67%, respectively. The two 0 10     
+
+> 7.541 1.274
+> 1.276 (a) Parameters (B)
+> 010000
+> 6584.40 711.59
+> 539.84 (b) GFLOPs ↓
+> 0500
+> 242.21 31.79
+> 24.90 (c) Latency (ms) ↓
+> OpenFly-Agent Dense current LightVLN
+
+Fig. 3. Model size, computation, and inference latency. Dense current (256T) LightVLN (32T)  
+
+> 020 40 60 80 100 120 140
+> Mean latency (ms) 17.75
+> 3.36 0.28
+> 53.06 33.47
+> 107.92 ms 9.27 Hz end-to-end
+> Inference 86.53 ms · 11.56 Hz
+> 17.69 3.39 0.28
+> 53.60 14.85
+> 89.81 ms 11.13 Hz end-to-end
+> Inference 68.45 ms · 14.61 Hz  UE image Communication SetPose Other infer. Decoder
+
+Fig. 4. Latency breakdown for Dense current and LightVLN. Stacked bars separate image acquisition, communication, pose updates, and model inference. 
+
+models have similar parameter counts (1.274B vs. 1.276B). Because the visual encoders remain unchanged, the reduction in full-model computation is smaller than the 82.35% reduc-tion in observation-derived tokens. For reference, OpenFly-Agent contains 7.541B parameters and requires 242.21 ms per inference under the same profiling setup. 
+
+Onboard efficiency. In the closed-loop onboard-compute HIL evaluation, LightVLN averages 68.45 ms per model inference (14.61 Hz) and 89.81 ms end to end (11.13 Hz). Dense current requires 86.53 ms (11.56 Hz) and 107.92 ms (9.27 Hz), respectively (Fig. 4). Compression reduces model latency by 20.89% and end-to-end latency by 16.78%; LLM decoder latency decreases from 33.47 to 14.85 ms. For LightVLN and Dense current, respectively, image acquisi-tion averages 17.69/17.75 ms and communication overhead 3.39/3.36 ms. SetPose takes 0.28 ms for each variant. The reduction therefore comes primarily from model inference within the closed loop. 
+
+Campus navigation results. On the 500-episode campus unseen evaluation set, LightVLN obtains 8.00% SR, 65.00% OSR, and 56.06 m NE. The large OSR–SR gap indicates that reaching the goal vicinity does not always translate into terminal success in the unseen environment. These results assess closed-loop navigation transfer with physical onboard inference in the reconstructed environment. 
+
+Qualitative closed-loop example. Figure 5 shows a suc-cessful LightVLN rollout in the campus environment under closed-loop onboard-compute HIL, with representative ob-servations and grouped predicted action segments. Instruction: Fly straight toward the library . Ascend and turn right, then fly straight to the football field .
+
+> 1
+> Approach the library
+> 2
+> Ascend 10 m
+> 3
+> Turn right 90°
+> 4
+> Fly forward
+> 5
+> Reach the field
+
+Fig. 5. A successful LightVLN rollout under closed-loop onboard-compute HIL in the campus environment, visualized with representative observations and grouped predicted actions. 
+
+V. C ONCLUSION 
+
+We presented LightVLN, a lightweight history-aware aerial VLN framework built on a compact 0.5B language backbone with compact historical and current visual repre-sentations. LightVLN compresses each historical frame into a single token by reusing visual features already computed by the policy, and uses historical information to guide local aggregation of the current observation from 256 to 32 tokens. With up to 16 historical frames, the policy uses at most 48 observation-derived tokens. LightVLN achieves 50.93%/36.14% SR on public OpenFly Test-Seen/Test-Unseen and 25.83% SR on AerialVLN-S Val-Seen. Relative to the dense-current counterpart, the compact representation reduces full-model computation by 24.14% and RTX 4090 inference latency by 21.67%. On Jetson Orin NX 16 GB, LightVLN reaches 14.61 Hz model inference and 11.13 Hz end-to-end decision updates in the closed-loop onboard-compute HIL system. Future work will further improve cross-environment robustness. REFERENCES [1] S. Liu, H. Zhang, Y. Qi, P. Wang, Y. Zhang, and Q. Wu, “AerialVLN: Vision-and-language navigation for UAVs,” in Proc. ICCV , 2023, pp. 15 384–15 394. [2] X. Wang, D. Yang, Z. Wang, H. Kwan, J. Chen, W. Wu, H. Li, Y. Liao, and S. Liu, “Towards realistic UAV vision-language navi-gation: Platform, benchmark, and methodology,” in Proc. ICLR , 2025, arXiv:2410.07087. [3] Y. Gao, C. Li, Z. You, J. Liu, Z. Li, P. Chen et al. , “OpenFly: A comprehensive platform for aerial vision-language navigation,” in 
+
+Proc. ICLR , 2026. [4] Y. Gao, Z. Wang, P. Han, L. Jing, D. Wang, and B. Zhao, “Exploring spatial representation to enhance LLM reasoning in aerial vision-language navigation,” arXiv preprint arXiv:2410.08500 , 2025. [5] W. Zhang, C. Gao, S. Yu, R. Peng, B. Zhao, Q. Zhang, J. Cui, X. Chen, and Y. Li, “CityNavAgent: Aerial vision-and-language navigation with hierarchical semantic planning and global memory,” in Proc. ACL ,2025, pp. 31 292–31 309. [6] Y. Ning, G. Zhao, Y. Qin, S. Liu, Y. Liu, L. Lin, and G. Li, “Lookaside-VLN: Direction-aware aerial vision-and-language navigation,” in Proc. CVPR , 2026, pp. 32 441–32 450. [7] Z. Xu, Y. Lu, W. Bao, Z. Zhu, J. Zhou, Z. Wang, J. Wang, L. Liu, and W. He, “Fly0: Persistent metric anchoring for zero-shot aerial vision-language navigation,” arXiv preprint arXiv:2602.15875 , 2026. [8] H. Xu, Z. Liu, Y. Luomei, and F. Xu, “Aerial vision-language navi-gation with a unified framework for spatial, temporal and embodied reasoning,” arXiv preprint arXiv:2512.08639 , 2025. [9] J. Zhang, K. Wang, R. Xu, G. Zhou, Y. Hong, X. Fang, Q. Wu, Z. Zhang, and H. Wang, “NaVid: Video-based VLM plans the next step for vision-and-language navigation,” in Proc. RSS , 2024. [10] A.-C. Cheng, Y. Ji, Z. Yang, Z. Gongye, X. Zou, J. Kautz, E. Biyik, H. Yin, S. Liu, and X. Wang, “NaVILA: Legged robot vision-language-action model for navigation,” in Proc. RSS , 2025. [11] Y. Deng and F. Xu, “DreamFly: Causal memory and receding-horizon diffusion planning for aerial vision-language navigation,” 
+
+arXiv preprint arXiv:2608.12308 , 2026. [12] X. Ding, J. Gao, C. Pan, W. Wang, and J. Qin, “History-enhanced two-stage transformer for aerial vision-and-language navigation,” in 
+
+Proc. AAAI , vol. 40, no. 22, 2026, pp. 18 225–18 233. [13] W. Jiang, L. Wang, K. Huang, W. Fan, J. Liu, S. Liu, H. Duan, B. Xu, and X. Ji, “LongFly: Long-horizon UAV vision-and-language navigation with spatiotemporal context integration,” arXiv preprint arXiv:2512.22010 , 2025. [14] Z. Ma, J. Chen, and D. Huang, “From semantic grounding to decision optimization: A unified framework for long-horizon UAV vision-language navigation,” in Proc. ACM MM , 2026. [15] Y. Wu, M. Zhu, X. Li, Y. Du, Y. Fan, W. Li, Z. Han, X. Zhou, and F. Gao, “VLA-AN: An efficient and onboard vision-language-action framework for aerial navigation in complex environments,” 
+
+arXiv preprint arXiv:2512.15258 , 2025. [16] X. Zhu, Q. Meng, L. Yu, W. Zhang, Z. Ma, H. Zhou, and Y. Tian, “FSD-VLN: Fast-slow dual-system modeling for aerial long-horizon vision-language navigation,” arXiv preprint arXiv:2607.08359 , 2026. [17] G. Zheng, Y. Ban, M. Zhang, J. Zheng, and B. Zhou, “OnFly: Onboard zero-shot aerial vision-language navigation toward safety and efficiency,” arXiv preprint arXiv:2603.10682 , 2026. [18] Z. Wang, M. Shi, C. Ni, J. Yang, M. Li, Z. Su, T. Lin, and H. Li, “NativeMEM: Native memory compression for long-horizon robotic manipulation,” arXiv preprint arXiv:2607.06678 , 2026. [19] J. Li, D. Li, S. Savarese, and S. Hoi, “BLIP-2: Bootstrapping language-image pre-training with frozen image encoders and large language models,” in Proc. ICML , vol. 202, 2023, pp. 19 730–19 742. [20] W. Li, Y. Yuan, J. Liu, D. Tang, S. Wang, J. Qin, J. Zhu, and L. Zhang, “TokenPacker: Efficient visual projector for multimodal LLM,” International Journal of Computer Vision , vol. 133, pp. 6794– 6812, 2025. [21] J. Song, F. Zhou, J. Qu, W. J. Li, T. Wu, G. Xue, Z. Zhao, D. Wei, Y. Lu, and B. Na, “EvoComp: Learning visual token compression for multimodal large language models via semantic-guided evolutionary labeling,” in Proc. CVPR , Jun. 2026, pp. 3532–3542. [22] M. Oquab, T. Darcet, T. Moutakanni, H. V. Vo, M. Szafraniec, V. Khalidov, P. Fernandez, D. Haziza, F. Massa, A. El-Nouby et al. ,“DINOv2: Learning robust visual features without supervision,” Trans-actions on Machine Learning Research (TMLR) , 2024. [23] X. Zhai, B. Mustafa, A. Kolesnikov, and L. Beyer, “Sigmoid loss for language image pre-training,” in Proc. ICCV , 2023, pp. 11 975–11 986. [24] A. Yang, B. Yang, B. Zhang, B. Hui, B. Zheng, B. Yu, C. Li, D. Liu, F. Huang, H. Wei et al. , “Qwen2.5 technical report,” arXiv preprint arXiv:2412.15115 , 2024. [25] S. Belkhale and D. Sadigh, “MiniVLA: A better VLA with asmaller footprint,” GitHub repository, 2024. [Online]. Available: https://github.com/Stanford-ILIAD/openvla-mini [26] E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, and W. Chen, “LoRA: Low-rank adaptation of large language models,” in Proc. ICLR , 2022.

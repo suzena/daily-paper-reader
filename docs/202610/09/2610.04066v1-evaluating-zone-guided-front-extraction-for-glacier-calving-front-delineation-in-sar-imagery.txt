@@ -1,0 +1,115 @@
+Title: Evaluating Zone-Guided Front Extraction for Glacier Calving-Front Delineation in SAR Imagery
+
+URL Source: https://arxiv.org/pdf/2610.04066v1
+
+Published Time: Tue, 06 Oct 2026 00:20:53 GMT
+
+Number of Pages: 4
+
+Markdown Content:
+# Evaluating Zone-Guided Front Extraction for Glacier Calving-Front Delineation in SAR Imagery 
+
+Chhaya Kulkarni 
+
+Department of Computer and Information Sciences Towson University ckulkarni@towson.edu 
+
+Emam Hossain 
+
+Department of Information Systems University of Maryland, Baltimore County emamh1@umbc.edu 
+
+Abstract —Automatic calving-front delineation from synthetic aperture radar imagery is challenging because the front is a thin and often ambiguous boundary between glacier ice, ocean, and surrounding rock or terrain. The CAlving Fronts and where to Find thEm (CaFFe) dataset provides both binary calving-front masks and broader semantic zone masks, making it possible to study whether zone-level supervision can support front recovery. In this paper, we compare direct front prediction with zone-guided front extraction using U-Net, DeepLabV3+, and SegFormer-B0 under the same bounding-box-cropped CaFFe setting. In the direct setting, models predict the binary calving-front mask. In the zone-guided setting, the model first predicts four semantic zone classes, and the front is then extracted from the predicted glacier–ocean boundary. We evaluate both zone-level and front-level performance, include a ground-truth-zone boundary check, and examine lightweight test-time adaptation on sensor-specific and glacier-specific subsets. The results show that zone labels contain useful front-boundary information: extracting the front from ground-truth zones gives the lowest mean distance error. However, fronts extracted from model-predicted zones remain weak, even when zone segmentation scores are moderate. Test-time adaptation also does not consistently improve zone-guided front recovery. These results indicate that zone segmen-tation performance should not be treated as a substitute for front-level evaluation and that effective use of zone labels may require boundary-aware training, label fusion, or explicit front supervision. 
+
+Index Terms —calving front delineation, semantic segmenta-tion, zone-guided segmentation, test-time adaptation, synthetic aperture radar 
+
+I. I NTRODUCTION 
+
+Marine-terminating glaciers lose mass partly through calv-ing, where ice breaks away from the glacier front into the ocean. Tracking the position of the calving front over time is important for monitoring glacier change, frontal ablation, and ice-sheet mass loss [1]–[3]. Manual delineation of calving fronts in satellite imagery is time-consuming, and automated methods remain challenging because the front is often thin, irregular, and visually ambiguous, especially in synthetic aper-ture radar (SAR) images. SAR imagery is useful for glacier monitoring because it can be acquired through cloud cover and during polar night [4], [5]. However, SAR-based calving-front delineation is difficult due to speckle, sensor differences, variable spatial resolution, seasonal surface changes, and the presence of ice m´ elange near the front [6], [7]. The CaFFe dataset provides a useful benchmark for study-ing this problem because it includes SAR images together with both binary calving-front annotations and broader semantic zone masks [4]. The front annotations represent the calving front as a thin binary line, while the zone masks label broader scene regions such as ocean, rock outcrops, glacier area, and no-information regions. This structure makes it possible to compare direct front prediction with a zone-guided strategy, where a model first predicts scene regions and the front is later extracted from the glacier-ocean boundary. Most prior work on CaFFe has focused on improving direct front delineation using specialized architectures, self-supervised SAR representations, or temporal information [6]– [9]. In contrast, less attention has been given to whether the available zone labels can help standard segmentation models recover calving fronts. This is a useful question because zone labels provide denser supervision than sparse front masks. At the same time, accurate zone segmentation may not be sufficient for accurate front delineation if the predicted glacier-ocean boundary is not locally precise. This paper evaluates that question through a controlled comparison of direct front prediction and zone-guided front extraction on CaFFe. We use three common segmentation models: U-Net, DeepLabV3+, and SegFormer-B0. In the direct setting, the models are trained to predict the binary front mask. In the zone-guided setting, the models are trained to predict four-class zone masks, and the front is extracted from the predicted glacier-ocean boundary. We evaluate both zone-level and front-level performance to determine whether region-level segmentation accuracy translates into useful front recovery. The contributions of this work are as follows:  
+
+> •
+
+We compare direct front prediction and zone-guided front extraction using U-Net, DeepLabV3+, and SegFormer-B0 under the same bounding-box-cropped CaFFe setting.  
+
+> •
+
+We evaluate whether predicted zone masks can support calving-front recovery by extracting the glacier-ocean boundary from model-predicted zones.  
+
+> •
+
+We include a ground-truth-zone boundary check to deter-mine whether the zone labels themselves contain useful front-boundary information.  
+
+> •
+
+We report zone-level and front-level metrics separately, showing that zone segmentation performance does not necessarily imply accurate front delineation. arXiv:2610.04066v1 [cs.CV] 2 Oct 2026 • We examine lightweight test-time adaptation on sensor-specific and glacier-specific subsets to assess whether inference-time adjustments improve direct-front and zone-guided predictions. II. R ELATED WORK 
+
+Gourmelon et al. introduced CaFFe as a benchmark for calving-front extraction from multi-sensor SAR imagery [4]. Its binary labels represent the front as a thin line, while its four-class zone masks describe glacier, ocean or ice m´ elange, rock, and no-information regions. Because a small displacement can sharply reduce pixel overlap, CaFFe studies commonly report mean distance error (MDE) together with F1. A recent comparison also shows that current automated systems remain below human annotator performance [7]. Several methods improve front delineation by preserv-ing local boundary detail while incorporating broader con-text. Herrmann et al. examined alternative label formulations with nnU-Net, showing that supervision design can affect sparse-boundary extraction [10]. AMD-HookNet and AMD-HookNet++ combine high-resolution and contextual features through specialized multi-branch or hybrid CNN–transformer designs [6], [11]. Other work uses self-supervised SAR repre-sentations, change information, or multiple acquisition times to improve robustness [8], [9], [12]. These studies mainly target stronger direct-front models. Our work instead asks a narrower question: whether CaFFe’s denser zone supervision can support front recovery with standard segmentation architectures. We therefore evaluate zone quality and the recovered front separately, since accurate region segmentation may still yield an imprecise glacier-ocean boundary. III. M ETHODOLOGY 
+
+We compare direct front prediction with zone-guided front extraction using the same SAR inputs, crops, image size, and train/test split. Figure 1 summarizes the pipeline. 
+
+A. Dataset and Preprocessing 
+
+CaFFe contains 681 SAR images acquired from 1995–2020, each paired with a binary front mask, a four-class zone mask, and a bounding box around the dynamic front region [4]. We map the zone classes to no-information, rock/outcrop, ocean, and glacier. The same bounding box is applied to the SAR image and both masks so that all inputs remain spatially aligned. The resulting variable-size crops are resized to 512 × 512 pixels. Bilinear interpolation is used for continu-ous SAR intensities, whereas nearest-neighbor interpolation preserves discrete mask labels. The prepared split contains 559 training and 122 test images. The bounding-box-cropped setting focuses the analysis on the dynamic frontal region rather than large areas unrelated to calving-front localization. Applying the same crop to the SAR image, front mask, and zone mask ensures that the image pixels and their correspond-ing labels remain aligned. Resizing all crops to a common resolution also enables consistent batching and comparison across models. 
+
+B. Model Selection 
+
+We compare U-Net, DeepLabV3+, and SegFormer-B0, rep-resenting encoder-decoder CNN, atrous multi-scale CNN, and hierarchical transformer segmentation, respectively [13]–[15]. All models used the same split, 512 × 512 inputs, batch size 2, 100-epoch limit, and early stopping after 10 epochs without validation macro-F1 improvement. Four-class zone models used cross-entropy loss. U-Net and DeepLabV3+ used Adam with learning rates of 10 −4 and 5 × 10 −4, respectively; SegFormer-B0 used AdamW with learning rate 5 × 10 −5 and weight decay 10 −4.
+
+C. Direct Front Prediction 
+
+In the direct setting, the cropped SAR image is mapped directly to a binary calving-front mask. This optimizes the final output of interest, but the target is highly sparse because the front is represented as a thin line. 
+
+D. Zone-Guided Front Extraction 
+
+In the zone-guided setting, the same input is mapped to the four-class zone mask. At inference, only glacier and ocean predictions are retained, and their shared boundary is extracted as the estimated front. The extracted line is then evaluated against the binary front annotation. This tests whether denser region-level supervision can recover a precise sparse boundary. 
+
+E. Ground-Truth-Zone Boundary Check 
+
+To determine whether the zone labels themselves encode usable front information, we also extract the glacier-ocean boundary from the ground-truth zone masks. This diagnostic is not a trained-model result; it separates errors caused by zone prediction from those introduced by the boundary-extraction procedure. 
+
+F. Test-Time Adaptation 
+
+We test lightweight inference-time strategies on the Sentinel-1 (S1) and Mapple subsets, which showed the largest per-group SegFormer-B0 errors among sensor and glacier groups. For SegFormer-B0, horizontal flip test-time augmen-tation averages predictions from the original image and its flipped version. For DeepLabV3+, we also test BatchNorm adaptation where applicable; it updates normalization statis-tics using unlabeled test images [16], [17]; related test-time methods also adapt parameters [18]. 
+
+G. Evaluation Metrics 
+
+Zone segmentation is evaluated using macro F1 across the four classes. Front delineation is evaluated using front F1 and mean distance error (MDE) in pixels. F1 requires exact pixel overlap, whereas MDE measures spatial separation between predicted and annotated lines and is therefore informative for thin boundaries [4], [7]. All front-level distances are measured in the resized 512 × 512 image coordinate system. The same evaluation procedure is applied to direct-front predictions, fronts recovered from predicted zones, and the ground-truth-zone diagnostic to maintain consistency. Tolerance-based F1 Fig. 1: Overview of the experimental pipeline. The same bounding-box-cropped SAR inputs are evaluated under two supervision settings: direct front prediction and zone-guided front extraction. In the zone-guided branch, the calving front is recovered from the predicted glacier–ocean boundary. Subset analyses on the Sentinel-1 and Mapple subsets apply flip and BatchNorm test-time adaptation. Colors in the zone masks denote the four semantic classes (ocean, rock outcrop, glacier, no-information). is used only as a diagnostic to determine whether poor zone-guided overlap is caused by small shifts or by fragmented and incomplete recovery. IV. R ESULTS AND DISCUSSION 
+
+A. Direct Front Prediction and Zone-Guided Extraction 
+
+Table I compares direct and zone-guided prediction; the ground-truth-zone row is diagnostic rather than a trained result. Among trained models, direct-front SegFormer-B0 performs best (F1 0.0939; MDE 35.79). SegFormer-B0 also gives the highest zone F1 (0.6808), but its extracted front remains weak (F1 0.0058; MDE 66.37). Thus, good region segmentation does not ensure accurate local glacier-ocean boundaries. 
+
+B. Ground-Truth-Zone Boundary Check 
+
+The ground-truth-zone check clarifies the zone-guided re-sults. Extracting the front from ground-truth zones increases front F1 to 0.1478 and reduces MDE to 21.01 pixels, the lowest among all settings. This confirms that the zone labels contain useful boundary information. The poor performance of predicted-zone fronts therefore reflects the inability of stan-dard models to preserve the glacier-ocean boundary precisely enough, rather than a lack of information in the zone labels. TABLE I: Direct front prediction vs. zone-guided front extrac-tion on the CaFFe test set. The ground-truth-zone row (italic) is a diagnostic upper reference, not a trained model.                              
+
+> Model Setting Zone F1 ↑Front F1 ↑MDE ↓
+> U-Net Direct front –0.0510 79.32 Zone-guided 0.5814 0.0055 64.65 DeepLabV3+ Direct front –0.0427 65.47 Zone-guided 0.3642 0.0060 90.06 SegFormer-B0 Direct front –0.0939 35.79
+> Zone-guided 0.6808 0.0058 66.37
+> Ground-truth zones Diagnostic –0.1478 21.01
+> Zone F1 is undefined for direct-front models, which predict binary front masks rather than zone masks (“–”).
+
+Thus, zone labels are useful in principle, but simple zone pre-diction followed by boundary extraction remains insufficient for accurate calving-front delineation. 
+
+C. Tolerance-Based Analysis of Zone-Guided Fronts 
+
+Tolerance-based F1 was evaluated at 0, 1, 2, 3, 5, and 10 pixels. Predicted-zone F1 remained below 0.01 for all models, peaking at 0.0095 for SegFormer-B0 at three pixels. Thus, weak zone-guided recovery is not explained by minor boundary shifts alone. TABLE II: Test-time adaptation on the worst-case Sentinel-1 (S1) and Mapple subsets. “Front” denotes models trained on binary front masks; “Zone” denotes models trained on zone masks with the front extracted from the predicted glacier-ocean boundary.                                                                   
+
+> Model Target Set Strategy Zone F1 ↑Front F1 ↑MDE ↓
+> Seg-B0 Front S1 None –0.1109 43.82 Flip –0.1150 38.13
+> Mapple None –0.1105 36.15 Flip –0.1054 33.98
+> Zone S1 None 0.5134 0.0018 97.67
+> Flip 0.5174 0.0022 102.83 Mapple None 0.7154 0.0051 70.38
+> Flip 0.6703 0.0041 80.93 DLV3+ Front S1 None –0.0737 64.45
+> BN –0.0853 102.36 Mapple None –0.0755 52.32
+> BN –0.0627 70.30 Zone S1 None 0.2884 0.0044 76.76
+> Flip 0.3164 0.0037 83.34 BN 0.3208 0.0027 90.29 Mapple None 0.4486 0.0071 90.61 Flip 0.4791 0.0067 86.45
+> BN 0.4989 0.0045 92.22
+
+Seg-B0: SegFormer-B0; DLV3+: DeepLabV3+; BN: BatchNorm adaptation. Zone F1 is undefined for front-trained models (“–”). Flip TTA is applied to SegFormer-B0 and BN adaptation to DeepLabV3+, matching each model’s applicable mechanism. 
+
+D. Test-Time Adaptation on S1 and Mapple Subsets 
+
+Table II reports test-time results on the S1 and Mapple subsets. Flip TTA improves direct-front SegFormer-B0 MDE on both subsets, but not its zone-guided outputs. DeepLabV3+ BatchNorm adaptation also provides no reliable front-level gains and often worsens MDE. Lightweight test-time changes therefore do not resolve the boundary-precision limitation of zone-guided extraction. V. C ONCLUSION AND FUTURE WORK 
+
+Zone labels contain useful calving-front information, but standard zone-prediction models do not preserve the glacier-ocean boundary precisely enough for reliable extraction. Direct-front SegFormer-B0 performs best, while the ground-truth-zone check suggests that boundary-aware use of zone supervision remains promising. Flip TTA and BatchNorm adaptation provide no consistent gains. Because this study evaluates standard segmentation models with simple boundary extraction, the results should be viewed as a controlled com-parison rather than a state-of-the-art benchmark. Future work should combine zone and front supervision using boundary-aware losses or explicit glacier-ocean constraints, together with temporal information and SAR-specific pretraining to improve robustness. ACKNOWLEDGMENT 
+
+This work is supported by iHARP: NSF HDR Institute for Harnessing Data and Model Revolution in the Polar Regions (Award# 2118285). The views expressed in this work do not necessarily reflect the policies of the NSF, and endorsement by the Federal Government should not be inferred. REFERENCES [1] E. Rignot, J. Mouginot, and B. Scheuchl, “Ice flow of the Antarctic ice sheet,” Science , vol. 333, no. 6048, pp. 1427–1430, 2011. [2] J. Mouginot, E. Rignot, A. A. Bjørk, M. Van den Broeke, R. Millan, M. Morlighem, B. No¨ el, B. Scheuchl, and M. Wood, “Forty-six years of Greenland Ice Sheet mass balance from 1972 to 2018,” Proceedings of the national academy of sciences , vol. 116, no. 19, pp. 9239–9244, 2019. [3] The IMBIE Team, “Mass balance of the Greenland Ice Sheet from 1992 to 2018,” Nature , vol. 579, no. 7798, pp. 233–239, 2020. [4] N. Gourmelon, T. Seehaus, M. Braun, A. Maier, and V. Christlein, “Calv-ing fronts and where to find them: a benchmark dataset and methodology for automatic glacier calving front extraction from synthetic aperture radar imagery,” Earth System Science Data , vol. 14, no. 9, pp. 4287– 4313, 2022. [5] M. Holzmann, A. Davari, T. Seehaus, M. Braun, A. Maier, and V. Christlein, “Glacier calving front segmentation using attention U-Net,” in 2021 IEEE International Geoscience and Remote Sensing Symposium IGARSS . IEEE, 2021, pp. 3483–3486. [6] F. Wu, N. Gourmelon, T. Seehaus, J. Zhang, M. Braun, A. Maier, and V. Christlein, “AMD-HookNet for glacier front segmentation,” IEEE Transactions on Geoscience and Remote Sensing , vol. 61, pp. 1–12, 2023. [7] N. Gourmelon, K. Heidler, E. Loebel, D. Cheng, J. Klink, A. Dong, F. Wu, N. Maul, M. Koch, M. Dreier et al. , “Comparison study: Glacier calving front delineation in synthetic aperture radar images with deep learning,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2026. [8] N. Gourmelon, M. Dreier, M. Mayr, T. Seehaus, D. Pyles, M. Braun, A. Maier, and V. Christlein, “SSL4SAR: Self-supervised learning for glacier calving front extraction from sar imagery,” IEEE Transactions on Geoscience and Remote Sensing , 2025. [9] M. Dreier, N. Gourmelon, D. Pyles, F. Wu, M. Braun, T. Seehaus, A. Maier, and V. Christlein, “Multi-temporal calving front segmenta-tion,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 239, pp. 276–290, 2026. [10] O. Herrmann, N. Gourmelon, T. Seehaus, A. Maier, J. J. F¨ urst, M. H. Braun, and V. Christlein, “Out-of-the-box calving-front detection method using deep learning,” The Cryosphere , vol. 17, no. 11, pp. 4957–4977, 2023. [11] F. Wu, M. Dreier, N. Gourmelon, S. Wind, J. Zhang, T. Seehaus, M. Braun, A. Maier, and V. Christlein, “AMD-HookNet++: Evolution of amd-hooknet with hybrid cnn-transformer feature enhancement for glacier calving front segmentation,” IEEE Transactions on Geoscience and Remote Sensing , 2025. [12] J. Zhao, J. Tong, T. Li, Y. Sun, C. Shao, and Y. Dong, “CISNet: Change information guided semantic segmentation network for automatic ex-traction of glacier calving fronts,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 228, pp. 666–678, 2025. [13] O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional net-works for biomedical image segmentation,” in International Confer-ence on Medical image computing and computer-assisted intervention .Springer, 2015, pp. 234–241. [14] L.-C. Chen, Y. Zhu, G. Papandreou, F. Schroff, and H. Adam, “Encoder-decoder with atrous separable convolution for semantic image segmen-tation,” in Proceedings of the European conference on computer vision (ECCV) , 2018, pp. 801–818. [15] E. Xie, W. Wang, Z. Yu, A. Anandkumar, J. M. Alvarez, and P. Luo, “SegFormer: Simple and efficient design for semantic segmentation with transformers,” Advances in neural information processing systems ,vol. 34, pp. 12 077–12 090, 2021. [16] Z. Nado, S. Padhy, D. Sculley, A. D’Amour, B. Lakshminarayanan, and J. Snoek, “Evaluating prediction-time batch normalization for robustness under covariate shift,” arXiv preprint arXiv:2006.10963 , 2020. [17] S. Schneider, E. Rusak, L. Eck, O. Bringmann, W. Brendel, and M. Bethge, “Improving robustness against common corruptions by covariate shift adaptation,” Advances in neural information processing systems , vol. 33, pp. 11 539–11 551, 2020. [18] D. Wang, E. Shelhamer, S. Liu, B. Olshausen, and T. Darrell, “Tent: Fully test-time adaptation by entropy minimization,” arXiv preprint arXiv:2006.10726 , 2020.

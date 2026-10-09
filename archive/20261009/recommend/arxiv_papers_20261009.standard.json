@@ -1,0 +1,252 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-09T23:27:30.205280+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2610.04066v1",
+      "source": "arxiv",
+      "title": "Evaluating Zone-Guided Front Extraction for Glacier Calving-Front Delineation in SAR Imagery",
+      "abstract": "Automatic calving-front delineation from synthetic aperture radar imagery is challenging because the front is a thin and often ambiguous boundary between glacier ice, ocean, and surrounding rock or terrain. The CAlving Fronts and where to Find thEm (CaFFe) dataset provides both binary calving-front masks and broader semantic zone masks, making it possible to study whether zone-level supervision can support front recovery. In this paper, we compare direct front prediction with zone-guided front extraction using U-Net, DeepLabV3+, and SegFormer-B0 under the same bounding-box-cropped CaFFe setting. In the direct setting, models predict the binary calving-front mask. In the zone-guided setting, the model first predicts four semantic zone classes, and the front is then extracted from the predicted glacier-ocean boundary. We evaluate both zone-level and front-level performance, include a ground-truth-zone boundary check, and examine lightweight test-time adaptation on sensor-specific and glacier-specific subsets. The results show that zone labels contain useful front-boundary information: extracting the front from ground-truth zones gives the lowest mean distance error. However, fronts extracted from model-predicted zones remain weak, even when zone segmentation scores are moderate. Test-time adaptation also does not consistently improve zone-guided front recovery. These results indicate that zone segmentation performance should not be treated as a substitute for front-level evaluation and that effective use of zone labels may require boundary-aware training, label fusion, or explicit front supervision.",
+      "authors": [
+        "Chhaya Kulkarni",
+        "Emam Hossain"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-10-02T21:18:16+00:00",
+      "link": "https://arxiv.org/pdf/2610.04066v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning segmentation of ocean-ice boundary in SAR remote sensing imagery",
+      "llm_evidence_cn": "SAR遥感影像中海洋-冰边界的深度学习分割",
+      "llm_evidence": "SAR遥感影像中海洋-冰边界的深度学习分割",
+      "canonical_evidence": "SAR遥感影像中海洋-冰边界的深度学习分割",
+      "llm_tldr_en": "Using the CaFFe dataset, this paper compares direct calving-front prediction with zone-guided extraction via U-Net, DeepLabV3+ and SegFormer-B0 to study whether zone-level supervision helps delineate thin ocean-ice boundaries.",
+      "llm_tldr_cn": "从合成孔径雷达影像自动勾绘冰川崩解前沿十分困难，因为该前沿是冰、海洋与岩石之间细而模糊的边界。本文基于CaFFe数据集，在相同裁剪设置下比较直接前沿预测与区域引导前沿提取，使用U-Net、DeepLabV3+与SegFormer-B0，先预测四类语义区域再据此恢复前沿。实验揭示了区域级监督对边界恢复的作用，为海洋-冰交界等遥感语义分割任务提供了方法参考。",
+      "llm_tldr": "从合成孔径雷达影像自动勾绘冰川崩解前沿十分困难，因为该前沿是冰、海洋与岩石之间细而模糊的边界。本文基于CaFFe数据集，在相同裁剪设置下比较直接前沿预测与区域引导前沿提取，使用U-Net、DeepLabV3+与SegFormer-B0，先预测四类语义区域再据此恢复前沿。实验揭示了区域级监督对边界恢复的作用，为海洋-冰交界等遥感语义分割任务提供了方法参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.04203v1",
+      "source": "arxiv",
+      "title": "Sparse-GS2Mesh: 3D Gaussian Splatting Guided by Novel Stereo Views and 2DGS for Sparse View Surface Reconstruction}",
+      "abstract": "Surface reconstruction under sparse-view settings remains challenging due to limited geometric cues. Volume rendering methods based on signed distance functions often produce over-smoothed surfaces, while 3D Gaussian Splatting (3DGS), though time-efficient, suffers from incomplete geometry due to the lack of reliable depth supervision and the limitation of being optimized only from given input views. In this paper, we present Sparse-GS2Mesh, a stereo-aware framework for surface reconstruction from sparse views. While 3DGS and stereo matching have been leveraged for surface reconstruction under dense view settings, we extend them to operate effectively under sparse view conditions by first initializing 3DGS using epipolar depth priors to mitigate the 3DGS overfitting problem, followed by our three key components: (I) adaptive baseline selection, (II) fine-tuning with a stereo matching network, and (III) 2D/3D co-regularized fine-tuning. Given a warmed-up 3DGS initialized with epipolar depth, the adaptive baseline selection automatically determines a baseline to synthesize for each sparse view. We then fine-tune 3DGS by backpropagating depth-refining gradients from the stereo matching network, effectively specializing the 3DGS for stereo matching. The 2D/3D co-regularization further helps obtain stable reconstruction, addressing weak geometric cues in close stereo views. Sparse-GS2Mesh achieves a 15\\% improvement over state-of-the-art methods in little-overlap settings and comparable results in large-overlap settings. Codes will be publicly available.",
+      "authors": [
+        "Younghyun Noh",
+        "Minje Kim",
+        "Tae-Kyun Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-03T01:33:18+00:00",
+      "link": "https://arxiv.org/pdf/2610.04203v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D Gaussian splatting surface reconstruction from sparse views",
+      "llm_evidence_cn": "稀疏视角下的三维高斯泼溅表面重建",
+      "llm_evidence": "稀疏视角下的三维高斯泼溅表面重建",
+      "canonical_evidence": "稀疏视角下的三维高斯泼溅表面重建",
+      "llm_tldr_en": "Sparse-GS2Mesh is a stereo-aware framework that initializes 3D Gaussian Splatting with novel stereo views and 2DGS guidance to reconstruct complete surfaces under sparse-view settings.",
+      "llm_tldr_cn": "稀疏视角下的表面重建因几何线索有限而困难，SDF体渲染易过度平滑，3D高斯泼溅又缺乏可靠深度监督导致几何不完整。本文提出Sparse-GS2Mesh，一种立体感知框架，先用新视角立体初始化3D高斯并融合2DGS引导。方法在稀疏视角条件下有效重建表面几何，提升完整性与精度，可为珊瑚礁等复杂场景的三维重建提供技术支撑。",
+      "llm_tldr": "稀疏视角下的表面重建因几何线索有限而困难，SDF体渲染易过度平滑，3D高斯泼溅又缺乏可靠深度监督导致几何不完整。本文提出Sparse-GS2Mesh，一种立体感知框架，先用新视角立体初始化3D高斯并融合2DGS引导。方法在稀疏视角条件下有效重建表面几何，提升完整性与精度，可为珊瑚礁等复杂场景的三维重建提供技术支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Methods for three dimensional modeling and reconstruction of coral reefs from remote sensing and underwater imagery",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.05024v1",
+      "source": "arxiv",
+      "title": "LightVLN: Efficient Aerial Vision-and-Language Navigation with Compact Memory and History-Guided Local Aggregation",
+      "abstract": "Aerial vision-and-language navigation (VLN) enables unmanned aerial vehicles to execute long-horizon natural-language instructions from visual observations in complex three-dimensional environments. However, recent aerial VLN models often rely on large-scale vision-language backbones and dense visual histories, imposing substantial computation and memory costs that hinder onboard deployment. We propose LightVLN, a lightweight history-aware aerial VLN framework that combines a compact 0.5B language backbone with compact representations of both historical and current observations. LightVLN compresses each historical frame into a single token using visual features already computed by the policy. It further introduces history- and instruction-conditioned local aggregation to reduce the current observation from 256 to 32 visual tokens while preserving navigation-relevant spatial information. With up to 16 historical frames, the policy uses at most 48 observation-derived tokens. On the public OpenFly dataset, LightVLN achieves 50.93% Test-Seen and 36.14% Test-Unseen success rates (SR), outperforming the evaluated 7B language-backbone baselines on most reported metrics. It also achieves 25.83% SR on AerialVLN-S Val-Seen. In a reconstructed unseen campus, we deploy LightVLN on a DJI M350 RTK with an external Jetson Orin NX 16 GB for closed-loop onboard-compute real-to-sim hardware-in-the-loop (HIL) evaluation, achieving 14.61 Hz model inference and 11.13 Hz end-to-end decision updates. These results demonstrate the effectiveness and efficiency of LightVLN for aerial navigation.",
+      "authors": [
+        "Yiming Zhao",
+        "Tianshun Li",
+        "Jingle He",
+        "Ruonan Chai",
+        "Xinhu Zheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-10-04T07:37:44+00:00",
+      "link": "https://arxiv.org/pdf/2610.05024v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "lightweight aerial vision-and-language navigation for UAV agents",
+      "llm_evidence_cn": "面向无人机智能体的轻量空中视觉语言导航",
+      "llm_evidence": "面向无人机智能体的轻量空中视觉语言导航",
+      "canonical_evidence": "面向无人机智能体的轻量空中视觉语言导航",
+      "llm_tldr_en": "LightVLN is a lightweight history-aware aerial vision-and-language navigation framework for UAVs, using a compact 0.5B language backbone and token-compressed visual history.",
+      "llm_tldr_cn": "针对空中视觉语言导航中现有模型依赖大规模视觉语言骨干和密集视觉历史、算力与内存开销大而难以机载部署的问题,本文提出LightVLN。方法结合紧凑的0.5B语言骨干与历史帧的单token压缩表示,并引入历史引导的局部聚合。实验表明该框架在长程自然语言指令导航中显著降低计算与内存成本,为无人机等智能体的海洋与空中自主导航应用提供了轻量化多模态方案。",
+      "llm_tldr": "针对空中视觉语言导航中现有模型依赖大规模视觉语言骨干和密集视觉历史、算力与内存开销大而难以机载部署的问题,本文提出LightVLN。方法结合紧凑的0.5B语言骨干与历史帧的单token压缩表示,并引入历史引导的局部聚合。实验表明该框架在长程自然语言指令导航中显著降低计算与内存成本,为无人机等智能体的海洋与空中自主导航应用提供了轻量化多模态方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.05731v1",
+      "source": "arxiv",
+      "title": "T-JEPA: A Temporal Joint-Embedding Predictive Architecture for Learning Better Remote Sensing Representations",
+      "abstract": "Earth observation (EO) data provide rich temporal supervision, yet existing remote sensing foundation models mainly exploit sequential observations through imposing predefined pairwise relations or aggregating holistic reconstruction context. We seek to further exploit the sparse and nonuniform temporal sampling inherent in EO sequences as supervisory signals. To this end, we propose T-JEPA, a temporal joint-embedding predictive architecture that learns time-gap-conditioned latent transitions. A shared single-frame encoder processes each observation, while a temporal predictor estimates the complete target latent field from a masked source latent representation and the actual elapsed time. Across multiple temporal intervals, these predictive constraints organize observed states into structured latent trajectories. Asymmetric metadata injection mitigates shortcut learning, and direct supervision across multiple temporal scales proves more effective than recursively rolling out intermediate states. In parallel, masked pixel reconstruction provides complementary supervision for preserving spatial details. Under matched pre-training data and throughput, T-JEPA achieves leading transfer performance on both static and temporal tasks. Analyses further reveal that T-JEPA learns representations with time-gap-dependent transition predictability and coherent latent dynamics, while maintaining strong cross-period consistency, representation diversity, and semantic discriminability.",
+      "authors": [
+        "Bowen Peng",
+        "Li Liu",
+        "Yongxiang Liu",
+        "Weijie Li",
+        "Jie Zhou",
+        "Zhen Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T03:31:44+00:00",
+      "link": "https://arxiv.org/pdf/2610.05731v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "temporal remote sensing representation learning for Earth observation",
+      "llm_evidence_cn": "面向地球观测的遥感时间表征学习",
+      "llm_evidence": "面向地球观测的遥感时间表征学习",
+      "canonical_evidence": "面向地球观测的遥感时间表征学习",
+      "llm_tldr_en": "T-JEPA is a temporal joint-embedding predictive architecture that learns time-gap-conditioned latent transitions from sparse nonuniform Earth observation sequences, improving remote sensing representations.",
+      "llm_tldr_cn": "地球观测数据蕴含丰富时间监督信号，但现有遥感基础模型多依赖预定义成对关系或整体重建。本文提出T-JEPA，一种时间联合嵌入预测架构，学习以时间间隔为条件的潜在状态转移。共享单帧编码器处理观测，时间预测器由掩码源潜表征与真实经过时间估计目标潜场。方法充分利用稀疏非均匀时间采样，为遥感表征学习提供新范式，可支撑海洋栖息地时序分析。",
+      "llm_tldr": "地球观测数据蕴含丰富时间监督信号，但现有遥感基础模型多依赖预定义成对关系或整体重建。本文提出T-JEPA，一种时间联合嵌入预测架构，学习以时间间隔为条件的潜在状态转移。共享单帧编码器处理观测，时间预测器由掩码源潜表征与真实经过时间估计目标潜场。方法充分利用稀疏非均匀时间采样，为遥感表征学习提供新范式，可支撑海洋栖息地时序分析。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.09085v1",
+      "source": "arxiv",
+      "title": "Anaximander: Interactively Running Geospatial Deep Learning Models on Any Compute Backend",
+      "abstract": "Applying deep learning models to satellite imagery from within geographic information systems (GIS) remains high-friction for remote sensing practitioners. Models arrive in incompatible formats and target different compute environments, from local workstations to serverless cloud services. As a result, every evaluation demands custom deployment, tiling, and georeferencing code before a single prediction reaches the analyst's map. This friction discourages systematic comparison in a domain where model choice directly affects operational outcomes such as field delineation, crop monitoring, and disaster response. We present Anaximander, an open-source system that unifies model source and compute location choice behind one interactive interface. The system's backend is an inference server that loads models from multiple commonly-used sources and serves them on any accessible compute backend. The server provides session management and model caching, and streams results back per tile. The backend is paired with a QGIS plugin that drives tiling, result reassembly, georeferencing, and real-time per-tile status visualization. An additional user-interface path injects layer legends as prompts into vision-language models. We demonstrate the system in a code-free side-by-side comparison of three heterogeneous models on an agricultural field delineation task: gpt-image-1 via a cloud API, Segment Anything Model 3 (SAM3) on a remote GPU, and DelineateAnything on a local CPU. The inference backend and protocol are open-source and available at https://github.com/microsoft/nxmndr.",
+      "authors": [
+        "Satej S. Soman",
+        "Akram Zaytar",
+        "Girmaw A. Tadesse",
+        "Gilles Q. Hacheme",
+        "Muhammad S. Danish",
+        "Inbal Becker-Reshef",
+        "Rahul Dodhia",
+        "Juan Lavista Ferres"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T20:31:38+00:00",
+      "link": "https://arxiv.org/pdf/2610.09085v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "interactive running of geospatial deep learning models on satellite imagery in GIS",
+      "llm_evidence_cn": "在GIS中交互运行卫星影像地理空间深度学习模型",
+      "llm_evidence": "在GIS中交互运行卫星影像地理空间深度学习模型",
+      "canonical_evidence": "在GIS中交互运行卫星影像地理空间深度学习模型",
+      "llm_tldr_en": "Anaximander is an open-source system that unifies model source and compute backend choice for interactively running geospatial deep learning models on satellite imagery within GIS.",
+      "llm_tldr_cn": "针对在GIS中对卫星影像应用深度学习模型仍高摩擦、模型格式与计算环境不兼容、每次评估都需定制部署与地理配准代码的问题,本文提出Anaximander。该系统将模型来源与计算位置的选择统一到一个交互界面中,自动处理切片与地理配准。结果使遥感从业者能便捷地系统比较模型,直接支持地表制图、作物监测与灾害响应等任务,为海洋等遥感数据的深度学习分析提供工具支撑。",
+      "llm_tldr": "针对在GIS中对卫星影像应用深度学习模型仍高摩擦、模型格式与计算环境不兼容、每次评估都需定制部署与地理配准代码的问题,本文提出Anaximander。该系统将模型来源与计算位置的选择统一到一个交互界面中,自动处理切片与地理配准。结果使遥感从业者能便捷地系统比较模型,直接支持地表制图、作物监测与灾害响应等任务,为海洋等遥感数据的深度学习分析提供工具支撑。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.12182v1",
+      "source": "arxiv",
+      "title": "AI-Based On-Board Maritime Object Detection for Earth Observation Payload Data Reduction on Versal Embedded Hardware",
+      "abstract": "Very-high-resolution Earth-observation satellites acquire more data than they can store and downlink, while in maritime surveillance the vessels cover a tiny fraction of each scene. We study onboard vessel detection as a way to select what is downlinked, which reduces the data according to its content rather than coding every pixel; it is complementary to conventional onboard compression. The work follows three axes. (i) Data and algorithm: a controlled dataset is generated from 68 annotated Maxar scenes with 43 vessel classes, and a YOLOX-S detector is trained on it. (ii) Embedded deployment: the detector is quantized and deployed on the DPU of a Versal VC1902, with a limited loss of detection quality and a processing time of a few seconds per scene. (iii) Data reduction: we propose several downlink modes, from metadata only (box, class and score of each detection) to image crops around vessels, tiles holding detections, or the whole scene with a degraded background, and estimate from the measured detection errors the trade-off each offers between the vessels kept and the volume downlinked. On our dense harbor and coastal scenes, tiles keep 98% of the vessels with 29% of the scene volume, and crops 83% with 3%.",
+      "authors": [
+        "Thomas Goudemant",
+        "Aurélien Bobey",
+        "Omar Hlimi",
+        "Marjorie Bellizzi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-08T15:48:00+00:00",
+      "link": "https://arxiv.org/pdf/2610.12182v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning vessel detection on ocean satellite imagery",
+      "llm_evidence_cn": "海洋卫星影像上的深度学习船只检测",
+      "llm_evidence": "海洋卫星影像上的深度学习船只检测",
+      "canonical_evidence": "海洋卫星影像上的深度学习船只检测",
+      "llm_tldr_en": "This work performs onboard maritime vessel detection on Earth-observation satellite imagery, training YOLOX-S and deploying it on Versal hardware to reduce downlink data by content.",
+      "llm_tldr_cn": "针对甚高分辨率对地观测卫星数据量远超存储与下传能力、而海事场景中船只占比极低的问题，本文研究星上船只检测以按内容筛选下传数据。作者基于68幅Maxar场景构建含43类船只的数据集，训练YOLOX-S检测器并量化部署到Versal VC1902的DPU上。实验表明嵌入式硬件上检测质量损失有限，能有效缩减载荷数据量。该工作为海洋遥感数据的星上智能处理与高效下传提供了可行方案。",
+      "llm_tldr": "针对甚高分辨率对地观测卫星数据量远超存储与下传能力、而海事场景中船只占比极低的问题，本文研究星上船只检测以按内容筛选下传数据。作者基于68幅Maxar场景构建含43类船只的数据集，训练YOLOX-S检测器并量化部署到Versal VC1902的DPU上。实验表明嵌入式硬件上检测质量损失有限，能有效缩减载荷数据量。该工作为海洋遥感数据的星上智能处理与高效下传提供了可行方案。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
