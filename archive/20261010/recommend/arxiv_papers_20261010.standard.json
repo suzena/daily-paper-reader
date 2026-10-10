@@ -1,0 +1,137 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-10T22:50:13.726143+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2610.11735v1",
+      "source": "arxiv",
+      "title": "Onboard Marine Anomaly Detection on $Φ$sat-2: From Simulation-Based Development to In-Orbit Demonstration",
+      "abstract": "Onboard Artificial Intelligence can improve responsiveness and bandwidth efficiency of Earth Observation systems by processing data directly on the satellite. This paper presents the experience gained from the development, onboard integration, and post-launch adaptation of a lightweight marine anomaly detection pipeline deployed on the European Space Agency's $Φ$sat-2 mission. The application combines sea segmentation, self-supervised feature encoding of marine regions, generic anomaly detection based on deviations from a normal sea state, and optional characterization of selected anomaly types. Before launch, the pipeline was trained and validated on simulated $Φ$sat-2 imagery to assess algorithmic performance and compatibility with resource-constrained onboard hardware. After integration and functional validation in the mission environment, early experiments on real $Φ$sat-2 acquisitions revealed a significant mismatch between simulated and in-orbit data. The pipeline was therefore retrained on real Level-1 imagery using an improved annotation strategy to better handle ambiguous marine regions, substantially enhancing performance. Beyond demonstrating the onboard feasibility of the application, the $Φ$sat-2 experience highlights the importance of robust annotation strategies and sensor-aware design, and shows that simulation-based development is valuable for pre-flight risk reduction, while reliable scientific validation requires representative in-orbit data and should be clearly distinguished from functional validation.",
+      "authors": [
+        "Clotilde Szywala",
+        "Thomas Goudemant",
+        "Marjorie Bellizzi",
+        "Benjamin Francesconi",
+        "Adrien Girard"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-10-08T11:31:06+00:00",
+      "link": "https://arxiv.org/pdf/2610.11735v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "onboard AI marine anomaly detection on satellite",
+      "llm_evidence_cn": "星上AI海洋异常检测",
+      "llm_evidence": "星上AI海洋异常检测",
+      "canonical_evidence": "星上AI海洋异常检测",
+      "llm_tldr_en": "The paper reports developing, integrating and adapting a lightweight onboard marine anomaly detection pipeline on ESA Phi-sat-2, combining sea segmentation, self-supervised encoding and normal-state anomaly detection, validated on simulated imagery before in-orbit demonstration.",
+      "llm_tldr_cn": "论文针对地球观测系统响应与带宽受限的问题，提出在ESA Φsat-2卫星上部署轻量级海洋异常检测流水线。方法结合海面分割、自监督特征编码与基于正常海况偏差的通用异常检测。发射前在仿真影像上训练验证，并在在轨阶段完成适配与演示，展示了星上AI对海洋监测的实用价值。",
+      "llm_tldr": "论文针对地球观测系统响应与带宽受限的问题，提出在ESA Φsat-2卫星上部署轻量级海洋异常检测流水线。方法结合海面分割、自监督特征编码与基于正常海况偏差的通用异常检测。发射前在仿真影像上训练验证，并在在轨阶段完成适配与演示，展示了星上AI对海洋监测的实用价值。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.07982v1",
+      "source": "arxiv",
+      "title": "M3SunAgent: Monocular 3D Spatial Understanding Agent for Metric Depth Estimation and 3D Visual Grounding",
+      "abstract": "Monocular metric depth estimation and 3D visual grounding represent the two complementary cornerstones of monocular 3D spatial understanding (M3Sun), from which the fundamental 3D spatial information required by M3Sun can be acquired. However, these complementary tasks are generally conducted by separate frameworks, which pose challenges of inflexible and unaligned spatial information access for embodied intelligence systems. In this paper, we propose a unified agent for monocular 3D spatial understanding (M3SunAgent) that leverages a large language model (LLM) as a task planner for spatial visual programming, which flexibly generate structured programs and coordinate tools. For instance-level metric depth estimation task, M3SunAgent invokes an object detector tool to locate the target, estimates depth at selected points with a depth estimation tool, and aggregates these predictions into an instance-level depth estimate. We also construct the M3Sun Instance (M3SI) dataset, a benchmark with 2,910 samples for evaluation. For monocular 3D visual grounding task, M3SunAgent uses a vision-language model (VLM) tool to locate the target and output basic spatial attributes, then combines back-projection tool with a dimension-lifting tool to predict its 3D bounding box. Experimental results demonstrate the superior performance of M3SunAgent. Specifically, in evaluations of instance-level monocular metric depth estimation, M3SunAgent achieves the best performance among all compared models, 52.61% of predicted instances are distributed below depth error 0.25 ($δ< 0.25$). In evaluations of monocular 3D visual grounding, M3SunAgent demonstrates overall competitive performance than vision and VLM models, reaching a 3D mean intersection over union (mIoU) of 41.73% and exceeding the state-of-the-art MonoVLM model by 3.62%.",
+      "authors": [
+        "Jinsong Zhang",
+        "Kejun Wu",
+        "Ming Zhu",
+        "Renjie Qiao",
+        "Chengtao Cai",
+        "Zhengguo Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-06T08:45:25+00:00",
+      "link": "https://arxiv.org/pdf/2610.07982v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM-as-planner agent for monocular 3D spatial understanding",
+      "llm_evidence_cn": "以LLM为规划器的单目三维空间理解智能体",
+      "llm_evidence": "以LLM为规划器的单目三维空间理解智能体",
+      "canonical_evidence": "以LLM为规划器的单目三维空间理解智能体",
+      "llm_tldr_en": "M3SunAgent unifies monocular metric depth estimation and 3D visual grounding under an LLM task planner that generates structured spatial-visual programs, enabling flexible and aligned 3D spatial understanding.",
+      "llm_tldr_cn": "单目度量深度估计与三维视觉定位是单目三维空间理解的两大基石，但通常由独立框架完成，导致具身智能系统空间信息获取不灵活且不对齐。本文提出统一智能体M3SunAgent，以大型语言模型作为任务规划器进行空间视觉编程，生成结构化程序并协调工具。实验表明该框架能在多类单目三维任务上实现灵活且对齐的空间信息获取，展示了大模型智能体在三维理解中的潜力。",
+      "llm_tldr": "单目度量深度估计与三维视觉定位是单目三维空间理解的两大基石，但通常由独立框架完成，导致具身智能系统空间信息获取不灵活且不对齐。本文提出统一智能体M3SunAgent，以大型语言模型作为任务规划器进行空间视觉编程，生成结构化程序并协调工具。实验表明该框架能在多类单目三维任务上实现灵活且对齐的空间信息获取，展示了大模型智能体在三维理解中的潜力。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "intelligent agent marine applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.11176v1",
+      "source": "arxiv",
+      "title": "Multimodal Remote Sensing Image Registration: A Comprehensive Review, Challenges and Prospects",
+      "abstract": "Multimodal remote sensing image registration is a crucial prerequisite for the collaborative processing and downstream application of remote sensing data, such as image fusion, change detection, and target recognition. However, significant variations in radiometry, geometry, scale, viewpoint, and time often exist between multimodal images. These differences, driven by varying sensor geometries, physical radiation mechanisms, imaging platforms, and environmental disturbances, pose severe challenges to achieving high-precision, robust registration. This paper systematically reviews the progress of mainstream multimodal remote sensing image registration methods. Based on their registration pipelines, existing approaches are categorized into three main types: region-based, feature-based, and deep learning-based methods. We detail the core principles, representative algorithms, advantages, and limitations of each category. Additionally, we summarize publicly available multimodal image datasets in the remote sensing domain, analyzing their specific characteristics and applicable scenarios. Finally, we highlight current bottlenecks in high-precision registration research and outline future development trends. This review aims to provide a comprehensive reference and valuable insights for researchers in related fields.",
+      "authors": [
+        "Zhiqiang Han",
+        "Yuanxin Ye",
+        "Qiuyun Wu",
+        "Jinhao Chen",
+        "Bai Zhu",
+        "Siyuan Hao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-08T03:36:12+00:00",
+      "link": "https://arxiv.org/pdf/2610.11176v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "review of multimodal remote sensing image registration for downstream tasks",
+      "llm_evidence_cn": "多模态遥感图像配准综述，服务于遥感下游处理",
+      "llm_evidence": "多模态遥感图像配准综述，服务于遥感下游处理",
+      "canonical_evidence": "多模态遥感图像配准综述，服务于遥感下游处理",
+      "llm_tldr_en": "Reviews multimodal remote sensing image registration, covering radiometric, geometric and temporal differences between sensors, and categorizes mainstream methods to guide fusion and downstream tasks.",
+      "llm_tldr_cn": "多模态遥感图像间存在辐射、几何、尺度与时间差异，导致高精度配准困难。本文系统综述主流多模态遥感图像配准方法，并按配准流程对现有方法进行分类比较。文章总结了各类方法在精度与鲁棒性上的表现及现存挑战。该综述为图像融合、变化检测和目标识别等遥感下游任务提供了方法参考。",
+      "llm_tldr": "多模态遥感图像间存在辐射、几何、尺度与时间差异，导致高精度配准困难。本文系统综述主流多模态遥感图像配准方法，并按配准流程对现有方法进行分类比较。文章总结了各类方法在精度与鲁棒性上的表现及现存挑战。该综述为图像融合、变化检测和目标识别等遥感下游任务提供了方法参考。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "data mining approaches for oceanographic remote sensing data",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

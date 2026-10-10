@@ -1,0 +1,57 @@
+{
+  "date": "20261010",
+  "date_label": "",
+  "generated_at": "2026-10-10 22:54:36 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.11735v1",
+      "route": "202610/10/2610.11735v1-onboard-marine-anomaly-detection-on-sat-2-from-simulation-based-development-to-in-orbit-demonstration",
+      "title": "Onboard Marine Anomaly Detection on $Φ$sat-2: From Simulation-Based Development to In-Orbit Demonstration",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "星上AI海洋异常检测",
+      "first_seen_at": "2026-10-10 22:54:36 UTC",
+      "updated_at": "2026-10-10 22:54:36 UTC"
+    },
+    {
+      "paper_id": "2610.07982v1",
+      "route": "202610/10/2610.07982v1-m3sunagent-monocular-3d-spatial-understanding-agent-for-metric-depth-estimation-and-3d-visual-grounding",
+      "title": "M3SunAgent: Monocular 3D Spatial Understanding Agent for Metric Depth Estimation and 3D Visual Grounding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "以LLM为规划器的单目三维空间理解智能体",
+      "first_seen_at": "2026-10-10 22:54:36 UTC",
+      "updated_at": "2026-10-10 22:54:36 UTC"
+    },
+    {
+      "paper_id": "2610.11176v1",
+      "route": "202610/10/2610.11176v1-multimodal-remote-sensing-image-registration-a-comprehensive-review-challenges-and-prospects",
+      "title": "Multimodal Remote Sensing Image Registration: A Comprehensive Review, Challenges and Prospects",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "多模态遥感图像配准综述，服务于遥感下游处理",
+      "first_seen_at": "2026-10-10 22:54:36 UTC",
+      "updated_at": "2026-10-10 22:54:36 UTC"
+    }
+  ]
+}
