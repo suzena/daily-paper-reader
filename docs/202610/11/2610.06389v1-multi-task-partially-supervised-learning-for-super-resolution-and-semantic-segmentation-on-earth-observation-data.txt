@@ -1,0 +1,249 @@
+Title: Multi-Task Partially Supervised Learning for Super-Resolution and Semantic Segmentation on Earth Observation data
+
+URL Source: https://arxiv.org/pdf/2610.06389v1
+
+Published Time: Tue, 06 Oct 2026 03:06:38 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+MULTI-TASK PARTIALLY SUPERVISED LEARNING FOR SUPER-RESOLUTION AND SEMANTIC SEGMENTATION ON EARTH OBSERVATION DATA 
+
+Ho` ang- ˆ An Lˆ e1,2,∗ , Minh-Tan Pham 1, Solange Lemai-Chenevier 2, Daniel Greslou 21Universit´ e Bretagne Sud, IRISA, UMR 6074, Vannes, France 
+
+> 2
+
+Centre National d’Etudes Spatiales (CNES), Toulouse, France 
+
+ABSTRACT 
+
+Super-resolution and semantic segmentation are known to benefit one another, especially in the Earth observation context. However, learning both tasks in a joint model often requires both task annotations, which is impractical and expensive. In this paper, we study the multi-task par-tially supervised learning paradigm for both tasks, where each example is assumed to have only a single-task an-notation. To that end, we examine two multi-task archi-tectural variations, the sequential and shared variants, then propose a hybrid variant and a re-projection loss to benefit from the shared representation and enforce image quality of super-resolution when training with semantic segmenta-tion. Experiments show favorable results compared to the SOTAs sequential variant. Source codes will be published at 
+
+https://github.com/lhoangan/munera .
+
+Index Terms — super-resolution, semantic segmentation, multi-task, partially supervised learning 
+
+1. INTRODUCTION 
+
+Earth observation, which studies and monitors the character-istics and activities on the Earth’s surface, has been attracting the attention of the computer vision community because of its importance and potential. One prominent challenge of Earth observation data is the high variation of data appearances due to geographical differences, e.g . rural compared to urban ar-eas, and due to different capturing sensors and acquisition al-titudes, e.g . aerial and satellite platforms. Scaling variation also affects scenes’ detail level, which is generally crucial for semantic-based applications [1, 2]. Super-resolution, which upsamples images and recovers high-resolution details, could serve as a remedy. However, it is an ill-posed problem, as there exists, in principle, an infi-nite number of high-resolution images that, through different degrading processes, result in the same low-resolution input image [3]. Categorical information has proven effective in constraining super-resolution [4], allowing realistic textural reconstruction [5, 6] and improving photo-realistic qualities. 
+
+> ∗Work done as part of the CNES post-doctoral fellowship program
+
+As it is known that the multi-task paradigm learns domain-specific information from related tasks to improve one an-other, jointly learning super-resolution and semantic segmen-tation in a single model should be reciprocally beneficial for Earth observation applications. The dual-task model by Wang et al . [7] with a shared encoder and two task-heads enhancing representation detail levels and predicting seman-tic segmentation at larger resolutions has been applied to remote sensing by various authors [8, 9] while being adapted to different network architectures [10]. On the other hand, [6] and [4] jointly learn semantic segmentation and super-resolution for the super-resolution’s benefit. Although var-ious approaches in the literature have leveraged one task to improve the performance of the other [5, 6, 7, 8], focusing on both tasks simultaneously [9, 10] remains limited, due to the impractical requirements of annotations for all tasks per training example that multiply the effort in creating a dataset and maintaining task synchronization. Multi-task partially supervised learning [11], in which each training example is required to be annotated for only a single task, is proposed to relax the strict requirement of multi-task learning. Without requiring all-task annotations for each training example, multiple datasets already anno-tated for different tasks can be combined in a single training pipeline, increasing the number of training examples and benefiting from complementary information. Yet, it is not without hindrances. The lack of joint annotations hinders joint optimization during training and requires specific atten-tion regarding the tasks and input data [12]. In this paper, we jointly learn super-resolution and semantic segmentation under the same network with a shared encoder using partially annotated datasets for Earth observation. To that end, we propose a re-projection loss to constrain the super-resolution subnet when training with segmentation-annotated data. Despite several works on discriminative tasks such as depth, segmentation, and object detection, the combination of a generative (super-resolution) and a discriminative (se-mantic segmentation) task is still limited, especially for Earth observation. Similar to our setting are the semantic-guided super-resolution [4] and super-resolution for image recog-nition (SR4IR) [2], which places a semantic segmentation network after the super-resolution network in a sequential or-
+
+> © 2026 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other use, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works. DOI: 10.1109/ICIP61757.2026.11630424” arXiv:2610.06389v1 [cs.CV] 5 Oct 2026
+
+der. Although such a design orients super-resolution toward a downstream task, it places semantic segmentation under the entire influence of super-resolution performance and reduces shared representation. To make the best of both worlds, we propose a hybrid variant that allows shared features as well as adapting super-resolution for a downstream task. The experiments performed on the ISPRS [13] and proprietary Pleiades-based datasets show favorable results compared to the existing state-of-the-art. The contributions of the paper are as follows: We (1) study the multi-task partial supervised learning for super-resolution and semantic segmentation on Earth observation data, and (2) propose a hybrid variant and a re-projection loss to enforce super-resolution image quality. 
+
+2. PARTIAL MULTI-TASK LEARNING 2.1. Problem formulation 
+
+Let (LR, H R) be a pair of low- and high-resolution images and (LS , M S ) be a pair of a different low-resolution image with its corresponding semantic annotation. The subscripts 
+
+R and S indicate the associated task, respectively super-resolution and semantic segmentation. Let c be a scale factor, the dual-task network is a function f c producing, for each input image Lx with N pixels, a semantic mask ˜Mx and a 
+
+c-times higher resolution image ˜Hx, as follows: 
+
+f c : RN → Rc2N × RN (1) 
+
+Lx 7 →
+
+ ˜Hx, ˜Mx
+
+
+
+. (2) 
+
+2.2. Network architecture 
+
+The network overview in Figure 1(a) visualizes with color-code a shared encoder E(·) for feature extraction and two task-decoder heads, DcR(·) and DS (·) for super-resolution and semantic segmentation, respectively. The predictions are, 
+
+˜Hx = DcR (E(Lx)) and ˜Mx = DS (E(Lx)) . (3) For super-resolution, we employ the RRDBNet architec-ture utilized in the ESRGAN [14] model with 23 residual-in-residual dense blocks (RRDB) to retain high-level informa-tion and increase the encoder’s capacity before upsampling 4 times (via interpolations and convolutions) and produc-ing the super-resolved image. For semantic segmentation, the HRNet [15] architecture is employed, which maintains a stream of embeddings at the input size. As the RRDBNet encodes the input image while maintaining the resolution of the embeddings, it replaces the first stage of HRNet and acts as the shared encoder E, leaving the upsampling subnet the super-resolution decoder DcR, with 2 pairs of interpolation-convolution layers (for c = 4 ) followed by 2 convolution layers. The rest of HRNet becomes the semantic segmenta-tion head DS . Interested readers are referred to the original works for more details. As we do not make any assumption on the architecture, this model is architecture-agnostic. 
+
+Multi-task decoders Different from the shared -encoder approach in conventional multi-task models, [2, 4] proposed a sequential approach which concatenates a full HRNet to the RRDBNet such that the super-resolved images are fed directly to the HRNet and uses the segmentation loss to guide the super-resolution performance (Figure 1-(b)). This approach allows maintaining the gradient flow through the super-resolution head when training with segmentation-annotated inputs LS , thereby putting the segmentation per-formance on the entire dependency of super-resolution. To make the best of both worlds, we propose a hybrid head (Fig-ure 1-(c)) where the shared features are adapted and added to the super-resolved features. The three variants share the same encoder E(.) and two decoders DR(.) and DS (.), as indicated by the same color code. The added blocks to adapt the features are shown explicitly for clarity purposes. 
+
+2.3. Optimizing objectives 
+
+The loss function for super-resolution and semantic segmen-tation task, respectively, can be written as LSR (f (LR) ˜H , H R)
+
+and LSS (f (LS ) ˜M , M S ), which receive different input vari-ables as partial multi-task learning assumes a single-task an-notation per training image. The optimization and parame-ters update can be performed collectively by alternating im-age batches for each task as inputs, making two batches per iteration, or separately for each task every epoch. 
+
+Super-resolution task Two losses are employed, in-cluding the reconstruction or pixel loss Lpix that measures the similarity to the high-resolution target using the L1 dis-tance and the Learned Perceptual Image Patch Similarity (LPIPS) [16] loss Lpcp with AlexNet. We deliberately with-hold the adversarial loss, as the ablation study in Table 3 shows that it destabilizes the training process and produces suboptimal performance. The final loss is as follows: 
+
+LSR = λ1Lpix ( ˜H, H ) + λ2Lpcp ( ˜H, H ), (4) 
+
+Semantic segmentation task For the semantic segmen-tation head, the cross-entropy with softmax loss LCE is em-ployed. To further constrain the super-resolution head, the super-resolved image is re-projected to the low-resolution do-main using nearest neighbor, and a re-projection loss is ap-plied with the input image to constrain the fidelity of the out-put, i.e . Lrpj ( ˜HS ↓c, L S ) = L1( ˜HS ↓c, L S ). The total loss for data annotated with semantic segmentation is, therefore: 
+
+LSS = LCE ( ˜MS , M S ) + λ3Lrpj ( ˜HS ↓c, L S ). (5) 
+
+λ1, λ2, and λ3 are empirically set to 0.01, 1, 4, respectively. 
+
+3. EXPERIMENTS 3.1. Setups Dataset The ISPRS 2D semantic labeling contest [13] and the proprietary datasets using real and synthetic Pl´ eiades im-agery are employed for experimentation. Regarding ISPRS, 2↓          
+
+> 4×
+> LR
+> LS
+> (b) sequential variant [2, 4]
+> ˜HR
+> ˜HS
+> ˜MS↓
+> 4×
+> LR
+> LS
+> (c) hybrid variant
+> ˜HR
+> ˜HS
+> ˜MS
+> B-2 blocks
+> 4×
+> input size 1/2 1/4 1/8 Super Resolution Semantic Segmentation RRDB block Dense block Element-wise addition Residual scaling conv.
+> k= 3 , s = 1
+> +leaky ReLU HRNet transition HRNet fusion many-to-many
+> HRNet head many-to-one
+> conv.
+> k= 3 , s = 1
+> +ReLU+BN
+> ↑↑
+> conv.
+> k= 3 , s = 1
+> +leaky ReLU
+> ↑
+> LR
+> LS
+> ˜HRHR
+> MS
+> ˜MS
+> D4
+> R(·)
+> DS(·)
+> E(·)
+> LSR
+> LCE
+> ˜HS
+> (a) shared architecture for partial MTL
+
+Fig. 1 . The multi-task architecture (color-coded) with a shared encoder (a), its sequential variant (b), and the hybrid variant (c) for 2 tasks, super-resolution and semantic segmentation. The encoder consists of B = 23 residual-in-residual blocks [14], the super-resolution decoder comprises 2 upsampling followed by 2 convolution layers, and the segmentation decoder is taken from HRNet-W18 architecture [15] variant SSIM PSNR SS-guided SR [4] sequential 0.746 23.890 SR4IR [2] sequential 0.694 22.830 Ours shared 0.804 25.491 
+
+Ours hybrid 0.804 25.446 
+
+Table 1 . Comparing our shared and hybrid MTL variants with the state-of-the-art methods employing the sequential variant for super-resolution on the Vaihingen test set. Our methods achieve better fidelity quality. the Potsdam subset is used to train super-resolution and Vai-hingen for semantic segmentation and testing. Following the clean super-resolution (CSR) evaluation strategy [17], the LR images are simulated by degrading clean HR images with hidden kernels and injecting noise of unknown statistics. In-spired by [4, 3, 18] we generate 5×5-Gaussian kernels k with uniformly random lengths, i.e . σ1, σ 2 ∼ U (0 .6, 2.5) , and multiplicative noise up to 25% of the pixels’ values, i.e . k := 
+
+k ∗ (1 + 25% ϵ), where ϵ ∼ N (0 , 1) , to deviate from a regular Gaussian, before normalizing to the sum of 1. The simulated LR images are generated via the well-known model, variant Vaihingen Pleiades SS-guided SR [4] sequential 0.597 0.492 SR4IR [2] sequential 0.716 0.520 Ours shared 0.605 0.508 Ours hybrid 0.721 0.531 Table 2 . Comparing our shared and hybrid MTL variants with the state-of-the-art methods employing the sequential variant for semantic segmentation on both datasets. Our methods per-form on par with the others on segmentation. 
+
+L = ( H ∗ k) ↓c +n, (6) where n ∼ N (0 , 4) models the sensor noise. The kernel and noise distribution are kept away from the training process. We apply Eq. 6 with the scale ratio c = 4 to the Vaihingen images whose original ground sampling distance (GSD) is 9 cm, re-sulting in (LR, HR) pairs of approximately 36 cm and 9 cm GSD. Conversely, the Potsdam images captured at a GSD of 5 cm are first downsampled 2 times using the bicubic kernel to remove potential noise, before applying Eq. 6, resulting in training pairs of 40 cm and 10 cm GSD. Validating semantic 3Surface                                                                                                             
+
+> Building
+> LowVeg
+> Tree
+> Car
+> Background Predicted Label
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background True Label
+> 9781 8122 1823 07623 4130 1169 607577 43 46 7837 1955 53 33536 210 38 47 7720 0000000mIOU = 0.597
+> 0.00e+00
+> 5.00e+04
+> 1.00e+05
+> 1.50e+05
+> 2.00e+05
+> 2.50e+05
+> 3.00e+05
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background Predicted Label
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background True Label
+> 1412 -992 1496 848 60 01687 2126 584 -107 -38 0-1240 -1924 -261 2847 10 46 -1062 -382 941 -497 33-203 36 14 -10 -163 0000000mIOU = 0.716
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background Predicted Label
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background True Label
+> -2561 -2910 198 434 -188 -95 743 1022 515 -217 -19 01632 -535 5880 5030 -10 -237 242 163 -674 -294 -16 -9 457 58 -4 -11 484 -16 000000mIOU = 0.605
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background Predicted Label
+> Surface
+> Building
+> LowVeg
+> Tree
+> Car
+> Background True Label
+> 329 -902 333 952 -54 0-507 49 410 156 -10 0-403 -1369 5440 7183 -17 46 -251 154 -5171 -5267 -2 3281 11 68306 0000000mIOU = 0.721
+
+Fig. 2 . The leftmost figure shows the confusion matrix of SS-guided SR [4] ( A) for the ISPRS data, and the rest show the differences with the confusion matrix ( B) of each of the other methods: from left to right, SR4IR [2], our shared and hybrid variants. The diagonals of the different matrices show if the other methods are higher in true positive counts, calculated by 
+
+B − A, while the other entries indicate if they are lower in false positive counts, i.e . A − B. Positive (red) values are favorable. Both SR4IR and our hybrid approach can recognize the absence of the Background class in the test data (last column). 
+
+Input (LR) SS-guided SR [4] SR4IR [2] Ours: shared Ours: hybrid Target (4x) 
+
+Fig. 3 . Qualitative results on the Vaihingen test. The shared and hybrid variants show richer in textures compared to the overly-smooth SS-guided SR [4] and the blurry SR4IR [2]. masks from Vaihingen are downsampled by nearest neighbor following common practices. The Pl´ eiades (CNES/Airbus) dataset 1 is set as the target data with the scale factor of 2, including 230 pan-sharpened images and semantic masks of 
+
+2048 × 2048 × 4-resolution and 50 cm GSDs (R, G, B, and Near-IR). For training super-resolution, a synthetic dataset with representative characteristics of the Pl´ eiades sensor, such as spectral bands, FTM, and SNR, is used, comprising 95 LR-HR pairs with the GSDs of 50 cm and 25 cm, respectively. 
+
+Metrics The Peak Signal-to-Noise Ratio (PSNR) and Structure Similarity Index (SSIM) are used for super-resolution, and mean intersection-over-union (mIoU) for semantic segmentation, of which higher is better. As Pl´ eiades is collected in a real-world setting with no paired HR images, the SR results are presented qualitatively only. 
+
+> 1
+
+[Online, accessed 2/2026] Pl´ eiades, VHR (50 cm) Satellites Imagery https://intelligence.airbus.com/imagery/ our-optical-and-radar-satellite-imagery/pleiades/ .
+
+3.2. Partial multi-task learning 
+
+In this subsection, the proposed variants for partial multi-task learning (PMTL) are compared to the state-of-the-art ap-proaches using the sequential variant, namely SR4IR [2] and SS-guided SR [4]. To maintain comparability, we follow each paper’s description and re-implement using our codebase. In particular, we respect the choices for losses and their em-pirical weights, as well as initialize all networks from pre-trained models. For SR4IR [2], the CQMix augmentation is removed for semantic segmentation as it violates the assump-tion of multi-task partially supervised learning. All networks are trained for 200K iterations with early stopping at the high-est mIOU. 
+
+For super-resolution the quantitative results on IS-PRS test set are shown in Table 1. The PMTL approaches outperform both state-of-the-art methods on structure simi-larity (SSIM) and achieve lower distortion (PSNR), showing higher image quality. The qualitative results on ISPRS in 4Input (LR) SS-guided SR [4] SR4IR [2] Ours: shared Ours: hybrid Bicubic 
+
+Fig. 4 . Qualitative results on the Pl´ eiades test set. Our methods approach the photometric consistency with the referenced bicubic, but are sharper, while the SOTAs show color leaks and are slightly blurrier. SR4IR [2] has a strong white-balance bias. Figure 3 show better textures in our methods compared to the overly smooth SS-guided SR [4] and blurry SR4IR [2]. On Pl´ eiades images (Figure 4) and with reference to the bicubic-upsampled version, our results are closer in photo-metric consistency, especially at brighter areas, where other results contain color leaks in brighter areas due to strong white balance bias that overly whitens the details. 
+
+For semantic segmentation in Table 2, the hybrid and SOTA-method SR4IR [2] experience a jump in performance on Vaihingen compared to the other two. Inspection of the confusion matrices in Figure 2 shows that the Background 
+
+class is absent from the Vaihingen test set, which is recog-nized by both approaches (in such a case, the common prac-tice disregards the class from mIoU calculation), while the others produce false positive results, which dictates the class being used in the calculation. Both our variants produce sim-ilar performance to the SOTA approaches with slight numeri-cal benefits on both Vaihingen and Pl´ eiades datasets. 
+
+3.3. Ablation study 
+
+Table 3 provides an ablation study of the GAN and re-projection Lrpj losses for all 3 variants. All three networks are trained from scratch and employ the same set of losses. Thus, the performance does not match the SOTA compari-son in the previous section. Although Lrpj does not provide extra information, it guarantees the fidelity of super-resolved sequential   
+
+> with GAN with Lrpj
+
+SSIM PSNR 
+
+✓ ✓ 0.796 26.000 0.764 23.835 
+
+✓ 0.821 26.491 
+
+shared SSIM PSNR 0.778 25.434 0.787 24.657 
+
+0.822 26.413 
+
+hybrid-add SSIM PSNR 0.767 24.971 0.767 24.073 
+
+0.827 26.634 Table 3 . Ablation study of GAN loss and re-projection loss 
+
+Lrpj . Removing GAN loss while adding re-projection loss reduces super-resolution distortion. images and reduces distortions. The GAN loss, on the other hand, destabilizes the training process and is disadvantageous to image quality. 
+
+4. CONCLUSION 
+
+The paper studies the joint learning under the multi-task par-tially supervised framework for Earth observation imagery. It is based on the well-known assumption that the two tasks are highly relevant and could contribute to one another. The hy-brid architecture is proposed to inherit the best of both shared representation and the semantic-guided sequential variants. The experiments against SOTA sequential methods show higher super-resolution quality both quantitatively and visu-ally, as well as similar semantic segmentation performance with a slight numerical benefit. 55. REFERENCES 
+
+[1] Aysim Toker, Marvin Eisenberger, Daniel Cremers, and Laura Leal-Taix´ e, “SatSynth: Augmenting Image-Mask Pairs through Diffusion Models for Aerial Semantic Segmentation,” in Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. [2] Jaeha Kim, Junghun Oh, and Kyoung Mu Lee, “Be-yond Image Super-Resolution for Image Recognition with Task-Driven Perceptual Loss,” in Conference on Computer Vision and Pattern Recognition , 2024. [3] Sefi Bell-Kligler, Assaf Shocher, and Michal Irani, “Blind Super-Resolution Kernel Estimation using an Internal-GAN,” in Advances in Neural Information Pro-cessing Systems , 2019, vol. 32. [4] Andreas Aakerberg, Anders S Johansen, Kamal Nasrol-lahi, and Thomas B Moeslund, “Semantic Segmentation Guided Real-World Super-Resolution,” in Winter Con-ference on Applications of Computer Vision (WACV) Workshops , 2022. [5] Xintao Wang, Ke Yu, Chao Dong, and Chen Change Loy, “Recovering Realistic Texture in Image Super-Resolution by Deep Spatial Feature Transform,” in Con-ference on Computer Vision and Pattern Recognition (CVPR) , 2018. [6] Mohammad Saeed Rad, Behzad Bozorgtabar, Claudiu Musat, Urs-Viktor Marti, Max Basler, Hazım Ke-mal Ekenel, and Jean-Philippe Thiran, “Benefiting from multitask learning to improve single image super-resolution,” Neurocomputing , vol. 398, 2020. [7] Li Wang, Dong Li, Yousong Zhu, Lu Tian, and Yi Shan, “Dual Super-Resolution Learning for Semantic Seg-mentation,” in Conference on Computer Vision and Pat-tern Recognition (CVPR) , 2020. [8] Sa¨ uc Abadal, Luis Salgueiro, Javier Marcello, and Ver´ onica Vilaplana, “A Dual Network for Super-Resolution and Semantic Segmentation of Sentinel-2 Imagery,” Remote Sensing , vol. 13, no. 22, 2021. [9] Qian Zhang, Guang Yang, and Guixu Zhang, “Collabo-rative Network for Super-Resolution and Semantic Seg-mentation of Remote Sensing Images,” IEEE Transac-tions on Geoscience and Remote Sensing , vol. 60, 2022. [10] Luis Salgueiro, Javier Marcello, and Ver´ onica Vila-plana, “SEG-ESRGAN: A Multi-Task Network for Super-Resolution and Semantic Segmentation of Re-mote Sensing Images,” Remote Sensing , vol. 14, no. 22, 2022. [11] Wei-Hong Li, Xialei Liu, and Hakan Bilen, “Learning Multiple Dense Prediction Tasks from Partially Anno-tated Data,” in International Conference on Computer Vision and Pattern Recognition (CVPR) , 2022. [12] Ho` ang- ˆ An Lˆ e and Minh-Tan Pham, “Data exploitation: multi-task learning of object detection and semantic seg-mentation on partially annotated data,” in British Ma-chine Vision Conference (BMVC) , 2023. [13] F Rottensteiner, G Sohn, J Jung, M Gerke, C Bailard, S Benitez, and U Breitkopf, “The ISPRS benchmark on urban object classification and 3D building reconstruc-tion,” in ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences , 2012. [14] Xintao Wang, Ke Yu, Shixiang Wu, Jinjin Gu, Yihao Liu, Chao Dong, Yu Qiao, and Chen Change Loy, “ES-RGAN: Enhanced Super-Resolution Generative Adver-sarial Networks,” in European Conference on Computer Vision Workshop (ECCVW) , 2018. [15] Jingdong Wang, Ke Sun, Tianheng Cheng, Borui Jiang, Chaorui Deng, Yang Zhao, Dong Liu, Yadong Mu, Mingkui Tan, Xinggang Wang, Wenyu Liu, and Bin Xiao, “Deep High-Resolution Representation Learning for Visual Recognition,” TPAMI , 2019. [16] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman, and Oliver Wang, “The Unreasonable Ef-fectiveness of Deep Features as a Perceptual Metric,” in 
+
+Conference on Computer Vision and Pattern Recogni-tion (CVPR) , 2018. [17] Andreas Lugmayr, Martin Danelljan, and Radu Tim-ofte, “Unsupervised Learning for Real-World Super-Resolution,” in 2019 International Conference on Com-puter Vision Workshop (ICCVW) , 2019. [18] Xiaozhong Ji, Yun Cao, Ying Tai, Chengjie Wang, Jilin Li, and Feiyue Huang, “Real-World Super-Resolution via Kernel Estimation and Noise Injection,” in Con-ference on Computer Vision and Pattern Recognition (CVPR) Workshops , 2020. 6

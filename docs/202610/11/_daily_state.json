@@ -1,0 +1,57 @@
+{
+  "date": "20261011",
+  "date_label": "",
+  "generated_at": "2026-10-11 23:11:29 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.06389v1",
+      "route": "202610/11/2610.06389v1-multi-task-partially-supervised-learning-for-super-resolution-and-semantic-segmentation-on-earth-observation-data",
+      "title": "Multi-Task Partially Supervised Learning for Super-Resolution and Semantic Segmentation on Earth Observation data",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "地球观测数据的多任务超分与语义分割",
+      "first_seen_at": "2026-10-11 23:11:29 UTC",
+      "updated_at": "2026-10-11 23:11:29 UTC"
+    },
+    {
+      "paper_id": "2610.09317v1",
+      "route": "202610/11/2610.09317v1-sareo-fm-decoupled-semantic-supervision-for-sar-eo-foundation-models",
+      "title": "SAREO-FM: Decoupled Semantic Supervision for SAR-EO Foundation Models",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "SAR与光学遥感基础模型及语义监督",
+      "first_seen_at": "2026-10-11 23:11:29 UTC",
+      "updated_at": "2026-10-11 23:11:29 UTC"
+    },
+    {
+      "paper_id": "2610.11810v1",
+      "route": "202610/11/2610.11810v1-seek-and-view-reasoning-for-multi-view-spatial-understanding",
+      "title": "Seek-and-View Reasoning for Multi-View Spatial Understanding",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "视觉语言模型结合三维基础模型的多视角空间推理",
+      "first_seen_at": "2026-10-11 23:11:29 UTC",
+      "updated_at": "2026-10-11 23:11:29 UTC"
+    }
+  ]
+}

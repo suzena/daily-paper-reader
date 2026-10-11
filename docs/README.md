@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-10-10</span>
+      <span class="dpr-home-dashboard-kicker">2026-10-11</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
     <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>1</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>2</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>0</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>3</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-10-10 22:54:36 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-10-11 23:11:29 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日精读1篇、速读2篇，聚焦星上海洋异常检测、单目3D空间理解与多模态遥感配准三个方向。</p>
-<p>最值得看的是拿下8.0分的《Onboard Marine Anomaly Detection on Φsat-2》，它完整走通了从仿真开发到在轨演示的星载AI落地链路；速读两篇（均6.0分）则分别覆盖单目度量深度估计与3D视觉定位、以及遥感图像配准的综述与挑战。</p>
-<p>建议普通读者优先从Φsat-2这篇入手，理解&quot;仿真训练—在轨验证&quot;这一范式，再按需延伸到3D感知或遥感配准综述。</p>
+<p>今日速读3篇遥感与多视图理解论文，精读挂零，整体以概览为主。最值得关注的是两篇对地观测方向：多任务半监督联合做超分与语义分割，以及SAR-EO基础模型的解耦语义监督，均适合遥感应用读者。建议先挑一篇速读摘要快速过一遍，再决定是否深入精读。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -80,12 +78,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">1 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Onboard Marine Anomaly Detection on $Φ$sat-2: From Simulation-Based Development to In-Orbit Demonstration">Onboard Marine Anomaly Detection on $Φ$sat-2: From Simulation-Based Development to In-Orbit Demonstration</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>1</strong></span></div>
+
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -93,12 +91,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">2 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="M3SunAgent: Monocular 3D Spatial Understanding Agent for Metric Depth Estimation and 3D Visual Grounding">M3SunAgent: Monocular 3D Spatial Understanding Agent for Metric Depth Estimation and 3D Visual Grounding</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multimodal Remote Sensing Image Registration: A Comprehensive Review, Challenges and Prospects">Multimodal Remote Sensing Image Registration: A Comprehensive Review, Challenges and Prospects</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Multi-Task Partially Supervised Learning for Super-Resolution and Semantic Segmentation on Earth Observation data">Multi-Task Partially Supervised Learning for Super-Resolution and Semantic Segmentation on Earth Observation data</span></li><li><span class="dpr-home-dashboard-paper-title" title="SAREO-FM: Decoupled Semantic Supervision for SAR-EO Foundation Models">SAREO-FM: Decoupled Semantic Supervision for SAR-EO Foundation Models</span></li><li><span class="dpr-home-dashboard-paper-title" title="Seek-and-View Reasoning for Multi-View Spatial Understanding">Seek-and-View Reasoning for Multi-View Spatial Understanding</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>2</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">ocean-ai <strong>3</strong></span></div>
 </section>
 </div>
 

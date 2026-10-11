@@ -1,0 +1,131 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-11T23:09:44.503455+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2610.06389v1",
+      "source": "arxiv",
+      "title": "Multi-Task Partially Supervised Learning for Super-Resolution and Semantic Segmentation on Earth Observation data",
+      "abstract": "Super-resolution and semantic segmentation are known to benefit one another, especially in the Earth observation context. However, learning both tasks in a joint model often requires both task annotations, which is impractical and expensive. In this paper, we study the multi-task partially supervised learning paradigm for both tasks, where each example is assumed to have only a single-task annotation. To that end, we examine two multi-task architectural variations, the sequential and shared variants, and then propose a hybrid variant and a re-projection loss to benefit from the shared representation and enforce image quality of super-resolution when training with semantic segmentation. Experiments show favorable results compared to the SOTA sequential variant. Source code will be published at https://github.com/lhoangan/munera.",
+      "authors": [
+        "Hoàng-Ân Lê",
+        "Minh-Tan Pham",
+        "Solange Lemai-Chenevier",
+        "Daniel Greslou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-05T14:13:18+00:00",
+      "link": "https://arxiv.org/pdf/2610.06389v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-task super-resolution and segmentation on Earth observation",
+      "llm_evidence_cn": "地球观测数据的多任务超分与语义分割",
+      "llm_evidence": "地球观测数据的多任务超分与语义分割",
+      "canonical_evidence": "地球观测数据的多任务超分与语义分割",
+      "llm_tldr_en": "Studies multi-task partially supervised learning for joint super-resolution and semantic segmentation on Earth observation data, where each sample has only one task annotation, proposing hybrid variants and a re-projection loss.",
+      "llm_tldr_cn": "地球观测中联合超分辨率与语义分割常需两种标注，成本高昂。本文研究部分监督多任务学习，每个样本仅有单一任务标注，比较顺序与共享结构并提出混合变体与重投影损失。实验显示该方案能在共享表示下保持超分质量与分割性能，可迁移至海洋栖息地制图与遥感三维重建。",
+      "llm_tldr": "地球观测中联合超分辨率与语义分割常需两种标注，成本高昂。本文研究部分监督多任务学习，每个样本仅有单一任务标注，比较顺序与共享结构并提出混合变体与重投影损失。实验显示该方案能在共享表示下保持超分质量与分割性能，可迁移至海洋栖息地制图与遥感三维重建。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.09317v1",
+      "source": "arxiv",
+      "title": "SAREO-FM: Decoupled Semantic Supervision for SAR-EO Foundation Models",
+      "abstract": "Synthetic aperture radar (SAR) and electro-optical (EO) imagery provide complementary observations: SAR enables day-and-night, weather-resilient sensing, whereas EO provides rich appearance and fine-grained semantic cues. We introduce SAREO-FM, which avoids forcing a single token stream to serve two distinct roles: modality tokens preserve how each sensor observes the scene through masked reconstruction, while learnable semantic queries capture what the scene contains under guidance from a pretrained vision foundation model (VFM). By jointly encoding these queries with SAR and EO tokens, the queries acquire modality-grounded semantic context, while the modality-token outputs remain the explicit targets of masked reconstruction. This design assigns semantic and reconstruction supervision to separate token streams while preserving their interaction within the shared encoder. Pretrained on the million-scale SAR-1M corpus, SAREO-FM achieves strong unimodal transfer for both SAR-only and EO-only inputs, while delivering substantial gains from joint SAR--EO observations on tasks that benefit from complementary sensing.",
+      "authors": [
+        "Jeonghyeok Do",
+        "Munchurl Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-07T02:17:33+00:00",
+      "link": "https://arxiv.org/pdf/2610.09317v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "SAR-EO remote sensing foundation model with semantic supervision",
+      "llm_evidence_cn": "SAR与光学遥感基础模型及语义监督",
+      "llm_evidence": "SAR与光学遥感基础模型及语义监督",
+      "canonical_evidence": "SAR与光学遥感基础模型及语义监督",
+      "llm_tldr_en": "SAREO-FM decouples modality tokens from semantic queries so a foundation model preserves how SAR and EO sensors observe a scene while capturing what the scene contains.",
+      "llm_tldr_cn": "针对SAR与光电遥感图像互补、但单一token流难以同时承担感知与语义两种角色的问题，本文提出SAREO-FM。方法让模态token通过掩码重建保留各传感器的观测特性，同时用可学习语义查询在预训练视觉基础模型引导下捕捉场景内容，并联合编码两类token。该设计使语义查询获得与模态关联的上下文。实验表明其在遥感语义理解上具有优势，为遥感基础模型提供了新范式。",
+      "llm_tldr": "针对SAR与光电遥感图像互补、但单一token流难以同时承担感知与语义两种角色的问题，本文提出SAREO-FM。方法让模态token通过掩码重建保留各传感器的观测特性，同时用可学习语义查询在预训练视觉基础模型引导下捕捉场景内容，并联合编码两类token。该设计使语义查询获得与模态关联的上下文。实验表明其在遥感语义理解上具有优势，为遥感基础模型提供了新范式。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "deep learning methods for satellite image analysis of ocean habitats",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.11810v1",
+      "source": "arxiv",
+      "title": "Seek-and-View Reasoning for Multi-View Spatial Understanding",
+      "abstract": "Existing approaches to multi-view spatial reasoning operate largely on sparse input views. Vision-language models (VLMs) are thus restricted to understand a scene and infer spatial relations within these fixed views, leading to fragile cross-view alignment and geometry-to-language bottleneck. To address these issues, we formulate a novel Seek-and-View reasoning approach to find implicit cross-view spatial evidence by locating a question-relevant view to support the spatial reasoning. To realize this approach, we propose Vantage, a training-free model-agnostic reasoning framework that pairs a VLM with a 3D foundation model: a viewpoint-grounded reasoning stage for question analysis and view planning, followed by a geometry-grounded evidence augmentation stage to effectively synthesize and incorporate visual evidence into the final reasoning. Comprehensive experiments on six VLMs demonstrate consistent improvements on five benchmarks without fine-tuning. Overall, by revealing spatial evidence through view-grounded reasoning, Vantage can largely reduce reliance on language-based cross-view alignment and improve multi-view spatial understanding. Our code is available at https://github.com/q1xiangchen/Vantage.",
+      "authors": [
+        "Qixiang Chen",
+        "Cheng Zhang",
+        "Fucai Ke",
+        "Chi-Wing Fu",
+        "Jianfei Cai",
+        "Jingwen Ye"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-08T12:18:01+00:00",
+      "link": "https://arxiv.org/pdf/2610.11810v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "VLM with 3D foundation model for multi-view spatial reasoning",
+      "llm_evidence_cn": "视觉语言模型结合三维基础模型的多视角空间推理",
+      "llm_evidence": "视觉语言模型结合三维基础模型的多视角空间推理",
+      "canonical_evidence": "视觉语言模型结合三维基础模型的多视角空间推理",
+      "llm_tldr_en": "Vantage is a training-free framework pairing a VLM with a 3D foundation model to seek question-relevant views and augment geometric evidence for multi-view spatial reasoning.",
+      "llm_tldr_cn": "现有多视角空间推理多基于稀疏输入视角，视觉语言模型受限于固定视角，跨视角对齐脆弱。本文提出寻视推理范式与Vantage框架，将视觉语言模型与三维基础模型结合，先做视角规划再做几何证据增强。该免训练框架可提升多视角空间理解，为三维建模与多模态推理提供可迁移思路。",
+      "llm_tldr": "现有多视角空间推理多基于稀疏输入视角，视觉语言模型受限于固定视角，跨视角对齐脆弱。本文提出寻视推理范式与Vantage框架，将视觉语言模型与三维基础模型结合，先做视角规划再做几何证据增强。该免训练框架可提升多视角空间理解，为三维建模与多模态推理提供可迁移思路。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Methods for three dimensional modeling and reconstruction of coral reefs from remote sensing and underwater imagery",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
