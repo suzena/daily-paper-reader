@@ -1,0 +1,280 @@
+Title: TerraAgent: Demonstration-Grounded Multi-Agent Reasoning for Long-Context Remote Sensing Visual Question Answering
+
+URL Source: https://arxiv.org/pdf/2610.12517v1
+
+Published Time: Mon, 12 Oct 2026 00:05:53 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# TerraAgent: Demonstration-Grounded Multi-Agent Reason-ing for Long-Context Remote Sensing Visual Question An-swering 
+
+Jingwen Huang, Yiming Fang, Hanxiao Wu, Boyuan He, Keyi Luo 
+
+Yunnan University of Finance and Economics, Kunming, China 
+
+keyi.luo@kust.edu.cn 
+
+## Abstract 
+
+Remote sensing visual question answering (RS-VQA) requires answers that truly depend on image evidence, yet current remote sensing multimodal large language models (RS MLLMs) are still evaluated mainly by accuracy, which cannot reveal whether a correct answer was produced without us-ing the image. This setting introduces three challenges: demonstrations retrieved across different ground sample distances (GSD), sensors, and city textures may be poorly matched; real queries often involve long visual contexts from multi-scale tiles, multi-temporal frames, and retrieved knowl-edge, where evidence can be diluted and errors can propagate through multi-step reasoning; and prior-only answering remains invisible to stan-dard metrics. We present AVA , a training-free framework that wraps a frozen RS MLLM with three modules. GDR performs GSD-bucketed, scene-graph-based demonstration retrieval and filters demonstrations whose answers are unsupported by their images. MACE decomposes each query into an evidence-typed sub-question DAG, routes sub-questions to suitable perception tools, and records verified provenance in a shared evidence ledger with bounded re-perception. CV A audits the final answer through counterfactual perturbations of cited evidence, including ablation and swap, and computes a visual-dependency score for confidence calibra-tion and evidence-forcing re-query. On RSVQA-LR/HR, VRSBench, and LHRS-Bench, AVA improves average accuracy by up to 2.40 points over the strongest same-setting baselines, raises the visual-dependency score from 0.28 to 0.49, reduces the prior-only answer rate from 46.2% to 21.7%, and lowers the hallucination rate from 17.1% to 9.8%, with 2.6 × the cost of a single backbone forward pass and no fine-tuning. 
+
+## 1 Introduction 
+
+Remote sensing visual question answering (RS-VQA) is the interface through which earth-observation systems turn pixels into decisions: damage assessment, illegal-construction screening and urban-expansion monitoring all end with a natural-language judgement about what is there , what changed and what it means Lobry et al. (2020). In the last two years, remote sensing multimodal large language models (RS MLLMs) such as GeoChat Kuckreja et al. (2023), LHRS-Bot Muhtar et al. (2024), RSGPT Hu et al. (2023) and SkyEyeGPT Zhan et al. (2024) have pushed zero-shot RS-VQA accuracy to levels that were unreachable with task-specific pipelines, mostly by scaling instruction data and domain adaptation. Yet three properties of the remote sensing setting remain unresolved, and they are precisely the ones that determine whether such a model can be deployed. 
+
+The central question. A single number hides the whole story. On RSVQA-LR, a model that never sees the image and answers from the question text alone already reaches 80.90% overall accuracy, whereas the full image–text model reaches 87.14% Wang & Ghamisi (2024). Most of the reported accuracy is therefore recoverable from language priors: “is there a building?” has a skewed answer distribution, and “how many” questions collapse to a 1arXiv:2610.12517v1 [cs.CV] 7 Oct 2026 handful of values. Accuracy cannot tell us whether an answer came from the image or from the question. We therefore treat visual dependency — the causal sensitivity of an answer to the visual evidence it cites — as a first-class quantity, not an after-the-fact analysis. 
+
+Why demonstrations do not transfer. In-context learning is the cheapest way to adapt a large vision–language model to a new task Zhou et al. (2024), and retrieval-augmented variants have been ported to remote sensing, either over knowledge Wen et al. (2026) or over imagery at scale Rajendran et al. (2026); Kazoom et al. (2026). However, RS imagery spans three orders of magnitude of ground sample distance (GSD): a Sentinel-2 tile at 10 m and a USGS orthophoto at 15 cm show the same “urban density” question through entirely different texture and object sizes. Cosine similarity over global image embeddings confuses a low-resolution city with a high-resolution field, and once several retrieved demonstrations share an answer (six “yes” out of eight), the model copies that distribution instead of reading the query image. What is missing is a comparability measure that is scale-normalised and a reject rule that removes demonstrations whose answer is not grounded in their own image. 
+
+Why long contexts hurt. Real queries are answered over long visual contexts: a large scene plus multi-scale crops (a small object occupies a few dozen pixels at full extent), multi-temporal frames, and external knowledge. Once the context grows, large vision– language models systematically shift weight from visual evidence to textual cues, and 2026 evaluations of agentic systems report three recurring failure modes — domain-toolset mismatch, unchecked error propagation, and static reasoning Zhang et al. (2026); Xiao et al. (2026). A five-step chain with 5% per-step error can accumulate to roughly 23% end-to-end error, and no current RS agent makes “every claim must have provenance” a hard constraint, although planner training for long-horizon agent tasks is known to dominate local heuristics Si et al. (2026). 
+
+Contributions. We present TerraAgent (Figure 1), a training-free framework that equips a frozen RS MLLM with demonstration grounding, evidence-carrying collaboration, and counterfactual auditing. Our contributions are: • GDR (Geo-Discriminative Retrieval). We replace single-vector retrieval with GSD-bucketed, dual-granularity matching (global RemoteCLIP embedding plus a structured scene graph over class counts, a 3 × 3 position histogram and a scale bucket), followed by an evidence-consistency gate (ECG) which asks the frozen backbone to re-answer each candidate demonstration from its image alone and discards candidates whose stored answer is not reproduced. The gate removes 12% of the demonstration pool. • MACE (Multi-Agent Collaborative Evidence). We instantiate role-specialised collaboration in an evidence-centric form: a planner emits an evidence-typed sub-question DAG, a perceiver routes each sub-question to the task-appropriate tool, every intermediate result is written as a typed entry with provenance and confidence into a shared evidence ledger, and a verifier rejects unsupported spans and triggers bounded re-perception. The ledger turns error propagation from a statistical risk into a checkable invariant. • CVA (Counterfactual Visual-dependency Audit). We make visual dependency measurable at inference time. For each surviving answer we run two perturbations of the evidence it cites — precise ablation of the cited region (or key temporal frame) and replacement with same-class evidence from another location — and define the visual-dependency score (VDS) and evidence-swap sensitivity (ESS). Low-VDS answers are re-queried with evidence-forcing prompts or abstained, and VDS is used to calibrate confidence. • Results and diagnosis. On RSVQA-LR/HR Lobry et al. (2020), VRSBench Li et al. (2024) and LHRS-Bench Muhtar et al. (2024), TerraAgent improves the strongest same-setting baseline by +1.59, +1.55, +2.40 and +1.74 points respectively, while raising VDS from 0.28 to 0.49, lowering the prior-only answer rate from 46.2% to 21.7% and the judged hallucination rate from 17.1% to 9.8%. We further show that longer demonstration contexts help and then hurt (§5.3), that the gain grows with 2Figure 1: Overview of TerraAgent. A frozen remote sensing multimodal LLM is wrapped by three training-free modules: GDR builds a scale-balanced, evidence-gated long context from retrieved demonstrations; MACE decomposes the question, routes sub-questions to perception tools, records typed evidence with provenance in a shared ledger and verifies every answer span; CVA perturbs the cited evidence (ablation and swap) to compute the visual-dependency score, which calibrates confidence and decides between acceptance, evidence-forcing re-query and abstention. domain shift, and that our efficiency remains 2.6 × a single forward pass with no training. 
+
+## 2 Related Work 
+
+Remote sensing visual question answering. RSVQA established the task and the low-/high-resolution splits that are still standard Lobry et al. (2020); VRSBench broadened evaluation to nine question categories with human-verified captions and object references Li et al. (2024); LHRS-Bench provides an objective single-choice probe of eleven remote sensing capability dimensions with global 1 m imagery Muhtar et al. (2024). Parameter-efficient adaptation of pretrained multimodal transformers remains competitive there Wang & Ghamisi (2024). Our work keeps these benchmarks but changes what is reported: alongside accuracy we report how much of the accuracy depends on the image. 
+
+Remote sensing and multimodal agents. Two 2026 systems are closest to us. GeoMMA-gent orchestrates retrieval, perception and reasoning specialists over a geoscience benchmark and shows that tool-augmented agents beat standalone models Xiao et al. (2026); UAV-MAS is a training-free multi-agent system whose ablation identifies domain-toolset mismatch, unchecked error propagation and static reasoning as the dominant failure modes Zhang et al. (2026). Role-specialised collaboration was shown to outperform monolithic models earlier in the multimodal medical setting Zhou et al. (2025). Our MACE reuses the planning skeleton but makes the intermediate product a ledger with provenance, and our verifier is a rejection rule over that ledger rather than another voting agent. 
+
+Retrieval augmentation for multimodal questions. Retrieving outside knowledge for VQA Lin & Byrne (2022), multimodal retrieval-augmented generation over images and text Chen et al. (2022), hypergraph reasoning for knowledge-based VQA Heo et al. (2022) and retrieval-augmented captioning Ramos et al. (2023) all assume that “more relevant context” equals “better answer”. Remote sensing retrieval has followed suit, from damage-assessment pipelines at scale Rajendran et al. (2026) to knowledge-conditioned RS-RAG Wen et al. (2026) and retrieval-curated change benchmarks Kazoom et al. (2026). We instead show that in remote sensing the selection of demonstrations is a scale-matching problem, and that a consistency gate is necessary to prevent answer-distribution leakage. 
+
+Demonstration-based in-context learning and sample selection. Visual in-context learn-ing demonstrated that a handful of image–answer demonstrations can substitute for task-3specific training Zhou et al. (2024), and long-context alignment work has shown that select-ing influential samples matters more than using more samples Si et al. (2025). Dual-encoder distillation Wang et al. (2022) supplies the retrieval encoder family we build on. Sample selection in remote sensing additionally has to respect GSD and sensor identity, which no text- or embedding-similarity criterion captures. 
+
+Long context, planning and faithfulness. Text-side long-context QA benefits from super-vised contrastive objectives Caciularu et al. (2022); planning with world models Hao et al. (2023) and prompting surveys Qiao et al. (2023) provide the decomposition vocabulary of our planner, and training global planners for long-horizon agent tasks has been shown to dominate local heuristics Si et al. (2026). Faithfulness under long contexts can be improved by synthetic supervision and reinforcement learning Si et al. (2026), but those methods train the language model; TerraAgent instead constrains inference with provenance and coun-terfactual evidence perturbation. The visual-dependency phenomenon — models drifting towards textual priors as context grows — was documented for long-context reasoning Zhou et al. (2024); we turn it into a measurable, actionable signal. 
+
+Remote sensing change understanding and long-context evaluation. Recent work names the underlying deficiency “temporal blindness” and proposes change-enhanced attention for multi-temporal interpretation Li et al. (2026); SMART-HC-VQA formalises sparse, irregular multi-temporal observations as a long-context VQA protocol Ramirez et al. (2026); AVION adapts vision–language models to aerial imagery with prompt tuning Hu et al. (2026). Our evaluation protocol borrows the spirit of these works — multi-image contexts and explicit perturbation — but keeps the benchmarks standard so that results remain comparable. 
+
+## 3 Method 
+
+3.1 Problem formulation 
+
+A query consists of a question q and a long visual context C = {I1, . . . , IN }, where N can reach tens of images because the context packs multi-scale tiles of the query scene, temporal frames, and retrieved demonstrations. We assume a frozen RS MLLM fθ with a visual encoder ϕv and a language decoder ϕl , and a demonstration pool D = {(Id, qd, ad)} with stored answers. The system must output an answer a, a confidence c and a provenance set 
+
+P such that every factual span of a is supported by an entry of P:
+
+F (q, C; θ) =  a, c, P , P ⊆ img id, region, tool . (1) The context is not given but constructed by retrieval (Equation 1), so the pipeline factorises into context construction C′ = GDR (q, C, D), evidence-grounded answering (a∗, P ) = 
+
+MACE (q, C′), and auditing (a, c) = CVA (a∗, P, C′):
+
+F = CVA ◦ MACE ◦ GDR, θ frozen throughout. (2) Equation 2 states the composition, and all three stages are training-free; the only offline cost is index construction and a one-pass self-audit of the demonstration pool. 
+
+3.2 GDR: Geo-Discriminative Retrieval Scale estimation and bucketing. A lightweight regressor assigns each image to one of three GSD buckets B = {10 m, 1 m, 0.3 m }. Buckets matter because the same semantic class occupies wildly different pixel footprints across them (Equation 3). We encode the similarity penalty between the query bucket bq and a candidate bucket bd as 
+
+κ(bd, bq) = 
+
+
+
+1.0, bd = bq,0.6, |idx (bd) − idx (bq)| = 1, 0.3, otherwise, idx : B → { 0, 1, 2 }. (3) 4Dual-granularity scoring. Each image is represented by a global embedding φ(I) from a remote sensing vision–language encoder Liu et al. (2024) and by a structured scene graph 
+
+G(I) whose nodes are class counts nc(I), a 3 × 3 position histogram h(I) and the scale bucket itself. The retrieval score balances appearance and structure (Equation 4), 
+
+s(d, q) = λ cos  φ(Id), φ(Iq) + ( 1 − λ) sim G
+
+ G(Id), G(Iq), (4) where the structural term (Equation 5) decomposes into class-count agreement, layout agreement and the bucket factor: sim G = κ(bd, bq) ∑
+
+> c∈Y
+
+wc(q) min  nc(Id), nc(Iq)
+
+max  nc(Id), nc(Iq) IoU  h(Id), h(Iq). (5) The weights wc(q) are selected by the question type: counting questions up-weight every class present in the query, comparison questions up-weight the two classes named in the question, and presence questions up-weight the single target class. This is the only place where the question type enters retrieval, and it makes the criterion interpretable. 
+
+Evidence-consistency gate. Similarity alone cannot prevent answer-distribution leakage, because the stored answer ad of a very similar demonstration may be an annotation artefact. We therefore ask the frozen backbone to re-answer each candidate from its own image (Equation 6) and keep the demonstration only if the stored answer is reproduced: 
+
+Dkeep = d ∈ TopM (q) : 1 fθ (Id, qd) ≃ ad
+
+ = 1 , (6) where ≃ is judged by a task-aware equivalence (exact match for counts, normalised string match for open answers). Candidates failing the gate are replaced by the next ones until the budget K is met; empirically 12% of the pool is rejected. Finally, the K accepted demon-strations are appended in a 3 : 1 same-bucket to adjacent-bucket ratio, which prevents the diversity collapse that pure top-K retrieval produces. 
+
+3.3 MACE: Multi-Agent Collaborative Evidence Planner. The planner converts (q, C′) into a directed acyclic graph of sub-questions, each annotated with the evidence type it requires, 
+
+G(q) = (ui, τi, par (i)) mi=1, (7) 
+
+τi ∈ { COUNT , PRESENCE , COMPARE , AREA , CHANGE , SCENE }, (8) Equation 8 defines the graph, where par (i) enforces the dependency order (a comparison cannot precede the two counts it compares). The planner is a prompting policy on the frozen backbone, so no parameters are introduced. 
+
+Perceiver and tool routing. The perceiver is a router that maps an evidence type to a perception tool (Equation 9), tool (τi) = 
+
+
+
+detector + de-duplicated counting, τi = COUNT ,open-vocabulary detector, τi = PRESENCE ,pairwise crops + scale normalisation, τi ∈ { COMPARE , AREA },bi-temporal difference module, τi = CHANGE ,scene classifier, τi = SCENE .(9) This routing table is an explicit inductive bias: the failure mode of “asking a captioner to count” is removed by construction rather than by hoping that the agent learns it. 
+
+Evidence ledger. Every tool call appends a typed entry to a ledger E that is append-only, so that later stages can audit provenance: 
+
+e =  v, prov, ce
+
+, v = ( class, count, box, area ratio ), prov = ( img id, region, tool ).(10) The ledger entry of Equation 10 is the interface between perception and language: the decoder sees the structured entries rather than raw tool text, which keeps evidence quotable and comparable across tools. 5Verifier with bounded re-perception. A draft answer a∗ is produced from (C′, q, E ). Each factual span zj of a∗ receives a support score sup (zj) = max  
+
+> e∈E
+
+sim (zj, ve) · ce, (11) the support score of Equation 11, and spans below a threshold τs are sent back to the perceiver for targeted re-perception (Equation 12), for at most r rounds; spans that re-main unsupported after r rounds are either deleted or replaced by an explicit “insufficient evidence” statement: ˆzj =
+
+
+
+zj, sup (zj) ≥ τs,re-perceive (zj), sup (zj) < τs ∧ round < r,insufficient evidence, otherwise. (12) The final draft is assembled from the surviving spans, ˆ a = assemble ({ ˆzj}).
+
+3.4 CVA: Counterfactual Visual-dependency Audit 
+
+The verifier guarantees that an answer is consistent with the ledger; it does not guarantee that the answer would change if the evidence changed. We therefore perturb the evidence that was actually cited. 
+
+Perturbation A: evidence ablation. Let e∗ be the entry with the highest support for the final answer, and let mask (e∗) precisely occlude the cited region (or remove the cited temporal frame). The ablated context of Equation 13 is 
+
+C′ 
+
+> A
+
+= C′ ⊖ mask (e∗), aA = fθ
+
+ q, C′
+
+> A
+
+, E \ { e∗}. (13) Masking the cited region is stricter than blacking out the whole image: a globally degraded image can be answered correctly from a language prior, whereas removing the specific evidence that the answer claims to rely on should invalidate the answer if the claim was genuine. 
+
+Perturbation B: evidence swap. We replace e∗ with same-class evidence ˜ e taken from a different location in the same GSD bucket, which preserves the semantic label while changing the ground truth (Equation 14): ˜C = C′ ⊕  e∗ → ˜e, aB = fθ
+
+ q, ˜ C, (E \ { e∗}) ∪ { ˜e}. (14) 
+
+Scores and decision. With δ(·, ·) the answer-equivalence indicator, we define VDS ( ˆa) = 1 − Eδ( ˆa, aA)
+
+Acc ( ˆa) , ESS ( ˆa) = 1 − Eδ( ˆa, aB)
+
+Acc ( ˆa) , (15) and take the calibrated confidence of Equation 17, 
+
+c = VDS ( ˆa) · 1
+
+|E ˆa| ∑
+
+> e∈E ˆa
+
+ce, (16) decide ( ˆa) = 
+
+
+
+accept ˆ a, VDS ≥ τvd ,evidence-forcing re-query, VDS < τvd ∧ round < 1, insufficient evidence, otherwise, (17) where the evidence-forcing re-query re-asks the question with an explicit instruction to name the region and tool that supports each claim. Because the perturbations touch only the one or two cited entries, the audit adds two forward passes on a shortened context rather than a full re-run. 
+
+Cost model. The expected cost of one query is Cost = 1|{z} 
+
+> GDR
+
++ E[1 + βr]
+
+| {z }
+
+> MACE
+
++ 2 · 1[audit ]
+
+| {z }
+
+> CVA
+
+, (18) in units of a single backbone forward pass, where β is the probability that a span triggers re-perception. Empirically β ≈ 0.2, giving 2.6 units. 6Table 1: Zero-shot RS-VQA accuracy on RSVQA-LR and RSVQA-HR (average over question types, %). Counting questions are omitted on LR and counting plus area questions on HR, following prior practice. Upper block: numbers as reported by the LHRS-Bot evaluation; lower block: TerraAgent on the same protocol.                                  
+
+> Method Backbone RSVQA-LR RSVQA-HR LLaVA-1.5 Liu et al. (2024) Vicuna-7B 65.86 53.99 MiniGPT-v2 Chen et al. (2023) Vicuna-7B 59.77 66.53 InstructBLIP Dai et al. (2023) Vicuna-7B 59.12 62.77 mPLUG-Owl2 Ye et al. (2023) Llama-2-7B 65.24 53.04 Qwen-VL-Chat Bai et al. (2023) Qwen-7B 58.73 63.87 InternLM-XComposer Zhang et al. (2023) InternLM-7B 59.55 67.21 RSGPT Hu et al. (2023) Vicuna-7B + RS 92.29 90.47 GeoChat Kuckreja et al. (2023) Vicuna-7B + RS 91.81 70.82 LHRS-Bot Muhtar et al. (2024) Vicuna-7B + RS 89.19 92.55
+> TerraAgent (GDR+MACE+CVA) Vicuna-7B + RS (frozen) 93.40 94.10
+
+## 4 Experimental Setup 
+
+Datasets. We evaluate on four dataset configurations that stress different axes. RSVQA-LR (772 Sentinel-2 images, 10 m GSD, four question types) and RSVQA-HR (10,659 aerial images at 15 cm, four question types, with a cross-city test split) test scale sensitivity Lobry et al. (2020). VRSBench tests fine-grained question types: nine categories over 29,614 images and 123,221 question–answer pairs drawn from DOTA-v2 and DIOR Li et al. (2024). LHRS-Bench tests objective domain knowledge and perception through 690 human-annotated single-choice questions over eleven dimensions on global 1 m imagery Muhtar et al. (2024). 
+
+Protocol. Following prior work we report the average accuracy over question types, omitting counting questions on RSVQA-LR and counting plus area questions on RSVQA-HR; VRSBench is evaluated with the official GPT-based open-set judge, and LHRS-Bench with exact single-choice match. TerraAgent is evaluated without any backbone fine-tuning and without training on benchmark question–answer pairs: the demonstration pool is disjoint from the evaluation splits. 
+
+Backbone and implementation. Unless stated otherwise the backbone is GeoChat-7B Kuckreja et al. (2023), an RS instruction-tuned LLaVA-1.5 model Liu et al. (2023; 2024); for LHRS-Bench we additionally report LHRS-Bot-7B as backbone to show that the framework is backbone-agnostic. The retrieval index is built on RemoteCLIP Liu et al. (2024); the perception tools use an open-vocabulary detector, a bi-temporal differencing module and an RS scene classifier. Default hyper-parameters are K = 6 demonstrations, λ = 0.5, τs
+
+set so that 11.4% of spans need re-perception, r = 2 and τvd = 0.35. The 2026 change-understanding and long-context protocols Li et al. (2026); Ramirez et al. (2026) inform our multi-image evaluation, but we keep the benchmark suites standard. 
+
+Metrics. Beyond accuracy we report VDS and ESS (Equation 15), the prior-only answer rate (the fraction of samples answered correctly even after the cited evidence is ablated), the judged hallucination rate and the unsupported-span ratio, latency in seconds, input tokens, tool calls and relative local inference cost. 
+
+## 5 Results 
+
+5.1 Main results 
+
+Table 1 reports RSVQA. Four observations stand out. First, the spread within the general-purpose block is large (53–67), which reflects how sensitive these models are to the resolution of the input; GeoChat loses 21.0 points from RSVQA-LR to RSVQA-HR, whereas LHRS-Bot is stable across the two splits, so the two splits probe genuinely different behaviour. Second, 7Table 2: VRSBench visual question answering (official GPT-based open-set evaluation, %). “All” is the overall score. Presence, quantity and reasoning are shown because they exhibit the strongest disagreement across models. 
+
+Method Backbone All Presence Quantity Reasoning GeoChat (w/o ft) Kuckreja et al. (2023) Vicuna-7B 40.8 48.5 85.9 57.4 MiniGPT-v2 Chen et al. (2023) Vicuna-7B 38.2 61.3 26.0 21.9 GPT-4V Yang et al. (2023) – (closed) 65.6 67.0 87.6 72.4 LLaVA-1.5 Liu et al. (2024) Vicuna-7B 76.4 86.9 91.8 73.4 GeoChat Kuckreja et al. (2023) Vicuna-7B 76.0 86.5 92.1 73.5 Mini-Gemini Li et al. (2024) Vicuna-7B / Llama-3 77.8 87.8 92.1 74.4 
+
+TerraAgent (GDR+MACE+CVA) Vicuna-7B + RS (frozen) 80.2 89.4 93.6 77.1 
+
+Table 3: LHRS-Bench single-choice accuracy (%) over eleven capability dimensions. Best per column in bold. The last column is the average. TerraAgent uses LHRS-Bot-7B as the frozen backbone here.                                                                                                                                     
+
+> Method Identity Color Orientation Shape Area Resolution Modality Location Distance Quantity Reasoning Avg LLaVA-1.5 Liu et al. (2024) 42.90 30.97 15.38 43.24 44.00 23.80 21.74 35.78 27.27 21.89 54.35 37.45 MiniGPT-v2 Chen et al. (2023) 20.19 15.93 2.56 8.11 13.33 14.29 4.35 15.20 13.64 9.49 36.96 16.88 InstructBLIP Dai et al. (2023) 20.35 22.12 5.13 24.32 22.67 38.10 0.00 13.73 22.85 13.14 30.43 18.87 mPLUG-Owl2 Ye et al. (2023) 41.48 45.13 12.82 40.54 32.00 33.33 0.00 30.88 13.64 32.12 54.34 37.00 Qwen-VL-Chat Bai et al. (2023) 31.38 32.74 7.69 32.43 29.33 19.05 4.35 24.02 21.45 21.17 56.52 28.65 InternLM-XComposer Zhang et al. (2023) 34.38 30.97 7.69 37.84 26.67 0.00 8.70 33.33 22.73 18.25 65.22 31.09 GPT-4-Turbo OpenAI (2024) 50.32 43.36 10.26 67.57 44.00 42.86 39.13 42.16 22.73 21.89 71.74 44.56 Claude-3-Opus Anthropic (2024) 41.01 36.28 17.95 64.86 41.33 66.67 39.13 34.80 45.45 26.28 54.35 39.08 LHRS-Bot Muhtar et al. (2024) 44.64 42.48 23.08 67.57 25.33 42.86 32.35 56.52 22.73 18.25 73.91 39.38
+> TerraAgent (GDR+MACE+CVA) 52.15 46.81 23.93 71.62 45.33 39.68 44.35 60.87 22.53 24.66 77.39 46.30
+
+RS-specific tuning is necessary: RSGPT and GeoChat are 26 and 30 points above LLaVA-1.5 on RSVQA-LR. Third, TerraAgent reaches 93.40 on LR and 94.10 on HR, i.e. +1.59 and +1.55 over the strongest baseline on each split, and the HR number does not degrade relative to LR, which suggests that scale-bucketed retrieval absorbs part of the resolution shift. Fourth, the strongest models differ in where they are strong: GeoChat wins on LR while collapsing on HR, LHRS-Bot is the opposite. TerraAgent is the only entry that is at or above the best baseline on both splits simultaneously. Table 2 reports VRSBench. The gap between the untuned GeoChat (40.8) and the tuned one (76.0) shows that this benchmark rewards RS instruction data; GPT-4V at 65.6 is below both, confirming that generic scale does not transfer. TerraAgent reaches 80.2, which is +2.40 over Mini-Gemini and +2.30 over the best RS-tuned model, with the largest relative gain on reasoning ( +2.7) and presence ( +1.6). The quantity column deserves a comment: the spread is extreme (26.0 for MiniGPT-v2 versus 93.6 for TerraAgent) because counting is exactly the question type where a captioning model fails and a de-duplicated counting tool succeeds, which is the empirical justification for MACE’s routing table. Table 3 reports LHRS-Bench, the least gameable of the three suites because each item is a single-choice question authored by remote sensing experts. TerraAgent reaches an average of 46.30, i.e. +1.74 over GPT-4-Turbo and +6.92 over the strongest open RS MLLM. The profile is informative: TerraAgent leads on identity, colour, orientation, shape, area, modality, location and reasoning, but loses on resolution, distance and quantity, where Claude-3-Opus (66.67) and GPT-4-Turbo dominate. This is a meaningful negative result rather than noise. Resolution asks what sensor or resolution this image comes from , and distance asks for metric judgements; both are better supported by the vast sensor-geography knowledge accumulated during pretraining of closed models than by any perception tool invoked on the current image. Our framework improves perceptual grounding , not world knowledge, and the two must be improved by different means. 
+
+5.2 Module ablations 
+
+Table 4 separates the contributions. GDR is worth +2.1 on VRSBench, which measures what better demonstration selection buys when the question types are fine-grained. MACE is worth +3.72 on LHRS-Bench, the suite where tool routing and domain knowledge matter most, and +1.09 on RSVQA-LR. CVA alone moves accuracy by only +1.12 on LHRS-Bench 8Table 4: Module ablation. VRSBench and RSVQA use the GeoChat-7B backbone, LHRS-Bench uses LHRS-Bot-7B; the baseline row is the corresponding published zero-shot number. Each single module and each pair improves over the baseline, and the full configuration is best on all three suites.                               
+
+> Configuration VRSBench All RSVQA-LR LHRS-Bench Avg Baseline (frozen RS MLLM, 4-shot random demos) 76.0 91.81 39.38 +GDR 78.1 92.60 41.20 +MACE 77.6 92.90 43.10 +CVA 76.9 92.20 40.50 +GDR+MACE 79.2 93.15 44.90 +GDR+CVA 78.6 92.75 41.85 +MACE+CVA 78.0 92.95 44.20
+> TerraAgent (GDR+MACE+CVA) 80.2 93.40 46.30
+> (a) Gain over the strongest same-setting baseline. (b) Demonstration budget Kon VRSBench.
+
+Figure 2: Left: TerraAgent improves every benchmark over the strongest comparable baseline. Right: longer demonstration contexts raise accuracy up to K = 6 and then degrade it, consistent with visual evidence being diluted in long contexts. and slightly less elsewhere, which is the expected signature of a calibration module: its value is not in the average but in the distribution of answers, as Section 5.5 shows. Every pair beats both of its members and the full model beats every pair, so the three modules are complementary rather than redundant: GDR decides what the model sees , MACE decides how it reasons over what it sees , and CVA decides whether to trust the result .
+
+5.3 Hyper-parameters and context length 
+
+Figure 2(b) sweeps the demonstration budget. Accuracy rises from 76.0 at K = 0 to 80.2 at K = 6 and then falls back to 79.2 at K = 12. The degradation at large K is the empirical counterpart of the long-context visual-dependency phenomenon Zhou et al. (2024): demonstrations carry an answer distribution, and beyond a point the model follows that distribution instead of the query image. A practical consequence is that “retrieve more” is not a free lunch in remote sensing, which also explains why sample-selection work in long-context alignment emphasises influence rather than quantity Si et al. (2025). Table 5 reports three sensitivity studies. For the retrieval weight, both extremes are clearly worse (77.2 at λ = 0, 77.6 at λ = 1.0) and the optimum is in the middle, which supports the dual-granularity design: appearance and structure each carry information that the other misses. For re-perception, r = 0 costs 3.55 points on LHRS-Bench and r > 2 slightly degrades performance, because repeated perception eventually introduces tool noise; a bounded budget is therefore not a compromise but the right design. For the VDS gate, tightening τvd monotonically reduces the prior-only answer rate while accuracy peaks at 
+
+τvd = 0.35; beyond that point correct-but-high-prior answers are rejected too, which is exactly the trade-off an abstention mechanism should expose. 9Table 5: Hyper-parameter sensitivity. Defaults are marked in bold and are optimal or near-optimal in every row.                                           
+
+> Retrieval weight λ(VRSBench All) 0.0 0.2 0.4 0.5 0.6 0.8 1.0 77.2 78.6 79.5 80.2 79.8 78.4 77.6 Re-perception rounds r(LHRS-Bench Avg) 0123442.75 44.90 46.30 46.12 45.51 Gate threshold τvd (RSVQA-LR) 0.0 0.2 0.35 0.5 0.7 92.10 92.95 93.40 93.02 92.25 Prior-only rate (%) 38.4 29.6 21.7 17.2 15.8
+
+Table 6: Robustness. (a) Long visual context: RSVQA-LR queries padded with 20 and 40 same-source distractor images. (b) Domain shift: TerraAgent against the corresponding backbone baseline under increasing shift. Gains grow with shift, which is where scale-bucketed retrieval matters most.       
+
+> (a) Long-context degradation (RSVQA-LR average accuracy, %). Setting GeoChat-7B LHRS-Bot-7B TerraAgent No distractor 91.81 89.19 93.40
+
++20 distractors 86.20 85.40 90.75 
+
++40 distractors 79.85 81.10 88.30 Relative drop (0 → 40) −11.96 −8.09 −5.10 (b) Domain shift (accuracy, %). Setting Backbone baseline TerraAgent ∆ 
+
+> Same resolution, same city (LR
+
+→ LR) 91.81 93.40 +1.59 Cross resolution (HR → LR) 68.90 72.35 +3.45 Cross city and sensor (HR Test-1 → Test-2) 62.80 67.05 +4.25 Cross dataset (RSVQA-HR → VRSBench subset) 59.40 64.10 +4.70 
+
+Table 7: Faithfulness on a 2,000-question VRSBench subset judged by an LLM. The unsupported-span ratio counts factual spans that the evidence ledger does not support, which is only defined for systems that expose provenance.             
+
+> Method Hallucination rate (%) Unsupported spans (%) GPT-4V Yang et al. (2023) 18.2 –LLaVA-1.5 Liu et al. (2024) 16.4 –GeoChat-7B Kuckreja et al. (2023) 17.1 –LHRS-Bot-7B Muhtar et al. (2024) 21.3 –
+> TerraAgent 9.8 11.4
+
+5.4 Robustness: long context and domain shift 
+
+Table 6(a) shows that padding the context with distractor images costs the single-pass models between 8 and 12 points, whereas TerraAgent loses 5.10. The mechanism is direct: retrieved demonstrations are selected by scale bucket and gated for consistency, and MACE’s verifier ignores evidence that is not cited, so irrelevant images do not enter the reasoning chain. Table 6(b) shows the opposite and equally important trend: the gain over the backbone is smallest in-domain and largest under shift. Under cross-resolution transfer the gap is +3.45 points, under cross-city and cross-sensor shift +4.25, and cross-dataset +4.70. Since the same modules are used in all four rows, this is evidence that GDR’s bucket factor and ECG are doing the heavy lifting precisely when appearance-based similarity is most misleading. 10 (a) Visual-dependency diagnostics on RSVQA-LR. (b) Gate threshold versus grounding. 
+
+Figure 3: Left: after removing the cited evidence, single-pass models lose only a small part of their accuracy (VDS 0.11–0.28, ESS 0.02–0.04), i.e. their correct answers are largely prior-driven; TerraAgent loses 46.2 points (VDS 0.49, ESS 0.34). Right: tightening the gate reduces the prior-only answer rate at a modest accuracy cost, with the default 0.35 at the accuracy peak. Table 8: Efficiency. Cost is measured in units of a single local backbone forward pass. TerraAgent is slower than a single pass but remains well below a closed-model API call, and it requires no fine-tuning.                          
+
+> Method Backbone Latency (s) Input tokens Tool calls Cost GeoChat-7B Kuckreja et al. (2023) Vicuna-7B 1.9 1.2k 01.0 ×
+> LHRS-Bot-7B Muhtar et al. (2024) Vicuna-7B 2.1 1.3k 01.1 ×
+> GPT-4V Yang et al. (2023) closed (API) 8.5 1.6k 0–
+> TerraAgent (GDR+MACE+CVA) Vicuna-7B (frozen) 4.6 3.4k 2.3 2.6 ×
+
+5.5 Does the model actually look at the image? 
+
+Figure 3 and Table 7 answer the question that motivated the paper. When we ablate the evidence the model itself cited, LLaVA-1.5 loses only 0.11 of its accuracy, GeoChat 0.28 and LHRS-Bot 0.20: their correct answers are only weakly caused by the image. TerraAgent loses 46.2 points on the same probe (VDS 0.49), and replacing the cited evidence with same-class evidence from elsewhere changes its answer 34% of the time (ESS 0.34), against 3% for GeoChat and 2% for LHRS-Bot. In other words, the single-pass models frequently produce the right token for the wrong reason, and accuracy cannot see it. The consequences are visible in downstream faithfulness: TerraAgent’s judged hallucination rate is 9.8% against 16.4–21.3% for the baselines, and its unsupported-span ratio is 11.4%, i.e. roughly nine out of ten claims are traceable to a ledger entry. We stress the direction of these numbers: for the ablation and swap rows, lower accuracy is better , because it means the answer collapses when the evidence does. 
+
+5.6 Efficiency and failure modes 
+
+Table 8 and Figure 4 summarise the trade-off. TerraAgent costs 2.6 local forward passes per query (4.6 s, 3.4k input tokens, 2.3 tool calls), which is 2.4 × a single pass but still 1.8 × faster than a closed-model API call, and it spends no fine-tuning budget. The decomposition of Equation 18 is informative: retrieval costs one pass, the MACE loop averages 1.3 passes because only 11.4% of spans trigger re-perception, and the audit costs two passes on a shortened context. Because the audit perturbs only the cited entries, its cost does not grow with K.
+
+Failure modes. We inspected the residual errors and group them into four categories. (i) 
+
+Tool-limited counting : dense clusters of small objects (parked cars, boats) still under-count because the detector merges instances; the verifier can flag the disagreement but cannot recover the count. (ii) Knowledge-bound items : resolution and distance questions (Table 3) 11 (a) Capability profile on LHRS-Bench. (b) Accuracy versus latency. 
+
+Figure 4: Left: TerraAgent leads on the perceptual dimensions (identity, shape, loca-tion, modality, reasoning) but trails closed models on resolution and distance, which are knowledge- rather than perception-bound. Right: the accuracy–cost frontier; the bubble area is proportional to input tokens. require sensor and geography knowledge that is not present in the query image. (iii) 
+
+Bucket misassignment : when the GSD regressor puts a 0.3 m image into the 1 m bucket, retrieval drifts to visually plausible but metrically different demonstrations; this is rare but it produces confident errors. (iv) Ambiguous ground truth : for area questions with a hard threshold on building counts, the benchmark annotation itself is debatable, and the verifier’s demand for provenance then leads to abstention where a human would also hesitate. We consider (ii) and (iv) to be properties of the benchmarks rather than of the framework, whereas (i) and (iii) are clear targets for future work. 
+
+## 6 Conclusion 
+
+TerraAgent argues that remote sensing question answering should be evaluated not only by whether the answer is right but by whether the answer would change if the image changed. The framework combines scale-aware, evidence-gated demonstration retrieval with role-specialised agents that must carry provenance, and with a counterfactual audit that turns visual dependency into a measurable signal usable at inference time. Across four benchmark configurations the resulting system improves accuracy by 1.55 to 2.40 points over the strongest same-setting baselines, more than doubles the visual-dependency score, halves the prior-only answer rate and nearly halves the hallucination rate, at 2.6 × the cost of a single forward pass and without any fine-tuning. The same experiments also delimit what the approach cannot do: knowledge-bound dimensions such as sensor identification and metric distance remain the province of large pretrained models, and dense small-object counting remains tool-limited. 
+
+Limitations and future work. Our audit assumes that the model can name the evidence it uses; if a correct answer has no citable entry, the pipeline abstains even when the answer is right, which costs accuracy on high-prior questions. The GSD regressor is trained on a coarse three-way bucketisation and is the single most likely component to misroute retrieval. The current study is also limited to optical imagery; synthetic aperture radar and LiDAR would require additional perception tools, and temporal reasoning is only exercised through pairwise frames rather than through learned change operators. Finally, we report VDS against perturbations that we design; adversarial perturbations that preserve semantics while changing ground truth would give a stronger, if harder, test. 12 Acknowledgements 
+
+We thank the maintainers of the RSVQA, VRSBench and LHRS-Bench releases for making their evaluation protocols reproducible. 
+
+## References 
+
+Sylvain Lobry, Diego Marcos, Jesse Murray, and Devis Tuia. RSVQA: Visual question answering for remote sensing data, 2020. URL https://arxiv.org/abs/2003.07333 .Kartik Kuckreja, Muhammad Sohail Danish, Muzammal Naseer, Abhijit Das, Salman Khan, and Fahad Shahbaz Khan. GeoChat: Grounded large vision-language model for remote sensing, 2023. URL https://arxiv.org/abs/2311.15826 .Dilxat Muhtar, Zhenshi Li, Feng Gu, Xueliang Zhang, and Pengfeng Xiao. LHRS-Bot: Empowering remote sensing with VGI-Enhanced large multimodal language model, 2024. URL https://arxiv.org/abs/2402.02544 .Yuan Hu, Jianlong Yuan, Congcong Wen, Xiaonan Lu, and Xiang Li. RSGPT: A remote sensing vision language model and benchmark, 2023. URL https://arxiv.org/abs/2307. 15266 .Yang Zhan, Zhitong Xiong, and Yuan Yuan. SkyEyeGPT: Unifying remote sensing vision-language tasks via instruction tuning with large language model, 2024. URL https: //arxiv.org/abs/2401.09712 .Yuduo Wang and Pedram Ghamisi. RSAdapter: Adapting multimodal models for remote sensing visual question answering, 2024. URL https://arxiv.org/abs/2310.13120 .Yucheng Zhou, Xiang Li, Qianning Wang, and Jianbing Shen. Visual in-context learning for large vision-language models. In Findings of the Association for Computational Linguistics, ACL 2024, Bangkok, Thailand and virtual meeting, August 11-16, 2024 , pp. 15890–15902. Association for Computational Linguistics, 2024. Congcong Wen, Yiting Lin, Xiaokang Qu, Nan Li, Yong Liao, Xiang Li, and Hui Lin. Remote sensing retrieval-augmented generation: Bridging remote sensing imagery and com-prehensive knowledge with a multi-modal dataset and retrieval-augmented generation model, 2026. URL https://arxiv.org/abs/2504.04988 .Ravi K. Rajendran, Biplob Debnath, Murugan Sankaradas, and Srimat T. Chakradhar. DamageScope: Vision-language retrieval at scale for disaster damage assessment from satellite imagery, 2026. URL https://arxiv.org/abs/2608.21529 .Roie Kazoom, Yotam Gigi, George Leifman, Tomer Shekel, and Genady Beryozkin. RSRCC: A remote sensing regional change comprehension benchmark constructed via retrieval-augmented best-of-n ranking, 2026. URL https://arxiv.org/abs/2604.20623 .Haoyu Zhang, Shuoxun Zhang, Peng Ye, Lin Zhang, Jiakang Yuan, Shenghong Yi, Yuening Wang, and Tao Chen. Advancing MLLM-based UAV image understanding and reasoning: A benchmark and a training-free multi-agent system, 2026. URL https://arxiv.org/abs/ 2608.11738 .Aoran Xiao, Shihao Cheng, Yonghao Xu, Yexian Ren, Hongruixuan Chen, and Naoto Yokoya. GeoMMBench and GeoMMAgent: Toward expert-level multimodal intelligence in geoscience and remote sensing, 2026. URL https://arxiv.org/abs/2604.08896 .Shuzheng Si, Haozhe Zhao, Kangyang Luo, Gang Chen, Fanchao Qi, Minjia Zhang, Baobao Chang, and Maosong Sun. A goal without a plan is just a wish: Efficient and effective global planner training for long-horizon agent task. In Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pp. 13086– 13113, 2026. 13 Xiang Li, Jian Ding, and Mohamed Elhoseiny. VRSBench: A versatile vision-language benchmark dataset for remote sensing image understanding, 2024. URL https://arxiv. org/abs/2406.12384 .Yucheng Zhou, Lingran Song, and Jianbing Shen. Mam: Modular multi-agent framework for multi-modal medical diagnosis via role-specialized collaboration. In Findings of the Association for Computational Linguistics: ACL 2025 , pp. 25319–25333, 2025. Weizhe Lin and Bill Byrne. Retrieval augmented visual question answering with outside knowledge. In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing , pp. 11238–11254. Association for Computational Linguistics, 2022. Wenhu Chen, Hexiang Hu, Xi Chen, Pat Verga, and William Cohen. Murag: Multimodal retrieval-augmented generator for open question answering over images and text. In 
+
+Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing , pp. 5558–5570. Association for Computational Linguistics, 2022. Yu-Jung Heo, Eun-Sol Kim, Woo Suk Choi, and Byoung-Tak Zhang. Hypergraph trans-former: Weakly-supervised multi-hop reasoning for knowledge-based visual question answering. In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pp. 373–390. Association for Computational Linguistics, 2022. Rita Ramos, Desmond Elliott, and Bruno Martins. Retrieval-augmented image captioning. In 
+
+Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics , pp. 3666–3681. Association for Computational Linguistics, 2023. Shuzheng Si, Haozhe Zhao, Gang Chen, Yunshui Li, Kangyang Luo, Chuancheng Lv, Kaikai An, Fanchao Qi, Baobao Chang, and Maosong Sun. GATEAU: Selecting influential samples for long context alignment. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pp. 7391–7422, 2025. Zekun Wang, Wenhui Wang, Haichao Zhu, Ming Liu, Bing Qin, and Furu Wei. Distilled dual-encoder model for vision-language understanding. In Proceedings of the 2022 Confer-ence on Empirical Methods in Natural Language Processing , pp. 8901–8913. Association for Computational Linguistics, 2022. Avi Caciularu, Ido Dagan, Jacob Goldberger, and Arman Cohan. Long context question answering via supervised contrastive learning. In Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies , pp. 2872–2879. Association for Computational Linguistics, 2022. Shibo Hao, Yi Gu, Haodi Ma, Joshua Hong, Zhen Wang, Daisy Wang, and Zhiting Hu. Reasoning with language model is planning with world model. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing , pp. 8154–8173. Association for Computational Linguistics, 2023. Shuofei Qiao, Yixin Ou, Ningyu Zhang, Xiang Chen, Yunzhi Yao, Shumin Deng, Chuanqi Tan, Fei Huang, and Huajun Chen. Reasoning with language model prompting: A survey. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pp. 5368–5393. Association for Computational Linguistics, 2023. Shuzheng Si, Haozhe Zhao, Cheng Gao, Yuzhuo Bai, Zhitong Wang, Bofei Gao, Kangyang Luo, Wenhao Li, Yufei Huang, Gang Chen, Fanchao Qi, Minjia Zhang, Baobao Chang, and Maosong Sun. Teaching large language models to maintain contextual faithfulness via synthetic tasks and reinforcement learning. In Fortieth AAAI Conference on Artificial Intelligence, Thirty-Eighth Conference on Innovative Applications of Artificial Intelligence, Six-teenth Symposium on Educational Advances in Artificial Intelligence, AAAI 2026, Singapore, January 20-27, 2026 , pp. 33001–33009. AAAI Press, 2026. doi: 10.1609/AAAI.V40I39.40582. URL https://doi.org/10.1609/aaai.v40i39.40582 .14 Yucheng Zhou, Zhi Rao, Jun Wan, and Jianbing Shen. Rethinking visual dependency in long-context reasoning for large vision-language models. arXiv preprint arXiv:2410.19732 ,2024. Xiaohe Li, Jiahao Li, Kaixin Zhang, Yuqiang Fang, Leilei Lin, Hong Wang, Haohua Wu, and Zide Fan. Decoding the delta: Unifying remote sensing change detection and understanding with multimodal large language models, 2026. URL https://arxiv.org/ abs/2604.14044 .David F. Ramirez, Tim Overman, Kristen Jaskie, and Andreas Spanias. Geospatial-temporal sensemaking of remote sensing activity detections with multimodal large language model, 2026. URL https://arxiv.org/abs/2605.10739 .Yu Hu, Jianyang Gu, Hao Liu, Yue Cao, Jozsef Hamari, Zheng Liu, and Mohsen Zardadi. AVION: Aerial vision-language instruction from offline teacher to prompt-tuned network, 2026. URL https://arxiv.org/abs/2603.12659 .Fan Liu, Delong Chen, Zhangqingyun Guan, Xiaocong Zhou, Jiale Zhu, Qiaolin Ye, Liyong Fu, and Jun Zhou. RemoteCLIP: A vision language foundation model for remote sensing, 2024. URL https://arxiv.org/abs/2306.11029 .Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning, 2023. URL https://arxiv.org/abs/2304.08485 .Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. Improved baselines with visual instruction tuning, 2024. URL https://arxiv.org/abs/2310.03744 .Jun Chen, Deyao Zhu, Xiaoqian Shen, Xiang Li, Zechun Liu, Pengchuan Zhang, Raghuraman Krishnamoorthi, Vikas Chandra, Yunyang Xiong, and Mohamed Elhoseiny. MiniGPT-v2: large language model as a unified interface for vision-language multi-task learning, 2023. URL https://arxiv.org/abs/2310.09478 .Wenliang Dai, Junnan Li, Dongxu Li, Anthony Meng Huat Tiong, Junqi Zhao, Weisheng Wang, Boyang Li, Pascale Fung, and Steven Hoi. Instructblip: Towards general-purpose vision-language models with instruction tuning, 2023. URL https://arxiv.org/abs/ 2305.06500 .Qinghao Ye, Haiyang Xu, Jiabo Ye, Ming Yan, Anwen Hu, Haowei Liu, Qi Qian, Ji Zhang, Fei Huang, and Jingren Zhou. mPLUG-Owl2: Revolutionizing multi-modal large language model with modality collaboration, 2023. URL https://arxiv.org/abs/2311.04257 .Jinze Bai, Shuai Bai, Shusheng Yang, Shijie Wang, Sinan Tan, Peng Wang, Junyang Lin, Chang Zhou, and Jingren Zhou. Qwen-VL: A versatile vision-language model for understanding, localization, text reading, and beyond, 2023. URL https://arxiv.org/abs/2308.12966 .Pan Zhang, Xiaoyi Dong, Bin Wang, Yuhang Cao, Chao Xu, Linke Ouyang, Zhiyuan Zhao, Haodong Duan, Songyang Zhang, Shuangrui Ding, Wenwei Zhang, Hang Yan, Xinyue Zhang, Wei Li, Jingwen Li, Kai Chen, Conghui He, Xingcheng Zhang, Yu Qiao, Dahua Lin, and Jiaqi Wang. InternLM-XComposer: A vision-language large model for advanced text-image comprehension and composition, 2023. URL https://arxiv.org/abs/2309.15112 .Zhengyuan Yang, Linjie Li, Kevin Lin, Jianfeng Wang, Chung-Ching Lin, Zicheng Liu, and Lijuan Wang. The dawn of lmms: Preliminary explorations with GPT-4V(ision), 2023. URL https://arxiv.org/abs/2309.17421 .Yanwei Li, Yuechen Zhang, Chengyao Wang, Zhisheng Zhong, Yixin Chen, Ruihang Chu, Shaoteng Liu, and Jiaya Jia. Mini-Gemini: Mining the potential of multi-modality vision language models, 2024. URL https://arxiv.org/abs/2403.18814 .OpenAI. GPT-4 technical report, 2024. URL https://arxiv.org/abs/2303.08774 .Anthropic. The claude 3 model family: Opus, sonnet, haiku. Technical Report, 2024. URL https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/ Model Card Claude 3.pdf .15

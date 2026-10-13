@@ -1,0 +1,212 @@
+Title: Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering
+
+URL Source: https://arxiv.org/pdf/2610.13636v1
+
+Published Time: Mon, 12 Oct 2026 01:41:55 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+# BENCHMARKING ANSWER-GROUNDING CONSISTENCY IN REMOTE SENSING VISUAL QUESTION ANSWERING 
+
+# Ping Guo 1, Zhiqi Huang 2, Xinran Li 3, Linkun Yu 4, Jingyin Pei 1, Kamata Seiichiro 1∗ 
+
+> 1
+
+# Graduate School of Information, Production and Systems, Waseda University, Kitakyushu, Japan  
+
+> 2
+
+# School of Artificial Intelligence, The Chinese University of Hong Kong, Shenzhen, China  
+
+> 3
+
+# School of Software, Dalian University of Technology, Dalian, China  
+
+> 4
+
+# Graduate School of Fundamental Science and Engineering, Waseda University, Tokyo, Japan 
+
+> The code is available at https://github.com/pingggg516/AESP-Evaluation.
+
+ABSTRACT 
+
+In grounded remote sensing visual question answering, a model produces a textual answer and identifies relevant ob-jects in the image as grounding evidence. Existing evalu-ations measure answer correctness and localization quality, but do not directly assess answer-grounding consistency. We propose the Answer-Evidence Support Protocol (AESP) to assess this consistency through evidence support: whether the grounding evidence supports the model’s own answer. AESP applies task-specific rules to existence, counting, and comparison questions. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark, containing 15,027 samples with questions, ref-erence answers, and all related object-level annotations. Ex-periments on seven grounded vision–language models reveal failures of evidence support across all three question types. Up to 50.82% of correct answers in the evidence evaluation subset are not supported by the provided grounding evidence. 
+
+Index Terms — Remote sensing visual question answer, visual grounding, answer-grounding consistency, benchmark 
+
+1. INTRODUCTION 
+
+Remote sensing imagery provides large-scale observations of the Earth’s surface, but obtaining task-specific information from rapidly growing image collections often requires expert knowledge. Remote sensing visual question answering (RS-VQA) provides a natural-language interface for querying im-age content [1]. Grounded RS-VQA further produces object localizations together with textual answers [2]. These ground-ing regions can serve as visual evidence, allowing users to check an answer against the image. However, accurate lo-calization of relevant objects does not guarantee these objects collectively support the claim stated in the textual answer. Existing remote sensing vision–language research has expanded beyond predicting textual answers to include vi-
+
+> ∗Corresponding author.
+
+Fig. 1 . Conventional evaluation measures answer correctness and localization quality; AESP additionally assesses answer-grounding consistency. sual grounding. RSVQA [1] provides benchmarks for ques-tion answering, while GeoChat [2] supports both VQA and grounded conversations that link textual responses to object coordinates. GeoGround [3] further broadens grounding ca-pabilities by unifying bounding-box and segmentation-mask outputs. VRSBench [4] brings question answering, visual grounding, and image captioning into a common benchmark. Despite this broader task coverage, GeoChat and VRSBench evaluate VQA and grounding as separate tasks. They re-port answer accuracy for VQA and assess localization by comparing predicted boxes with ground-truth boxes using intersection-over-union (IoU) thresholds. Beyond remote sensing, studies address feature–threshold calibration [5], cross-teacher consistency [6], and joint eval-uation. NExT-GQA [7] evaluates answer correctness and the localization of relevant video segments. MM-GCoT [8] mea-sures consistency using answer and bounding-box correct-ness, while VISTAQA [9] combines answer correctness and mask quality into a joint score. For counting and compari-arXiv:2610.13636v1 [cs.CV] 9 Oct 2026 Fig. 2 . Overview of G-RSVQA construction. The rightmost panel shows a sample and its annotation format. son questions, however, combining or jointly evaluating these scores can not explicitly check whether the grounded object counts agree with the count or numerical relation stated in the answer. As illustrated in Fig. 1, grounding nine of ten storage tanks yields a high localization F1-score but does not support the textual answer “ten” . Similarly, grounding equal object numbers of two classes can not support the answer claiming one class has more instances than the other. To address this gap, we propose the Answer-Evidence Support Protocol (AESP) to assess answer-grounding con-sistency. Using object-level annotations, AESP counts in-stances covered by predicted grounding regions and applies task-specific rules to assess support for the model’s own an-swer. Answer correctness and localization quality are evalu-ated separately. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark with all related object-level annotations. Our main contributions are as follows: 
+
+1) We propose AESP with task-specific rules for exis-tence, counting, and comparison questions to assess whether grounding evidence supports the model’s own answer. 
+
+2) We construct G-RSVQA with 15,027 question–answer samples and all related object-level annotations. 
+
+3) We evaluate seven grounded vision–language models, finding that up to 50.82% of correct answers in the evidence evaluation subset lack supporting evidence. 
+
+2. G-RSVQA BENCHMARK 
+
+We construct G-RSVQA to evaluate evidence support for ex-istence, counting, and comparison questions. This evaluation requires verifying which objects the predicted grounding re-gions identify and whether the numbers of grounded instances support the model’s answer. Each question is therefore paired with a reference answer and all related object-level annota-tions, covering every instance of the target classes so that any objects selected by a model as evidence can be verified. As shown in Fig. 2, we collect images and object anno-tations from DIOR [10], NWPU VHR-10 [11], and SODA-A [12] datasets. We parse the annotations to extract object classes and locations, then generate questions and refer-ence answers using rules based on object presence, instance counts, and numerical relations between classes. For each question, we retain all related object-level annotations from 
+
+(a) Question composition (b) Dataset sources 
+
+Fig. 3 . Question types and data sources of G-RSVQA. which its reference answer is derived. We check question– answer consistency, annotation validity, and image integrity, and remove exact duplicates. The rightmost panel shows a constructed sample and its annotation format. As shown in Fig. 3, G-RSVQA contains 15,027 question– answer samples: 8,592 existence, 4,275 counting, and 2,160 comparison questions. These cover object presence and ab-sence, counts from zero to more than ten target instances, and fewer-than, equal-to, and more-than relations between classes. Each dataset includes all three question types. 
+
+3. AESP EVALUATION PROTOCOL 3.1. Answer Extraction and Grounding Verification 
+
+We normalize model responses to Yes/No answers for ex-istence and comparison questions and nonnegative integers for counting questions. Responses already in these formats are parsed directly; otherwise, Qwen3-14B [13] extracts the answer using only the question and original response. Am-biguous or contradictory responses are invalid. After convert-ing predicted regions to original image coordinates, we count covered target instances per class using all related object-level annotations. Each instance is counted once if its ground-truth box center lies within any predicted region. 
+
+3.2. Task-Specific Evidence Support 
+
+Let ˆa denote the extracted answer and nc the number of cov-ered instances of target class c. We evaluate evidence support using the task-specific rules illustrated in Fig. 4. For each sample, we set s = 1 when the grounding evidence supports 
+
+ˆa, and s = 0 for unsupported or invalid answers. Fig. 4 . Illustration of AESP evaluation protocol for assessing whether grounding evidence supports a model’s answer. Each question is paired with supporting and non-supporting evidence across existence, counting, and comparison tasks. 
+
+Existence. For an existence question about class c, a Yes an-swer requires at least one covered instance, while a No answer requires zero. We define evidence support as: 
+
+s =
+
+
+
+1, ˆa = Yes and nc ≥ 1,
+
+1, ˆa = No and nc = 0 ,
+
+0, otherwise .
+
+(1) In Fig. 4, covering one ship supports the Yes answer even though other ships are present. Full coverage of the target class is not required, since one instance is sufficient to support an existence claim. For No, the rule checks that no target instances are covered by the predicted regions. Target objects may still be present in the image without being covered. 
+
+Counting. For a valid nonnegative integer answer ˆa, the cov-ered instance count must match the model’s answer: 
+
+s =
+
+(
+
+1, nc = ˆ a, 
+
+0, otherwise . (2) In Fig. 4, the image contains four airplanes, but the model answers three. Covering three instances supports this answer, whereas covering two does not. Covering all four also fails because the covered count exceeds the stated count. The rule checks agreement with the model’s own answer, which can be supported even when incorrect. Evidence support and answer correctness are therefore evaluated separately. 
+
+Comparison. Let nA and nB be the covered instance counts of classes A and B. For questions asking whether A has more instances than B, we define support as: 
+
+s =
+
+
+
+1, ˆa = Yes and nA > n B ,
+
+1, ˆa = No and nA ≤ nB ,
+
+0, otherwise .
+
+(3) For More-than questions, a No answer is supported even when both covered counts are zero. In Fig. 4, covering three tennis courts and two basketball courts supports the Yes an-swer, whereas covering two of each does not. Neither class needs to be fully covered. Fewer-than questions use < for Yes and ≥ for No; equality questions use = and ̸ =, respectively. 
+
+3.3. Evaluation Metrics 
+
+We measure answer correctness using answer accuracy, with invalid answers counted as incorrect. Localization quality is measured by micro-averaged precision, recall, and F1-score using one-to-one matching between predicted and ground-truth boxes at IoU ≥ 0.5. Answer accuracy is reported on all 15,027 samples. For localization quality and evidence sup-port, we exclude the 5,328 existence questions with No ref-erence answers because their images contain no instances of the target class, leaving 9,699 samples for evaluation. Let E denote the evaluation subset and si the evidence support indicator for sample i. We set ri = 1 if its extracted answer is correct and ri = 0 otherwise. These indicators are used to compute evidence support and joint success. Evidence Support–Overall ( ES overall ) measures the pro-portion of samples in E whose grounding evidence supports the model’s own answer, regardless of answer correctness: 
+
+ES overall =
+
+P 
+
+> i∈E
+
+si
+
+|E| . (4) Evidence Support–Correct Answers ( ES correct ) measures the proportion of correctly answered samples in E whose grounding evidence supports the model’s own answer: 
+
+ES correct =
+
+P 
+
+> i∈E
+
+risi
+
+P 
+
+> i∈E
+
+ri
+
+. (5) Table 1 . Evaluation of seven vision–language models on G-RSVQA under the proposed protocol. All values are percentages; the best result in each column is bold.  
+
+> Model
+
+Answer Accuracy Localization Evidence Support Joint Success Precision Recall F1-score Overall Correct Answers  
+
+> GeoChat[2]
+
+60.11 32.87 1.95 3.68 35.43 49.18 29.16  
+
+> Qwen2.5-VL-7B[14]
+
+65.50 41.05 6.33 10.96 58.94 92.82 43.99  
+
+> Kosmos-2[15]
+
+38.08 36.29 3.01 5.55 51.20 79.90 47.12  
+
+> GeoGround[3]
+
+67.38 52.27 4.40 8.11 50.82 62.92 32.51  
+
+> Ferret-7B[16]
+
+30.58 22.06 2.04 3.73 30.34 76.80 27.58  
+
+> InternVL3-8B[17]
+
+76.92 17.47 3.14 5.32 50.78 59.11 40.79  
+
+> Qwen3-VL-8B [18]
+
+77.47 31.63 10.05 15.26 80.11 94.35 63.76 Table 2 . Answer extraction accuracy (%) on 400 VLM re-sponses, evaluated against human reference annotations.              
+
+> Extractor Existence Counting Comparison Overall Qwen3-8B[13] 99.32 83.02 88.89 95.75
+> Qwen3-14B [13] 99.66 96.23 94.44 98.50
+> Mistral-NeMo-12B [19] 96.25 67.92 92.59 92.00
+
+Joint Success ( JS ) measures the proportion of samples in 
+
+E with a correct answer and supporting grounding evidence: 
+
+JS = 
+
+P 
+
+> i∈E
+
+risi
+
+|E| . (6) 
+
+4. EXPERIMENT 4.1. Experimental Setup 
+
+We evaluate the seven models in Table 1 using publicly re-leased weights, including GeoGround’s task-specific LoRA weights, without additional training on G-RSVQA. Five models generate answers and grounding regions in one response; GeoChat and GeoGround use separate requests whose grounding prompts contain no previously generated answers. We adapt prompts to each model’s interface, coordi-nate format and task. We compare three answer extractors on 400 VLM responses against human reference annotations. As shown in Table 2, Qwen3-14B achieves the highest extraction accuracy of 98.50% and is selected as our answer extractor. 
+
+4.2. Results and Analysis 
+
+Table 1 shows that answer accuracy and localization precision can not reflect evidence support. InternVL3-8B achieves the second-highest answer accuracy of 76.92%, but its ES overall 
+
+is only 50.78%. Qwen3-VL-8B also has a similar accuracy of 77.47%, yet its ES overall reaches 80.11%. GeoGround achieves the highest precision of 52.27%, but its ES overall is 50.82%. Qwen2.5-VL-7B shows how evaluating only correct answers can hide support failures: its support rate is 92.82% 
+
+Table 3 . Overall evidence support and joint success rates (%) 
+
+by question type on G-RSVQA.                                             
+
+> Model Existence Counting Comparison ES Overall Joint Success ES Overall Joint Success ES Overall Joint Success GeoChat 62.93 60.69 8.87 6.22 46.44 26.90 Qwen2.5-VL-7B 97.49 64.55 24.26 21.66 69.35 57.13 Kosmos-2 90.84 90.84 29.89 25.17 33.47 24.49 GeoGround 88.33 70.13 28.89 6.69 37.55 26.76 Ferret-7B 68.72 67.68 6.39 5.38 19.77 10.93 InternVL3-8B 63.60 54.60 30.20 23.16 72.13 54.81 Qwen3-VL-8B 95.99 83.18 72.37 50.69 71.44 60.28
+
+among correct answers but 58.94% across the evaluation sub-set. Its JS of 43.99% shows that fewer than half of this subset receive a correct answer and supporting evidence. Table 3 reveals a weakness in supporting exact counts. All seven models have lower ES overall on counting than on existence. InternVL3-8B reaches 72.13% on comparison but only 30.20% on counting. Missing some objects may leave the relation between two class counts unchanged. A counting answer loses support whenever the covered count differs from the stated number. Strong comparison support therefore does not establish reliable support for exact counts. Qwen3-VL-8B illustrates why support and correctness must be distinguished: its counting ES overall is 72.37%, while its JS is 50.69%. This gap identifies answers whose grounding matches the stated number even though that number is incorrect. 
+
+5. CONCLUSION 
+
+We proposed AESP to evaluate answer-grounding consis-tency in grounded RS-VQA and constructed the G-RSVQA benchmark with 15,027 samples. Experiments on seven grounded vision–language models show that answer cor-rectness and localization quality do not necessarily imply supporting grounding evidence, with counting showing par-ticularly weak support. These results highlight the importance of explicitly evaluating whether grounding evidence supports a model’s own answer. 6. REFERENCES 
+
+[1] Sylvain Lobry, Diego Marcos, Jesse Murray, and Devis Tuia, “Rsvqa: Visual question answering for remote sensing data,” IEEE Transactions on Geoscience and Remote Sensing , vol. 58, no. 12, pp. 8555–8566, 2020. [2] Kartik Kuckreja, Muhammad Sohail Danish, Muzam-mal Naseer, Abhijit Das, Salman Khan, and Fahad Shah-baz Khan, “Geochat: Grounded large vision-language model for remote sensing,” in 2024 IEEE/CVF Con-ference on Computer Vision and Pattern Recognition (CVPR) . IEEE, 2024, pp. 27831–27840. [3] Yue Zhou, Mengcheng Lan, Xiang Li, Litong Feng, Yip-ing Ke, Xue Jiang, Qingyun Li, Xue Yang, and Wayne Zhang, “Geoground: A unified large vision-language model for remote sensing visual grounding,” arXiv preprint arXiv:2411.11904 , 2024. [4] Xiang Li, Jian Ding, and Mohamed Elhoseiny, “Vrs-bench: A versatile vision-language benchmark dataset for remote sensing image understanding,” Advances in Neural Information Processing Systems , vol. 37, pp. 3229–3242, 2024. [5] Ping Guo, Zhiqi Huang, and Xinran Li, “When noise meets long-tail: Feature-threshold dual cali-bration for robust pseudo-labeling,” arXiv preprint arXiv:2609.33668 , 2026. [6] Ping Guo, Chengzhou Li, Guanchen Meng, Qi Jia, Jinyuan Liu, Zhu Liu, Yu Liu, Zhongxuan Luo, and Xin Fan, “Ctfs: Collaborative teacher framework for forward-looking sonar image semantic segmenta-tion with extremely limited labels,” arXiv preprint arXiv:2603.21071 , 2026. [7] Junbin Xiao, Angela Yao, Yicong Li, and Tat-Seng Chua, “Can i trust your answer? visually grounded video question answering,” in 2024 IEEE/CVF Con-ference on Computer Vision and Pattern Recognition (CVPR) . IEEE, 2024, pp. 13204–13214. [8] Qiong Wu, Xiangcong Yang, Yiyi Zhou, Chenxin Fang, Baiyang Song, Xiaoshuai Sun, and Rongrong Ji, “Grounded chain-of-thought for multimodal large lan-guage models,” in Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition ,2026, pp. 33577–33587. [9] Mozhgan Nasr Azadani, Yimu Wang, Yongpeng Zhu, Lihong Chen, Milan Ganai, Sean Sedwards, Marco Pavone, and Krzysztof Czarnecki, “Vistaqa: Bench-marking joint visual question answering and pixel-level evidence,” arXiv preprint arXiv:2605.20676 , 2026. [10] Ke Li, Gang Wan, Gong Cheng, Liqiu Meng, and Jun-wei Han, “Object detection in optical remote sensing images: A survey and a new benchmark,” ISPRS jour-nal of photogrammetry and remote sensing , vol. 159, pp. 296–307, 2020. [11] Gong Cheng, Junwei Han, Peicheng Zhou, and Lei Guo, “Multi-class geospatial object detection and geographic image classification based on collection of part detec-tors,” ISPRS Journal of Photogrammetry and Remote Sensing , vol. 98, pp. 119–132, 2014. [12] Gong Cheng, Xiang Yuan, Xiwen Yao, Kebing Yan, Qinghua Zeng, Xingxing Xie, and Junwei Han, “To-wards large-scale small object detection: Survey and benchmarks,” IEEE transactions on pattern analysis and machine intelligence , vol. 45, no. 11, pp. 13467– 13488, 2023. [13] An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chen-gen Huang, Chenxu Lv, et al., “Qwen3 technical report,” 
+
+arXiv preprint arXiv:2505.09388 , 2025. [14] Chenfei Wu, Jiahao Li, Jingren Zhou, Junyang Lin, Kaiyuan Gao, Kun Yan, Sheng-ming Yin, Shuai Bai, Xiao Xu, Yilei Chen, et al., “Qwen-image technical re-port,” arXiv preprint arXiv:2508.02324 , 2025. [15] Zhiliang Peng, Wenhui Wang, Li Dong, Yaru Hao, Shaohan Huang, Shuming Ma, and Furu Wei, “Kosmos-2: Grounding multimodal large language models to the world,” arXiv preprint arXiv:2306.14824 , 2023. [16] Haoxuan You, Haotian Zhang, Zhe Gan, Xianzhi Du, Bowen Zhang, Zirui Wang, Liangliang Cao, Shih-Fu Chang, and Yinfei Yang, “Ferret: Refer and ground anything anywhere at any granularity,” in Interna-tional Conference on Learning Representations , 2024, vol. 2024, pp. 57153–57180. [17] Jinguo Zhu, Weiyun Wang, Zhe Chen, Zhaoyang Liu, Shenglong Ye, Lixin Gu, Hao Tian, Yuchen Duan, Wei-jie Su, Jie Shao, et al., “Internvl3: Exploring advanced training and test-time recipes for open-source multi-modal models,” arXiv preprint arXiv:2504.10479 , 2025. [18] Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, et al., “Qwen3-vl technical report,” arXiv preprint arXiv:2511.21631 ,2025. [19] Mistral AI team, “Mistral NeMo,” https://mistral.ai/ news/mistral-nemo/, July 2024, Accessed: September 13, 2026.
