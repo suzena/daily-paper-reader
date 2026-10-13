@@ -1,18 +1,17 @@
 {
   "mode": "standard",
-  "generated_at": "2026-10-13T01:17:48.223508+00:00",
+  "generated_at": "2026-10-13T23:39:13.623783+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 0,
+    "deep_divecandidates": 1,
     "deep_cap": 6,
-    "deep_selected": 0,
-    "quick_candidates": 5,
+    "deep_selected": 1,
+    "quick_candidates": 4,
     "quick_skim_target": 11,
-    "quick_selected": 5
+    "quick_selected": 4
   },
-  "deep_dive": [],
-  "quick_skim": [
+  "deep_dive": [
     {
       "id": "2610.12517v1",
       "source": "arxiv",
@@ -35,20 +34,61 @@
         "keyword:ocean-ai",
         "query:ocean-ai"
       ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-agent reasoning over remote sensing multimodal LLM VQA",
+      "llm_evidence_cn": "遥感多模态大模型上的多智能体推理问答",
+      "llm_evidence": "遥感多模态大模型上的多智能体推理问答",
+      "canonical_evidence": "遥感多模态大模型上的多智能体推理问答",
+      "llm_tldr_en": "TerraAgent targets long-context remote sensing visual question answering, where retrieved demonstrations may mismatch across sensors and errors propagate, using demonstration-grounded multi-agent reasoning to ensure answers truly rely on image evidence.",
+      "llm_tldr_cn": "遥感视觉问答要求答案真正依赖图像证据，但现有遥感多模态大模型多以准确率评价，无法判断答案是否绕开图像。本文提出TerraAgent，面向长上下文场景，用示范锚定的多智能体推理应对跨传感器、跨分辨率示范失配，以及多尺度瓦片、多时相与检索知识带来的证据稀释与误差传播。方法强调以图像证据为基础的推理，为遥感环境评估中的智能体与大模型协同提供新范式。",
+      "llm_tldr": "遥感视觉问答要求答案真正依赖图像证据，但现有遥感多模态大模型多以准确率评价，无法判断答案是否绕开图像。本文提出TerraAgent，面向长上下文场景，用示范锚定的多智能体推理应对跨传感器、跨分辨率示范失配，以及多尺度瓦片、多时相与检索知识带来的证据稀释与误差传播。方法强调以图像证据为基础的推理，为遥感环境评估中的智能体与大模型协同提供新范式。",
+      "llm_tags": [
+        "query:ocean-ai:composite"
+      ],
+      "matched_query_tag": "query:ocean-ai:composite",
+      "matched_query_text": "Papers central to 大模型与智能体、三维建模、珊瑚、遥感, especially work that connects or combines: intelligent agent marine applications; remote sensing techniques for coral reef ecosystem mapping; deep learning methods for satellite image analysis of ocean habitats; classification models for coral reef benthic cover; multimodal fusion of imagery and text for ocean science; data mining approaches for oceanographic remote sensing data; How do large language models assist in coral reef habitat mapping from remote sensing imagery?; Which deep learning models perform best for coral reef classification in satellite images?; Can multimodal large models combine remote sensing data and text reports for environmental assessment?; Methods for three dimensional modeling and reconstruction of coral reefs from remote sensing and underwater imagery.",
+      "matched_requirement_id": "req-composite-ocean-ai",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.13636v1",
+      "source": "arxiv",
+      "title": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
+      "abstract": "In grounded remote sensing visual question answering, a model produces a textual answer and identifies relevant objects in the image as grounding evidence. Existing evaluations measure answer correctness and localization quality, but do not directly assess answer-grounding consistency. We propose the Answer-Evidence Support Protocol (AESP) to assess this consistency through evidence support: whether the grounding evidence supports the model's own answer. AESP applies task-specific rules to existence, counting, and comparison questions. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark, containing 15,027 samples with questions, reference answers, and all related object-level annotations. Experiments on seven grounded vision--language models reveal failures of evidence support across all three question types. Up to 50.82% of correct answers in the evidence evaluation subset are not supported by the provided grounding evidence.",
+      "authors": [
+        "Ping Guo",
+        "Zhiqi Huang",
+        "Xinran Li",
+        "Linkun Yu",
+        "Jingyin Pei",
+        "Kamata Seiichiro"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-10-09T14:15:50+00:00",
+      "link": "https://arxiv.org/pdf/2610.13636v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
       "llm_score": 7.0,
-      "llm_evidence_en": "multi-agent reasoning for long-context remote sensing visual question answering",
-      "llm_evidence_cn": "面向长上下文遥感视觉问答的多智能体推理",
-      "llm_evidence": "面向长上下文遥感视觉问答的多智能体推理",
-      "canonical_evidence": "面向长上下文遥感视觉问答的多智能体推理",
-      "llm_tldr_en": "TerraAgent uses demonstration-grounded multi-agent reasoning for remote sensing VQA, addressing mismatched demonstrations, diluted long visual context and prior-only answering in RS MLLMs.",
-      "llm_tldr_cn": "该文针对遥感视觉问答中多模态大模型仅以准确率评估、无法判断答案是否真正依赖图像证据的问题，指出跨地面采样距离、传感器与城市纹理检索的示例易失配，长视觉上下文易稀释证据并传播错误，且仅凭先验作答难以察觉。为此提出TerraAgent，一种基于示例的多智能体推理框架，用于长上下文遥感视觉问答。该方法将大模型与智能体推理结合，对遥感图文融合与环境评估类任务具有较强参考价值。",
-      "llm_tldr": "该文针对遥感视觉问答中多模态大模型仅以准确率评估、无法判断答案是否真正依赖图像证据的问题，指出跨地面采样距离、传感器与城市纹理检索的示例易失配，长视觉上下文易稀释证据并传播错误，且仅凭先验作答难以察觉。为此提出TerraAgent，一种基于示例的多智能体推理框架，用于长上下文遥感视觉问答。该方法将大模型与智能体推理结合，对遥感图文融合与环境评估类任务具有较强参考价值。",
+      "llm_evidence_en": "remote sensing visual question answering fusing imagery and text evidence",
+      "llm_evidence_cn": "融合影像与文本证据的遥感视觉问答",
+      "llm_evidence": "融合影像与文本证据的遥感视觉问答",
+      "canonical_evidence": "融合影像与文本证据的遥感视觉问答",
+      "llm_tldr_en": "Proposes the Answer-Evidence Support Protocol and G-RSVQA benchmark to evaluate answer-grounding consistency in remote sensing visual question answering.",
+      "llm_tldr_cn": "遥感视觉问答中模型既输出文本答案又标出图像证据，但现有评估只衡量答案正确性与定位质量，未考察二者一致性。本文提出AESP协议，通过证据支持度判断定位证据是否支撑模型自身答案，并构建含15027个样本的G-RSVQA基准。该工作为影像与文本联合推理提供了更严格的评估工具，对多模态海洋科学融合有借鉴意义。",
+      "llm_tldr": "遥感视觉问答中模型既输出文本答案又标出图像证据，但现有评估只衡量答案正确性与定位质量，未考察二者一致性。本文提出AESP协议，通过证据支持度判断定位证据是否支撑模型自身答案，并构建含15027个样本的G-RSVQA基准。该工作为影像与文本联合推理提供了更严格的评估工具，对多模态海洋科学融合有借鉴意义。",
       "llm_tags": [
         "query:ocean-ai"
       ],
       "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "Can multimodal large models combine remote sensing data and text reports for environmental assessment?",
-      "matched_requirement_id": "req-9",
+      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
+      "matched_requirement_id": "req-5",
       "selection_source": "fresh_fetch",
       "quick_tier": "7"
     },
@@ -77,13 +117,56 @@
         "query:ocean-ai"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "autonomous robotic system for language-annotated open-vocabulary 3D mapping",
-      "llm_evidence_cn": "面向语言标注开放词汇三维建图的自主机器人系统",
-      "llm_evidence": "面向语言标注开放词汇三维建图的自主机器人系统",
-      "canonical_evidence": "面向语言标注开放词汇三维建图的自主机器人系统",
-      "llm_tldr_en": "Robots in unfamiliar environments need language-annotated 3D maps for open-vocabulary understanding. ActiveLang performs online language-feature adaptation on dual-Gaussian representations, jointly reconstructing geometry, appearance and semantics with guided exploration.",
-      "llm_tldr_cn": "机器人要在陌生环境中执行多样任务，需要兼具几何与语义理解能力，并支持事先未知概念，这推动了语言标注三维地图的需求。本文提出ActiveLang，一种面向主动开放词汇三维建图的自主系统，在紧凑的双高斯表示上在线适配语言特征，联合重建场景几何、外观与开放词汇语义，并以语义不确定性引导探索。该方法在有限内存下高效完成建图，为面向智能体的三维语义建图与海洋探索提供了可迁移框架。",
-      "llm_tldr": "机器人要在陌生环境中执行多样任务，需要兼具几何与语义理解能力，并支持事先未知概念，这推动了语言标注三维地图的需求。本文提出ActiveLang，一种面向主动开放词汇三维建图的自主系统，在紧凑的双高斯表示上在线适配语言特征，联合重建场景几何、外观与开放词汇语义，并以语义不确定性引导探索。该方法在有限内存下高效完成建图，为面向智能体的三维语义建图与海洋探索提供了可迁移框架。",
+      "llm_evidence_en": "Active open-vocabulary 3D mapping with language-annotated reconstruction",
+      "llm_evidence_cn": "带语言标注的主动开放词汇三维建图与重建",
+      "llm_evidence": "带语言标注的主动开放词汇三维建图与重建",
+      "canonical_evidence": "带语言标注的主动开放词汇三维建图与重建",
+      "llm_tldr_en": "ActiveLang is an autonomous system for active open-vocabulary 3D mapping, performing online language-feature adaptation on a dual-Gaussian representation and guiding exploration by semantic uncertainty.",
+      "llm_tldr_cn": "机器人在陌生环境中作业需同时具备几何与语义理解，并支持未知概念的开放词汇识别。本文提出ActiveLang，一种语义不确定性引导探索的主动开放词汇三维建图系统。它在紧凑的双高斯表示上进行在线语言特征自适应，联合重建场景几何、外观与开放词汇语义，内存开销较低，并由规划器高效探索。该工作为智能体自主三维建图与环境理解提供通用框架。",
+      "llm_tldr": "机器人在陌生环境中作业需同时具备几何与语义理解，并支持未知概念的开放词汇识别。本文提出ActiveLang，一种语义不确定性引导探索的主动开放词汇三维建图系统。它在紧凑的双高斯表示上进行在线语言特征自适应，联合重建场景几何、外观与开放词汇语义，内存开销较低，并由规划器高效探索。该工作为智能体自主三维建图与环境理解提供通用框架。",
+      "llm_tags": [
+        "query:ocean-ai"
+      ],
+      "matched_query_tag": "query:ocean-ai",
+      "matched_query_text": "Methods for three dimensional modeling and reconstruction of coral reefs from remote sensing and underwater imagery",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.11366v1",
+      "source": "arxiv",
+      "title": "SpatialOPSD: Self-Distilling Spatial Intelligence from Verified Coding Agent Traces",
+      "abstract": "Spatial coding agents significantly improve spatial reasoning in Multimodal Large Language Models (MLLMs) by using external tools to generate verified execution traces. However, this paradigm inherently suffers from prohibitive inference-time overhead and external dependencies. In this paper, we explore whether an MLLM can internalize this agentic capability to operate entirely tool-free. We begin with a simple observation: prompting an MLLM with summarized execution traces of a spatial coding agent naturally unlocks the model's internal spatial Chain-of-Thought (CoT). Motivated by this, we introduce SpatialOPSD, an on-policy self-distillation framework that internalizes spatial reasoning into a standalone MLLM by formulating verified agent traces as privileged information. To mitigate privileged-information leakage during distillation, we introduce Repetition-Aware Distillation, which combines repetition masking with unlikelihood regularization. Experiments across multiple benchmarks demonstrate that self-distilling SpatialOPSD achieves higher average accuracy than SFT and GRPO on both spatial and OOD datasets, exhibiting superior performance and generalization.",
+      "authors": [
+        "Rongxue Li",
+        "Meng Yang",
+        "Yiru Mao",
+        "Yongliang Tao",
+        "Lulu Hu",
+        "Bin Yang",
+        "Zhao Xu",
+        "Weihua Luo",
+        "Bowen Xu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-08T06:58:30+00:00",
+      "link": "https://arxiv.org/pdf/2610.11366v1",
+      "tags": [
+        "keyword:ocean-ai",
+        "query:ocean-ai"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "internalizing spatial agent capability into multimodal LLM via self-distillation",
+      "llm_evidence_cn": "通过自蒸馏将空间智能体能力内化到多模态大模型",
+      "llm_evidence": "通过自蒸馏将空间智能体能力内化到多模态大模型",
+      "canonical_evidence": "通过自蒸馏将空间智能体能力内化到多模态大模型",
+      "llm_tldr_en": "SpatialOPSD self-distills verified spatial coding agent traces into a standalone MLLM, enabling tool-free spatial reasoning without inference overhead.",
+      "llm_tldr_cn": "空间编码智能体借助外部工具提升多模态大模型的空间推理，但带来高昂推理开销与外部依赖。本文提出SpatialOPSD，发现在提示中注入智能体的执行轨迹可解锁模型内部空间思维链，进而用在线策略自蒸馏将智能体能力内化到独立MLLM。该方法实现无工具的空间推理，为智能体与大模型结合提供了高效范式，对海洋遥感智能分析有借鉴意义。",
+      "llm_tldr": "空间编码智能体借助外部工具提升多模态大模型的空间推理，但带来高昂推理开销与外部依赖。本文提出SpatialOPSD，发现在提示中注入智能体的执行轨迹可解锁模型内部空间思维链，进而用在线策略自蒸馏将智能体能力内化到独立MLLM。该方法实现无工具的空间推理，为智能体与大模型结合提供了高效范式，对海洋遥感智能分析有借鉴意义。",
       "llm_tags": [
         "query:ocean-ai"
       ],
@@ -94,118 +177,42 @@
       "quick_tier": "6"
     },
     {
-      "id": "2610.13535v1",
+      "id": "2610.13720v1",
       "source": "arxiv",
-      "title": "Knowing Whether, Not Just Where: Anchor-Probing Distillation for Open-Set Remote Sensing Visual Grounding",
-      "abstract": "Open-set visual grounding in remote sensing requires models to determine not only where a queried object is located, but also whether the image provides sufficient evidence for the query at all. Existing closed-set grounding models, however, tend to return plausible boxes even for absent objects, blurring localization confidence with genuine Visual Support. We introduce AnchorProbe-Distill (APD), a teacher-student framework that recasts open-set grounding as Visual Support learning. APD builds on the insight that supported queries should induce coherent spatial anchors, whereas unsupported or mismatched queries tend to produce unstable or misleading localization patterns. APD-T therefore uses the Original Query as a Reference Anchor to interpret query perturbations: Semantic-Preserving Queries retain the annotated target, Near-Category Ambiguous Queries are resolved according to whether they form a reliable alternative anchor or collapse onto the Reference Anchor, and Far-Category Counterfactual Queries provide rejection supervision. This reference-aware reasoning is distilled into APD-S, enabling unified localization and rejection from a single image--query pair. Experiments show that APD enables the resulting model to reject absent targets while also improving its localization of present targets.",
+      "title": "State-Isolated Vision Mamba via Update-Tendency Routing for Underwater Image Enhancement",
+      "abstract": "Vision Mamba has recently emerged as an efficient alternative to convolutional and Transformer-based architectures by modeling long-range spatial dependencies through recurrent state evolution. Existing studies primarily improve token serialization, scanning strategies, or expert routing, yet largely overlook a state level question question: how should recurrent states be organized for spatially heterogeneous visual restoration? In this paper, we show that forcing tokens with heterogeneous update behaviors to recurrently modify a shared hidden state leads to persistent cross-content interference, which we term \\textbf{State Contention}. We further argue that effective recurrent modeling should organize state evolution according to token compatibility rather than token ordering. Based on this observation, we introduce \\textbf{State Isolation}, a new recurrent state organization principle for Vision Mamba,tokens with compatible state-update tendencies evolve within independent recurrent state streams. To instantiate this principle, we propose \\textbf{IsoMamba}, a $Δ$-guided architecture that constructs model-intrinsic update representations, discovers update-compatible token groups through label-free clustering, and routes them to isolated Mamba experts following a \\textbf{cluster--route--isolate} paradigm. In addition, we develop a dynamic channel-wise reweighting objective to compensate for wavelength-dependent reconstruction difficulty in underwater images. Extensive experiments demonstrate that IsoMamba consistently achieves state-of-the-art performance on multiple underwater image enhancement benchmarks while providing cleaner hidden state responses, validating the effectiveness of state isolated recurrent modeling.",
       "authors": [
-        "Zhihao Chang",
-        "Lei Zhai",
-        "Shuyuan Yang",
-        "Zhixi Feng"
+        "Yan Luo",
+        "Laibin Chang",
+        "Zefan Feng",
+        "Yi'ang Chen",
+        "Kui Jiang",
+        "Zhengguo Li"
       ],
       "primary_category": "cs.CV",
       "categories": [
         "cs.CV"
       ],
-      "published": "2026-10-09T12:55:42+00:00",
-      "link": "https://arxiv.org/pdf/2610.13535v1",
-      "tags": [
-        "keyword:ocean-ai",
-        "query:ocean-ai"
-      ],
-      "llm_score": 7.0,
-      "llm_evidence_en": "remote sensing visual grounding fusing text queries and imagery",
-      "llm_evidence_cn": "融合文本查询与影像的遥感视觉定位",
-      "llm_evidence": "融合文本查询与影像的遥感视觉定位",
-      "canonical_evidence": "融合文本查询与影像的遥感视觉定位",
-      "llm_tldr_en": "Introduces AnchorProbe-Distill, a teacher-student framework that recasts open-set remote sensing visual grounding as Visual Support learning, judging not only where an object is but whether the image supports the query.",
-      "llm_tldr_cn": "开放集遥感视觉定位不仅需要判断目标位置，还需判断影像是否足以支持查询，而现有闭集模型对缺失目标也会输出看似合理的框。本文将开放集定位重构为视觉支持学习，提出师生框架AnchorProbe-Distill，利用受支持查询应产生一致空间锚点、而不匹配查询定位不稳定的特性进行蒸馏判别。该方法统一了文本查询与遥感影像的多模态定位与证据判定。",
-      "llm_tldr": "开放集遥感视觉定位不仅需要判断目标位置，还需判断影像是否足以支持查询，而现有闭集模型对缺失目标也会输出看似合理的框。本文将开放集定位重构为视觉支持学习，提出师生框架AnchorProbe-Distill，利用受支持查询应产生一致空间锚点、而不匹配查询定位不稳定的特性进行蒸馏判别。该方法统一了文本查询与遥感影像的多模态定位与证据判定。",
-      "llm_tags": [
-        "query:ocean-ai"
-      ],
-      "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
-      "matched_requirement_id": "req-5",
-      "selection_source": "fresh_fetch",
-      "quick_tier": "7"
-    },
-    {
-      "id": "2610.12669v1",
-      "source": "arxiv",
-      "title": "GeoFitBench-LLM: A Benchmark for Assessing Large Language Models' Capabilities in Geospatial Data Requirements Elicitation for Geo-Analytic Tasks",
-      "abstract": "Large language models are becoming central to GeoAI systems, yet their evaluation rarely considers the elicitation of geospatial data requirements. This omission is critical as retrieval oriented geo-analytic tasks cannot be supported reliably without first identifying the necessary datasets and constraints. GeoFitBench-LLM is introduced as a benchmark for assessing whether LLMs can infer the datasets, the supporting resources and the constraints required by geo-analytic requests in natural language. The benchmark is structured around two reasoning dimensions, Spatio-Temporal Relational and Semantic Grounding, reflecting long-standing challenges in geospatial information retrieval and related natural language tasks. Ground truth requirements are encoded in a fixed, provider-independent schema for reproducible evaluation of resource identification and attribute-level specification. Experiments on seven models under minimal prompting indicate that identifying the necessary resources is often achievable, with GPT-5.4 Thinking achieving the best result by recovering the complete set of resources in 66.67% of benchmark requests. Results further indicate that accurate fitness-for-use specification remains more difficult as inferential demands increase.",
-      "authors": [
-        "Amirhossein Vahdat",
-        "Thierry Badard",
-        "Luc Lamontagne"
-      ],
-      "primary_category": "cs.CL",
-      "categories": [
-        "cs.CL",
-        "cs.AI"
-      ],
-      "published": "2026-10-08T19:45:40+00:00",
-      "link": "https://arxiv.org/pdf/2610.12669v1",
+      "published": "2026-10-09T15:18:36+00:00",
+      "link": "https://arxiv.org/pdf/2610.13720v1",
       "tags": [
         "keyword:ocean-ai",
         "query:ocean-ai"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "benchmark for LLMs inferring geospatial data requirements for geo-analytic tasks",
-      "llm_evidence_cn": "评估大模型推断地理空间数据需求的基准",
-      "llm_evidence": "评估大模型推断地理空间数据需求的基准",
-      "canonical_evidence": "评估大模型推断地理空间数据需求的基准",
-      "llm_tldr_en": "GeoFitBench-LLM benchmarks whether large language models can infer datasets, resources and constraints needed by geo-analytic requests, organizing evaluation around spatio-temporal and semantic reasoning.",
-      "llm_tldr_cn": "该文指出现有大语言模型评估很少考察地理空间数据需求的推断能力，而面向检索的地理分析任务必须先确定所需数据集与约束。为此提出GeoFitBench-LLM基准，从时空关系推理与语义接地两个维度评估模型能否从自然语言请求中推断数据集、支撑资源与约束条件。该工作为GeoAI系统中大模型的可靠性评估提供了结构化工具，对遥感与海洋科学中的LLM应用有参考价值。",
-      "llm_tldr": "该文指出现有大语言模型评估很少考察地理空间数据需求的推断能力，而面向检索的地理分析任务必须先确定所需数据集与约束。为此提出GeoFitBench-LLM基准，从时空关系推理与语义接地两个维度评估模型能否从自然语言请求中推断数据集、支撑资源与约束条件。该工作为GeoAI系统中大模型的可靠性评估提供了结构化工具，对遥感与海洋科学中的LLM应用有参考价值。",
+      "llm_evidence_en": "Underwater image enhancement for marine visual restoration",
+      "llm_evidence_cn": "面向海洋视觉复原的水下图像增强",
+      "llm_evidence": "面向海洋视觉复原的水下图像增强",
+      "canonical_evidence": "面向海洋视觉复原的水下图像增强",
+      "llm_tldr_en": "This paper identifies State Contention in Vision Mamba, where heterogeneous tokens share a recurrent hidden state, and proposes state-isolated modeling with update-tendency routing for underwater image enhancement.",
+      "llm_tldr_cn": "Vision Mamba以递归状态演化建模长程空间依赖，但现有研究多关注令牌序列化与扫描策略，忽视状态组织问题。本文指出异质令牌共享隐藏状态会导致持续的内容干扰，称为状态竞争，并提出按令牌更新趋势路由的状态隔离建模方法。该工作面向水下图像增强这一空间异质复原任务，为海洋视觉复原提供更有效的递归建模范式。",
+      "llm_tldr": "Vision Mamba以递归状态演化建模长程空间依赖，但现有研究多关注令牌序列化与扫描策略，忽视状态组织问题。本文指出异质令牌共享隐藏状态会导致持续的内容干扰，称为状态竞争，并提出按令牌更新趋势路由的状态隔离建模方法。该工作面向水下图像增强这一空间异质复原任务，为海洋视觉复原提供更有效的递归建模范式。",
       "llm_tags": [
         "query:ocean-ai"
       ],
       "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "How do large language models assist in coral reef habitat mapping from remote sensing imagery?",
-      "matched_requirement_id": "req-7",
-      "selection_source": "fresh_fetch",
-      "quick_tier": "6"
-    },
-    {
-      "id": "2610.13636v1",
-      "source": "arxiv",
-      "title": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
-      "abstract": "In grounded remote sensing visual question answering, a model produces a textual answer and identifies relevant objects in the image as grounding evidence. Existing evaluations measure answer correctness and localization quality, but do not directly assess answer-grounding consistency. We propose the Answer-Evidence Support Protocol (AESP) to assess this consistency through evidence support: whether the grounding evidence supports the model's own answer. AESP applies task-specific rules to existence, counting, and comparison questions. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark, containing 15,027 samples with questions, reference answers, and all related object-level annotations. Experiments on seven grounded vision--language models reveal failures of evidence support across all three question types. Up to 50.82% of correct answers in the evidence evaluation subset are not supported by the provided grounding evidence.",
-      "authors": [
-        "Ping Guo",
-        "Zhiqi Huang",
-        "Xinran Li",
-        "Linkun Yu",
-        "Jingyin Pei",
-        "Kamata Seiichiro"
-      ],
-      "primary_category": "cs.CV",
-      "categories": [
-        "cs.CV"
-      ],
-      "published": "2026-10-09T14:15:50+00:00",
-      "link": "https://arxiv.org/pdf/2610.13636v1",
-      "tags": [
-        "keyword:ocean-ai",
-        "query:ocean-ai"
-      ],
-      "llm_score": 6.0,
-      "llm_evidence_en": "remote sensing visual question answering fusing imagery and text with grounding evidence",
-      "llm_evidence_cn": "融合遥感影像与文本并评估定位证据的视觉问答",
-      "llm_evidence": "融合遥感影像与文本并评估定位证据的视觉问答",
-      "canonical_evidence": "融合遥感影像与文本并评估定位证据的视觉问答",
-      "llm_tldr_en": "The paper proposes the Answer-Evidence Support Protocol to test whether grounding evidence supports a model's own answer in remote sensing VQA, and builds the 15,027-sample G-RSVQA benchmark.",
-      "llm_tldr_cn": "在带定位的遥感视觉问答中，模型既输出文本答案又标出相关物体作为证据，但现有评估只衡量答案正确性与定位质量，未直接检验答案与证据是否一致。本文提出答案-证据支撑协议AESP，按存在、计数与比较等问题类型施加规则，并构建含15027个样本的G-RSVQA基准。该工作为遥感多模态问答的可靠性与可解释性评估提供了新协议与数据基础。",
-      "llm_tldr": "在带定位的遥感视觉问答中，模型既输出文本答案又标出相关物体作为证据，但现有评估只衡量答案正确性与定位质量，未直接检验答案与证据是否一致。本文提出答案-证据支撑协议AESP，按存在、计数与比较等问题类型施加规则，并构建含15027个样本的G-RSVQA基准。该工作为遥感多模态问答的可靠性与可解释性评估提供了新协议与数据基础。",
-      "llm_tags": [
-        "query:ocean-ai"
-      ],
-      "matched_query_tag": "query:ocean-ai",
-      "matched_query_text": "multimodal fusion of imagery and text for ocean science",
-      "matched_requirement_id": "req-5",
+      "matched_query_text": "Methods for three dimensional modeling and reconstruction of coral reefs from remote sensing and underwater imagery",
+      "matched_requirement_id": "req-10",
       "selection_source": "fresh_fetch",
       "quick_tier": "6"
     }

@@ -1,14 +1,30 @@
 {
   "date": "20261013",
   "date_label": "",
-  "generated_at": "2026-10-13 01:20:32 UTC",
+  "generated_at": "2026-10-13 23:43:05 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
     {
       "paper_id": "2610.12517v1",
       "route": "202610/13/2610.12517v1-terraagent-demonstration-grounded-multi-agent-reasoning-for-long-context-remote-sensing-visual-question-answering",
       "title": "TerraAgent: Demonstration-Grounded Multi-Agent Reasoning for Long-Context Remote Sensing Visual Question Answering",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "遥感多模态大模型上的多智能体推理问答",
+      "first_seen_at": "2026-10-13 01:20:32 UTC",
+      "updated_at": "2026-10-13 23:43:05 UTC"
+    },
+    {
+      "paper_id": "2610.13636v1",
+      "route": "202610/13/2610.13636v1-benchmarking-answer-grounding-consistency-in-remote-sensing-visual-question-answering",
+      "title": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
       "section": "quick",
       "tags": [
         {
@@ -17,9 +33,9 @@
         }
       ],
       "score": 7.0,
-      "evidence": "面向长上下文遥感视觉问答的多智能体推理",
+      "evidence": "融合影像与文本证据的遥感视觉问答",
       "first_seen_at": "2026-10-13 01:20:32 UTC",
-      "updated_at": "2026-10-13 01:20:32 UTC"
+      "updated_at": "2026-10-13 23:43:05 UTC"
     },
     {
       "paper_id": "2610.13535v1",
@@ -49,9 +65,41 @@
         }
       ],
       "score": 6.0,
-      "evidence": "面向语言标注开放词汇三维建图的自主机器人系统",
+      "evidence": "带语言标注的主动开放词汇三维建图与重建",
       "first_seen_at": "2026-10-13 01:20:32 UTC",
-      "updated_at": "2026-10-13 01:20:32 UTC"
+      "updated_at": "2026-10-13 23:43:05 UTC"
+    },
+    {
+      "paper_id": "2610.11366v1",
+      "route": "202610/13/2610.11366v1-spatialopsd-self-distilling-spatial-intelligence-from-verified-coding-agent-traces",
+      "title": "SpatialOPSD: Self-Distilling Spatial Intelligence from Verified Coding Agent Traces",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "通过自蒸馏将空间智能体能力内化到多模态大模型",
+      "first_seen_at": "2026-10-13 23:43:05 UTC",
+      "updated_at": "2026-10-13 23:43:05 UTC"
+    },
+    {
+      "paper_id": "2610.13720v1",
+      "route": "202610/13/2610.13720v1-state-isolated-vision-mamba-via-update-tendency-routing-for-underwater-image-enhancement",
+      "title": "State-Isolated Vision Mamba via Update-Tendency Routing for Underwater Image Enhancement",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "ocean-ai"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向海洋视觉复原的水下图像增强",
+      "first_seen_at": "2026-10-13 23:43:05 UTC",
+      "updated_at": "2026-10-13 23:43:05 UTC"
     },
     {
       "paper_id": "2610.12669v1",
@@ -66,22 +114,6 @@
       ],
       "score": 6.0,
       "evidence": "评估大模型推断地理空间数据需求的基准",
-      "first_seen_at": "2026-10-13 01:20:32 UTC",
-      "updated_at": "2026-10-13 01:20:32 UTC"
-    },
-    {
-      "paper_id": "2610.13636v1",
-      "route": "202610/13/2610.13636v1-benchmarking-answer-grounding-consistency-in-remote-sensing-visual-question-answering",
-      "title": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "ocean-ai"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "融合遥感影像与文本并评估定位证据的视觉问答",
       "first_seen_at": "2026-10-13 01:20:32 UTC",
       "updated_at": "2026-10-13 01:20:32 UTC"
     }

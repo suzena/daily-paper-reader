@@ -1,12 +1,12 @@
 {
   "label": "2026-10-13",
   "date": "2026-10-13",
-  "generated_at": "2026-10-13T01:20:37",
-  "count": 5,
+  "generated_at": "2026-10-13T23:43:06",
+  "count": 7,
   "papers": [
     {
       "paper_id": "202610/13/2610.12517v1-terraagent-demonstration-grounded-multi-agent-reasoning-for-long-context-remote-sensing-visual-question-answering",
-      "section": "quick",
+      "section": "deep",
       "title_en": "TerraAgent: Demonstration-Grounded Multi-Agent Reasoning for Long-Context Remote Sensing Visual Question Answering",
       "authors": "Jingwen Huang, Yiming Fang, Hanxiao Wu, Boyuan He, Keyi Luo",
       "date": "2026-10-07",
@@ -16,6 +16,21 @@
       "tldr": "遥感视觉问答需答案真正依赖图像，但现有RS MLLM仅看准确率，无法识别先验答题；跨域演示匹配差，长上下文稀释证据并传播误差。论文提出TerraAgent/AVA训练-free框架：GDR检索过滤演示，MACE分解证据DAG并路由工具，CVA反事实审计并算视觉依赖分。在RSVQA-LR/HR、VRSBench、LHRS-Bench上，准确率最高+2.40分，视觉依赖0.28→0.49，先验答题46.2%→21.7%，幻觉17.1%→9.8%，成本2.6倍且免微调。",
       "tags": "query:ocean-ai",
       "abstract_en": "Remote sensing visual question answering (RS-VQA) requires answers that truly depend on image evidence, yet current remote sensing multimodal large language models (RS MLLMs) are still evaluated mainly by accuracy, which cannot reveal whether a correct answer was produced without using the image. This setting introduces three challenges: demonstrations retrieved across different ground sample distances (GSD), sensors, and city textures may be poorly matched; real queries often involve long visual contexts from multi-scale tiles, multi-temporal frames, and retrieved knowledge, where evidence can be diluted and errors can propagate through multi-step reasoning; and prior-only answering remains invisible to standard metrics. We present AVA, a training-free framework that wraps a frozen RS MLLM with three modules. GDR performs GSD-bucketed, scene-graph-based demonstration retrieval and filters demonstrations whose answers are unsupported by their images. MACE decomposes each query into an evidence-typed sub-question DAG, routes sub-questions to suitable perception tools, and records verified provenance in a shared evidence ledger with bounded re-perception. CVA audits the final answer through counterfactual perturbations of cited evidence, including ablation and swap, and computes a visual-dependency score for confidence calibration and evidence-forcing re-query. On RSVQA-LR/HR, VRSBench, and LHRS-Bench, AVA improves average accuracy by up to 2.40 points over the strongest same-setting baselines, raises the visual-dependency score from 0.28 to 0.49, reduces the prior-only answer rate from 46.2 percent to 21.7 percent, and lowers the hallucination rate from 17.1 percent to 9.8 percent, with 2.6x the cost of a single backbone forward pass and no fine-tuning.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/13/2610.13636v1-benchmarking-answer-grounding-consistency-in-remote-sensing-visual-question-answering",
+      "section": "quick",
+      "title_en": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
+      "authors": "Ping Guo, Zhiqi Huang, Xinran Li, Linkun Yu, Jingyin Pei, Kamata Seiichiro",
+      "date": "2026-10-09",
+      "pdf": "https://arxiv.org/pdf/2610.13636v1",
+      "score": "6.0",
+      "evidence": "融合遥感影像与文本并评估定位证据的视觉问答",
+      "tldr": "遥感视觉问答中，模型既要给出文本答案，也要定位图像证据，但现有评测只看答案正确性或定位质量，忽略两者是否一致。为此，作者提出答案-证据支持协议AESP，按存在、计数、比较三类问题制定规则，检验定位证据能否支持模型自己的答案。同时构建G-RSVQA基准，含15027个样本及完整对象级标注。在七个接地视觉语言模型上，三类问题均出现证据支持失败，最高50.82%的正确答案不被其定位证据支持。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "In grounded remote sensing visual question answering, a model produces a textual answer and identifies relevant objects in the image as grounding evidence. Existing evaluations measure answer correctness and localization quality, but do not directly assess answer-grounding consistency. We propose the Answer-Evidence Support Protocol (AESP) to assess this consistency through evidence support: whether the grounding evidence supports the model's own answer. AESP applies task-specific rules to existence, counting, and comparison questions. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark, containing 15,027 samples with questions, reference answers, and all related object-level annotations. Experiments on seven grounded vision--language models reveal failures of evidence support across all three question types. Up to 50.82% of correct answers in the evidence evaluation subset are not supported by the provided grounding evidence.",
       "source": "arxiv",
       "selection_source": "fresh_fetch"
     },
@@ -50,6 +65,36 @@
       "selection_source": "fresh_fetch"
     },
     {
+      "paper_id": "202610/13/2610.11366v1-spatialopsd-self-distilling-spatial-intelligence-from-verified-coding-agent-traces",
+      "section": "quick",
+      "title_en": "SpatialOPSD: Self-Distilling Spatial Intelligence from Verified Coding Agent Traces",
+      "authors": "Rongxue Li, Meng Yang, Yiru Mao, Yongliang Tao, Lulu Hu, Bin Yang, Zhao Xu, Weihua Luo, Bowen Xu",
+      "date": "2026-10-08",
+      "pdf": "https://arxiv.org/pdf/2610.11366v1",
+      "score": "6.0",
+      "evidence": "通过自蒸馏将空间智能体能力内化到多模态大模型",
+      "tldr": "空间编码智能体虽能借助外部工具生成可验证执行轨迹来提升多模态大模型的空间推理，却带来高昂推理开销与外部依赖。本文提出 SpatialOPSD，一种在线策略自蒸馏框架，将已验证的智能体轨迹作为特权信息，把智能体能力内化进单一 MLLM，实现完全无工具推理。为缓解特权信息泄漏，引入重复感知蒸馏，结合重复掩码与不可似然正则。在多个基准上，其平均准确率超过 SFT 与 GRPO，并在空间及分布外数据集上展现更优泛化。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Spatial coding agents significantly improve spatial reasoning in Multimodal Large Language Models (MLLMs) by using external tools to generate verified execution traces. However, this paradigm inherently suffers from prohibitive inference-time overhead and external dependencies. In this paper, we explore whether an MLLM can internalize this agentic capability to operate entirely tool-free. We begin with a simple observation: prompting an MLLM with summarized execution traces of a spatial coding agent naturally unlocks the model's internal spatial Chain-of-Thought (CoT). Motivated by this, we introduce SpatialOPSD, an on-policy self-distillation framework that internalizes spatial reasoning into a standalone MLLM by formulating verified agent traces as privileged information. To mitigate privileged-information leakage during distillation, we introduce Repetition-Aware Distillation, which combines repetition masking with unlikelihood regularization. Experiments across multiple benchmarks demonstrate that self-distilling SpatialOPSD achieves higher average accuracy than SFT and GRPO on both spatial and OOD datasets, exhibiting superior performance and generalization.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202610/13/2610.13720v1-state-isolated-vision-mamba-via-update-tendency-routing-for-underwater-image-enhancement",
+      "section": "quick",
+      "title_en": "State-Isolated Vision Mamba via Update-Tendency Routing for Underwater Image Enhancement",
+      "authors": "Yan Luo, Laibin Chang, Zefan Feng, Yi'ang Chen, Kui Jiang, Zhengguo Li",
+      "date": "2026-10-09",
+      "pdf": "https://arxiv.org/pdf/2610.13720v1",
+      "score": "6.0",
+      "evidence": "面向海洋视觉复原的水下图像增强",
+      "tldr": "Vision Mamba 通过循环状态演化建模长程依赖，但现有方法多关注 token 序列化与扫描策略，忽略了状态组织这一关键问题。本文指出，异构更新 token 共享同一隐状态会引发持续跨内容干扰，称为 State Contention；有效循环建模应按 token 更新兼容性而非排列顺序组织状态。基于此提出 State Isolation 原则，并设计 IsoMamba：以 Δ 引导构造模型内在更新表示，用无标签聚类发现兼容 token 组，按 cluster-route-isolate 范式路由至隔离 Mamba 专家，同时引入通道重加权补偿水下波长相关重建难度。多个水下增强基准取得 SOTA，隐状态响应更干净。",
+      "tags": "query:ocean-ai",
+      "abstract_en": "Vision Mamba has recently emerged as an efficient alternative to convolutional and Transformer-based architectures by modeling long-range spatial dependencies through recurrent state evolution. Existing studies primarily improve token serialization, scanning strategies, or expert routing, yet largely overlook a state level question question: how should recurrent states be organized for spatially heterogeneous visual restoration? In this paper, we show that forcing tokens with heterogeneous update behaviors to recurrently modify a shared hidden state leads to persistent cross-content interference, which we term \\textbf{State Contention}. We further argue that effective recurrent modeling should organize state evolution according to token compatibility rather than token ordering. Based on this observation, we introduce \\textbf{State Isolation}, a new recurrent state organization principle for Vision Mamba,tokens with compatible state-update tendencies evolve within independent recurrent state streams. To instantiate this principle, we propose \\textbf{IsoMamba}, a $Δ$-guided architecture that constructs model-intrinsic update representations, discovers update-compatible token groups through label-free clustering, and routes them to isolated Mamba experts following a \\textbf{cluster--route--isolate} paradigm. In addition, we develop a dynamic channel-wise reweighting objective to compensate for wavelength-dependent reconstruction difficulty in underwater images. Extensive experiments demonstrate that IsoMamba consistently achieves state-of-the-art performance on multiple underwater image enhancement benchmarks while providing cleaner hidden state responses, validating the effectiveness of state isolated recurrent modeling.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
       "paper_id": "202610/13/2610.12669v1-geofitbench-llm-a-benchmark-for-assessing-large-language-models-capabilities-in-geospatial-data-requirements-elicitation-for-geo-analytic-tasks",
       "section": "quick",
       "title_en": "GeoFitBench-LLM: A Benchmark for Assessing Large Language Models' Capabilities in Geospatial Data Requirements Elicitation for Geo-Analytic Tasks",
@@ -61,21 +106,6 @@
       "tldr": "大语言模型正成为GeoAI核心，但其地理空间数据需求获取能力缺乏评估，而检索型地理分析任务须先确定所需数据集与约束。GeoFitBench-LLM围绕时空关系推理与语义锚定两个维度，以固定且与提供方无关的schema编码真实需求，评估资源识别和属性级规格。七模型最小提示实验显示，资源识别常可实现，GPT-5.4 Thinking在66.67%请求中恢复完整资源集，但适用性规格仍随推理需求增加而变难。该工作为可复现评测LLM地理数据需求获取提供了基准。",
       "tags": "query:ocean-ai",
       "abstract_en": "Large language models are becoming central to GeoAI systems, yet their evaluation rarely considers the elicitation of geospatial data requirements. This omission is critical as retrieval oriented geo-analytic tasks cannot be supported reliably without first identifying the necessary datasets and constraints. GeoFitBench-LLM is introduced as a benchmark for assessing whether LLMs can infer the datasets, the supporting resources and the constraints required by geo-analytic requests in natural language. The benchmark is structured around two reasoning dimensions, Spatio-Temporal Relational and Semantic Grounding, reflecting long-standing challenges in geospatial information retrieval and related natural language tasks. Ground truth requirements are encoded in a fixed, provider-independent schema for reproducible evaluation of resource identification and attribute-level specification. Experiments on seven models under minimal prompting indicate that identifying the necessary resources is often achievable, with GPT-5.4 Thinking achieving the best result by recovering the complete set of resources in 66.67% of benchmark requests. Results further indicate that accurate fitness-for-use specification remains more difficult as inferential demands increase.",
-      "source": "arxiv",
-      "selection_source": "fresh_fetch"
-    },
-    {
-      "paper_id": "202610/13/2610.13636v1-benchmarking-answer-grounding-consistency-in-remote-sensing-visual-question-answering",
-      "section": "quick",
-      "title_en": "Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering",
-      "authors": "Ping Guo, Zhiqi Huang, Xinran Li, Linkun Yu, Jingyin Pei, Kamata Seiichiro",
-      "date": "2026-10-09",
-      "pdf": "https://arxiv.org/pdf/2610.13636v1",
-      "score": "6.0",
-      "evidence": "融合遥感影像与文本并评估定位证据的视觉问答",
-      "tldr": "遥感视觉问答中，模型既要给出文本答案，也要定位图像证据，但现有评测只看答案正确性或定位质量，忽略两者是否一致。为此，作者提出答案-证据支持协议AESP，按存在、计数、比较三类问题制定规则，检验定位证据能否支持模型自己的答案。同时构建G-RSVQA基准，含15027个样本及完整对象级标注。在七个接地视觉语言模型上，三类问题均出现证据支持失败，最高50.82%的正确答案不被其定位证据支持。",
-      "tags": "query:ocean-ai",
-      "abstract_en": "In grounded remote sensing visual question answering, a model produces a textual answer and identifies relevant objects in the image as grounding evidence. Existing evaluations measure answer correctness and localization quality, but do not directly assess answer-grounding consistency. We propose the Answer-Evidence Support Protocol (AESP) to assess this consistency through evidence support: whether the grounding evidence supports the model's own answer. AESP applies task-specific rules to existence, counting, and comparison questions. We further construct the Grounded Remote Sensing Visual Question Answering (G-RSVQA) benchmark, containing 15,027 samples with questions, reference answers, and all related object-level annotations. Experiments on seven grounded vision--language models reveal failures of evidence support across all three question types. Up to 50.82% of correct answers in the evidence evaluation subset are not supported by the provided grounding evidence.",
       "source": "arxiv",
       "selection_source": "fresh_fetch"
     }
